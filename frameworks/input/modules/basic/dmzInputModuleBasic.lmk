@@ -1,0 +1,5 @@
+lmk.set_name "dmzInputModuleBasic"
+lmk.set_type "plugin"
+lmk.add_libs {"dmzInputEvents", "dmzKernel",}
+lmk.add_preqs {"dmzInputFramework",}
+lmk.add_files {"dmzInputModuleBasic.cpp"}

@@ -1,0 +1,19 @@
+The following two packages must be installed to build under Linux.
+
+% apt-get install uuid-dev
+% apt-get install libatomic-ops-dev
+
+Ubuntu 8 supports Qt 4.3.4 to install
+
+% apt-get install libqt4-dev
+
+global.lua for Qt:
+
+lmk.set_global_env {
+
+   DMZ_USE_QT=true,
+   DMZ_QT_HOME="/usr/bin",
+   DMZ_QT_INCLUDE_PATH="/usr/share/qt4/include",
+   DMZ_QT_LIB_PATH="/usr/lib",
+}
+

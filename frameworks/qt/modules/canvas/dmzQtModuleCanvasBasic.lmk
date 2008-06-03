@@ -1,0 +1,18 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtModuleCanvasBasic"
+lmk.set_type "plugin"
+
+lmk.add_files ({
+   "dmzQtCanvasScene.h",
+   "dmzQtModuleCanvasBasic.h",
+},
+{src = "moc"})
+
+lmk.add_files {
+   "dmzQtModuleCanvasBasic.cpp",
+   "dmzQtCanvasScene.cpp",
+}
+
+lmk.add_preqs {"dmzQtFramework", "dmzInputFramework",}
+lmk.add_libs {"dmzQtCanvasView", "dmzQtUtil", "dmzInputEvents", "dmzKernel",}
+lmkQt.add_libs {"QtCore", "QtGui", "QtOpenGL",}

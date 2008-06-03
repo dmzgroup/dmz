@@ -1,0 +1,5 @@
+lmk.set_name ("dmzSystemMarshalTest")
+lmk.set_type ("exe")
+lmk.add_files {"dmzSystemMarshalTest.cpp"}
+lmk.add_libs {"dmzTest", "dmzKernel",}
+lmk.add_vars { test = {"$(localBinTarget)"} }

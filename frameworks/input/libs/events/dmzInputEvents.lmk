@@ -1,0 +1,22 @@
+lmk.set_name "dmzInputEvents"
+lmk.set_type "shared"
+
+lmk.add_files {
+   "dmzInputEventsExport.h",
+   "dmzInputEventController.h",
+   "dmzInputEventKey.h",
+   "dmzInputEventMouse.h",
+}
+
+lmk.add_files {
+   "dmzInputEventController.cpp",
+   "dmzInputEventKey.cpp",
+   "dmzInputEventMouse.cpp",
+}
+
+lmk.add_libs {"dmzKernel",}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_INPUT_EVENTS_EXPORT"
+}, { win32 = true })
+

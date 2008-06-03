@@ -1,0 +1,20 @@
+require "lmkOSG"
+lmkOSG.set_name ("dmzRenderExtViewerOSG")
+
+lmk.set_type "plugin"
+
+lmk.add_libs {
+   "dmzRenderUtilOSG",
+   "dmzInputEvents",
+   "dmzKernel",
+}
+
+lmk.add_preqs {
+   "dmzRenderModuleCoreOSG", 
+   "dmzRenderFramework", 
+   "dmzInputFramework",
+}
+
+lmk.add_files {"dmzRenderExtViewerOSG.cpp",}
+lmkOSG.add_libs {"osg", "osgGA", "osgViewer",}
+

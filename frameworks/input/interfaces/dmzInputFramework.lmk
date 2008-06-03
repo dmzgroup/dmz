@@ -1,0 +1,8 @@
+lmk.set_name "dmzInputFramework"
+
+lmk.add_files {
+   "dmzInputModule.h",
+   "dmzInputObserver.h",
+   "dmzInputConsts.h",
+   "dmzInputMaskConsts.h",
+}

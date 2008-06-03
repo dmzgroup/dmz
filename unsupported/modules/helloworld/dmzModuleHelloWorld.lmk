@@ -1,0 +1,2 @@
+lmk.set_name "dmzModuleHelloWorld"
+lmk.add_files {"dmzModuleHelloWorld.h"}

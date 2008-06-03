@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/AppQt" >
+        <file alias="DMZ-Splash.png">images/DMZ-Splash.png</file>
+    </qresource>
+</RCC>

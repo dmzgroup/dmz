@@ -1,0 +1,22 @@
+<dmz>
+<runtime>
+   <plugin name="dmzInputPluginMouseEventToMessage" unique="tool"/>
+</runtime>
+<tool>
+   <input>
+      <channel name="ToolChannel"/>
+      <source name="dmzQtModuleCanvasBasic"/>
+   </input>
+	<target name="TargetName"/>
+   <converter type="2D" start="first">
+      <state name="first" type="basic">
+         <condition button="1" action="pressed" result="object" message="MessageName" next="NextState">
+            <target name="TargetName1"/>
+            <target name="TargetName2"/>
+            <attribute type="position" name="position"/>
+            <attribute type="object" name="handle"/>
+         </condition>
+      </state>
+   <converter>
+</tool>
+</dmz>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dmz>
+  <runtime>
+    <types>
+      <data name="rootDataType">
+        <attribute type="UInt32" size="1" name="uint32fixed"/>
+        <attribute type="UInt64" size="1" name="uint64fixed"/>
+        <attribute type="Int32" size="1" name="int32fixed"/>
+        <attribute type="Int64" size="1" name="int64fixed"/>
+        <attribute type="Float32" size="1" name="float32fixed"/>
+        <attribute type="Float64" size="1" name="float64fixed"/>
+        <attribute type="String" size="1" name="stringfixed"/>
+        <attribute type="Float64" size="3" name="vectorfixed"/>
+      </data>
+      <data name="testDataType" parent="rootDataType">
+        <attribute type="UInt32" name="uint32"/>
+        <attribute type="UInt64" name="uint64"/>
+        <attribute type="Int32" name="int32"/>
+        <attribute type="Int64" name="int64"/>
+        <attribute type="Float32" name="float32"/>
+        <attribute type="Float64" name="float64"/>
+        <attribute type="String" name="string"/>
+        <attribute type="Float64" name="vector"/>
+      </data>
+      <message name="rootMessageType"/>
+      <message name="testMessageType1" parent="rootMessageType"/>
+      <message name="testMessageType2"/>
+    </types>
+  </runtime>
+  <dmzRuntimeMessagingTest>
+    <messageName1 name="testMessageType1"/>
+    <messageName2 name="testMessageType2"/>
+    <messageName3 name="rootMessageType"/>
+    <dataName name="testDataType"/>
+  </dmzRuntimeMessagingTest>
+</dmz>

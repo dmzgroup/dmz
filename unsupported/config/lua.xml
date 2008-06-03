@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dmz>
+<runtime>
+   <time>
+      <frequency value="10"/>
+   </time>
+</runtime>
+<plugins>
+   <plugin name="dmzLuaModuleBasic"/>
+   <plugin name="dmzPluginTermExit"/>
+</plugins>
+<dmzLuaModuleBasic>
+   <instance name="plugin"/>
+   <instance name="plugin" unique="plugin2"/>
+   <extensions>
+      <plugin name="dmzLuaExtIsect"/>
+   </extensions>
+</dmzLuaModuleBasic>
+<plugin>
+   <unreg value="true"/>
+</plugin>
+<plugin2>
+   <unreg value="false"/>
+</plugin2>
+</dmz>

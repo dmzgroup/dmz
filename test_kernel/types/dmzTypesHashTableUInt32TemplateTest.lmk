@@ -1,0 +1,5 @@
+lmk.set_name ("dmzTypesHashTableUInt32TemplateTest")
+lmk.set_type ("exe")
+lmk.add_files {"dmzTypesHashTableUInt32TemplateTest.cpp"}
+lmk.add_libs {"dmzTest", "dmzKernel",}
+lmk.add_vars { test = {"$(localBinTarget)"} }

@@ -1,0 +1,5 @@
+lmk.set_name "dmzNetModuleLocalDRBasic"
+lmk.set_type "plugin"
+lmk.add_files {"dmzNetModuleLocalDRBasic.cpp",}
+lmk.add_libs {"dmzKernel",}
+lmk.add_preqs {"dmzNetFramework", "dmzObjectFramework"}

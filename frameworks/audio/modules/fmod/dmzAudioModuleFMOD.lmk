@@ -1,0 +1,21 @@
+lmk.set_name ("dmzAudioModuleFMOD", { DMZ_USE_FMOD = true })
+lmk.set_type "plugin"
+lmk.add_libs {"dmzAudioSoundAttributes", "dmzKernel",}
+lmk.add_preqs {"dmzAudioFramework",}
+
+lmk.add_files {"dmzAudioModuleFMOD.cpp"}
+
+lmk.add_vars ({
+   localIncludes = "$(lmk.includePathFlag)$(DMZ_FMOD_INCLUDE_PATH)",
+   localLibPaths = "$(lmk.libPathFlag)$(DMZ_FMOD_LIB_PATH)",
+   localLibs = "$(lmk.libPrefix)fmodex",
+},
+{ win32 = false })
+
+lmk.add_vars ({
+   localIncludes = "$(lmk.includePathFlag)$(DMZ_FMOD_INCLUDE_PATH)",
+   localLibPaths = "$(lmk.libPathFlag)$(DMZ_FMOD_LIB_PATH)",
+   localLibs = "$(lmk.libPrefix)fmodex_vc$(lmk.libSuffix)",
+   localDefines = "$(lmk.defineFlag)WIN32",
+},
+{ win32 = true })

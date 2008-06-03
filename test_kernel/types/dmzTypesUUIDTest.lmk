@@ -1,0 +1,5 @@
+lmk.set_name ("dmzTypesUUIDTest")
+lmk.set_type ("exe")
+lmk.add_files {"dmzTypesUUIDTest.cpp"}
+lmk.add_libs {"dmzTest", "dmzKernel",}
+lmk.add_vars { test = {"$(localBinTarget)"} }

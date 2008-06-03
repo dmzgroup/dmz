@@ -1,0 +1,12 @@
+lmk.set_name "dmzAudioPluginObject"
+lmk.set_type "plugin"
+lmk.add_files {"dmzAudioPluginObject.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+   "dmzAudioSoundAttributes",
+}
+lmk.add_preqs {
+   "dmzObjectFramework",
+   "dmzAudioFramework",
+}

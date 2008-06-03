@@ -1,0 +1,4 @@
+lmk.set_name ("dmzSystemMutexTest")
+lmk.set_type ("exe")
+lmk.add_files {"dmzSystemMutexTest.cpp"}
+lmk.add_libs {"dmzKernel",}

@@ -1,0 +1,8 @@
+lmk.set_name "dmzNetModulePacketCodecBasic"
+lmk.set_type "plugin"
+lmk.add_files {
+   "dmzNetModulePacketCodecBasic.cpp",
+   "dmzNetModulePacketCodecBasicHeaderCodec.cpp",
+}
+lmk.add_libs {"dmzKernel",}
+lmk.add_preqs {"dmzNetFramework"}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dmz>
+<plugins>
+   <plugin name="dmzObjectObserverUtilTest"/>
+   <plugin name="dmzObjectModuleBasic"/>
+</plugins>
+<runtime>
+   <types>
+      <object name="rootType" />
+   </types>
+</runtime>
+</dmz>

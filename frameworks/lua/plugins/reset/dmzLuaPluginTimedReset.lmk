@@ -1,0 +1,7 @@
+lmk.set_name "dmzLuaPluginTimedReset"
+lmk.set_type "plugin"
+lmk.add_files {"dmzLuaPluginTimedReset.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzLuaFramework",}

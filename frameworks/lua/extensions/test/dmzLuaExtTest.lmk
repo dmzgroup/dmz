@@ -1,0 +1,11 @@
+lmk.set_name "dmzLuaExtTest"
+lmk.set_type "plugin"
+lmk.add_files {"dmzLuaExtTest.cpp",}
+lmk.add_libs {
+   "lua",
+   "dmzKernel",
+   "dmzLuaKernel",
+}
+lmk.add_preqs {
+   "dmzLuaFramework",
+}

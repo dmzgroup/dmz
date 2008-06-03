@@ -1,0 +1,13 @@
+lmk.set_name "dmzLuaExtPortal"
+lmk.set_type "plugin"
+lmk.add_files {"dmzLuaExtPortal.cpp",}
+lmk.add_libs {
+   "dmzLuaKernel",
+   "dmzKernel",
+   "lua",
+}
+lmk.add_preqs {
+   "dmzAudioFramework",
+   "dmzLuaFramework",
+   "dmzRenderFramework",
+}

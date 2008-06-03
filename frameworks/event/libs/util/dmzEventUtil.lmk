@@ -1,0 +1,21 @@
+lmk.set_name "dmzEventUtil"
+lmk.set_type "shared"
+
+lmk.add_files {
+   "dmzEventAttributeMasks.h",
+   "dmzEventObserverUtil.h",
+   "dmzEventUtilExport.h",
+}
+
+lmk.add_files {
+   "dmzEventAttributeMasks.cpp",
+   "dmzEventObserverUtil.cpp",
+}
+
+lmk.add_libs {"dmzKernel"}
+lmk.add_preqs {"dmzEventFramework"}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_EVENT_UTIL_EXPORT"
+}, { win32 = true })
+

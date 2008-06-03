@@ -1,0 +1,4 @@
+lmk.set_name ("dmzSystemTimeTest")
+lmk.set_type ("exe")
+lmk.add_files {"dmzSystemTimeTest.cpp"}
+lmk.add_libs {"dmzKernel",}

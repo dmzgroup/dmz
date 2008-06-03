@@ -1,0 +1,20 @@
+lmk.set_name "expat"
+lmk.set_type "shared"
+lmk.add_files {"expat.h", "expat_external.h"}
+lmk.add_files {
+   "xmlparse.c",
+   "xmlrole.c",
+   "xmltok.c",
+}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)HAVE_EXPAT_CONFIG_H",
+}, {win32 = false})
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)COMPILED_FROM_DSP",
+   localLibPaths = "/DEF:libexpat.def",
+}, {win32 = true})
+
+lmk.add_vars { localIncludes = "$(lmk.includePathFlag)." }
+

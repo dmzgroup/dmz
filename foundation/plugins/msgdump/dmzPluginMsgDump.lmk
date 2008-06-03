@@ -1,0 +1,4 @@
+lmk.set_name "dmzPluginMsgDump"
+lmk.set_type "plugin"
+lmk.add_files {"dmzPluginMsgDump.cpp",}
+lmk.add_libs {"dmzKernel",}

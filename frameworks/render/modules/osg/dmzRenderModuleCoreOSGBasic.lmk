@@ -1,0 +1,22 @@
+require "lmkOSG"
+
+lmkOSG.set_name ("dmzRenderModuleCoreOSGBasic")
+
+lmk.set_type "plugin"
+
+lmk.add_preqs {
+   "dmzRenderUtilOSG",
+   "dmzRenderModuleCoreOSG",
+   "dmzRenderFramework",
+   "dmzObjectFramework",
+}
+
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+
+lmk.add_files { "dmzRenderModuleCoreOSGBasic.cpp" }
+
+lmkOSG.add_libs {"osg", "osgGA", "osgViewer",}
+

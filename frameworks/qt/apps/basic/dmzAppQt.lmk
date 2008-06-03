@@ -1,0 +1,7 @@
+require "lmkQt"
+lmkQt.set_name ("dmzAppQt")
+lmk.set_type ("exe")
+lmk.add_libs {"dmzQtLogObserver", "dmzApplication", "dmzXML", "dmzKernel",}
+lmk.add_files {"dmzAppQt.qrc"}
+lmk.add_files {"dmzAppQt.cpp", "dmzQtSplashScreen.cpp"}
+lmkQt.add_libs {"QtCore", "QtGui"}

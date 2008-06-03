@@ -1,0 +1,5 @@
+lmk.set_name ("dmzRenderModuleCoreOSG", { DMZ_USE_OSG = true })
+
+lmk.add_files {
+   "dmzRenderModuleCoreOSG.h",
+}

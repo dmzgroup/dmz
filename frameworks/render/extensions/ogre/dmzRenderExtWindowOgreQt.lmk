@@ -1,0 +1,22 @@
+require "lmkOgre"
+require "lmkQt"
+lmk.set_name ("dmzRenderExtWindowOgreQt", { DMZ_USE_OGRE = true, DMZ_USE_QT = true })
+lmk.set_type "plugin"
+lmk.add_libs {
+   "dmzQtUtil",
+   "dmzInputEvents",
+   "dmzKernel",
+}
+
+lmk.add_preqs {
+   "dmzQtFramework", 
+   "dmzRenderFrameworkOgre", 
+   "dmzRenderFramework", 
+   "dmzInputFramework",
+}
+
+lmk.add_files ({"dmzRenderExtWindowOgreQt.h"},{src = "moc"})
+lmk.add_files {"dmzRenderExtWindowOgreQt.cpp",}
+lmkOgre.add_libs ()
+lmkQt.add_libs {"QtCore", "QtGui"}
+

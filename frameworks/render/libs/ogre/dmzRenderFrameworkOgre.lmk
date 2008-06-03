@@ -1,0 +1,12 @@
+require "lmkOgre"
+lmkOgre.set_name ("dmzRenderFrameworkOgre")
+lmk.set_type "shared"
+lmk.add_libs { "dmzKernel", }
+
+lmk.add_files {
+   "dmzRenderUtilOgre.h",
+   "dmzRenderExtWindowOgre.h",
+   "dmzRenderModuleCoreOgre.h",
+}
+
+lmkOgre.add_libs ()

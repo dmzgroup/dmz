@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dmz>
+<plugins>
+   <plugin name="dmzPluginTermExit"/>
+   <plugin name="dmzLuaModuleBasic"/>
+   <plugin name="dmzLuaPluginTimedReset"/>
+<!--   <plugin name="dmzExPluginMessageSend"/> -->
+<!--   <plugin name="dmzExPluginMessageReceive"/> -->
+</plugins>
+<runtime>
+   <time>
+      <frequency value="60.0"/>
+   </time>
+   <types>
+      <message name="topSecretMessageType"/>
+   </types>
+</runtime>
+<dmzLuaModuleBasic>
+   <instance name="dmzExPluginMessageSend"/>
+   <instance name="dmzExPluginMessageReceive"/>
+</dmzLuaModuleBasic>
+<dmzExPluginMessageSend>
+   <message name="topSecretMessageType" value="Shhhh"/>
+</dmzExPluginMessageSend>
+<dmzExPluginMessageReceive>
+   <message name="topSecretMessageType"/>
+</dmzExPluginMessageReceive>
+</dmz>

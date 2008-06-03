@@ -1,0 +1,23 @@
+lmk.set_name ("hawknl")
+lmk.set_type ("shared")
+lmk.add_files {"nl.h",}
+lmk.add_files {
+   "condition.c",
+   "crc.c",
+   "err.c",
+   "errorstr.c",
+   "group.c",
+   "loopback.c",
+   "mutex.c",
+   "nl.c",
+   "nltime.c",
+   "sock.c",
+   "thread.c",
+}
+lmk.add_files ({"ipx.c"}, {win32 = true})
+lmk.add_vars ({localDefines = "-D_REENTRANT -DMACOSX"}, {macos = true})
+lmk.add_vars ({localDefines = "-D_REENTRANT -D_GNU_SOURCE"}, {linux = true})
+lmk.add_vars ({
+   localDefines = "/DWIN32 /D_CRT_SECURE_NO_DEPRECATE /DDMZ_EXPORT_HAWKNL",
+   localLibs = "ws2_32.lib",
+}, {win32 = true})

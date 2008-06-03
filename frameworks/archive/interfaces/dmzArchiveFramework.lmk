@@ -1,0 +1,5 @@
+lmk.set_name "dmzArchiveFramework"
+lmk.add_files {
+   "dmzArchiveModule.h",
+   "dmzArchiveObserver.h",
+}

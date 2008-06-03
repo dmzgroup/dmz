@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dmz>
+   <plugins>
+      <plugin name="dmzInputModuleBasic"/>
+      <plugin name="dmzInputPluginControllerKey"/>
+      <plugin name="dmzRenderModuleCoreOgreBasic" unload="false"/>
+      <plugin name="dmzRenderModuleIsectOgre"/>
+      <plugin name="dmzRenderModulePortalOgre"/>
+      <!-- <plugin name="dmzRenderPluginLoadModelOgre"/> -->
+      <plugin name="dmzPluginCameraTest"/>
+      <!-- <plugin name="dmzPluginTermExit"/> -->
+      <plugin name="dmzPluginExit"/>
+   </plugins>
+   <runtime>
+      <time>
+         <frequency value="100.0"/>
+      </time>
+   </runtime>
+   <dmzRenderModuleCoreOgreBasic>
+      <ogre>
+         <plugins>
+            <plugin name="RenderSystem_GL"/>
+            <plugin name="Plugin_ParticleFX"/>
+            <plugin name="Plugin_BSPSceneManager"/>
+            <plugin name="Plugin_OctreeSceneManager"/>
+            <plugin name="Plugin_CgProgramManager"/>
+         </plugins>
+         <log name="ogre.log"/>
+         <resources>
+            <resource name="data" type="FileSystem" group="General"/>
+         </resources>
+      </ogre>
+      <plugins>
+         <plugin name="dmzRenderExtWindowOgreQt"/>
+         <plugin name="dmzRenderExtObjectOgre"/>
+      </plugins>
+      <dmzRenderExtWindowOgreQt>
+         <window width="800" height="600"/>
+      </dmzRenderExtWindowOgreQt>
+   </dmzRenderModuleCoreOgreBasic>
+   <dmzRenderModulePortalOgre>
+      <visibility fov="60.0" near="1.0" far="32000.0"/>
+   </dmzRenderModulePortalOgre>
+   <dmzPluginCameraTest>
+      <movement speed="100" turnRate="3"/>
+      <start x="707" y="250" z="528"/>
+   </dmzPluginCameraTest>
+</dmz>

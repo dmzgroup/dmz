@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dmz>
+   <plugins>
+      <plugin name="dmzInputModuleBasic"/>
+      <plugin name="dmzInputPluginControllerKey"/>
+      <plugin name="dmzInputPluginControllerMacOS"/>
+      <plugin name="dmzPluginTermExit"/>
+      <plugin name="dmzPluginExit"/>
+   </plugins>
+   <runtime>
+      <time>
+         <frequency value="100.0"/>
+      </time>
+   </runtime>
+   <dmzInputPluginControllerMacOS>
+      <controller device="WingMan Cordless Gamepad" id="1">
+         <hatswitch
+            north="0"
+            northeast="1"
+            east="2"
+            southeast="3"
+            south="4"
+            southwest="5"
+            west="6"
+            northwest="7"
+            default="8"/>
+         <axis elementId="1" id="1"/>
+         <axis elementId="2" id="2"/>
+         <axis elementId="3" id="3"/>
+         <axis elementId="6" id="4"/>
+         <axis elementId="7" id="5"/>
+         <hatswitch elementId="8" xAxisId="7" yAxisId="8" />
+         <button elementId="1" id="1"/>
+         <button elementId="2" id="2"/>
+         <button elementId="3" id="3"/>
+         <button elementId="4" id="4"/>
+         <button elementId="5" id="5"/>
+         <button elementId="6" id="6"/>
+         <button elementId="7" id="7"/>
+         <button elementId="8" id="8"/>
+         <button elementId="9" id="9"/>
+         <button elementId="10" id="10"/>
+         <button elementId="11" id="11"/>
+      </controller>
+   </dmzInputPluginControllerMacOS>
+</dmz>

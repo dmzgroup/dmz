@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dmz>
+<plugins>
+   <plugin name="dmzInputModuleBasic"/>
+   <plugin name="dmzArchivePluginInput"/>
+   <plugin name="dmzPluginTermExit"/>
+   <plugin name="dmzExPluginInput"/>
+</plugins>
+<dmzArchivePluginInput>
+   <input key="a" value="1" delay="1"/>
+   <input key="a" value="0" delay="0.1"/>
+   <input button="5" source="1" value="1" delay=".5"/>
+   <input button="5" source="1" value="0" delay=".5"/>
+   <input key="A" value="1" delay="2"/>
+   <input key="A" value="0" delay=".2"/>
+   <input axis="2" source="1" value="0.1" delay=".5"/> 
+   <input axis="2" source="1" value="0.2" delay=".01"/> 
+   <input axis="2" source="1" value="0.3" delay=".01"/> 
+   <input axis="2" source="1" value="0.4" delay=".01"/> 
+   <input axis="2" source="1" value="0.5" delay=".01"/> 
+   <input axis="2" source="1" value="0.6" delay=".01"/> 
+   <input axis="2" source="1" value="0.7" delay=".01"/> 
+   <input axis="2" source="1" value="0.0" delay=".75"/> 
+   <input key="z" value="1" delay="3"/>
+   <input key="z" value="0" delay=".3"/>
+</dmzArchivePluginInput>
+</dmz>

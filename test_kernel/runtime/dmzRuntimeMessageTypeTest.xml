@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dmz>
+<runtime>
+   <types>
+      <message name="rootType"/>
+      <message name="testType" parent="rootType"/>
+   </types>
+</runtime>
+</dmz>
+

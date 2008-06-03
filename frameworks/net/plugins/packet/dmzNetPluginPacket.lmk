@@ -1,0 +1,5 @@
+lmk.set_name "dmzNetPluginPacket"
+lmk.set_type "plugin"
+lmk.add_files {"dmzNetPluginPacket.cpp",}
+lmk.add_libs {"dmzObjectUtil", "dmzKernel",}
+lmk.add_preqs {"dmzNetFramework", "dmzObjectFramework",}

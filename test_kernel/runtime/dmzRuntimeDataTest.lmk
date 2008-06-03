@@ -1,0 +1,5 @@
+lmk.set_name ("dmzRuntimeDataTest")
+lmk.set_type ("exe")
+lmk.add_files {"dmzRuntimeDataTest.cpp"}
+lmk.add_libs {"dmzTest", "dmzKernel",}
+lmk.add_vars { test = {"$(localBinTarget)"} }

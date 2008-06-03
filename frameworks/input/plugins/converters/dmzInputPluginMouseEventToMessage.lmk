@@ -1,0 +1,9 @@
+lmk.set_name "dmzInputPluginMouseEventToMessage"
+lmk.set_type "plugin"
+lmk.add_files {"dmzInputPluginMouseEventToMessage.cpp",}
+lmk.add_libs {
+   "dmzInputEvents",
+   "dmzInputUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzInputFramework", "dmzRenderFramework"}

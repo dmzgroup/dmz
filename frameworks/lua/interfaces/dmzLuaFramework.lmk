@@ -1,0 +1,6 @@
+lmk.set_name "dmzLuaFramework"
+lmk.add_files {
+   "dmzLuaExt.h",
+   "dmzLuaModule.h",
+   "dmzLuaObserver.h",
+}

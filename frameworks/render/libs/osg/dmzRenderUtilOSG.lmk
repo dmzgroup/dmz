@@ -1,0 +1,31 @@
+require "lmkOSG"
+
+lmkOSG.set_name ("dmzRenderUtilOSG")
+
+lmk.set_type "shared"
+
+lmk.add_preqs {
+   "dmzInputFramework", 
+}
+
+lmk.add_libs {
+   "dmzInputEvents",
+   "dmzKernel",
+}
+
+lmk.add_files {
+   "dmzRenderEventHandlerOSG.h",
+   "dmzRenderCameraManipulatorOSG.h",
+   "dmzRenderUtilOSG.h",
+   "dmzRenderUtilOSGExport.h",
+}
+
+lmk.add_files {
+   "dmzRenderEventHandlerOSG.cpp",
+}
+
+lmkOSG.add_libs {"osg", "osgGA", "osgViewer",}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_RENDER_UTIL_OSG_EXPORT",
+}, {win32 = true})

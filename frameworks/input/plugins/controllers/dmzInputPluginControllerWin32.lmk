@@ -1,0 +1,6 @@
+lmk.set_name ("dmzInputPluginControllerWin32", { win32 = true })
+lmk.set_type "plugin"
+lmk.add_libs {"dmzInputUtil", "dmzInputEvents", "dmzKernel",}
+lmk.add_preqs {"dmzInputFramework",}
+lmk.add_files {"dmzInputPluginControllerWin32.cpp"}
+lmk.add_vars { localLibs = "winmm.lib"}

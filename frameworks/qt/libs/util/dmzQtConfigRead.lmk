@@ -1,0 +1,44 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtUtil"
+lmk.set_type "shared"
+
+lmk.add_files ({
+   "dmzQtVersion.ui",
+})
+
+lmk.add_files ({
+   "dmzQtSingletonApplication.h",
+   "dmzQtVersion.h",
+}, {src = "moc"})
+
+lmk.add_files {
+   "dmzQtUtilExport.h",
+   "dmzQtUtil.h",
+   "dmzQtConfigRead.h",
+   "dmzQtConfigWrite.h",
+   "dmzQtSingletonApplication.h",
+   "dmzQtVersion.h",
+}
+
+lmk.add_files {
+   "dmzQtUtil.cpp",
+   "dmzQtConfigRead.cpp",
+   "dmzQtConfigWrite.cpp",
+   "dmzQtVersion.cpp",
+}
+
+lmk.add_files ({
+   "dmzQtSingletonApplication.cpp",
+}, {win32 = false})
+
+lmk.add_files ({
+   "dmzQtSingletonApplicationWin32.cpp",
+}, {win32 = true})
+
+lmk.add_libs {"dmzKernel",}
+lmkQt.add_libs {"QtCore", "QtGui",}
+
+lmk.add_vars ({
+   localLibs = "User32.lib",
+   localDefines = "$(lmk.defineFlag)DMZ_QT_UTIL_EXPORT",
+},{win32 = true})

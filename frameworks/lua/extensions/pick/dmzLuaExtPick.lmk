@@ -1,0 +1,12 @@
+lmk.set_name "dmzLuaExtPick"
+lmk.set_type "plugin"
+lmk.add_files {"dmzLuaExtPick.cpp",}
+lmk.add_libs {
+   "lua",
+   "dmzKernel",
+   "dmzLuaKernel",
+}
+lmk.add_preqs {
+   "dmzLuaFramework",
+   "dmzRenderFramework",
+}

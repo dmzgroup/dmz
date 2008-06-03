@@ -1,0 +1,9 @@
+lmk.set_name "dmzLuaPluginReset"
+lmk.set_type "plugin"
+lmk.add_files {"dmzLuaPluginReset.cpp",}
+lmk.add_libs {
+   "dmzInputEvents",
+   "dmzInputUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzLuaFramework", "dmzInputFramework",}

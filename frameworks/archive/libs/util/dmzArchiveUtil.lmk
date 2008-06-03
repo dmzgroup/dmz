@@ -1,0 +1,19 @@
+lmk.set_name "dmzArchiveUtil"
+lmk.set_type "shared"
+
+lmk.add_files {
+   "dmzArchiveObserverUtil.h",
+   "dmzArchiveUtilExport.h",
+}
+
+lmk.add_files {
+   "dmzArchiveObserverUtil.cpp",
+}
+
+lmk.add_libs {"dmzKernel",}
+lmk.add_preqs {"dmzArchiveFramework"}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_ARCHIVE_UTIL_EXPORT"
+}, { win32 = true })
+

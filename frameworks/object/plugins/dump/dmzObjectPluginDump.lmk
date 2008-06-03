@@ -1,0 +1,5 @@
+lmk.set_name "dmzObjectPluginDump"
+lmk.set_type "plugin"
+lmk.add_files {"dmzObjectPluginDump.cpp",}
+lmk.add_libs {"dmzObjectUtil", "dmzKernel",}
+lmk.add_preqs {"dmzObjectFramework",}

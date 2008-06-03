@@ -1,0 +1,194 @@
+lmk.set_name ("dmzKernel")
+lmk.set_type ("shared")
+
+lmk.add_files ({
+   "types/dmzTypesHashTable-type-.hash.h",
+   "types/dmzTypesHashTable-type-Template.hash.h",
+   "types/dmzTypesHashTable-type-.hash.cpp",
+},
+{ src="template" })
+
+lmk.add_files {
+   "dmzKernelExport.h",
+   "runtime/dmzRuntime.h",
+   "runtime/dmzRuntimeConfig.h",
+   "runtime/dmzRuntimeConfigRead.h",
+   "runtime/dmzRuntimeConfigWrite.h",
+   "runtime/dmzRuntimeData.h",
+   "runtime/dmzRuntimeDataBinder.h",
+   "runtime/dmzRuntimeDataConverters.h",
+   "runtime/dmzRuntimeDefinitions.h",
+   "runtime/dmzRuntimeEventType.h",
+   "runtime/dmzRuntimeExit.h",
+   "runtime/dmzRuntimeHandle.h",
+   "runtime/dmzRuntimeHandleAllocator.h",
+   "runtime/dmzRuntimeInit.h",
+   "runtime/dmzRuntimeLog.h",
+   "runtime/dmzRuntimeLogObserverBasic.h",
+   "runtime/dmzRuntimeMessaging.h",
+   "runtime/dmzRuntimeObjectType.h",
+   "runtime/dmzRuntimePlugin.h",
+   "runtime/dmzRuntimePluginContainer.h",
+   "runtime/dmzRuntimePluginFactoryLinkSymbol.h",
+   "runtime/dmzRuntimePluginInfo.h",
+   "runtime/dmzRuntimePluginLoader.h",
+   "runtime/dmzRuntimeRTTI.h",
+   "runtime/dmzRuntimeRTTINamed.h",
+   "runtime/dmzRuntimeSession.h",
+   "runtime/dmzRuntimeSync.h",
+   "runtime/dmzRuntimeTime.h",
+   "runtime/dmzRuntimeUndo.h",
+   "system/dmzSystemDynamicLibrary.h",
+   "system/dmzSystemFile.h",
+   "system/dmzSystemMutex.h",
+   "system/dmzSystemMarshal.h",
+   "system/dmzSystemRefCount.h",
+   "system/dmzSystemThread.h",
+   "system/dmzSystem.h",
+   "system/dmzSystemSpinLock.h",
+   "system/dmzSystemStream.h",
+   "system/dmzSystemStreamFile.h",
+   "system/dmzSystemStreamString.h",
+   "system/dmzSystemUnmarshal.h",
+   "system/qdb.h",
+   "types/dmzTypes.h",
+   "types/dmzTypesArrays.h",
+   "types/dmzTypesArrayTemplate.h",
+   "types/dmzTypesBase.h",
+   "types/dmzTypesBooleanOperator.h",
+   "types/dmzTypesConsts.h",
+   "types/dmzTypesHandleContainer.h",
+   "types/dmzTypesHashTableLock.h",
+   "types/dmzTypesMask.h",
+   "types/dmzTypesString.h",
+   "types/dmzTypesStringTokenizer.h",
+   "types/dmzTypesStringUtil.h",
+   "types/dmzTypesMath.h",
+   "types/dmzTypesMatrix.h",
+   "types/dmzTypesQuaternion.h",
+   "types/dmzTypesUUID.h",
+   "types/dmzTypesVector.h",
+}
+
+lmk.add_files {
+   "runtime/dmzRuntime.cpp",
+   "runtime/dmzRuntimeConfig.cpp",
+   "runtime/dmzRuntimeConfigUtil.cpp",
+   "runtime/dmzRuntimeContext.cpp",
+   "runtime/dmzRuntimeContextDefinitions.cpp",
+   "runtime/dmzRuntimeContextLog.cpp",
+   "runtime/dmzRuntimeContextMessaging.cpp",
+   "runtime/dmzRuntimeContextRTTI.cpp",
+   "runtime/dmzRuntimeContextTime.cpp",
+   "runtime/dmzRuntimeData.cpp",
+   "runtime/dmzRuntimeDataBinder.cpp",
+   "runtime/dmzRuntimeDataConverters.cpp",
+   "runtime/dmzRuntimeEventType.cpp",
+   "runtime/dmzRuntimeExit.cpp",
+   "runtime/dmzRuntimeHandle.cpp",
+   "runtime/dmzRuntimeHandleAllocator.cpp",
+   "runtime/dmzRuntimeInit.cpp",
+   "runtime/dmzRuntimeLog.cpp",
+   "runtime/dmzRuntimeLogObserverBasic.cpp",
+   "runtime/dmzRuntimeMessaging.cpp",
+   "runtime/dmzRuntimeObjectType.cpp",
+   "runtime/dmzRuntimePluginContainer.cpp",
+   "runtime/dmzRuntimePluginInfo.cpp",
+   "runtime/dmzRuntimePluginLoader.cpp",
+   "runtime/dmzRuntimeRTTI.cpp",
+   "runtime/dmzRuntimeSession.cpp",
+   "runtime/dmzRuntimeSync.cpp",
+   "runtime/dmzRuntimeTime.cpp",
+   "runtime/dmzRuntimeUndo.cpp",
+   "system/dmzSystemCommon.cpp",
+   "system/dmzSystemFileCommon.cpp",
+   "system/dmzSystemMarshal.cpp",
+   "system/dmzSystemStream.cpp",
+   "system/dmzSystemStreamFile.cpp",
+   "system/dmzSystemStreamString.cpp",
+   "system/dmzSystemThreadCommon.cpp",
+   "system/dmzSystemUnmarshal.cpp",
+   "types/dmzTypes.cpp",
+   "types/dmzTypesHandleContainer.cpp",
+   "types/dmzTypesMask.cpp",
+   "types/dmzTypesMath.cpp",
+   "types/dmzTypesMatrix.cpp",
+   "types/dmzTypesQuaternion.cpp",
+   "types/dmzTypesString.cpp",
+   "types/dmzTypesStringUtil.cpp",
+}
+
+lmk.add_files ({
+   "system/dmzSystemDynamicLibraryUnix.cpp",
+   "system/dmzSystemFileUnix.cpp",
+   "system/dmzSystemMutexUnix.cpp",
+   "system/dmzSystemThreadUnix.cpp",
+   "system/dmzSystemUnix.cpp",
+}, {win32 = false})
+
+lmk.add_files ({
+   "system/dmzSystemSpinLockMacOS.cpp",
+   "system/dmzSystemRefCountMacOS.cpp",
+}, {macos = true})
+
+lmk.add_files ({
+   "system/dmzSystemSpinLockLinux.cpp",
+   "system/dmzSystemRefCountCommon.cpp",
+}, {linux = true})
+
+lmk.add_files ({
+   "system/dmzSystemDynamicLibraryWin32.cpp",
+   "system/dmzSystemFileWin32.cpp",
+   "system/dmzSystemLocalWin32.cpp",
+   "system/dmzSystemMutexWin32.cpp",
+   "system/dmzSystemRefCountWin32.cpp",
+   "system/dmzSystemSpinLockWin32.cpp",
+   "system/dmzSystemThreadWin32.cpp",
+   "system/dmzSystemWin32.cpp",
+}, {win32 = true})
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_KERNEL_EXPORT",
+   localLibs = "winmm.lib rpcrt4.lib",
+}, { win32 = true })
+
+lmk.add_vars ({
+   localLibs = "-lpthread -ldl -lrt -luuid",
+}, { linux = true })
+
+lmk.add_vars ({
+   localLibs = "-framework CoreFoundation",
+}, { macos = true })
+
+lmk.add_vars {
+   templateDefine = {
+      hash = {
+         {
+            type = "Handle",
+            typeInclude = "dmzTypesBase.h",
+            zero = " = 0",
+         },
+         {
+            type = "UInt32",
+            typeInclude = "dmzTypesBase.h",
+            zero = " = 0",
+         },
+         {
+            type = "UInt64",
+            typeInclude = "dmzTypesBase.h",
+            zero = " = 0",
+         },
+         {
+            type = "String",
+            typeInclude = "dmzTypesString.h",
+            zero = ".flush ()",
+         },
+         {
+            type = "UUID",
+            typeInclude = "dmzTypesUUID.h",
+            zero = ".clear ()",
+         },
+      },
+   },
+}
+

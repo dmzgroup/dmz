@@ -1,0 +1,15 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/" >
+   <file>images/bug.png</file>
+   <file>images/cross.png</file>
+   <file>images/disk.png</file>
+   <file>images/error.png</file>
+   <file>images/exclamation.png</file>
+   <file>images/find.png</file>
+   <file>images/folder.png</file>
+   <file>images/information.png</file>
+   <file>images/next.png</file>
+   <file>images/previous.png</file>
+   <file>images/wrap.png</file>
+</qresource>
+</RCC>

@@ -1,0 +1,8 @@
+lmk.set_name "dmzObjectFramework"
+lmk.add_files {
+   "dmzObjectConsts.h",
+   "dmzObjectMaskConsts.h",
+   "dmzObjectModule.h",
+   "dmzObjectModuleSelect.h",
+   "dmzObjectObserver.h",
+}

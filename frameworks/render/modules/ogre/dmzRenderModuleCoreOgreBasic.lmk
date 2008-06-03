@@ -1,0 +1,32 @@
+require "lmkOgre"
+
+lmkOgre.set_name ("dmzRenderModuleCoreOgreBasic")
+
+lmk.set_type "plugin"
+
+lmk.add_preqs {
+   "dmzRenderFrameworkOgre",
+   "dmzRenderFramework",
+   "dmzObjectFramework",
+}
+
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+
+lmk.add_files {
+   "dmzRenderModuleCoreOgreBasic.cpp",
+}
+
+lmk.add_files { 
+   "osmscene/OgreOSMScene.cpp",
+   "tinyxml/tinystr.cpp", 
+   "tinyxml/tinyxml.cpp", 
+   "tinyxml/tinyxmlerror.cpp", 
+   "tinyxml/tinyxmlparser.cpp",
+}
+
+lmkOgre.add_libs ()
+
+lmk.add_vars ({localDefines = "/D_CRT_SECURE_NO_DEPRECATE"}, {win32 = true})

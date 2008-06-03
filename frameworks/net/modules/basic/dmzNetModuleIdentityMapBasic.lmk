@@ -1,0 +1,5 @@
+lmk.set_name "dmzNetModuleIdentityMapBasic"
+lmk.set_type "plugin"
+lmk.add_files {"dmzNetModuleIdentityMapBasic.cpp",}
+lmk.add_libs {"dmzKernel",}
+lmk.add_preqs {"dmzNetFramework", "dmzObjectFramework"}

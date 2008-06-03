@@ -1,0 +1,6 @@
+lmk.set_name ("dmzObjectObserverUtilTest")
+lmk.set_type ("plugin")
+lmk.add_files {"dmzObjectObserverUtilTest.cpp"}
+lmk.add_libs {"dmzObjectUtil", "dmzTest", "dmzKernel",}
+lmk.add_preqs {"dmzObjectUtil", "dmzObjectFramework", "dmzAppTest"}
+lmk.add_vars { test = {"$(dmzAppTest.localBinTarget) -f $(name).xml"} }

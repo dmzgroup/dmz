@@ -1,0 +1,13 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtCanvasView"
+lmk.set_type "shared"
+lmk.add_files {"dmzQtCanvasViewExport.h","dmzQtCanvasView.h","dmzQtCanvasViewUtil.h",}
+lmk.add_files ({"dmzQtCanvasView.h",},{src = "moc"})
+lmk.add_files {"dmzQtCanvasView.cpp","dmzQtCanvasViewUtil.cpp",}
+lmk.add_libs {"dmzQtUtil","dmzKernel",}
+lmkQt.add_libs {"QtCore","QtGui",}
+lmk.add_preqs {"dmzQtFramework",}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_QT_CANVAS_VIEW_EXPORT"
+}, {win32 = true})

@@ -1,0 +1,11 @@
+lmk.set_name "sqlite3"
+lmk.set_type "shared"
+lmk.add_files {"sqlite3.h", "sqlite3ext.h"}
+lmk.add_files { "sqlite3.c", }
+
+lmk.add_vars ({
+   localLibPaths = "/DEF:sqlite3.def",
+   localDefines = "/wd4244 /wd4018 /wd4996",
+}, {win32 = true})
+
+

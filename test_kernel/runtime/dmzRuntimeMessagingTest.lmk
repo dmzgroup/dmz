@@ -1,0 +1,6 @@
+lmk.set_name ("dmzRuntimeMessagingTest")
+lmk.set_type ("exe")
+lmk.add_files {"dmzRuntimeMessagingTest.cpp"}
+lmk.add_libs {"dmzTest", "dmzKernel",}
+lmk.add_preqs {"dmzRuntimeMessageTypeTest"}
+lmk.add_vars { test = {"$(localBinTarget) -f $(name).xml"} }

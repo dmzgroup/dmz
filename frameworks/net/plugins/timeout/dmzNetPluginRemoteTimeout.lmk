@@ -1,0 +1,5 @@
+lmk.set_name "dmzNetPluginRemoteTimeout"
+lmk.set_type "plugin"
+lmk.add_files {"dmzNetPluginRemoteTimeout.cpp",}
+lmk.add_libs {"dmzObjectUtil", "dmzKernel",}
+lmk.add_preqs {"dmzObjectFramework",}

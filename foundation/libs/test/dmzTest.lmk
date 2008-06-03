@@ -1,0 +1,18 @@
+lmk.set_name "dmzTest"
+lmk.set_type "shared"
+lmk.add_libs {"dmzApplication", "dmzKernel",}
+
+lmk.add_files {
+   "dmzTest.h",
+   "dmzTestPluginUtil.h",
+   "dmzTestExport.h",
+}
+
+lmk.add_files {
+   "dmzTest.cpp",
+   "dmzTestPluginUtil.cpp",
+}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_TEST_EXPORT",
+}, {win32 = true})

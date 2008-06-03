@@ -1,0 +1,18 @@
+require "lmkOgre"
+lmkOgre.set_name ("dmzRenderExtObjectOgre")
+lmk.set_type "plugin"
+
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+
+lmk.add_preqs {
+   "dmzRenderFrameworkOgre", 
+   "dmzRenderFramework",
+   "dmzObjectFramework",
+}
+
+lmk.add_files {"dmzRenderExtObjectOgre.cpp",}
+
+lmkOgre.add_libs ()

@@ -1,0 +1,4 @@
+lmk.set_name ("base64")
+lmk.set_type ("exe")
+lmk.add_files {"base64.cpp"}
+lmk.add_libs {"dmzXML", "dmzKernel",}

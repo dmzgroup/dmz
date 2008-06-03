@@ -1,0 +1,6 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginCanvasAutoLink"
+lmk.set_type "plugin"
+lmk.add_files {"dmzQtPluginCanvasAutoLink.cpp",}
+lmk.add_libs {"dmzObjectUtil","dmzKernel",}
+lmk.add_preqs {"dmzObjectFramework","dmzQtFramework",}

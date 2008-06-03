@@ -1,0 +1,6 @@
+lmk.set_name "dmzPluginUndoDump"
+lmk.set_type "plugin"
+lmk.add_files {"dmzPluginUndoDump.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+}

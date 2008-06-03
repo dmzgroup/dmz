@@ -1,0 +1,23 @@
+lmk.set_name "dmzObjectUtil"
+lmk.set_type "shared"
+
+lmk.add_files {
+   "dmzObjectAttributeMasks.h",
+   "dmzObjectCalc.h",
+   "dmzObjectObserverUtil.h",
+   "dmzObjectUtilExport.h",
+}
+
+lmk.add_files {
+   "dmzObjectAttributeMasks.cpp",
+   "dmzObjectCalc.cpp",
+   "dmzObjectObserverUtil.cpp",
+}
+
+lmk.add_libs {"dmzKernel",}
+lmk.add_preqs {"dmzObjectFramework"}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_OBJECT_UTIL_EXPORT"
+}, { win32 = true })
+

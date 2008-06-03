@@ -1,0 +1,8 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginMenuToMessage"
+lmk.set_type "plugin"
+lmk.add_files ({"dmzQtPluginMenuToMessage.h",},{src="moc"})
+lmk.add_files {"dmzQtPluginMenuToMessage.cpp",}
+lmk.add_libs {"dmzKernel",}
+lmk.add_preqs {"dmzQtFramework","dmzRenderFramework","dmzObjectFramework",}
+lmkQt.add_libs {"QtCore","QtGui",}

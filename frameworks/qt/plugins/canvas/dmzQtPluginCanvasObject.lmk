@@ -1,0 +1,7 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginCanvasObject"
+lmk.set_type "plugin"
+lmk.add_files {"dmzQtPluginCanvasObject.cpp",}
+lmk.add_libs {"dmzKernel", "dmzObjectUtil","dmzQtUtil",}
+lmk.add_preqs {"dmzObjectFramework", "dmzQtFramework",}
+lmkQt.add_libs {"QtCore", "QtGui",}

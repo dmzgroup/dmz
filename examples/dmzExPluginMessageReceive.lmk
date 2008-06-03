@@ -1,0 +1,6 @@
+lmk.set_name "dmzExPluginMessageReceive"
+lmk.set_type "plugin"
+lmk.add_files {"dmzExPluginMessageReceive.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+}

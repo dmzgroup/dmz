@@ -1,0 +1,19 @@
+lmk.set_name "dmzRenderUtil"
+lmk.set_type "shared"
+
+lmk.add_files {
+   "dmzRenderPick2dUtil.h",
+   "dmzRenderUtilExport.h",
+}
+
+lmk.add_files {
+   "dmzRenderPick2dUtil.cpp",
+}
+
+lmk.add_libs {"dmzKernel",}
+lmk.add_preqs {"dmzRenderFramework"}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_RENDER_UTIL_EXPORT"
+}, { win32 = true })
+

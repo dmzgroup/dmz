@@ -1,0 +1,5 @@
+lmk.set_name ("dmzPluginHelloWorld")
+lmk.set_type ("plugin")
+lmk.add_libs {"dmzKernel",}
+lmk.add_preqs {"dmzModuleHelloWorld",}
+lmk.add_files { "dmzPluginHelloWorld.cpp", }

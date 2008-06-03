@@ -1,0 +1,22 @@
+lmk.set_name "dmzXML"
+lmk.set_type "shared"
+lmk.add_libs {"dmzKernel", "expat"}
+
+lmk.add_files {
+   "dmzXMLBase64.h",
+   "dmzXMLInterpreterConfig.h",
+   "dmzXMLParser.h",
+   "dmzXMLExport.h",
+   "dmzXMLUtil.h",
+}
+
+lmk.add_files {
+   "dmzXMLBase64.cpp",
+   "dmzXMLInterpreterConfig.cpp",
+   "dmzXMLParserExpat.cpp",
+   "dmzXMLUtil.cpp",
+}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_XML_EXPORT",
+}, {win32 = true})

@@ -1,0 +1,5 @@
+lmk.set_name "dmzNetModulePacketIOHawkNL"
+lmk.set_type "plugin"
+lmk.add_files {"dmzNetModulePacketIOHawkNL.cpp",}
+lmk.add_libs {"hawknl", "dmzKernel",}
+lmk.add_preqs {"dmzNetFramework"}

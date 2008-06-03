@@ -1,0 +1,7 @@
+require "lmkOgre"
+lmkOgre.set_name ("dmzRenderModuleIsectOgre")
+lmk.set_type "plugin"
+lmk.add_libs {"dmzRenderIsect", "dmzKernel",}
+lmk.add_preqs {"dmzRenderFramework", "dmzRenderFrameworkOgre",}
+lmk.add_files {"dmzRenderModuleIsectOgre.cpp"}
+lmkOgre.add_libs ()

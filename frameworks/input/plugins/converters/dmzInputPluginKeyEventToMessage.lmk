@@ -1,0 +1,9 @@
+lmk.set_name "dmzInputPluginKeyEventToMessage"
+lmk.set_type "plugin"
+lmk.add_files {"dmzInputPluginKeyEventToMessage.cpp",}
+lmk.add_libs {
+   "dmzInputEvents",
+   "dmzInputUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzInputFramework",}

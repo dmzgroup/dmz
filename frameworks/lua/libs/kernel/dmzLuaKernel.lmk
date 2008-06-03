@@ -1,0 +1,43 @@
+lmk.set_name "dmzLuaKernel"
+lmk.set_type "shared"
+
+lmk.add_files {
+   "dmzLuaKernel.h",
+   "dmzLuaKernelRuntime.h",
+   "dmzLuaKernelErrorHandler.h",
+   "dmzLuaKernelExport.h",
+   "dmzLuaKernelInit.h",
+   "dmzLuaKernelValidate.h",
+}
+
+lmk.add_files {
+   "dmzLuaKernel.cpp",
+   "dmzLuaKernelConfig.cpp",
+   "dmzLuaKernelData.cpp",
+   "dmzLuaKernelDefinitions.cpp",
+   "dmzLuaKernelEventType.cpp",
+   "dmzLuaKernelHandle.cpp",
+   "dmzLuaKernelLog.cpp",
+   "dmzLuaKernelMask.cpp",
+   "dmzLuaKernelMath.cpp",
+   "dmzLuaKernelMatrix.cpp",
+   "dmzLuaKernelMessageObserver.cpp",
+   "dmzLuaKernelMessageType.cpp",
+   "dmzLuaKernelObjectType.cpp",
+   "dmzLuaKernelRuntime.cpp",
+   "dmzLuaKernelSync.cpp",
+   "dmzLuaKernelTime.cpp",
+   "dmzLuaKernelUndo.cpp",
+   "dmzLuaKernelUUID.cpp",
+   "dmzLuaKernelVector.cpp",
+}
+
+lmk.add_libs {
+   "lua",
+   "dmzKernel",
+}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_LUA_KERNEL_EXPORT"
+}, { win32 = true })
+

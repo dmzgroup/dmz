@@ -1,0 +1,21 @@
+lmk.set_name ("dmzInputPluginControllerMacOS", { macos = true })
+lmk.set_type "plugin"
+lmk.add_libs {"dmzInputUtil", "dmzInputEvents", "dmzKernel",}
+lmk.add_preqs {"dmzInputFramework",}
+
+lmk.add_files {
+   "macos/HID_Config_Utilities.c",
+   "macos/HID_Error_Handler.c",
+   "macos/HID_Name_Lookup.c",
+   "macos/HID_Queue_Utilities.c",
+   "macos/HID_Transaction_Utilities.c",
+   "macos/HID_Utilities.c",
+}
+
+lmk.add_files {"dmzInputPluginControllerMacOS.cpp"}
+
+lmk.add_vars {
+   localDefines = "-DkBuildingLibrary=1", 
+   localIncludes = '-fno-common -fpascal-strings -pipe "-fmessage-length=0" -Wno-four-char-constants -Wno-unknown-pragmas',
+   localLibPaths = "-framework IOKit -framework CoreFoundation"
+}

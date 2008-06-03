@@ -1,0 +1,19 @@
+lmk.set_name "dmzRenderIsect"
+lmk.set_type "shared"
+lmk.add_libs {"dmzKernel",}
+lmk.add_preqs {"dmzRenderFramework",}
+
+lmk.add_files {
+   "dmzRenderIsect.h",
+   "dmzRenderIsectUtil.h",
+   "dmzRenderIsectExport.h",
+}
+
+lmk.add_files {
+   "dmzRenderIsect.cpp",
+   "dmzRenderIsectUtil.cpp",
+}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_RENDER_ISECT_EXPORT",
+}, {win32 = true})

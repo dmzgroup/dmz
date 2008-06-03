@@ -1,0 +1,9 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginCanvasZoomPan"
+lmk.set_type "plugin"
+lmk.add_files {"dmzQtPluginCanvasZoomPan.ui",}
+lmk.add_files ({"dmzQtPluginCanvasZoomPan.h",},{src = "moc"})
+lmk.add_files {"dmzQtPluginCanvasZoomPan.cpp",}
+lmk.add_libs {"dmzKernel","dmzInputEvents","dmzInputUtil","dmzQtUtil"}
+lmk.add_preqs {"dmzInputFramework","dmzQtFramework",}
+lmkQt.add_libs {"QtCore","QtGui",}

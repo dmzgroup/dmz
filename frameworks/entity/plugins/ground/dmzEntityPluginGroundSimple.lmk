@@ -1,0 +1,16 @@
+lmk.set_name "dmzEntityPluginGroundSimple"
+lmk.set_type "plugin"
+lmk.add_files {"dmzEntityPluginGroundSimple.cpp",}
+lmk.add_libs {
+	"dmzRenderIsect",
+	"dmzInputEvents",
+	"dmzInputUtil",
+   "dmzObjectUtil",
+	"dmzKernel",
+}
+lmk.add_preqs {
+	"dmzInputFramework", 
+   "dmzObjectFramework",
+	"dmzRenderFramework", 
+	"dmzRenderModuleCoreOSG",
+}

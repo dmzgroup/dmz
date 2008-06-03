@@ -1,0 +1,15 @@
+require "lmkOgre"
+lmkOgre.set_name "dmzRenderPluginStatsOgre"
+lmk.set_type "plugin"
+lmk.add_files {"dmzRenderPluginStatsOgre.cpp",}
+lmk.add_libs {
+   "dmzInputEvents",
+   "dmzInputUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {
+   "dmzInputFramework",
+   "dmzRenderFramework",
+   "dmzRenderFrameworkOgre",
+}
+lmkOgre.add_libs ()

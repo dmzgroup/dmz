@@ -1,0 +1,13 @@
+lmk.set_name "dmzLuaExtIsect"
+lmk.set_type "plugin"
+lmk.add_files {"dmzLuaExtIsect.cpp",}
+lmk.add_libs {
+   "lua",
+   "dmzKernel",
+   "dmzLuaKernel",
+   "dmzRenderIsect",
+}
+lmk.add_preqs {
+   "dmzLuaFramework",
+   "dmzRenderFramework",
+}

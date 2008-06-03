@@ -1,0 +1,17 @@
+lmk.set_name "dmzFileCacheLocal"
+lmk.set_type "shared"
+lmk.add_libs {"dmzKernel"}
+lmk.add_preqs {"dmzFoundation"}
+
+lmk.add_files {
+   "dmzFileCacheLocal.h",
+   "dmzFileCacheLocalExport.h",
+}
+
+lmk.add_files {
+   "dmzFileCacheLocal.cpp",
+}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_FILE_CACHE_LOCAL_EXPORT",
+}, {win32 = true})

@@ -1,0 +1,4 @@
+lmk.set_name ("dmzRuntimeConfigTest")
+lmk.set_type ("exe")
+lmk.add_libs {"dmzXML", "dmzKernel",}
+lmk.add_files {"dmzRuntimeConfigTest.cpp"}

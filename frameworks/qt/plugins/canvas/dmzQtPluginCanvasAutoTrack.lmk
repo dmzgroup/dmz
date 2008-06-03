@@ -1,0 +1,7 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginCanvasAutoTrack"
+lmk.set_type "plugin"
+lmk.add_files {"dmzQtPluginCanvasAutoTrack.cpp",}
+lmk.add_libs {"dmzKernel", "dmzObjectUtil",}
+lmk.add_preqs {"dmzObjectFramework","dmzQtFramework",}
+lmkQt.add_libs {"QtCore", "QtGui",}

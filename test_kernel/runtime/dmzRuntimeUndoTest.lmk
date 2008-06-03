@@ -1,0 +1,6 @@
+lmk.set_name ("dmzRuntimeUndoTest")
+lmk.set_type ("exe")
+lmk.add_files {"dmzRuntimeUndoTest.cpp"}
+lmk.add_libs {"dmzTest", "dmzKernel",}
+lmk.add_preqs {"dmzRuntimeDataTest", "dmzRuntimeMessagingTest"}
+lmk.add_vars { test = {"$(localBinTarget) -f $(name).xml"} }

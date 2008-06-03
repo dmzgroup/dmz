@@ -1,0 +1,10 @@
+lmk.set_name "dmzNetFramework"
+
+lmk.add_files {
+   "dmzNetExtPacketCodec.h",
+   "dmzNetModuleAttributeMap.h",
+   "dmzNetModuleLocalDR.h",
+   "dmzNetModuleIdentityMap.h",
+   "dmzNetModulePacketCodec.h",
+   "dmzNetModulePacketIO.h",
+}

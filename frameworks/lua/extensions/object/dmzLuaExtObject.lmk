@@ -1,0 +1,10 @@
+lmk.set_name "dmzLuaExtObject"
+lmk.set_type "plugin"
+lmk.add_files {"dmzLuaExtObject.cpp", "dmzLuaExtObjectObserver.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzLuaKernel",
+   "dmzKernel",
+   "lua",
+}
+lmk.add_preqs {"dmzLuaFramework", "dmzObjectFramework",}

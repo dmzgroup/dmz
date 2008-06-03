@@ -1,0 +1,5 @@
+lmk.set_name ("dmzTypesVectorTest")
+lmk.set_type ("exe")
+lmk.add_files {"dmzTypesVectorTest.cpp"}
+lmk.add_libs {"dmzTest", "dmzKernel",}
+lmk.add_vars { test = {"$(localBinTarget)"} }

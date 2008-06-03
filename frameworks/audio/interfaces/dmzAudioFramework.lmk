@@ -1,0 +1,7 @@
+lmk.set_name "dmzAudioFramework"
+
+lmk.add_files {
+   "dmzAudioModule.h",
+   "dmzAudioModulePortal.h",
+}
+

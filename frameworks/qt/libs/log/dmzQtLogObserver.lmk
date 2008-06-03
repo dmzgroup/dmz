@@ -1,0 +1,27 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtLogObserver"
+lmk.set_type "shared"
+
+lmk.add_files {"dmzQtLogObserver.qrc",}
+lmk.add_files {"dmzQtLogObserver.h",}
+lmk.add_files {"dmzQtLogObserverWidget.ui",}
+
+lmk.add_files ({
+   "dmzQtLogObserver.h",
+   "dmzQtLogObserverWidget.h",
+},
+{src = "moc"})
+
+lmk.add_files {
+   "dmzQtLogObserver.cpp",
+   "dmzQtLogObserverWidget.cpp",
+}
+
+lmk.add_libs {"dmzQtUtil","dmzKernel",}
+lmkQt.add_libs {"QtCore", "QtGui",}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_QT_LOG_OBSERVER_EXPORT"
+}, {win32 = true})
+
+lmk.add_preqs {"dmzQtFramework",}

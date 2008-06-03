@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dmz>
+<runtime>
+  <types>
+    <object name="cat">
+      <info texture="catSkin.png"/>
+      <info howTo="skin_a_cat"/>
+      <attitude lifestyle="lazy"/>
+    </object>
+    <object name="caracal" parent="cat">
+      <info ears="awesome" madeOf="win"/>
+      <info motivation="evil"/>
+    </object>
+    <object name="serval" parent="cat">
+      <info ears="cute" madeOf="meow"/>
+      <info motivation="food"/>
+    </object>
+  </types>
+</runtime>
+</dmz>

@@ -1,0 +1,29 @@
+lmk.set_name ("dmzDynamicsPluginODESimple", {DMZ_USE_ODE = true})
+lmk.set_type "plugin"
+lmk.add_files {"dmzDynamicsPluginODESimple.cpp",}
+lmk.add_libs {
+   "dmzRenderIsect",
+   "dmzInputEvents",
+   "dmzInputUtil",
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+
+lmk.add_preqs {
+   "dmzInputFramework", 
+   "dmzObjectFramework",
+   "dmzRenderFramework", 
+   "dmzRenderModuleCoreOSG",
+}
+
+lmk.add_vars {
+   localIncludes = "$(lmk.includePathFlag)$(DMZ_ODE_INCLUDE_PATH)",
+   localLibPaths = "$(lmk.libPathFlag)$(DMZ_ODE_LIB_PATH)",
+   localLibs = "$(lmk.libPrefix)ode$(lmk.libSuffix)",
+}
+
+lmk.add_vars ({
+   localLibs = "User32.lib",
+   localDefines = "/DWIN32",
+},
+{ win32 = true })

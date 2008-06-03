@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dmz>
+<plugins>
+   <plugin name="dmzArchivePluginObject"/>
+   <plugin name="dmzObjectModuleBasic"/>
+   <plugin name="dmzPluginTermExit"/>
+   <!-- <plugin name="dmzObjectPluginDump"/> -->
+   <plugin name="dmzExPluginObject"/>
+</plugins>
+<runtime>
+   <types>
+      <object name="vehicle"/>
+      <object name="wheels"/>
+   </types>
+</runtime>
+<dmzArchivePluginObject>
+   <object name="front_wheels" type="wheels">
+      <attributes>
+         <position x="0.0" y="0.0" z="-10.0"/>
+      </attributes>
+   </object>
+   <object name="rear_wheels" type="wheels">
+      <attributes>
+         <position x="0.0" y="0.0" z="8.0"/>
+      </attributes>
+   </object>
+   <object name="truck" type="vehicle">
+      <attributes>
+         <position x="0.0" y="0.5" z="0.0"/>
+      </attributes>
+      <attributes name="Ex_Link1">
+         <links>
+            <object name="front_wheels"/>
+         </links>
+      </attributes>
+      <attributes name="Ex_Link2">
+         <links>
+            <object name="rear_wheels"/>
+         </links>
+      </attributes>
+      <attributes name="Ex_Flag_Visible">
+         <flag value="true"/>
+      </attributes>
+   </object>
+</dmzArchivePluginObject>
+</dmz>

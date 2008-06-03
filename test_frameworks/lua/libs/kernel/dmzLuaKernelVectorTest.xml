@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dmz>
+<plugins>
+   <plugin name="dmzLuaModuleBasic"/>
+</plugins>
+<dmzLuaModuleBasic>
+   <error exit="true"/>
+   <script name="dmzLuaKernelVectorTest"/>
+   <extensions>
+      <plugin name="dmzLuaExtTest"/>
+   </extensions>
+</dmzLuaModuleBasic>
+</dmz>

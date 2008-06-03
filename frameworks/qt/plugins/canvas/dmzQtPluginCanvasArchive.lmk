@@ -1,0 +1,7 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginCanvasArchive"
+lmk.set_type "plugin"
+lmk.add_files {"dmzQtPluginCanvasArchive.cpp",}
+lmk.add_libs {"dmzQtUtil","dmzQtCanvasView","dmzArchiveUtil","dmzKernel",}
+lmk.add_preqs {"dmzArchiveFramework","dmzQtFramework",}
+lmkQt.add_libs {"QtCore","QtGui",}

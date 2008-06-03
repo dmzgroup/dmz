@@ -17,4 +17,4 @@ lmk.set_global_env {
    DMZ_QT_LIB_PATH="/usr/lib",
 }
 
-// EOF
+-- EOF

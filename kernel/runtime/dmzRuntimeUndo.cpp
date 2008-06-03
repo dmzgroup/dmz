@@ -286,7 +286,7 @@ if (action->data) { out << *(action->data) << endl; }
 out << "-------------------------------" << endl;
 #endif
 
-            action->Type.send_message (
+            action->Type.send (
                action->ObserverHandle,
                action->data,
                0);
@@ -362,7 +362,7 @@ out << "+++ Start Record: " << Name << ":" << result << endl;
 /*!
 
 \brief Stores an action.
-\param[in] Type MessageType that will be sent when the action is played back.
+\param[in] Type Message that will be sent when the action is played back.
 \param[in] ObserverHandle Handle to the observer the action message should be set to.
 If set to zero, it is sent to all subscribers of the specified message type.
 \param[in] UndoData Pointer to Data object to be sent with the action message. Pointer
@@ -373,7 +373,7 @@ dmz::False if actions are not currently being recorded.
 */
 dmz::Boolean
 dmz::Undo::store_action (
-      const MessageType &Type,
+      const Message &Type,
       const Handle ObserverHandle,
       const Data *UndoData) {
 
@@ -403,9 +403,9 @@ out << "################################" << endl;
 
 /*!
 
-\fn dmz::Boolean dmz::Undo::store_action (const MessageType &Type, const Data *UndoData)
+\fn dmz::Boolean dmz::Undo::store_action (const Message &Type, const Data *UndoData)
 \brief Stores an action.
-\param[in] Type MessageType that will be sent when the action is played back.
+\param[in] Type Message that will be sent when the action is played back.
 \param[in] UndoData Pointer to Data object to be sent with the action message. Pointer
 may be NULL if no data needs to be send with the message.
 \return Returns dmz::True if the action was stored successfully. Will return

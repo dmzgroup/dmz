@@ -13,7 +13,7 @@ int
 main (int argc, char *argv[]) {
 
    
-   Test test ("dmzRuntimeMessageTypeTest", argc, argv);
+   Test test ("dmzRuntimeMessageTest", argc, argv);
    RuntimeContext *context (test.rt.get_context ());
 
    Config config;
@@ -28,104 +28,104 @@ main (int argc, char *argv[]) {
    const String TestTypeName ("testType");
    const String RootTypeName ("rootType");
 
-   MessageType type;
+   Message type;
 
    Definitions defs (context, &(test.log));
 
    test.validate (
-      "Looking up MessageType: testType",
+      "Looking up Message: testType",
       defs.lookup_message_type (TestTypeName, type));
 
    test.validate (
-      "MessageType name is set to: testType",
+      "Message name is set to: testType",
       type.get_name () == TestTypeName);
 
    test.validate (
-      "MessageType handle is non-zero",
+      "Message handle is non-zero",
       type.get_handle () != 0);
 
-   MessageType parent;
+   Message parent;
 
    test.validate (
       "Fetching parent message type",
       type.get_parent (parent));
 
    test.validate (
-      "MessageType parent name is set to: rootType",
+      "Message parent name is set to: rootType",
       parent.get_name () == RootTypeName);
 
    test.validate (
-      "MessageType parent handle is non-zero",
+      "Message parent handle is non-zero",
       parent.get_handle () != 0);
 
    // null constructor
-   MessageType nullMessageType;
+   Message nullMessage;
    test.validate (
       "Default constructor",
-      !nullMessageType.get_message_type_context ());
+      !nullMessage.get_message_type_context ());
 
    // standard constructors
-   MessageType testMessageTypeName ("testType", context);
+   Message testMessageName ("testType", context);
    test.validate (
       "Constructor with \"Name\" and \"RuntimeContext\" supplied.",
-      testMessageTypeName.get_message_type_context () &&
-      !(strcmp (testMessageTypeName.get_name ().get_buffer (), "testType")));
-   MessageType testMessageTypeHandle (testMessageTypeName.get_handle (), context);
+      testMessageName.get_message_type_context () &&
+      !(strcmp (testMessageName.get_name ().get_buffer (), "testType")));
+   Message testMessageHandle (testMessageName.get_handle (), context);
 
    test.validate (
       "Constructor with \"Handle\" and \"RuntimeContext\" supplied.",
-      testMessageTypeHandle.get_message_type_context () &&
-      !(strcmp (testMessageTypeHandle.get_name ().get_buffer (), "testType")) &&
-      (testMessageTypeHandle == testMessageTypeName));
+      testMessageHandle.get_message_type_context () &&
+      !(strcmp (testMessageHandle.get_name ().get_buffer (), "testType")) &&
+      (testMessageHandle == testMessageName));
 
-   MessageType testMessageType (testMessageTypeHandle.get_message_type_context ());
+   Message testMessage (testMessageHandle.get_message_type_context ());
    test.validate (
-      "Constructor with \"MessageTypeContext\" supplied.",
-      testMessageType.get_message_type_context () &&
-      !(strcmp (testMessageType.get_name ().get_buffer (), "testType")) &&
-      (testMessageType == testMessageTypeName) &&
-      (testMessageType == testMessageTypeHandle));
+      "Constructor with \"MessageContext\" supplied.",
+      testMessage.get_message_type_context () &&
+      !(strcmp (testMessage.get_name ().get_buffer (), "testType")) &&
+      (testMessage == testMessageName) &&
+      (testMessage == testMessageHandle));
 
    // copy constructor
-   MessageType copyOfTestMessageType (testMessageType);
+   Message copyOfTestMessage (testMessage);
    test.validate (
       "Copy Constructor.",
-      copyOfTestMessageType.get_message_type_context () &&
-      !(strcmp (copyOfTestMessageType.get_name ().get_buffer (), "testType")) &&
-      (copyOfTestMessageType == testMessageType) &&
-      (copyOfTestMessageType == testMessageTypeName) &&
-      (copyOfTestMessageType == testMessageTypeHandle));
+      copyOfTestMessage.get_message_type_context () &&
+      !(strcmp (copyOfTestMessage.get_name ().get_buffer (), "testType")) &&
+      (copyOfTestMessage == testMessage) &&
+      (copyOfTestMessage == testMessageName) &&
+      (copyOfTestMessage == testMessageHandle));
 
 
    // operators
 
-   MessageType sameType (testMessageType);
-   MessageType differentType ("rootType", context);
+   Message sameType (testMessage);
+   Message differentType ("rootType", context);
 
    // == operator
    test.validate (
       "== operator",
-      (testMessageType == sameType) &&
-      !(testMessageType == differentType));
+      (testMessage == sameType) &&
+      !(testMessage == differentType));
 
    // != operator
    test.validate (
       "!= operator",
-      !(testMessageType != sameType) &&
-      (testMessageType != differentType));
+      !(testMessage != sameType) &&
+      (testMessage != differentType));
 
    // ! operator
-   MessageType anotherType;
+   Message anotherType;
    test.validate (
       "! operator",
       (!anotherType) &&
-      !(!testMessageType));
+      !(!testMessage));
 
    // = operator
-   anotherType = testMessageType;
+   anotherType = testMessage;
    test.validate (
       "Assignment operator",
-      (testMessageType == anotherType));
+      (testMessage == anotherType));
 
 
    // validate set_type
@@ -133,54 +133,54 @@ main (int argc, char *argv[]) {
    anotherType = differentType;
    test.validate (
       "set_type",
-      (testMessageType != anotherType) &&
-      anotherType.set_type (testMessageType.get_handle (), context) &&
-      (testMessageType == anotherType));
+      (testMessage != anotherType) &&
+      anotherType.set_type (testMessage.get_handle (), context) &&
+      (testMessage == anotherType));
 
    // is_of_type and is_of_exact_type
 
-   MessageType testMessageTypeRoot ("rootType", context);
-   MessageType testMessageTypeTest ("testType", context);
+   Message testMessageRoot ("rootType", context);
+   Message testMessageTest ("testType", context);
 
    test.validate (
       "is_of_type",
-      testMessageTypeRoot.is_of_type (testMessageTypeRoot) &&
-      !testMessageTypeRoot.is_of_type (testMessageTypeTest) &&
-      testMessageTypeTest.is_of_type (testMessageTypeRoot) &&
-      testMessageTypeTest.is_of_type (testMessageTypeTest));
+      testMessageRoot.is_of_type (testMessageRoot) &&
+      !testMessageRoot.is_of_type (testMessageTest) &&
+      testMessageTest.is_of_type (testMessageRoot) &&
+      testMessageTest.is_of_type (testMessageTest));
 
    test.validate (
       "is_of_exact_type",
-      testMessageTypeRoot.is_of_exact_type (testMessageTypeRoot) &&
-      !testMessageTypeRoot.is_of_exact_type (testMessageTypeTest) &&
-      !testMessageTypeTest.is_of_exact_type (testMessageTypeRoot) &&
-      testMessageTypeTest.is_of_exact_type (testMessageTypeTest));
+      testMessageRoot.is_of_exact_type (testMessageRoot) &&
+      !testMessageRoot.is_of_exact_type (testMessageTest) &&
+      !testMessageTest.is_of_exact_type (testMessageRoot) &&
+      testMessageTest.is_of_exact_type (testMessageTest));
 
    // get and set functions
 
    test.validate (
       "get_name",
-      !strcmp (testMessageTypeRoot.get_name ().get_buffer (), "rootType") &&
-      !strcmp (testMessageTypeTest.get_name ().get_buffer (), "testType"));
+      !strcmp (testMessageRoot.get_name ().get_buffer (), "rootType") &&
+      !strcmp (testMessageTest.get_name ().get_buffer (), "testType"));
 
    test.validate (
       "get_handle",
-      !nullMessageType.get_handle () &&
-      testMessageType.get_handle ());
+      !nullMessage.get_handle () &&
+      testMessage.get_handle ());
 
-   testMessageType = testMessageTypeTest;
+   testMessage = testMessageTest;
    test.validate (
       "get_parent",
-      (testMessageType != testMessageTypeRoot) &&
-      testMessageTypeTest.get_parent (testMessageType) &&
-      (testMessageType == testMessageTypeRoot));
+      (testMessage != testMessageRoot) &&
+      testMessageTest.get_parent (testMessage) &&
+      (testMessage == testMessageRoot));
 
-   testMessageType = testMessageTypeTest;
+   testMessage = testMessageTest;
    test.validate (
       "become_parent",
-      (testMessageType != testMessageTypeRoot) &&
-      testMessageType.become_parent () &&
-      (testMessageType == testMessageTypeRoot));
+      (testMessage != testMessageRoot) &&
+      testMessage.become_parent () &&
+      (testMessage == testMessageRoot));
 
 
    return test.result ();

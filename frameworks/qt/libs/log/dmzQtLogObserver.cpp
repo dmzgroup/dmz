@@ -113,7 +113,7 @@ dmz::QtLogObserver::eventFilter (QObject *object, QEvent *event) {
 // Message Observer Interface
 void
 dmz::QtLogObserver::receive_message (
-      const MessageType &Msg,
+      const Message &Msg,
       const UInt32 MessageSendHandle,
       const UInt32 TargetObserverHandle,
       const Data *InData,

@@ -30,7 +30,7 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
-         MessageType _type;
+         Message _type;
          DataBinder _binder;
          String _value;
          Float64 _time;

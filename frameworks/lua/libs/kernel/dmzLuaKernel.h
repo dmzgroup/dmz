@@ -14,7 +14,7 @@ namespace dmz {
    class Log;
    class Mask;
    class Matrix;
-   class MessageType;
+   class Message;
    class ObjectType;
    class RuntimeContext;
    class Stream;
@@ -80,13 +80,13 @@ namespace dmz {
    DMZ_LUA_KERNEL_LINK_SYMBOL Matrix *lua_to_matrix (lua_State *L, int narg);
    DMZ_LUA_KERNEL_LINK_SYMBOL Matrix *lua_check_matrix (lua_State *L, int narg);
 
-   DMZ_LUA_KERNEL_LINK_SYMBOL MessageType *lua_create_message_type (
+   DMZ_LUA_KERNEL_LINK_SYMBOL Message *lua_create_message (
       lua_State *L,
-      const MessageType *Value = 0);
+      const Message *Value = 0);
 
-   DMZ_LUA_KERNEL_LINK_SYMBOL MessageType *lua_to_message_type (lua_State *L, int narg);
+   DMZ_LUA_KERNEL_LINK_SYMBOL Message *lua_to_message (lua_State *L, int narg);
 
-   DMZ_LUA_KERNEL_LINK_SYMBOL MessageType *lua_check_message_type (
+   DMZ_LUA_KERNEL_LINK_SYMBOL Message *lua_check_message (
       lua_State *L,
       int narg);
 

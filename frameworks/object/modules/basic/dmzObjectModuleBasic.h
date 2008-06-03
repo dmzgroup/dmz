@@ -650,8 +650,8 @@ namespace dmz {
          HashTableHandleTemplate<ObjectObserverStruct> _dataTable;
 
          DataConverterHandle _handleConverter;
-         MessageType _createObjMsg;
-         MessageType _removeObjMsg;
+         Message _createObjMsg;
+         Message _removeObjMsg;
 
          Handle _defaultHandle;
          //! \endcond

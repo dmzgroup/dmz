@@ -231,7 +231,7 @@ struct ConditionStruct {
    const UInt32 Button;
    const MouseConditionEnum MouseCondition;
    const ResultConditionEnum ResultCondition;
-   const MessageType Message;
+   const Message Msg;
    const HandleContainer Targets;
    DataBinder binder;
    astruct *attrList;
@@ -245,14 +245,14 @@ struct ConditionStruct {
          const UInt32 TheButton,
          const MouseConditionEnum TheMouseCondition,
          const ResultConditionEnum TheResultCondition,
-         const MessageType &TheMessage,
+         const Message &TheMessage,
          const HandleContainer &TheTargets,
          const String &NextStateName,
          RuntimeContext *context) :
          Button (TheButton),
          MouseCondition (TheMouseCondition),
          ResultCondition (TheResultCondition),
-         Message (TheMessage),
+         Msg (TheMessage),
          Targets (TheTargets),
          binder (context),
          attrList (0),
@@ -333,9 +333,9 @@ Converter2DBasicStruct::process_results (
 
       if (passed) {
 
-         const MessageType &Message (current->Message);
+         const Message &Msg (current->Msg);
 
-         if (Message) {
+         if (Msg) {
 
 // out << "Sending message: " << Message.get_name () << endl;
 
@@ -359,7 +359,7 @@ Converter2DBasicStruct::process_results (
 
             while (target) {
 
-               Message.send_message (target, dataPtr, 0);
+               Msg.send (target, dataPtr, 0);
 
                target = Targets.get_next ();
             }
@@ -449,11 +449,11 @@ dmz::InputPluginMouseEventToMessage::update_channel_state (
 
       _current = 0;
 
-      _send_message (_deactivateMessage, _deactivateTargetTable);
+      _send (_deactivateMessage, _deactivateTargetTable);
    }
    else if (1 == _activeCount) {
 
-      _send_message (_activateMessage, _activateTargetTable);
+      _send (_activateMessage, _activateTargetTable);
    }
 }
 
@@ -473,17 +473,17 @@ dmz::InputPluginMouseEventToMessage::receive_mouse_event (
 
 
 void
-dmz::InputPluginMouseEventToMessage::_send_message (
-      const MessageType &Message,
+dmz::InputPluginMouseEventToMessage::_send (
+      const Message &Msg,
       HandleContainer &targets) {
 
-   if (Message) {
+   if (Msg) {
 
       Handle target (targets.get_first ());
 
       while (target) {
 
-         Message.send_message (target, 0, 0);
+         Msg.send (target, 0, 0);
          target = targets.get_next ();
       }
    }
@@ -605,7 +605,7 @@ dmz::InputPluginMouseEventToMessage::_create_converter2d_basic (
          const ResultConditionEnum ResultCondition (
             local_config_to_result_condition ("result", condition, _log)); 
 
-         MessageType message (config_create_message_type (
+         Message message (config_create_message_type (
             "message",
             condition,
             "",

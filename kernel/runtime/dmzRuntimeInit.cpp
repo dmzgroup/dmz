@@ -7,7 +7,7 @@
 #include <dmzRuntimeHandleAllocator.h>
 #include <dmzRuntimeInit.h>
 #include <dmzRuntimeLog.h>
-#include "dmzRuntimeMessageTypeContext.h"
+#include "dmzRuntimeMessageContext.h"
 #include "dmzRuntimePluginInfo.h"
 #include "dmzRuntimeTypeContext.h"
 #include <dmzRuntimeTime.h>
@@ -50,11 +50,11 @@ static void local_init_state (
 
 static void local_create_message_type (
    const String &Name,
-   const MessageType *Parent,
+   const Message *Parent,
    RuntimeContextMessaging &def,
    RuntimeContext *context,
    Log *log,
-   MessageType &msg);
+   Message &msg);
 
 static void local_init_message_type (
    const Config &Init,
@@ -388,13 +388,13 @@ local_init_state (
 void
 local_create_message_type (
       const String &Name,
-      const MessageType *Parent,
+      const Message *Parent,
       RuntimeContextMessaging &def,
       RuntimeContext *context,
       Log *log,
-      MessageType &msg) {
+      Message &msg) {
 
-   MessageTypeContext *ptr (new MessageTypeContext (
+   MessageContext *ptr (new MessageContext (
       Name,
       context,
       &def,
@@ -402,7 +402,7 @@ local_create_message_type (
 
    if (ptr) {
 
-      MessageType *type (new MessageType (ptr));
+      Message *type (new Message (ptr));
 
       if (type) {
 
@@ -440,7 +440,7 @@ local_init_message_type (
 
       if (current.lookup_attribute ("name", name)) {
 
-         MessageType *parent (0);
+         Message *parent (0);
 
          String parentName;
 
@@ -453,11 +453,11 @@ local_init_message_type (
             }
          }
 
-         MessageType *msg (def.messageNameTable.lookup (name));
+         Message *msg (def.messageNameTable.lookup (name));
 
          if (msg) {
 
-            MessageType tmp;
+            Message tmp;
             msg->get_parent (tmp);
 
             if (tmp.get_message_type_context () !=
@@ -474,7 +474,7 @@ local_init_message_type (
          }
          else {
 
-            MessageType tmp;
+            Message tmp;
             local_create_message_type (name, parent, def, context, log, tmp);
          }
       }
@@ -551,7 +551,7 @@ An XML example for defining the various runtime types and time settings:
          <!-- Event data -->
       </event>
 
-      <!-- dmz::MessageType definition -->
+      <!-- dmz::Message definition -->
       <message name="Message Name" parent="Parent Name"/>
    </types>
 
@@ -561,7 +561,7 @@ An XML example for defining the various runtime types and time settings:
 \param[in] Init Config containing runtime initialization data.
 \param[in] context Pointer to runtime context.
 \param[in] log Pointer to Log to use for log messages.
-\sa dmz::ObjectType \n dmz::EventType \n dmz::MessageType \n dmz::Time
+\sa dmz::ObjectType \n dmz::EventType \n dmz::Message \n dmz::Time
 
 */
 void
@@ -623,7 +623,7 @@ dmz::runtime_init (const Config &Init, RuntimeContext *context, Log *log) {
 \ingroup Runtime
 \brief Class for finding runtime types.
 \details The Definitions class provides function for looking up the following types:
-- dmz::MessageType
+- dmz::Message
 - dmz::EventType
 - dmz::ObjectType
 - States stored in dmz::Mask.
@@ -784,10 +784,10 @@ dmz::Definitions::lookup_named_handle_name (const Handle NamedHandle) const {
 }
 
 
-dmz::MessageType
+dmz::Message
 dmz::Definitions::get_global_message_type () const {
 
-   MessageType result;
+   Message result;
 
    if (_state.context) {
 
@@ -821,13 +821,13 @@ dmz::Definitions::get_global_message_type () const {
 
 \brief Creates new message type context.
 \param[in] Name String containing name of new message type context.
-\param[out] type MessageType to store new message type context.
+\param[out] type Message to store new message type context.
 \return Returns dmz::True if a new message type context was created or a message type
 context of the name name already exists.
 
 */
 dmz::Boolean
-dmz::Definitions::create_message_type (const String &Name, MessageType &type) {
+dmz::Definitions::create_message_type (const String &Name, Message &type) {
 
    Boolean result (False);
 
@@ -839,7 +839,7 @@ dmz::Definitions::create_message_type (const String &Name, MessageType &type) {
 
          rcm->ref ();
 
-         MessageType *ptr (rcm->messageNameTable.lookup (Name));
+         Message *ptr (rcm->messageNameTable.lookup (Name));
 
          if (ptr) { type = *ptr; }
          else {
@@ -850,7 +850,7 @@ dmz::Definitions::create_message_type (const String &Name, MessageType &type) {
          if (type) { result = True; }
          else if (_state.log) {
 
-            _state.log->warn << "Unable to create dmz::MessageType: " << Name << endl;
+            _state.log->warn << "Unable to create dmz::Message: " << Name << endl;
          }
 
          rcm->unref ();
@@ -863,7 +863,7 @@ dmz::Definitions::create_message_type (const String &Name, MessageType &type) {
    }
    else if (_state.log) {
 
-      _state.log->error << "NULL Runtime context. Unable to create dmz::MessageType: "
+      _state.log->error << "NULL Runtime context. Unable to create dmz::Message: "
          << Name << endl;
    }
 
@@ -875,12 +875,12 @@ dmz::Definitions::create_message_type (const String &Name, MessageType &type) {
 
 \brief Looks up message type context by name.
 \param[in] Name String containing name of message type context.
-\param[out] type MessageType to store found message type context.
+\param[out] type Message to store found message type context.
 \return Returns dmz::True if the named message type context is found.
 
 */
 dmz::Boolean
-dmz::Definitions::lookup_message_type (const String &Name, MessageType &type) const {
+dmz::Definitions::lookup_message_type (const String &Name, Message &type) const {
 
    Boolean result (False);
 
@@ -891,11 +891,11 @@ dmz::Definitions::lookup_message_type (const String &Name, MessageType &type) co
       if (rcm) {
 
          rcm->ref ();
-         MessageType *ptr (rcm->messageNameTable.lookup (Name));
+         Message *ptr (rcm->messageNameTable.lookup (Name));
          if (ptr) { type = *ptr; result = True; }
          else if (_state.log) {
 
-            _state.log->warn << "Unable to find dmz::MessageType: " << Name << endl;
+            _state.log->warn << "Unable to find dmz::Message: " << Name << endl;
          }
 
          rcm->unref ();
@@ -908,7 +908,7 @@ dmz::Definitions::lookup_message_type (const String &Name, MessageType &type) co
    }
    else if (_state.log) {
 
-      _state.log->error << "NULL Runtime context. Unable to lookup dmz::MessageType: "
+      _state.log->error << "NULL Runtime context. Unable to lookup dmz::Message: "
          << Name << endl;
    }
 
@@ -920,12 +920,12 @@ dmz::Definitions::lookup_message_type (const String &Name, MessageType &type) co
 
 \brief Looks up message type context by unique handle.
 \param[in] TypeHandle Unique handle of message type context.
-\param[out] type MessageType to store found message type context.
+\param[out] type Message to store found message type context.
 \return Returns dmz::True if the message type context is found.
 
 */
 dmz::Boolean
-dmz::Definitions::lookup_message_type (const Handle TypeHandle, MessageType &type) const {
+dmz::Definitions::lookup_message_type (const Handle TypeHandle, Message &type) const {
 
    Boolean result (False);
 
@@ -936,11 +936,11 @@ dmz::Definitions::lookup_message_type (const Handle TypeHandle, MessageType &typ
       if (rcm) {
 
          rcm->ref ();
-         MessageType *ptr (rcm->messageHandleTable.lookup (TypeHandle));
+         Message *ptr (rcm->messageHandleTable.lookup (TypeHandle));
          if (ptr) { type = *ptr; result = True; }
          else if (_state.log) {
 
-            _state.log->warn << "Unable to find dmz::MessageType: " << TypeHandle << endl;
+            _state.log->warn << "Unable to find dmz::Message: " << TypeHandle << endl;
          }
 
          rcm->unref ();
@@ -953,7 +953,7 @@ dmz::Definitions::lookup_message_type (const Handle TypeHandle, MessageType &typ
    }
    else if (_state.log) {
 
-      _state.log->error << "NULL Runtime context. Unable to lookup dmz::MessageType: "
+      _state.log->error << "NULL Runtime context. Unable to lookup dmz::Message: "
          << TypeHandle << endl;
    }
 

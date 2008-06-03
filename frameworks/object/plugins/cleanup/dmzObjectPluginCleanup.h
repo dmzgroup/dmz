@@ -29,7 +29,7 @@ namespace dmz {
 
          // Message Observer Interface
          void receive_message (
-            const MessageType &Msg,
+            const Message &Msg,
             const UInt32 MessageSendHandle,
             const Handle TargetObserverHandle,
             const Data *InData,
@@ -61,7 +61,7 @@ namespace dmz {
          void _get_type_set (const String &Name, Config &config, ObjectTypeSet &set);
          void _init (Config &local);
 
-         MessageType _cleanupMessage;
+         Message _cleanupMessage;
          HandleContainer _cleanupTable;
          ObjectTypeSet _ignoreSet;
          ObjectTypeSet _cleanupSet;

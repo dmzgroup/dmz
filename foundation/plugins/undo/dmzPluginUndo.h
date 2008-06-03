@@ -25,7 +25,7 @@ namespace dmz {
 
          // Message Observer Interface
          void receive_message (
-            const MessageType &Msg,
+            const Message &Msg,
             const UInt32 MessageSendHandle,
             const Handle TargetObserverHandle,
             const Data *InData,
@@ -34,8 +34,8 @@ namespace dmz {
       protected:
          void _init (Config &local);
 
-         MessageType _undoMessage;
-         MessageType _redoMessage;
+         Message _undoMessage;
+         Message _redoMessage;
 
          Undo _undo;
          Log _log;

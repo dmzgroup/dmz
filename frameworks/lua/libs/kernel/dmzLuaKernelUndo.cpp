@@ -67,7 +67,7 @@ undo_store_action (lua_State *L) {
 
    int result (0);
 
-   MessageType *type (lua_check_message_type (L, 1));
+   Message *type (lua_check_message (L, 1));
 
    Handle *ptr (0);
 

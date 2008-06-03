@@ -1,5 +1,5 @@
 #include "dmzRuntimeContextMessaging.h"
-#include "dmzRuntimeMessageTypeContext.h"
+#include "dmzRuntimeMessageContext.h"
 
 //! Constructor.
 dmz::RuntimeContextMessaging::RuntimeContextMessaging (
@@ -14,13 +14,13 @@ dmz::RuntimeContextMessaging::RuntimeContextMessaging (
       obsHandleTable (&obsHandleLock),
       obsNameTable (&obsNameLock) {
 
-   MessageTypeContext *globalContext (
-      new MessageTypeContext ("Global_Message", context, this, 0));
+   MessageContext *globalContext (
+      new MessageContext ("Global_Message", context, this, 0));
 
    if (globalContext) {
 
       globalType.set_message_type_context (globalContext);
-      MessageType *ptr (new MessageType (globalType));
+      Message *ptr (new Message (globalType));
 
       if (ptr) {
 
@@ -54,12 +54,12 @@ dmz::RuntimeContextMessaging::~RuntimeContextMessaging () {
 
 
 inline void
-local_send_message (
+local_send (
       const dmz::UInt32 Count,
       const dmz::Handle ObsHandle,
       const dmz::Data *InData,
-      dmz::MessageTypeContext &context,
-      dmz::MessageTypeContext &realContext) {
+      dmz::MessageContext &context,
+      dmz::MessageContext &realContext) {
 
    if (!context.inSend) {
 
@@ -67,7 +67,7 @@ local_send_message (
 
       dmz::HashTableHandleIterator it;
 
-      const dmz::MessageType Type (&realContext);
+      const dmz::Message Type (&realContext);
 
       for (
             dmz::MessageObserver *obs = context.obsTable.get_first (it);
@@ -83,8 +83,8 @@ local_send_message (
 
 
 dmz::UInt32
-dmz::RuntimeContextMessaging::send_message (
-      const MessageType &Type,
+dmz::RuntimeContextMessaging::send (
+      const Message &Type,
       const Handle ObserverHandle,
       const Data *InData,
       Data *outData) const {
@@ -95,8 +95,8 @@ dmz::RuntimeContextMessaging::send_message (
 
    if (self->key.is_main_thread ()) {
 
-      MessageTypeContext *type (Type.get_message_type_context ());
-      MessageTypeContext *startType (type);
+      MessageContext *type (Type.get_message_type_context ());
+      MessageContext *startType (type);
 
       if (type) {
 
@@ -127,17 +127,17 @@ dmz::RuntimeContextMessaging::send_message (
 
                while (type) {
 
-                  local_send_message (result, ObserverHandle, InData, *type, *startType);
+                  local_send (result, ObserverHandle, InData, *type, *startType);
                   type = type->parent;
                }
             }
          }
 
-         MessageTypeContext *gcontext (globalType.get_message_type_context ());
+         MessageContext *gcontext (globalType.get_message_type_context ());
 
          if (gcontext) {
 
-            local_send_message (result, ObserverHandle, InData, *gcontext, *startType);
+            local_send (result, ObserverHandle, InData, *gcontext, *startType);
          }
       }
    }
@@ -172,7 +172,7 @@ dmz::RuntimeContextMessaging::sync () {
 
       while (ms) {
 
-         ms->Type.send_message (ms->ObserverHandle, ms->DataPtr, 0);
+         ms->Type.send (ms->ObserverHandle, ms->DataPtr, 0);
          ms = ms->next;
       }
 
@@ -181,33 +181,33 @@ dmz::RuntimeContextMessaging::sync () {
 }
 
 //! Creates message type.
-dmz::MessageType
+dmz::Message
 dmz::RuntimeContextMessaging::create_message_type (
       const String &Name,
       const String &ParentName,
       RuntimeContext *context) {
 
-   MessageType result;
+   Message result;
 
-   MessageType *type (messageNameTable.lookup (Name));
+   Message *type (messageNameTable.lookup (Name));
 
    if (!type) {
 
-      MessageTypeContext *parentContext (0);
+      MessageContext *parentContext (0);
 
       if (ParentName) {
 
-         MessageType *parent (messageNameTable.lookup (ParentName));
+         Message *parent (messageNameTable.lookup (ParentName));
 
          if (parent) { parentContext = parent->get_message_type_context (); }
       }
 
-      MessageTypeContext *mtc =
-         new MessageTypeContext (Name, context, this, parentContext);
+      MessageContext *mtc =
+         new MessageContext (Name, context, this, parentContext);
 
       if (mtc) {
 
-         type = new MessageType (mtc);
+         type = new Message (mtc);
 
          if (type) {
 

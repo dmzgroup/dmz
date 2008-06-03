@@ -22,7 +22,7 @@ namespace dmz {
          QString get_requested_file ();
 
          bool start_application ();
-         bool send_message_to_running_application (const QString &Message);
+         bool send_to_running_application (const QString &Message);
 
       protected:
          struct State;

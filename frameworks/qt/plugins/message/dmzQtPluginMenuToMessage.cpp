@@ -20,7 +20,7 @@ dmz::QtPluginMenuToMessage::QtPluginMenuToMessage (
       _pickModule (0),
       _pickModuleName (),
       _defaultAttrHandle (0),
-      _showMessageType (0),
+      _showMessage (0),
       _source (0),
       _objectAttrHandle (0),
       _positionAttrHandle (0),
@@ -34,7 +34,7 @@ dmz::QtPluginMenuToMessage::QtPluginMenuToMessage (
 
    connect (
       _actionGroup, SIGNAL (triggered (QAction *)),
-      this, SLOT (_slot_send_message (QAction *)));
+      this, SLOT (_slot_send (QAction *)));
 
    _menu = new QMenu (get_plugin_name ().get_buffer ());
    _menu->setObjectName (get_plugin_name ().get_buffer ());
@@ -86,13 +86,13 @@ dmz::QtPluginMenuToMessage::remove_plugin (const Plugin *PluginPtr) {
 // Message Observer Interface
 void
 dmz::QtPluginMenuToMessage::receive_message (
-      const MessageType &Msg,
+      const Message &Msg,
       const UInt32 MessageSendHandle,
       const Handle TargetObserverHandle,
       const Data *InData,
       Data *outData) {
 
-   if (Msg == _showMessageType) {
+   if (Msg == _showMessage) {
       
       if (InData && _pickModule && _objectModule && _menu) {
          
@@ -126,7 +126,7 @@ dmz::QtPluginMenuToMessage::receive_message (
 
 
 void
-dmz::QtPluginMenuToMessage::_slot_send_message (QAction *action) {
+dmz::QtPluginMenuToMessage::_slot_send (QAction *action) {
 
    if (action && _object) {
 
@@ -144,7 +144,7 @@ dmz::QtPluginMenuToMessage::_slot_send_message (QAction *action) {
 
                while (target) {
 
-                  ms->message.send_message (target, &data, 0);
+                  ms->message.send (target, &data, 0);
 
                   target = ms->targets.get_next ();
                }
@@ -226,7 +226,7 @@ dmz::QtPluginMenuToMessage::_build_menu (const String &Name, Config &config) {
          
          const String StatusTip (config_to_string ("statusTip", cd, Text));
          
-         MessageType message (config_create_message_type (
+         Message message (config_create_message_type (
             "message", cd, "", get_plugin_runtime_context ()));
             
          if (Text && message && _menu && _actionGroup) {
@@ -277,13 +277,13 @@ dmz::QtPluginMenuToMessage::_init (Config &local) {
    _positionAttrHandle = config_to_named_handle (
       "attribute.position.name", local, "position", context);
       
-   _showMessageType = config_create_message_type (
+   _showMessage = config_create_message_type (
       "message.show",
       local,
       "ShowObjectMenuMessage",
       context);
    
-   subscribe_to_message (_showMessageType);
+   subscribe_to_message (_showMessage);
 
    _get_type_set ("object", local, _objectSet);
    

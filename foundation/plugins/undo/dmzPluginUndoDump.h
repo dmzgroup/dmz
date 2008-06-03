@@ -27,7 +27,7 @@ namespace dmz {
 
          // Message Observer Interface
          void receive_message (
-            const MessageType &Msg,
+            const Message &Msg,
             const UInt32 MessageSendHandle,
             const Handle TargetObserverHandle,
             const Data *InData,
@@ -37,7 +37,7 @@ namespace dmz {
          virtual void start_record (const Handle RecordHandle, const String &Name);
 
          virtual void store_action (
-            const MessageType &Type,
+            const Message &Type,
             const Handle Target,
             const Data *Value);
 

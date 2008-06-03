@@ -38,18 +38,18 @@ namespace dmz {
 
             const Handle Source;
             const Handle Target;
-            const MessageType Message;
+            const Message Msg;
             const Boolean Pressed;
             TargetStruct *next;
 
             TargetStruct (
                    const Handle TheSource,
                    const Handle TheTarget,
-                   const MessageType &TheMessage,
+                   const Message &TheMessage,
                    const Boolean IsPressed) :
                    Source (TheSource),
                    Target (TheTarget),
-                   Message (TheMessage),
+                   Msg (TheMessage),
                    Pressed (IsPressed),
                    next (0) {;}
 

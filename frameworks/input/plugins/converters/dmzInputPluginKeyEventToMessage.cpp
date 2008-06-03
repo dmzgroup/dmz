@@ -128,7 +128,7 @@ dmz::InputPluginKeyEventToMessage::receive_key_event (
             if ((!current->Source || (current->Source == Source)) &&
                   (current->Pressed == Pressed)) {
 
-               current->Message.send_message (current->Target, 0, 0);
+               current->Msg.send (current->Target, 0, 0);
             }
 
             current = current->next;
@@ -154,13 +154,13 @@ dmz::InputPluginKeyEventToMessage::_create_targets (
 
       const Handle Source (config_to_named_handle ("source", target, context));
       const Handle Target (config_to_named_handle ("name", target, context));
-      const MessageType Message (
+      const Message Msg (
          config_create_message_type ("message", target, "", context));
       const Boolean Pressed (config_to_boolean ("pressed", target, True));
 
-      if (Message) {
+      if (Msg) {
 
-         TargetStruct *next (new TargetStruct (Source, Target, Message, Pressed));
+         TargetStruct *next (new TargetStruct (Source, Target, Msg, Pressed));
 
          if (current) { current->next = next; current = next; }
          else { ks.targets = current = next; }

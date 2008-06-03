@@ -53,6 +53,6 @@ the subscriber will also receive all children message types that are sent global
 directly to the subscriber.
 
 */
-class MessageTypeContext {};
+class MessageContext {};
 
 };

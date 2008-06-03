@@ -68,7 +68,7 @@ namespace dmz {
 
          // MessageObserver Interface
          virtual void receive_message (
-            const MessageType &Type,
+            const Message &Type,
             const Handle MessageSendHandle,
             const Handle TargetObserverHandle,
             const Data *InData,
@@ -111,7 +111,7 @@ namespace dmz {
          QString _currentBuffer;
          LuaModule *_luaMod;
          lua_State *L;
-         MessageType _showMsg;
+         Message _showMsg;
          Ui::LuaConsole _console;
          Highlighter _hl;
          Int32 _historyCount;

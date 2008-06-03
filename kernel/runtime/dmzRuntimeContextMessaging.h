@@ -14,20 +14,20 @@
 namespace dmz {
 
    class RuntimeContext;
-   class RuntimeMessageTypeContext;
+   class RuntimeMessageContext;
 
    class RuntimeContextMessaging : public RefCountDeleteOnZero {
 
       public:
          struct MessageStruct {
 
-            const MessageType Type;
+            const Message Type;
             const Handle ObserverHandle;
             const Data *DataPtr;
             MessageStruct *next;
 
             MessageStruct (
-                  const MessageType &TheType,
+                  const Message &TheType,
                   const Handle TheHandle,
                   const Data *TheData) :
                   Type (TheType),
@@ -46,15 +46,15 @@ namespace dmz {
             RuntimeContextThreadKey &theKey,
             RuntimeContext *context);
 
-         UInt32 send_message (
-            const MessageType &Type,
+         UInt32 send (
+            const Message &Type,
             const Handle ObserverHandle,
             const Data *InData,
             Data *outData) const;
 
          void sync ();
 
-         MessageType create_message_type (
+         Message create_message_type (
             const String &Name,
             const String &ParentName,
             RuntimeContext *context);
@@ -67,14 +67,14 @@ namespace dmz {
          MessageStruct *tail; //!< Message type list tail.
 
          UInt32 messageCount; //!< Message count.
-         MessageType globalType; //!< Global message type.
+         Message globalType; //!< Global message type.
          RuntimeContextThreadKey &key; //!< Thread key.
 
          ConfigContextLock messageHandleLock; //!< Lock.
-         HashTableHandleTemplate<MessageType> messageHandleTable; //!< Table.
+         HashTableHandleTemplate<Message> messageHandleTable; //!< Table.
 
          ConfigContextLock messageNameLock; //!< Lock.
-         HashTableStringTemplate<MessageType> messageNameTable; //!< Table.
+         HashTableStringTemplate<Message> messageNameTable; //!< Table.
 
          ConfigContextLock obsHandleLock; //!< Lock.
          HashTableHandleTemplate<MessageObserver> obsHandleTable; //!< Table.

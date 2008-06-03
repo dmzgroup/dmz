@@ -52,7 +52,7 @@ dmz::PluginUndo::remove_plugin (const Plugin *PluginPtr) {
 // Message Observer Interface
 void
 dmz::PluginUndo::receive_message (
-      const MessageType &Msg,
+      const Message &Msg,
       const UInt32 MessageSendHandle,
       const Handle TargetObserverHandle,
       const Data *InData,

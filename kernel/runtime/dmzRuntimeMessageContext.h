@@ -14,23 +14,23 @@ namespace dmz {
    class HandleAllocator;
    class RuntimeContext;
 
-   class MessageTypeContext : public RefCountDeleteOnZero {
+   class MessageContext : public RefCountDeleteOnZero {
 
       public:
-         MessageTypeContext (
+         MessageContext (
             const String &TheName,
             RuntimeContext *theContext,
             RuntimeContextMessaging *msgContext,
-            MessageTypeContext *theParent);
+            MessageContext *theParent);
 
-         ~MessageTypeContext ();
+         ~MessageContext ();
 
          const RuntimeHandle Handle;
          const String Name;
 
          Boolean inSend;
 
-         MessageTypeContext *parent;
+         MessageContext *parent;
          RuntimeContextMessaging *context;
 
          HashTableHandleTemplate<MessageObserver> obsTable;
@@ -39,12 +39,12 @@ namespace dmz {
 
 
 inline
-dmz::MessageTypeContext::MessageTypeContext (
+dmz::MessageContext::MessageContext (
       const String &TheName,
       RuntimeContext *theContext,
       RuntimeContextMessaging *msgContext,
-      MessageTypeContext *theParent) :
-      Handle (TheName + ".MessageType", theContext),
+      MessageContext *theParent) :
+      Handle (TheName + ".Message", theContext),
       Name (TheName),
       inSend (False),
       parent (theParent),
@@ -56,7 +56,7 @@ dmz::MessageTypeContext::MessageTypeContext (
 
 
 inline
-dmz::MessageTypeContext::~MessageTypeContext () {
+dmz::MessageContext::~MessageContext () {
 
    obsTable.clear ();
    if (parent) { parent->unref (); parent = 0; }

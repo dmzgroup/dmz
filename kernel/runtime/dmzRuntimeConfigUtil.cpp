@@ -406,31 +406,31 @@ dmz::config_to_string (
 
 /*!
 
-\brief Converts Config to MessageType.
+\brief Converts Config to Message.
 \details Defined in dmzRuntimeConfigRead.h.
-This function converts the named attribute to a dmz::MessageType. It is assumed that the
+This function converts the named attribute to a dmz::Message. It is assumed that the
 last part of the \a Name variable specifies the attribute name. If the String
 "type.name" is passed in as \a Name, it will try to find a  config context called
 "type" and the attribute "name" stored in the "type" config context.
 \code
-dmz::MessageType type = dmz::config_to_message_type ("dmz.type.name", global, get_plugin_runtime_context (), &_log);
+dmz::Message type = dmz::config_to_message_type ("dmz.type.name", global, get_plugin_runtime_context (), &_log);
 \endcode
 \param[in] Name String containing name of the attribute in the config context to convert.
 \param[in] Source Config containing config context to convert.
 \param[in] context Pointer to the runtime context.
 \param[in] log Pointer to the dmz::Log to use for log reporting.
-\return Returns dmz::MessageType containing the message type. Returns an empty
-dmz::MessageType if the message type is not found.
+\return Returns dmz::Message containing the message type. Returns an empty
+dmz::Message if the message type is not found.
 
 */
-dmz::MessageType
+dmz::Message
 dmz::config_to_message_type (
       const String &Name,
       const Config &Source,
       RuntimeContext *context,
       Log *log) {
 
-   MessageType result;
+   Message result;
 
    String messageTypeName;
 
@@ -463,28 +463,28 @@ dmz::config_to_message_type (
 
 /*!
 
-\brief Creates dmz::MessageType from dmz::Config.
+\brief Creates dmz::Message from dmz::Config.
 \details Defined in dmzRuntimeConfigRead.h.
-This function converts the named attribute to a dmz::MessageType. It is assumed that the
+This function converts the named attribute to a dmz::Message. It is assumed that the
 last part of the \a Name variable specifies the attribute name. If the String
 "type.name" is passed in as \a Name, it will try to find a  config context called
 "type" and the attribute "name" stored in the "type" config context. If the named
-MessageType does not exist, it is created.
+Message does not exist, it is created.
 \code
-dmz::MessageType type = dmz::config_create_message_type ("dmz.type.name", global, "DefaultMessage", get_plugin_runtime_context (), &_log);
+dmz::Message type = dmz::config_create_message_type ("dmz.type.name", global, "DefaultMessage", get_plugin_runtime_context (), &_log);
 \endcode
 \param[in] Name String containing name of the attribute in the config context to convert.
 \param[in] Source Config containing config context to convert.
-\param[in] DefaultValue String containing default name of MessageType to use if not found
+\param[in] DefaultValue String containing default name of Message to use if not found
 int the Config.
 \param[in] context Pointer to the runtime context.
 \param[in] log Pointer to the dmz::Log to use for log reporting.
-\return Returns dmz::MessageType containing the message type. Returns an empty
-dmz::MessageType if no message name is specified in either the Config or the
+\return Returns dmz::Message containing the message type. Returns an empty
+dmz::Message if no message name is specified in either the Config or the
 \a DefaultValue.
 
 */
-dmz::MessageType
+dmz::Message
 dmz::config_create_message_type (
       const String &Name,
       const Config &Source,
@@ -492,7 +492,7 @@ dmz::config_create_message_type (
       RuntimeContext *context,
       Log *log) {
 
-   MessageType result;
+   Message result;
 
    String name;
 

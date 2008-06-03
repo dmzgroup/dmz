@@ -98,7 +98,7 @@ dmz::ArchivePluginUndo::process_archive (
 
             while (actionList.get_next_config (actionIt, action)) {
 
-               const MessageType Type (
+               const Message Type (
                   config_create_message_type ("message", action, "", context, &_log));
 
                const Handle Target (
@@ -136,7 +136,7 @@ dmz::ArchivePluginUndo::start_record (const Handle RecordHandle, const String &N
 
 void
 dmz::ArchivePluginUndo::store_action (
-      const MessageType &Type,
+      const Message &Type,
       const Handle Target,
       const Data *Value) {
 

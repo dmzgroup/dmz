@@ -371,25 +371,25 @@ config_lookup_event_type (lua_State *L) {
 
 
 static int
-config_lookup_message_type (lua_State *L) {
+config_lookup_message (lua_State *L) {
 
    int result (0);
 
    Config **config = config_check (L, 1);
    String name (luaL_checkstring (L, 2));
 
-   MessageType *value (0);
+   Message *value (0);
 
    if (!lua_isnoneornil (L, 3)) {
 
-      value = lua_check_message_type (L, 3);
+      value = lua_check_message (L, 3);
    }
 
    if (config && *config) {
 
       const String MessageName (config_to_string (name, **config));
 
-      MessageType *type = lua_create_message_type (L);
+      Message *type = lua_create_message (L);
 
       if (type) {
 
@@ -857,7 +857,7 @@ static const luaL_Reg arrayMembers [] = {
    {"lookup_handle", config_lookup_handle},
    {"lookup_matrix", config_lookup_matrix},
    {"lookup_event_type", config_lookup_event_type},
-   {"lookup_message_type", config_lookup_message_type},
+   {"lookup_message", config_lookup_message},
    {"lookup_object_type", config_lookup_object_type},
    {"lookup_state", config_lookup_state},
    {"lookup_uuid", config_lookup_uuid},

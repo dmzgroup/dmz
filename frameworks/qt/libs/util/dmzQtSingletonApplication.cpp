@@ -8,7 +8,7 @@ struct dmz::QtSingletonApplication::State {
 
    QString id;
    QString fileName;
-   MessageType msg;
+   Message msg;
    Handle fileHandle;
 
    State (const QString &TheID, RuntimeContext *context) : id (TheID), fileHandle (0) {
@@ -42,7 +42,7 @@ dmz::QtSingletonApplication::start_application () { return true; }
 
 
 bool
-dmz::QtSingletonApplication::send_message_to_running_application (const QString &Message) { return false; }
+dmz::QtSingletonApplication::send_to_running_application (const QString &Message) { return false; }
 
 
 bool
@@ -56,7 +56,7 @@ dmz::QtSingletonApplication::event (QEvent *event) {
          _state.fileName = ((QFileOpenEvent *)event)->file ();
          Data value;
          value.store_string (_state.fileHandle, 0, qPrintable (_state.fileName));
-         _state.msg.send_message (&value);
+         _state.msg.send (&value);
          eaten = true;
          break;
       }

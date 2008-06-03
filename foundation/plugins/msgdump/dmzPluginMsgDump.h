@@ -25,7 +25,7 @@ namespace dmz {
 
          // Message Observer Interface
          void receive_message (
-            const MessageType &Msg,
+            const Message &Msg,
             const UInt32 MessageSendHandle,
             const UInt32 TargetObserverHandle,
             const Data *InData,

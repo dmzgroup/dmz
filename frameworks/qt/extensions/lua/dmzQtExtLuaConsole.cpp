@@ -359,7 +359,7 @@ dmz::QtExtLuaConsole::remove_plugin (const Plugin *PluginPtr) {
 // MessageObserver Interface
 void
 dmz::QtExtLuaConsole::receive_message (
-      const MessageType &Type,
+      const Message &Type,
       const Handle MessageSendHandle,
       const Handle TargetObserverHandle,
       const Data *InData,

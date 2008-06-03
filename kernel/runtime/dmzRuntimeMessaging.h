@@ -7,56 +7,56 @@
 namespace dmz {
 
    class Data;
-   class MessageTypeContext;
+   class MessageContext;
    class PluginInfo;
    class RuntimeContext;
    class RuntimeContextMessaging;
 
-   class DMZ_KERNEL_LINK_SYMBOL MessageType {
+   class DMZ_KERNEL_LINK_SYMBOL Message {
 
       public:
-         MessageType ();
-         MessageType (const MessageType &Type);
-         MessageType (MessageTypeContext *context);
-         MessageType (const String &Name, RuntimeContext *context);
-         MessageType (const Handle TypeHandle, RuntimeContext *context);
-         ~MessageType ();
+         Message ();
+         Message (const Message &Type);
+         Message (MessageContext *context);
+         Message (const String &Name, RuntimeContext *context);
+         Message (const Handle TypeHandle, RuntimeContext *context);
+         ~Message ();
 
-         MessageType &operator= (const MessageType &Type);
-         Boolean operator== (const MessageType &Type) const;
-         Boolean operator!= (const MessageType &Type) const;
+         Message &operator= (const Message &Type);
+         Boolean operator== (const Message &Type) const;
+         Boolean operator!= (const Message &Type) const;
          Boolean operator! () const;
          DMZ_BOOLEAN_OPERATOR;
 
          Boolean set_type (const String &Name, RuntimeContext *context);
          Boolean set_type (const Handle TypeHandle, RuntimeContext *context);
 
-         Boolean is_of_type (const MessageType &Type) const;
-         Boolean is_of_exact_type (const MessageType &Type) const;
+         Boolean is_of_type (const Message &Type) const;
+         Boolean is_of_exact_type (const Message &Type) const;
 
          String get_name () const;
          Handle get_handle () const;
 
-         Boolean get_parent (MessageType &type) const;
+         Boolean get_parent (Message &type) const;
          Boolean become_parent ();
 
-         UInt32 send_message (
+         UInt32 send (
             const Handle TargetObserverHandle,
             const Data *InData,
             Data *outData) const;
 
-         UInt32 send_message (const Data *InData) const {
+         UInt32 send (const Data *InData) const {
 
-            return send_message (0, InData, 0);
+            return send (0, InData, 0);
          }
 
-         UInt32 send_message () const { return send_message (0, 0, 0); }
+         UInt32 send () const { return send (0, 0, 0); }
 
-         void set_message_type_context (MessageTypeContext *context);
-         MessageTypeContext *get_message_type_context () const;
+         void set_message_type_context (MessageContext *context);
+         MessageContext *get_message_type_context () const;
 
       protected:
-         MessageTypeContext *_context; //!< Internal state.
+         MessageContext *_context; //!< Internal state.
    };
 
    class DMZ_KERNEL_LINK_SYMBOL MessageObserver {
@@ -65,12 +65,12 @@ namespace dmz {
          Handle get_message_observer_handle () const;
          String get_message_observer_name () const;
 
-         Boolean subscribe_to_message (const MessageType &Type);
-         Boolean unsubscribe_to_message (const MessageType &Type);
+         Boolean subscribe_to_message (const Message &Type);
+         Boolean unsubscribe_to_message (const Message &Type);
          Boolean unsubscribe_to_all_messages ();
 
          virtual void receive_message (
-            const MessageType &Type,
+            const Message &Type,
             const Handle MessageSendHandle,
             const Handle TargetObserverHandle,
             const Data *InData,

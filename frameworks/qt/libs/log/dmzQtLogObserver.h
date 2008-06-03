@@ -48,7 +48,7 @@ namespace dmz {
          virtual bool eventFilter (QObject *object, QEvent *event);
 
          virtual void receive_message (
-            const MessageType &Msg,
+            const Message &Msg,
             const UInt32 MessageSendHandle,
             const UInt32 TargetObserverHandle,
             const Data *InData,

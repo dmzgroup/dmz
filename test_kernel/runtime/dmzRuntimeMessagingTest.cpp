@@ -13,7 +13,7 @@ using namespace dmz;
 class msgObsTest : public MessageObserver {
 
    public:
-      MessageType type;
+      Message type;
       UInt32 sendHandle;
       UInt32 targetHandle;
       Data data;
@@ -24,7 +24,7 @@ class msgObsTest : public MessageObserver {
             targetHandle (0) {;}
 
       virtual void receive_message (
-            const MessageType &Type,
+            const Message &Type,
             const UInt32 MessageSendHandle,
             const UInt32 TargetObserverHandle,
             const Data *InData,

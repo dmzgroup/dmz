@@ -26,7 +26,7 @@ dmz::PluginMsgDump::PluginMsgDump (const PluginInfo &Info, Config &local) :
 // Message Observer Interface
 void
 dmz::PluginMsgDump::receive_message (
-      const MessageType &Msg,
+      const Message &Msg,
       const UInt32 MessageSendHandle,
       const UInt32 TargetObserverHandle,
       const Data *InData,

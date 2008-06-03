@@ -3,33 +3,33 @@
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeHandle.h>
 #include <dmzRuntimeDefinitions.h>
-#include "dmzRuntimeMessageTypeContext.h"
+#include "dmzRuntimeMessageContext.h"
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePluginInfo.h>
 
 
 /*!
 
-\class dmz::MessageType
+\class dmz::Message
 \ingroup Runtime
 \brief Container for message type context.
 \details Message types are hierarchical. A message type may have one parent and
 multiple children.
-\sa dmz::MessageTypeContext
+\sa dmz::MessageContext
 
 */
 
 
 //! Constructor.
-dmz::MessageType::MessageType () : _context (0) {;}
+dmz::Message::Message () : _context (0) {;}
 
 
 //! Copy constructor.
-dmz::MessageType::MessageType (const MessageType &Type) : _context (0) { *this = Type; }
+dmz::Message::Message (const Message &Type) : _context (0) { *this = Type; }
 
 
 //! Message type context constructor.
-dmz::MessageType::MessageType (MessageTypeContext *context) : _context (0) {
+dmz::Message::Message (MessageContext *context) : _context (0) {
 
    set_message_type_context (context);
 }
@@ -44,7 +44,7 @@ If one is not found, the internal context pointer is set to NULL.
 \param[in] context Pointer to runtime context.
 
 */
-dmz::MessageType::MessageType (const String &Name, RuntimeContext *context) :
+dmz::Message::Message (const String &Name, RuntimeContext *context) :
       _context (0) {
 
    set_type (Name, context);
@@ -60,7 +60,7 @@ dmz::MessageType::MessageType (const String &Name, RuntimeContext *context) :
 \param[in] context Pointer to the runtime context.
 
 */
-dmz::MessageType::MessageType (const Handle TypeHandle, RuntimeContext *context) :
+dmz::Message::Message (const Handle TypeHandle, RuntimeContext *context) :
       _context (0) {
 
    set_type (TypeHandle, context);
@@ -68,12 +68,12 @@ dmz::MessageType::MessageType (const Handle TypeHandle, RuntimeContext *context)
 
 
 //! Destructor.
-dmz::MessageType::~MessageType () { if (_context) { _context->unref (); _context = 0; } }
+dmz::Message::~Message () { if (_context) { _context->unref (); _context = 0; } }
 
 
 //! Assignment operator.
-dmz::MessageType &
-dmz::MessageType::operator= (const MessageType &Type) {
+dmz::Message &
+dmz::Message::operator= (const Message &Type) {
 
    set_message_type_context (Type._context);
    return *this;
@@ -82,7 +82,7 @@ dmz::MessageType::operator= (const MessageType &Type) {
 
 //! Relational "equal to" operator.
 dmz::Boolean
-dmz::MessageType::operator== (const MessageType &Type) const {
+dmz::Message::operator== (const Message &Type) const {
 
    return Type._context == _context;
 }
@@ -90,7 +90,7 @@ dmz::MessageType::operator== (const MessageType &Type) const {
 
 //! Relational "not equal to" operator.
 dmz::Boolean
-dmz::MessageType::operator!= (const MessageType &Type) const {
+dmz::Message::operator!= (const Message &Type) const {
 
    return Type._context != _context;
 }
@@ -98,7 +98,7 @@ dmz::MessageType::operator!= (const MessageType &Type) const {
 
 //! Logical not operator.
 dmz::Boolean
-dmz::MessageType::operator! () const { return !_context; }
+dmz::Message::operator! () const { return !_context; }
 
 
 /*!
@@ -110,7 +110,7 @@ dmz::MessageType::operator! () const { return !_context; }
 
 */
 dmz::Boolean
-dmz::MessageType::set_type (const String &Name, RuntimeContext *context) {
+dmz::Message::set_type (const String &Name, RuntimeContext *context) {
 
    Definitions defs (context);
 
@@ -127,7 +127,7 @@ dmz::MessageType::set_type (const String &Name, RuntimeContext *context) {
 
 */
 dmz::Boolean
-dmz::MessageType::set_type (const Handle TypeHandle, RuntimeContext *context) {
+dmz::Message::set_type (const Handle TypeHandle, RuntimeContext *context) {
 
    Definitions defs (context);
 
@@ -138,18 +138,18 @@ dmz::MessageType::set_type (const Handle TypeHandle, RuntimeContext *context) {
 /*!
 
 \brief Test if message type is a related type.
-\param[in] Type MessageType to test against.
+\param[in] Type Message to test against.
 \return Returns dmz::True if \a Type is the same or a parent.
 
 */
 dmz::Boolean
-dmz::MessageType::is_of_type (const MessageType &Type) const {
+dmz::Message::is_of_type (const Message &Type) const {
 
    Boolean result (False);
 
    if (Type) {
 
-      MessageType current (_context);
+      Message current (_context);
 
       while (current && !result) {
 
@@ -165,12 +165,12 @@ dmz::MessageType::is_of_type (const MessageType &Type) const {
 /*!
 
 \brief Test if messge type is an exact type.
-\param[in] Type MessageType to test against.
+\param[in] Type Message to test against.
 \return Returns dmz::True if \a Type is the same type.
 
 */
 dmz::Boolean
-dmz::MessageType::is_of_exact_type (const MessageType &Type) const {
+dmz::Message::is_of_exact_type (const Message &Type) const {
 
    return _context && (Type == *this);
 }
@@ -178,7 +178,7 @@ dmz::MessageType::is_of_exact_type (const MessageType &Type) const {
 
 //! Gets message types name.
 dmz::String
-dmz::MessageType::get_name () const {
+dmz::Message::get_name () const {
 
    String result;
 
@@ -191,11 +191,11 @@ dmz::MessageType::get_name () const {
 /*!
 
 \brief Gets message type handle.
-\return Returns event type's unique handle. Returns zero if the MessageType is empty.
+\return Returns event type's unique handle. Returns zero if the Message is empty.
 
 */
 dmz::Handle
-dmz::MessageType::get_handle () const {
+dmz::Message::get_handle () const {
 
    Handle result (0);
 
@@ -208,12 +208,12 @@ dmz::MessageType::get_handle () const {
 /*!
 
 \brief Gets message type's parent.
-\return Returns event types parent. The returned MessageType will be empty if the
+\return Returns event types parent. The returned Message will be empty if the
 message type has no parent.
 
 */
 dmz::Boolean
-dmz::MessageType::get_parent (MessageType &msg) const {
+dmz::Message::get_parent (Message &msg) const {
 
    if (_context) { msg.set_message_type_context (_context->parent); }
 
@@ -224,17 +224,17 @@ dmz::MessageType::get_parent (MessageType &msg) const {
 /*!
 
 \brief Becomes message type's parent.
-\details The MessageType will be empty if it has no parent.
+\details The Message will be empty if it has no parent.
 \return Returns dmz::True if the message type became its parent. Returns dmz::False
 if the current message type has no parent.
 
 */
 dmz::Boolean
-dmz::MessageType::become_parent () {
+dmz::Message::become_parent () {
 
    if (_context) {
 
-      MessageTypeContext *prev (_context);
+      MessageContext *prev (_context);
       _context = prev->parent;
       if (_context) { _context->ref (); }
       prev->unref (); prev = 0;
@@ -263,20 +263,20 @@ observer has subscribed to the sent message.
 
 */
 dmz::UInt32
-dmz::MessageType::send_message (
+dmz::Message::send (
       const Handle ObserverHandle,
       const Data *InData,
       Data *outData) const {
 
    return
       (_context && _context->context) ?
-         _context->context->send_message (*this, ObserverHandle, InData, outData) : 0;
+         _context->context->send (*this, ObserverHandle, InData, outData) : 0;
 }
 
 
 //! For internal use.
 void
-dmz::MessageType::set_message_type_context (MessageTypeContext *context) {
+dmz::Message::set_message_type_context (MessageContext *context) {
 
    if (context != _context) {
 
@@ -288,15 +288,15 @@ dmz::MessageType::set_message_type_context (MessageTypeContext *context) {
 
 
 //! For internal use.
-dmz::MessageTypeContext *
-dmz::MessageType::get_message_type_context () const { return _context; }
+dmz::MessageContext *
+dmz::Message::get_message_type_context () const { return _context; }
 
 
 /*!
 
-\fn dmz::Handle dmz::Messaging::send_message (const MessageType &Type, const Data *InData)
+\fn dmz::Handle dmz::Messaging::send (const Message &Type, const Data *InData)
 \brief Sends message to all subscribed message observers.
-\param[in] Type dmz::MessageType containing message type to send.
+\param[in] Type dmz::Message containing message type to send.
 \param[in] InData Pointer to Data object containing data to send with the message.
 May be NULL if no data is to be sent with the message.
 \return Returns a handle associated with the sent message. This handle is not a unique
@@ -320,7 +320,7 @@ struct dmz::MessageObserver::MessageObserverState {
    const String Name;
    RuntimeHandle *handlePtr;
    RuntimeContextMessaging *context;
-   HashTableHandleTemplate<MessageType> msgTable;
+   HashTableHandleTemplate<Message> msgTable;
 
    MessageObserverState (
          const Handle TheHandle,
@@ -422,12 +422,12 @@ dmz::MessageObserver::get_message_observer_name () const { return _msgObsState.N
 \details This function is used to specify which messages types the observer wishes
 to receive.
 \note Messages subscriptions may only occur in the main thread.
-\param[in] Type dmz::MessageType to subscribe to.
+\param[in] Type dmz::Message to subscribe to.
 \return Returns dmz::True if the subscription was successful.
 
 */
 dmz::Boolean
-dmz::MessageObserver::subscribe_to_message (const MessageType &Type) {
+dmz::MessageObserver::subscribe_to_message (const Message &Type) {
 
    Boolean result (False);
 
@@ -435,14 +435,14 @@ dmz::MessageObserver::subscribe_to_message (const MessageType &Type) {
 
       if (_msgObsState.context->key.is_main_thread ()) {
 
-         MessageTypeContext *typeContext (Type.get_message_type_context ());
+         MessageContext *typeContext (Type.get_message_type_context ());
 
          const Handle ObsHandle (get_message_observer_handle ());
 
          if (typeContext && ObsHandle) {
 
             result = typeContext->obsTable.store (ObsHandle, this);
-            MessageType *ptr = new MessageType (typeContext);
+            Message *ptr = new Message (typeContext);
 
             if (ptr) {
 
@@ -463,12 +463,12 @@ dmz::MessageObserver::subscribe_to_message (const MessageType &Type) {
 
 \brief Unsubscribes from a message type.
 \note Unsubscribing from messages may only occur in the main thread.
-\param[in] Type dmz::MessageType to unsubscribe to.
+\param[in] Type dmz::Message to unsubscribe to.
 \return Returns dmz::True if the unsubscription was successful.
 
 */
 dmz::Boolean
-dmz::MessageObserver::unsubscribe_to_message (const MessageType &Type) {
+dmz::MessageObserver::unsubscribe_to_message (const Message &Type) {
 
    Boolean result (False);
 
@@ -476,14 +476,14 @@ dmz::MessageObserver::unsubscribe_to_message (const MessageType &Type) {
 
       if (_msgObsState.context->key.is_main_thread ()) {
 
-         MessageTypeContext *typeContext (Type.get_message_type_context ());
+         MessageContext *typeContext (Type.get_message_type_context ());
 
          const Handle ObsHandle (get_message_observer_handle ());
 
          if (typeContext && ObsHandle) {
 
             result = (this == typeContext->obsTable.remove (ObsHandle));
-            MessageType *ptr = _msgObsState.msgTable.remove (Type.get_handle ());
+            Message *ptr = _msgObsState.msgTable.remove (Type.get_handle ());
             if (ptr) { delete ptr; ptr = 0; }
          }
       }
@@ -513,7 +513,7 @@ dmz::MessageObserver::unsubscribe_to_all_messages () {
          HashTableHandleIterator it;
 
          for (
-               MessageType *current = _msgObsState.msgTable.get_first (it);
+               Message *current = _msgObsState.msgTable.get_first (it);
                current != 0;
                current = _msgObsState.msgTable.get_next (it)) {
 
@@ -531,7 +531,7 @@ dmz::MessageObserver::unsubscribe_to_all_messages () {
 /*!
 
 \fn void dmz::MessageObserver::receive_message (
-const MessageType &Type,
+const Message &Type,
 const UInt32 MessageSendHandle,
 const Handle TargetObserverHandle,
 const Data *InData,
@@ -539,9 +539,9 @@ Data *outData)
 \brief Pure virtual function that is invoked to notify the observer that a message
 has been received.
 \details Derived class need to implement this function in order to receive messages.
-\param[in] Type dmz::MessageType being sent.
+\param[in] Type dmz::Message being sent.
 \param[in] MessageSendHandle This handle corresponds to the handle returned to the caller
-of dmz::Messaging::send_message.
+of dmz::Messaging::send.
 \param[in] TargetObserverHandle Handle of observer the message was sent to. Will be zero
 if the message was sent to all subscribers.
 \param[in] InData Pointer to data object containing data associated with the message. May

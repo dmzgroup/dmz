@@ -23,7 +23,7 @@ namespace dmz {
    };
 
    class Data;
-   class MessageType;
+   class Message;
    class PluginInfo;
    class RuntimeContext;
    class RuntimeContextUndo;
@@ -34,7 +34,7 @@ namespace dmz {
          virtual void start_record (const Handle RecordHandle, const String &Name) = 0;
 
          virtual void store_action (
-            const MessageType &Type,
+            const Message &Type,
             const Handle Target,
             const Data *Value) = 0;
 
@@ -67,11 +67,11 @@ namespace dmz {
          Handle start_record (const String &Name);
 
          Boolean store_action (
-            const MessageType &Type,
+            const Message &Type,
             const Handle ObserverHandle,
             const Data *UndoData);
 
-         Boolean store_action (const MessageType &Type, const Data *UndoData) {
+         Boolean store_action (const Message &Type, const Data *UndoData) {
 
             return store_action (Type, 0, UndoData);
          }

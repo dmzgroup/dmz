@@ -12,7 +12,7 @@ namespace dmz {
 
    class Data;
    class Marshal;
-   class MessageType;
+   class Message;
    class Unmarshal;
 
    enum NetObjectEncodeEnum { NetObjectActivate, NetObjectUpdate, NetObjectDeactivate, };

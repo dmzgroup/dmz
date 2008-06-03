@@ -48,8 +48,8 @@ dmz::ExPluginMessageSend::update_sync (const Float64 TimeDelta) {
    
    if (_binder.write_data (data)) {
 
-      _log.out << "[sync_plugin] _type.send_message (&data)" << endl;
-      const UInt32 Count (_type.send_message (&data));
+      _log.out << "[sync_plugin] _type.send (&data)" << endl;
+      const UInt32 Count (_type.send (&data));
    }
 }
 

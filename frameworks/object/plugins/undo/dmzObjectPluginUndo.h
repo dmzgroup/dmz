@@ -29,7 +29,7 @@ namespace dmz {
 
          // Message Observer Interface
          void receive_message (
-            const MessageType &Msg,
+            const Message &Msg,
             const UInt32 MessageSendHandle,
             const Handle TargetObserverHandle,
             const Data *InData,
@@ -200,28 +200,28 @@ namespace dmz {
 
          Definitions _defs;
 
-         MessageType _createObject;
-         MessageType _activateObject;
-         MessageType _destroyObject;
-         MessageType _storeUUID;
-         MessageType _removeAttribute;
-         MessageType _storeLocality;
-         MessageType _linkObjects;
-         MessageType _unlinkObjects;
-         MessageType _storeLinkAttributeObject;
-         MessageType _storeType;
-         MessageType _storeState;
-         MessageType _storeFlag;
-         MessageType _storeTimeStamp;
-         MessageType _storePosition;
-         MessageType _storeOrientation;
-         MessageType _storeVelocity;
-         MessageType _storeAcceleration;
-         MessageType _storeScale;
-         MessageType _storeVector;
-         MessageType _storeScalar;
-         MessageType _storeText;
-         MessageType _storeData;
+         Message _createObject;
+         Message _activateObject;
+         Message _destroyObject;
+         Message _storeUUID;
+         Message _removeAttribute;
+         Message _storeLocality;
+         Message _linkObjects;
+         Message _unlinkObjects;
+         Message _storeLinkAttributeObject;
+         Message _storeType;
+         Message _storeState;
+         Message _storeFlag;
+         Message _storeTimeStamp;
+         Message _storePosition;
+         Message _storeOrientation;
+         Message _storeVelocity;
+         Message _storeAcceleration;
+         Message _storeScale;
+         Message _storeVector;
+         Message _storeScalar;
+         Message _storeText;
+         Message _storeData;
 
          Handle _defaultAttrHandle;
 

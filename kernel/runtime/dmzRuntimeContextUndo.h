@@ -12,14 +12,14 @@ namespace dmz {
 
    struct UndoActionStruct {
 
-      const MessageType Type;
+      const Message Type;
       const Handle ObserverHandle;
       Data *data;
 
       UndoActionStruct *next;
 
       UndoActionStruct (
-            const MessageType &TheType,
+            const Message &TheType,
             const Handle TheHandle,
             const Data *TheData) :
             Type (TheType),

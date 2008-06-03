@@ -39,7 +39,7 @@ namespace dmz {
 
          // Message Observer Interface
          virtual void receive_message (
-            const MessageType &Msg,
+            const Message &Msg,
             const UInt32 MessageSendHandle,
             const Handle TargetObserverHandle,
             const Data *InData,
@@ -76,7 +76,7 @@ namespace dmz {
 
          Log _log;
          UInt32 _tableCount;
-         MessageType _showMsg;
+         Message _showMsg;
          Float64 _hookCount;
          HashTableStringTemplate<StatsStruct> _statsTable;
          String _luaModuleName;

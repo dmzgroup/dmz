@@ -45,7 +45,7 @@ namespace dmz {
             const InputEventMouse &Value);
 
       protected:
-         void _send_message (const MessageType &Message, HandleContainer &targets);
+         void _send (const Message &Message, HandleContainer &targets);
          void _get_targets (const String &Name, Config &config, HandleContainer &targets);
 
          AttrStruct *_create_attributes (
@@ -77,9 +77,9 @@ namespace dmz {
          Int32 _activeCount;
          HandleContainer _sourceTable;
          HandleContainer _targetTable;
-         MessageType _activateMessage;
+         Message _activateMessage;
          HandleContainer _activateTargetTable;
-         MessageType _deactivateMessage;
+         Message _deactivateMessage;
          HandleContainer _deactivateTargetTable;
          Log _log;
          //! \endcond

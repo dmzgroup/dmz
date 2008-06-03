@@ -17,7 +17,7 @@ namespace dmz {
    void open_lua_kernel_math_lib (lua_State *L);
    void open_lua_kernel_matrix_lib (lua_State *L);
    void open_lua_kernel_message_observer_lib (lua_State *L);
-   void open_lua_kernel_message_type_lib (lua_State *L);
+   void open_lua_kernel_message_lib (lua_State *L);
    void open_lua_kernel_object_type_lib (lua_State *L);
    void open_lua_kernel_time_lib (lua_State *L);
    void open_lua_kernel_runtime_lib (lua_State *L);

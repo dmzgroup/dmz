@@ -12,7 +12,7 @@ namespace dmz {
    class EventType;
    class Log;
    class Mask;
-   class MessageType;
+   class Message;
    class ObjectType;
    class PluginInfo;
    class RuntimeContext;
@@ -38,10 +38,10 @@ namespace dmz {
          Handle lookup_named_handle (const String &Name) const;
          String lookup_named_handle_name (const Handle NamedHandle) const;
 
-         MessageType get_global_message_type () const;
-         Boolean create_message_type (const String &Name, MessageType &type);
-         Boolean lookup_message_type (const String &Name, MessageType &type) const;
-         Boolean lookup_message_type (const Handle TypeHandle, MessageType &type) const;
+         Message get_global_message_type () const;
+         Boolean create_message_type (const String &Name, Message &type);
+         Boolean lookup_message_type (const String &Name, Message &type) const;
+         Boolean lookup_message_type (const Handle TypeHandle, Message &type) const;
 
          EventType get_root_event_type () const;
          Boolean lookup_event_type (const String &Name, EventType &type) const;

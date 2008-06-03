@@ -2403,7 +2403,7 @@ dmz::ObjectModuleBasic::activate_created_object (const Handle ObjectHandle) {
    _dump_object (ObjectHandle);
 
    Data out (_handleConverter.to_data (ObjectHandle));
-   _createObjMsg.send_message (&out);
+   _createObjMsg.send (&out);
 
    _inObsUpdate = False;
 
@@ -2460,7 +2460,7 @@ dmz::ObjectModuleBasic::immediate_destroy_object (const Handle ObjectHandle) {
       if (obj == _objectCache) { _objectCache = 0; }
 
       Data out (_handleConverter.to_data (ObjectHandle));
-      _removeObjMsg.send_message (&out);
+      _removeObjMsg.send (&out);
 
       _inObsUpdate = False;
    }

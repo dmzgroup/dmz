@@ -158,7 +158,7 @@ dmz::open_lua_kernel_libs (Config &global, lua_State *L, RuntimeContext *context
    open_lua_kernel_mask_lib (L);
    open_lua_kernel_math_lib (L);
    open_lua_kernel_message_observer_lib (L);
-   open_lua_kernel_message_type_lib (L);
+   open_lua_kernel_message_lib (L);
    open_lua_kernel_object_type_lib (L);
    open_lua_kernel_runtime_lib (L);
    open_lua_kernel_sync_lib (L);

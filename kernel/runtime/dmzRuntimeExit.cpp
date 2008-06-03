@@ -2,7 +2,7 @@
 #include "dmzRuntimeContextMessaging.h"
 #include <dmzRuntimeDataConverters.h>
 #include <dmzRuntimeExit.h>
-#include "dmzRuntimeMessageTypeContext.h"
+#include "dmzRuntimeMessageContext.h"
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePluginInfo.h>
 
@@ -27,10 +27,10 @@ namespace {
    const char LocalNormalExitMessageName[] = "DMZ_NORMAL_EXIT_MESSAGE";
    const char LocalErrorExitMessageName[] = "DMZ_ERROR_EXIT_MESSAGE";
 
-   static dmz::MessageType
+   static dmz::Message
    local_get_exit_message (const dmz::String &Name, dmz::RuntimeContext *context) {
 
-      dmz::MessageType result;
+      dmz::Message result;
 
       if (context) {
 
@@ -45,13 +45,13 @@ namespace {
       return result;
    }
 
-   static dmz::MessageType
+   static dmz::Message
    local_get_normal_exit_message (dmz::RuntimeContext *context) {
 
       return local_get_exit_message (LocalNormalExitMessageName, context);
    }
 
-   static dmz::MessageType
+   static dmz::Message
    local_get_error_exit_message (dmz::RuntimeContext *context) {
 
       return local_get_exit_message (LocalErrorExitMessageName, context);
@@ -60,8 +60,8 @@ namespace {
    class exitMessageObserver : public dmz::MessageObserver {
 
       public:
-         const dmz::MessageType NormalMsg;
-         const dmz::MessageType ErrorMsg;
+         const dmz::Message NormalMsg;
+         const dmz::Message ErrorMsg;
          dmz::ExitObserver *callback;
          dmz::DataConverterString convert;
 
@@ -75,7 +75,7 @@ namespace {
          ~exitMessageObserver () { callback = 0; }
 
          void receive_message (
-               const dmz::MessageType &Msg,
+               const dmz::Message &Msg,
                const dmz::UInt32 MessageSendHandle,
                const dmz::Handle TargetObserverHandle,
                const dmz::Data *InData,
@@ -103,8 +103,8 @@ namespace {
 
 struct dmz::Exit::State {
 
-   const MessageType NormalMsg;
-   const MessageType ErrorMsg;
+   const Message NormalMsg;
+   const Message ErrorMsg;
    DataConverterString convert;
 
    State (RuntimeContext *context) :
@@ -143,11 +143,11 @@ dmz::Exit::request_exit (const ExitStatusEnum Status, const String &ExitReason) 
 
    if (Status == ExitStatusNormal) {
 
-      _state.NormalMsg.send_message (value ? &value : 0);
+      _state.NormalMsg.send (value ? &value : 0);
    }
    else if (Status == ExitStatusError) {
 
-      _state.ErrorMsg.send_message (value ? &value : 0);
+      _state.ErrorMsg.send (value ? &value : 0);
    }
 }
 

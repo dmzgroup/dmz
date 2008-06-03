@@ -12,7 +12,7 @@ namespace dmz {
    class Data;
    class EventType;
    class Marshal;
-   class MessageType;
+   class Message;
    class ObjectType;
    class Unmarshal;
    

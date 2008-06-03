@@ -1615,15 +1615,15 @@ dmz::LuaExtObject::open_lua_extension (lua_State *LuaState) {
    lua_pushstring (L, ObjectAttributeSelectName);
    lua_setfield (L, Table, "AttributeSelectName");
 
-   const MessageType CreateType (ObjectCreateMessageName, lua_get_runtime_context (L));
-   const MessageType DestroyType (ObjectDestroyMessageName, lua_get_runtime_context (L));
+   const Message CreateType (ObjectCreateMessageName, lua_get_runtime_context (L));
+   const Message DestroyType (ObjectDestroyMessageName, lua_get_runtime_context (L));
 
-   if (lua_create_message_type (L, &CreateType)) {
+   if (lua_create_message (L, &CreateType)) {
 
       lua_setfield (L, Table, "CreateMessage");
    }
 
-   if (lua_create_message_type (L, &DestroyType)) {
+   if (lua_create_message (L, &DestroyType)) {
 
       lua_setfield (L, Table, "DestroyMessage");
    }

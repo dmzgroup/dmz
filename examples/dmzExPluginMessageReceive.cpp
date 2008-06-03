@@ -58,7 +58,7 @@ dmz::ExPluginMessageReceive::remove_plugin (const Plugin *PluginPtr) {
 // Message Observer Interface
 void
 dmz::ExPluginMessageReceive::receive_message (
-      const MessageType &Msg,
+      const Message &Msg,
       const UInt32 MessageSendHandle,
       const UInt32 TargetObserverHandle,
       const Data *InData,

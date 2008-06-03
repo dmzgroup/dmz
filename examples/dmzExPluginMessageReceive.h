@@ -26,7 +26,7 @@ namespace dmz {
 
          // Message Observer Interface
          void receive_message (
-            const MessageType &Msg,
+            const Message &Msg,
             const UInt32 MessageSendHandle,
             const UInt32 TargetObserverHandle,
             const Data *InData,
@@ -36,7 +36,7 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
-         MessageType _type;
+         Message _type;
          DataBinder _binder;
          String _value;
          Float64 _time;

@@ -13,7 +13,7 @@ class winEventClass : public QWidget {
 
    public:
       const QString Name;
-      dmz::MessageType msg;
+      dmz::Message msg;
       dmz::Handle fileHandle;
 
       winEventClass (dmz::RuntimeContext *context) :
@@ -40,7 +40,7 @@ class winEventClass : public QWidget {
 
                   dmz::Data data;
                   data.store_string (fileHandle, 0, FileName);
-                  msg.send_message (&data);
+                  msg.send (&data);
                }
             }
 
@@ -143,7 +143,7 @@ dmz::QtSingletonApplication::start_application () {
 
 
 bool
-dmz::QtSingletonApplication::send_message_to_running_application (const QString &Message) {
+dmz::QtSingletonApplication::send_to_running_application (const QString &Message) {
 
    bool result (false);
 

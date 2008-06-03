@@ -42,20 +42,20 @@ namespace dmz {
 
          // Message Observer Interface
          void receive_message (
-            const MessageType &Msg,
+            const Message &Msg,
             const UInt32 MessageSendHandle,
             const Handle TargetObserverHandle,
             const Data *InData,
             Data *outData);
 
       protected slots:
-         void _slot_send_message (QAction *action);
+         void _slot_send (QAction *action);
       
       protected:
          struct MessageStruct {
 
             QAction *action;
-            MessageType message;
+            Message message;
             HandleContainer targets;
          
             MessageStruct () :
@@ -84,7 +84,7 @@ namespace dmz {
          String _objectModuleName;
          RenderModulePick *_pickModule;
          String _pickModuleName;
-         MessageType _showMessageType;
+         Message _showMessage;
          Handle _defaultAttrHandle;
          Handle _source;
          Handle _objectAttrHandle;

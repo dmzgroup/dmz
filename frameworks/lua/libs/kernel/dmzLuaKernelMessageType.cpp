@@ -10,14 +10,14 @@ using namespace dmz;
 
 namespace {
 
-static const char MessageTypeName[] = "dmz.runtime.message";
+static const char MessageName[] = "dmz.runtime.message";
 
-inline MessageType**
-message_type_check (lua_State *L, int index) {
+inline Message**
+message_check (lua_State *L, int index) {
 
    if (index < 0) { index = lua_gettop (L) + index + 1; }
 
-   MessageType **result = 0;
+   Message **result = 0;
 
    if (lua_isstring (L, index)) {
 
@@ -25,7 +25,7 @@ message_type_check (lua_State *L, int index) {
 
       if (name) {
 
-         MessageType *ptr = lua_create_message_type (L);
+         Message *ptr = lua_create_message (L);
 
          if (ptr) {
 
@@ -33,7 +33,7 @@ message_type_check (lua_State *L, int index) {
 
             lua_replace (L, index);
 
-            result = message_type_check (L, index);
+            result = message_check (L, index);
          }
       }
       else {
@@ -42,20 +42,20 @@ message_type_check (lua_State *L, int index) {
          lua_error (L);
       }
    }
-   else { result = (MessageType **)luaL_checkudata (L, index, MessageTypeName); }
+   else { result = (Message **)luaL_checkudata (L, index, MessageName); }
 
    return result;
 }
 
 
 static int
-message_type_new (lua_State *L) {
+message_new (lua_State *L) {
 
    int result (0);
 
    int stackCount = lua_gettop (L);
 
-   MessageType *ptr = lua_create_message_type (L);
+   Message *ptr = lua_create_message (L);
 
    if (ptr) {
 
@@ -67,7 +67,7 @@ message_type_new (lua_State *L) {
       }
       else if (1 == stackCount) {
 
-         MessageType **messagePtr = message_type_check (L, 1);
+         Message **messagePtr = message_check (L, 1);
 
          if (messagePtr && *messagePtr) { *ptr = **messagePtr; }
       }
@@ -82,20 +82,20 @@ message_type_new (lua_State *L) {
 
 
 static int
-message_type_is_a (lua_State *L) {
+message_is_a (lua_State *L) {
 
-   if (lua_to_message_type (L, 1)) { lua_pushvalue (L, 1); }
+   if (lua_to_message (L, 1)) { lua_pushvalue (L, 1); }
    else { lua_pushnil (L); }
 
    return 1;
 }
 
 static int
-message_type_send_message (lua_State *L) {
+message_send (lua_State *L) {
 
    int result (0);
 
-   MessageType *type = lua_check_message_type (L, 1);
+   Message *type = lua_check_message (L, 1);
    Handle *toPtr (0);
    Data *inData (0);
    Data *outData (0);
@@ -108,7 +108,7 @@ message_type_send_message (lua_State *L) {
 
       lua_pushnumber (
          L, 
-         (lua_Number)type->send_message (toPtr ? *toPtr : 0, inData, outData));
+         (lua_Number)type->send (toPtr ? *toPtr : 0, inData, outData));
 
       result = 1;
    }
@@ -118,20 +118,20 @@ message_type_send_message (lua_State *L) {
 
 
 static const luaL_Reg arrayFunc [] = {
-   {"new", message_type_new},
-   {"is_a", message_type_is_a},
-   {"send", message_type_send_message},
+   {"new", message_new},
+   {"is_a", message_is_a},
+   {"send", message_send},
    {NULL, NULL},
 };
 
 
 static int
-message_type_equal (lua_State *L) {
+message_equal (lua_State *L) {
 
    int result (0);
 
-   MessageType **message1 = message_type_check (L, 1);
-   MessageType **message2 = message_type_check (L, 2);
+   Message **message1 = message_check (L, 1);
+   Message **message2 = message_check (L, 2);
 
    if (message1 && message2 && *message1 && *message2) {
 
@@ -144,11 +144,11 @@ message_type_equal (lua_State *L) {
 
 
 static int
-message_type_to_string (lua_State *L) {
+message_to_string (lua_State *L) {
 
    int result (0);
 
-   MessageType **message = message_type_check (L, 1);
+   Message **message = message_check (L, 1);
 
    if (message && *message) {
 
@@ -161,12 +161,12 @@ message_type_to_string (lua_State *L) {
 
 
 static int
-message_type_is_of_type (lua_State *L) {
+message_is_of_type (lua_State *L) {
 
    int result (0);
 
-   MessageType **message1 = message_type_check (L, 1);
-   MessageType **message2 = message_type_check (L, 2);
+   Message **message1 = message_check (L, 1);
+   Message **message2 = message_check (L, 2);
 
    if (message1 && message2 && *message1 && *message2) {
 
@@ -179,11 +179,11 @@ message_type_is_of_type (lua_State *L) {
 
 
 static int
-message_type_get_handle (lua_State *L) {
+message_get_handle (lua_State *L) {
 
    int result (0);
 
-   MessageType **message = message_type_check (L, 1);
+   Message **message = message_check (L, 1);
 
    if (message && *message) {
 
@@ -198,19 +198,19 @@ message_type_get_handle (lua_State *L) {
 
 
 static int
-message_type_get_parent (lua_State *L) {
+message_get_parent (lua_State *L) {
 
    int result (0);
 
-   MessageType **message = message_type_check (L, 1);
+   Message **message = message_check (L, 1);
 
    if (message && *message) {
 
-      MessageType parent;
+      Message parent;
 
       if ((*message)->get_parent (parent)) {
 
-         if (lua_create_message_type (L, &parent)) { result = 1; }
+         if (lua_create_message (L, &parent)) { result = 1; }
       }
       else { lua_pushnil (L); result = 1; }
    }
@@ -220,11 +220,11 @@ message_type_get_parent (lua_State *L) {
 
 
 static int
-message_type_become_parent (lua_State *L) {
+message_become_parent (lua_State *L) {
 
    int result (0);
 
-   MessageType **message = message_type_check (L, 1);
+   Message **message = message_check (L, 1);
 
    if (message && *message) {
 
@@ -237,9 +237,9 @@ message_type_become_parent (lua_State *L) {
 
 
 static int
-message_type_delete (lua_State *L) {
+message_delete (lua_State *L) {
 
-   MessageType **message = message_type_check (L, 1);
+   Message **message = message_check (L, 1);
    if (message && *message) { delete (*message); *message = 0; }
 
    return 0;
@@ -247,15 +247,15 @@ message_type_delete (lua_State *L) {
 
 
 static const luaL_Reg arrayMembers [] = {
-   {"__eq", message_type_equal},
-   {"__tostring", message_type_to_string},
-   {"is_of_type", message_type_is_of_type},
-   {"get_name", message_type_to_string},
-   {"get_handle", message_type_get_handle},
-   {"get_parent", message_type_get_parent},
-   {"become_parent", message_type_become_parent},
-   {"send_message", message_type_send_message},
-   {"__gc", message_type_delete},
+   {"__eq", message_equal},
+   {"__tostring", message_to_string},
+   {"is_of_type", message_is_of_type},
+   {"get_name", message_to_string},
+   {"get_handle", message_get_handle},
+   {"get_parent", message_get_parent},
+   {"become_parent", message_become_parent},
+   {"send", message_send},
+   {"__gc", message_delete},
    {NULL, NULL},
 };
 
@@ -263,37 +263,37 @@ static const luaL_Reg arrayMembers [] = {
 
 
 void
-dmz::open_lua_kernel_message_type_lib (lua_State *L) {
+dmz::open_lua_kernel_message_lib (lua_State *L) {
 
    LUA_START_VALIDATE (L);
 
-   luaL_newmetatable (L, MessageTypeName);
+   luaL_newmetatable (L, MessageName);
    luaL_register (L, NULL, arrayMembers);
    lua_pushvalue (L, -1);
    lua_setfield (L, -2, "__index");
-   lua_create_dmz_namespace (L, "message_type");
+   lua_create_dmz_namespace (L, "message");
    luaL_register (L, NULL, arrayFunc);
-   lua_make_readonly (L, -1); // make message_type read only.
+   lua_make_readonly (L, -1); // make message read only.
    lua_pop (L, 2); // pops meta table and dmz.message table.
 
    LUA_END_VALIDATE (L, 0);
 }
 
 
-dmz::MessageType *
-dmz::lua_create_message_type (lua_State *L, const MessageType *Value) {
+dmz::Message *
+dmz::lua_create_message (lua_State *L, const Message *Value) {
 
-   MessageType *result (0);
+   Message *result (0);
 
-   MessageType **ptr = (MessageType **)lua_newuserdata (L, sizeof (MessageType *));
+   Message **ptr = (Message **)lua_newuserdata (L, sizeof (Message *));
 
    if (ptr) {
 
-      *ptr = new MessageType;
+      *ptr = new Message;
 
       if (*ptr && Value) { (**ptr) = *Value; }
 
-      luaL_getmetatable (L, MessageTypeName);
+      luaL_getmetatable (L, MessageName);
       lua_setmetatable (L, -2);
 
       result = *ptr;
@@ -303,22 +303,22 @@ dmz::lua_create_message_type (lua_State *L, const MessageType *Value) {
 }
 
 
-dmz::MessageType *
-dmz::lua_to_message_type (lua_State *L, int narg) {
+dmz::Message *
+dmz::lua_to_message (lua_State *L, int narg) {
 
-   MessageType *result (0);
-   MessageType **value = (MessageType **) lua_is_object (L, narg, MessageTypeName);
+   Message *result (0);
+   Message **value = (Message **) lua_is_object (L, narg, MessageName);
    if (value) { result = *value; }
 
    return result;
 }
 
 
-dmz::MessageType *
-dmz::lua_check_message_type (lua_State *L, int narg) {
+dmz::Message *
+dmz::lua_check_message (lua_State *L, int narg) {
 
-   MessageType *result (0);
-   MessageType **value = message_type_check (L, narg);
+   Message *result (0);
+   Message **value = message_check (L, narg);
    if (value) { result = *value; }
 
    return result;

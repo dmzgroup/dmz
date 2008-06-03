@@ -25,7 +25,7 @@ class UndoTest : public MessageObserver {
 
       // MessageObserver interface
       void receive_message (
-         const MessageType &Type,
+         const Message &Type,
          const UInt32 Count,
          const UInt32 Handle,
          const Data *InData,
@@ -41,8 +41,8 @@ class UndoTest : public MessageObserver {
       Boolean gotRedo;
       DataConverterString dcs;
       Undo undo;
-      MessageType undoType;
-      MessageType redoType;
+      Message undoType;
+      Message redoType;
 };
 
 
@@ -67,7 +67,7 @@ UndoTest::UndoTest (
 
 void
 UndoTest::receive_message (
-      const MessageType &Type,
+      const Message &Type,
       const UInt32 Count,
       const UInt32 Handle,
       const Data *InData,

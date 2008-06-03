@@ -53,7 +53,7 @@ dmz::PluginUndoDump::remove_plugin (const Plugin *PluginPtr) {
 // Message Observer Interface
 void
 dmz::PluginUndoDump::receive_message (
-      const MessageType &Msg,
+      const Message &Msg,
       const UInt32 MessageSendHandle,
       const Handle TargetObserverHandle,
       const Data *InData,
@@ -78,7 +78,7 @@ dmz::PluginUndoDump::start_record (const Handle RecordHandle, const String &Name
 
 void
 dmz::PluginUndoDump::store_action (
-      const MessageType &Type,
+      const Message &Type,
       const Handle Target,
       const Data *Value) {
 
@@ -99,7 +99,7 @@ dmz::PluginUndoDump::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
 
-   MessageType message;
+   Message message;
   _defs.create_message_type ("DumpUndoStackMessage", message);
    subscribe_to_message (message);
 }

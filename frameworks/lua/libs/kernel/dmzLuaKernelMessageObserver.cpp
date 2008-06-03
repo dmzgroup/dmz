@@ -28,14 +28,14 @@ class MessageObserverLua : public MessageObserver {
       ~MessageObserverLua ();
 
       virtual void receive_message (
-         const MessageType &Type,
+         const Message &Type,
          const Handle MessageSendHandle,
          const Handle TargetObserverHandle,
          const Data *InData,
          Data *outData);
 
-      Boolean register_callback (const MessageType &Type, const int Index);
-      Boolean release_callback (const MessageType &Type);
+      Boolean register_callback (const Message &Type, const int Index);
+      Boolean release_callback (const Message &Type);
       void release_all ();
 
    protected:
@@ -59,7 +59,7 @@ MessageObserverLua::~MessageObserverLua () { release_all (); }
 
 void
 MessageObserverLua::receive_message (
-      const MessageType &Type,
+      const Message &Type,
       const Handle MessageSendHandle,
       const Handle TargetObserverHandle,
       const Data *InData,
@@ -67,7 +67,7 @@ MessageObserverLua::receive_message (
 
    LUA_START_VALIDATE (L);
 
-   MessageType current (Type);
+   Message current (Type);
 
    int *ptr (0);
 
@@ -95,7 +95,7 @@ MessageObserverLua::receive_message (
          if (lua_isfunction (L, -1)) {
 
             lua_rawgeti (L, CallBackTable, 2);
-            lua_create_message_type (L, &Type);
+            lua_create_message (L, &Type);
 
             if (InData) { lua_create_data (L, InData); }
             else { lua_pushnil (L); }
@@ -128,7 +128,7 @@ MessageObserverLua::receive_message (
 
 
 Boolean
-MessageObserverLua::register_callback (const MessageType &Type, const int Index) {
+MessageObserverLua::register_callback (const Message &Type, const int Index) {
 
    Boolean result (True);
 
@@ -142,7 +142,7 @@ MessageObserverLua::register_callback (const MessageType &Type, const int Index)
 
 
 Boolean
-MessageObserverLua::release_callback (const MessageType &Type) {
+MessageObserverLua::release_callback (const Message &Type) {
 
    Boolean result (False);
 
@@ -237,7 +237,7 @@ message_obs_register (lua_State *L) {
    int result (0);
 
    MessageObserverLua **obs = message_obs_check (L, 1);
-   MessageType *type = lua_check_message_type (L, 2);
+   Message *type = lua_check_message (L, 2);
    luaL_checktype (L, 3, LUA_TFUNCTION);
    luaL_checktype (L, 4, LUA_TTABLE);
 
@@ -268,7 +268,7 @@ message_obs_release (lua_State *L) {
    int result (0);
 
    MessageObserverLua **obs = message_obs_check (L, 1);
-   MessageType *type = lua_check_message_type (L, 2);
+   Message *type = lua_check_message (L, 2);
 
    if (obs && *obs) {
 

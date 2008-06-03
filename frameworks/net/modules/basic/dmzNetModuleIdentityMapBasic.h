@@ -72,7 +72,7 @@ namespace dmz {
 
          // MessageObserver Interface
          virtual void receive_message (
-            const MessageType &Msg,
+            const Message &Msg,
             const UInt32 MessageSendHandle,
             const UInt32 TargetObserverHandle,
             const Data *InData,
@@ -128,7 +128,7 @@ namespace dmz {
          HashTableUInt32Template<EntityStruct> _objTable;
          HashTableStringTemplate<EntityStruct> _nameTable;
 
-         MessageType _removeObjMsg;
+         Message _removeObjMsg;
          DataConverterHandle _handleConverter;
 
       private:

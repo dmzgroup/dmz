@@ -9,6 +9,9 @@ namespace dmz {
    class RuntimeContext;
    class Config;
 
+   enum PluginStateEnum { PluginStateStart, PluginStateStop, PluginStateShutdown };
+   enum PluginDiscoverEnum { PluginDiscoverAdd, PluginDiscoverRemove };
+
    class Plugin {
 
       public:
@@ -19,11 +22,13 @@ namespace dmz {
          Handle get_plugin_handle () const;
          RuntimeContext *get_plugin_runtime_context () const;
 
-         virtual void discover_plugin (const Plugin *PluginPtr) = 0;
-         virtual void start_plugin () = 0;
-         virtual void stop_plugin () = 0;
-         virtual void shutdown_plugin () = 0;
-         virtual void remove_plugin (const Plugin *PluginPtr) = 0;
+         virtual void update_plugin_state (
+            const PluginStateEnum State,
+            const UInt32 Level) = 0;
+
+         virtual void discover_plugin (
+            const PluginDiscoverEnum Mode,
+            const Plugin *PluginPtr) = 0;
 
       protected:
          //! Reference to the Plugin initialization information.

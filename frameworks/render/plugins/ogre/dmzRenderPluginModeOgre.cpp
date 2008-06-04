@@ -30,45 +30,29 @@ dmz::RenderPluginModeOgre::~RenderPluginModeOgre () {
 
 // Plugin Interface
 void
-dmz::RenderPluginModeOgre::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderPluginModeOgre::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_core) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _core = RenderModuleCoreOgre::cast (PluginPtr);
+      if (!_core) {
 
-      if (_core) {
-         
-         _camera = _core->lookup_camera (_name);
+         _core = RenderModuleCoreOgre::cast (PluginPtr);
+
+         if (_core) {
+
+            _camera = _core->lookup_camera (_name);
+         }
       }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
 
+      if (_core && (_core == RenderModuleCoreOgre::cast (PluginPtr))) {
 
-void
-dmz::RenderPluginModeOgre::start_plugin () {
-
-}
-
-
-void
-dmz::RenderPluginModeOgre::stop_plugin () {
-
-}
-
-
-void
-dmz::RenderPluginModeOgre::shutdown_plugin () {
-
-}
-
-
-void
-dmz::RenderPluginModeOgre::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_core && (_core == RenderModuleCoreOgre::cast (PluginPtr))) {
-
-      _camera = 0;
-      _core = 0;
+         _camera = 0;
+         _core = 0;
+      }
    }
 }
 

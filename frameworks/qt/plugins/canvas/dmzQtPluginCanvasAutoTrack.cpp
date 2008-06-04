@@ -33,18 +33,24 @@ dmz::QtPluginCanvasAutoTrack::~QtPluginCanvasAutoTrack () {
 
 // Plugin Interface
 void
-dmz::QtPluginCanvasAutoTrack::discover_plugin (const Plugin *PluginPtr) {
+dmz::QtPluginCanvasAutoTrack::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_canvasModule) {
-      
-      _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_canvasModule) {
+
+         _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+      }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
 
+      if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
 
-void
-dmz::QtPluginCanvasAutoTrack::start_plugin () {
-   
+         _canvasModule = 0;
+      }
+   }
 }
 
 
@@ -59,28 +65,6 @@ dmz::QtPluginCanvasAutoTrack::update_sync (const Float64 TimeDelta) {
       if (item && view) { view->ensureVisible (item); }
       
       _updateView = False;
-   }
-}
-
-
-void
-dmz::QtPluginCanvasAutoTrack::stop_plugin () {
-
-}
-
-
-void
-dmz::QtPluginCanvasAutoTrack::shutdown_plugin () {
-
-}
-
-
-void
-dmz::QtPluginCanvasAutoTrack::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
-         
-      _canvasModule = 0;
    }
 }
 

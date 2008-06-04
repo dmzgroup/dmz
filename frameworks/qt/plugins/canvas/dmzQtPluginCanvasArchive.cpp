@@ -29,39 +29,23 @@ dmz::QtPluginCanvasArchive::~QtPluginCanvasArchive () {
 
 // Plugin Interface
 void
-dmz::QtPluginCanvasArchive::discover_plugin (const Plugin *PluginPtr) {
+dmz::QtPluginCanvasArchive::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_canvasModule) {
-      
-      _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_canvasModule) {
+
+         _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+      }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
 
+      if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
 
-void
-dmz::QtPluginCanvasArchive::start_plugin () {
-
-}
-
-
-void
-dmz::QtPluginCanvasArchive::stop_plugin () {
-
-}
-
-
-void
-dmz::QtPluginCanvasArchive::shutdown_plugin () {
-
-}
-
-
-void
-dmz::QtPluginCanvasArchive::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
-
-      _canvasModule = 0;
+         _canvasModule = 0;
+      }
    }
 }
 

@@ -1299,104 +1299,105 @@ dmz::QtPluginCanvasLayer::~QtPluginCanvasLayer () {
 
 // Plugin Interface
 void
-dmz::QtPluginCanvasLayer::discover_plugin (const Plugin *PluginPtr) {
-
-   const String PluginName (PluginPtr ? PluginPtr->get_plugin_name () : "");
+dmz::QtPluginCanvasLayer::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
    
-   if (!_canvasModule) {
-      
-      _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+   if (State == PluginStateStart) {
 
-      if (_canvasModule) {
+      _load_session ();
+   }
+   else if (State == PluginStateStop) {
 
-         _layerModel.store_canvas_module (*_canvasModule);
+      _save_session ();
+   }
+   else if (State == PluginStateShutdown) {
+
+      _ui.treeView->setModel (0);
+   }
+}
+
+
+void
+dmz::QtPluginCanvasLayer::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
+
+   if (Mode == PluginDiscoverAdd) {
+
+      const String PluginName (PluginPtr ? PluginPtr->get_plugin_name () : "");
+
+      if (!_canvasModule) {
+
+         _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+
+         if (_canvasModule) {
+
+            _layerModel.store_canvas_module (*_canvasModule);
+         }
+      }
+
+      if (!_objectModule) {
+
+         _objectModule = ObjectModule::cast (PluginPtr, _objectModuleName);
+
+         if (_objectModule) {
+
+   //            ObjectObserver *obs (ObjectObserver::cast (&_layerModel));
+            ObjectObserver *obs = dynamic_cast<ObjectObserver *> (&_layerModel);
+
+            if (obs) {
+
+               obs->store_object_module (PluginName, *_objectModule);
+            }
+         }
+      }
+
+      if (!_mainWindowModule) {
+
+         _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
+
+         if (_mainWindowModule) {
+
+            _dock = new QDockWidget (_title, this);
+            _dock->setObjectName (get_plugin_name ().get_buffer ());
+            _dock->setAllowedAreas (Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+
+            _dock->setFeatures (QDockWidget::NoDockWidgetFeatures);
+   //            QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+
+            _mainWindowModule->add_dock_widget (_channel, Qt::RightDockWidgetArea, _dock);
+            _dock->setWidget (this);
+         }
       }
    }
+   else if (Mode == PluginDiscoverRemove) {
 
-   if (!_objectModule) {
+      if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
 
-      _objectModule = ObjectModule::cast (PluginPtr, _objectModuleName);
+         _layerModel.remove_canvas_module (*_canvasModule);
 
-      if (_objectModule) {
+         _canvasModule = 0;
+      }
 
-//            ObjectObserver *obs (ObjectObserver::cast (&_layerModel));
+      if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
+
+   //      ObjectObserver *obs (ObjectObserver::cast (&_layerModel));
          ObjectObserver *obs = dynamic_cast<ObjectObserver *> (&_layerModel);
 
          if (obs) {
 
-            obs->store_object_module (PluginName, *_objectModule);
+            obs->remove_object_module (PluginPtr->get_plugin_name (), *_objectModule);
          }
-      }
-   }
-   
-   if (!_mainWindowModule) {
-  
-      _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
 
-      if (_mainWindowModule) {
-
-         _dock = new QDockWidget (_title, this);
-         _dock->setObjectName (get_plugin_name ().get_buffer ());
-         _dock->setAllowedAreas (Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-         
-         _dock->setFeatures (QDockWidget::NoDockWidgetFeatures);
-//            QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-
-         _mainWindowModule->add_dock_widget (_channel, Qt::RightDockWidgetArea, _dock);
-         _dock->setWidget (this);
-      }
-   }
-}
-
-
-void
-dmz::QtPluginCanvasLayer::start_plugin () {
-   
-   _load_session ();
-}
-
-
-void
-dmz::QtPluginCanvasLayer::stop_plugin () {
-
-   _save_session ();
-}
-
-
-void
-dmz::QtPluginCanvasLayer::shutdown_plugin () {
-
-   _ui.treeView->setModel (0);
-}
-
-
-void
-dmz::QtPluginCanvasLayer::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
-
-      _layerModel.remove_canvas_module (*_canvasModule);
-
-      _canvasModule = 0;
-   }
-
-   if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
-
-//      ObjectObserver *obs (ObjectObserver::cast (&_layerModel));
-      ObjectObserver *obs = dynamic_cast<ObjectObserver *> (&_layerModel);
-
-      if (obs) {
-
-         obs->remove_object_module (PluginPtr->get_plugin_name (), *_objectModule);
+         _objectModule = 0;
       }
 
-      _objectModule = 0;
-   }
+      if (_mainWindowModule && (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
 
-   if (_mainWindowModule && (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
-      
-      _mainWindowModule->remove_dock_widget (_channel, _dock);
-      _mainWindowModule = 0;
+         _mainWindowModule->remove_dock_widget (_channel, _dock);
+         _mainWindowModule = 0;
+      }
    }
 }
 

@@ -50,49 +50,30 @@ dmz::QtPluginLuaProfiler::~QtPluginLuaProfiler () {
 
 // Plugin Interface
 void
-dmz::QtPluginLuaProfiler::discover_plugin (const Plugin *PluginPtr) {
+dmz::QtPluginLuaProfiler::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-}
+   if (State == PluginStateShutdown) {
 
+      RuntimeContext *context (get_plugin_runtime_context ());
 
-void
-dmz::QtPluginLuaProfiler::start_plugin () {
+      if (context) {
 
-}
+         String data;
 
+         Config session (get_plugin_name ());
 
-void
-dmz::QtPluginLuaProfiler::stop_plugin () {
+         session.add_config (qbytearray_to_config ("geometry", saveGeometry ()));
 
-}
+         if (isVisible ()) {
 
+            session.add_config (boolean_to_config ("window", "visible", True));
+         }
 
-void
-dmz::QtPluginLuaProfiler::shutdown_plugin () {
-
-   RuntimeContext *context (get_plugin_runtime_context ());
-
-   if (context) {
-
-      String data;
-
-      Config session (get_plugin_name ());
-
-      session.add_config (qbytearray_to_config ("geometry", saveGeometry ()));
-
-      if (isVisible ()) {
-
-         session.add_config (boolean_to_config ("window", "visible", True));
+         set_session_config (context, session);
       }
-
-      set_session_config (context, session);
    }
-}
-
-
-void
-dmz::QtPluginLuaProfiler::remove_plugin (const Plugin *PluginPtr) {
-
 }
 
 

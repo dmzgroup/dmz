@@ -70,61 +70,58 @@ dmz::QtModuleCanvasBasic::~QtModuleCanvasBasic () {
 
 // Plugin Interface
 void
-dmz::QtModuleCanvasBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::QtModuleCanvasBasic::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   if (!_mainWindowModule) {
+   if (State == PluginStateStart) {
 
-      _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
+      _load_session ();
+      setFocus (Qt::ActiveWindowFocusReason);
+   }
+   else if (State == PluginStateStop) {
+
+      _save_session ();
+   }
+}
+
+void
+dmz::QtModuleCanvasBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
+
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_mainWindowModule) {
+
+         _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
+
+         if (_mainWindowModule) {
+
+            _mainWindowModule->add_central_widget (_channel, this);
+         }
+      }
+
+      if (!_inputModule) {
+
+         _inputModule = InputModule::cast (PluginPtr, _inputModuleName);
+      }
+   }
+   else if (Mode == PluginDiscoverRemove) {
 
       if (_mainWindowModule) {
 
-         _mainWindowModule->add_central_widget (_channel, this);
+         if (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr)) {
+
+            _mainWindowModule->remove_central_widget (_channel);
+            _mainWindowModule = 0;
+         }
       }
-   }
 
-   if (!_inputModule) {
+      if (_inputModule && (_inputModule == InputModule::cast (PluginPtr))) {
 
-      _inputModule = InputModule::cast (PluginPtr, _inputModuleName);
-   }
-}
-
-
-void
-dmz::QtModuleCanvasBasic::start_plugin () {
-
-   _load_session ();
-   setFocus (Qt::ActiveWindowFocusReason);
-}
-
-
-void
-dmz::QtModuleCanvasBasic::stop_plugin () {
-
-   _save_session ();
-}
-
-
-void
-dmz::QtModuleCanvasBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::QtModuleCanvasBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_mainWindowModule) {
-
-      if (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr)) {
-
-         _mainWindowModule->remove_central_widget (_channel);
-         _mainWindowModule = 0;
+         _inputModule = 0;
       }
-   }
-
-   if (_inputModule && (_inputModule == InputModule::cast (PluginPtr))) {
-
-      _inputModule = 0;
    }
 }
 

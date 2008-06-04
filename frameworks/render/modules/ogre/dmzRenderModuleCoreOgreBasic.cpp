@@ -68,15 +68,61 @@ dmz::RenderModuleCoreOgreBasic::~RenderModuleCoreOgreBasic () {
 
 // Plugin Interface
 void
-dmz::RenderModuleCoreOgreBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderModuleCoreOgreBasic::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   _extensions.discover_external_plugin (PluginPtr);
+   if (State == PluginStateStart) {
 
-   if (!_objectModule) {
-      
-      _objectModule = ObjectModule::cast (PluginPtr);
-      
-      if (_objectModule) {
+      _extensions.start_plugins ();
+   }
+   else if (State == PluginStateStop) {
+
+      _extensions.stop_plugins ();
+   }
+   else if (State == PluginStateShutdown) {
+
+      _extensions.shutdown_plugins ();
+   }
+}
+
+
+void
+dmz::RenderModuleCoreOgreBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
+
+   if (Mode == PluginDiscoverAdd) {
+
+      _extensions.discover_external_plugin (PluginPtr);
+
+      if (!_objectModule) {
+
+         _objectModule = ObjectModule::cast (PluginPtr);
+
+         if (_objectModule) {
+
+            PluginIterator it;
+
+            Plugin *ptr (_extensions.get_first (it));
+
+            while (ptr) {
+
+               ObjectObserver *obs (ObjectObserver::cast (ptr));
+
+               if (obs) {
+
+                  obs->store_object_module (PluginPtr->get_plugin_name (), *_objectModule);
+               }
+
+               ptr = _extensions.get_next (it);
+            }
+         }
+      }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
 
          PluginIterator it;
 
@@ -87,21 +133,18 @@ dmz::RenderModuleCoreOgreBasic::discover_plugin (const Plugin *PluginPtr) {
             ObjectObserver *obs (ObjectObserver::cast (ptr));
 
             if (obs) {
-               
-               obs->store_object_module (PluginPtr->get_plugin_name (), *_objectModule);
+
+               obs->remove_object_module (PluginPtr->get_plugin_name (), *_objectModule);
             }
 
             ptr = _extensions.get_next (it);
          }
+
+         _objectModule = 0;
       }
+
+      _extensions.remove_external_plugin (PluginPtr);
    }
-}
-
-
-void
-dmz::RenderModuleCoreOgreBasic::start_plugin () {
-
-   _extensions.start_plugins ();
 }
 
 
@@ -113,48 +156,6 @@ dmz::RenderModuleCoreOgreBasic::update_sync (const Float64 TimeDelta) {
       Ogre::WindowEventUtilities::messagePump();
       _root->renderOneFrame ();
    }
-}
-
-
-void
-dmz::RenderModuleCoreOgreBasic::shutdown_plugin () {
-
-   _extensions.shutdown_plugins ();
-}
-
-
-void
-dmz::RenderModuleCoreOgreBasic::stop_plugin () {
-
-   _extensions.stop_plugins ();
-}
-
-
-void
-dmz::RenderModuleCoreOgreBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
-      
-      PluginIterator it;
-
-      Plugin *ptr (_extensions.get_first (it));
-
-      while (ptr) {
-
-         ObjectObserver *obs (ObjectObserver::cast (ptr));
-
-         if (obs) {
-            
-            obs->remove_object_module (PluginPtr->get_plugin_name (), *_objectModule);
-         }
-         
-         ptr = _extensions.get_next (it);
-      }
-
-      _objectModule = 0;
-   }
-   
-   _extensions.remove_external_plugin (PluginPtr);
 }
 
 
@@ -316,7 +317,7 @@ dmz::RenderModuleCoreOgreBasic::OnSceneManagerCreate (
 
       while (ptr) {
 
-         ptr->discover_plugin (this);
+         ptr->discover_plugin (PluginDiscoverAdd, this);
 
          ptr = _extensions.get_next (it);
       }

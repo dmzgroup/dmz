@@ -33,50 +33,35 @@ dmz::RenderModulePortalOgre::~RenderModulePortalOgre () {
 
 
 void
-dmz::RenderModulePortalOgre::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderModulePortalOgre::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_core) {
+   if (Mode == PluginDiscoverAdd) {
+      
+      if (!_core) {
 
-      _core = RenderModuleCoreOgre::cast (PluginPtr);
+         _core = RenderModuleCoreOgre::cast (PluginPtr);
 
-      if (_core) {
+         if (_core) {
          
-         _camera = _core->lookup_camera (_portalName);
+            _camera = _core->lookup_camera (_portalName);
 
-         set_fov (_fov);
-         set_near_clip_plane (_nearClip);
-         set_far_clip_plane (_farClip);
+            set_fov (_fov);
+            set_near_clip_plane (_nearClip);
+            set_far_clip_plane (_farClip);
+         }
       }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
+      
+      if (_core && (_core == RenderModuleCoreOgre::cast (PluginPtr))) {
 
-
-void
-dmz::RenderModulePortalOgre::start_plugin () {
-
-}
-
-
-void
-dmz::RenderModulePortalOgre::stop_plugin () {
-
-}
-
-
-void
-dmz::RenderModulePortalOgre::shutdown_plugin () {
-
-}
-
-
-void
-dmz::RenderModulePortalOgre::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_core && (_core == RenderModuleCoreOgre::cast (PluginPtr))) {
-
-      _camera = 0;
-      _core = 0;
+         _camera = 0;
+         _core = 0;
+      }
    }
+
 }
 
 

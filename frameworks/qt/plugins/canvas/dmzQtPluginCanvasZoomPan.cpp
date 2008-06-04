@@ -51,77 +51,75 @@ dmz::QtPluginCanvasZoomPan::~QtPluginCanvasZoomPan () {
 
 // Plugin Interface
 void
-dmz::QtPluginCanvasZoomPan::discover_plugin (const Plugin *PluginPtr) {
+dmz::QtPluginCanvasZoomPan::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   if (!_canvasModule) {
-   
-      _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+   if (State == PluginStateStart) {
 
-      if (_canvasModule) {
-         
-         _source = (PluginPtr ? PluginPtr->get_plugin_handle () : 0);
+      _load_session ();
+   }
+   else if (State == PluginStateStop) {
+
+      _save_session ();
+   }
+}
+
+
+void
+dmz::QtPluginCanvasZoomPan::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
+
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_canvasModule) {
+
+         _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+
+         if (_canvasModule) {
+
+            _source = (PluginPtr ? PluginPtr->get_plugin_handle () : 0);
+
+            QGraphicsView *view = _canvasModule->get_view ();
+
+            if (view) {
+
+               connect (
+                  view, SIGNAL (scale_changed (qreal)),
+                  this, SLOT (slot_scale_changed (qreal)));
+
+               view->installEventFilter (this);
+               setParent (view);
+            }
+
+            _canvasModule->set_zoom_min_value (_zoomMin);
+            _canvasModule->set_zoom_max_value (_zoomMax);
+            _canvasModule->set_zoom_step_value (_zoomStep);
+            _canvasModule->set_zoom (_zoomDefault);
+         }
+      }
+
+      if (!_mainWindowModule) {
+
+         _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
+      }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
 
          QGraphicsView *view = _canvasModule->get_view ();
 
          if (view) {
 
-            connect (
-               view, SIGNAL (scale_changed (qreal)),
-               this, SLOT (slot_scale_changed (qreal)));
-
-            view->installEventFilter (this);
-            setParent (view);
+            view->removeEventFilter (this);
+            hide ();
+            setParent (0);
          }
 
-         _canvasModule->set_zoom_min_value (_zoomMin);
-         _canvasModule->set_zoom_max_value (_zoomMax);
-         _canvasModule->set_zoom_step_value (_zoomStep);
-         _canvasModule->set_zoom (_zoomDefault);
+         _canvasModule = 0;
       }
-   }
-   
-   if (!_mainWindowModule) {
-      
-      _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
-   }
-}
-
-
-void
-dmz::QtPluginCanvasZoomPan::start_plugin () {
-   
-   _load_session ();
-}
-
-
-void
-dmz::QtPluginCanvasZoomPan::stop_plugin () {
-
-   _save_session ();
-}
-
-
-void
-dmz::QtPluginCanvasZoomPan::shutdown_plugin () {
-
-}
-
-
-void
-dmz::QtPluginCanvasZoomPan::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
-      
-      QGraphicsView *view = _canvasModule->get_view ();
-
-      if (view) {
-
-         view->removeEventFilter (this);
-         hide ();
-         setParent (0);
-      }
-      
-      _canvasModule = 0;
    }
 }
 

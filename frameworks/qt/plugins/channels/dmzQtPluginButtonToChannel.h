@@ -26,11 +26,13 @@ namespace dmz {
          ~QtPluginButtonToChannel ();
 
          // Plugin Interface
-         virtual void discover_plugin (const Plugin *PluginPtr);
-         virtual void start_plugin ();
-         virtual void stop_plugin ();
-         virtual void shutdown_plugin ();
-         virtual void remove_plugin (const Plugin *PluginPtr);
+         virtual void update_plugin_state (
+            const PluginStateEnum State,
+            const UInt32 Level) {;}
+
+         virtual void discover_plugin (
+            const PluginDiscoverEnum Mode,
+            const Plugin *PluginPtr);
 
       protected slots:
          void _slot_change_channel (QAction *action);
@@ -49,9 +51,7 @@ namespace dmz {
 
             ~ChannelStruct () { if (next) { delete next; next = 0; } }
          };
-         
-         void _save_session ();
-         void _load_session ();
+
          void _init (Config &local);
          
          Log _log;

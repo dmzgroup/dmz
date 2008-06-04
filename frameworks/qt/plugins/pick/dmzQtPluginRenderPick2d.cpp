@@ -30,49 +30,33 @@ dmz::QtPluginRenderPick2d::~QtPluginRenderPick2d () {
 
 // Plugin Interface
 void
-dmz::QtPluginRenderPick2d::discover_plugin (const Plugin *PluginPtr) {
+dmz::QtPluginRenderPick2d::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_canvasModule) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+      if (!_canvasModule) {
+
+         _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+      }
+
+      if (!_objectModule) {
+
+         _objectModule = ObjectModule::cast (PluginPtr, _objectModuleName);
+      }
    }
+   else if (Mode == PluginDiscoverRemove) {
 
-   if (!_objectModule) {
+      if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
 
-      _objectModule = ObjectModule::cast (PluginPtr, _objectModuleName);
-   }
-}
+         _canvasModule = 0;
+      }
 
+      if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
 
-void
-dmz::QtPluginRenderPick2d::start_plugin () {
-
-}
-
-
-void
-dmz::QtPluginRenderPick2d::stop_plugin () {
-
-}
-
-
-void
-dmz::QtPluginRenderPick2d::shutdown_plugin () {
-
-}
-
-
-void
-dmz::QtPluginRenderPick2d::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
-
-      _canvasModule = 0;
-   }
-
-   if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
-
-      _objectModule = 0;
+         _objectModule = 0;
+      }
    }
 }
 

@@ -56,43 +56,44 @@ dmz::RenderModuleCoreOSGBasic::~RenderModuleCoreOSGBasic () {
 
 // Plugin Interface
 void
-dmz::RenderModuleCoreOSGBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderModuleCoreOSGBasic::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   _extensions.discover_external_plugin (PluginPtr);
+   if (State == PluginStateStart) {
 
-   if (!_objectModule) { _objectModule = ObjectModule::cast (PluginPtr); }
+      _extensions.start_plugins ();
+   }
+   else if (State == PluginStateStop) {
+
+      _extensions.stop_plugins ();
+   }
+   else if (State == PluginStateShutdown) {
+
+      _extensions.shutdown_plugins ();
+   }
 }
 
 
 void
-dmz::RenderModuleCoreOSGBasic::start_plugin () {
+dmz::RenderModuleCoreOSGBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   _extensions.start_plugins ();
-}
-
-
-void
-dmz::RenderModuleCoreOSGBasic::shutdown_plugin () {
-
-   _extensions.shutdown_plugins ();
-}
-
-
-void
-dmz::RenderModuleCoreOSGBasic::stop_plugin () {
-
-   _extensions.stop_plugins ();
-}
-
-
-void
-dmz::RenderModuleCoreOSGBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   _extensions.remove_external_plugin (PluginPtr);
-
-   if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
+   if (Mode == PluginDiscoverAdd) {
       
-      _objectModule = 0;
+      _extensions.discover_external_plugin (PluginPtr);
+
+      if (!_objectModule) { _objectModule = ObjectModule::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+      
+      _extensions.remove_external_plugin (PluginPtr);
+
+      if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
+
+         _objectModule = 0;
+      }
    }
 }
 

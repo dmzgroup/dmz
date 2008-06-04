@@ -35,38 +35,20 @@ dmz::ArchiveModuleBasic::~ArchiveModuleBasic () {
 
 // Plugin Interface
 void
-dmz::ArchiveModuleBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::ArchiveModuleBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
    ArchiveObserver *obs (ArchiveObserver::cast (PluginPtr));
 
-   if (obs) { obs->store_archive_module (get_plugin_name (), *this); }
-}
+   if (Mode == PluginDiscoverAdd) {
 
+      if (obs) { obs->store_archive_module (get_plugin_name (), *this); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
 
-void
-dmz::ArchiveModuleBasic::start_plugin () {
-
-}
-
-
-void
-dmz::ArchiveModuleBasic::stop_plugin () {
-
-}
-
-
-void
-dmz::ArchiveModuleBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::ArchiveModuleBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   ArchiveObserver *obs (ArchiveObserver::cast (PluginPtr));
-
-   if (obs) { obs->remove_archive_module (get_plugin_name (), *this); }
+      if (obs) { obs->remove_archive_module (get_plugin_name (), *this); }
+   }
 }
 
 

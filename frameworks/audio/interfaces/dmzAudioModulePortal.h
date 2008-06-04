@@ -22,6 +22,7 @@ namespace dmz {
          String get_audio_portal_name () const;
          UInt32 get_audio_portal_handle () const;
 
+         // AudioModulePortal Interface
          virtual Boolean is_master_portal () const = 0;
 
          virtual void set_view (const Vector &Pos, const Matrix &Ori) = 0;

@@ -108,32 +108,34 @@ dmz::LuaExtPortal::get_view (const String &Name, Vector &pos, Matrix &ori) {
 
 // Plugin Interface
 void
-dmz::LuaExtPortal::discover_plugin (const Plugin *PluginPtr) {
+dmz::LuaExtPortal::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   AudioModulePortal *audioPortal (AudioModulePortal::cast (PluginPtr));
+   if (Mode == PluginDiscoverAdd) {
 
-   if (audioPortal && audioPortal->is_master_portal ()) { _audioMaster = audioPortal; }
+      AudioModulePortal *audioPortal (AudioModulePortal::cast (PluginPtr));
 
-   RenderModulePortal *renderPortal (RenderModulePortal::cast (PluginPtr));
+      if (audioPortal && audioPortal->is_master_portal ()) { _audioMaster = audioPortal; }
 
-   if (renderPortal && renderPortal->is_master_portal ()) {
+      RenderModulePortal *renderPortal (RenderModulePortal::cast (PluginPtr));
 
-      _renderMaster = renderPortal;
+      if (renderPortal && renderPortal->is_master_portal ()) {
+
+         _renderMaster = renderPortal;
+      }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
 
+      if (_audioMaster && (_audioMaster == AudioModulePortal::cast (PluginPtr))) {
 
-void
-dmz::LuaExtPortal::remove_plugin (const Plugin *PluginPtr) {
+         _audioMaster = 0;
+      }
 
-   if (_audioMaster && (_audioMaster == AudioModulePortal::cast (PluginPtr))) {
+      if (_renderMaster && (_renderMaster == RenderModulePortal::cast (PluginPtr))) {
 
-      _audioMaster = 0;
-   }
-
-   if (_renderMaster && (_renderMaster == RenderModulePortal::cast (PluginPtr))) {
-
-      _renderMaster = 0;
+         _renderMaster = 0;
+      }
    }
 }
 

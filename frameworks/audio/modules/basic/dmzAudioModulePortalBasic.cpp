@@ -28,67 +28,43 @@ dmz::AudioModulePortalBasic::~AudioModulePortalBasic () {
 }
 
 
+// Plugin Interface
 void
-dmz::AudioModulePortalBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::AudioModulePortalBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-    if (!_audioModule) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _audioModule = AudioModule::cast (PluginPtr);
+      if (!_audioModule) {
 
-      if (_audioModule) { 
+         _audioModule = AudioModule::cast (PluginPtr);
 
-         _handle = _audioModule->create_listener (_name);
+         if (_audioModule) { 
+
+            _handle = _audioModule->create_listener (_name);
          
-         if (_handle) {
+            if (_handle) {
             
-            // Default to listener at origin
-            _audioModule->set_listener (_handle, Vector (0.0, 0.0, 0.0), Matrix ());
+               // Default to listener at origin
+               _audioModule->set_listener (_handle, Vector (0.0, 0.0, 0.0), Matrix ());
+            }
          }
       }
    }
+   else if (Mode == PluginDiscoverRemove) {
 
-}
+      if (_audioModule && _handle && (_audioModule == AudioModule::cast (PluginPtr))) {
 
-
-void
-dmz::AudioModulePortalBasic::start_plugin () {
-
-}
-
-
-void
-dmz::AudioModulePortalBasic::stop_plugin () {
-
-}
-
-
-void
-dmz::AudioModulePortalBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::AudioModulePortalBasic::remove_plugin (const Plugin *PluginPtr) {
-
-    if (_audioModule && _handle && (_audioModule == AudioModule::cast (PluginPtr))) {
-
-      _audioModule->destroy_listener (_handle);
-      _handle = 0;
-      _audioModule = 0;
+         _audioModule->destroy_listener (_handle);
+         _handle = 0;
+         _audioModule = 0;
+      }
    }
 }
 
 
-dmz::String
-dmz::AudioModulePortalBasic::get_audio_portal_name () const { return _name; }
-
-
-
-dmz::UInt32
-dmz::AudioModulePortalBasic::get_audio_portal_handle () const { return _handle; }
-
-
+// AudioModulePortal Interface
 dmz::Boolean
 dmz::AudioModulePortalBasic::is_master_portal () const {
 

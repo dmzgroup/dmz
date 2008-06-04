@@ -36,37 +36,6 @@ dmz::NetModuleIdentityMapBasic::~NetModuleIdentityMapBasic () {
 }
 
 
-// Plugin Interface
-void
-dmz::NetModuleIdentityMapBasic::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::NetModuleIdentityMapBasic::start_plugin () {
-
-}
-
-
-void
-dmz::NetModuleIdentityMapBasic::stop_plugin () {
-
-}
-
-
-void
-dmz::NetModuleIdentityMapBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::NetModuleIdentityMapBasic::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 dmz::UInt32
 dmz::NetModuleIdentityMapBasic::get_site_handle () { return _site; }
 

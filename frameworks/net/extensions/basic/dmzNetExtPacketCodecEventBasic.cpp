@@ -44,54 +44,38 @@ dmz::NetExtPacketCodecEventBasic::~NetExtPacketCodecEventBasic () {
 
 // Plugin Interface
 void
-dmz::NetExtPacketCodecEventBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::NetExtPacketCodecEventBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_eventMod) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _eventMod = EventModule::cast (PluginPtr);
+      if (!_eventMod) {
+
+         _eventMod = EventModule::cast (PluginPtr);
+      }
+
+      if (!_attrMod) { _attrMod = NetModuleAttributeMap::cast (PluginPtr); }
+      if (!_idMod) { _idMod = NetModuleIdentityMap::cast (PluginPtr); }
    }
+   else if (Mode == PluginDiscoverRemove) {
 
-   if (!_attrMod) { _attrMod = NetModuleAttributeMap::cast (PluginPtr); }
-   if (!_idMod) { _idMod = NetModuleIdentityMap::cast (PluginPtr); }
-}
+      if (_eventMod && (_eventMod = EventModule::cast (PluginPtr))) {
 
+         _defaultHandle = 0;
+         _sourceHandle = 0;
+         _targetHandle = 0;
+         _munitionHandle = 0;
+         _eventMod = 0;
+      }
 
-void
-dmz::NetExtPacketCodecEventBasic::start_plugin () {
+      if (_attrMod && (_attrMod == NetModuleAttributeMap::cast (PluginPtr))) {
 
-}
+         _attrMod = 0;
+      }
 
-
-void
-dmz::NetExtPacketCodecEventBasic::stop_plugin () {
-
-}
-
-
-void
-dmz::NetExtPacketCodecEventBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::NetExtPacketCodecEventBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_eventMod && (_eventMod = EventModule::cast (PluginPtr))) {
-
-      _defaultHandle = 0;
-      _sourceHandle = 0;
-      _targetHandle = 0;
-      _munitionHandle = 0;
-      _eventMod = 0;
+      if (_idMod && (_idMod == NetModuleIdentityMap::cast (PluginPtr))) { _idMod = 0; }
    }
-
-   if (_attrMod && (_attrMod == NetModuleAttributeMap::cast (PluginPtr))) {
-
-      _attrMod = 0;
-   }
-
-   if (_idMod && (_idMod == NetModuleIdentityMap::cast (PluginPtr))) { _idMod = 0; }
 }
 
 

@@ -35,24 +35,11 @@ dmz::NetPluginPacket::~NetPluginPacket () {
 
 // Plugin Interface
 void
-dmz::NetPluginPacket::discover_plugin (const Plugin *PluginPtr) {
+dmz::NetPluginPacket::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   if (!_drMod) { _drMod = NetModuleLocalDR::cast (PluginPtr); }
-   if (!_codecMod) { _codecMod = NetModulePacketCodec::cast (PluginPtr); }
-
-   if (!_ioMod) {
-
-      _ioMod = NetModulePacketIO::cast (PluginPtr);
-
-      if (_ioMod) { _ioMod->register_packet_observer (*this); }
-   }
-}
-
-
-void
-dmz::NetPluginPacket::start_plugin () {
-
-   if (_codecMod && _ioMod) {
+   if ((State == PluginStateStart) && _codecMod && _ioMod) {
 
       HashTableHandleIterator it;
 
@@ -85,6 +72,55 @@ dmz::NetPluginPacket::start_plugin () {
 
 
 void
+dmz::NetPluginPacket::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
+
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_drMod) { _drMod = NetModuleLocalDR::cast (PluginPtr); }
+      if (!_codecMod) { _codecMod = NetModulePacketCodec::cast (PluginPtr); }
+
+      if (!_ioMod) {
+
+         _ioMod = NetModulePacketIO::cast (PluginPtr);
+
+         if (_ioMod) { _ioMod->register_packet_observer (*this); }
+      }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_drMod && (_drMod = NetModuleLocalDR::cast (PluginPtr))) { _drMod = 0; }
+
+      if (_codecMod && (_codecMod == NetModulePacketCodec::cast (PluginPtr))) {
+
+         HashTableHandleIterator it;
+
+         ObjStruct *os (_objTable.get_first (it));
+
+         while (os) {
+
+            if (!_preRegObjTable.store (os->ObjectHandle, os)) { delete os; os = 0; }
+
+            os = _objTable.get_next (it);
+         }
+
+         _objTable.clear ();
+
+         _codecMod = 0;
+      }
+
+      if (_ioMod && (_ioMod == NetModulePacketIO::cast (PluginPtr))) {
+
+         _ioMod->release_packet_observer (*this);
+         _ioMod = 0;
+      }
+   }
+}
+
+
+// Sync Interface
+void
 dmz::NetPluginPacket::update_sync (const Float64 TimeDelta) {
 
    if (_codecMod && _ioMod) {
@@ -106,49 +142,6 @@ dmz::NetPluginPacket::update_sync (const Float64 TimeDelta) {
 
          os = _objTable.get_next (it);
       }
-   }
-}
-
-
-void
-dmz::NetPluginPacket::stop_plugin () {
-
-}
-
-
-void
-dmz::NetPluginPacket::shutdown_plugin () {
-
-}
-
-
-void
-dmz::NetPluginPacket::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_drMod && (_drMod = NetModuleLocalDR::cast (PluginPtr))) { _drMod = 0; }
-
-   if (_codecMod && (_codecMod == NetModulePacketCodec::cast (PluginPtr))) {
-
-      HashTableHandleIterator it;
-
-      ObjStruct *os (_objTable.get_first (it));
-
-      while (os) {
-
-         if (!_preRegObjTable.store (os->ObjectHandle, os)) { delete os; os = 0; }
-
-         os = _objTable.get_next (it);
-      }
-
-      _objTable.clear ();
-
-      _codecMod = 0;
-   }
-
-   if (_ioMod && (_ioMod == NetModulePacketIO::cast (PluginPtr))) {
-
-      _ioMod->release_packet_observer (*this);
-      _ioMod = 0;
    }
 }
 

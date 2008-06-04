@@ -65,37 +65,6 @@ dmz::InputPluginKeyEventToMessage::~InputPluginKeyEventToMessage () {
 }
 
 
-// Plugin Interface
-void
-dmz::InputPluginKeyEventToMessage::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::InputPluginKeyEventToMessage::start_plugin () {
-
-}
-
-
-void
-dmz::InputPluginKeyEventToMessage::stop_plugin () {
-
-}
-
-
-void
-dmz::InputPluginKeyEventToMessage::shutdown_plugin () {
-
-}
-
-
-void
-dmz::InputPluginKeyEventToMessage::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Input Observer Interface
 void
 dmz::InputPluginKeyEventToMessage::update_channel_state (

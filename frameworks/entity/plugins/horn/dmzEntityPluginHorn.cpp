@@ -25,37 +25,6 @@ dmz::EntityPluginHorn::~EntityPluginHorn () {
 }
 
 
-// Plugin Interface
-void
-dmz::EntityPluginHorn::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::EntityPluginHorn::start_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginHorn::stop_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginHorn::shutdown_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginHorn::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Input Observer Interface
 void
 dmz::EntityPluginHorn::update_channel_state (const Handle Channel, const Boolean State) {

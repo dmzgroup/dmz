@@ -197,41 +197,25 @@ dmz::LuaExtPick::~LuaExtPick () {
 
 // Plugin Interface
 void
-dmz::LuaExtPick::discover_plugin (const Plugin *PluginPtr) {
+dmz::LuaExtPick::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_pick) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _pick = RenderModulePick::cast (PluginPtr);
+      if (!_pick) {
 
-      if (_pick && !(*_pickPtr)) { *_pickPtr = _pick; }
+         _pick = RenderModulePick::cast (PluginPtr);
+
+         if (_pick && !(*_pickPtr)) { *_pickPtr = _pick; }
+      }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
 
+      if (_pick && (_pick == RenderModulePick::cast (PluginPtr))) {
 
-void
-dmz::LuaExtPick::start_plugin () {
-
-}
-
-
-void
-dmz::LuaExtPick::stop_plugin () {
-
-}
-
-
-void
-dmz::LuaExtPick::shutdown_plugin () {
-
-}
-
-
-void
-dmz::LuaExtPick::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_pick && (_pick == RenderModulePick::cast (PluginPtr))) {
-
-      _pick = 0;
+         _pick = 0;
+      }
    }
 }
 

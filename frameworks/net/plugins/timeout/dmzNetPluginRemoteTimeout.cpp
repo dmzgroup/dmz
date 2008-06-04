@@ -36,18 +36,22 @@ dmz::NetPluginRemoteTimeout::~NetPluginRemoteTimeout () {
 
 // Plugin Interface
 void
-dmz::NetPluginRemoteTimeout::discover_plugin (const Plugin *PluginPtr) {
+dmz::NetPluginRemoteTimeout::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_objMod) { _objMod = ObjectModule::cast (PluginPtr); }
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_objMod) { _objMod = ObjectModule::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_objMod && (_objMod == ObjectModule::cast (PluginPtr))) { _objMod = 0; }
+   }
 }
 
 
-void
-dmz::NetPluginRemoteTimeout::start_plugin () {
-
-}
-
-
+// Sync Interface
 void
 dmz::NetPluginRemoteTimeout::update_sync (const Float64 TimeDelta) {
 
@@ -69,25 +73,6 @@ dmz::NetPluginRemoteTimeout::update_sync (const Float64 TimeDelta) {
          ptr = _objTable.get_next (it);
       }
    }
-}
-
-
-void
-dmz::NetPluginRemoteTimeout::stop_plugin () {
-
-}
-
-
-void
-dmz::NetPluginRemoteTimeout::shutdown_plugin () {
-
-}
-
-
-void
-dmz::NetPluginRemoteTimeout::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_objMod && (_objMod == ObjectModule::cast (PluginPtr))) { _objMod = 0; }
 }
 
 

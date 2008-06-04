@@ -26,34 +26,18 @@ dmz::LuaPluginTimedReset::~LuaPluginTimedReset () {
 
 // Plugin Interface
 void
-dmz::LuaPluginTimedReset::discover_plugin (const Plugin *PluginPtr) {
+dmz::LuaPluginTimedReset::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_luaMod) { _luaMod = LuaModule::cast (PluginPtr); }
-}
+   if (Mode == PluginDiscoverAdd) {
 
+      if (!_luaMod) { _luaMod = LuaModule::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
 
-void
-dmz::LuaPluginTimedReset::start_plugin () {
-
-}
-
-
-void
-dmz::LuaPluginTimedReset::stop_plugin () {
-
-}
-
-
-void
-dmz::LuaPluginTimedReset::shutdown_plugin () {
-
-}
-
-
-void
-dmz::LuaPluginTimedReset::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_luaMod && (_luaMod == LuaModule::cast (PluginPtr))) { _luaMod = 0; }
+      if (_luaMod && (_luaMod == LuaModule::cast (PluginPtr))) { _luaMod = 0; }
+   }
 }
 
 

@@ -20,38 +20,6 @@ dmz::ArchivePluginUndo::~ArchivePluginUndo () {
 }
 
 
-// Plugin Interface
-void
-dmz::ArchivePluginUndo::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::ArchivePluginUndo::start_plugin () {
-
-}
-
-
-void
-dmz::ArchivePluginUndo::stop_plugin () {
-
-}
-
-
-void
-dmz::ArchivePluginUndo::shutdown_plugin () {
-
-}
-
-
-void
-dmz::ArchivePluginUndo::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-
 // ArchiveObserver Interface.
 void
 dmz::ArchivePluginUndo::create_archive (

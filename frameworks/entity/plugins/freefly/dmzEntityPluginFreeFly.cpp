@@ -35,18 +35,22 @@ dmz::EntityPluginFreeFly::~EntityPluginFreeFly () {
 
 // Plugin Interface
 void
-dmz::EntityPluginFreeFly::discover_plugin (const Plugin *PluginPtr) {
+dmz::EntityPluginFreeFly::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_isect) { _isect = RenderModuleIsect::cast (PluginPtr); }
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_isect) { _isect = RenderModuleIsect::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_isect && (_isect == RenderModuleIsect::cast (PluginPtr))) { _isect = 0; }
+   }
 }
 
 
-void
-dmz::EntityPluginFreeFly::start_plugin () {
-
-}
-
-
+// Sync Interface
 void
 dmz::EntityPluginFreeFly::update_sync (const Float64 TimeDelta) {
 
@@ -127,24 +131,6 @@ dmz::EntityPluginFreeFly::update_sync (const Float64 TimeDelta) {
    }
 }
 
-
-void
-dmz::EntityPluginFreeFly::stop_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginFreeFly::shutdown_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginFreeFly::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_isect && (_isect == RenderModuleIsect::cast (PluginPtr))) { _isect = 0; }
-}
 
 
 // Object Observer Interface

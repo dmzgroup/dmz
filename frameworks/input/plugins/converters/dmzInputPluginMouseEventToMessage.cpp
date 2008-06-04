@@ -406,34 +406,18 @@ dmz::InputPluginMouseEventToMessage::~InputPluginMouseEventToMessage () {
 
 // Plugin Interface
 void
-dmz::InputPluginMouseEventToMessage::discover_plugin (const Plugin *PluginPtr) {
+dmz::InputPluginMouseEventToMessage::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_pickMod) { _pickMod = RenderModulePick::cast (PluginPtr); }
-}
+   if (Mode == PluginDiscoverAdd) {
 
+      if (!_pickMod) { _pickMod = RenderModulePick::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
 
-void
-dmz::InputPluginMouseEventToMessage::start_plugin () {
-
-}
-
-
-void
-dmz::InputPluginMouseEventToMessage::stop_plugin () {
-
-}
-
-
-void
-dmz::InputPluginMouseEventToMessage::shutdown_plugin () {
-
-}
-
-
-void
-dmz::InputPluginMouseEventToMessage::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_pickMod && (_pickMod == RenderModulePick::cast (PluginPtr))) { _pickMod = 0; } 
+      if (_pickMod && (_pickMod == RenderModulePick::cast (PluginPtr))) { _pickMod = 0; } 
+   }
 }
 
 

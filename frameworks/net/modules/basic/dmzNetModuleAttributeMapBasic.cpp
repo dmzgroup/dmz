@@ -43,37 +43,6 @@ dmz::NetModuleAttributeMapBasic::~NetModuleAttributeMapBasic () {
 }
 
 
-// Plugin Interface
-void
-dmz::NetModuleAttributeMapBasic::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::NetModuleAttributeMapBasic::start_plugin () {
-
-}
-
-
-void
-dmz::NetModuleAttributeMapBasic::stop_plugin () {
-
-}
-
-
-void
-dmz::NetModuleAttributeMapBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::NetModuleAttributeMapBasic::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // NetModuleAttributeMap Interface
 dmz::UInt32
 dmz::NetModuleAttributeMapBasic::lookup_which_handle (const String &Name) {

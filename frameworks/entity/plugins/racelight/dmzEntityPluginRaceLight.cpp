@@ -34,37 +34,6 @@ dmz::EntityPluginRaceLight::~EntityPluginRaceLight () {
 }
 
 
-// Plugin Interface
-void
-dmz::EntityPluginRaceLight::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::EntityPluginRaceLight::start_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginRaceLight::stop_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginRaceLight::shutdown_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginRaceLight::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Input Observer Interface
 void
 dmz::EntityPluginRaceLight::update_channel_state (

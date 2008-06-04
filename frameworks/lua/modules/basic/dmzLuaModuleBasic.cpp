@@ -119,51 +119,46 @@ dmz::LuaModuleBasic::~LuaModuleBasic () {
 
 // Plugin Interface
 void
-dmz::LuaModuleBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::LuaModuleBasic::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   LuaObserver *obs = LuaObserver::cast (PluginPtr);
+   if (State == PluginStateStart) {
 
-   if (obs) { obs->store_lua_module (get_plugin_name (), *this); }
-
-   _extensions.discover_external_plugin (PluginPtr);
-}
-
-
-void
-dmz::LuaModuleBasic::start_plugin () {
-
-   _extensions.start_plugins ();
-   if (!_started) { _start_lua_plugins (); }
-   _started = True;
-}
-
-
-void
-dmz::LuaModuleBasic::stop_plugin () {
-
-   _extensions.stop_plugins ();
-}
-
-
-void
-dmz::LuaModuleBasic::shutdown_plugin () {
-
-   _extensions.shutdown_plugins ();
-}
-
-
-void
-dmz::LuaModuleBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   LuaObserver *obs = LuaObserver::cast (PluginPtr);
-
-   if (obs) {
-
-      obs->remove_lua_module (get_plugin_name (), *this);
-      release_lua_observer (LuaAllCallbacksMask, *obs);
+      _extensions.start_plugins ();
+      if (!_started) { _start_lua_plugins (); }
+      _started = True;
    }
+   else if (State == PluginStateStop) { _extensions.stop_plugins (); } 
+   else if (State == PluginStateShutdown) { _extensions.shutdown_plugins (); }
+}
 
-   _extensions.remove_external_plugin (PluginPtr);
+
+void
+dmz::LuaModuleBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
+
+   if (Mode == PluginDiscoverAdd) {
+
+      LuaObserver *obs = LuaObserver::cast (PluginPtr);
+
+      if (obs) { obs->store_lua_module (get_plugin_name (), *this); }
+
+      _extensions.discover_external_plugin (PluginPtr);
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      LuaObserver *obs = LuaObserver::cast (PluginPtr);
+
+      if (obs) {
+
+         obs->remove_lua_module (get_plugin_name (), *this);
+         release_lua_observer (LuaAllCallbacksMask, *obs);
+      }
+
+      _extensions.remove_external_plugin (PluginPtr);
+   }
 }
 
 

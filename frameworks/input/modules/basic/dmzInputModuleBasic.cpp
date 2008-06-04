@@ -132,42 +132,28 @@ dmz::InputModuleBasic::~InputModuleBasic () {
 }
 
 
+// Plugin Interface
 void
-dmz::InputModuleBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::InputModuleBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   InputObserver *obs (InputObserver::cast (PluginPtr));
+   if (Mode == PluginDiscoverAdd) {
 
-   if (obs) { obs->store_input_module_channels (_PluginInfoData.get_name (), *this); }
+      InputObserver *obs (InputObserver::cast (PluginPtr));
+
+      if (obs) { obs->store_input_module_channels (_PluginInfoData.get_name (), *this); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      InputObserver *obs (InputObserver::cast (PluginPtr));
+
+      if (obs) { obs->remove_input_module_channels (_PluginInfoData.get_name (), *this); }
+   }
 }
 
 
-void
-dmz::InputModuleBasic::start_plugin () {
-
-}
-
-
-void
-dmz::InputModuleBasic::stop_plugin () {
-
-}
-
-
-void
-dmz::InputModuleBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::InputModuleBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   InputObserver *obs (InputObserver::cast (PluginPtr));
-
-   if (obs) { obs->remove_input_module_channels (_PluginInfoData.get_name (), *this); }
-}
-
-
+// Input Module Interface
 void
 dmz::InputModuleBasic::register_input_observer (
       const Handle Channel,

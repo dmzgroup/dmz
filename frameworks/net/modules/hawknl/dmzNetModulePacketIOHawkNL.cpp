@@ -27,19 +27,7 @@ dmz::NetModulePacketIOHawkNL::~NetModulePacketIOHawkNL () {
 }
 
 
-// Plugin Interface
-void
-dmz::NetModulePacketIOHawkNL::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::NetModulePacketIOHawkNL::start_plugin () {
-
-}
-
-
+// Sync Interface
 void
 dmz::NetModulePacketIOHawkNL::update_sync (const Float64 TimeDelta) {
 
@@ -68,24 +56,6 @@ dmz::NetModulePacketIOHawkNL::update_sync (const Float64 TimeDelta) {
          }
       } while (size && (count < 32));
    }
-}
-
-
-void
-dmz::NetModulePacketIOHawkNL::stop_plugin () {
-
-}
-
-
-void
-dmz::NetModulePacketIOHawkNL::shutdown_plugin () {
-
-}
-
-
-void
-dmz::NetModulePacketIOHawkNL::remove_plugin (const Plugin *PluginPtr) {
-
 }
 
 

@@ -86,37 +86,23 @@ dmz::NetModulePacketCodecBasic::~NetModulePacketCodecBasic () {
 
 // Plugin Interface
 void
-dmz::NetModulePacketCodecBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::NetModulePacketCodecBasic::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   _extensions.discover_external_plugin (PluginPtr);
+   if (State == PluginStateStart) { _extensions.start_plugins (); }
+   else if (State == PluginStateStop) { _extensions.stop_plugins (); }
+   else if (State == PluginStateShutdown) { _extensions.shutdown_plugins (); }
 }
 
 
 void
-dmz::NetModulePacketCodecBasic::start_plugin () {
+dmz::NetModulePacketCodecBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   _extensions.start_plugins ();
-}
-
-
-void
-dmz::NetModulePacketCodecBasic::stop_plugin () {
-
-   _extensions.stop_plugins ();
-}
-
-
-void
-dmz::NetModulePacketCodecBasic::shutdown_plugin () {
-
-   _extensions.shutdown_plugins ();
-}
-
-
-void
-dmz::NetModulePacketCodecBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   _extensions.remove_external_plugin (PluginPtr);
+   if (Mode == PluginDiscoverAdd) { _extensions.discover_external_plugin (PluginPtr); }
+   else if (Mode == PluginDiscoverAdd) { _extensions.remove_external_plugin (PluginPtr); }
 }
 
 

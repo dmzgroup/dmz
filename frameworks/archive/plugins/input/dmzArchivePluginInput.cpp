@@ -103,58 +103,52 @@ dmz::ArchivePluginInput::~ArchivePluginInput () {
 
 // Plugin Interface
 void
-dmz::ArchivePluginInput::discover_plugin (const Plugin *PluginPtr) {
+dmz::ArchivePluginInput::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   if (!_channels) { _channels = InputModule::cast (PluginPtr); }
-}
+   if (State == PluginStateStart) {
+      if (_eventList) {
 
+         if (_channels) {
 
-void
-dmz::ArchivePluginInput::start_plugin () {
-
-   if (_eventList) {
-
-      if (_channels) {
-
-         EventStruct *event (_eventList);
+            EventStruct *event (_eventList);
          
-         while (event) {
+            while (event) {
             
-            if (event->channel) {
+               if (event->channel) {
                
-               _channels->create_channel (event->channel->handle);
-            }
+                  _channels->create_channel (event->channel->handle);
+               }
             
-            event = event->next;
+               event = event->next;
+            }
          }
-      }
       
-      set_sync_interval (_eventList->Delay);
-      start_sync ();
+         set_sync_interval (_eventList->Delay);
+         start_sync ();
+      }
    }
+   else if (State == PluginStateShutdown) { _destroy_events (); }
 }
 
 
 void
-dmz::ArchivePluginInput::stop_plugin () {
+dmz::ArchivePluginInput::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-}
+   if (Mode == PluginDiscoverAdd) {
 
+      if (!_channels) { _channels = InputModule::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
 
-void
-dmz::ArchivePluginInput::shutdown_plugin () {
+      if (_channels && (_channels == InputModule::cast (PluginPtr))) {
 
-   _destroy_events ();
-}
-
-
-void
-dmz::ArchivePluginInput::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_channels && (_channels == InputModule::cast (PluginPtr))) {
-
-      _destroy_events ();
-      _channels = 0;
+         _destroy_events ();
+         _channels = 0;
+      }
    }
 }
 

@@ -33,12 +33,16 @@ namespace dmz {
          InputModuleBasic (const PluginInfo &Info);
          ~InputModuleBasic ();
 
-         virtual void discover_plugin (const Plugin *PluginPtr);
-         virtual void start_plugin ();
-         virtual void stop_plugin ();
-         virtual void shutdown_plugin ();
-         virtual void remove_plugin (const Plugin *PluginPtr);
+         // Plugin Interface
+         virtual void update_plugin_state (
+            const PluginStateEnum State,
+            const UInt32 Level) {;}
 
+         virtual void discover_plugin (
+            const PluginDiscoverEnum Mode,
+            const Plugin *PluginPtr);
+
+         // Input Module Interface
          virtual void register_input_observer (
             const Handle Channel,
             const Mask &EventMask,

@@ -74,14 +74,7 @@ dmz::AudioModuleFMOD::~AudioModuleFMOD () {
 }
 
 
-void
-dmz::AudioModuleFMOD::discover_plugin (const Plugin *PluginPtr) {;}
-
-
-void
-dmz::AudioModuleFMOD::start_plugin () {;}
-
-
+// Sync Interface
 void
 dmz::AudioModuleFMOD::update_sync (const Float64 TimeDelta) {
 
@@ -89,18 +82,7 @@ dmz::AudioModuleFMOD::update_sync (const Float64 TimeDelta) {
 }
 
 
-void
-dmz::AudioModuleFMOD::remove_plugin (const Plugin *PluginPtr) {;}
-
-
-void
-dmz::AudioModuleFMOD::stop_plugin () {;}
-
-
-void
-dmz::AudioModuleFMOD::shutdown_plugin () {;}
-
-
+// AudioModule Interface
 dmz::UInt32
 dmz::AudioModuleFMOD::create_audio_handle (const String &Filename) {
 

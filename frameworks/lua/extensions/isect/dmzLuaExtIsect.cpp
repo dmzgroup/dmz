@@ -357,36 +357,20 @@ dmz::LuaExtIsect::~LuaExtIsect () {
 
 // Plugin Interface
 void
-dmz::LuaExtIsect::discover_plugin (const Plugin *PluginPtr) {
+dmz::LuaExtIsect::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_isect.isect) { _isect.isect = RenderModuleIsect::cast (PluginPtr); }
-}
+   if (Mode == PluginDiscoverAdd) {
 
+      if (!_isect.isect) { _isect.isect = RenderModuleIsect::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
 
-void
-dmz::LuaExtIsect::start_plugin () {
+      if (_isect.isect && (_isect.isect == RenderModuleIsect::cast (PluginPtr))) {
 
-}
-
-
-void
-dmz::LuaExtIsect::stop_plugin () {
-
-}
-
-
-void
-dmz::LuaExtIsect::shutdown_plugin () {
-
-}
-
-
-void
-dmz::LuaExtIsect::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_isect.isect && (_isect.isect == RenderModuleIsect::cast (PluginPtr))) {
-
-      _isect.isect = 0;
+         _isect.isect = 0;
+      }
    }
 }
 

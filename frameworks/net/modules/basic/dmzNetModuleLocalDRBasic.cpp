@@ -493,37 +493,18 @@ dmz::NetModuleLocalDRBasic::~NetModuleLocalDRBasic () {
 
 // Plugin Interface
 void
-dmz::NetModuleLocalDRBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::NetModuleLocalDRBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_objMod) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _objMod = ObjectModule::cast (PluginPtr);
+      if (!_objMod) { _objMod = ObjectModule::cast (PluginPtr); }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
 
-
-void
-dmz::NetModuleLocalDRBasic::start_plugin () {
-
-}
-
-
-void
-dmz::NetModuleLocalDRBasic::stop_plugin () {
-
-}
-
-
-void
-dmz::NetModuleLocalDRBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::NetModuleLocalDRBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_objMod && (_objMod == ObjectModule::cast (PluginPtr))) { _objMod = 0; }
+      if (_objMod && (_objMod == ObjectModule::cast (PluginPtr))) { _objMod = 0; }
+   }
 }
 
 

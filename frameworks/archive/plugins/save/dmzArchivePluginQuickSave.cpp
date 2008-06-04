@@ -52,18 +52,20 @@ dmz::ArchivePluginQuickSave::~ArchivePluginQuickSave () {
 
 // Plugin Interface
 void
-dmz::ArchivePluginQuickSave::discover_plugin (const Plugin *PluginPtr) {
+dmz::ArchivePluginQuickSave::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_archiveMod) { _archiveMod = ArchiveModule::cast (PluginPtr); }
-}
+   if (Mode == PluginDiscoverAdd) {
 
+      if (!_archiveMod) { _archiveMod = ArchiveModule::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
 
-void
-dmz::ArchivePluginQuickSave::remove_plugin (const Plugin *PluginPtr) {
+      if (_archiveMod && (_archiveMod == ArchiveModule::cast (PluginPtr))) {
 
-   if (_archiveMod && (_archiveMod == ArchiveModule::cast (PluginPtr))) {
-
-      _archiveMod = 0;
+         _archiveMod = 0;
+      }
    }
 }
 

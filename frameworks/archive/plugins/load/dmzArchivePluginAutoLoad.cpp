@@ -38,16 +38,11 @@ dmz::ArchivePluginAutoLoad::~ArchivePluginAutoLoad () {
 
 // Plugin Interface
 void
-dmz::ArchivePluginAutoLoad::discover_plugin (const Plugin *PluginPtr) {
+dmz::ArchivePluginAutoLoad::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   if (!_archiveMod) { _archiveMod = ArchiveModule::cast (PluginPtr); }
-}
-
-
-void
-dmz::ArchivePluginAutoLoad::start_plugin () {
-
-   if (_archiveMod && _archive) {
+   if ((State == PluginStateStart) && _archiveMod && _archive) {
 
       Config data;
       _global.lookup_all_config_merged ("dmz", data);
@@ -57,11 +52,20 @@ dmz::ArchivePluginAutoLoad::start_plugin () {
 
 
 void
-dmz::ArchivePluginAutoLoad::remove_plugin (const Plugin *PluginPtr) {
+dmz::ArchivePluginAutoLoad::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (_archiveMod && (_archiveMod == ArchiveModule::cast (PluginPtr))) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _archiveMod = 0;
+      if (!_archiveMod) { _archiveMod = ArchiveModule::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_archiveMod && (_archiveMod == ArchiveModule::cast (PluginPtr))) {
+
+         _archiveMod = 0;
+      }
    }
 }
 

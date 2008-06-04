@@ -11,7 +11,7 @@
 
 
 dmz::AudioPluginObject::AudioPluginObject (
-      const PluginInfo &Info, 
+      const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
       Sync (Info),
@@ -24,8 +24,8 @@ dmz::AudioPluginObject::AudioPluginObject (
    _init (local);
 
    _defaultHandle = activate_default_object_attribute (
-      ObjectCreateMask | 
-         ObjectDestroyMask | 
+      ObjectCreateMask |
+         ObjectDestroyMask |
          ObjectTypeMask |
          ObjectStateMask |
          ObjectPositionMask |
@@ -43,15 +43,68 @@ dmz::AudioPluginObject::~AudioPluginObject () {
 
 // Plugin Interface
 void
-dmz::AudioPluginObject::discover_plugin (const Plugin *PluginPtr) {
+dmz::AudioPluginObject::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_audioMod) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _audioMod = AudioModule::cast (PluginPtr);
+      if (!_audioMod) {
 
-      if (_audioMod) {
+         _audioMod = AudioModule::cast (PluginPtr);
+
+         if (_audioMod) {
+
+            HashTableHandleIterator it;
+
+            SoundDefStruct *ss (_soundTable.get_first (it));
+
+            while (ss) {
+
+               SoundDefStruct *current (ss);
+
+               while (current) {
+
+                  _lookup_sound_handles (*current);
+
+                  current = current->next;
+               }
+
+               ss = _soundTable.get_next (it);
+            }
+
+            ObjectStruct *os (_objectTable.get_first (it));
+
+            while (os) {
+
+               HashTableHandleIterator attrIt;
+
+               SoundStruct *current (os->list);
+
+               SoundAttributes attr (os->pos, os->vel, 1.0, True);
+
+               while (current) {
+
+                  attr.set_pitch_scale (current->scale);
+
+                  current->handle =
+                     _audioMod->play_sound (current->Data.loopHandle, attr);
+
+                  current = current->next;
+               }
+
+               os = _objectTable.get_next (it);
+            }
+         }
+      }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_audioMod && (_audioMod == AudioModule::cast (PluginPtr))) {
 
          HashTableHandleIterator it;
+
+         _stop_all_looped_sounds ();
 
          SoundDefStruct *ss (_soundTable.get_first (it));
 
@@ -61,7 +114,23 @@ dmz::AudioPluginObject::discover_plugin (const Plugin *PluginPtr) {
 
             while (current) {
 
-               _lookup_sound_handles (*current);
+               if (current->activateHandle) {
+
+                  _audioMod->destroy_audio_handle (current->activateHandle);
+                  current->activateHandle = 0;
+               }
+
+               if (current->loopHandle) {
+
+                  _audioMod->destroy_audio_handle (current->loopHandle);
+                  current->loopHandle = 0;
+               }
+
+               if (current->deactivateHandle) {
+
+                  _audioMod->destroy_audio_handle (current->deactivateHandle);
+                  current->deactivateHandle = 0;
+               }
 
                current = current->next;
             }
@@ -69,36 +138,13 @@ dmz::AudioPluginObject::discover_plugin (const Plugin *PluginPtr) {
             ss = _soundTable.get_next (it);
          }
 
-         ObjectStruct *os (_objectTable.get_first (it));
-
-         while (os) {
-
-            HashTableHandleIterator attrIt;
-
-            SoundStruct *current (os->list);
-
-            SoundAttributes attr (os->pos, os->vel, 1.0, True); 
-
-            while (current) {
-
-               attr.set_pitch_scale (current->scale);
-               current->handle = _audioMod->play_sound (current->Data.loopHandle, attr);
-               current = current->next;
-            }
-
-            os = _objectTable.get_next (it);
-         }
+         _audioMod = 0;
       }
    }
 }
 
 
-void
-dmz::AudioPluginObject::start_plugin () {
-
-}
-
-
+// Sync Interface
 void
 dmz::AudioPluginObject::update_sync (const Float64 TimeDelta) {
 
@@ -130,64 +176,6 @@ dmz::AudioPluginObject::update_sync (const Float64 TimeDelta) {
    }
 
    _updateTable.clear ();
-}
-
-
-void
-dmz::AudioPluginObject::stop_plugin () {
-
-}
-
-
-void
-dmz::AudioPluginObject::shutdown_plugin () {
-
-}
-
-
-void
-dmz::AudioPluginObject::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_audioMod && (_audioMod == AudioModule::cast (PluginPtr))) {
-
-      HashTableHandleIterator it;
-
-      _stop_all_looped_sounds ();
-
-      SoundDefStruct *ss (_soundTable.get_first (it));
-
-      while (ss) {
-
-         SoundDefStruct *current (ss);
-
-         while (current) {
-
-            if (current->activateHandle) {
-
-               _audioMod->destroy_audio_handle (current->activateHandle);
-               current->activateHandle = 0;
-            }
-
-            if (current->loopHandle) {
-
-               _audioMod->destroy_audio_handle (current->loopHandle);
-               current->loopHandle = 0;
-            }
-
-            if (current->deactivateHandle) {
-
-               _audioMod->destroy_audio_handle (current->deactivateHandle);
-               current->deactivateHandle = 0;
-            }
-
-            current = current->next;
-         }
-
-         ss = _soundTable.get_next (it);
-      }
-
-      _audioMod = 0;
-   }
 }
 
 
@@ -440,9 +428,9 @@ dmz::AudioPluginObject::_object_type_to_sound_list (const ObjectType &Type) {
          }
 
          SoundDefStruct *ss = new SoundDefStruct (state);
-   
+
          if (ss) {
-   
+
             _init_sound_struct (data, *ss);
 
             if (!current) {
@@ -475,7 +463,7 @@ dmz::AudioPluginObject::_init_sound_struct (Config &data, SoundDefStruct &ss) {
    const String ScalarName (config_to_string ("scalar", data));
 
    if (ScalarName) {
-            
+
       ss.scalarAttributeHandle = activate_object_attribute (ScalarName, ObjectScalarMask);
    }
 
@@ -489,7 +477,7 @@ dmz::AudioPluginObject::_lookup_sound_handles (SoundDefStruct &ss) {
 
    if (_audioMod) {
 
-      if (ss.activateName) { 
+      if (ss.activateName) {
 
          ss.activateHandle = _audioMod->create_audio_handle (ss.activateName);
       }

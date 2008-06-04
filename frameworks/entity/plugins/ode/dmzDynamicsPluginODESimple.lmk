@@ -1,4 +1,4 @@
-lmk.set_name ("dmzDynamicsPluginODESimple", {DMZ_USE_ODE = true})
+lmk.set_name ("dmzDynamicsPluginODESimple", {DMZ_DO_NOT_BUILD = true})
 lmk.set_type "plugin"
 lmk.add_files {"dmzDynamicsPluginODESimple.cpp",}
 lmk.add_libs {

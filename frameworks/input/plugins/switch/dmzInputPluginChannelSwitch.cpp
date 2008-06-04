@@ -40,36 +40,6 @@ dmz::InputPluginChannelSwitch::~InputPluginChannelSwitch () {
 }
 
 
-// Plugin Interface
-void
-dmz::InputPluginChannelSwitch::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::InputPluginChannelSwitch::start_plugin () {
-}
-
-
-void
-dmz::InputPluginChannelSwitch::stop_plugin () {
-
-}
-
-
-void
-dmz::InputPluginChannelSwitch::shutdown_plugin () {
-
-}
-
-
-void
-dmz::InputPluginChannelSwitch::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Input Observer Interface
 void
 dmz::InputPluginChannelSwitch::update_channel_state (

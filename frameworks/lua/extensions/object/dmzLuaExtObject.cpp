@@ -1433,52 +1433,35 @@ dmz::LuaExtObject::release_object_observer (ObjectObserver &obs) {
 
 // Plugin Interface
 void
-dmz::LuaExtObject::discover_plugin (const Plugin *PluginPtr) {
+dmz::LuaExtObject::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_obj.selectMod) { _obj.selectMod = ObjectModuleSelect::cast (PluginPtr); }
+   if (Mode == PluginDiscoverAdd) {
 
-   ObjectModule *objMod (ObjectModule::cast (PluginPtr));
+      if (!_obj.selectMod) { _obj.selectMod = ObjectModuleSelect::cast (PluginPtr); }
 
-   if (PluginPtr && objMod) {
+      ObjectModule *objMod (ObjectModule::cast (PluginPtr));
 
-      store_object_module (PluginPtr->get_plugin_name (), *objMod);
+      if (PluginPtr && objMod) {
+
+         store_object_module (PluginPtr->get_plugin_name (), *objMod);
+      }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
 
+      if (_obj.selectMod && (_obj.selectMod == ObjectModuleSelect::cast (PluginPtr))) {
 
-void
-dmz::LuaExtObject::start_plugin () {
+         _obj.selectMod = 0;
+      }
 
-}
+      ObjectModule *objMod (ObjectModule::cast (PluginPtr));
 
+      if (PluginPtr && objMod) {
 
-void
-dmz::LuaExtObject::stop_plugin () {
-
-}
-
-
-void
-dmz::LuaExtObject::shutdown_plugin () {
-
-}
-
-
-void
-dmz::LuaExtObject::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_obj.selectMod && (_obj.selectMod == ObjectModuleSelect::cast (PluginPtr))) {
-
-      _obj.selectMod = 0;
+         remove_object_module (PluginPtr->get_plugin_name (), *objMod);
+      }
    }
-
-   ObjectModule *objMod (ObjectModule::cast (PluginPtr));
-
-   if (PluginPtr && objMod) {
-
-      remove_object_module (PluginPtr->get_plugin_name (), *objMod);
-   }
-
 }
 
 

@@ -37,13 +37,30 @@ dmz::EntityPluginPortalFollow::~EntityPluginPortalFollow () {
 
 // Plugin Interface
 void
-dmz::EntityPluginPortalFollow::discover_plugin (const Plugin *PluginPtr) {
+dmz::EntityPluginPortalFollow::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_renderPortal) { _renderPortal = RenderModulePortal::cast (PluginPtr); }
-   if (!_audioPortal) { _audioPortal = AudioModulePortal::cast (PluginPtr); }
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_renderPortal) { _renderPortal = RenderModulePortal::cast (PluginPtr); }
+      if (!_audioPortal) { _audioPortal = AudioModulePortal::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_renderPortal && (_renderPortal == RenderModulePortal::cast (PluginPtr))) { 
+      
+         _renderPortal = 0; 
+      }
+      if (_audioPortal && (_audioPortal == AudioModulePortal::cast (PluginPtr))) { 
+      
+         _audioPortal = 0; 
+      }
+   }
 }
 
 
+// Sync Interface
 void
 dmz::EntityPluginPortalFollow::update_sync (const Float64 TimeDelta) {
 
@@ -147,20 +164,6 @@ dmz::EntityPluginPortalFollow::update_sync (const Float64 TimeDelta) {
 
       if (_renderPortal) { _renderPortal->set_view (pos, ori); }
       if (_audioPortal) { _audioPortal->set_view (pos, ori); }
-   }
-}
-
-
-void
-dmz::EntityPluginPortalFollow::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_renderPortal && (_renderPortal == RenderModulePortal::cast (PluginPtr))) { 
-      
-      _renderPortal = 0; 
-   }
-   if (_audioPortal && (_audioPortal == AudioModulePortal::cast (PluginPtr))) { 
-      
-      _audioPortal = 0; 
    }
 }
 

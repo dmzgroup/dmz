@@ -38,18 +38,22 @@ dmz::EntityPluginGroundSimple::~EntityPluginGroundSimple () {
 
 // Plugin Interface
 void
-dmz::EntityPluginGroundSimple::discover_plugin (const Plugin *PluginPtr) {
+dmz::EntityPluginGroundSimple::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_isect) { _isect = RenderModuleIsect::cast (PluginPtr); }
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_isect) { _isect = RenderModuleIsect::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_isect && (_isect == RenderModuleIsect::cast (PluginPtr))) { _isect = 0; }
+   }
 }
 
 
-void
-dmz::EntityPluginGroundSimple::start_plugin () {
-
-}
-
-
+// Sync Interface
 void
 dmz::EntityPluginGroundSimple::update_sync (const Float64 TimeDelta) {
 
@@ -142,24 +146,6 @@ dmz::EntityPluginGroundSimple::update_sync (const Float64 TimeDelta) {
    }
 }
 
-
-void
-dmz::EntityPluginGroundSimple::stop_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginGroundSimple::shutdown_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginGroundSimple::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_isect && (_isect == RenderModuleIsect::cast (PluginPtr))) { _isect = 0; }
-}
 
 
 // Object Observer Interface

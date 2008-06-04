@@ -19,15 +19,16 @@ namespace dmz {
          AudioModulePortalBasic (const PluginInfo &Info, const Config &Local);
          ~AudioModulePortalBasic (); 
 
-         virtual void discover_plugin (const Plugin *PluginPtr);
-         virtual void start_plugin ();
-         virtual void stop_plugin ();
-         virtual void shutdown_plugin ();
-         virtual void remove_plugin (const Plugin *PluginPtr);
+         // Plugin Interface
+         virtual void update_plugin_state (
+            const PluginStateEnum State,
+            const UInt32 Level) {;}
 
-         String get_audio_portal_name () const;
-         UInt32 get_audio_portal_handle () const;
+         virtual void discover_plugin (
+            const PluginDiscoverEnum Mode,
+            const Plugin *PluginPtr);
 
+         // AudioModulePortal Interface
          virtual Boolean is_master_portal () const;
 
          virtual void set_view (const Vector &Pos, const Matrix &Ori);

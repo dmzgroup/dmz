@@ -203,19 +203,27 @@ dmz::InputPluginControllerWin32::~InputPluginControllerWin32 () {
 }
 
 
+// Plugin Interface
 void
-dmz::InputPluginControllerWin32::discover_plugin (const Plugin *PluginPtr) {
+dmz::InputPluginControllerWin32::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_channels) { _channels = InputModule::cast (PluginPtr); }
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_channels) { _channels = InputModule::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_channels && (_channels == InputModule::cast (PluginPtr))) {
+   
+         _channels = 0;
+      }
+   }
 }
 
 
-void
-dmz::InputPluginControllerWin32::start_plugin () {
-
-}
-
-
+// Sync Interface
 void
 dmz::InputPluginControllerWin32::update_sync (const Float64 DeltaTime) {
 
@@ -231,28 +239,6 @@ dmz::InputPluginControllerWin32::update_sync (const Float64 DeltaTime) {
 
          controller = _controllerTable.get_next (it);
       }
-   }
-}
-
-
-void
-dmz::InputPluginControllerWin32::stop_plugin () {
-
-}
-
-
-void
-dmz::InputPluginControllerWin32::shutdown_plugin () {
-
-}
-
-
-void
-dmz::InputPluginControllerWin32::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_channels && (_channels == InputModule::cast (PluginPtr))) {
-   
-      _channels = 0;
    }
 }
 

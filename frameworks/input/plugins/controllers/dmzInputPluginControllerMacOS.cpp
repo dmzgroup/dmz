@@ -162,19 +162,27 @@ dmz::InputPluginControllerMacOS::~InputPluginControllerMacOS () {
 }
 
 
+// Plugin Interface
 void
-dmz::InputPluginControllerMacOS::discover_plugin (const Plugin *PluginPtr) {
+dmz::InputPluginControllerMacOS::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_channels) { _channels = InputModule::cast (PluginPtr); }
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_channels) { _channels = InputModule::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_channels && (_channels == InputModule::cast (PluginPtr))) {
+   
+         _channels = 0;
+      }
+   }
 }
 
 
-void
-dmz::InputPluginControllerMacOS::start_plugin () {
-
-}
-
-
+// Sync Interface
 void
 dmz::InputPluginControllerMacOS::update_sync (const Float64 DeltaTime) {
 
@@ -190,28 +198,6 @@ dmz::InputPluginControllerMacOS::update_sync (const Float64 DeltaTime) {
 
          controller = _controllerTable.get_next (it);
       }
-   }
-}
-
-
-void
-dmz::InputPluginControllerMacOS::stop_plugin () {
-
-}
-
-
-void
-dmz::InputPluginControllerMacOS::shutdown_plugin () {
-
-}
-
-
-void
-dmz::InputPluginControllerMacOS::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_channels && (_channels == InputModule::cast (PluginPtr))) {
-   
-      _channels = 0;
    }
 }
 

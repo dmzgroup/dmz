@@ -39,39 +39,23 @@ dmz::NetExtPacketCodecObjectBasic::~NetExtPacketCodecObjectBasic () {
 
 // Plugin Interface
 void
-dmz::NetExtPacketCodecObjectBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::NetExtPacketCodecObjectBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_objMod) { _objMod = ObjectModule::cast (PluginPtr); }
-   if (!_attrMod) { _attrMod = NetModuleAttributeMap::cast (PluginPtr); }
-}
+   if (Mode == PluginDiscoverAdd) {
 
+      if (!_objMod) { _objMod = ObjectModule::cast (PluginPtr); }
+      if (!_attrMod) { _attrMod = NetModuleAttributeMap::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
 
-void
-dmz::NetExtPacketCodecObjectBasic::start_plugin () {
+      if (_objMod && (_objMod == ObjectModule::cast (PluginPtr))) { _objMod = 0; }
 
-}
+      if (_attrMod && (_attrMod == NetModuleAttributeMap::cast (PluginPtr))) {
 
-
-void
-dmz::NetExtPacketCodecObjectBasic::stop_plugin () {
-
-}
-
-
-void
-dmz::NetExtPacketCodecObjectBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::NetExtPacketCodecObjectBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_objMod && (_objMod == ObjectModule::cast (PluginPtr))) { _objMod = 0; }
-
-   if (_attrMod && (_attrMod == NetModuleAttributeMap::cast (PluginPtr))) {
-
-      _attrMod = 0;
+         _attrMod = 0;
+      }
    }
 }
 

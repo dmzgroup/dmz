@@ -16,35 +16,6 @@ dmz::AudioPluginEvent::~AudioPluginEvent () {
 }
 
 
-// Plugin Interface
-void
-dmz::AudioPluginEvent::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::AudioPluginEvent::start_plugin () {
-
-}
-
-
-void
-dmz::AudioPluginEvent::stop_plugin () {
-
-}
-
-void
-dmz::AudioPluginEvent::shutdown_plugin () {
-
-}
-
-void
-dmz::AudioPluginEvent::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Event Observer Interface
 void
 dmz::AudioPluginEvent::start_event (

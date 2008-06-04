@@ -34,79 +34,80 @@ dmz::ArchivePluginAutoSave::~ArchivePluginAutoSave () {
 
 
 // Plugin Interface
-void
-dmz::ArchivePluginAutoSave::discover_plugin (const Plugin *PluginPtr) {
 
-   if (!_archiveMod) { _archiveMod = ArchiveModule::cast (PluginPtr); }
-}
 
 
 void
-dmz::ArchivePluginAutoSave::start_plugin () {
+dmz::ArchivePluginAutoSave::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   if (_firstStart && _saveFile && is_valid_path (_saveFile) && _archiveMod) {
+   if (State == PluginStateStart) {
 
-      _log.info << "Restoring from auto save archive: " << _saveFile << endl;
+      if (_firstStart && _saveFile && is_valid_path (_saveFile) && _archiveMod) {
 
-      Config global ("global");
-      XMLParser parser;
-      XMLInterpreterConfig interpreter (global);
-      parser.set_interpreter (&interpreter);
+         _log.info << "Restoring from auto save archive: " << _saveFile << endl;
 
-      FILE *file = open_file (_saveFile, "rb");
+         Config global ("global");
+         XMLParser parser;
+         XMLInterpreterConfig interpreter (global);
+         parser.set_interpreter (&interpreter);
 
-      if (file) {
+         FILE *file = open_file (_saveFile, "rb");
 
-         Boolean error (False);
-         String buffer;
+         if (file) {
 
-         while (read_file (file, 1024, buffer) && !error) {
+            Boolean error (False);
+            String buffer;
 
-            const Int32 Length = buffer.get_length ();
-            const char *cbuf = buffer.get_buffer ();
+            while (read_file (file, 1024, buffer) && !error) {
 
-            if (!parser.parse_buffer (cbuf, Length, Length < 1024)) {
+               const Int32 Length = buffer.get_length ();
+               const char *cbuf = buffer.get_buffer ();
 
-               error = True;
-               _log.error << "Unable to restore from auto save archive: " << _saveFile
-                  << " : " << parser.get_error ();
+               if (!parser.parse_buffer (cbuf, Length, Length < 1024)) {
+
+                  error = True;
+                  _log.error << "Unable to restore from auto save archive: " << _saveFile
+                     << " : " << parser.get_error ();
+               }
+            }
+
+            close_file (file);
+
+            Config data;
+
+            if (!error && global.lookup_all_config_merged ("dmz", data)) {
+
+               _archiveMod->process_archive (_archiveHandle, data);
             }
          }
-
-         close_file (file);
-
-         Config data;
-
-         if (!error && global.lookup_all_config_merged ("dmz", data)) {
-
-            _archiveMod->process_archive (_archiveHandle, data);
-         }
       }
+
+      _firstStart = False;
    }
+   else if (State == PluginStateShutdown) {
 
-   _firstStart = False;
+      if (is_valid_path (_saveFile)) { remove_file (_saveFile); }
+   }
 }
 
 
 void
-dmz::ArchivePluginAutoSave::stop_plugin () {
+dmz::ArchivePluginAutoSave::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-}
+   if (Mode == PluginDiscoverAdd) {
 
+      if (!_archiveMod) { _archiveMod = ArchiveModule::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
 
-void
-dmz::ArchivePluginAutoSave::shutdown_plugin () {
+      if (_archiveMod && (_archiveMod == ArchiveModule::cast (PluginPtr))) {
 
-   if (is_valid_path (_saveFile)) { remove_file (_saveFile); }
-}
-
-
-void
-dmz::ArchivePluginAutoSave::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_archiveMod && (_archiveMod == ArchiveModule::cast (PluginPtr))) {
-
-      _archiveMod = 0;
+         _archiveMod = 0;
+      }
    }
 }
 

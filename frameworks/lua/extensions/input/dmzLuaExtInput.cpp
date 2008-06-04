@@ -916,43 +916,27 @@ dmz::LuaExtInput::release_observer_all (const Handle ObsHandle) {
 
 // Plugin Interface
 void
-dmz::LuaExtInput::discover_plugin (const Plugin *PluginPtr) {
+dmz::LuaExtInput::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   InputModule *channels (InputModule::cast (PluginPtr));
+   if (Mode == PluginDiscoverAdd) {
 
-   if (PluginPtr && channels) {
+      InputModule *channels (InputModule::cast (PluginPtr));
 
-      store_input_module_channels (PluginPtr->get_plugin_name (), *channels);
+      if (PluginPtr && channels) {
+
+         store_input_module_channels (PluginPtr->get_plugin_name (), *channels);
+      }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
 
+      InputModule *channels (InputModule::cast (PluginPtr));
 
-void
-dmz::LuaExtInput::start_plugin () {
+      if (PluginPtr && channels) {
 
-}
-
-
-void
-dmz::LuaExtInput::stop_plugin () {
-
-}
-
-
-void
-dmz::LuaExtInput::shutdown_plugin () {
-
-}
-
-
-void
-dmz::LuaExtInput::remove_plugin (const Plugin *PluginPtr) {
-
-   InputModule *channels (InputModule::cast (PluginPtr));
-
-   if (PluginPtr && channels) {
-
-      remove_input_module_channels (PluginPtr->get_plugin_name (), *channels);
+         remove_input_module_channels (PluginPtr->get_plugin_name (), *channels);
+      }
    }
 }
 

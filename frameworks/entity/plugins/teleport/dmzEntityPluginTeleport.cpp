@@ -30,37 +30,6 @@ dmz::EntityPluginTeleport::~EntityPluginTeleport () {
 }
 
 
-// Plugin Interface
-void
-dmz::EntityPluginTeleport::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::EntityPluginTeleport::start_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginTeleport::stop_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginTeleport::shutdown_plugin () {
-
-}
-
-
-void
-dmz::EntityPluginTeleport::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Input Observer Interface
 void
 dmz::EntityPluginTeleport::update_channel_state (

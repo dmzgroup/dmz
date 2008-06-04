@@ -40,36 +40,7 @@ dmz::InputPluginControllerKey::~InputPluginControllerKey () {
 }
 
 
-void
-dmz::InputPluginControllerKey::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::InputPluginControllerKey::start_plugin () {
-
-}
-
-
-void
-dmz::InputPluginControllerKey::stop_plugin () {
-
-}
-
-
-void
-dmz::InputPluginControllerKey::shutdown_plugin () {
-
-}
-
-
-void
-dmz::InputPluginControllerKey::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
+// Input Observer Interface
 void
 dmz::InputPluginControllerKey::update_channel_state (
       const UInt32 Channel,

@@ -88,19 +88,7 @@ dmz::EventModuleBasic::~EventModuleBasic () {
 }
 
 
-// Plugin Interface
-void
-dmz::EventModuleBasic::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::EventModuleBasic::start_plugin () {
-
-}
-
-
+// Sync Interface
 void
 dmz::EventModuleBasic::update_sync (const Float64 TimeDelta) {
 
@@ -157,24 +145,6 @@ dmz::EventModuleBasic::update_sync (const Float64 TimeDelta) {
          else { event = _eventTable.get_next (it); }
       }
    }
-}
-
-
-void
-dmz::EventModuleBasic::stop_plugin () {
-
-}
-
-
-void
-dmz::EventModuleBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::EventModuleBasic::remove_plugin (const Plugin *PluginPtr) {
-
 }
 
 

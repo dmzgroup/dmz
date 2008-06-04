@@ -26,14 +26,18 @@ namespace dmz {
          ~ObjectObserverUtilTest ();
 
          // Plugin Interface
-         void discover_plugin (const Plugin *PluginPtr);
-         void start_plugin ();
-         void stop_plugin ();
-         void shutdown_plugin ();
-         void remove_plugin (const Plugin *PluginPtr);
+         virtual void update_plugin_state (
+            const PluginStateEnum State,
+            const UInt32 Level) {;}
 
+         virtual void discover_plugin (
+            const PluginDiscoverEnum Mode,
+            const Plugin *PluginPtr) {;}
+
+         // Sync Interface
          void update_sync (const Float64 TimeDelta);
 
+         // Object Observer Interface
          void store_object_position (
             const UUID &Identity,
             const Handle ObjectHandle,

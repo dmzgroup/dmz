@@ -27,23 +27,13 @@ dmz::ObjectObserverUtilTest::ObjectObserverUtilTest (
 dmz::ObjectObserverUtilTest::~ObjectObserverUtilTest () {;}
 
 
-// Plugin Interface
-void
-dmz::ObjectObserverUtilTest::discover_plugin (const Plugin *PluginPtr) {
-
-   if (!_objMod) { _objMod = ObjectModule::cast (PluginPtr); }
-}
-
-
-void
-dmz::ObjectObserverUtilTest::start_plugin () {;}
-
-
+// Sync Interface
 void
 dmz::ObjectObserverUtilTest::update_sync (const Float64 TimeDelta) {
 
-   if (_objMod) {
+   _objMod = get_object_module ();
 
+   if (_objMod) {
 
 _log.out << "Discovered object module! " << _type.get_name () << endl;
 
@@ -71,20 +61,6 @@ _log.out << "Created object with handle " << handle << endl;
    test.exit ("Test completed");
 }
 
-
-void
-dmz::ObjectObserverUtilTest::stop_plugin () {;}
-
-
-void
-dmz::ObjectObserverUtilTest::shutdown_plugin () {;}
-
-
-void
-dmz::ObjectObserverUtilTest::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_objMod && (_objMod == ObjectModule::cast (PluginPtr))) { _objMod = 0; }
-}
 
 void
 dmz::ObjectObserverUtilTest::store_object_position (

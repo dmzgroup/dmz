@@ -24,11 +24,13 @@ namespace dmz {
          ~ObjectModuleBasicTest ();
 
          // Plugin Interface
-         void discover_plugin (const Plugin *PluginPtr);
-         void start_plugin ();
-         void stop_plugin ();
-         void shutdown_plugin ();
-         void remove_plugin (const Plugin *PluginPtr);
+         virtual void update_plugin_state (
+            const PluginStateEnum State,
+            const UInt32 Level) {;}
+
+         virtual void discover_plugin (
+            const PluginDiscoverEnum Mode,
+            const Plugin *PluginPtr) {;}
 
          void update_sync (const Float64 TimeDelta);
 

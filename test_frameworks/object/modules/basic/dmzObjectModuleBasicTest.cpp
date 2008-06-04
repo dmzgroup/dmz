@@ -20,37 +20,11 @@ dmz::ObjectModuleBasicTest::ObjectModuleBasicTest (
 dmz::ObjectModuleBasicTest::~ObjectModuleBasicTest () {;}
 
 
-// Plugin Interface
-void
-dmz::ObjectModuleBasicTest::discover_plugin (const Plugin *PluginPtr) {
-
-   if (!_objMod) { _objMod = ObjectModule::cast (PluginPtr); }
-}
-
-
-void
-dmz::ObjectModuleBasicTest::start_plugin () {;}
-
-
+// Sync Interface
 void
 dmz::ObjectModuleBasicTest::update_sync (const Float64 TimeDelta) {
 
    test.exit ("Test completed");
-}
-
-
-void
-dmz::ObjectModuleBasicTest::stop_plugin () {;}
-
-
-void
-dmz::ObjectModuleBasicTest::shutdown_plugin () {;}
-
-
-void
-dmz::ObjectModuleBasicTest::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_objMod && (_objMod == ObjectModule::cast (PluginPtr))) { _objMod = 0; }
 }
 
 

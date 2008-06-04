@@ -29,37 +29,6 @@ dmz::QtPluginCanvasAutoLink::~QtPluginCanvasAutoLink () {
 }
 
 
-// Plugin Interface
-void
-dmz::QtPluginCanvasAutoLink::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::QtPluginCanvasAutoLink::start_plugin () {
-
-}
-
-
-void
-dmz::QtPluginCanvasAutoLink::stop_plugin () {
-
-}
-
-
-void
-dmz::QtPluginCanvasAutoLink::shutdown_plugin () {
-
-}
-
-
-void
-dmz::QtPluginCanvasAutoLink::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Object Observer Interface
 void
 dmz::QtPluginCanvasAutoLink::create_object (

@@ -117,44 +117,93 @@ dmz::QtPluginCanvasObject::~QtPluginCanvasObject () {
 
 // Plugin Interface
 void
-dmz::QtPluginCanvasObject::discover_plugin (const Plugin *PluginPtr) {
+dmz::QtPluginCanvasObject::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   const String PluginName (PluginPtr ? PluginPtr->get_plugin_name () : "");
-   
-   ObjectModule *objectModule = ObjectModule::cast (PluginPtr);
-      
-   if (objectModule) {
+   if (State == PluginStateStart) {
 
-      PluginIterator it;
-
-      Plugin *ptr (_extensions.get_first (it));
-
-      while (ptr) {
-
-         ObjectObserver *obs (ObjectObserver::cast (ptr));
-
-         if (obs) {
-            
-            obs->store_object_module (PluginName, *objectModule);
-         }
-
-         ptr = _extensions.get_next (it);
-      }
+      _extensions.start_plugins ();
    }
-   
-   if (!_canvasModule) {
-      
-      _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+   else if (State == PluginStateStop) {
+
+      _extensions.stop_plugins ();
    }
-   
-   _extensions.discover_external_plugin (PluginPtr);
+   else if (State == PluginStateShutdown) {
+
+      _extensions.shutdown_plugins ();
+   }
 }
 
 
 void
-dmz::QtPluginCanvasObject::start_plugin () {
+dmz::QtPluginCanvasObject::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   _extensions.start_plugins ();
+   const String PluginName (PluginPtr ? PluginPtr->get_plugin_name () : "");
+
+   if (Mode == PluginDiscoverAdd) {
+
+      ObjectModule *objectModule = ObjectModule::cast (PluginPtr);
+
+      if (objectModule) {
+
+         PluginIterator it;
+
+         Plugin *ptr (_extensions.get_first (it));
+
+         while (ptr) {
+
+            ObjectObserver *obs (ObjectObserver::cast (ptr));
+
+            if (obs) {
+
+               obs->store_object_module (PluginName, *objectModule);
+            }
+
+            ptr = _extensions.get_next (it);
+         }
+      }
+
+      if (!_canvasModule) {
+
+         _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+      }
+
+      _extensions.discover_external_plugin (PluginPtr);
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      _extensions.remove_external_plugin (PluginPtr);
+
+      ObjectModule *objectModule (ObjectModule::cast (PluginPtr));
+
+      if (objectModule) {
+
+         PluginIterator it;
+
+         Plugin *ptr (_extensions.get_first (it));
+
+         while (ptr) {
+
+            ObjectObserver *obs (ObjectObserver::cast (ptr));
+
+            if (obs) {
+
+               obs->remove_object_module (PluginName, *objectModule);
+            }
+
+            ptr = _extensions.get_next (it);
+         }
+      }
+
+      if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
+
+         _objectTable.empty ();
+         _canvasModule = 0;
+      }
+   }
 }
 
 
@@ -172,56 +221,6 @@ dmz::QtPluginCanvasObject::update_sync (const Float64 TimeDelta) {
       }
 
       _updateTable.clear ();
-   }
-}
-
-
-void
-dmz::QtPluginCanvasObject::stop_plugin () {
-
-   _extensions.stop_plugins ();
-}
-
-
-void
-dmz::QtPluginCanvasObject::shutdown_plugin () {
-
-   _extensions.shutdown_plugins ();
-}
-
-
-void
-dmz::QtPluginCanvasObject::remove_plugin (const Plugin *PluginPtr) {
-
-   const String PluginName (PluginPtr ? PluginPtr->get_plugin_name () : "");
-
-   _extensions.remove_external_plugin (PluginPtr);
-
-   ObjectModule *objectModule (ObjectModule::cast (PluginPtr));
-
-   if (objectModule) {
-
-      PluginIterator it;
-
-      Plugin *ptr (_extensions.get_first (it));
-
-      while (ptr) {
-
-         ObjectObserver *obs (ObjectObserver::cast (ptr));
-
-         if (obs) {
-
-            obs->remove_object_module (PluginName, *objectModule);
-         }
-
-         ptr = _extensions.get_next (it);
-      }
-   }
-
-   if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
-
-      _objectTable.empty ();
-      _canvasModule = 0;
    }
 }
 

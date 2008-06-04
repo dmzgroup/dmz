@@ -50,100 +50,100 @@ dmz::RenderExtWindowOgreQt::~RenderExtWindowOgreQt () {
 
 
 // Plugin Interface
+
+
 void
-dmz::RenderExtWindowOgreQt::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderExtWindowOgreQt::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   if (!_core) {
-
-      _core = RenderModuleCoreOgre::cast (PluginPtr);
+   if (State == PluginStateStart) {
       
-      if (_core && _window) {
-         
-         Ogre::SceneManager *sceneManager = _core->get_scene_manager ();
+      _load_session ();
+      show ();
+      setFocus (Qt::ActiveWindowFocusReason);
+   }
+   else if (State == PluginStateStop) {
+      
+      _save_session ();
+      close ();
+   }
+}
 
-         if (sceneManager) {
 
-            _camera = sceneManager->createCamera (_portalName.get_buffer ());
-            
-            if (_camera) {
-               
-               _core->add_camera (_portalName, _camera);
-               
-               _viewport = _window->addViewport (_camera); 
+void
+dmz::RenderExtWindowOgreQt::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-               if (_viewport) {
+   if (Mode == PluginDiscoverAdd) {
 
-                  _camera->setAspectRatio (
-                     Ogre::Real(_viewport->getActualWidth ()) /
-                     Ogre::Real(_viewport->getActualHeight ()));
+      if (!_core) {
+
+         _core = RenderModuleCoreOgre::cast (PluginPtr);
+
+         if (_core && _window) {
+
+            Ogre::SceneManager *sceneManager = _core->get_scene_manager ();
+
+            if (sceneManager) {
+
+               _camera = sceneManager->createCamera (_portalName.get_buffer ());
+
+               if (_camera) {
+
+                  _core->add_camera (_portalName, _camera);
+
+                  _viewport = _window->addViewport (_camera); 
+
+                  if (_viewport) {
+
+                     _camera->setAspectRatio (
+                        Ogre::Real(_viewport->getActualWidth ()) /
+                        Ogre::Real(_viewport->getActualHeight ()));
+                  }
                }
             }
          }
       }
-   }
-   
-   if (!_channels) {
 
-      _channels = InputModule::cast (PluginPtr);
-   }
-}
+      if (!_channels) {
 
-
-void
-dmz::RenderExtWindowOgreQt::start_plugin () {
-
-   _load_session ();
-   show ();
-   setFocus (Qt::ActiveWindowFocusReason);
-}
-
-
-void
-dmz::RenderExtWindowOgreQt::stop_plugin () {
-
-   _save_session ();
-   close ();
-}
-
-
-void
-dmz::RenderExtWindowOgreQt::shutdown_plugin () {
-
-}
-
-
-void
-dmz::RenderExtWindowOgreQt::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_core && (_core == RenderModuleCoreOgre::cast (PluginPtr))) {
-   
-      _core->remove_camera (_portalName);
-      
-      if (_window && _viewport) {
-         
-         _window->removeViewport (_viewport->getZOrder ());
-         _viewport = 0;
+         _channels = InputModule::cast (PluginPtr);
       }
+   }
+   else if (Mode == PluginDiscoverRemove) {
 
-      if (_camera) {
+      if (_core && (_core == RenderModuleCoreOgre::cast (PluginPtr))) {
 
-         Ogre::SceneManager *sceneManager = _camera->getSceneManager ();
+         _core->remove_camera (_portalName);
 
-         if (sceneManager) {
+         if (_window && _viewport) {
 
-            sceneManager->destroyCamera (_camera);
-            _camera = 0;
+            _window->removeViewport (_viewport->getZOrder ());
+            _viewport = 0;
          }
+
+         if (_camera) {
+
+            Ogre::SceneManager *sceneManager = _camera->getSceneManager ();
+
+            if (sceneManager) {
+
+               sceneManager->destroyCamera (_camera);
+               _camera = 0;
+            }
+         }
+
+         _core = 0;
       }
 
-      _core = 0;
-   }
-   
-   if (_channels && (_channels == InputModule::cast (PluginPtr))) {
-   
-      _keyEvent.set_source_handle (0);
-      _mouseEvent.set_source_handle (0);
-      _channels = 0;
+      if (_channels && (_channels == InputModule::cast (PluginPtr))) {
+
+         _keyEvent.set_source_handle (0);
+         _mouseEvent.set_source_handle (0);
+         _channels = 0;
+      }
    }
 }
 

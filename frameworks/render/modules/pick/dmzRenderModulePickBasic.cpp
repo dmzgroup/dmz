@@ -40,38 +40,20 @@ dmz::RenderModulePickBasic::~RenderModulePickBasic () {
 
 // Plugin Interface
 void
-dmz::RenderModulePickBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderModulePickBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
    RenderPick2d *pick2d (RenderPick2d::cast (PluginPtr));
    
-   if (pick2d) { pick2d->store_render_module_pick (get_plugin_name (), *this); }
-}
-
-
-void
-dmz::RenderModulePickBasic::start_plugin () {
-   
-}
-
-
-void
-dmz::RenderModulePickBasic::stop_plugin () {
-
-}
-
-
-void
-dmz::RenderModulePickBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::RenderModulePickBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   RenderPick2d *pick2d (RenderPick2d::cast (PluginPtr));
-   
-   if (pick2d) { pick2d->remove_render_module_pick (get_plugin_name (), *this); }
+   if (Mode == PluginDiscoverAdd) {
+      
+      if (pick2d) { pick2d->store_render_module_pick (get_plugin_name (), *this); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+      
+      if (pick2d) { pick2d->remove_render_module_pick (get_plugin_name (), *this); }
+   }
 }
 
 

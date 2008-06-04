@@ -32,44 +32,57 @@ dmz::RenderPluginStatsOgre::~RenderPluginStatsOgre () {
 
 // Plugin Interface
 void
-dmz::RenderPluginStatsOgre::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderPluginStatsOgre::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_core) {
+   if (Mode == PluginDiscoverAdd) {
+      
+      if (!_core) {
 
-      _core = RenderModuleCoreOgre::cast (PluginPtr);
+         _core = RenderModuleCoreOgre::cast (PluginPtr);
 
-      if (_core) {
+         if (_core) {
 
-         try {
+            try {
 
-            _debugOverlay =
-               Ogre::OverlayManager::getSingleton().getByName (
-                  "RenderPluginStatsOgre/DebugOverlay");
+               _debugOverlay =
+                  Ogre::OverlayManager::getSingleton().getByName (
+                     "RenderPluginStatsOgre/DebugOverlay");
 
-            if (_debugOverlay) { _debugOverlay->show (); }
+               if (_debugOverlay) { _debugOverlay->show (); }
 
-            _statsOverlay =
-               Ogre::OverlayManager::getSingleton ().getOverlayElement (
-                  "RenderPluginStatsOgre/StatPanel");
+               _statsOverlay =
+                  Ogre::OverlayManager::getSingleton ().getOverlayElement (
+                     "RenderPluginStatsOgre/StatPanel");
 
-            if (_statsOverlay) { _statsOverlay->hide (); }
+               if (_statsOverlay) { _statsOverlay->hide (); }
 
-         }
-         catch (Ogre::Exception e) {
-            
-            _log.error << e.getFullDescription ().c_str () << endl;
+            }
+            catch (Ogre::Exception e) {
 
-            _debugOverlay = 0;
-            _statsOverlay = 0;
+               _log.error << e.getFullDescription ().c_str () << endl;
+
+               _debugOverlay = 0;
+               _statsOverlay = 0;
+            }
          }
       }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
+      
+      if (_core && (_core == RenderModuleCoreOgre::cast (PluginPtr))) {
 
+         if (_debugOverlay) {
 
-void
-dmz::RenderPluginStatsOgre::start_plugin () {
+            _debugOverlay->hide ();
+            _debugOverlay = 0;
+         }
 
+         _statsOverlay = 0;
+         _core = 0;
+      }
+   }
 }
 
 
@@ -77,35 +90,6 @@ void
 dmz::RenderPluginStatsOgre::update_sync (const Float64 TimeDelta) {
 
    _update_stats ();
-}
-
-
-void
-dmz::RenderPluginStatsOgre::stop_plugin () {
-
-}
-
-
-void
-dmz::RenderPluginStatsOgre::shutdown_plugin () {
-
-}
-
-
-void
-dmz::RenderPluginStatsOgre::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_core && (_core == RenderModuleCoreOgre::cast (PluginPtr))) {
-
-      if (_debugOverlay) {
-         
-         _debugOverlay->hide ();
-         _debugOverlay = 0;
-      }
-
-      _statsOverlay = 0;
-      _core = 0;
-   }
 }
 
 

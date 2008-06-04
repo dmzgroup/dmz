@@ -247,40 +247,24 @@ dmz::QtPluginCanvasObjectBasic::~QtPluginCanvasObjectBasic () {
 
 // Plugin Interface
 void
-dmz::QtPluginCanvasObjectBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::QtPluginCanvasObjectBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_canvasModule) {
-      
-      _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_canvasModule) {
+
+         _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+      }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
 
+      if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
 
-void
-dmz::QtPluginCanvasObjectBasic::start_plugin () {
-   
-}
-
-
-void
-dmz::QtPluginCanvasObjectBasic::stop_plugin () {
-
-}
-
-
-void
-dmz::QtPluginCanvasObjectBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::QtPluginCanvasObjectBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
-         
-      _objectTable.empty ();
-      _canvasModule = 0;
+         _objectTable.empty ();
+         _canvasModule = 0;
+      }
    }
 }
 

@@ -129,67 +129,51 @@ dmz::RenderModuleIsectOgre::~RenderModuleIsectOgre () {
 
 
 void
-dmz::RenderModuleIsectOgre::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderModuleIsectOgre::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_core) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _core = RenderModuleCoreOgre::cast (PluginPtr);
-      
-      if (_core) {
-         
-         _sceneManager = _core->get_scene_manager ();
-         
-         if (_sceneManager) {
-            
-            try {
+      if (!_core) {
 
-               _raySceneQuery =
-                  _sceneManager->createRayQuery (
-                     Ogre::Ray (),
-                     Ogre::SceneManager::WORLD_GEOMETRY_TYPE_MASK);
-            }
-            catch (Ogre::Exception e) {
+         _core = RenderModuleCoreOgre::cast (PluginPtr);
 
-               _raySceneQuery = 0;
-               _log.error << e.getFullDescription ().c_str () << endl;
+         if (_core) {
+
+            _sceneManager = _core->get_scene_manager ();
+
+            if (_sceneManager) {
+
+               try {
+
+                  _raySceneQuery =
+                     _sceneManager->createRayQuery (
+                        Ogre::Ray (),
+                        Ogre::SceneManager::WORLD_GEOMETRY_TYPE_MASK);
+               }
+               catch (Ogre::Exception e) {
+
+                  _raySceneQuery = 0;
+                  _log.error << e.getFullDescription ().c_str () << endl;
+               }
             }
          }
       }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
 
+      if (_core && (_core == RenderModuleCoreOgre::cast (PluginPtr))) {
 
-void
-dmz::RenderModuleIsectOgre::start_plugin () {
+         if (_sceneManager) {
 
-}
+            _sceneManager->destroyQuery (_raySceneQuery);
+            _raySceneQuery = 0;
+            _sceneManager = 0;
+         }
 
-
-void
-dmz::RenderModuleIsectOgre::stop_plugin () {
-
-}
-
-
-void
-dmz::RenderModuleIsectOgre::shutdown_plugin () {
-
-}
-
-
-void
-dmz::RenderModuleIsectOgre::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_core && (_core == RenderModuleCoreOgre::cast (PluginPtr))) {
-
-      if (_sceneManager) {
-         
-         _sceneManager->destroyQuery (_raySceneQuery);
-         _raySceneQuery = 0;
-         _sceneManager = 0;
+         _core = 0;
       }
-      
-      _core = 0;
    }
 }
 

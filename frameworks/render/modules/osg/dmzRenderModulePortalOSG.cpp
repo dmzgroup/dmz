@@ -36,52 +36,36 @@ dmz::RenderModulePortalOSG::~RenderModulePortalOSG () {
 
 
 void
-dmz::RenderModulePortalOSG::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderModulePortalOSG::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_core) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _core = RenderModuleCoreOSG::cast (PluginPtr);
-      if (_core) {
-         
-         _manipulator = _core->lookup_camera_manipulator (_portalName);
-         
-         _camera = _core->lookup_camera (_portalName);
-         if (_camera.valid ()) {
-            
-            _camera->setComputeNearFarMode (osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
-            _update_camera ();
+      if (!_core) {
+
+         _core = RenderModuleCoreOSG::cast (PluginPtr);
+         if (_core) {
+
+            _manipulator = _core->lookup_camera_manipulator (_portalName);
+
+            _camera = _core->lookup_camera (_portalName);
+            if (_camera.valid ()) {
+
+               _camera->setComputeNearFarMode (osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+               _update_camera ();
+            }
          }
       }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
 
+      if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
 
-void
-dmz::RenderModulePortalOSG::start_plugin () {
-
-}
-
-
-void
-dmz::RenderModulePortalOSG::stop_plugin () {
-
-}
-
-
-void
-dmz::RenderModulePortalOSG::shutdown_plugin () {
-
-}
-
-
-void
-dmz::RenderModulePortalOSG::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
-
-      _core = 0;
-      _camera.release ();
-      _manipulator.release ();
+         _core = 0;
+         _camera.release ();
+         _manipulator.release ();
+      }
    }
 }
 

@@ -99,39 +99,24 @@ dmz::RenderExtObjectOgre::~RenderExtObjectOgre () {
 
 // Plugin Interface
 void
-dmz::RenderExtObjectOgre::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderExtObjectOgre::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_renderModuleCore) {
-
-      _renderModuleCore = RenderModuleCoreOgre::cast (PluginPtr);
-   }
-}
-
-
-void
-dmz::RenderExtObjectOgre::start_plugin () {
-
-}
-
-
-void
-dmz::RenderExtObjectOgre::stop_plugin () {
-
-}
-
-
-void
-dmz::RenderExtObjectOgre::shutdown_plugin () {
-
-}
-
-
-void
-dmz::RenderExtObjectOgre::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_renderModuleCore && (_renderModuleCore == RenderModuleCoreOgre::cast (PluginPtr))) {
+   if (Mode == PluginDiscoverAdd) {
       
-      _renderModuleCore = 0;
+      if (!_renderModuleCore) {
+
+         _renderModuleCore = RenderModuleCoreOgre::cast (PluginPtr);
+      }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+      
+      if (_renderModuleCore && 
+            (_renderModuleCore == RenderModuleCoreOgre::cast (PluginPtr))) {
+
+         _renderModuleCore = 0;
+      }
    }
 }
 

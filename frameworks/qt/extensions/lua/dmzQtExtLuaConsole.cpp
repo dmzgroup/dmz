@@ -292,67 +292,48 @@ dmz::QtExtLuaConsole::~QtExtLuaConsole () {
 
 // Plugin Interface
 void
-dmz::QtExtLuaConsole::discover_plugin (const Plugin *PluginPtr) {
+dmz::QtExtLuaConsole::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-}
+   if (State == PluginStateShutdown) {
 
+      if (L && (this == get_console (L))) { set_console (L, 0); }
 
-void
-dmz::QtExtLuaConsole::start_plugin () {
+      RuntimeContext *context (get_plugin_runtime_context ());
 
-}
+      if (context) {
 
+         String data;
 
-void
-dmz::QtExtLuaConsole::stop_plugin () {
+         Config session (get_plugin_name ());
 
-}
+         session.add_config (qbytearray_to_config ("geometry", saveGeometry ()));
 
+         session.add_config (
+            qbytearray_to_config ("splitter", _console.splitter->saveState ()));
 
-void
-dmz::QtExtLuaConsole::shutdown_plugin () {
+         if (isVisible ()) {
 
-   if (L && (this == get_console (L))) { set_console (L, 0); }
+            session.add_config (boolean_to_config ("window", "visible", True));
+         }
 
-   RuntimeContext *context (get_plugin_runtime_context ());
+         HistoryStruct *current = _historyHead;
 
-   if (context) {
+         Int32 count = 0;
 
-      String data;
+         while (current && (count < 100)) {
 
-      Config session (get_plugin_name ());
+            Config history ("history");
+            history.store_attribute ("value", encode_base64 (qPrintable (current->Value)));
+            session.add_config (history);
+            current = current->next;
+            count++;
+         }
 
-      session.add_config (qbytearray_to_config ("geometry", saveGeometry ()));
-
-      session.add_config (
-         qbytearray_to_config ("splitter", _console.splitter->saveState ()));
-
-      if (isVisible ()) {
-         
-         session.add_config (boolean_to_config ("window", "visible", True));
+         set_session_config (context, session);
       }
-
-      HistoryStruct *current = _historyHead;
-
-      Int32 count = 0;
-
-      while (current && (count < 100)) {
-
-         Config history ("history");
-         history.store_attribute ("value", encode_base64 (qPrintable (current->Value)));
-         session.add_config (history);
-         current = current->next;
-         count++;
-      }
-
-      set_session_config (context, session);
    }
-}
-
-
-void
-dmz::QtExtLuaConsole::remove_plugin (const Plugin *PluginPtr) {
-
 }
 
 

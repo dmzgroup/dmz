@@ -60,37 +60,21 @@ dmz::QtModuleMainWindowBasic::~QtModuleMainWindowBasic () {
 
 // Plugin Interface
 void
-dmz::QtModuleMainWindowBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::QtModuleMainWindowBasic::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-}
+   if (State == PluginStateStart) {
 
+      _load_session ();
+      setUnifiedTitleAndToolBarOnMac (_showUnifiedTitleAndToolBar);
+      show ();
+   }
+   else if (State == PluginStateStop) {
 
-void
-dmz::QtModuleMainWindowBasic::start_plugin () {
-
-   _load_session ();
-   setUnifiedTitleAndToolBarOnMac (_showUnifiedTitleAndToolBar);
-   show ();
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::stop_plugin () {
-
-   _save_session ();
-   hide ();
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::remove_plugin (const Plugin *PluginPtr) {
-
+      _save_session ();
+      hide ();
+   }
 }
 
 

@@ -54,31 +54,33 @@ dmz::QtPluginMenuToMessage::~QtPluginMenuToMessage () {
 
 // Plugin Interface
 void
-dmz::QtPluginMenuToMessage::discover_plugin (const Plugin *PluginPtr) {
+dmz::QtPluginMenuToMessage::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_objectModule) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _objectModule = ObjectModule::cast (PluginPtr, _objectModuleName);
+      if (!_objectModule) {
+
+         _objectModule = ObjectModule::cast (PluginPtr, _objectModuleName);
+      }
+
+      if (!_pickModule) {
+
+         _pickModule = RenderModulePick::cast (PluginPtr, _pickModuleName);
+      }
    }
-   
-   if (!_pickModule) {
+   else if (Mode == PluginDiscoverRemove) {
 
-      _pickModule = RenderModulePick::cast (PluginPtr, _pickModuleName);
-   }
-}
+      if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
 
+         _objectModule = 0;
+      }
 
-void
-dmz::QtPluginMenuToMessage::remove_plugin (const Plugin *PluginPtr) {
-   
-   if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
-   
-      _objectModule = 0;
-   }
-   
-   if (_pickModule && (_pickModule == RenderModulePick::cast (PluginPtr))) {
-   
-      _pickModule = 0;
+      if (_pickModule && (_pickModule == RenderModulePick::cast (PluginPtr))) {
+
+         _pickModule = 0;
+      }
    }
 }
 

@@ -38,15 +38,17 @@ dmz::QtPluginButtonToChannel::~QtPluginButtonToChannel () {
 
 // Plugin Interface
 void
-dmz::QtPluginButtonToChannel::discover_plugin (const Plugin *PluginPtr) {
+dmz::QtPluginButtonToChannel::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
    const String PluginName (PluginPtr ? PluginPtr->get_plugin_name () : "");
    
-   if (!_inputModule) {
-   
-      if (!_inputModuleName || (PluginName == _inputModuleName)) {
-         
-         _inputModule = InputModule::cast (PluginPtr);
+   if (Mode == PluginDiscoverAdd) {
+      
+      if (!_inputModule) {
+
+         _inputModule = InputModule::cast (PluginPtr, _inputModuleName);
 
          if (_inputModule) {
 
@@ -64,13 +66,10 @@ dmz::QtPluginButtonToChannel::discover_plugin (const Plugin *PluginPtr) {
             }
          }
       }
-   }
-   
-   if (!_mainWindowModule) {
-      
-      if (!_mainWindowModuleName || (PluginName == _mainWindowModuleName)) {
-         
-         _mainWindowModule = QtModuleMainWindow::cast (PluginPtr);
+
+      if (!_mainWindowModule) {
+
+         _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
 
          if (_mainWindowModule) {
 
@@ -87,42 +86,19 @@ dmz::QtPluginButtonToChannel::discover_plugin (const Plugin *PluginPtr) {
          }
       }
    }
-}
-
-
-void
-dmz::QtPluginButtonToChannel::start_plugin () {
-   
-   _load_session ();
-}
-
-
-void
-dmz::QtPluginButtonToChannel::stop_plugin () {
-
-   _save_session ();
-}
-
-
-void
-dmz::QtPluginButtonToChannel::shutdown_plugin () {
-
-}
-
-
-void
-dmz::QtPluginButtonToChannel::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_inputModule && (_inputModule == InputModule::cast (PluginPtr))) {
-
-      _inputModule = 0;
-   }
-   
-   if (_mainWindowModule && (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
+   else if (Mode == PluginDiscoverRemove) {
       
-      _mainWindowModule->remove_dock_widget (_channel, _dock);
-      
-      _mainWindowModule = 0;
+      if (_inputModule && (_inputModule == InputModule::cast (PluginPtr))) {
+
+         _inputModule = 0;
+      }
+
+      if (_mainWindowModule && (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
+
+         _mainWindowModule->remove_dock_widget (_channel, _dock);
+
+         _mainWindowModule = 0;
+      }
    }
 }
 
@@ -157,28 +133,6 @@ dmz::QtPluginButtonToChannel::_slot_change_channel (QAction *theAction) {
          current = current->next;
       }
    }
-}
-
-
-void
-dmz::QtPluginButtonToChannel::_save_session () {
-
-//   String data;
-
-//   Config session (get_plugin_name ());
-
-//   Config window ("window");
-
-//   session.add_config (window);
-
-//   set_session_config (get_plugin_runtime_context (), session);
-}
-
-
-void
-dmz::QtPluginButtonToChannel::_load_session () {
-
-//   Config session (get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
 }
 
 

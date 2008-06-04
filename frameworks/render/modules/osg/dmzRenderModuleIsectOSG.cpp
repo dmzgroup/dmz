@@ -34,36 +34,24 @@ dmz::RenderModuleIsectOSG::~RenderModuleIsectOSG () {
 
 
 void
-dmz::RenderModuleIsectOSG::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderModuleIsectOSG::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_core) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _core = RenderModuleCoreOSG::cast (PluginPtr);
+      if (!_core) {
+
+         _core = RenderModuleCoreOSG::cast (PluginPtr);
+      }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
+      
+      if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
 
-
-void
-dmz::RenderModuleIsectOSG::start_plugin () {
-
-}
-
-
-void
-dmz::RenderModuleIsectOSG::stop_plugin () {
-
-}
-
-
-void
-dmz::RenderModuleIsectOSG::shutdown_plugin () {
-
-}
-
-
-void
-dmz::RenderModuleIsectOSG::remove_plugin (const Plugin *PluginPtr) {
-
+         _core = 0;
+      }
+   }
 }
 
 

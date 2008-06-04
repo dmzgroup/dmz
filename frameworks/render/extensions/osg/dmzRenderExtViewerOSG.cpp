@@ -50,47 +50,75 @@ dmz::RenderExtViewerOSG::~RenderExtViewerOSG () {
 
 // Plugin Interface
 void
-dmz::RenderExtViewerOSG::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderExtViewerOSG::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
 
-   if (!_core) {
+   if (State == PluginStateStart) {
 
-      _core = RenderModuleCoreOSG::cast (PluginPtr);
-      if (_core) {
+      if (_viewer.valid ()) {
 
-         osg::ref_ptr<osg::Group> scene = _core->get_scene ();
-         if (scene.valid ()) { _viewer->setSceneData (scene.get ()); }
-
-         if (_cameraManipulator.valid ()) {
-            
-            _core->add_camera_manipulator (_portalName, _cameraManipulator.get ());
-         }
-         
-         if (_camera.valid ()) {
-            
-            _core->add_camera (_portalName, _camera.get ());
-         }
-      }
-   }
-
-   if (!_channels) {
-
-      _channels = InputModule::cast (PluginPtr);
-      if (_channels) {
-
-         Definitions defs (get_plugin_runtime_context (), &_log);
-         const Handle SourceHandle = defs.create_named_handle (_portalName);
-         _eventHandler->set_input_module_channels (_channels, SourceHandle);
+         _viewer->realize ();
       }
    }
 }
 
 
 void
-dmz::RenderExtViewerOSG::start_plugin () {
+dmz::RenderExtViewerOSG::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (_viewer.valid ()) {
+   if (Mode == PluginDiscoverAdd) {
+      
+      if (!_core) {
 
-      _viewer->realize ();
+         _core = RenderModuleCoreOSG::cast (PluginPtr);
+         if (_core) {
+
+            osg::ref_ptr<osg::Group> scene = _core->get_scene ();
+            if (scene.valid ()) { _viewer->setSceneData (scene.get ()); }
+
+            if (_cameraManipulator.valid ()) {
+
+               _core->add_camera_manipulator (_portalName, _cameraManipulator.get ());
+            }
+
+            if (_camera.valid ()) {
+
+               _core->add_camera (_portalName, _camera.get ());
+            }
+         }
+      }
+
+      if (!_channels) {
+
+         _channels = InputModule::cast (PluginPtr);
+         if (_channels) {
+
+            Definitions defs (get_plugin_runtime_context (), &_log);
+            const Handle SourceHandle = defs.create_named_handle (_portalName);
+            _eventHandler->set_input_module_channels (_channels, SourceHandle);
+         }
+      }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+      
+      if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
+
+         _viewer->setCameraManipulator (0);
+         _core->remove_camera (_portalName);
+         _core->remove_camera_manipulator (_portalName);
+         osg::ref_ptr<osg::Group> scene = new osg::Group;
+         if (scene.valid ()) { _viewer->setSceneData (scene.get ()); }
+         _core = 0;
+      }
+
+      if (_channels && (_channels == InputModule::cast (PluginPtr))) {
+
+         _eventHandler->set_input_module_channels (0, 0);
+         _channels = 0;
+      }
    }
 }
 
@@ -105,37 +133,6 @@ dmz::RenderExtViewerOSG::update_sync (const Float64 TimeDelta) {
 }
 
 
-void
-dmz::RenderExtViewerOSG::stop_plugin () {
-
-}
-
-
-void
-dmz::RenderExtViewerOSG::shutdown_plugin () {
-
-}
-
-
-void
-dmz::RenderExtViewerOSG::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
-
-      _viewer->setCameraManipulator (0);
-      _core->remove_camera (_portalName);
-      _core->remove_camera_manipulator (_portalName);
-      osg::ref_ptr<osg::Group> scene = new osg::Group;
-      if (scene.valid ()) { _viewer->setSceneData (scene.get ()); }
-      _core = 0;
-   }
-   
-   if (_channels && (_channels == InputModule::cast (PluginPtr))) {
-   
-      _eventHandler->set_input_module_channels (0, 0);
-      _channels = 0;
-   }
-}
 
 
 void

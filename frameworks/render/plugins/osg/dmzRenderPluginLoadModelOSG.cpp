@@ -28,69 +28,53 @@ dmz::RenderPluginLoadModelOSG::~RenderPluginLoadModelOSG () {
 
 
 void
-dmz::RenderPluginLoadModelOSG::discover_plugin (const Plugin *PluginPtr) {
+dmz::RenderPluginLoadModelOSG::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   if (!_core) {
+   if (Mode == PluginDiscoverAdd) {
 
-      _core = RenderModuleCoreOSG::cast (PluginPtr);
-      if (_core) {
+      if (!_core) {
 
-         HashTableStringIterator it;
+         _core = RenderModuleCoreOSG::cast (PluginPtr);
+         if (_core) {
 
-         String *currentFileName;
-         for (currentFileName = _fileNameTable.get_first (it);
-               currentFileName;
-               currentFileName = _fileNameTable.get_next (it)) {
+            HashTableStringIterator it;
 
-            osg::ref_ptr<osg::Node> model = 
-               osgDB::readNodeFile (currentFileName->get_buffer ());
+            String *currentFileName;
+            for (currentFileName = _fileNameTable.get_first (it);
+                  currentFileName;
+                  currentFileName = _fileNameTable.get_next (it)) {
 
-            if (model.valid ()) {
+               osg::ref_ptr<osg::Node> model = 
+                  osgDB::readNodeFile (currentFileName->get_buffer ());
+
+               if (model.valid ()) {
 
 #if 1
-               // Attach transform to static object tree
-               osg::Matrix mat = to_osg_matrix (
-                  *_rotationTable.lookup (*currentFileName));
-               mat.translate (to_osg_vector (*_positionTable.lookup (*currentFileName)));
-               osg::ref_ptr<osg::MatrixTransform> matTransform = 
-                  new osg::MatrixTransform (mat);
-               matTransform->addChild (model.get ());
+                  // Attach transform to static object tree
+                  osg::Matrix mat = to_osg_matrix (
+                     *_rotationTable.lookup (*currentFileName));
+                  mat.translate (to_osg_vector (*_positionTable.lookup (*currentFileName)));
+                  osg::ref_ptr<osg::MatrixTransform> matTransform = 
+                     new osg::MatrixTransform (mat);
+                  matTransform->addChild (model.get ());
 
-               _core->get_static_objects ()->addChild (matTransform.get ());
+                  _core->get_static_objects ()->addChild (matTransform.get ());
 #else
-               _core->get_static_objects ()->addChild (model.get ());
+                  _core->get_static_objects ()->addChild (model.get ());
 #endif
+               }
             }
          }
       }
    }
-}
+   else if (Mode == PluginDiscoverRemove) {
 
+      if (_core && _core == RenderModuleCoreOSG::cast (PluginPtr)) {
 
-void
-dmz::RenderPluginLoadModelOSG::start_plugin () {
-
-}
-
-
-void
-dmz::RenderPluginLoadModelOSG::stop_plugin () {
-
-}
-
-
-void
-dmz::RenderPluginLoadModelOSG::shutdown_plugin () {
-
-}
-
-
-void
-dmz::RenderPluginLoadModelOSG::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_core && _core == RenderModuleCoreOSG::cast (PluginPtr)) {
-
-      _core = 0;
+         _core = 0;
+      }
    }
 }
 

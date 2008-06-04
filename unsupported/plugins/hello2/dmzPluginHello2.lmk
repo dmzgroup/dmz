@@ -1,6 +1,0 @@
-lmk.set_name "dmzPluginHello2"
-lmk.set_type "plugin"
-lmk.add_files {"dmzPluginHello2.cpp",}
-lmk.add_libs {
-   "dmzKernel",
-}

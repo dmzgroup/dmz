@@ -30,6 +30,11 @@ namespace dmz {
 
          Handle get_handle () const;
 
+         Boolean uses_level (const UInt32 Level);
+         void add_level (const UInt32 Level);
+         UInt32 get_first_level () const;
+         UInt32 get_next_level () const;
+
          void set_delete_mode (const PluginDeleteModeEnum Mode);
          PluginDeleteModeEnum get_delete_mode () const;
 

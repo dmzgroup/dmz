@@ -3,6 +3,7 @@
 #include <dmzRuntimeHandle.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzSystemDynamicLibrary.h>
+#include <dmzTypesHashTableUInt32.h>
 
 /*!
 
@@ -33,6 +34,8 @@ struct dmz::PluginInfo::State {
    PluginDeleteModeEnum deleteMode;
    RuntimeContext *context;
    DynamicLibrary *lib;
+   HashTableUInt32 levelTable;
+   HashTableUInt32Iterator it;
 
    State (
          const String &TheName,
@@ -48,6 +51,8 @@ struct dmz::PluginInfo::State {
          lib (0) {;}
 
    ~State () {
+
+      levelTable.clear ();
 
       if (_handlePtr) { delete _handlePtr; _handlePtr = 0; }
       else {
@@ -96,6 +101,43 @@ dmz::PluginInfo::get_name () const { return _state.Name; }
 //! Returns Plugin's unique handle.
 dmz::Handle
 dmz::PluginInfo::get_handle () const { return _state.PluginHandle; } 
+
+
+dmz::Boolean
+dmz::PluginInfo::uses_level (const UInt32 Level) {
+
+   return _state.levelTable.lookup (Level) != 0;
+}
+
+
+void
+dmz::PluginInfo::add_level (const UInt32 Level) {
+
+   if (Level) { _state.levelTable.store (Level, (void *)this); }
+}
+
+
+dmz::UInt32
+dmz::PluginInfo::get_first_level () const {
+
+   UInt32 result (1);
+   _state.it.reset ();
+   void *ptr (_state.levelTable.get_next (_state.it));
+   if (ptr) { result = _state.it.get_hash_key (); }
+
+   return result;
+}
+
+
+dmz::UInt32
+dmz::PluginInfo::get_next_level () const {
+
+   UInt32 result (0);
+   void *ptr (_state.levelTable.get_next (_state.it));
+   if (ptr) { result = _state.it.get_hash_key (); }
+
+   return result;
+}
 
 
 //! Sets current delete mode.

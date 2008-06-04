@@ -19,37 +19,6 @@ dmz::PluginUndoDump::~PluginUndoDump () {
 }
 
 
-// Plugin Interface
-void
-dmz::PluginUndoDump::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::PluginUndoDump::start_plugin () {
-
-}
-
-
-void
-dmz::PluginUndoDump::stop_plugin () {
-
-}
-
-
-void
-dmz::PluginUndoDump::shutdown_plugin () {
-
-}
-
-
-void
-dmz::PluginUndoDump::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Message Observer Interface
 void
 dmz::PluginUndoDump::receive_message (

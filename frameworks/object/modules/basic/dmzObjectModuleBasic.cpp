@@ -122,42 +122,28 @@ dmz::ObjectModuleBasic::~ObjectModuleBasic () {
 }
 
 
+// Plugin Interface
 void
-dmz::ObjectModuleBasic::discover_plugin (const Plugin *PluginPtr) {
+dmz::ObjectModuleBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
 
-   ObjectObserver *obs (ObjectObserver::cast (PluginPtr));
+   if (Mode == PluginDiscoverAdd) {
 
-   if (obs) { obs->store_object_module (_PluginInfoData.get_name (), *this); }
+      ObjectObserver *obs (ObjectObserver::cast (PluginPtr));
+
+      if (obs) { obs->store_object_module (_PluginInfoData.get_name (), *this); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      ObjectObserver *obs (ObjectObserver::cast (PluginPtr));
+
+      if (obs) { obs->remove_object_module (_PluginInfoData.get_name (), *this); }
+   }
 }
 
 
-void
-dmz::ObjectModuleBasic::start_plugin () {
-
-}
-
-
-void
-dmz::ObjectModuleBasic::stop_plugin () {
-
-}
-
-
-void
-dmz::ObjectModuleBasic::shutdown_plugin () {
-
-}
-
-
-void
-dmz::ObjectModuleBasic::remove_plugin (const Plugin *PluginPtr) {
-
-   ObjectObserver *obs (ObjectObserver::cast (PluginPtr));
-
-   if (obs) { obs->remove_object_module (_PluginInfoData.get_name (), *this); }
-}
-
-
+// ObjectModule Interface
 dmz::Boolean
 dmz::ObjectModuleBasic::register_global_object_observer (ObjectObserver &observer) {
 

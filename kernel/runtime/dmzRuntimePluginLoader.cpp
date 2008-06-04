@@ -139,6 +139,8 @@ dmz::PluginLoader::load_plugins (
          const String FactoryName (config_to_string ("factory", data, defaultFactory));
          const String ScopeName (config_to_string ("scope", data, PluginName));
          const String Platform (config_to_string ("platform", data));
+         Config levelConfig;
+         data.lookup_all_config ("level", levelConfig);
 
          const PluginDeleteModeEnum DeleteMode (
             config_to_boolean ("delete", data, True) ?
@@ -225,6 +227,14 @@ dmz::PluginLoader::load_plugins (
                         lib));
 
                   if (info) {
+
+                     ConfigIterator it;
+                     Config level;
+
+                     while (levelConfig.get_next_config (it, level)) {
+
+                        info->add_level (config_to_uint32 ("value", level, 0));
+                     }
 
                      Config local;
 

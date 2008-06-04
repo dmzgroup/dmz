@@ -95,19 +95,7 @@ dmz::PluginTermExit::~PluginTermExit () {
 }
 
 
-// Plugin Interface
-void
-dmz::PluginTermExit::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::PluginTermExit::start_plugin () {
-
-}
-
-
+// Sync Interface
 void
 dmz::PluginTermExit::update_sync (const Float64 TimeDelta) {
 
@@ -159,24 +147,6 @@ dmz::PluginTermExit::update_sync (const Float64 TimeDelta) {
       }
    } while (!done);
 #endif
-}
-
-
-void
-dmz::PluginTermExit::stop_plugin () {
-
-}
-
-
-void
-dmz::PluginTermExit::shutdown_plugin () {
-
-}
-
-
-void
-dmz::PluginTermExit::remove_plugin (const Plugin *PluginPtr) {
-
 }
 
 

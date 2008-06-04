@@ -65,6 +65,20 @@ namespace {
          }
       }
    };
+
+typedef dmz::HashTableHandleTemplate<pluginStruct> PluginTable;
+
+struct LevelStruct {
+
+   const dmz::UInt32 Level;
+   LevelStruct *next;
+   LevelStruct *prev;
+   PluginTable table;
+
+   LevelStruct (const dmz::UInt32 TheLevel) : Level (TheLevel), next (0), prev (0) {;}
+   ~LevelStruct () { table.clear (); if (next) { delete next; next = 0; } }
+};
+
 };
 
 
@@ -83,10 +97,12 @@ struct dmz::PluginContainer::State {
 
    Boolean discovered;
    Boolean started;
-   HashTableHandleIterator handleIt;
-   HashTableHandleTemplate<pluginStruct> interfaceTable;
-   HashTableHandleTemplate<pluginStruct> pluginTable;
+   PluginTable interfaceTable;
+   PluginTable pluginTable;
    HashTableHandleTemplate<const Plugin> externTable;
+   LevelStruct *levelsHead;
+   LevelStruct *levelsTail;
+   UInt32 maxLevel;
    Log *log;
 
    void delete_plugins () {
@@ -96,30 +112,107 @@ struct dmz::PluginContainer::State {
       interfaceTable.clear ();
       pluginTable.empty ();
       externTable.clear ();
+      if (levelsHead) { delete levelsHead; levelsHead = 0; }
+      levelsTail = 0;
+      maxLevel = 1;
    }
 
-   State (Log *theLog) : discovered (False), started (False), log (theLog) {;}
+   State (Log *theLog) :
+         discovered (False),
+         started (False),
+         levelsHead (0),
+         levelsTail (0),
+         maxLevel (1),
+         log (theLog) {;}
+
    ~State () { delete_plugins (); }
+
+   LevelStruct *get_level (const UInt32 Level) {
+
+      if (Level > maxLevel) { maxLevel = Level; }
+
+      LevelStruct *result (0);
+
+      if (!levelsHead) { result = levelsHead = levelsTail = new LevelStruct (Level); }
+      else {
+
+         LevelStruct *current (levelsHead);
+
+         while (current && !result) {
+
+            if (current->Level == Level) { result = current; }
+            else if (!current->next) {
+
+               result = new LevelStruct (Level);
+
+               if (result) {
+
+                  current->next = levelsTail = result;
+                  result->prev = current;
+               }
+               else { current = 0; }
+            }
+            else if (current->Level > Level) {
+
+               result = new LevelStruct (Level);
+
+               if (result) {
+
+                  if (!current->prev) { levelsHead = result; }
+                  else { current->prev->next = result; }
+                  result->next = current;
+                  result->prev = current->prev;
+                  current->prev = result;
+               }
+               else { current = 0; }
+            }
+            else { current = current->next; }
+         }
+      }
+
+      return result;
+   }
+
+   void update_levels (pluginStruct &ps) {
+
+      UInt32 level (ps.info.get_first_level ());
+
+      while (level) {
+
+         LevelStruct *ls (get_level (level));
+
+         if (ls) {
+
+            ls->table.store (ps.info.get_handle (), &ps);
+         }
+
+         level = ps.info.get_next_level ();
+      }
+   }
 
    void discover_plugin (const Plugin *PluginPtr) {
 
-      for (
-            pluginStruct *current = pluginTable.get_first (handleIt);
-            current;
-            current = pluginTable.get_next (handleIt)) {
+      HashTableHandleIterator it;
 
-         current->plugin.discover_plugin (PluginPtr);
+      for (
+            pluginStruct *current = pluginTable.get_first (it);
+            current;
+            current = pluginTable.get_next (it)) {
+
+         current->plugin.discover_plugin (PluginDiscoverAdd, PluginPtr);
       }
    }
 
    void remove_plugin (const Plugin *PluginPtr) {
 
-      for (
-            pluginStruct *current = pluginTable.get_last (handleIt);
-            current;
-            current = pluginTable.get_prev (handleIt)) {
+      HashTableHandleIterator it;
 
-         current->plugin.remove_plugin (PluginPtr);
+      for (
+            pluginStruct *current = pluginTable.get_last (it);
+            current;
+            current = pluginTable.get_prev (it)) {
+
+         current->plugin.discover_plugin (PluginDiscoverRemove, PluginPtr);
       }
    }
 
@@ -127,22 +220,22 @@ struct dmz::PluginContainer::State {
 
       if (pluginPtr) {
 
-         for (
-               pluginStruct *current = interfaceTable.get_first (handleIt);
-               current;
-               current = interfaceTable.get_next (handleIt)) {
-
-            pluginPtr->discover_plugin (&(current->plugin));
-         }
-
          HashTableHandleIterator it;
+
+         for (
+               pluginStruct *current = interfaceTable.get_first (it);
+               current;
+               current = interfaceTable.get_next (it)) {
+
+            pluginPtr->discover_plugin (PluginDiscoverAdd, &(current->plugin));
+         }
 
          for (
                const Plugin *ExPtr = externTable.get_first (it);
                ExPtr;
                ExPtr = externTable.get_next (it)) {
 
-            pluginPtr->discover_plugin (ExPtr);
+            pluginPtr->discover_plugin (PluginDiscoverAdd, ExPtr);
          }
       }
    }
@@ -151,22 +244,22 @@ struct dmz::PluginContainer::State {
 
       if (pluginPtr) {
 
-         for (
-               pluginStruct *current = interfaceTable.get_last (handleIt);
-               current;
-               current = interfaceTable.get_prev (handleIt)) {
-
-            pluginPtr->remove_plugin (&(current->plugin));
-         }
-
          HashTableHandleIterator it;
+
+         for (
+               pluginStruct *current = interfaceTable.get_last (it);
+               current;
+               current = interfaceTable.get_prev (it)) {
+
+            pluginPtr->discover_plugin (PluginDiscoverRemove, &(current->plugin));
+         }
 
          for (
                const Plugin *ExPtr = externTable.get_last (it);
                ExPtr;
                ExPtr = externTable.get_prev (it)) {
 
-            pluginPtr->remove_plugin (ExPtr);
+            pluginPtr->discover_plugin (PluginDiscoverRemove, ExPtr);
          }
       }
    }
@@ -216,6 +309,8 @@ dmz::PluginContainer::add_plugin (PluginInfo *info, Plugin *plugin) {
 
       if (ps) {
 
+         _state.update_levels (*ps);
+
          if (_state.pluginTable.store (ps->info.get_handle (), ps)) {
 
             if (ps->HasInterface) {
@@ -228,7 +323,21 @@ dmz::PluginContainer::add_plugin (PluginInfo *info, Plugin *plugin) {
          else { delete ps; ps = 0; }
 
          if (_state.discovered) { _state.discover_all_plugins (plugin); }
-         if (_state.started) { plugin->start_plugin (); }
+
+         if (_state.started) {
+
+             LevelStruct *ls (_state.levelsTail);
+
+             while (ls) {
+
+                if (info->uses_level (ls->Level)) {
+
+                   plugin->update_plugin_state (PluginStateStart, ls->Level);
+                }
+
+                ls = ls->prev;
+            }
+         }
       }
    }
 
@@ -297,7 +406,22 @@ dmz::PluginContainer::remove_plugin (const Handle PluginHandle) {
 
    if (ps) {
 
-      if (_state.started) { ps->plugin.stop_plugin (); ps->plugin.shutdown_plugin (); }
+      if (_state.started) {
+
+         LevelStruct *ls (_state.levelsHead);
+
+         while (ls) {
+
+            if (ps->info.uses_level (ls->Level)) {
+
+               ps->plugin.update_plugin_state (PluginStateStop, ls->Level);
+            }
+
+            ls = ls->next;
+         }
+
+         ps->plugin.update_plugin_state (PluginStateShutdown, 0);
+      }
 
       if (_state.discovered) {
 
@@ -351,12 +475,21 @@ dmz::PluginContainer::start_plugins () {
 
    if (_state.log) { _state.log->info << "Starting Plugins" << endl; }
 
-   for (
-         pluginStruct *current = _state.pluginTable.get_first (_state.handleIt);
-         current;
-         current = _state.pluginTable.get_next (_state.handleIt)) {
+   LevelStruct *ls (_state.levelsTail);
 
-      current->plugin.start_plugin ();
+   while (ls) {
+
+      HashTableHandleIterator it;
+
+      for (
+            pluginStruct *current = ls->table.get_first (it);
+            current;
+            current = ls->table.get_next (it)) {
+
+         current->plugin.update_plugin_state (PluginStateStart, ls->Level);
+      }
+
+      ls = ls->prev;
    }
 }
 
@@ -369,12 +502,21 @@ dmz::PluginContainer::stop_plugins () {
 
    if (_state.log) { _state.log->info << "Stopping Plugins" << endl; }
 
-   for (
-         pluginStruct *current = _state.pluginTable.get_last (_state.handleIt);
-         current;
-         current = _state.pluginTable.get_prev (_state.handleIt)) {
+   LevelStruct *ls (_state.levelsHead);
 
-      current->plugin.stop_plugin ();
+   while (ls) {
+
+      HashTableHandleIterator it;
+
+      for (
+            pluginStruct *current = ls->table.get_last (it);
+            current;
+            current = ls->table.get_prev (it)) {
+
+         current->plugin.update_plugin_state (PluginStateStop, ls->Level);
+      }
+
+      ls = ls->next;
    }
 }
 
@@ -387,12 +529,14 @@ dmz::PluginContainer::shutdown_plugins () {
 
    if (_state.log) { _state.log->info << "Shutting Down Plugins" << endl; }
 
-   for (
-         pluginStruct *current = _state.pluginTable.get_last (_state.handleIt);
-         current;
-         current = _state.pluginTable.get_prev (_state.handleIt)) {
+   HashTableHandleIterator it;
 
-      current->plugin.shutdown_plugin ();
+   for (
+         pluginStruct *current = _state.pluginTable.get_last (it);
+         current;
+         current = _state.pluginTable.get_prev (it)) {
+
+      current->plugin.update_plugin_state (PluginStateShutdown, 0);
    }
 }
 

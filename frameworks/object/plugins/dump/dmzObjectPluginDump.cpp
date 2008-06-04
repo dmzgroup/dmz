@@ -38,37 +38,6 @@ dmz::ObjectPluginDump::~ObjectPluginDump () {
 }
 
 
-// Plugin Interface
-void
-dmz::ObjectPluginDump::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::ObjectPluginDump::start_plugin () {
-
-}
-
-
-void
-dmz::ObjectPluginDump::stop_plugin () {
-
-}
-
-
-void
-dmz::ObjectPluginDump::shutdown_plugin () {
-
-}
-
-
-void
-dmz::ObjectPluginDump::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Object Observer Interface
 void
 dmz::ObjectPluginDump::create_object (

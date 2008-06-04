@@ -55,37 +55,6 @@ dmz::ObjectPluginCleanup::~ObjectPluginCleanup () {
 }
 
 
-// Plugin Interface
-void
-dmz::ObjectPluginCleanup::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::ObjectPluginCleanup::start_plugin () {
-
-}
-
-
-void
-dmz::ObjectPluginCleanup::stop_plugin () {
-
-}
-
-
-void
-dmz::ObjectPluginCleanup::shutdown_plugin () {
-
-}
-
-
-void
-dmz::ObjectPluginCleanup::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Message Observer Interface
 void
 dmz::ObjectPluginCleanup::receive_message (

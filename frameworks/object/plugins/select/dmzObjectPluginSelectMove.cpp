@@ -39,36 +39,20 @@ dmz::ObjectPluginSelectMove::~ObjectPluginSelectMove () {
 
 // Plugin Interface
 void
-dmz::ObjectPluginSelectMove::discover_plugin (const Plugin *PluginPtr) {
+dmz::ObjectPluginSelectMove::discover_plugin (
+      const PluginDiscoverEnum Mode, 
+      const Plugin *PluginPtr) {
 
-   if (!_selectMod) { _selectMod = ObjectModuleSelect::cast (PluginPtr); }
-}
+   if (Mode == PluginDiscoverAdd) {
 
+      if (!_selectMod) { _selectMod = ObjectModuleSelect::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
 
-void
-dmz::ObjectPluginSelectMove::start_plugin () {
+      if (_selectMod && (_selectMod == ObjectModuleSelect::cast (PluginPtr))) {
 
-}
-
-
-void
-dmz::ObjectPluginSelectMove::stop_plugin () {
-
-}
-
-
-void
-dmz::ObjectPluginSelectMove::shutdown_plugin () {
-
-}
-
-
-void
-dmz::ObjectPluginSelectMove::remove_plugin (const Plugin *PluginPtr) {
-
-   if (_selectMod && (_selectMod == ObjectModuleSelect::cast (PluginPtr))) {
-
-      _selectMod = 0;
+         _selectMod = 0;
+      }
    }
 }
 

@@ -20,37 +20,6 @@ dmz::ExPluginInput::~ExPluginInput () {
 }
 
 
-// Plugin Interface
-void
-dmz::ExPluginInput::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::ExPluginInput::start_plugin () {
-
-}
-
-
-void
-dmz::ExPluginInput::stop_plugin () {
-
-}
-
-
-void
-dmz::ExPluginInput::shutdown_plugin () {
-
-}
-
-
-void
-dmz::ExPluginInput::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Input Observer Interface
 void
 dmz::ExPluginInput::update_channel_state (const UInt32 Channel, const Boolean State) {

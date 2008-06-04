@@ -26,19 +26,7 @@ dmz::ExPluginMessageSend::~ExPluginMessageSend () {
 }
 
 
-// Plugin Interface
-void
-dmz::ExPluginMessageSend::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::ExPluginMessageSend::start_plugin () {
-
-}
-
-
+// Sync Interface
 void
 dmz::ExPluginMessageSend::update_sync (const Float64 TimeDelta) {
 
@@ -51,24 +39,6 @@ dmz::ExPluginMessageSend::update_sync (const Float64 TimeDelta) {
       _log.out << "[sync_plugin] _type.send (&data)" << endl;
       const UInt32 Count (_type.send (&data));
    }
-}
-
-
-void
-dmz::ExPluginMessageSend::stop_plugin () {
-
-}
-
-
-void
-dmz::ExPluginMessageSend::shutdown_plugin () {
-
-}
-
-
-void
-dmz::ExPluginMessageSend::remove_plugin (const Plugin *PluginPtr) {
-
 }
 
 

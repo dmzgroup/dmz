@@ -18,37 +18,6 @@ dmz::PluginUndo::~PluginUndo () {
 }
 
 
-// Plugin Interface
-void
-dmz::PluginUndo::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::PluginUndo::start_plugin () {
-
-}
-
-
-void
-dmz::PluginUndo::stop_plugin () {
-
-}
-
-
-void
-dmz::PluginUndo::shutdown_plugin () {
-
-}
-
-
-void
-dmz::PluginUndo::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Message Observer Interface
 void
 dmz::PluginUndo::receive_message (

@@ -27,37 +27,6 @@ dmz::ExPluginObject::~ExPluginObject () {
 }
 
 
-// Plugin Interface
-void
-dmz::ExPluginObject::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::ExPluginObject::start_plugin () {
-
-}
-
-
-void
-dmz::ExPluginObject::stop_plugin () {
-
-}
-
-
-void
-dmz::ExPluginObject::shutdown_plugin () {
-
-}
-
-
-void
-dmz::ExPluginObject::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Object Observer Interface
 void
 dmz::ExPluginObject::create_object (

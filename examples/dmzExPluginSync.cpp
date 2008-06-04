@@ -16,37 +16,6 @@ dmz::ExPluginSync::~ExPluginSync () {
 }
 
 
-// Plugin Interface
-void
-dmz::ExPluginSync::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::ExPluginSync::start_plugin () {
-
-}
-
-
-void
-dmz::ExPluginSync::stop_plugin () {
-
-}
-
-
-void
-dmz::ExPluginSync::shutdown_plugin () {
-
-}
-
-
-void
-dmz::ExPluginSync::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Sync Interface
 void
 dmz::ExPluginSync::update_sync (const Float64 DeltaTime) {

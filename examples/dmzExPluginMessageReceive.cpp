@@ -24,37 +24,6 @@ dmz::ExPluginMessageReceive::~ExPluginMessageReceive () {
 }
 
 
-// Plugin Interface
-void
-dmz::ExPluginMessageReceive::discover_plugin (const Plugin *PluginPtr) {
-
-}
-
-
-void
-dmz::ExPluginMessageReceive::start_plugin () {
-
-}
-
-
-void
-dmz::ExPluginMessageReceive::stop_plugin () {
-
-}
-
-
-void
-dmz::ExPluginMessageReceive::shutdown_plugin () {
-
-}
-
-
-void
-dmz::ExPluginMessageReceive::remove_plugin (const Plugin *PluginPtr) {
-
-}
-
-
 // Message Observer Interface
 void
 dmz::ExPluginMessageReceive::receive_message (

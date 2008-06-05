@@ -457,8 +457,7 @@ local_init_message_type (
 
          if (msg) {
 
-            Message tmp;
-            msg->get_parent (tmp);
+            Message tmp (msg->get_parent ());
 
             if (tmp.get_message_type_context () !=
                   (parent ? parent->get_message_type_context () : 0)) {

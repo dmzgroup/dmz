@@ -28,6 +28,8 @@ namespace dmz {
          const RuntimeHandle Handle;
          const String Name;
 
+         Data *monostate;
+
          Boolean inSend;
 
          MessageContext *parent;
@@ -46,11 +48,12 @@ dmz::MessageContext::MessageContext (
       MessageContext *theParent) :
       Handle (TheName + ".Message", theContext),
       Name (TheName),
+      monostate (0),
       inSend (False),
       parent (theParent),
       context (msgContext) {
 
-   if (context) { context->ref (); }
+//   if (context) { context->ref (); }
    if (parent) { parent->ref (); }
 }
 
@@ -60,7 +63,8 @@ dmz::MessageContext::~MessageContext () {
 
    obsTable.clear ();
    if (parent) { parent->unref (); parent = 0; }
-   if (context) { context->unref (); context = 0; }
+   if (monostate) { delete monostate; monostate = 0; }
+//   if (context) { context->unref (); context = 0; }
 }
 
 #endif // DMZ_RUNTIME_MESSAGE_TYPE_CONTEXT_DOT_H

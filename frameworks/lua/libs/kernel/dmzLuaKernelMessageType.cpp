@@ -206,9 +206,9 @@ message_get_parent (lua_State *L) {
 
    if (message && *message) {
 
-      Message parent;
+      Message parent ((*message)->get_parent ());
 
-      if ((*message)->get_parent (parent)) {
+      if (parent) {
 
          if (lua_create_message (L, &parent)) { result = 1; }
       }

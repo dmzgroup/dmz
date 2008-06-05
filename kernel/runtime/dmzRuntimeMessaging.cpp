@@ -191,7 +191,7 @@ dmz::Message::get_name () const {
 /*!
 
 \brief Gets message type handle.
-\return Returns event type's unique handle. Returns zero if the Message is empty.
+\return Returns message's unique handle. Returns zero if the Message is empty.
 
 */
 dmz::Handle
@@ -208,16 +208,18 @@ dmz::Message::get_handle () const {
 /*!
 
 \brief Gets message type's parent.
-\return Returns event types parent. The returned Message will be empty if the
+\return Returns message's parent. The returned Message will be empty if the
 message type has no parent.
 
 */
-dmz::Boolean
-dmz::Message::get_parent (Message &msg) const {
+dmz::Message
+dmz::Message::get_parent () const {
 
-   if (_context) { msg.set_message_type_context (_context->parent); }
+   Message result;
 
-   return msg.get_message_type_context () != 0;
+   if (_context) { result.set_message_type_context (_context->parent); }
+
+   return result;
 }
 
 
@@ -246,6 +248,58 @@ dmz::Message::become_parent () {
 
 /*!
 
+\brief Sets message monostate mode.
+\details If the message's monostate mode is set to MessageMonostateOn, then the
+InData from the last globally sent message is retained and any new subscribers to
+the message will receive the last message sent at the time of subscriptions.
+\param[in] Mode Sets the message's monostate mode.
+\sa dmz::MessageMonostateEnum
+
+*/
+void
+dmz::Message::set_monostate_mode (const MessageMonostateEnum Mode) const {
+
+   if (_context) {
+
+      if (Mode == MessageMonostateOn) {
+
+         if (!_context->monostate) { _context->monostate = new Data; }
+      }
+      else if (Mode == MessageMonostateOff) {
+
+         if (_context->monostate) { delete (_context->monostate); }
+      }
+   }
+}
+
+
+//! Returns the message's current monostate mode.
+dmz::MessageMonostateEnum
+dmz::Message::get_monostate_mode () {
+
+   MessageMonostateEnum result (MessageMonostateOff);
+   if (_context && _context->monostate) { result = MessageMonostateOn; }
+
+   return result;
+}
+
+
+/*!
+
+\brief Returns a pointer to the message's monostate.
+\details If the message's monostate mode is on then the last globally sent Data
+object is returned.
+\return Return a pointer to the monostate. The monostate Data object may be empty
+if no global messages have been sent. If monostate mode is off a NULL pointer is
+returned.
+
+*/
+const dmz::Data *
+dmz::Message::get_monostate () const { return _context ? _context->monostate : 0; }
+
+
+/*!
+
 \brief Sends the message.
 \param[in] ObserverHandle Unique handle of message observer to send message. If set
 to zero, message will be sent to all subscribers to the message type.
@@ -268,9 +322,19 @@ dmz::Message::send (
       const Data *InData,
       Data *outData) const {
 
-   return
-      (_context && _context->context) ?
-         _context->context->send (*this, ObserverHandle, InData, outData) : 0;
+   UInt32 result (0);
+
+   if (_context && _context->context) {
+
+      if (_context->monostate && !ObserverHandle && InData) {
+
+         *(_context->monostate) = *InData;
+      }
+
+      result = _context->context->send (*this, ObserverHandle, InData, outData);
+   }
+
+   return result;
 }
 
 
@@ -294,11 +358,16 @@ dmz::Message::get_message_type_context () const { return _context; }
 
 /*!
 
-\fn dmz::Handle dmz::Messaging::send (const Message &Type, const Data *InData)
+\fn dmz::UInt32 dmz::Message::send(const Data *InData) const
 \brief Sends message to all subscribed message observers.
-\param[in] Type dmz::Message containing message type to send.
 \param[in] InData Pointer to Data object containing data to send with the message.
 May be NULL if no data is to be sent with the message.
+\return Returns a handle associated with the sent message. This handle is not a unique
+runtime handle but is instead a running counter that will roll over when max unsigned
+integer messages have been sent.
+
+\fn dmz::UInt32 dmz::Message::send() const
+\brief Sends message to all subscribed message observers.
 \return Returns a handle associated with the sent message. This handle is not a unique
 runtime handle but is instead a running counter that will roll over when max unsigned
 integer messages have been sent.
@@ -450,6 +519,11 @@ dmz::MessageObserver::subscribe_to_message (const Message &Type) {
 
                   delete ptr; ptr = 0;
                }
+            }
+
+            if (typeContext->monostate) {
+
+               receive_message (Type, 0, ObsHandle, typeContext->monostate, 0);
             }
          }
       }

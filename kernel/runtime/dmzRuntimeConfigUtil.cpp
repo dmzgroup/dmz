@@ -494,14 +494,14 @@ dmz::config_create_message_type (
 
    Message result;
 
-   String name;
+   String messageName;
 
-   if (!Source.lookup_attribute (Name, name)) { name = DefaultValue; }
+   if (!Source.lookup_attribute (Name, messageName)) { messageName = DefaultValue; }
 
-   if (name) {
+   if (messageName) {
 
       Definitions defs (context);
-      defs.create_message_type (name, result);
+      defs.create_message_type (messageName, result);
    }
 
    return result;

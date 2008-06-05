@@ -12,6 +12,12 @@ namespace dmz {
    class RuntimeContext;
    class RuntimeContextMessaging;
 
+   //! Enum used to set message's monostate mode.
+   enum MessageMonostateEnum {
+      MessageMonostateOn, //! Enables message's monostate.
+      MessageMonostateOff //! Disables message's monostate.
+   };
+
    class DMZ_KERNEL_LINK_SYMBOL Message {
 
       public:
@@ -37,8 +43,12 @@ namespace dmz {
          String get_name () const;
          Handle get_handle () const;
 
-         Boolean get_parent (Message &type) const;
+         Message get_parent () const;
          Boolean become_parent ();
+
+         void set_monostate_mode (const MessageMonostateEnum Mode) const;
+         MessageMonostateEnum get_monostate_mode ();
+         const Data *get_monostate () const;
 
          UInt32 send (
             const Handle TargetObserverHandle,

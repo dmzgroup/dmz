@@ -44,11 +44,11 @@ main (int argc, char *argv[]) {
       "Message handle is non-zero",
       type.get_handle () != 0);
 
-   Message parent;
+   Message parent (type.get_parent ());
 
    test.validate (
       "Fetching parent message type",
-      type.get_parent (parent));
+      parent);
 
    test.validate (
       "Message parent name is set to: rootType",
@@ -168,11 +168,9 @@ main (int argc, char *argv[]) {
       !nullMessage.get_handle () &&
       testMessage.get_handle ());
 
-   testMessage = testMessageTest;
+   testMessage = testMessageTest.get_parent ();
    test.validate (
       "get_parent",
-      (testMessage != testMessageRoot) &&
-      testMessageTest.get_parent (testMessage) &&
       (testMessage == testMessageRoot));
 
    testMessage = testMessageTest;

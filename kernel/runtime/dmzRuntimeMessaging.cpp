@@ -17,6 +17,11 @@
 multiple children.
 \sa dmz::MessageContext
 
+\enum dmz::MessageMonostateEnum
+\ingroup Runtime
+\brief Sets the Message's monostate mode.
+\details Defined in dmzRuntimeMessaging.h
+
 */
 
 

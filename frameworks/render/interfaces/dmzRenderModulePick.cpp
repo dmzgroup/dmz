@@ -11,13 +11,20 @@ the Handle of the object at the given screen coordinates if an object is present
 \fn dmz::RenderModulePick *dmz::RenderModulePick::cast (const Plugin *PluginPtr)A
 \brief Cast Plugin pointer to a RenderModulePick.
 \param[in] PluginPtr Ponter to the Plugin to cast.
+\param[in] PluginName String containing the name of the desired RenderModulePick
 \return Returns pointer to the RenderModulePick. Returns NULL if the PluginPtr does not
-implement the RenderModulePick interface.
-         
+implement the RenderModulePick interface or the \a PluginName is not empty
+and not equal to the Plugin's name.
+        
 \fn dmz::RenderModulePick::RenderModulePick (const PluginInfo &Info);
+\brief Constructor.
+\para[in] Info Reference to the PluginInfo.
+
 \fn dmz::RenderModulePick::~RenderModulePick ();
+\brief Destructor
          
 \fn dmz::Boolean dmz::RenderModulePick::register_pick_2d (const Handle Source, RenderPick2d &pick)
+
 \fn dmz::Boolean dmz::RenderModulePick::release_pick_2d (const Handle Source, RenderPick2d &pick)
          
 \fn dmz::Boolean dmz::RenderModulePick::screen_to_world (

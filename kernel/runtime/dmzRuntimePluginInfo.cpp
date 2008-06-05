@@ -103,6 +103,7 @@ dmz::Handle
 dmz::PluginInfo::get_handle () const { return _state.PluginHandle; } 
 
 
+//! Returns dmz::True if the plugin uses the specified level.
 dmz::Boolean
 dmz::PluginInfo::uses_level (const UInt32 Level) {
 
@@ -110,6 +111,7 @@ dmz::PluginInfo::uses_level (const UInt32 Level) {
 }
 
 
+//! Adds a level.
 void
 dmz::PluginInfo::add_level (const UInt32 Level) {
 
@@ -117,6 +119,7 @@ dmz::PluginInfo::add_level (const UInt32 Level) {
 }
 
 
+//! Returns the first level in the level list.
 dmz::UInt32
 dmz::PluginInfo::get_first_level () const {
 
@@ -129,6 +132,8 @@ dmz::PluginInfo::get_first_level () const {
 }
 
 
+//! Returns the next level in the level list. Returns zero when list the end of
+//! the list is reached.
 dmz::UInt32
 dmz::PluginInfo::get_next_level () const {
 

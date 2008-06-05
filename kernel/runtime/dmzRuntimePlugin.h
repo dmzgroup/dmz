@@ -9,8 +9,16 @@ namespace dmz {
    class RuntimeContext;
    class Config;
 
-   enum PluginStateEnum { PluginStateStart, PluginStateStop, PluginStateShutdown };
-   enum PluginDiscoverEnum { PluginDiscoverAdd, PluginDiscoverRemove };
+   enum PluginStateEnum {
+      PluginStateStart, //!< Plugin state start mode.
+      PluginStateStop, //!< Plugin state stop mode.
+      PluginStateShutdown, //!< Plugin state shutdown mode.
+   };
+
+   enum PluginDiscoverEnum {
+      PluginDiscoverAdd, //!< Discovered plugin is being added.
+      PluginDiscoverRemove //!< Discovered plugin is being removed.
+   };
 
    class Plugin {
 

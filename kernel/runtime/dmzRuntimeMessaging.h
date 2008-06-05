@@ -12,10 +12,9 @@ namespace dmz {
    class RuntimeContext;
    class RuntimeContextMessaging;
 
-   //! Enum used to set message's monostate mode.
    enum MessageMonostateEnum {
-      MessageMonostateOn, //! Enables message's monostate.
-      MessageMonostateOff //! Disables message's monostate.
+      MessageMonostateOn, //!< Enables message's monostate.
+      MessageMonostateOff //!< Disables message's monostate.
    };
 
    class DMZ_KERNEL_LINK_SYMBOL Message {

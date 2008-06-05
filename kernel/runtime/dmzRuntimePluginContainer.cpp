@@ -420,7 +420,17 @@ dmz::PluginContainer::remove_plugin (const Handle PluginHandle) {
             ls = ls->next;
          }
 
-         ps->plugin.update_plugin_state (PluginStateShutdown, 0);
+         ls = _state.levelsHead;
+
+         while (ls) {
+
+            if (ps->info.uses_level (ls->Level)) {
+
+               ps->plugin.update_plugin_state (PluginStateShutdown, ls->Level);
+            }
+
+            ls = ls->next;
+         }
       }
 
       if (_state.discovered) {
@@ -503,8 +513,6 @@ dmz::PluginContainer::stop_plugins () {
 
    _state.started = False;
 
-   if (_state.log) { _state.log->info << "Stopping Plugins" << endl; }
-
    LevelStruct *ls (_state.levelsHead);
 
    while (ls) {
@@ -535,16 +543,26 @@ dmz::PluginContainer::shutdown_plugins () {
 
    _state.started = False;
 
-   if (_state.log) { _state.log->info << "Shutting Down Plugins" << endl; }
+   LevelStruct *ls (_state.levelsHead);
 
-   HashTableHandleIterator it;
+   while (ls) {
 
-   for (
-         pluginStruct *current = _state.pluginTable.get_last (it);
-         current;
-         current = _state.pluginTable.get_prev (it)) {
+      if (_state.log) {
 
-      current->plugin.update_plugin_state (PluginStateShutdown, 0);
+         _state.log->info << "Shutting Down Level " << ls->Level << " Plugins" << endl;
+      }
+
+      HashTableHandleIterator it;
+
+      for (
+            pluginStruct *current = _state.pluginTable.get_last (it);
+            current;
+            current = _state.pluginTable.get_prev (it)) {
+
+         current->plugin.update_plugin_state (PluginStateShutdown, 0);
+      }
+
+      ls = ls->next;
    }
 }
 

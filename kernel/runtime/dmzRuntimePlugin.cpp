@@ -7,6 +7,16 @@
 \file dmzRuntimePlugin.h
 \brief Defines the dmz::Plugin interface.
 
+\enum PluginStateEnum
+\ingroup Runtime
+\brief Plugin state enumerations.
+\details Defined in dmzRuntimePlugin.h
+
+\enum PluginDiscoverEnum
+\ingroup Runtime
+\brief Plugin discover enumerations.
+\details Defined in dmzRuntimePlugin.h
+
 \class dmz::Plugin
 \ingroup Runtime
 \brief Plugin interface.
@@ -67,36 +77,28 @@ objects such as various runtime types. This function returns the runtime context
 to initialized the Plugin.
 \return Returns pointer to runtime context.
 
-\fn dmz::Plugin::discover_plugin (const Plugin *PluginPtr)
+\fn dmz::Plugin::update_plugin_state (
+const PluginStateEnum State,
+const UInt32 Level)
+\brief Updates the state of the the Plugin.
+\details This function is invoked after all the Plugins have been discovered.
+It indicates that the runtime is about to being the main simulation loop.
+Any set up that needs to be done before stating the sync phase should be done here.
+\param[in] State Specifies the current state of the plugin. The plugin may be
+started, stopped, and shutdown.
+\param[in] Level Specifies the state level. Plugins default to level one which is
+the last level called on start and the first level called on stop and shutdown.
+
+\fn dmz::Plugin::discover_plugin (
+const PluginDiscoverEnum Mode,
+const Plugin *PluginPtr)
 \brief Discover other plugins.
 \details This function is used to pass the pointer of every Plugin stored in the
 same PluginContainer as the current Plugin. Each Plugin pointer may be queried
 to discover what module interface it supports. This function may be invoked multiple
 times. One call is made for each Plugin being discovered.
+\param[in] Mode Specifies whether the plugin is being added or removed.
 \param[in] PluginPtr Pointer a Plugin.
-
-\fn dmz::Plugin::start_plugin ()
-\brief Start the Plugin.
-\details This function is invoked after all the Plugins have been discovered.
-It indicates that the runtime is about to being the main simulation loop.
-Any set up that needs to be done before stating the sync phase should be done here.
-
-\fn dmz::Plugin::stop_plugin ()
-\brief Stop the Plugin.
-\details This function is invoked to inform the Plugin that the sync loop is being
-stopped. After a Plugin has been stopped, new Plugins may be discovered and
-discovered Plugins may be removed.
-
-\fn dmz::Plugin::shutdown_plugin ()
-\brief Shutdown the Plugin.
-\details This function is invoked to inform the Plugin that it is about to be deleted
-and that all discovered Plugins are about to be removed.
-
-\fn dmz::Plugin::remove_plugin (const Plugin *PluginPtr)
-\brief Remove previously discovered Plugins.
-\details This function may be invoked multiple times. One call is made for each
-Plugin being removed.
-\param[in] PluginPtr Pointer to the Plugin being removed.
 
 \typedef dmz::Plugin *(*create_plugin_factory_function) (
    const dmz::PluginInfo &Info,

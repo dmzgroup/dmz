@@ -13,11 +13,15 @@ The primary view into the scene is called the master portal.
 \fn dmz::RenderModulePortal::~RenderModulePortal ()
 \brief Destructor.
 
-\fn dmz::RenderModulePortal *dmz::RenderModulePortal::cast (const Plugin *PluginPtr)
+\fn dmz::RenderModulePortal *dmz::RenderModulePortal::cast (
+const Plugin *PluginPtr,
+const String &PluginName)
 \brief Cast Plugin pointer to a RenderModulePortal.
 \param[in] PluginPtr Pointer to the Plugin to cast.
+\param[in] PluginName String containing the name of the desired RenderModulePortal
 \return Returns pointer to the RenderModulePortal. Returns NULL if the PluginPtr does
-not implement the RenderModulePortal interface.
+not implement the RenderModulePortal interface or the \a PluginName is not empty
+and not equal to the Plugin's name.
 
 \fn dmz::String dmz::RenderModulePortal::get_render_portal_name ()
 \brief Gets render portal name.

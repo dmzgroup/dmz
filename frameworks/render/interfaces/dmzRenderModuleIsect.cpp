@@ -14,13 +14,17 @@ on the scene.
 \fn dmz::RenderModuleIsect::~RenderModuleIsect ()
 \brief Destructor.
 
-\fn dmz::RenderModuleIsect *dmz::RenderModuleIsect::cast (const Plugin *PluginPtr)
+\fn dmz::RenderModuleIsect *dmz::RenderModuleIsect::cast (
+const Plugin *PluginPtr,
+const String &PluginName)
 \brief Casts Plugin pointer to an RenderModuleIsect.
 \details If the Plugin object implements the RenderModuleIsect interface, a pointer to
 the RenderModuleIsect interface of the Plugin is returned.
 \param[in] PluginPtr Pointer to the Plugin to cast.
+\param[in] PluginName String containing the name of the desired RenderModuleIsect
 \return Returns pointer to the RenderModuleIsect. Return NULL if the PluginPtr does not
-implement the RenderModuleIsect interface.
+implement the RenderModuleIsect interface or the \a PluginName is not empty
+and not equal to the Plugin's name.
 
 \fn dmz::Boolean dmz::RenderModuleIsect::do_isect (
 const IsectParameters &Parameters,

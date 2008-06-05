@@ -18,4 +18,4 @@ namespace dmz {
    DMZ_KERNEL_LINK_SYMBOL Float64 get_heading (const Matrix &Ori);
 };
  
-#endif DMZ_TYPES_MATH_DOT_H
+#endif // DMZ_TYPES_MATH_DOT_H

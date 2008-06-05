@@ -473,11 +473,14 @@ dmz::PluginContainer::start_plugins () {
 
    _state.started = True;
 
-   if (_state.log) { _state.log->info << "Starting Plugins" << endl; }
-
    LevelStruct *ls (_state.levelsTail);
 
    while (ls) {
+
+      if (_state.log) {
+
+         _state.log->info << "Starting Level " << ls->Level << " Plugins" << endl;
+      }
 
       HashTableHandleIterator it;
 
@@ -505,6 +508,11 @@ dmz::PluginContainer::stop_plugins () {
    LevelStruct *ls (_state.levelsHead);
 
    while (ls) {
+
+      if (_state.log) {
+
+         _state.log->info << "Stopping Level " << ls->Level << " Plugins" << endl;
+      }
 
       HashTableHandleIterator it;
 

@@ -289,6 +289,14 @@ dmz::get_absolute_path (const String &Path, String &absPath) {
 }
 
 
+/*!
+
+\brief Removes specified file.
+\details Defined in dmzSystemFile.h.
+\param[in] Path String containing the path of the file to remove.
+\return Returns dmz::True if the file was successfully removed.
+
+*/
 dmz::Boolean
 dmz::remove_file (const String &Path) { return remove (Path.get_buffer ()) == 0; }
 

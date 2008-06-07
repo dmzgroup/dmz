@@ -5,13 +5,18 @@
 \brief Archive observer interface.
 \details
 
-\fn dmz::ArchiveObserver *dmz::ArchiveObserver::cast (const Plugin *PluginPtr)
+\fn dmz::ArchiveObserver *dmz::ArchiveObserver::cast (
+const Plugin *PluginPtr,
+const String &PluginName)
 \brief Casts Plugin pointer to an ArchiveObserver.
 \details If the Plugin ojbect implements the ArchiveObserver interface, a pointer
 to the ArchiveObserver interface of the Plugin is returned.
 \param[in] PluginPtr Pointer to the Plugin.
-\return Returns a pointer to the ArchiveObserver. Returns NULL if the \a PluginPtr
-does not implement the ArchiveObserver interface.
+\param[in] PluginName String containing name of desired Observer. Will not test for name
+if \a PluginName is an empty string.
+\return Returns a pointer to the ArchiveObserver. Returns NULL if the PluginPtr does not
+implement the ArchiveObserver interface or the \a PluginName is not empty and not equal to
+the Plugin's name.
 
 \fn dmz::ArchiveObserver::ArchiveObserver (const PluginInfo &Info)
 \brief Constructor.

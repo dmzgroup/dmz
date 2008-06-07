@@ -5,6 +5,7 @@
 
 namespace dmz {
 
+   //! \cond
    class ApplicationStateBasic : public ApplicationState {
 
       public:
@@ -40,6 +41,7 @@ namespace dmz {
          ApplicationStateBasic (const ApplicationStateBasic &);
          ApplicationStateBasic &operator= (const ApplicationStateBasic &);
    };
+   //! \endcond
 };
 
 #endif // DMZ_APPLICATION_STATE_BASIC_DOT_H

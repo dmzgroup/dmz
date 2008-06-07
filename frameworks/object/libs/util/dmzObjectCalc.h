@@ -25,7 +25,7 @@ namespace dmz {
    DMZ_OBJECT_UTIL_LINK_SYMBOL ObjectAttributeCalculator *
    config_to_object_attribute_calculator (
       const String &Name,
-      Config &source,
+      const Config &Source,
       RuntimeContext *context,
       Log *log = 0);
 };

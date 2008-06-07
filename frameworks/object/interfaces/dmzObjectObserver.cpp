@@ -15,12 +15,17 @@ dmz::ObjectObserverUtil class.
 \fn dmz::ObjectObserver::~ObjectObserver ()
 \brief Destructor.
 
-\fn dmz::ObjectObserver *dmz::ObjectObserver::cast (const Plugin *PluginPtr);
+\fn dmz::ObjectObserver *dmz::ObjectObserver::cast (
+const Plugin *PluginPtr,
+const String &PluginName);
 \brief Casts Plugin pointer to an ObjectObserver pointer.
 \details If the Plugin object implements the ObjectObserver interface,
 a pointer to the ObjectObserver interface of the Plugin is returned.
-\return Returns a pointer to the ObjectObserver. Returns NULL if the PluginPtr does
-not implement the ObjectObserver interface.
+\param[in] PluginPtr Pointer to the Plugin to cast.
+\param[in] PluginName String containing the name of the desired ObjectObserver.
+\return Returns pointer to the ObjectObserver. Return NULL if the PluginPtr does not
+implement the ObjectObserver interface or the \a PluginName is not empty
+and not equal to the Plugin's name.
 
 \fn dmz::Boolean dmz::ObjectObserver::is_valid (
 const Handle ObserverHandle,

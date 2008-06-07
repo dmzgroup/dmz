@@ -16,6 +16,7 @@ namespace dmz {
          public Sync,
          public UndoObserver {
 
+      //! \cond
       public:
          ArchivePluginAutoSave (const PluginInfo &Info, Config &local);
          ~ArchivePluginAutoSave ();
@@ -54,6 +55,7 @@ namespace dmz {
          Boolean _appStateDirty;
 
          Log _log;
+         //! \endcond
 
       private:
          ArchivePluginAutoSave ();

@@ -14,6 +14,7 @@ namespace dmz {
          public MessageObserver,
          public UndoDump {
 
+      //! \cond
       public:
          PluginUndoDump (const PluginInfo &Info, Config &local);
          ~PluginUndoDump ();
@@ -49,6 +50,7 @@ namespace dmz {
          Definitions _defs;
          Undo _undo;
          Log _log;
+         //! \endcond
 
       private:
          PluginUndoDump ();

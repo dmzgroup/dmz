@@ -106,7 +106,7 @@ EXCLUDE_PATTERNS       = */.svn/* \
                          */kernel/runtime/dmzRuntimeConfigContext* \
                          */kernel/runtime/dmzRuntimeTypeContext* \
                          */kernel/runtime/dmzRuntimeDataTypeContext* \
-                         */kernel/runtime/dmzRuntimeMessageTypeContext* \
+                         */kernel/runtime/dmzRuntimeMessageContext* \
                          */kernel/runtime/dmzRuntimeHandleUtil* \
                          */kernel/types/dmzTypesQuaternion* \
                          *dmzObjectMaskConsts.h \

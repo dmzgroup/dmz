@@ -14,6 +14,7 @@ namespace dmz {
       public Plugin,
       private RenderModulePick {
 
+      //! \cond
       public:
          RenderModulePickBasic (const PluginInfo &Info, Config &local);
          ~RenderModulePickBasic ();
@@ -63,6 +64,7 @@ namespace dmz {
          Log _log;
 
          HashTableHandleTemplate<RenderPick2d> _pick2dTable;
+         //! \endcond
 
       private:
          RenderModulePickBasic ();

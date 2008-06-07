@@ -15,13 +15,17 @@ set to dmz::False when the object is not selected.
 \fn dmz::ObjectModuleSelect::~ObjectModuleSelect ()
 \brief Destructor.
 
-\fn dmz::ObjectModuleSelect *dmz::ObjectModuleSelect::cast (const Plugin *PluginPtr)
+\fn dmz::ObjectModuleSelect *dmz::ObjectModuleSelect::cast (
+const Plugin *PluginPtr,
+const String &PluginName)
 \brief Casts Plugin pointer to an ObjectModuleSelect.
 \details If the Plugin object implements the ObjectModuleSelect interface, a pointer
 to the ObjectModuleSelect interface of the Plugin is returned.
-\param[in] PluginPtr Pointer to the Plugin.
-\return Returns a pointer to the ObjectModuleSelect. Returns NULL if the PluginPtr does
-not implement the ObjectModuleSelect interface.
+\param[in] PluginPtr Pointer to the Plugin to cast.
+\param[in] PluginName String containing the name of the desired ObjectModuleSelect.
+\return Returns pointer to the ObjectModuleSelect. Return NULL if the PluginPtr does not
+implement the ObjectModuleSelect interface or the \a PluginName is not empty
+and not equal to the Plugin's name.
 
 \fn void dmz::ObjectModuleSelect::get_selected_objects (HandleContainer &container)
 \brief Creates a list of all selected objects.

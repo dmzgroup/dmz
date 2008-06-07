@@ -33,6 +33,31 @@ static dmz::qdb out;
 \brief Undo recording type enumeration.
 \details Defined in dmzRuntimeUndo.h.
 
+\class dmz::UndoDump
+\ingroup Runtime
+\brief Allows the current undo and redo stack to be dumped.
+
+\fn dmz::UndoDump::UndoDump ()
+\brief Constructor.
+
+\fn dmz::UndoDump::~UndoDump ()
+\brief Constructor.
+
+\fn void dmz::UndoDump::start_record (const Handle RecordHandle, const String &Name)
+\brief Callback made when a new undo is started.
+\param[in] RecordHandle Handle of the undo.
+\param[in] Name String containing a description of the undo.
+
+\fn void dmz::UndoDump::store_action (
+const Message &Type,
+const Handle Target,
+const Data *Value)
+\brief Callback made to store an undo action.
+\param[in] Type Message sent for undo action.
+\param[in] Target Handle of the undo action target.
+\param[in] Value Pointer to the Data object send with the undo action Message.
+
+
 \class dmz::Undo
 \ingroup Runtime
 \brief Interface for undo and redo.

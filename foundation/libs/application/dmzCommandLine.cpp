@@ -52,9 +52,11 @@ struct dmz::CommandLineArgs::State {
 };
 
 
+//! Constructor.
 dmz::CommandLineArgs::CommandLineArgs () : _state (*(new State)) {;}
 
 
+//! Copy Constructor.
 dmz::CommandLineArgs::CommandLineArgs (const CommandLineArgs &Args) :
       _state (*(new State)) { *this = Args; }
 
@@ -71,6 +73,7 @@ dmz::CommandLineArgs::CommandLineArgs (const String &Name) : _state (*(new State
 }
 
 
+//! Destructor
 dmz::CommandLineArgs::~CommandLineArgs () { delete &_state; }
 
 
@@ -256,7 +259,12 @@ dmz::CommandLine::parse (int argc, char *argv[]) {
    return result;
 }
 
+/*!
 
+\brief Adds arguments to the command line container.
+\param[in] Args CommandLineArgs to be added.
+
+*/
 void
 dmz::CommandLine::add_args (const CommandLineArgs &Args) {
 

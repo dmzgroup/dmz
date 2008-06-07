@@ -42,7 +42,16 @@ local_attr_name_to_handle (
 
 };
 
+/*!
 
+\class dmz::ObjectPluginUndo
+\ingroup Object
+\brief Records changes to objects in the ObjectModule to the runtime undo.
+
+*/
+
+
+//! \cond
 dmz::ObjectPluginUndo::ObjectPluginUndo (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       MessageObserver (Info),
@@ -1164,6 +1173,7 @@ dmz::ObjectPluginUndo::_init (Config &local) {
    _vectorHandle = _defs.create_named_handle ("Vector");
    _matrixHandle = _defs.create_named_handle ("Matrix");
 }
+//! \endcond
 
 
 extern "C" {

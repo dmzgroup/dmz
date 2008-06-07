@@ -12,6 +12,7 @@ namespace dmz {
          public Plugin,
          public MessageObserver {
 
+      //! \cond
       public:
          PluginUndo (const PluginInfo &Info, Config &local);
          ~PluginUndo ();
@@ -41,6 +42,7 @@ namespace dmz {
 
          Undo _undo;
          Log _log;
+         //! \endcond
 
       private:
          PluginUndo ();

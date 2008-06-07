@@ -16,6 +16,7 @@ namespace dmz {
          public ObjectObserverUtil,
          public UndoObserver {
 
+      //! \cond
       public:
          ObjectPluginUndo (const PluginInfo &Info, Config &local);
          ~ObjectPluginUndo ();
@@ -242,6 +243,7 @@ namespace dmz {
 
          Undo _undo;
          Log _log;
+         //! \endcond
 
       private:
          ObjectPluginUndo ();

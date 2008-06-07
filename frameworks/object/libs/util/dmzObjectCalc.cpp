@@ -7,6 +7,7 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzTypesHandleContainer.h>
 
+//! \cond
 dmz::ObjectAttrOperator::ObjectAttrOperator (const ObjectAttrOperatorEnum Operator) :
       _Op (Operator),
       _argList (0) {;}
@@ -266,11 +267,44 @@ local_build_calc_tree (Config &source, Definitions &defs, Log *log) {
 
 }
 
+//! \endcond
 
+/*!
+
+\class dmz::ObjectAttributeCalculator
+\ingroup Object
+\brief Interface for calculating a scalar based on multiple object attribute values.
+\sa dmz::config_to_object_attribute_calculator ()
+
+\fn dmz::ObjectAttributeCalculator::ObjectAttributeCalculator ()
+\brief Constructor.
+
+\fn dmz::ObjectAttributeCalculator::~ObjectAttributeCalculator ()
+\brief Destructor.
+
+\fn void dmz::ObjectAttributeCalculator::store_object_module (ObjectModule *module)
+\brief Stores the ObjectModule in the calculator tree.
+
+\fn dmz::Float64 dmz::ObjectAttributeCalculator::calculate (const Handle ObjectHandle)
+\brief Performs calculation on specified object handle.
+
+*/
+
+/*!
+
+\brief Creates an Object Attribute Calculator tree.
+\ingroup Object
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] context Pointer to the runtime context.
+\param[in] log Pointer to dmz::Log to use for log reporting.
+\return Returns a pointer to the created ObjectAttributeCalculator tree.
+
+*/
 dmz::ObjectAttributeCalculator *
 dmz::config_to_object_attribute_calculator (
       const String &Name,
-      Config &source,
+      const Config &Source,
       RuntimeContext *context,
       Log *log) {
 
@@ -280,11 +314,11 @@ dmz::config_to_object_attribute_calculator (
 
    Config root;
 
-   if (!Name) { root = source; }
+   if (!Name) { root = Source; }
    else {
 
       Config config;
-      source.lookup_config (Name, config);
+      Source.lookup_config (Name, config);
       ConfigIterator it;
       config.get_first_config (it, root);
    }

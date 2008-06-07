@@ -5,6 +5,7 @@
 
 namespace dmz {
 
+   //! \cond
    enum ObjectAttrOperatorEnum {
       ObjectAttrOperatorAdd,
       ObjectAttrOperatorSubtract,
@@ -72,6 +73,8 @@ namespace dmz {
       protected:
          const Float64 _ConstValue;
    };
+
+   //! \endcond
 };
 
 #endif //  DMZ_OBJECT_CALC_PRIVATE_H

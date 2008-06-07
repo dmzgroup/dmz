@@ -15,6 +15,7 @@ namespace dmz {
          public ArchiveObserverUtil,
          public UndoDump {
 
+      //! \cond
       public:
          ArchivePluginUndo (const PluginInfo &Info, Config &local);
          ~ArchivePluginUndo ();
@@ -55,6 +56,7 @@ namespace dmz {
          Definitions _defs;
          Undo _undo;
          Log _log;
+         //! \endcond
 
       private:
          ArchivePluginUndo ();

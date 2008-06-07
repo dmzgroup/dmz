@@ -46,7 +46,7 @@ namespace dmz {
 
       public:
          Log &log; //!< Reference to application log
-         ApplicationState &state;
+         ApplicationState &state; //!< Application state.
          
       private:
          Application ();

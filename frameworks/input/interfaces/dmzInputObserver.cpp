@@ -14,12 +14,17 @@ interface. Derived classes should use the dmz::InputObserverUtil class.
 \fn dmz::InputObserver::~InputObserver ()
 \brief Destructor.
 
-\fn dmz::InputObserver::InputObserver *dmz::InputObserver::cast (const Plugin *PluginPtr)
+\fn dmz::InputObserver::InputObserver *dmz::InputObserver::cast (
+const Plugin *PluginPtr,
+const String &PluginName)
 \brief Casts Plugin pointer to an InputObserver pointer.
 \details If the Plugin object implements the InputObserver interface, apointer to the
 InputObserver interface of the Plugin is returned.
-\return Resturns a pointer to the InputObserver. Returns NULL if the PluginPtr does not
-implement the InputObserver interface.
+\param[in] PluginPtr Pointer to the Plugin.
+\param[in] PluginName String containing name of desired InputObserver.
+\return Returns a ointer to the InputObserver. Returns NULL if the Plugin does not
+implement the InputObserver interface or the \a PluginName is not empty and not
+equal to the Plugin's name.
 
 \fn dmz::Boolean dmz::InputObserver::is_valid (
 const Handle ObserverHandle,

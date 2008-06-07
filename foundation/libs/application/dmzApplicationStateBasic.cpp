@@ -1,5 +1,6 @@
 #include "dmzApplicationStateBasic.h"
 
+//! \cond
 dmz::ApplicationStateBasic::ApplicationStateBasic (RuntimeContext *context) :
       ApplicationState (context),
       _modeStack (0) {;}
@@ -58,3 +59,4 @@ dmz::ApplicationStateBasic::pop_mode () {
 
    return get_mode ();
 }
+//! \endcond

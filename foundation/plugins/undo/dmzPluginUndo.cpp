@@ -3,6 +3,17 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::PluginUndo
+\ingroup Foundation
+\brief Performs and undo or redo when a message is received.
+\details The default Message name to perform an undo is "Plugin_Undo_Message" and
+the default Message to perform a redo is "Plugin_Redo_Message".
+
+*/
+
+//! \cond
 dmz::PluginUndo::PluginUndo (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       MessageObserver (Info),
@@ -54,6 +65,8 @@ dmz::PluginUndo::_init (Config &local) {
    subscribe_to_message (_undoMessage);
    subscribe_to_message (_redoMessage);
 }
+
+//! \endcond
 
 
 extern "C" {

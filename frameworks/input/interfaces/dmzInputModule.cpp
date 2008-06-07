@@ -13,7 +13,7 @@ to the InputModule interface of the Plugin is returned.
 \param[in] PluginPtr Pointer to the Plugin.
 \param[in] PluginName String containing name of desired InputModule.
 \return Returns a ointer to the InputModule. Returns NULL if the Plugin does not
-implement the InputModuleChannesl interface or the \a PluginName is not empty and not
+implement the InputModule interface or the \a PluginName is not empty and not
 equal to the Plugin's name.
 
 \fn dmz::InputModule::InputModule (const PluginInfo &Info)

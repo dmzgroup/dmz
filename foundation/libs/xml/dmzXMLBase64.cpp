@@ -507,6 +507,14 @@ dmz::String
 dmz::Base64Decoder::get_error_message () { return _state.errorMessage; }
 
 
+/*!
+
+\brief Base64 encodes a String.
+\ingroup Foundation
+\param[in] Value String containing value to be base64 encoded.
+\return Returns String containing the base64 encoded result.
+
+*/
 dmz::String
 dmz::encode_base64 (const String &Value) {
 
@@ -524,6 +532,14 @@ dmz::encode_base64 (const String &Value) {
 
 
 
+/*!
+
+\brief Base64 decodes a String.
+\ingroup Foundation
+\param[in] Value String containing value to be base64 decoded.
+\return Returns String containing the base64 decoded result.
+
+*/
 dmz::String
 dmz::decode_base64 (const String &Value) {
 

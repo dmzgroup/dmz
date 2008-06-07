@@ -4,6 +4,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::ArchivePluginUndo
+\ingroup Archive
+\brief Creates an archive of the runtime undo stack.
+
+*/
+
+//! \cond
 dmz::ArchivePluginUndo::ArchivePluginUndo (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       ArchiveObserverUtil (Info, local),
@@ -149,6 +158,7 @@ dmz::ArchivePluginUndo::_init (Config &local) {
    }
    else { activate_default_archive (); }
 }
+//! \endcond
 
 
 extern "C" {

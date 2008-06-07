@@ -11,6 +11,17 @@
 #include <dmzXMLParser.h>
 #include <dmzXMLUtil.h>
 
+/*!
+
+\class dmz::ArchivePluginAutoSave
+\ingroup Archive
+\brief Creates an auto save file whenever a new undo event is create.
+\details Creates archives while the application is running. If the application
+abnormally terminates and is restarted, it will restore from the auto saved archive.
+
+*/
+
+//! \cond
 dmz::ArchivePluginAutoSave::ArchivePluginAutoSave (
       const PluginInfo &Info,
       Config &local) :
@@ -169,6 +180,7 @@ dmz::ArchivePluginAutoSave::_init (Config &local) {
    }
 
 }
+//! \endcond
 
 
 extern "C" {

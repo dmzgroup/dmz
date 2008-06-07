@@ -29,13 +29,17 @@ number from run to run.
 Zero is considered an invalid attribute handle.
 \sa dmz::ObjectObserver \n dmz::Definitions::create_named_handle()
 
-\fn dmz::ObjectModule *dmz::ObjectModule::cast (const Plugin *PluginPtr);
+\fn dmz::ObjectModule *dmz::ObjectModule::cast (
+const Plugin *PluginPtr,
+const String &PluginName);
 \brief Casts Plugin pointer to an ObjectModule.
 \details If the Plugin object implements the ObjectModule interface, a pointer to
 the ObjectModule interface of the Plugin is returned.
-\param[in] PluginPtr Pointer to the Plugin.
-\return Returns a pointer to the ObjectModule. Returns NULL if the PluginPtr does not
-implement the ObjectModule interface.
+\param[in] PluginPtr Pointer to the Plugin to cast.
+\param[in] PluginName String containing the name of the desired ObjectModule.
+\return Returns pointer to the ObjectModule. Return NULL if the PluginPtr does not
+implement the ObjectModule interface or the \a PluginName is not empty
+and not equal to the Plugin's name.
 
 \fn dmz::Boolean dmz::ObjectModule::register_global_object_observer (
 ObjectObserver &observer)

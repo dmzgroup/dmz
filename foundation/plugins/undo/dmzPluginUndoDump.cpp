@@ -3,6 +3,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::PluginUndoDump
+\ingroup Foundation
+\brief Dumps the undo and redo stack to the info log.
+
+*/
+
+//! \cond
 dmz::PluginUndoDump::PluginUndoDump (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       MessageObserver (Info),
@@ -72,6 +81,7 @@ dmz::PluginUndoDump::_init (Config &local) {
   _defs.create_message_type ("DumpUndoStackMessage", message);
    subscribe_to_message (message);
 }
+//! \endcond
 
 
 extern "C" {

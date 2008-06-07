@@ -4,6 +4,15 @@
 #include <dmzRuntimePluginInfo.h>
 
 
+/*!
+
+\class dmz::RenderModulePickBasic
+\ingroup Render
+\brief Basic implementation of the RenderModulePick
+
+*/
+
+//! \cond
 dmz::RenderModulePickBasic::RenderModulePickBasic (
       const PluginInfo &Info,
       Config &local) :
@@ -191,6 +200,7 @@ void
 dmz::RenderModulePickBasic::_init (Config &local) {
    
 }
+//! \endcond
 
 
 extern "C" {

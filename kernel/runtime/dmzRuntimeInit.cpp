@@ -783,6 +783,7 @@ dmz::Definitions::lookup_named_handle_name (const Handle NamedHandle) const {
 }
 
 
+//! Gets the global Message.
 dmz::Message
 dmz::Definitions::get_global_message_type () const {
 

@@ -36,6 +36,7 @@ namespace dmz {
          Boolean remove_plugin (const Handle PluginHandle);
 
          void discover_plugins ();
+         void init_plugins ();
          void start_plugins ();
          void stop_plugins ();
          void shutdown_plugins ();

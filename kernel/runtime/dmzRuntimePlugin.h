@@ -10,6 +10,7 @@ namespace dmz {
    class Config;
 
    enum PluginStateEnum {
+      PluginStateInit, //!< Plugin state start mode.
       PluginStateStart, //!< Plugin state start mode.
       PluginStateStop, //!< Plugin state stop mode.
       PluginStateShutdown, //!< Plugin state shutdown mode.

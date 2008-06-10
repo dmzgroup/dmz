@@ -336,6 +336,7 @@ dmz::Application::load_plugins () {
          &(_state.log));
 
       _state.container.discover_plugins ();
+      _state.container.init_plugins ();
    }
 
    return !_state.error;

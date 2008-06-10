@@ -332,6 +332,18 @@ dmz::PluginContainer::add_plugin (PluginInfo *info, Plugin *plugin) {
 
                 if (info->uses_level (ls->Level)) {
 
+                   plugin->update_plugin_state (PluginStateInit, ls->Level);
+                }
+
+                ls = ls->prev;
+            }
+
+             ls = _state.levelsTail;
+
+             while (ls) {
+
+                if (info->uses_level (ls->Level)) {
+
                    plugin->update_plugin_state (PluginStateStart, ls->Level);
                 }
 
@@ -473,6 +485,34 @@ dmz::PluginContainer::discover_plugins () {
          ps = _state.pluginTable.get_next (it)) {
 
       _state.discover_all_plugins (&(ps->plugin));
+   }
+}
+
+
+//! All Plugins are initialized.
+void
+dmz::PluginContainer::init_plugins () {
+
+   LevelStruct *ls (_state.levelsTail);
+
+   while (ls) {
+
+      if (_state.log) {
+
+         _state.log->info << "Initializing Level " << ls->Level << " Plugins" << endl;
+      }
+
+      HashTableHandleIterator it;
+
+      for (
+            pluginStruct *current = ls->table.get_first (it);
+            current;
+            current = ls->table.get_next (it)) {
+
+         current->plugin.update_plugin_state (PluginStateInit, ls->Level);
+      }
+
+      ls = ls->prev;
    }
 }
 

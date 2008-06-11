@@ -24,42 +24,42 @@ and not equal to the Plugin's name.
 \fn dmz::AudioModule::~AudioModule ()
 \brief Destructor.
 
-\fn dmz::UInt32 dmz::AudioModule::create_audio_handle (const dmz::String &FileName)
+\fn dmz::Handle dmz::AudioModule::create_audio_handle (const dmz::String &FileName)
 
-\fn dmz::Boolean dmz::AudioModule::destroy_audio_handle (const dmz::UInt32 AudioHandle)
+\fn dmz::Boolean dmz::AudioModule::destroy_audio_handle (const dmz::Handle AudioHandle)
 
-\fn dmz::UInt32 dmz::AudioModule::play_sound (
-const dmz::UInt32 AudioHandle, 
+\fn dmz::Handle dmz::AudioModule::play_sound (
+const dmz::Handle AudioHandle, 
 const dmz::SoundAttributes &Attributes)
 
 \fn dmz::Boolean dmz::AudioModule::update_sound (
-const dmz::UInt32 InstanceHandle, 
+const dmz::Handle InstanceHandle, 
 const dmz::SoundAttributes &Attributes)
 
 \fn dmz::Boolean dmz::AudioModule::lookup_sound (
-const dmz::UInt32 InstanceHandle, 
+const dmz::Handle InstanceHandle, 
 dmz::SoundAttributes &attributes)
 
-\fn dmz::Boolean dmz::AudioModule::stop_sound (const dmz::UInt32 InstanceHandle)
+\fn dmz::Boolean dmz::AudioModule::stop_sound (const dmz::Handle InstanceHandle)
 
 \fn dmz::Boolean dmz::AudioModule::set_mute_all_state (const dmz::Boolean Mute)
 
 \fn dmz::Boolean dmz::AudioModule::get_mute_all_state (dmz::Boolean &mute)
 
-\fn dmz::UInt32 dmz::AudioModule::create_listener (const dmz::String &Name)
+\fn dmz::Handle dmz::AudioModule::create_listener (const dmz::String &Name)
 
-\fn dmz::UInt32 dmz::AudioModule::lookup_listener (const dmz::String &Name)
+\fn dmz::Handle dmz::AudioModule::lookup_listener (const dmz::String &Name)
 
 \fn dmz::Boolean dmz::AudioModule::set_listener (
-const dmz::UInt32 Handle,
+const dmz::Handle Handle,
 const dmz::Vector &Position,
 const dmz::Matrix &Orientation)
 
 \fn dmz::Boolean dmz::AudioModule::get_listener (
-const dmz::UInt32 Handle,
+const dmz::Handle Handle,
 dmz::Vector &position,
 dmz::Matrix &orientation)
 
-\fn dmz::Boolean dmz::AudioModule::destroy_listener (const dmz::UInt32 Handle)
+\fn dmz::Boolean dmz::AudioModule::destroy_listener (const dmz::Handle Handle)
 
 */

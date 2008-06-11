@@ -11,7 +11,7 @@
 #include <dmzSystemRefCount.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesHashTableStringTemplate.h>
-#include <dmzTypesHashTableUInt32Template.h>
+#include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
 
@@ -42,49 +42,49 @@ namespace dmz {
          virtual void update_sync (const Float64 TimeDelta);
 
          // AudioModule Interface
-         virtual UInt32 create_audio_handle (const String &FileName);
-         virtual Boolean destroy_audio_handle (const UInt32 AudioHandle);
+         virtual Handle create_audio_handle (const String &FileName);
+         virtual Boolean destroy_audio_handle (const Handle AudioHandle);
 
-         virtual UInt32 play_sound (
-            const UInt32 AudioHandle, 
+         virtual Handle play_sound (
+            const Handle AudioHandle, 
             const SoundAttributes &Attributes);
 
          virtual Boolean update_sound (
-            const UInt32 InstanceHandle, 
+            const Handle InstanceHandle, 
             const SoundAttributes &Attributes);
 
          virtual Boolean lookup_sound (
-            const UInt32 InstanceHandle, 
+            const Handle InstanceHandle, 
             SoundAttributes &attributes);
 
-         virtual Boolean stop_sound (const UInt32 InstanceHandle);
+         virtual Boolean stop_sound (const Handle InstanceHandle);
 
          virtual Boolean set_mute_all_state (const Boolean Mute);
          virtual Boolean get_mute_all_state (Boolean &mute);
 
-         virtual UInt32 create_listener (const String &Name);
-         virtual UInt32 lookup_listener (const String &Name);
+         virtual Handle create_listener (const String &Name);
+         virtual Handle lookup_listener (const String &Name);
 
          virtual Boolean set_listener (
-            const UInt32 Handle,
+            const Handle ListenerHandle,
             const Vector &Position,
             const Matrix &Orientation);
 
          virtual Boolean get_listener (
-            const UInt32 Handle,
+            const Handle ListenerHandle,
             Vector &position,
             Matrix &orientation);
 
-         virtual Boolean destroy_listener (const UInt32 Handle);
+         virtual Boolean destroy_listener (const Handle ListenerHandle);
 
       protected:
          struct SoundStruct : public RefCountDeleteOnZero {
 
             const String Filename;
-            const RuntimeHandle Handle;
+            const RuntimeHandle RTHandle;
             FMOD::Sound *sound;
 
-            UInt32 get_handle () const { return Handle.get_runtime_handle (); }
+            Handle get_handle () const { return RTHandle.get_runtime_handle (); }
 
             SoundStruct (
                   const String &AbsFilePath, 
@@ -92,7 +92,7 @@ namespace dmz {
                   RuntimeContext *context) :
                   RefCountDeleteOnZero (),
                   Filename (AbsFilePath),
-                  Handle (Filename + ".SoundDataFMOD", context),
+                  RTHandle (Filename + ".SoundDataFMOD", context),
                   sound (soundData) {;}
 
             protected:
@@ -101,7 +101,7 @@ namespace dmz {
 
          struct InstanceStruct {
 
-            const RuntimeHandle Handle;
+            const RuntimeHandle RTHandle;
             AudioModuleFMOD &module;
 
             Float64 defaultFrequency;
@@ -110,7 +110,7 @@ namespace dmz {
 
             InstanceStruct *next;
 
-            UInt32 get_handle () const { return Handle.get_runtime_handle (); }
+            Handle get_handle () const { return RTHandle.get_runtime_handle (); }
 
             void reset () {
 
@@ -126,7 +126,7 @@ namespace dmz {
                   AudioModuleFMOD &theModule,
                   SoundStruct *soundData, 
                   RuntimeContext *context) :
-                  Handle (FilePath + ".SoundInstanceFMOD", context), 
+                  RTHandle (FilePath + ".SoundInstanceFMOD", context), 
                   module (theModule),
                   defaultFrequency (1.0),
                   data (soundData),
@@ -141,20 +141,20 @@ namespace dmz {
 
          struct ListenerStruct {
          
-            const RuntimeHandle Handle;
+            const RuntimeHandle RTHandle;
             const String Name;
             Int32 index;
 
             Vector position;
             Matrix orientation;
                
-            UInt32 get_handle () const { return Handle.get_runtime_handle (); }
+            Handle get_handle () const { return RTHandle.get_runtime_handle (); }
 
             ListenerStruct (
                   const String &TheName, 
                   const Int32 TheIndex, 
                   RuntimeContext *context) :
-                  Handle (TheName + ".AudioListenerFMOD", context),
+                  RTHandle (TheName + ".AudioListenerFMOD", context),
                   Name (TheName), 
                   index (TheIndex) {;}
 
@@ -175,18 +175,18 @@ namespace dmz {
             const FMOD_RESULT Error);
  
          InstanceStruct *_get_new_instance (SoundStruct *soundData);
-         void _remove_instance (UInt32 InstanceHandle);
+         void _remove_instance (Handle InstanceHandle);
 
          Log _log;
 
          FMOD::System *_system;
 
-         HashTableUInt32Template<InstanceStruct> _instanceTable;
-         HashTableUInt32Template<SoundStruct> _soundHandleTable;
+         HashTableHandleTemplate<InstanceStruct> _instanceTable;
+         HashTableHandleTemplate<SoundStruct> _soundHandleTable;
          HashTableStringTemplate<SoundStruct> _soundNameTable;
          HashTableStringTemplate<ListenerStruct> _listenerNameTable;
-         HashTableUInt32Template<ListenerStruct> _listenerHandleTable;
-         HashTableUInt32Template<ListenerStruct> _listenerIndexTable;
+         HashTableHandleTemplate<ListenerStruct> _listenerHandleTable;
+         HashTableHandleTemplate<ListenerStruct> _listenerIndexTable;
 
          InstanceStruct *_instanceRecycle;
 

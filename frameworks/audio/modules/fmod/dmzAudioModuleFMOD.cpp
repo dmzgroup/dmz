@@ -26,7 +26,7 @@ dmz::AudioModuleFMOD::AudioModuleFMOD (const PluginInfo &Info, const Config &Loc
 dmz::AudioModuleFMOD::~AudioModuleFMOD () {
 
    //Stop all existing sound instances
-   HashTableUInt32Iterator it;
+   HashTableHandleIterator it;
 
    for (InstanceStruct *instance = _instanceTable.get_first (it);
          instance;
@@ -83,10 +83,10 @@ dmz::AudioModuleFMOD::update_sync (const Float64 TimeDelta) {
 
 
 // AudioModule Interface
-dmz::UInt32
+dmz::Handle
 dmz::AudioModuleFMOD::create_audio_handle (const String &Filename) {
 
-   UInt32 result (0);
+   Handle result (0);
    String absPath;
 
    if (_system) {
@@ -124,7 +124,7 @@ dmz::AudioModuleFMOD::create_audio_handle (const String &Filename) {
 
                if (newSoundData && _soundNameTable.store (absPath, newSoundData)) {
                   
-                  UInt32 newHandle = newSoundData->get_handle ();
+                  Handle newHandle = newSoundData->get_handle ();
 
                   if (newHandle && _soundHandleTable.store (newHandle, newSoundData)) {
 
@@ -143,7 +143,7 @@ dmz::AudioModuleFMOD::create_audio_handle (const String &Filename) {
 
 
 dmz::Boolean
-dmz::AudioModuleFMOD::destroy_audio_handle (const UInt32 AudioHandle) {
+dmz::AudioModuleFMOD::destroy_audio_handle (const Handle AudioHandle) {
 
    Boolean result (False);
 
@@ -168,12 +168,12 @@ dmz::AudioModuleFMOD::destroy_audio_handle (const UInt32 AudioHandle) {
 }
 
 
-dmz::UInt32
+dmz::Handle
 dmz::AudioModuleFMOD::play_sound (
-      const UInt32 AudioHandle, 
+      const Handle AudioHandle, 
       const SoundAttributes &Attributes) {
 
-   UInt32 result (0);
+   Handle result (0);
 
    if (_system) {
 
@@ -181,13 +181,13 @@ dmz::AudioModuleFMOD::play_sound (
 
       if (data) {
 
-         UInt32 dataHandle = data->get_handle ();
+         Handle dataHandle = data->get_handle ();
 
          InstanceStruct *instance = _get_new_instance (data);
 
          if (instance) {
 
-            UInt32 instanceHandle = instance->get_handle ();
+            Handle instanceHandle = instance->get_handle ();
 
             if (instanceHandle && 
                   _instanceTable.store (instanceHandle, instance)) {
@@ -257,7 +257,7 @@ dmz::AudioModuleFMOD::play_sound (
 
 dmz::Boolean
 dmz::AudioModuleFMOD::update_sound (
-      const UInt32 InstanceHandle, 
+      const Handle InstanceHandle, 
       const SoundAttributes &Attributes) {
 
    Boolean result (False);
@@ -321,7 +321,7 @@ dmz::AudioModuleFMOD::update_sound (
 
 dmz::Boolean
 dmz::AudioModuleFMOD::lookup_sound (
-      const UInt32 InstanceHandle, 
+      const Handle InstanceHandle, 
       SoundAttributes &attributes) {
 
    Boolean result (False);
@@ -356,7 +356,7 @@ dmz::AudioModuleFMOD::lookup_sound (
 
 
 dmz::Boolean
-dmz::AudioModuleFMOD::stop_sound (const UInt32 InstanceHandle) {
+dmz::AudioModuleFMOD::stop_sound (const Handle InstanceHandle) {
 
    Boolean result (False);
 
@@ -440,10 +440,10 @@ dmz::AudioModuleFMOD::get_mute_all_state (Boolean &mute) {
 }
 
 
-dmz::UInt32
+dmz::Handle
 dmz::AudioModuleFMOD::create_listener (const String &Name) {
 
-   UInt32 result (0);
+   Handle result (0);
 
    Int32 numListeners = _listenerNameTable.get_count ();
 
@@ -497,10 +497,10 @@ dmz::AudioModuleFMOD::create_listener (const String &Name) {
 }
 
 
-dmz::UInt32
+dmz::Handle
 dmz::AudioModuleFMOD::lookup_listener (const String &Name) {
 
-   UInt32 result (0);
+   Handle result (0);
 
    ListenerStruct *listener = _listenerNameTable.lookup (Name);
 
@@ -512,7 +512,7 @@ dmz::AudioModuleFMOD::lookup_listener (const String &Name) {
 
 dmz::Boolean
 dmz::AudioModuleFMOD::set_listener (
-      const UInt32 Handle,
+      const Handle ListenerHandle,
       const Vector &Position,
       const Matrix &Orientation) {
 
@@ -520,7 +520,7 @@ dmz::AudioModuleFMOD::set_listener (
 
    if (_system) {
 
-      ListenerStruct *listener = _listenerHandleTable.lookup (Handle);
+      ListenerStruct *listener = _listenerHandleTable.lookup (ListenerHandle);
 
       if (listener) {
 
@@ -533,18 +533,11 @@ dmz::AudioModuleFMOD::set_listener (
          Orientation.transform_vector (lookVector);
          Orientation.transform_vector (upVector);
 
-#ifdef FOO_BAR // _WIN32
-         FMOD_VECTOR fmodLookVector = {
-            Float32 (lookVector.get_x () + (Float64 (rand () / (Float64 (RAND_MAX) * 10.0)))),
-            Float32 (lookVector.get_y () + ((Float64 (rand () / Float64 (RAND_MAX) * 10.0)))),
-            Float32 (lookVector.get_z () + ((Float64 (rand () / Float64 (RAND_MAX) * 10.0))))};
-#else
 
          FMOD_VECTOR fmodLookVector = {
             Float32 (lookVector.get_x ()),
             Float32 (lookVector.get_y ()),
             Float32 (lookVector.get_z ())};
-#endif
 
          FMOD_VECTOR fmodUpVector = {
             Float32 (upVector.get_x ()),
@@ -579,7 +572,7 @@ dmz::AudioModuleFMOD::set_listener (
 
 dmz::Boolean
 dmz::AudioModuleFMOD::get_listener (
-      const UInt32 Handle,
+      const Handle ListenerHandle,
       Vector &position,
       Matrix &orientation) {
 
@@ -587,7 +580,7 @@ dmz::AudioModuleFMOD::get_listener (
 
    if (_system) {
 
-      ListenerStruct *listener = _listenerHandleTable.lookup (Handle);
+      ListenerStruct *listener = _listenerHandleTable.lookup (ListenerHandle);
 
       if (listener) {
          
@@ -612,12 +605,12 @@ dmz::AudioModuleFMOD::get_listener (
 
 
 dmz::Boolean
-dmz::AudioModuleFMOD::destroy_listener (const UInt32 Handle) {
+dmz::AudioModuleFMOD::destroy_listener (const Handle ListenerHandle) {
       
    Boolean result (False);
    if (_system) {
 
-      ListenerStruct *listener = _listenerHandleTable.lookup (Handle);
+      ListenerStruct *listener = _listenerHandleTable.lookup (ListenerHandle);
 
       if (listener) {
 
@@ -644,7 +637,7 @@ dmz::AudioModuleFMOD::destroy_listener (const UInt32 Handle) {
             if (_error_check ("Destroying a Listener", fmodResult) && muteSuccess) {
 
                // Delete the listener
-               _listenerHandleTable.remove (Handle);
+               _listenerHandleTable.remove (ListenerHandle);
                _listenerNameTable.remove (listener->Name);
                _listenerIndexTable.remove (listener->index);
                delete listener; listener = 0;
@@ -687,7 +680,7 @@ dmz::AudioModuleFMOD::destroy_listener (const UInt32 Handle) {
                      if (_error_check ("Destroying a Listener", fmodResult)) {
 
                         // Delete the listener
-                        _listenerHandleTable.remove (Handle);
+                        _listenerHandleTable.remove (ListenerHandle);
                         _listenerNameTable.remove (listener->Name);
                         _listenerIndexTable.remove (listener->index);
                         delete listener; listener = 0;
@@ -810,7 +803,7 @@ dmz::AudioModuleFMOD::_get_new_instance (SoundStruct *soundData) {
 
 
 void
-dmz::AudioModuleFMOD::_remove_instance (UInt32 InstanceHandle) {
+dmz::AudioModuleFMOD::_remove_instance (Handle InstanceHandle) {
 
    InstanceStruct *instance = _instanceTable.lookup (InstanceHandle);
    

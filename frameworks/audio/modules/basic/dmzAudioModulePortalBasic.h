@@ -41,7 +41,7 @@ namespace dmz {
 
          void _init (const Config &Local);
 
-         UInt32 _handle;
+         Handle _handle;
          AudioModule *_audioModule;
          String _name;
 

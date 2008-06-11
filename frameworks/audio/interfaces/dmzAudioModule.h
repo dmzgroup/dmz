@@ -20,40 +20,40 @@ namespace dmz {
             const Plugin *PluginPtr,
             const String &PluginName = "");
 
-         virtual UInt32 create_audio_handle (const String &FileName) = 0;
-         virtual Boolean destroy_audio_handle (const UInt32 AudioHandle) = 0;
+         virtual Handle create_audio_handle (const String &FileName) = 0;
+         virtual Boolean destroy_audio_handle (const Handle AudioHandle) = 0;
 
-         virtual UInt32 play_sound (
-            const UInt32 AudioHandle, 
+         virtual Handle play_sound (
+            const Handle AudioHandle, 
             const SoundAttributes &Attributes) = 0;
 
          virtual Boolean update_sound (
-            const UInt32 InstanceHandle, 
+            const Handle InstanceHandle, 
             const SoundAttributes &Attributes) = 0;
 
          virtual Boolean lookup_sound (
-            const UInt32 InstanceHandle, 
+            const Handle InstanceHandle, 
             SoundAttributes &attributes) = 0;
 
-         virtual Boolean stop_sound (const UInt32 InstanceHandle) = 0;
+         virtual Boolean stop_sound (const Handle InstanceHandle) = 0;
 
          virtual Boolean set_mute_all_state (const Boolean Mute) = 0;
          virtual Boolean get_mute_all_state (Boolean &mute) = 0;
 
-         virtual UInt32 create_listener (const String &Name) = 0;
-         virtual UInt32 lookup_listener (const String &Name) = 0;
+         virtual Handle create_listener (const String &Name) = 0;
+         virtual Handle lookup_listener (const String &Name) = 0;
 
          virtual Boolean set_listener (
-            const UInt32 Handle,
+            const Handle Handle,
             const Vector &Position,
             const Matrix &Orientation) = 0;
 
          virtual Boolean get_listener (
-            const UInt32 Handle,
+            const Handle Handle,
             Vector &position,
             Matrix &orientation) = 0;
          
-         virtual Boolean destroy_listener (const UInt32 Handle) = 0;
+         virtual Boolean destroy_listener (const Handle Handle) = 0;
 
       protected:
          AudioModule (const PluginInfo &Info);

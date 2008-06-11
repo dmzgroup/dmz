@@ -20,7 +20,7 @@ namespace dmz {
             const String &PluginName = "");
 
          String get_audio_portal_name () const;
-         UInt32 get_audio_portal_handle () const;
+         Handle get_audio_portal_handle () const;
 
          // AudioModulePortal Interface
          virtual Boolean is_master_portal () const = 0;
@@ -66,6 +66,13 @@ dmz::AudioModulePortal::~AudioModulePortal () {
 
    remove_rtti_interface (DMZ_AUDIO_MODULE_PORTAL_INTERFACE_NAME, __Info);
 }
+
+dmz::String
+dmz::AudioModulePortal::get_audio_portal_name () const { return __Info.get_name (); }
+
+
+dmz::Handle
+dmz::AudioModulePortal::get_audio_portal_handle () const { return __Info.get_handle (); }
 
 #endif //  DMZ_AUDIO_MODULE_PORTAL_DOT_H
 

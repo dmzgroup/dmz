@@ -1417,7 +1417,7 @@ dmz::Boolean
 dmz::ObjectModuleBasic::store_flag (
       const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Boolean &Value) {
+      const Boolean Value) {
 
    Boolean result (False);
 

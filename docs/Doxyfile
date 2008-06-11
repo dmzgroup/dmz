@@ -90,6 +90,7 @@ WARN_LOGFILE           =
 INPUT                  = ../kernel \
                          ../foundation \
                          ../frameworks/archive \
+                         ../frameworks/audio \
                          ../frameworks/input \
                          ../frameworks/object \
                          ../frameworks/render

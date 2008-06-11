@@ -31,7 +31,7 @@ Zero is considered an invalid attribute handle.
 
 \fn dmz::ObjectModule *dmz::ObjectModule::cast (
 const Plugin *PluginPtr,
-const String &PluginName);
+const dmz::String &PluginName);
 \brief Casts Plugin pointer to an ObjectModule.
 \details If the Plugin object implements the ObjectModule interface, a pointer to
 the ObjectModule interface of the Plugin is returned.
@@ -57,7 +57,7 @@ ObjectObserver &observer)
 \sa dmz::ObjectModule::register_global_object_observer()
 
 \fn dmz::Boolean dmz::ObjectModule::register_object_observer (
-const Handle AttributeHandle,
+const dmz::Handle AttributeHandle,
 const Mask &AttributeMask,
 ObjectObserver &observer)
 \brief Registers object observer.
@@ -71,9 +71,9 @@ given attribute handle and attribute once.
 \return Returns dmz::True if the object observer was successfully registered.
 
 \fn dmz::Boolean dmz::ObjectModule::release_object_observer (
-const Handle AttributeHandle,
-const Mask &AttributeMask,
-ObjectObserver &observer)
+const dmz::Handle AttributeHandle,
+const dmz::Mask &AttributeMask,
+dmz::ObjectObserver &observer)
 \brief Release an object observer.
 \details This function will only release the observer from the attributes defined
 in the \a AttributeMask. If an observer has subscribed to position and orientation
@@ -84,22 +84,22 @@ continue to receive position updates.
 \param[in] observer ObjectObserver to release.
 \return Returns dmz::True if the object observer was successfully released.
 
-\fn dmz::Boolean dmz::ObjectModule::release_object_observer_all (ObjectObserver &observer)
+\fn dmz::Boolean dmz::ObjectModule::release_object_observer_all (dmz::ObjectObserver &observer)
 \brief Releases object observer from all attribute subscriptions.
 \param[in] observer ObjectObserver to be released.
 \return Returns dmz::True if the observer is released from all attribute subscriptions.
 
-\fn dmz::Boolean dmz::ObjectModule::is_object (const Handle ObjectHandle)
+\fn dmz::Boolean dmz::ObjectModule::is_object (const dmz::Handle ObjectHandle)
 \brief Tests if a handle is associated with an object stored in the module.
 \param[in] ObjectHandle Handle to test.
 \return Returns dmz::True if the Handle is associated with and object.
 
-\fn dmz::Boolean dmz::ObjectModule::is_link (const Handle LinkHandle)
+\fn dmz::Boolean dmz::ObjectModule::is_link (const dmz::Handle LinkHandle)
 \brief Tests if a handle is associated with linked objects stored in the module.
 \param[in] LinkHandle Handle to test.
 \return Returns dmz::True if the Handle is associated with a link.
 
-\fn dmz::Boolean dmz::ObjectModule::get_object_handles (HandleContainer &container)
+\fn dmz::Boolean dmz::ObjectModule::get_object_handles (dmz::HandleContainer &container)
 \brief Creates a list of all objects in the module.
 \details The list will contain both local and remote objects. Objects that have
 not been activated yet will \b not be in the list.
@@ -107,8 +107,8 @@ not been activated yet will \b not be in the list.
 \return Returns dmz::True if the container was filled with object handles.
 
 \fn dmz::Boolean dmz::ObjectModule::dump_object_attributes (
-const Handle ObjectHandle,
-ObjectObserver &Observer)
+const dmz::Handle ObjectHandle,
+dmz::ObjectObserver &Observer)
 \brief Dumps subscribed object attributes.
 \details This function will dump all attributes for which the ObjectObserver has
 a subscription. If the object observer has not subscribed to any attributes, nothing
@@ -119,8 +119,8 @@ object attribute values to the object observer even if they have not changed.
 \return Returns dmz::True if any attributes were dumped.
 
 \fn dmz::Boolean dmz::ObjectModule::dump_all_object_attributes (
-const Handle ObjectHandle,
-ObjectObserver &Observer)
+const dmz::Handle ObjectHandle,
+dmz::ObjectObserver &Observer)
 \brief Dumps all object attributes.
 \details This function does not check if the observer has subscribed for any specific
 attributes but will instead dump the values of any attribute that has been stored
@@ -130,8 +130,8 @@ with the object.
 \return Returns dmz::True if any attributes were dumped.
 
 \fn dmz::Handle dmz::ObjectModule::create_object (
-const ObjectType &Type,
-const ObjectLocalityEnum Locality)
+const dmz::ObjectType &Type,
+const dmz::ObjectLocalityEnum Locality)
 \brief Creates object.
 \details Creates an object in the object module. The object is not active after this
 call. Calls to store_* functions will store the values in the object module but will
@@ -144,7 +144,7 @@ remotely.
 \return Returns the object handle of the newly created object. Will return zero if
 the creation fails.
 
-\fn dmz::Boolean dmz::ObjectModule::activate_object (const Handle ObjectHandle)
+\fn dmz::Boolean dmz::ObjectModule::activate_object (const dmz::Handle ObjectHandle)
 \brief Activates a created object.
 \details Any attribute values that have been set since the object was created will
 be pushed to subscribing object observers. The message defined by
@@ -157,7 +157,7 @@ activation, the object module will assign it a new UUID.
 \return Returns dmz::True if the object was activated.
 \sa DataConverterObjectHandle \n Messaging
 
-\fn dmz::Boolean dmz::ObjectModule::destroy_object (const Handle ObjectHandle)
+\fn dmz::Boolean dmz::ObjectModule::destroy_object (const dmz::Handle ObjectHandle)
 \brief Destroys object.
 \details The message defined by dmz::ObjectRemoveMessageName will be send with a
 Data object containing the object handle. DataConverterObjectHandle should be used to
@@ -168,8 +168,8 @@ callback.
 \return Returns dmz::True if the object is destroyed.
 
 \fn dmz::Handle dmz::ObjectModule::clone_object (
-const Handle ObjectHandle,
-const ObjectLinkRetentionEnum LinkRetention)
+const dmz::Handle ObjectHandle,
+const dmz::ObjectLinkRetentionEnum LinkRetention)
 \brief Clones object.
 \details Creates a clone of the object specified by the object handle. The clone will
 have a different ObjectHandle and UUID. Links will be cloned if the LinkRetention
@@ -182,14 +182,14 @@ should also be cloned.
 \return Returns the dmz::Handle of the newly cloned object.
 
 \fn dmz::Boolean dmz::ObjectModule::store_uuid (
-const Handle ObjectHandle,
-const UUID &Value)
+const dmz::Handle ObjectHandle,
+const dmz::UUID &Value)
 \brief Stores object's UUID.
 \param[in] ObjectHandle dmz::Handle of object to update.
 \param[in] Value UUID object to store in object.
 \return Returns dmz::True if the UUID was successfully stored.
 
-\fn dmz::Boolean dmz::ObjectModule::lookup_uuid (const Handle ObjectHandle, UUID &value)
+\fn dmz::Boolean dmz::ObjectModule::lookup_uuid (const dmz::Handle ObjectHandle, UUID &value)
 \brief Looks up object's UUID.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[out] value UUID object to store object's uuid.
@@ -203,9 +203,9 @@ const UUID &Value)
 zero if no object is associated with the UUID.
 
 \fn dmz::Boolean dmz::ObjectModule::remove_attribute (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const Mask &AttrMask)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::Mask &AttrMask)
 \brief Remove attribute.
 \details Removes attribute from object. After the attribute has been removed,
 the lookup_* function will return dmz::False as if the attribute had never been
@@ -216,9 +216,9 @@ set.
 \return Returns dmz::True if the attributes were removed.
 
 \fn dmz::Handle dmz::ObjectModule::link_objects (
-const Handle AttributeHandle,
-const Handle SuperHandle,
-const Handle SubHandle)
+const dmz::Handle AttributeHandle,
+const dmz::Handle SuperHandle,
+const dmz::Handle SubHandle)
 \brief Links objects.
 \details Creates a link between two objects. A link is automatically broken
 when one of the linked objects is destroyed.
@@ -228,9 +228,9 @@ when one of the linked objects is destroyed.
 \return Returns the dmz::Handle associated with the link.
 
 \fn dmz::Handle dmz::ObjectModule::lookup_link_handle (
-const Handle AttributeHandle,
-const Handle SuperHandle,
-const Handle SubHandle)
+const dmz::Handle AttributeHandle,
+const dmz::Handle SuperHandle,
+const dmz::Handle SubHandle)
 \brief Finds the link handle for two linked objects.
 \param[in] AttributeHandle Attribute handle of the link.
 \param[in] SuperHandle Handle for the super object in the link.
@@ -238,24 +238,24 @@ const Handle SubHandle)
 \return Returns the Handle for the link.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_linked_objects (
-const Handle LinkHandle,
-Handle &attributeHandle,
-Handle &superHandle,
-Handle &subHandle)
+const dmz::Handle LinkHandle,
+dmz::Handle &attributeHandle,
+dmz::Handle &superHandle,
+dmz::Handle &subHandle)
 \brief Finds the objects associated with the link handle.
 \param[in] LinkHandle Link handle as returned by dmz::ObjectModule::link_objects()..
 \param[out] attributeHandle Attribute handle of the link.
 \param[out] superHandle Handle for the super object in the link.
 \param[out] subHandle Handle for the sub object in the link.
 \return Returns the Handle for the link.
-\fn dmz::Boolean dmz::ObjectModule::unlink_objects (const Handle LinkHandle)
+\fn dmz::Boolean dmz::ObjectModule::unlink_objects (const dmz::Handle LinkHandle)
 \brief Unlinks objects.
 \param[in] LinkHandle Link handle as returned by dmz::ObjectModule::link_objects()..
 \return Returns dmz::True if the objects are unlinked.
 
 \fn dmz::Boolean dmz::ObjectModule::store_link_attribute_object (
-const Handle LinkHandle,
-const Handle AttributeObjectHandle)
+const dmz::Handle LinkHandle,
+const dmz::Handle AttributeObjectHandle)
 \brief Stores link attribute object.
 \details Links may be associated with an object in the object module. This object
 contains the links attributes. This object may define the lines color, thickness, 
@@ -268,16 +268,16 @@ attribute object from the link.
 \return Returns dmz::True if attribute object was associated with the link.
 
 \fn dmz::Handle dmz::ObjectModule::lookup_link_attribute_object (
-const Handle LinkHandle)
+const dmz::Handle LinkHandle)
 \brief Gets object handle to link's attribute object.
 \param[in] LinkHandle Link handle as returned by dmz::ObjectModule::link_objects()..
 \return Returns the dmz::Handle of the link's attribute object. Returns zero
 it the link does not have an attribute object.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_super_links (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-HandleContainer &container)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::HandleContainer &container)
 \brief Gets all super links of the object.
 \details Stores the dmz::Handle of all objects that are super links to the given
 object for a specific attribute handle.
@@ -288,9 +288,9 @@ super links.
 \return Returns dmz::True if the object has super links.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_sub_links (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-HandleContainer &container)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::HandleContainer &container)
 \brief Gets all sub links of the object.
 \details Stores the dmz::Handle of all objects that are sub links to the given
 object for a specific attribute handle.
@@ -301,22 +301,23 @@ sub links.
 \return Returns dmz::True if the object has sub links.
 
 \fn dmz::Boolean dmz::ObjectModule::store_locality (
-const Handle ObjectHandle,
-const ObjectLocalityEnum Locality)
+const dmz::Handle ObjectHandle,
+const dmz::ObjectLocalityEnum Locality)
 \brief Stores object's locality.
 \details The locality defines whether the object is locally or remotely.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] Locality Objects locality.
 \return Returns dmz::True if the objects attribute was updated.
 
-\fn dmz::ObjectLocalityEnum dmz::ObjectModule::lookup_locality (const Handle ObjectHandle)
+\fn dmz::ObjectLocalityEnum dmz::ObjectModule::lookup_locality (
+const dmz::Handle ObjectHandle)
 \brief Looks up object's locality.
 \details The locality defines whether the object is locally or remotely.
 \param[in] ObjectHandle dmz::Handle of object.
 \return Returns dmz::ObjectLocal if object is local. Returns dmz::ObjectRemote if object
 is remote. Returns dmz::ObjectLocalityUnknown if the object's handle is unknown.
 
-\fn dmz::ObjectLocalityEnum dmz::ObjectModule::lookup_locality (const UUID &Identity)
+\fn dmz::ObjectLocalityEnum dmz::ObjectModule::lookup_locality (const dmz::UUID &Identity)
 \brief Looks up object's locality.
 \details The locality defines whether the object is locally or remotely.
 \param[in] Identity UUID of object.
@@ -324,9 +325,9 @@ is remote. Returns dmz::ObjectLocalityUnknown if the object's handle is unknown.
 is remote. Returns dmz::ObjectLocalityUnknown if the UUID is unknown.
 
 \fn dmz::Boolean dmz::ObjectModule::store_object_type (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const ObjectType &Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::ObjectType &Value)
 \brief Stores an ObjectType with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -334,9 +335,9 @@ const ObjectType &Value)
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_object_type (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-ObjectType &value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::ObjectType &value)
 \brief Looks up ObjectType stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -344,9 +345,9 @@ ObjectType &value)
 \return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::ObjectModule::store_state (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const Mask &Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::Mask &Value)
 \brief Stores a Mask containing state with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -354,9 +355,9 @@ const Mask &Value)
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_state (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-Mask &value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::Mask &value)
 \brief Looks up state stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -364,9 +365,9 @@ Mask &value)
 \return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::ObjectModule::store_flag (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const Boolean &Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::Boolean Value)
 \brief Stores object's flag value.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -374,8 +375,8 @@ const Boolean &Value)
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_flag (
-const Handle ObjectHandle,
-const Handle AttributeHandle)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle)
 \brief Looks up flag stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -383,9 +384,9 @@ const Handle AttributeHandle)
 or the object does not exist.
 
 \fn dmz::Boolean dmz::ObjectModule::store_time_stamp (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const Float64 Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::Float64 Value)
 \brief Stores time stamp with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -393,8 +394,8 @@ const Float64 Value)
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_time_stamp (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
 Float64 &value)
 \brief Looks up time stamp stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
@@ -403,9 +404,9 @@ Float64 &value)
 \return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::ObjectModule::store_position (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const Vector &Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::Vector &Value)
 \brief Stores position with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -413,9 +414,9 @@ const Vector &Value)
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_position (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-Vector &value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::Vector &value)
 \brief Looks up position stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -423,9 +424,9 @@ Vector &value)
 \return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::ObjectModule::store_orientation (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const Matrix &Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::Matrix &Value)
 \brief Stores orientation with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -433,9 +434,9 @@ const Matrix &Value)
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_orientation (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-Matrix &value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::Matrix &value)
 \brief Looks up orientation stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -443,9 +444,9 @@ Matrix &value)
 \return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::ObjectModule::store_velocity (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const Vector &Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::Vector &Value)
 \brief Stores velocity with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -453,9 +454,9 @@ const Vector &Value)
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_velocity (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-Vector &value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::Vector &value)
 \brief Looks up velocity stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -463,9 +464,9 @@ Vector &value)
 \return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::ObjectModule::store_acceleration (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const Vector &Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::Vector &Value)
 \brief Stores acceleration with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -473,9 +474,9 @@ const Vector &Value)
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_acceleration (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-Vector &value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::Vector &value)
 \brief Looks up acceleration stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -483,9 +484,9 @@ Vector &value)
 \return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::ObjectModule::store_scale (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const Vector &Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::Vector &Value)
 \brief Stores scale with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -493,9 +494,9 @@ const Vector &Value)
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_scale (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-Vector &value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::Vector &value)
 \brief Looks up scale stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -503,9 +504,9 @@ Vector &value)
 \return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::ObjectModule::store_vector (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const Vector &Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::Vector &Value)
 \brief Stores a vector with the object.
 \details The vector attribute is intended as a catch all for vector types that
 aren't Position, Velocity, Acceleration, or Scale.
@@ -515,9 +516,9 @@ aren't Position, Velocity, Acceleration, or Scale.
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_vector (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-Vector &value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::Vector &value)
 \brief Looks up vector stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -525,9 +526,9 @@ Vector &value)
 \return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::ObjectModule::store_scalar (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const Float64 Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::Float64 Value)
 \brief Stores a scalar value with the object
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -535,9 +536,9 @@ const Float64 Value)
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_scalar (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-Float64 &value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::Float64 &value)
 \brief Looks up scalar stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -545,9 +546,9 @@ Float64 &value)
 \return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::ObjectModule::store_text (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const String &Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::String &Value)
 \brief Stores a text value with the object
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -555,9 +556,9 @@ const String &Value)
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_text (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-String &value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::String &value)
 \brief Looks up text stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -565,9 +566,9 @@ String &value)
 \return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::ObjectModule::store_data (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-const Data &Value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+const dmz::Data &Value)
 \brief Stores a Data value with the object
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -575,9 +576,9 @@ const Data &Value)
 \return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_data (
-const Handle ObjectHandle,
-const Handle AttributeHandle,
-Data &value)
+const dmz::Handle ObjectHandle,
+const dmz::Handle AttributeHandle,
+dmz::Data &value)
 \brief Looks up Data object stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
@@ -585,7 +586,7 @@ Data &value)
 \return Returns dmz::True if the attribute was found.
 
 
-\fn dmz::ObjectModule::ObjectModule (const PluginInfo &Info);
+\fn dmz::ObjectModule::ObjectModule (const dmz::PluginInfo &Info);
 \brief Constructor.
 \param[in] Info PluginInfo containing initialization data.
 

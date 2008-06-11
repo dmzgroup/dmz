@@ -170,7 +170,7 @@ namespace dmz {
          virtual Boolean store_flag (
             const Handle ObjectHandle,
             const Handle AttributeHandle,
-            const Boolean &Value);
+            const Boolean Value);
 
          virtual Boolean lookup_flag (
             const Handle ObjectHandle,

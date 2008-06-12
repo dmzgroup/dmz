@@ -4,7 +4,7 @@ lmk.add_libs {"dmzKernel"}
 
 lmk.add_files {
    "dmzAudioSoundAttributes.h",
-   "dmzAudioSoundAttributesExport.h",
+   "dmzAudioBaseExport.h",
 }
 
 lmk.add_files {
@@ -12,5 +12,5 @@ lmk.add_files {
 }
 
 lmk.add_vars ({
-   localDefines = "$(lmk.defineFlag)DMZ_AUDIO_SOUND_ATTRIBUTES_EXPORT",
+   localDefines = "$(lmk.defineFlag)DMZ_AUDIO_BASE_EXPORT",
 }, {win32 = true})

@@ -1,14 +1,14 @@
 #ifndef DMZ_AUDIO_SOUND_ATTRIBUTES_DOT_H
 #define DMZ_AUDIO_SOUND_ATTRIBUTES_DOT_H
 
-#include <dmzAudioSoundAttributesExport.h>
+#include <dmzAudioBaseExport.h>
 #include <dmzTypesBase.h>
 
 namespace dmz {
 
    class Vector;
 
-   class DMZ_AUDIO_SOUND_ATTRIBUTES_LINK_SYMBOL SoundAttributes {
+   class DMZ_AUDIO_BASE_LINK_SYMBOL SoundAttributes {
 
       public:
          SoundAttributes ();
@@ -39,7 +39,7 @@ namespace dmz {
 
       protected:
          struct State;
-         State &_state;
+         State &_state; //!< Internal state.
    };
 
 };

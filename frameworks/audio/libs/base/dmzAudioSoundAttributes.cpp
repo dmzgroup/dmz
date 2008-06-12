@@ -1,6 +1,15 @@
 #include <dmzAudioSoundAttributes.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::SoundAttributes
+\ingroup Audio
+\brief Audio instance attributes.
+\details Provides a container for getting and setting a sound instance's attributes
+such as position, velocity, pitch, and looped state.
+
+*/
 
 
 struct dmz::SoundAttributes::State {
@@ -26,9 +35,19 @@ struct dmz::SoundAttributes::State {
 };
 
 
+//! Constructor
 dmz::SoundAttributes::SoundAttributes () : _state (*(new State)) {;}
 
+/*!
 
+\brief Constructor
+\param[in] Position Vector containing the sound instance's position.
+\param[in] Velocity Vector containing the sound instance's velocity.
+\param[in] Pitch Scalar value specifying the sound instance's pitch where 1.0 gives the
+default pitch.
+\param[in] Loop Boolean that specifies if the sound instance should be looped.
+
+*/
 dmz::SoundAttributes::SoundAttributes (
       const Vector &Position,
       const Vector &Velocity,
@@ -42,13 +61,16 @@ dmz::SoundAttributes::SoundAttributes (
 }
 
 
+//! Copy constructor.
 dmz::SoundAttributes::SoundAttributes (const SoundAttributes &Value) :
       _state (*(new State)) { *this = Value; }
 
 
+//! Destructor.
 dmz::SoundAttributes::~SoundAttributes () { delete &_state; }
 
 
+//! Assignment operator.
 dmz::SoundAttributes &
 dmz::SoundAttributes::operator= (const SoundAttributes &Value) {
 
@@ -58,6 +80,7 @@ dmz::SoundAttributes::operator= (const SoundAttributes &Value) {
 }
 
 
+//! Set position.
 void
 dmz::SoundAttributes::set_position (const Vector &Pos) {
 
@@ -65,6 +88,7 @@ dmz::SoundAttributes::set_position (const Vector &Pos) {
 }
 
 
+//! Get position.
 void
 dmz::SoundAttributes::get_position (Vector &pos) const { 
    
@@ -72,6 +96,7 @@ dmz::SoundAttributes::get_position (Vector &pos) const {
 }
 
 
+//! Set velocity.
 void
 dmz::SoundAttributes::set_velocity (const Vector &Vel) {
 
@@ -79,12 +104,15 @@ dmz::SoundAttributes::set_velocity (const Vector &Vel) {
 }
 
 
+//! Get velocity.
 void
 dmz::SoundAttributes::get_velocity (Vector &vel) const { 
    
    vel = _state.velocity;
 }
 
+
+//! Set pitch scale. A value of 1.0 specifies the default pitch.
 void
 dmz::SoundAttributes::set_pitch_scale (const Float64 Value) {
 
@@ -92,10 +120,12 @@ dmz::SoundAttributes::set_pitch_scale (const Float64 Value) {
 }
 
 
+//! Get pitch scale.
 dmz::Float64
 dmz::SoundAttributes::get_pitch_scale () const { return _state.pitch; }
 
 
+//! Set loop state.
 void
 dmz::SoundAttributes::set_loop (const Boolean Value) {
 
@@ -103,6 +133,7 @@ dmz::SoundAttributes::set_loop (const Boolean Value) {
 }
 
 
+//! Get loop state.
 dmz::Boolean
 dmz::SoundAttributes::get_loop () const { return _state.loop; }
 

@@ -225,6 +225,7 @@ SEARCH_INCLUDES        = YES
 INCLUDE_PATH           = 
 INCLUDE_FILE_PATTERNS  = 
 PREDEFINED             = DMZ_ARCHIVE_UTIL_LINK_SYMBOL= \
+                         DMZ_AUDIO_BASE_LINK_SYMBOL= \
                          DMZ_BOOLEAN_OPERATOR= \
                          DMZ_INPUT_UTIL_LINK_SYMBOL= \
                          DMZ_INPUT_EVENTS_LINK_SYMBOL= \

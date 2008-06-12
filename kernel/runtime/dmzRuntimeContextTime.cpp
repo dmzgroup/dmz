@@ -36,7 +36,6 @@ dmz::RuntimeContextTime::~RuntimeContextTime () {
 void
 dmz::RuntimeContextTime::sync () {
 
-   const Float64 RealTime (get_time ());
    updateStruct *top = head;
    Boolean currentTimeUpdated (False);
 

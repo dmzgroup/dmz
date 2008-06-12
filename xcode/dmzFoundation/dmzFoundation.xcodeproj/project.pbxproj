@@ -1,0 +1,876 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7A4934430E01DA33009C7A49 /* dmzFileCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49340A0E01DA0B009C7A49 /* dmzFileCache.cpp */; };
+		7A4934440E01DA33009C7A49 /* dmzFileCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49340B0E01DA0B009C7A49 /* dmzFileCache.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A4934450E01DA4E009C7A49 /* dmzFileCacheLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49341A0E01DA0B009C7A49 /* dmzFileCacheLocal.cpp */; };
+		7A4934460E01DA4E009C7A49 /* dmzFileCacheLocal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49341B0E01DA0B009C7A49 /* dmzFileCacheLocal.h */; };
+		7A4934470E01DA4E009C7A49 /* dmzFileCacheLocalExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49341D0E01DA0B009C7A49 /* dmzFileCacheLocalExport.h */; };
+		7A4934C50E01E005009C7A49 /* expat.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4933E60E01DA0B009C7A49 /* expat.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A4934C60E01E006009C7A49 /* expat_external.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4933E90E01DA0B009C7A49 /* expat_external.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A4934C70E01E010009C7A49 /* xmltok.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4933F50E01DA0B009C7A49 /* xmltok.c */; };
+		7A4934C80E01E011009C7A49 /* xmlrole.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4933F30E01DA0B009C7A49 /* xmlrole.c */; };
+		7A4934C90E01E011009C7A49 /* xmlparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4933F20E01DA0B009C7A49 /* xmlparse.c */; };
+		7A4934CA0E01E018009C7A49 /* expat_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4933E80E01DA0B009C7A49 /* expat_config.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A4934CD0E01E07C009C7A49 /* dmzXMLBase64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A4934270E01DA0B009C7A49 /* dmzXMLBase64.cpp */; };
+		7A4934CE0E01E07C009C7A49 /* dmzXMLBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934280E01DA0B009C7A49 /* dmzXMLBase64.h */; };
+		7A4934CF0E01E07C009C7A49 /* dmzXMLExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934290E01DA0B009C7A49 /* dmzXMLExport.h */; };
+		7A4934D00E01E07C009C7A49 /* dmzXMLInterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342A0E01DA0B009C7A49 /* dmzXMLInterpreter.cpp */; };
+		7A4934D10E01E07C009C7A49 /* dmzXMLInterpreterConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342B0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.cpp */; };
+		7A4934D20E01E07C009C7A49 /* dmzXMLInterpreterConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49342C0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.h */; };
+		7A4934D30E01E07C009C7A49 /* dmzXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49342D0E01DA0B009C7A49 /* dmzXMLParser.h */; };
+		7A4934D40E01E07C009C7A49 /* dmzXMLParserExpat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342E0E01DA0B009C7A49 /* dmzXMLParserExpat.cpp */; };
+		7A4934D50E01E07C009C7A49 /* dmzXMLUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342F0E01DA0B009C7A49 /* dmzXMLUtil.cpp */; };
+		7A4934D60E01E07C009C7A49 /* dmzXMLUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934300E01DA0B009C7A49 /* dmzXMLUtil.h */; };
+		7A4934EA0E01E8F5009C7A49 /* dmzFileCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49340B0E01DA0B009C7A49 /* dmzFileCache.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A4934EB0E01E8F5009C7A49 /* dmzFileCacheLocal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49341B0E01DA0B009C7A49 /* dmzFileCacheLocal.h */; };
+		7A4934EC0E01E8F5009C7A49 /* dmzFileCacheLocalExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49341D0E01DA0B009C7A49 /* dmzFileCacheLocalExport.h */; };
+		7A4934ED0E01E8F5009C7A49 /* expat.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4933E60E01DA0B009C7A49 /* expat.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A4934EE0E01E8F5009C7A49 /* expat_external.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4933E90E01DA0B009C7A49 /* expat_external.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A4934EF0E01E8F5009C7A49 /* expat_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4933E80E01DA0B009C7A49 /* expat_config.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A4934F00E01E8F5009C7A49 /* dmzXMLBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934280E01DA0B009C7A49 /* dmzXMLBase64.h */; };
+		7A4934F10E01E8F5009C7A49 /* dmzXMLExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934290E01DA0B009C7A49 /* dmzXMLExport.h */; };
+		7A4934F20E01E8F5009C7A49 /* dmzXMLInterpreterConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49342C0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.h */; };
+		7A4934F30E01E8F5009C7A49 /* dmzXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49342D0E01DA0B009C7A49 /* dmzXMLParser.h */; };
+		7A4934F40E01E8F5009C7A49 /* dmzXMLUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934300E01DA0B009C7A49 /* dmzXMLUtil.h */; };
+		7A4934F60E01E8F5009C7A49 /* dmzFileCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49340A0E01DA0B009C7A49 /* dmzFileCache.cpp */; };
+		7A4934F70E01E8F5009C7A49 /* dmzFileCacheLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49341A0E01DA0B009C7A49 /* dmzFileCacheLocal.cpp */; };
+		7A4934F80E01E8F5009C7A49 /* xmltok.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4933F50E01DA0B009C7A49 /* xmltok.c */; };
+		7A4934F90E01E8F5009C7A49 /* xmlrole.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4933F30E01DA0B009C7A49 /* xmlrole.c */; };
+		7A4934FA0E01E8F5009C7A49 /* xmlparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4933F20E01DA0B009C7A49 /* xmlparse.c */; };
+		7A4934FB0E01E8F5009C7A49 /* dmzXMLBase64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A4934270E01DA0B009C7A49 /* dmzXMLBase64.cpp */; };
+		7A4934FC0E01E8F5009C7A49 /* dmzXMLInterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342A0E01DA0B009C7A49 /* dmzXMLInterpreter.cpp */; };
+		7A4934FD0E01E8F5009C7A49 /* dmzXMLInterpreterConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342B0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.cpp */; };
+		7A4934FE0E01E8F5009C7A49 /* dmzXMLParserExpat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342E0E01DA0B009C7A49 /* dmzXMLParserExpat.cpp */; };
+		7A4934FF0E01E8F5009C7A49 /* dmzXMLUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342F0E01DA0B009C7A49 /* dmzXMLUtil.cpp */; };
+		7A49350A0E01E91D009C7A49 /* dmzFileCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49340B0E01DA0B009C7A49 /* dmzFileCache.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A49350B0E01E91D009C7A49 /* dmzFileCacheLocal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49341B0E01DA0B009C7A49 /* dmzFileCacheLocal.h */; };
+		7A49350C0E01E91D009C7A49 /* dmzFileCacheLocalExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49341D0E01DA0B009C7A49 /* dmzFileCacheLocalExport.h */; };
+		7A49350D0E01E91D009C7A49 /* expat.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4933E60E01DA0B009C7A49 /* expat.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A49350E0E01E91D009C7A49 /* expat_external.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4933E90E01DA0B009C7A49 /* expat_external.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A49350F0E01E91D009C7A49 /* expat_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4933E80E01DA0B009C7A49 /* expat_config.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A4935100E01E91D009C7A49 /* dmzXMLBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934280E01DA0B009C7A49 /* dmzXMLBase64.h */; };
+		7A4935110E01E91D009C7A49 /* dmzXMLExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934290E01DA0B009C7A49 /* dmzXMLExport.h */; };
+		7A4935120E01E91D009C7A49 /* dmzXMLInterpreterConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49342C0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.h */; };
+		7A4935130E01E91D009C7A49 /* dmzXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49342D0E01DA0B009C7A49 /* dmzXMLParser.h */; };
+		7A4935140E01E91D009C7A49 /* dmzXMLUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934300E01DA0B009C7A49 /* dmzXMLUtil.h */; };
+		7A4935160E01E91D009C7A49 /* dmzFileCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49340A0E01DA0B009C7A49 /* dmzFileCache.cpp */; };
+		7A4935170E01E91D009C7A49 /* dmzFileCacheLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49341A0E01DA0B009C7A49 /* dmzFileCacheLocal.cpp */; };
+		7A4935180E01E91D009C7A49 /* xmltok.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4933F50E01DA0B009C7A49 /* xmltok.c */; };
+		7A4935190E01E91D009C7A49 /* xmlrole.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4933F30E01DA0B009C7A49 /* xmlrole.c */; };
+		7A49351A0E01E91D009C7A49 /* xmlparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4933F20E01DA0B009C7A49 /* xmlparse.c */; };
+		7A49351B0E01E91D009C7A49 /* dmzXMLBase64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A4934270E01DA0B009C7A49 /* dmzXMLBase64.cpp */; };
+		7A49351C0E01E91D009C7A49 /* dmzXMLInterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342A0E01DA0B009C7A49 /* dmzXMLInterpreter.cpp */; };
+		7A49351D0E01E91D009C7A49 /* dmzXMLInterpreterConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342B0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.cpp */; };
+		7A49351E0E01E91D009C7A49 /* dmzXMLParserExpat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342E0E01DA0B009C7A49 /* dmzXMLParserExpat.cpp */; };
+		7A49351F0E01E91D009C7A49 /* dmzXMLUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342F0E01DA0B009C7A49 /* dmzXMLUtil.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7A4934970E01DCA4009C7A49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A4934930E01DCA4009C7A49 /* dmzKernel.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC046055464E500DB518D /* libdmzFoundation.a */;
+			remoteInfo = dmzKernel;
+		};
+		7A49349D0E01DCDA009C7A49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A4934930E01DCA4009C7A49 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzKernel */;
+			remoteInfo = dmzKernel;
+		};
+		7A4934E80E01E8F5009C7A49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A4934930E01DCA4009C7A49 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzKernel;
+		};
+		7A4935080E01E91D009C7A49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A4934930E01DCA4009C7A49 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzKernel;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7A4933E30E01DA0B009C7A49 /* ascii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ascii.h; sourceTree = "<group>"; };
+		7A4933E40E01DA0B009C7A49 /* asciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asciitab.h; sourceTree = "<group>"; };
+		7A4933E50E01DA0B009C7A49 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		7A4933E60E01DA0B009C7A49 /* expat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = expat.h; sourceTree = "<group>"; };
+		7A4933E70E01DA0B009C7A49 /* expat.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = expat.lmk; sourceTree = "<group>"; };
+		7A4933E80E01DA0B009C7A49 /* expat_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = expat_config.h; sourceTree = "<group>"; };
+		7A4933E90E01DA0B009C7A49 /* expat_external.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = expat_external.h; sourceTree = "<group>"; };
+		7A4933EA0E01DA0B009C7A49 /* iasciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iasciitab.h; sourceTree = "<group>"; };
+		7A4933EB0E01DA0B009C7A49 /* internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = internal.h; sourceTree = "<group>"; };
+		7A4933EC0E01DA0B009C7A49 /* latin1tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = latin1tab.h; sourceTree = "<group>"; };
+		7A4933ED0E01DA0B009C7A49 /* libexpat.def */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = libexpat.def; sourceTree = "<group>"; };
+		7A4933EE0E01DA0B009C7A49 /* nametab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nametab.h; sourceTree = "<group>"; };
+		7A4933EF0E01DA0B009C7A49 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		7A4933F00E01DA0B009C7A49 /* utf8tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8tab.h; sourceTree = "<group>"; };
+		7A4933F10E01DA0B009C7A49 /* winconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = winconfig.h; sourceTree = "<group>"; };
+		7A4933F20E01DA0B009C7A49 /* xmlparse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmlparse.c; sourceTree = "<group>"; };
+		7A4933F30E01DA0B009C7A49 /* xmlrole.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmlrole.c; sourceTree = "<group>"; };
+		7A4933F40E01DA0B009C7A49 /* xmlrole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlrole.h; sourceTree = "<group>"; };
+		7A4933F50E01DA0B009C7A49 /* xmltok.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok.c; sourceTree = "<group>"; };
+		7A4933F60E01DA0B009C7A49 /* xmltok.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltok.h; sourceTree = "<group>"; };
+		7A4933F70E01DA0B009C7A49 /* xmltok_impl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok_impl.c; sourceTree = "<group>"; };
+		7A4933F80E01DA0B009C7A49 /* xmltok_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltok_impl.h; sourceTree = "<group>"; };
+		7A4933F90E01DA0B009C7A49 /* xmltok_ns.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok_ns.c; sourceTree = "<group>"; };
+		7A4933FB0E01DA0B009C7A49 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
+		7A4933FC0E01DA0B009C7A49 /* sqlite3.def */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sqlite3.def; sourceTree = "<group>"; };
+		7A4933FD0E01DA0B009C7A49 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		7A4933FE0E01DA0B009C7A49 /* sqlite3.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sqlite3.lmk; sourceTree = "<group>"; };
+		7A4933FF0E01DA0B009C7A49 /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3ext.h; sourceTree = "<group>"; };
+		7A4934020E01DA0B009C7A49 /* dmzAppBasic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzAppBasic.cpp; sourceTree = "<group>"; };
+		7A4934030E01DA0B009C7A49 /* dmzAppBasic.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzAppBasic.lmk; sourceTree = "<group>"; };
+		7A4934050E01DA0B009C7A49 /* dmzAppTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzAppTest.cpp; sourceTree = "<group>"; };
+		7A4934060E01DA0B009C7A49 /* dmzAppTest.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzAppTest.lmk; sourceTree = "<group>"; };
+		7A4934080E01DA0B009C7A49 /* dmzApplicationState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzApplicationState.cpp; sourceTree = "<group>"; };
+		7A4934090E01DA0B009C7A49 /* dmzApplicationState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzApplicationState.h; sourceTree = "<group>"; };
+		7A49340A0E01DA0B009C7A49 /* dmzFileCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzFileCache.cpp; sourceTree = "<group>"; };
+		7A49340B0E01DA0B009C7A49 /* dmzFileCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzFileCache.h; sourceTree = "<group>"; };
+		7A49340C0E01DA0B009C7A49 /* dmzFoundation.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzFoundation.lmk; sourceTree = "<group>"; };
+		7A49340F0E01DA0B009C7A49 /* dmzApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzApplication.cpp; sourceTree = "<group>"; };
+		7A4934100E01DA0B009C7A49 /* dmzApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzApplication.h; sourceTree = "<group>"; };
+		7A4934110E01DA0B009C7A49 /* dmzApplication.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzApplication.lmk; sourceTree = "<group>"; };
+		7A4934120E01DA0B009C7A49 /* dmzApplicationExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzApplicationExport.h; sourceTree = "<group>"; };
+		7A4934130E01DA0B009C7A49 /* dmzApplicationStateBasic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzApplicationStateBasic.cpp; sourceTree = "<group>"; };
+		7A4934140E01DA0B009C7A49 /* dmzApplicationStateBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzApplicationStateBasic.h; sourceTree = "<group>"; };
+		7A4934150E01DA0B009C7A49 /* dmzCommandLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzCommandLine.cpp; sourceTree = "<group>"; };
+		7A4934160E01DA0B009C7A49 /* dmzCommandLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzCommandLine.h; sourceTree = "<group>"; };
+		7A4934170E01DA0B009C7A49 /* dmzCommandLineConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzCommandLineConfig.cpp; sourceTree = "<group>"; };
+		7A4934180E01DA0B009C7A49 /* dmzCommandLineConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzCommandLineConfig.h; sourceTree = "<group>"; };
+		7A49341A0E01DA0B009C7A49 /* dmzFileCacheLocal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzFileCacheLocal.cpp; sourceTree = "<group>"; };
+		7A49341B0E01DA0B009C7A49 /* dmzFileCacheLocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzFileCacheLocal.h; sourceTree = "<group>"; };
+		7A49341C0E01DA0B009C7A49 /* dmzFileCacheLocal.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzFileCacheLocal.lmk; sourceTree = "<group>"; };
+		7A49341D0E01DA0B009C7A49 /* dmzFileCacheLocalExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzFileCacheLocalExport.h; sourceTree = "<group>"; };
+		7A49341F0E01DA0B009C7A49 /* dmzTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTest.cpp; sourceTree = "<group>"; };
+		7A4934200E01DA0B009C7A49 /* dmzTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTest.h; sourceTree = "<group>"; };
+		7A4934210E01DA0B009C7A49 /* dmzTest.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzTest.lmk; sourceTree = "<group>"; };
+		7A4934220E01DA0B009C7A49 /* dmzTestExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTestExport.h; sourceTree = "<group>"; };
+		7A4934230E01DA0B009C7A49 /* dmzTestPluginUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTestPluginUtil.cpp; sourceTree = "<group>"; };
+		7A4934240E01DA0B009C7A49 /* dmzTestPluginUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTestPluginUtil.h; sourceTree = "<group>"; };
+		7A4934260E01DA0B009C7A49 /* dmzXML.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzXML.lmk; sourceTree = "<group>"; };
+		7A4934270E01DA0B009C7A49 /* dmzXMLBase64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzXMLBase64.cpp; sourceTree = "<group>"; };
+		7A4934280E01DA0B009C7A49 /* dmzXMLBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzXMLBase64.h; sourceTree = "<group>"; };
+		7A4934290E01DA0B009C7A49 /* dmzXMLExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzXMLExport.h; sourceTree = "<group>"; };
+		7A49342A0E01DA0B009C7A49 /* dmzXMLInterpreter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzXMLInterpreter.cpp; sourceTree = "<group>"; };
+		7A49342B0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzXMLInterpreterConfig.cpp; sourceTree = "<group>"; };
+		7A49342C0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzXMLInterpreterConfig.h; sourceTree = "<group>"; };
+		7A49342D0E01DA0B009C7A49 /* dmzXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzXMLParser.h; sourceTree = "<group>"; };
+		7A49342E0E01DA0B009C7A49 /* dmzXMLParserExpat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzXMLParserExpat.cpp; sourceTree = "<group>"; };
+		7A49342F0E01DA0B009C7A49 /* dmzXMLUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzXMLUtil.cpp; sourceTree = "<group>"; };
+		7A4934300E01DA0B009C7A49 /* dmzXMLUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzXMLUtil.h; sourceTree = "<group>"; };
+		7A4934330E01DA0B009C7A49 /* dmzPluginMsgDump.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzPluginMsgDump.cpp; sourceTree = "<group>"; };
+		7A4934340E01DA0C009C7A49 /* dmzPluginMsgDump.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzPluginMsgDump.h; sourceTree = "<group>"; };
+		7A4934350E01DA0C009C7A49 /* dmzPluginMsgDump.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzPluginMsgDump.lmk; sourceTree = "<group>"; };
+		7A4934370E01DA0C009C7A49 /* dmzPluginTermExit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzPluginTermExit.cpp; sourceTree = "<group>"; };
+		7A4934380E01DA0C009C7A49 /* dmzPluginTermExit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzPluginTermExit.h; sourceTree = "<group>"; };
+		7A4934390E01DA0C009C7A49 /* dmzPluginTermExit.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzPluginTermExit.lmk; sourceTree = "<group>"; };
+		7A49343B0E01DA0C009C7A49 /* dmzPluginUndo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzPluginUndo.cpp; sourceTree = "<group>"; };
+		7A49343C0E01DA0C009C7A49 /* dmzPluginUndo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzPluginUndo.h; sourceTree = "<group>"; };
+		7A49343D0E01DA0C009C7A49 /* dmzPluginUndo.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzPluginUndo.lmk; sourceTree = "<group>"; };
+		7A49343E0E01DA0C009C7A49 /* dmzPluginUndoDump.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzPluginUndoDump.cpp; sourceTree = "<group>"; };
+		7A49343F0E01DA0C009C7A49 /* dmzPluginUndoDump.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzPluginUndoDump.h; sourceTree = "<group>"; };
+		7A4934400E01DA0C009C7A49 /* dmzPluginUndoDump.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzPluginUndoDump.lmk; sourceTree = "<group>"; };
+		7A4934930E01DCA4009C7A49 /* dmzKernel.xcodeproj */ = {isa = PBXFileReference; explicitFileType = "wrapper.pb-project"; name = dmzKernel.xcodeproj; path = ../dmzKernel/dmzKernel.xcodeproj; sourceTree = SOURCE_ROOT; };
+		7A4935040E01E8F5009C7A49 /* libdmzFoundation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzFoundation.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A4935240E01E91D009C7A49 /* libdmzFoundation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzFoundation.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2AAC046055464E500DB518D /* libdmzFoundation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzFoundation.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7A4935000E01E8F5009C7A49 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A4935200E01E91D009C7A49 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D289987405E68DCB004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* dmzFoundation */ = {
+			isa = PBXGroup;
+			children = (
+				7A4934930E01DCA4009C7A49 /* dmzKernel.xcodeproj */,
+				7A4933E00E01DA0B009C7A49 /* foundation */,
+				D2AAC046055464E500DB518D /* libdmzFoundation.a */,
+				7A4935050E01E8F5009C7A49 /* Products */,
+			);
+			name = dmzFoundation;
+			sourceTree = "<group>";
+		};
+		7A4933E00E01DA0B009C7A49 /* foundation */ = {
+			isa = PBXGroup;
+			children = (
+				7A4933E10E01DA0B009C7A49 /* 3rdparty */,
+				7A4934000E01DA0B009C7A49 /* apps */,
+				7A4934070E01DA0B009C7A49 /* interfaces */,
+				7A49340D0E01DA0B009C7A49 /* libs */,
+				7A4934310E01DA0B009C7A49 /* plugins */,
+			);
+			name = foundation;
+			path = ../../foundation;
+			sourceTree = SOURCE_ROOT;
+		};
+		7A4933E10E01DA0B009C7A49 /* 3rdparty */ = {
+			isa = PBXGroup;
+			children = (
+				7A4933E20E01DA0B009C7A49 /* expat */,
+				7A4933FA0E01DA0B009C7A49 /* sqlite3 */,
+			);
+			path = 3rdparty;
+			sourceTree = "<group>";
+		};
+		7A4933E20E01DA0B009C7A49 /* expat */ = {
+			isa = PBXGroup;
+			children = (
+				7A4933E30E01DA0B009C7A49 /* ascii.h */,
+				7A4933E40E01DA0B009C7A49 /* asciitab.h */,
+				7A4933E50E01DA0B009C7A49 /* COPYING */,
+				7A4933E60E01DA0B009C7A49 /* expat.h */,
+				7A4933E70E01DA0B009C7A49 /* expat.lmk */,
+				7A4933E80E01DA0B009C7A49 /* expat_config.h */,
+				7A4933E90E01DA0B009C7A49 /* expat_external.h */,
+				7A4933EA0E01DA0B009C7A49 /* iasciitab.h */,
+				7A4933EB0E01DA0B009C7A49 /* internal.h */,
+				7A4933EC0E01DA0B009C7A49 /* latin1tab.h */,
+				7A4933ED0E01DA0B009C7A49 /* libexpat.def */,
+				7A4933EE0E01DA0B009C7A49 /* nametab.h */,
+				7A4933EF0E01DA0B009C7A49 /* README */,
+				7A4933F00E01DA0B009C7A49 /* utf8tab.h */,
+				7A4933F10E01DA0B009C7A49 /* winconfig.h */,
+				7A4933F20E01DA0B009C7A49 /* xmlparse.c */,
+				7A4933F30E01DA0B009C7A49 /* xmlrole.c */,
+				7A4933F40E01DA0B009C7A49 /* xmlrole.h */,
+				7A4933F50E01DA0B009C7A49 /* xmltok.c */,
+				7A4933F60E01DA0B009C7A49 /* xmltok.h */,
+				7A4933F70E01DA0B009C7A49 /* xmltok_impl.c */,
+				7A4933F80E01DA0B009C7A49 /* xmltok_impl.h */,
+				7A4933F90E01DA0B009C7A49 /* xmltok_ns.c */,
+			);
+			path = expat;
+			sourceTree = "<group>";
+		};
+		7A4933FA0E01DA0B009C7A49 /* sqlite3 */ = {
+			isa = PBXGroup;
+			children = (
+				7A4933FB0E01DA0B009C7A49 /* sqlite3.c */,
+				7A4933FC0E01DA0B009C7A49 /* sqlite3.def */,
+				7A4933FD0E01DA0B009C7A49 /* sqlite3.h */,
+				7A4933FE0E01DA0B009C7A49 /* sqlite3.lmk */,
+				7A4933FF0E01DA0B009C7A49 /* sqlite3ext.h */,
+			);
+			path = sqlite3;
+			sourceTree = "<group>";
+		};
+		7A4934000E01DA0B009C7A49 /* apps */ = {
+			isa = PBXGroup;
+			children = (
+				7A4934010E01DA0B009C7A49 /* basic */,
+				7A4934040E01DA0B009C7A49 /* test */,
+			);
+			path = apps;
+			sourceTree = "<group>";
+		};
+		7A4934010E01DA0B009C7A49 /* basic */ = {
+			isa = PBXGroup;
+			children = (
+				7A4934020E01DA0B009C7A49 /* dmzAppBasic.cpp */,
+				7A4934030E01DA0B009C7A49 /* dmzAppBasic.lmk */,
+			);
+			path = basic;
+			sourceTree = "<group>";
+		};
+		7A4934040E01DA0B009C7A49 /* test */ = {
+			isa = PBXGroup;
+			children = (
+				7A4934050E01DA0B009C7A49 /* dmzAppTest.cpp */,
+				7A4934060E01DA0B009C7A49 /* dmzAppTest.lmk */,
+			);
+			path = test;
+			sourceTree = "<group>";
+		};
+		7A4934070E01DA0B009C7A49 /* interfaces */ = {
+			isa = PBXGroup;
+			children = (
+				7A4934080E01DA0B009C7A49 /* dmzApplicationState.cpp */,
+				7A4934090E01DA0B009C7A49 /* dmzApplicationState.h */,
+				7A49340A0E01DA0B009C7A49 /* dmzFileCache.cpp */,
+				7A49340B0E01DA0B009C7A49 /* dmzFileCache.h */,
+				7A49340C0E01DA0B009C7A49 /* dmzFoundation.lmk */,
+			);
+			path = interfaces;
+			sourceTree = "<group>";
+		};
+		7A49340D0E01DA0B009C7A49 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				7A49340E0E01DA0B009C7A49 /* application */,
+				7A4934190E01DA0B009C7A49 /* cache */,
+				7A49341E0E01DA0B009C7A49 /* test */,
+				7A4934250E01DA0B009C7A49 /* xml */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		7A49340E0E01DA0B009C7A49 /* application */ = {
+			isa = PBXGroup;
+			children = (
+				7A49340F0E01DA0B009C7A49 /* dmzApplication.cpp */,
+				7A4934100E01DA0B009C7A49 /* dmzApplication.h */,
+				7A4934110E01DA0B009C7A49 /* dmzApplication.lmk */,
+				7A4934120E01DA0B009C7A49 /* dmzApplicationExport.h */,
+				7A4934130E01DA0B009C7A49 /* dmzApplicationStateBasic.cpp */,
+				7A4934140E01DA0B009C7A49 /* dmzApplicationStateBasic.h */,
+				7A4934150E01DA0B009C7A49 /* dmzCommandLine.cpp */,
+				7A4934160E01DA0B009C7A49 /* dmzCommandLine.h */,
+				7A4934170E01DA0B009C7A49 /* dmzCommandLineConfig.cpp */,
+				7A4934180E01DA0B009C7A49 /* dmzCommandLineConfig.h */,
+			);
+			path = application;
+			sourceTree = "<group>";
+		};
+		7A4934190E01DA0B009C7A49 /* cache */ = {
+			isa = PBXGroup;
+			children = (
+				7A49341A0E01DA0B009C7A49 /* dmzFileCacheLocal.cpp */,
+				7A49341B0E01DA0B009C7A49 /* dmzFileCacheLocal.h */,
+				7A49341C0E01DA0B009C7A49 /* dmzFileCacheLocal.lmk */,
+				7A49341D0E01DA0B009C7A49 /* dmzFileCacheLocalExport.h */,
+			);
+			path = cache;
+			sourceTree = "<group>";
+		};
+		7A49341E0E01DA0B009C7A49 /* test */ = {
+			isa = PBXGroup;
+			children = (
+				7A49341F0E01DA0B009C7A49 /* dmzTest.cpp */,
+				7A4934200E01DA0B009C7A49 /* dmzTest.h */,
+				7A4934210E01DA0B009C7A49 /* dmzTest.lmk */,
+				7A4934220E01DA0B009C7A49 /* dmzTestExport.h */,
+				7A4934230E01DA0B009C7A49 /* dmzTestPluginUtil.cpp */,
+				7A4934240E01DA0B009C7A49 /* dmzTestPluginUtil.h */,
+			);
+			path = test;
+			sourceTree = "<group>";
+		};
+		7A4934250E01DA0B009C7A49 /* xml */ = {
+			isa = PBXGroup;
+			children = (
+				7A4934260E01DA0B009C7A49 /* dmzXML.lmk */,
+				7A4934270E01DA0B009C7A49 /* dmzXMLBase64.cpp */,
+				7A4934280E01DA0B009C7A49 /* dmzXMLBase64.h */,
+				7A4934290E01DA0B009C7A49 /* dmzXMLExport.h */,
+				7A49342A0E01DA0B009C7A49 /* dmzXMLInterpreter.cpp */,
+				7A49342B0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.cpp */,
+				7A49342C0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.h */,
+				7A49342D0E01DA0B009C7A49 /* dmzXMLParser.h */,
+				7A49342E0E01DA0B009C7A49 /* dmzXMLParserExpat.cpp */,
+				7A49342F0E01DA0B009C7A49 /* dmzXMLUtil.cpp */,
+				7A4934300E01DA0B009C7A49 /* dmzXMLUtil.h */,
+			);
+			path = xml;
+			sourceTree = "<group>";
+		};
+		7A4934310E01DA0B009C7A49 /* plugins */ = {
+			isa = PBXGroup;
+			children = (
+				7A4934320E01DA0B009C7A49 /* msgdump */,
+				7A4934360E01DA0C009C7A49 /* term */,
+				7A49343A0E01DA0C009C7A49 /* undo */,
+			);
+			path = plugins;
+			sourceTree = "<group>";
+		};
+		7A4934320E01DA0B009C7A49 /* msgdump */ = {
+			isa = PBXGroup;
+			children = (
+				7A4934330E01DA0B009C7A49 /* dmzPluginMsgDump.cpp */,
+				7A4934340E01DA0C009C7A49 /* dmzPluginMsgDump.h */,
+				7A4934350E01DA0C009C7A49 /* dmzPluginMsgDump.lmk */,
+			);
+			path = msgdump;
+			sourceTree = "<group>";
+		};
+		7A4934360E01DA0C009C7A49 /* term */ = {
+			isa = PBXGroup;
+			children = (
+				7A4934370E01DA0C009C7A49 /* dmzPluginTermExit.cpp */,
+				7A4934380E01DA0C009C7A49 /* dmzPluginTermExit.h */,
+				7A4934390E01DA0C009C7A49 /* dmzPluginTermExit.lmk */,
+			);
+			path = term;
+			sourceTree = "<group>";
+		};
+		7A49343A0E01DA0C009C7A49 /* undo */ = {
+			isa = PBXGroup;
+			children = (
+				7A49343B0E01DA0C009C7A49 /* dmzPluginUndo.cpp */,
+				7A49343C0E01DA0C009C7A49 /* dmzPluginUndo.h */,
+				7A49343D0E01DA0C009C7A49 /* dmzPluginUndo.lmk */,
+				7A49343E0E01DA0C009C7A49 /* dmzPluginUndoDump.cpp */,
+				7A49343F0E01DA0C009C7A49 /* dmzPluginUndoDump.h */,
+				7A4934400E01DA0C009C7A49 /* dmzPluginUndoDump.lmk */,
+			);
+			path = undo;
+			sourceTree = "<group>";
+		};
+		7A4934940E01DCA4009C7A49 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7A4934980E01DCA4009C7A49 /* libdmzKernel.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7A4935050E01E8F5009C7A49 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7A4935040E01E8F5009C7A49 /* libdmzFoundation.a */,
+				7A4935240E01E91D009C7A49 /* libdmzFoundation.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		7A4934E90E01E8F5009C7A49 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A4934EA0E01E8F5009C7A49 /* dmzFileCache.h in Headers */,
+				7A4934EB0E01E8F5009C7A49 /* dmzFileCacheLocal.h in Headers */,
+				7A4934EC0E01E8F5009C7A49 /* dmzFileCacheLocalExport.h in Headers */,
+				7A4934ED0E01E8F5009C7A49 /* expat.h in Headers */,
+				7A4934EE0E01E8F5009C7A49 /* expat_external.h in Headers */,
+				7A4934EF0E01E8F5009C7A49 /* expat_config.h in Headers */,
+				7A4934F00E01E8F5009C7A49 /* dmzXMLBase64.h in Headers */,
+				7A4934F10E01E8F5009C7A49 /* dmzXMLExport.h in Headers */,
+				7A4934F20E01E8F5009C7A49 /* dmzXMLInterpreterConfig.h in Headers */,
+				7A4934F30E01E8F5009C7A49 /* dmzXMLParser.h in Headers */,
+				7A4934F40E01E8F5009C7A49 /* dmzXMLUtil.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A4935090E01E91D009C7A49 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A49350A0E01E91D009C7A49 /* dmzFileCache.h in Headers */,
+				7A49350B0E01E91D009C7A49 /* dmzFileCacheLocal.h in Headers */,
+				7A49350C0E01E91D009C7A49 /* dmzFileCacheLocalExport.h in Headers */,
+				7A49350D0E01E91D009C7A49 /* expat.h in Headers */,
+				7A49350E0E01E91D009C7A49 /* expat_external.h in Headers */,
+				7A49350F0E01E91D009C7A49 /* expat_config.h in Headers */,
+				7A4935100E01E91D009C7A49 /* dmzXMLBase64.h in Headers */,
+				7A4935110E01E91D009C7A49 /* dmzXMLExport.h in Headers */,
+				7A4935120E01E91D009C7A49 /* dmzXMLInterpreterConfig.h in Headers */,
+				7A4935130E01E91D009C7A49 /* dmzXMLParser.h in Headers */,
+				7A4935140E01E91D009C7A49 /* dmzXMLUtil.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2AAC043055464E500DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A4934440E01DA33009C7A49 /* dmzFileCache.h in Headers */,
+				7A4934460E01DA4E009C7A49 /* dmzFileCacheLocal.h in Headers */,
+				7A4934470E01DA4E009C7A49 /* dmzFileCacheLocalExport.h in Headers */,
+				7A4934C50E01E005009C7A49 /* expat.h in Headers */,
+				7A4934C60E01E006009C7A49 /* expat_external.h in Headers */,
+				7A4934CA0E01E018009C7A49 /* expat_config.h in Headers */,
+				7A4934CE0E01E07C009C7A49 /* dmzXMLBase64.h in Headers */,
+				7A4934CF0E01E07C009C7A49 /* dmzXMLExport.h in Headers */,
+				7A4934D20E01E07C009C7A49 /* dmzXMLInterpreterConfig.h in Headers */,
+				7A4934D30E01E07C009C7A49 /* dmzXMLParser.h in Headers */,
+				7A4934D60E01E07C009C7A49 /* dmzXMLUtil.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		7A4934E60E01E8F5009C7A49 /* dmzFileCacheLocal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A4935010E01E8F5009C7A49 /* Build configuration list for PBXNativeTarget "dmzFileCacheLocal" */;
+			buildPhases = (
+				7A4934E90E01E8F5009C7A49 /* Headers */,
+				7A4934F50E01E8F5009C7A49 /* Sources */,
+				7A4935000E01E8F5009C7A49 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A4934E70E01E8F5009C7A49 /* PBXTargetDependency */,
+			);
+			name = dmzFileCacheLocal;
+			productName = dmzFoundation;
+			productReference = 7A4935040E01E8F5009C7A49 /* libdmzFoundation.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A4935060E01E91D009C7A49 /* expat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A4935210E01E91D009C7A49 /* Build configuration list for PBXNativeTarget "expat" */;
+			buildPhases = (
+				7A4935090E01E91D009C7A49 /* Headers */,
+				7A4935150E01E91D009C7A49 /* Sources */,
+				7A4935200E01E91D009C7A49 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A4935070E01E91D009C7A49 /* PBXTargetDependency */,
+			);
+			name = expat;
+			productName = dmzFoundation;
+			productReference = 7A4935240E01E91D009C7A49 /* libdmzFoundation.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D2AAC045055464E500DB518D /* dmzXML */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "dmzXML" */;
+			buildPhases = (
+				D2AAC043055464E500DB518D /* Headers */,
+				D2AAC044055464E500DB518D /* Sources */,
+				D289987405E68DCB004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A49349E0E01DCDA009C7A49 /* PBXTargetDependency */,
+			);
+			name = dmzXML;
+			productName = dmzFoundation;
+			productReference = D2AAC046055464E500DB518D /* libdmzFoundation.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "dmzFoundation" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* dmzFoundation */;
+			productRefGroup = 7A4935050E01E8F5009C7A49 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 7A4934940E01DCA4009C7A49 /* Products */;
+					ProjectRef = 7A4934930E01DCA4009C7A49 /* dmzKernel.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				D2AAC045055464E500DB518D /* dmzXML */,
+				7A4934E60E01E8F5009C7A49 /* dmzFileCacheLocal */,
+				7A4935060E01E91D009C7A49 /* expat */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		7A4934980E01DCA4009C7A49 /* libdmzKernel.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libdmzKernel.a;
+			remoteRef = 7A4934970E01DCA4009C7A49 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7A4934F50E01E8F5009C7A49 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A4934F60E01E8F5009C7A49 /* dmzFileCache.cpp in Sources */,
+				7A4934F70E01E8F5009C7A49 /* dmzFileCacheLocal.cpp in Sources */,
+				7A4934F80E01E8F5009C7A49 /* xmltok.c in Sources */,
+				7A4934F90E01E8F5009C7A49 /* xmlrole.c in Sources */,
+				7A4934FA0E01E8F5009C7A49 /* xmlparse.c in Sources */,
+				7A4934FB0E01E8F5009C7A49 /* dmzXMLBase64.cpp in Sources */,
+				7A4934FC0E01E8F5009C7A49 /* dmzXMLInterpreter.cpp in Sources */,
+				7A4934FD0E01E8F5009C7A49 /* dmzXMLInterpreterConfig.cpp in Sources */,
+				7A4934FE0E01E8F5009C7A49 /* dmzXMLParserExpat.cpp in Sources */,
+				7A4934FF0E01E8F5009C7A49 /* dmzXMLUtil.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A4935150E01E91D009C7A49 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A4935160E01E91D009C7A49 /* dmzFileCache.cpp in Sources */,
+				7A4935170E01E91D009C7A49 /* dmzFileCacheLocal.cpp in Sources */,
+				7A4935180E01E91D009C7A49 /* xmltok.c in Sources */,
+				7A4935190E01E91D009C7A49 /* xmlrole.c in Sources */,
+				7A49351A0E01E91D009C7A49 /* xmlparse.c in Sources */,
+				7A49351B0E01E91D009C7A49 /* dmzXMLBase64.cpp in Sources */,
+				7A49351C0E01E91D009C7A49 /* dmzXMLInterpreter.cpp in Sources */,
+				7A49351D0E01E91D009C7A49 /* dmzXMLInterpreterConfig.cpp in Sources */,
+				7A49351E0E01E91D009C7A49 /* dmzXMLParserExpat.cpp in Sources */,
+				7A49351F0E01E91D009C7A49 /* dmzXMLUtil.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2AAC044055464E500DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A4934430E01DA33009C7A49 /* dmzFileCache.cpp in Sources */,
+				7A4934450E01DA4E009C7A49 /* dmzFileCacheLocal.cpp in Sources */,
+				7A4934C70E01E010009C7A49 /* xmltok.c in Sources */,
+				7A4934C80E01E011009C7A49 /* xmlrole.c in Sources */,
+				7A4934C90E01E011009C7A49 /* xmlparse.c in Sources */,
+				7A4934CD0E01E07C009C7A49 /* dmzXMLBase64.cpp in Sources */,
+				7A4934D00E01E07C009C7A49 /* dmzXMLInterpreter.cpp in Sources */,
+				7A4934D10E01E07C009C7A49 /* dmzXMLInterpreterConfig.cpp in Sources */,
+				7A4934D40E01E07C009C7A49 /* dmzXMLParserExpat.cpp in Sources */,
+				7A4934D50E01E07C009C7A49 /* dmzXMLUtil.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7A49349E0E01DCDA009C7A49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = dmzKernel;
+			targetProxy = 7A49349D0E01DCDA009C7A49 /* PBXContainerItemProxy */;
+		};
+		7A4934E70E01E8F5009C7A49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = dmzKernel;
+			targetProxy = 7A4934E80E01E8F5009C7A49 /* PBXContainerItemProxy */;
+		};
+		7A4935070E01E91D009C7A49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = dmzKernel;
+			targetProxy = 7A4935080E01E91D009C7A49 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91EC08733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../build/Debug-iphonesimulator\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
+				PRODUCT_NAME = dmzFoundation;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+			};
+			name = Debug;
+		};
+		1DEB91ED08733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../build/Debug-iphonesimulator\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
+				PRODUCT_NAME = dmzFoundation;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+			};
+			name = Release;
+		};
+		1DEB91F008733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = iphonesimulator2.0;
+			};
+			name = Debug;
+		};
+		1DEB91F108733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = iphonesimulator2.0;
+			};
+			name = Release;
+		};
+		7A4935020E01E8F5009C7A49 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\"$(SRCROOT)/../build/Debug-iphonesimulator\\\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
+				PRODUCT_NAME = dmzFoundation;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+			};
+			name = Debug;
+		};
+		7A4935030E01E8F5009C7A49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\"$(SRCROOT)/../build/Debug-iphonesimulator\\\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
+				PRODUCT_NAME = dmzFoundation;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+			};
+			name = Release;
+		};
+		7A4935220E01E91D009C7A49 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\"$(SRCROOT)/../build/Debug-iphonesimulator\\\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
+				PRODUCT_NAME = dmzFoundation;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+			};
+			name = Debug;
+		};
+		7A4935230E01E91D009C7A49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\"$(SRCROOT)/../build/Debug-iphonesimulator\\\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
+				PRODUCT_NAME = dmzFoundation;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "dmzXML" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91EC08733DB70010E9CD /* Debug */,
+				1DEB91ED08733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "dmzFoundation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91F008733DB70010E9CD /* Debug */,
+				1DEB91F108733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7A4935010E01E8F5009C7A49 /* Build configuration list for PBXNativeTarget "dmzFileCacheLocal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A4935020E01E8F5009C7A49 /* Debug */,
+				7A4935030E01E8F5009C7A49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7A4935210E01E91D009C7A49 /* Build configuration list for PBXNativeTarget "expat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A4935220E01E91D009C7A49 /* Debug */,
+				7A4935230E01E91D009C7A49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

@@ -44,16 +44,16 @@ namespace dmz {
          virtual Handle lookup_listener (const String &Name) = 0;
 
          virtual Boolean set_listener (
-            const Handle Handle,
+            const Handle ListenerHandle,
             const Vector &Position,
             const Matrix &Orientation) = 0;
 
          virtual Boolean get_listener (
-            const Handle Handle,
+            const Handle ListenerHandle,
             Vector &position,
             Matrix &orientation) = 0;
          
-         virtual Boolean destroy_listener (const Handle Handle) = 0;
+         virtual Boolean destroy_listener (const Handle ListenerHandle) = 0;
 
       protected:
          AudioModule (const PluginInfo &Info);

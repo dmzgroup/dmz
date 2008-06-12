@@ -1,6 +1,6 @@
 lmk.set_name ("dmzAudioModuleFMOD", { DMZ_USE_FMOD = true })
 lmk.set_type "plugin"
-lmk.add_libs {"dmzAudioSoundAttributes", "dmzKernel",}
+lmk.add_libs {"dmzAudioBase", "dmzKernel",}
 lmk.add_preqs {"dmzAudioFramework",}
 
 lmk.add_files {"dmzAudioModuleFMOD.cpp"}

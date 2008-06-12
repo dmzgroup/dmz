@@ -3,8 +3,8 @@ lmk.set_type "plugin"
 lmk.add_files {"dmzAudioPluginEvent.cpp",}
 lmk.add_libs {
    "dmzEventUtil",
+   "dmzAudioBase",
    "dmzKernel",
-   "dmzAudioSoundAttributes",
 }
 lmk.add_preqs {
    "dmzEventFramework",

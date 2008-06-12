@@ -157,7 +157,7 @@ dmz::AudioModuleFMOD::destroy_audio_handle (const Handle AudioHandle) {
          _soundNameTable.remove (data->Filename);
 
          data->unref ();
-         // Now any when any leftover sound instances are done with this piece
+         // Now when any leftover sound instances are done with this piece
          // of sound data, then it will be automatically deleted
 
          result = True;

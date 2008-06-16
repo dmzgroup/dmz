@@ -11,122 +11,137 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D23BBF680E06E2C5008937FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245941E0E0325D9001AAB67 /* dmzObjectFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D23BBF360E06E1F8008937FB;
+			remoteInfo = dmzObjectFramework;
+		};
+		D23BBFEB0E06E3E6008937FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245941E0E0325D9001AAB67 /* dmzObjectFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D23BBFDC0E06E3C7008937FB /* libbuild_all.a */;
+			remoteInfo = build_all;
+		};
+		D23BC01B0E06E47D008937FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24593EF0E032597001AAB67 /* dmzEntityPluginTeleport */;
+			remoteInfo = dmzEntityPluginTeleport;
+		};
 		D245941C0E0325C5001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24594180E0325C5001AAB67 /* dmzKernel.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D /* libdmzKernel.a */;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = dmzKernel;
-		};
-		D24594260E0325D9001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245941E0E0325D9001AAB67 /* dmzObjectFramework.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D24591A30E030917001AAB67 /* libdmzObjectFramework.a */;
-			remoteInfo = dmzObjectFramework;
 		};
 		D24594280E0325D9001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D245941E0E0325D9001AAB67 /* dmzObjectFramework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D204868A0E03083300F6444C /* libdmzObjectUtil.a */;
+			remoteGlobalIDString = D204868A0E03083300F6444C;
 			remoteInfo = dmzObjectUtil;
 		};
 		D245942A0E0325D9001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D245941E0E0325D9001AAB67 /* dmzObjectFramework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D24591B00E0309A7001AAB67 /* libdmzObjectModuleBasic.a */;
+			remoteGlobalIDString = D24591B00E0309A7001AAB67;
 			remoteInfo = dmzObjectModuleBasic;
 		};
 		D245942C0E0325D9001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D245941E0E0325D9001AAB67 /* dmzObjectFramework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D24591C50E030A1C001AAB67 /* libdmzObjectModuleSelectBasic.a */;
+			remoteGlobalIDString = D24591C50E030A1C001AAB67;
 			remoteInfo = dmzObjectModuleSelectBasic;
 		};
 		D245942E0E0325D9001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D245941E0E0325D9001AAB67 /* dmzObjectFramework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D24591D90E030AC1001AAB67 /* libdmzObjectPluginArchive.a */;
+			remoteGlobalIDString = D24591D90E030AC1001AAB67;
 			remoteInfo = dmzObjectPluginArchive;
 		};
 		D24594370E0325ED001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24594300E0325ED001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D /* libdmzInputFramework.a */;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = dmzInputFramework;
 		};
 		D24594390E0325ED001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24594300E0325ED001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D24593620E032185001AAB67 /* libdmzInputEvents.a */;
+			remoteGlobalIDString = D24593620E032185001AAB67;
 			remoteInfo = dmzInputEvents;
 		};
 		D245943B0E0325ED001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24594300E0325ED001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D24593800E032218001AAB67 /* libdmzInputUtil.a */;
+			remoteGlobalIDString = D24593800E032218001AAB67;
 			remoteInfo = dmzInputUtil;
 		};
 		D245943D0E0325ED001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24594300E0325ED001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D24593960E03225F001AAB67 /* libdmzInputModuleBasic.a */;
+			remoteGlobalIDString = D24593960E03225F001AAB67;
 			remoteInfo = dmzInputModuleBasic;
 		};
 		D245943F0E0325FD001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24594180E0325C5001AAB67 /* dmzKernel.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzKernel */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzKernel;
 		};
 		D24594410E032603001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D245941E0E0325D9001AAB67 /* dmzObjectFramework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D20486890E03083300F6444C /* dmzObjectUtil */;
+			remoteGlobalIDString = D20486890E03083300F6444C;
 			remoteInfo = dmzObjectUtil;
 		};
 		D24594430E032609001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D245941E0E0325D9001AAB67 /* dmzObjectFramework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzObjectFramework */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzObjectFramework;
 		};
 		D24594450E03260C001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24594300E0325ED001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D245937F0E032218001AAB67 /* dmzInputUtil */;
+			remoteGlobalIDString = D245937F0E032218001AAB67;
 			remoteInfo = dmzInputUtil;
 		};
 		D24594470E03260F001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24594300E0325ED001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D24593610E032185001AAB67 /* dmzInputEvents */;
+			remoteGlobalIDString = D24593610E032185001AAB67;
 			remoteInfo = dmzInputEvents;
 		};
 		D24594490E032612001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24594300E0325ED001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzInputFramework */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzInputFramework;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D24593F00E032597001AAB67 /* libdmzEntityPluginTeleport.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdmzEntityPluginTeleport.a; path = "../../../../build/Debug-iphonesimulator/libdmzEntityPluginTeleport.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D23BC0180E06E478008937FB /* libbuild_all.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libbuild_all.a; path = "../../../../build/Debug-iphonesimulator/libbuild_all.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D24593F00E032597001AAB67 /* libdmzEntityPluginTeleport.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzEntityPluginTeleport.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D24593F70E0325A6001AAB67 /* dmzEntityPluginFreeFly.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzEntityPluginFreeFly.cpp; sourceTree = "<group>"; };
 		D24593F80E0325A6001AAB67 /* dmzEntityPluginFreeFly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzEntityPluginFreeFly.h; sourceTree = "<group>"; };
 		D24593F90E0325A6001AAB67 /* dmzEntityPluginFreeFly.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzEntityPluginFreeFly.lmk; sourceTree = "<group>"; };
@@ -157,6 +172,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D23BC0160E06E478008937FB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D24593EE0E032597001AAB67 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -183,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				D24593F00E032597001AAB67 /* libdmzEntityPluginTeleport.a */,
+				D23BC0180E06E478008937FB /* libbuild_all.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -294,11 +317,12 @@
 		D245941F0E0325D9001AAB67 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D24594270E0325D9001AAB67 /* libdmzObjectFramework.a */,
+				D23BBF690E06E2C5008937FB /* libdmzObjectFramework.a */,
 				D24594290E0325D9001AAB67 /* libdmzObjectUtil.a */,
 				D245942B0E0325D9001AAB67 /* libdmzObjectModuleBasic.a */,
 				D245942D0E0325D9001AAB67 /* libdmzObjectModuleSelectBasic.a */,
 				D245942F0E0325D9001AAB67 /* libdmzObjectPluginArchive.a */,
+				D23BBFEC0E06E3E6008937FB /* libbuild_all.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -317,6 +341,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		D23BC0140E06E478008937FB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D24593EC0E032597001AAB67 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -327,6 +358,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		D23BC0170E06E478008937FB /* build_all */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D23BC0200E06E484008937FB /* Build configuration list for PBXNativeTarget "build_all" */;
+			buildPhases = (
+				D23BC0140E06E478008937FB /* Headers */,
+				D23BC0150E06E478008937FB /* Sources */,
+				D23BC0160E06E478008937FB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D23BC01C0E06E47D008937FB /* PBXTargetDependency */,
+			);
+			name = build_all;
+			productName = build_all;
+			productReference = D23BC0180E06E478008937FB /* libbuild_all.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		D24593EF0E032597001AAB67 /* dmzEntityPluginTeleport */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D24593F30E03259F001AAB67 /* Build configuration list for PBXNativeTarget "dmzEntityPluginTeleport" */;
@@ -377,25 +426,33 @@
 			projectRoot = "";
 			targets = (
 				D24593EF0E032597001AAB67 /* dmzEntityPluginTeleport */,
+				D23BC0170E06E478008937FB /* build_all */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		D23BBF690E06E2C5008937FB /* libdmzObjectFramework.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libdmzObjectFramework.a;
+			remoteRef = D23BBF680E06E2C5008937FB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D23BBFEC0E06E3E6008937FB /* libbuild_all.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			name = libbuild_all.a;
+			path = "../../../../build/Debug-iphonesimulator/libbuild_all.a";
+			remoteRef = D23BBFEB0E06E3E6008937FB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D245941D0E0325C5001AAB67 /* libdmzKernel.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libdmzKernel.a;
 			remoteRef = D245941C0E0325C5001AAB67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D24594270E0325D9001AAB67 /* libdmzObjectFramework.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			name = libdmzObjectFramework.a;
-			path = "/Users/scott/cm/src/build/Debug-iphonesimulator/libdmzObjectFramework.a";
-			remoteRef = D24594260E0325D9001AAB67 /* PBXContainerItemProxy */;
-			sourceTree = "<absolute>";
 		};
 		D24594290E0325D9001AAB67 /* libdmzObjectUtil.a */ = {
 			isa = PBXReferenceProxy;
@@ -407,24 +464,21 @@
 		D245942B0E0325D9001AAB67 /* libdmzObjectModuleBasic.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			name = libdmzObjectModuleBasic.a;
-			path = "../../../../build/Debug-iphonesimulator/libdmzObjectModuleBasic.a";
+			path = libdmzObjectModuleBasic.a;
 			remoteRef = D245942A0E0325D9001AAB67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D245942D0E0325D9001AAB67 /* libdmzObjectModuleSelectBasic.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			name = libdmzObjectModuleSelectBasic.a;
-			path = "../../../../build/Debug-iphonesimulator/libdmzObjectModuleSelectBasic.a";
+			path = libdmzObjectModuleSelectBasic.a;
 			remoteRef = D245942C0E0325D9001AAB67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D245942F0E0325D9001AAB67 /* libdmzObjectPluginArchive.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			name = libdmzObjectPluginArchive.a;
-			path = "../../../../build/Debug-iphonesimulator/libdmzObjectPluginArchive.a";
+			path = libdmzObjectPluginArchive.a;
 			remoteRef = D245942E0E0325D9001AAB67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -438,30 +492,34 @@
 		D245943A0E0325ED001AAB67 /* libdmzInputEvents.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			name = libdmzInputEvents.a;
-			path = "../../../../build/Debug-iphonesimulator/libdmzInputEvents.a";
+			path = libdmzInputEvents.a;
 			remoteRef = D24594390E0325ED001AAB67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D245943C0E0325ED001AAB67 /* libdmzInputUtil.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			name = libdmzInputUtil.a;
-			path = "../../../../build/Debug-iphonesimulator/libdmzInputUtil.a";
+			path = libdmzInputUtil.a;
 			remoteRef = D245943B0E0325ED001AAB67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D245943E0E0325ED001AAB67 /* libdmzInputModuleBasic.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			name = libdmzInputModuleBasic.a;
-			path = "../../../../build/Debug-iphonesimulator/libdmzInputModuleBasic.a";
+			path = libdmzInputModuleBasic.a;
 			remoteRef = D245943D0E0325ED001AAB67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D23BC0150E06E478008937FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D24593ED0E032597001AAB67 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -473,6 +531,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D23BC01C0E06E47D008937FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24593EF0E032597001AAB67 /* dmzEntityPluginTeleport */;
+			targetProxy = D23BC01B0E06E47D008937FB /* PBXContainerItemProxy */;
+		};
 		D24594400E0325FD001AAB67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = dmzKernel;
@@ -534,6 +597,31 @@
 			};
 			name = Release;
 		};
+		D23BC0190E06E478008937FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PREBINDING = NO;
+				PRODUCT_NAME = build_all;
+			};
+			name = Debug;
+		};
+		D23BC01A0E06E478008937FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = build_all;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 		D24593F10E032597001AAB67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -567,6 +655,15 @@
 			buildConfigurations = (
 				1DEB91F008733DB70010E9CD /* Debug */,
 				1DEB91F108733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D23BC0200E06E484008937FB /* Build configuration list for PBXNativeTarget "build_all" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D23BC0190E06E478008937FB /* Debug */,
+				D23BC01A0E06E478008937FB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

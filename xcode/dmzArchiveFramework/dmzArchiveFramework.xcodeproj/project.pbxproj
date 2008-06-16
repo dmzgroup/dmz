@@ -21,254 +21,311 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		D24592420E030EFE001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D /* libdmzArchiveFramework.a */;
-			remoteInfo = dmzKernel;
-		};
-		D24592450E030F05001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzKernel */;
-			remoteInfo = dmzKernel;
-		};
-		D24592470E030F09001AAB67 /* PBXContainerItemProxy */ = {
+		D23BBFFD0E06E41D008937FB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzArchiveFramework */;
 			remoteInfo = dmzArchiveFramework;
 		};
-		D24592690E030F7D001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D /* libdmzArchiveFramework.a */;
-			remoteInfo = dmzXML;
-		};
-		D245926B0E030F7D001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7A4935040E01E8F5009C7A49 /* libdmzFileCacheLocal.a */;
-			remoteInfo = dmzFileCacheLocal;
-		};
-		D245926D0E030F7D001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7A4935240E01E91D009C7A49 /* libexpat.a */;
-			remoteInfo = expat;
-		};
-		D245926F0E030F7D001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D20485F60E02FE5D00F6444C /* libdmzPluginMsgDump.a */;
-			remoteInfo = dmzPluginMsgDump;
-		};
-		D24592710E030F7D001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D204860C0E02FFBC00F6444C /* libdmzPluginUndoDump.a */;
-			remoteInfo = dmzPluginUndoDump;
-		};
-		D24592730E030F7D001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D20486170E02FFD000F6444C /* libdmzPluginUndo.a */;
-			remoteInfo = dmzPluginUndo;
-		};
-		D24592760E030F8F001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzKernel */;
-			remoteInfo = dmzKernel;
-		};
-		D24592780E030F9C001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzArchiveFramework */;
-			remoteInfo = dmzArchiveFramework;
-		};
-		D245928C0E0310E3001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D24592820E0310D3001AAB67 /* libdmzFoundation.a */;
-			remoteInfo = dmzFoundation;
-		};
-		D24592AE0E031B5E001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D24592810E0310D3001AAB67 /* dmzFoundation */;
-			remoteInfo = dmzFoundation;
-		};
-		D24592BA0E031C8B001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzKernel */;
-			remoteInfo = dmzKernel;
-		};
-		D24592CA0E031CC6001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzKernel */;
-			remoteInfo = dmzKernel;
-		};
-		D24592CC0E031CCA001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzXML */;
-			remoteInfo = dmzXML;
-		};
-		D24592CE0E031CD2001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D24592810E0310D3001AAB67 /* dmzFoundation */;
-			remoteInfo = dmzFoundation;
-		};
-		D24592D00E031CD8001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzArchiveFramework */;
-			remoteInfo = dmzArchiveFramework;
-		};
-		D24592F10E031FDA001AAB67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzKernel */;
-			remoteInfo = dmzKernel;
-		};
-		D24592F30E031FE2001AAB67 /* PBXContainerItemProxy */ = {
+		D23BBFFF0E06E420008937FB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = D245923A0E030EE3001AAB67 /* dmzArchiveUtil */;
 			remoteInfo = dmzArchiveUtil;
 		};
+		D23BC0010E06E422008937FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24592580E030F6A001AAB67 /* dmzArchiveModuleBasic */;
+			remoteInfo = dmzArchiveModuleBasic;
+		};
+		D23BC0030E06E425008937FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24592B60E031C81001AAB67 /* dmzArchivePluginAutoLoad */;
+			remoteInfo = dmzArchivePluginAutoLoad;
+		};
+		D23BC0050E06E428008937FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24592C60E031CC0001AAB67 /* dmzArchivePluginAutoSave */;
+			remoteInfo = dmzArchivePluginAutoSave;
+		};
+		D23BC0070E06E42B008937FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24592E30E031F1A001AAB67 /* dmzArchivePluginQuickSave */;
+			remoteInfo = dmzArchivePluginQuickSave;
+		};
+		D23BC0090E06E42E008937FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24592ED0E031FD5001AAB67 /* dmzArchivePluginUndo */;
+			remoteInfo = dmzArchivePluginUndo;
+		};
+		D23BC00B0E06E431008937FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24593CA0E03233A001AAB67 /* dmzArchivePluginInput */;
+			remoteInfo = dmzArchivePluginInput;
+		};
+		D24592420E030EFE001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
+			remoteInfo = dmzKernel;
+		};
+		D24592450E030F05001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzKernel;
+		};
+		D24592470E030F09001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzArchiveFramework;
+		};
+		D24592690E030F7D001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
+			remoteInfo = dmzXML;
+		};
+		D245926B0E030F7D001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7A4935040E01E8F5009C7A49;
+			remoteInfo = dmzFileCacheLocal;
+		};
+		D245926D0E030F7D001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7A4935240E01E91D009C7A49;
+			remoteInfo = expat;
+		};
+		D245926F0E030F7D001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D20485F60E02FE5D00F6444C;
+			remoteInfo = dmzPluginMsgDump;
+		};
+		D24592710E030F7D001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D204860C0E02FFBC00F6444C;
+			remoteInfo = dmzPluginUndoDump;
+		};
+		D24592730E030F7D001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D20486170E02FFD000F6444C;
+			remoteInfo = dmzPluginUndo;
+		};
+		D24592760E030F8F001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzKernel;
+		};
+		D24592780E030F9C001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzArchiveFramework;
+		};
+		D245928C0E0310E3001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D24592820E0310D3001AAB67;
+			remoteInfo = dmzFoundation;
+		};
+		D24592AE0E031B5E001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D24592810E0310D3001AAB67;
+			remoteInfo = dmzFoundation;
+		};
+		D24592BA0E031C8B001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzKernel;
+		};
+		D24592CA0E031CC6001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzKernel;
+		};
+		D24592CC0E031CCA001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzXML;
+		};
+		D24592CE0E031CD2001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D24592810E0310D3001AAB67;
+			remoteInfo = dmzFoundation;
+		};
+		D24592D00E031CD8001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzArchiveFramework;
+		};
+		D24592F10E031FDA001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzKernel;
+		};
+		D24592F30E031FE2001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D245923A0E030EE3001AAB67;
+			remoteInfo = dmzArchiveUtil;
+		};
 		D24592F50E031FE6001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzArchiveFramework */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzArchiveFramework;
 		};
 		D24593AD0E0322BF001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24593A60E0322BF001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D /* libdmzArchiveFramework.a */;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = dmzInputFramework;
 		};
 		D24593AF0E0322BF001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24593A60E0322BF001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D24593620E032185001AAB67 /* libdmzInputEvents.a */;
+			remoteGlobalIDString = D24593620E032185001AAB67;
 			remoteInfo = dmzInputEvents;
 		};
 		D24593B10E0322BF001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24593A60E0322BF001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D24593800E032218001AAB67 /* libdmzInputUtil.a */;
+			remoteGlobalIDString = D24593800E032218001AAB67;
 			remoteInfo = dmzInputUtil;
 		};
 		D24593B30E0322BF001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24593A60E0322BF001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D24593960E03225F001AAB67 /* libdmzInputModuleBasic.a */;
+			remoteGlobalIDString = D24593960E03225F001AAB67;
 			remoteInfo = dmzInputModuleBasic;
 		};
 		D24593B50E0322D2001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzKernel */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzKernel;
 		};
 		D24593B70E0322D6001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzXML */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzXML;
 		};
 		D24593B90E0322DB001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24593A60E0322BF001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D245937F0E032218001AAB67 /* dmzInputUtil */;
+			remoteGlobalIDString = D245937F0E032218001AAB67;
 			remoteInfo = dmzInputUtil;
 		};
 		D24593BB0E0322DF001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24593A60E0322BF001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D24593610E032185001AAB67 /* dmzInputEvents */;
+			remoteGlobalIDString = D24593610E032185001AAB67;
 			remoteInfo = dmzInputEvents;
 		};
 		D24593BD0E0322E2001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24593A60E0322BF001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzInputFramework */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzInputFramework;
 		};
 		D24593BF0E0322EA001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzArchiveFramework */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzArchiveFramework;
 		};
 		D24593CE0E03233F001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzKernel */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzKernel;
 		};
 		D24593D00E032346001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24593A60E0322BF001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D245937F0E032218001AAB67 /* dmzInputUtil */;
+			remoteGlobalIDString = D245937F0E032218001AAB67;
 			remoteInfo = dmzInputUtil;
 		};
 		D24593D20E03234B001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24593A60E0322BF001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D24593610E032185001AAB67 /* dmzInputEvents */;
+			remoteGlobalIDString = D24593610E032185001AAB67;
 			remoteInfo = dmzInputEvents;
 		};
 		D24593D40E03234E001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D24593A60E0322BF001AAB67 /* dmzInputFramework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzInputFramework */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzInputFramework;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D23BBFFA0E06E419008937FB /* libbuild_all.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libbuild_all.a; path = "../../../../build/Debug-iphonesimulator/libbuild_all.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D24592100E030EA4001AAB67 /* dmzArchiveFramework.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzArchiveFramework.lmk; sourceTree = "<group>"; };
 		D24592110E030EA4001AAB67 /* dmzArchiveModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchiveModule.cpp; sourceTree = "<group>"; };
 		D24592120E030EA4001AAB67 /* dmzArchiveModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchiveModule.h; sourceTree = "<group>"; };
@@ -296,20 +353,27 @@
 		D24592310E030EA4001AAB67 /* dmzArchivePluginUndo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchivePluginUndo.cpp; sourceTree = "<group>"; };
 		D24592320E030EA4001AAB67 /* dmzArchivePluginUndo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchivePluginUndo.h; sourceTree = "<group>"; };
 		D24592330E030EA4001AAB67 /* dmzArchivePluginUndo.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzArchivePluginUndo.lmk; sourceTree = "<group>"; };
-		D245923B0E030EE3001AAB67 /* libdmzArchiveUtil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdmzArchiveUtil.a; path = "../../../../build/Debug-iphonesimulator/libdmzArchiveUtil.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D245923B0E030EE3001AAB67 /* libdmzArchiveUtil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchiveUtil.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D245923E0E030EFE001AAB67 /* dmzKernel.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = dmzKernel.xcodeproj; path = ../dmzKernel/dmzKernel.xcodeproj; sourceTree = SOURCE_ROOT; };
-		D24592590E030F6A001AAB67 /* libdmzArchiveModuleBasic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdmzArchiveModuleBasic.a; path = "../../../../build/Debug-iphonesimulator/libdmzArchiveModuleBasic.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D24592590E030F6A001AAB67 /* libdmzArchiveModuleBasic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchiveModuleBasic.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D245925C0E030F7D001AAB67 /* dmzFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = dmzFoundation.xcodeproj; path = ../dmzFoundation/dmzFoundation.xcodeproj; sourceTree = SOURCE_ROOT; };
-		D24592B70E031C81001AAB67 /* libdmzArchivePluginAutoLoad.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdmzArchivePluginAutoLoad.a; path = "../../../../build/Debug-iphonesimulator/libdmzArchivePluginAutoLoad.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D24592C70E031CC0001AAB67 /* libdmzArchivePluginAutoSave.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdmzArchivePluginAutoSave.a; path = "../../../../build/Debug-iphonesimulator/libdmzArchivePluginAutoSave.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D24592E40E031F1A001AAB67 /* libdmzArchivePluginQuickSave.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdmzArchivePluginQuickSave.a; path = "../../../../build/Debug-iphonesimulator/libdmzArchivePluginQuickSave.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D24592EE0E031FD5001AAB67 /* libdmzArchivePluginUndo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdmzArchivePluginUndo.a; path = "../../../../build/Debug-iphonesimulator/libdmzArchivePluginUndo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D24592B70E031C81001AAB67 /* libdmzArchivePluginAutoLoad.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchivePluginAutoLoad.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D24592C70E031CC0001AAB67 /* libdmzArchivePluginAutoSave.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchivePluginAutoSave.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D24592E40E031F1A001AAB67 /* libdmzArchivePluginQuickSave.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchivePluginQuickSave.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D24592EE0E031FD5001AAB67 /* libdmzArchivePluginUndo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchivePluginUndo.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D24593A60E0322BF001AAB67 /* dmzInputFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = dmzInputFramework.xcodeproj; path = ../dmzInputFramework/dmzInputFramework.xcodeproj; sourceTree = SOURCE_ROOT; };
-		D24593CB0E03233A001AAB67 /* libdmzArchivePluginInput.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdmzArchivePluginInput.a; path = "../../../../build/Debug-iphonesimulator/libdmzArchivePluginInput.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D24593CB0E03233A001AAB67 /* libdmzArchivePluginInput.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchivePluginInput.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2AAC046055464E500DB518D /* libdmzArchiveFramework.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchiveFramework.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D23BBFF80E06E419008937FB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D24592390E030EE3001AAB67 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -392,6 +456,7 @@
 				D24592E40E031F1A001AAB67 /* libdmzArchivePluginQuickSave.a */,
 				D24592EE0E031FD5001AAB67 /* libdmzArchivePluginUndo.a */,
 				D24593CB0E03233A001AAB67 /* libdmzArchivePluginInput.a */,
+				D23BBFFA0E06E419008937FB /* libbuild_all.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -547,6 +612,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		D23BBFF60E06E419008937FB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D24592370E030EE3001AAB67 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -610,6 +682,31 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		D23BBFF90E06E419008937FB /* build_all */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D23BC0120E06E456008937FB /* Build configuration list for PBXNativeTarget "build_all" */;
+			buildPhases = (
+				D23BBFF60E06E419008937FB /* Headers */,
+				D23BBFF70E06E419008937FB /* Sources */,
+				D23BBFF80E06E419008937FB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D23BBFFE0E06E41D008937FB /* PBXTargetDependency */,
+				D23BC0000E06E420008937FB /* PBXTargetDependency */,
+				D23BC0020E06E422008937FB /* PBXTargetDependency */,
+				D23BC0040E06E425008937FB /* PBXTargetDependency */,
+				D23BC0060E06E428008937FB /* PBXTargetDependency */,
+				D23BC0080E06E42B008937FB /* PBXTargetDependency */,
+				D23BC00A0E06E42E008937FB /* PBXTargetDependency */,
+				D23BC00C0E06E431008937FB /* PBXTargetDependency */,
+			);
+			name = build_all;
+			productName = build_all;
+			productReference = D23BBFFA0E06E419008937FB /* libbuild_all.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		D245923A0E030EE3001AAB67 /* dmzArchiveUtil */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D24592440E030EFE001AAB67 /* Build configuration list for PBXNativeTarget "dmzArchiveUtil" */;
@@ -803,6 +900,7 @@
 				D24592E30E031F1A001AAB67 /* dmzArchivePluginQuickSave */,
 				D24592ED0E031FD5001AAB67 /* dmzArchivePluginUndo */,
 				D24593CA0E03233A001AAB67 /* dmzArchivePluginInput */,
+				D23BBFF90E06E419008937FB /* build_all */,
 			);
 		};
 /* End PBXProject section */
@@ -860,8 +958,7 @@
 		D245928D0E0310E3001AAB67 /* libdmzFoundation.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			name = libdmzFoundation.a;
-			path = "../../../../build/Debug-iphonesimulator/libdmzFoundation.a";
+			path = libdmzFoundation.a;
 			remoteRef = D245928C0E0310E3001AAB67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -875,30 +972,34 @@
 		D24593B00E0322BF001AAB67 /* libdmzInputEvents.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			name = libdmzInputEvents.a;
-			path = "../../../../build/Debug-iphonesimulator/libdmzInputEvents.a";
+			path = libdmzInputEvents.a;
 			remoteRef = D24593AF0E0322BF001AAB67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D24593B20E0322BF001AAB67 /* libdmzInputUtil.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			name = libdmzInputUtil.a;
-			path = "../../../../build/Debug-iphonesimulator/libdmzInputUtil.a";
+			path = libdmzInputUtil.a;
 			remoteRef = D24593B10E0322BF001AAB67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D24593B40E0322BF001AAB67 /* libdmzInputModuleBasic.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			name = libdmzInputModuleBasic.a;
-			path = "../../../../build/Debug-iphonesimulator/libdmzInputModuleBasic.a";
+			path = libdmzInputModuleBasic.a;
 			remoteRef = D24593B30E0322BF001AAB67 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D23BBFF70E06E419008937FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D24592380E030EE3001AAB67 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -965,6 +1066,46 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D23BBFFE0E06E41D008937FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC045055464E500DB518D /* dmzArchiveFramework */;
+			targetProxy = D23BBFFD0E06E41D008937FB /* PBXContainerItemProxy */;
+		};
+		D23BC0000E06E420008937FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D245923A0E030EE3001AAB67 /* dmzArchiveUtil */;
+			targetProxy = D23BBFFF0E06E420008937FB /* PBXContainerItemProxy */;
+		};
+		D23BC0020E06E422008937FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24592580E030F6A001AAB67 /* dmzArchiveModuleBasic */;
+			targetProxy = D23BC0010E06E422008937FB /* PBXContainerItemProxy */;
+		};
+		D23BC0040E06E425008937FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24592B60E031C81001AAB67 /* dmzArchivePluginAutoLoad */;
+			targetProxy = D23BC0030E06E425008937FB /* PBXContainerItemProxy */;
+		};
+		D23BC0060E06E428008937FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24592C60E031CC0001AAB67 /* dmzArchivePluginAutoSave */;
+			targetProxy = D23BC0050E06E428008937FB /* PBXContainerItemProxy */;
+		};
+		D23BC0080E06E42B008937FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24592E30E031F1A001AAB67 /* dmzArchivePluginQuickSave */;
+			targetProxy = D23BC0070E06E42B008937FB /* PBXContainerItemProxy */;
+		};
+		D23BC00A0E06E42E008937FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24592ED0E031FD5001AAB67 /* dmzArchivePluginUndo */;
+			targetProxy = D23BC0090E06E42E008937FB /* PBXContainerItemProxy */;
+		};
+		D23BC00C0E06E431008937FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24593CA0E03233A001AAB67 /* dmzArchivePluginInput */;
+			targetProxy = D23BC00B0E06E431008937FB /* PBXContainerItemProxy */;
+		};
 		D24592460E030F05001AAB67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = dmzKernel;
@@ -1133,6 +1274,31 @@
 				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
 				PREBINDING = NO;
 				SDKROOT = iphonesimulator2.0;
+			};
+			name = Release;
+		};
+		D23BBFFB0E06E419008937FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PREBINDING = NO;
+				PRODUCT_NAME = build_all;
+			};
+			name = Debug;
+		};
+		D23BBFFC0E06E419008937FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = build_all;
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -1328,6 +1494,15 @@
 			buildConfigurations = (
 				1DEB91F008733DB70010E9CD /* Debug */,
 				1DEB91F108733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D23BC0120E06E456008937FB /* Build configuration list for PBXNativeTarget "build_all" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D23BBFFB0E06E419008937FB /* Debug */,
+				D23BBFFC0E06E419008937FB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

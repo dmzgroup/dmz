@@ -14,20 +14,23 @@
 		7A3978FF0E01EBC900B484F3 /* xmlrole.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4933F30E01DA0B009C7A49 /* xmlrole.c */; };
 		7A3979000E01EBC900B484F3 /* xmltok.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A4933F50E01DA0B009C7A49 /* xmltok.c */; };
 		7A4934CD0E01E07C009C7A49 /* dmzXMLBase64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A4934270E01DA0B009C7A49 /* dmzXMLBase64.cpp */; };
-		7A4934CE0E01E07C009C7A49 /* dmzXMLBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934280E01DA0B009C7A49 /* dmzXMLBase64.h */; };
-		7A4934CF0E01E07C009C7A49 /* dmzXMLExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934290E01DA0B009C7A49 /* dmzXMLExport.h */; };
+		7A4934CE0E01E07C009C7A49 /* dmzXMLBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934280E01DA0B009C7A49 /* dmzXMLBase64.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A4934CF0E01E07C009C7A49 /* dmzXMLExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934290E01DA0B009C7A49 /* dmzXMLExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A4934D00E01E07C009C7A49 /* dmzXMLInterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342A0E01DA0B009C7A49 /* dmzXMLInterpreter.cpp */; };
 		7A4934D10E01E07C009C7A49 /* dmzXMLInterpreterConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342B0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.cpp */; };
-		7A4934D20E01E07C009C7A49 /* dmzXMLInterpreterConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49342C0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.h */; };
-		7A4934D30E01E07C009C7A49 /* dmzXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49342D0E01DA0B009C7A49 /* dmzXMLParser.h */; };
+		7A4934D20E01E07C009C7A49 /* dmzXMLInterpreterConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49342C0E01DA0B009C7A49 /* dmzXMLInterpreterConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A4934D30E01E07C009C7A49 /* dmzXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49342D0E01DA0B009C7A49 /* dmzXMLParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A4934D40E01E07C009C7A49 /* dmzXMLParserExpat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342E0E01DA0B009C7A49 /* dmzXMLParserExpat.cpp */; };
 		7A4934D50E01E07C009C7A49 /* dmzXMLUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342F0E01DA0B009C7A49 /* dmzXMLUtil.cpp */; };
-		7A4934D60E01E07C009C7A49 /* dmzXMLUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934300E01DA0B009C7A49 /* dmzXMLUtil.h */; };
-		7A4934EA0E01E8F5009C7A49 /* dmzFileCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49340B0E01DA0B009C7A49 /* dmzFileCache.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7A4934D60E01E07C009C7A49 /* dmzXMLUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934300E01DA0B009C7A49 /* dmzXMLUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A4934EB0E01E8F5009C7A49 /* dmzFileCacheLocal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49341B0E01DA0B009C7A49 /* dmzFileCacheLocal.h */; };
 		7A4934EC0E01E8F5009C7A49 /* dmzFileCacheLocalExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49341D0E01DA0B009C7A49 /* dmzFileCacheLocalExport.h */; };
-		7A4934F60E01E8F5009C7A49 /* dmzFileCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49340A0E01DA0B009C7A49 /* dmzFileCache.cpp */; };
 		7A4934F70E01E8F5009C7A49 /* dmzFileCacheLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49341A0E01DA0B009C7A49 /* dmzFileCacheLocal.cpp */; };
+		D20485FC0E02FF1B00F6444C /* dmzPluginMsgDump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A4934330E01DA0B009C7A49 /* dmzPluginMsgDump.cpp */; };
+		D204861E0E03005A00F6444C /* dmzPluginUndoDump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49343E0E01DA0C009C7A49 /* dmzPluginUndoDump.cpp */; };
+		D204861F0E03006600F6444C /* dmzPluginUndo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49343B0E01DA0C009C7A49 /* dmzPluginUndo.cpp */; };
+		D24592930E031108001AAB67 /* dmzApplicationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934090E01DA0B009C7A49 /* dmzApplicationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D24592940E031108001AAB67 /* dmzFileCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49340B0E01DA0B009C7A49 /* dmzFileCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,7 +38,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A4935060E01E91D009C7A49 /* expat */;
+			remoteGlobalIDString = 7A4935060E01E91D009C7A49;
 			remoteInfo = expat;
 		};
 		7A4934970E01DCA4009C7A49 /* PBXContainerItemProxy */ = {
@@ -58,6 +61,41 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzKernel;
+		};
+		D20485EA0E02FE5D00F6444C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A4934930E01DCA4009C7A49 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzKernel;
+		};
+		D20486040E02FFBC00F6444C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A4934930E01DCA4009C7A49 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzKernel;
+		};
+		D204860F0E02FFD000F6444C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A4934930E01DCA4009C7A49 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzKernel;
+		};
+		D24592A00E031AF6001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24592810E0310D3001AAB67 /* dmzFoundation */;
+			remoteInfo = dmzFoundation;
+		};
+		D24592A20E031AFF001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24592810E0310D3001AAB67 /* dmzFoundation */;
+			remoteInfo = dmzFoundation;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -145,6 +183,10 @@
 		7A4934930E01DCA4009C7A49 /* dmzKernel.xcodeproj */ = {isa = PBXFileReference; explicitFileType = "wrapper.pb-project"; name = dmzKernel.xcodeproj; path = ../dmzKernel/dmzKernel.xcodeproj; sourceTree = SOURCE_ROOT; };
 		7A4935040E01E8F5009C7A49 /* libdmzFileCacheLocal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzFileCacheLocal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A4935240E01E91D009C7A49 /* libexpat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libexpat.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D20485F60E02FE5D00F6444C /* libdmzPluginMsgDump.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzPluginMsgDump.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D204860C0E02FFBC00F6444C /* libdmzPluginUndoDump.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzPluginUndoDump.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D20486170E02FFD000F6444C /* libdmzPluginUndo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzPluginUndo.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D24592820E0310D3001AAB67 /* libdmzFoundation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdmzFoundation.a; path = "../../../../build/Debug-iphonesimulator/libdmzFoundation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2AAC046055464E500DB518D /* libdmzXML.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzXML.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -157,6 +199,34 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		7A4935200E01E91D009C7A49 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D20485F20E02FE5D00F6444C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D20486080E02FFBC00F6444C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D20486130E02FFD000F6444C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D24592800E0310D3001AAB67 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -413,6 +483,10 @@
 				D2AAC046055464E500DB518D /* libdmzXML.a */,
 				7A4935040E01E8F5009C7A49 /* libdmzFileCacheLocal.a */,
 				7A4935240E01E91D009C7A49 /* libexpat.a */,
+				D20485F60E02FE5D00F6444C /* libdmzPluginMsgDump.a */,
+				D204860C0E02FFBC00F6444C /* libdmzPluginUndoDump.a */,
+				D20486170E02FFD000F6444C /* libdmzPluginUndo.a */,
+				D24592820E0310D3001AAB67 /* libdmzFoundation.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -424,7 +498,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A4934EA0E01E8F5009C7A49 /* dmzFileCache.h in Headers */,
 				7A4934EB0E01E8F5009C7A49 /* dmzFileCacheLocal.h in Headers */,
 				7A4934EC0E01E8F5009C7A49 /* dmzFileCacheLocalExport.h in Headers */,
 			);
@@ -437,6 +510,36 @@
 				7A3978FB0E01EBC900B484F3 /* expat.h in Headers */,
 				7A3978FC0E01EBC900B484F3 /* expat_config.h in Headers */,
 				7A3978FD0E01EBC900B484F3 /* expat_external.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D20485EB0E02FE5D00F6444C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D20486050E02FFBC00F6444C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D20486100E02FFD000F6444C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D245927E0E0310D3001AAB67 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D24592930E031108001AAB67 /* dmzApplicationState.h in Headers */,
+				D24592940E031108001AAB67 /* dmzFileCache.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,6 +570,7 @@
 			);
 			dependencies = (
 				7A4934E70E01E8F5009C7A49 /* PBXTargetDependency */,
+				D24592A30E031AFF001AAB67 /* PBXTargetDependency */,
 			);
 			name = dmzFileCacheLocal;
 			productName = dmzFoundation;
@@ -490,6 +594,77 @@
 			productReference = 7A4935240E01E91D009C7A49 /* libexpat.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		D20485E80E02FE5D00F6444C /* dmzPluginMsgDump */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D20485F30E02FE5D00F6444C /* Build configuration list for PBXNativeTarget "dmzPluginMsgDump" */;
+			buildPhases = (
+				D20485EB0E02FE5D00F6444C /* Headers */,
+				D20485EF0E02FE5D00F6444C /* Sources */,
+				D20485F20E02FE5D00F6444C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D20485E90E02FE5D00F6444C /* PBXTargetDependency */,
+			);
+			name = dmzPluginMsgDump;
+			productName = dmzFoundation;
+			productReference = D20485F60E02FE5D00F6444C /* libdmzPluginMsgDump.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D20486020E02FFBC00F6444C /* dmzPluginUndoDump */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D20486090E02FFBC00F6444C /* Build configuration list for PBXNativeTarget "dmzPluginUndoDump" */;
+			buildPhases = (
+				D20486050E02FFBC00F6444C /* Headers */,
+				D20486060E02FFBC00F6444C /* Sources */,
+				D20486080E02FFBC00F6444C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D20486030E02FFBC00F6444C /* PBXTargetDependency */,
+			);
+			name = dmzPluginUndoDump;
+			productName = dmzFoundation;
+			productReference = D204860C0E02FFBC00F6444C /* libdmzPluginUndoDump.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D204860D0E02FFD000F6444C /* dmzPluginUndo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D20486140E02FFD000F6444C /* Build configuration list for PBXNativeTarget "dmzPluginUndo" */;
+			buildPhases = (
+				D20486100E02FFD000F6444C /* Headers */,
+				D20486110E02FFD000F6444C /* Sources */,
+				D20486130E02FFD000F6444C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D204860E0E02FFD000F6444C /* PBXTargetDependency */,
+			);
+			name = dmzPluginUndo;
+			productName = dmzFoundation;
+			productReference = D20486170E02FFD000F6444C /* libdmzPluginUndo.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D24592810E0310D3001AAB67 /* dmzFoundation */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D24592910E0310E3001AAB67 /* Build configuration list for PBXNativeTarget "dmzFoundation" */;
+			buildPhases = (
+				D245927E0E0310D3001AAB67 /* Headers */,
+				D245927F0E0310D3001AAB67 /* Sources */,
+				D24592800E0310D3001AAB67 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = dmzFoundation;
+			productName = dmzFoundation;
+			productReference = D24592820E0310D3001AAB67 /* libdmzFoundation.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		D2AAC045055464E500DB518D /* dmzXML */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "dmzXML" */;
@@ -503,6 +678,7 @@
 			dependencies = (
 				7A49349E0E01DCDA009C7A49 /* PBXTargetDependency */,
 				7A3979030E01EC5E00B484F3 /* PBXTargetDependency */,
+				D24592A10E031AF6001AAB67 /* PBXTargetDependency */,
 			);
 			name = dmzXML;
 			productName = dmzFoundation;
@@ -528,9 +704,13 @@
 			);
 			projectRoot = "";
 			targets = (
+				D24592810E0310D3001AAB67 /* dmzFoundation */,
 				D2AAC045055464E500DB518D /* dmzXML */,
 				7A4934E60E01E8F5009C7A49 /* dmzFileCacheLocal */,
 				7A4935060E01E91D009C7A49 /* expat */,
+				D20485E80E02FE5D00F6444C /* dmzPluginMsgDump */,
+				D20486020E02FFBC00F6444C /* dmzPluginUndoDump */,
+				D204860D0E02FFD000F6444C /* dmzPluginUndo */,
 			);
 		};
 /* End PBXProject section */
@@ -550,7 +730,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A4934F60E01E8F5009C7A49 /* dmzFileCache.cpp in Sources */,
 				7A4934F70E01E8F5009C7A49 /* dmzFileCacheLocal.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -562,6 +741,37 @@
 				7A3978FE0E01EBC900B484F3 /* xmlparse.c in Sources */,
 				7A3978FF0E01EBC900B484F3 /* xmlrole.c in Sources */,
 				7A3979000E01EBC900B484F3 /* xmltok.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D20485EF0E02FE5D00F6444C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D20485FC0E02FF1B00F6444C /* dmzPluginMsgDump.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D20486060E02FFBC00F6444C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D204861E0E03005A00F6444C /* dmzPluginUndoDump.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D20486110E02FFD000F6444C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D204861F0E03006600F6444C /* dmzPluginUndo.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D245927F0E0310D3001AAB67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,6 +804,31 @@
 			isa = PBXTargetDependency;
 			name = dmzKernel;
 			targetProxy = 7A4934E80E01E8F5009C7A49 /* PBXContainerItemProxy */;
+		};
+		D20485E90E02FE5D00F6444C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = dmzKernel;
+			targetProxy = D20485EA0E02FE5D00F6444C /* PBXContainerItemProxy */;
+		};
+		D20486030E02FFBC00F6444C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = dmzKernel;
+			targetProxy = D20486040E02FFBC00F6444C /* PBXContainerItemProxy */;
+		};
+		D204860E0E02FFD000F6444C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = dmzKernel;
+			targetProxy = D204860F0E02FFD000F6444C /* PBXContainerItemProxy */;
+		};
+		D24592A10E031AF6001AAB67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24592810E0310D3001AAB67 /* dmzFoundation */;
+			targetProxy = D24592A00E031AF6001AAB67 /* PBXContainerItemProxy */;
+		};
+		D24592A30E031AFF001AAB67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24592810E0310D3001AAB67 /* dmzFoundation */;
+			targetProxy = D24592A20E031AFF001AAB67 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -747,6 +982,154 @@
 			};
 			name = Release;
 		};
+		D20485F40E02FE5D00F6444C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\\\\\"$(SRCROOT)/../build/Debug-iphonesimulator\\\\\\\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
+				PRODUCT_NAME = dmzPluginMsgDump;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+			};
+			name = Debug;
+		};
+		D20485F50E02FE5D00F6444C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\\\\\"$(SRCROOT)/../build/Debug-iphonesimulator\\\\\\\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
+				PRODUCT_NAME = dmzFileCacheLocal;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+			};
+			name = Release;
+		};
+		D204860A0E02FFBC00F6444C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\\\\\\\\\\\\\"$(SRCROOT)/../build/Debug-iphonesimulator\\\\\\\\\\\\\\\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
+				PRODUCT_NAME = dmzPluginUndoDump;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+			};
+			name = Debug;
+		};
+		D204860B0E02FFBC00F6444C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\\\\\\\\\\\\\"$(SRCROOT)/../build/Debug-iphonesimulator\\\\\\\\\\\\\\\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
+				PRODUCT_NAME = dmzFileCacheLocal;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+			};
+			name = Release;
+		};
+		D20486150E02FFD000F6444C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"$(SRCROOT)/../build/Debug-iphonesimulator\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
+				PRODUCT_NAME = dmzPluginUndo;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+			};
+			name = Debug;
+		};
+		D20486160E02FFD000F6444C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"$(SRCROOT)/../build/Debug-iphonesimulator\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"",
+				);
+				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
+				PRODUCT_NAME = dmzFileCacheLocal;
+				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+			};
+			name = Release;
+		};
+		D24592830E0310D3001AAB67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzFoundation;
+			};
+			name = Debug;
+		};
+		D24592840E0310D3001AAB67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzFoundation;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -782,6 +1165,42 @@
 			buildConfigurations = (
 				7A4935220E01E91D009C7A49 /* Debug */,
 				7A4935230E01E91D009C7A49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D20485F30E02FE5D00F6444C /* Build configuration list for PBXNativeTarget "dmzPluginMsgDump" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D20485F40E02FE5D00F6444C /* Debug */,
+				D20485F50E02FE5D00F6444C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D20486090E02FFBC00F6444C /* Build configuration list for PBXNativeTarget "dmzPluginUndoDump" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D204860A0E02FFBC00F6444C /* Debug */,
+				D204860B0E02FFBC00F6444C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D20486140E02FFD000F6444C /* Build configuration list for PBXNativeTarget "dmzPluginUndo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D20486150E02FFD000F6444C /* Debug */,
+				D20486160E02FFD000F6444C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D24592910E0310E3001AAB67 /* Build configuration list for PBXNativeTarget "dmzFoundation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D24592830E0310D3001AAB67 /* Debug */,
+				D24592840E0310D3001AAB67 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -1,1 +1,3 @@
-build/**/*
+build
+*/*.xcodeproj/*.model1v3
+*/*.xcodeproj/*.pbxuser

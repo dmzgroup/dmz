@@ -1,0 +1,791 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D245935A0E032154001AAB67 /* dmzInputConsts.h in Headers */ = {isa = PBXBuildFile; fileRef = D245930E0E032115001AAB67 /* dmzInputConsts.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D245935B0E032154001AAB67 /* dmzInputMaskConsts.h in Headers */ = {isa = PBXBuildFile; fileRef = D24593100E032115001AAB67 /* dmzInputMaskConsts.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D245935C0E032154001AAB67 /* dmzInputModule.h in Headers */ = {isa = PBXBuildFile; fileRef = D24593120E032115001AAB67 /* dmzInputModule.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D245935D0E032154001AAB67 /* dmzInputObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = D24593140E032115001AAB67 /* dmzInputObserver.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D245936E0E0321B5001AAB67 /* dmzInputEventController.h in Headers */ = {isa = PBXBuildFile; fileRef = D24593180E032115001AAB67 /* dmzInputEventController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D245936F0E0321B5001AAB67 /* dmzInputEventKey.h in Headers */ = {isa = PBXBuildFile; fileRef = D245931A0E032115001AAB67 /* dmzInputEventKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D24593700E0321B5001AAB67 /* dmzInputEventMouse.h in Headers */ = {isa = PBXBuildFile; fileRef = D245931C0E032115001AAB67 /* dmzInputEventMouse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D24593710E0321B5001AAB67 /* dmzInputEventsExport.h in Headers */ = {isa = PBXBuildFile; fileRef = D245931E0E032115001AAB67 /* dmzInputEventsExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D24593720E0321D3001AAB67 /* dmzInputEventController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D24593170E032115001AAB67 /* dmzInputEventController.cpp */; };
+		D24593730E0321D3001AAB67 /* dmzInputEventKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D24593190E032115001AAB67 /* dmzInputEventKey.cpp */; };
+		D24593740E0321D3001AAB67 /* dmzInputEventMouse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D245931B0E032115001AAB67 /* dmzInputEventMouse.cpp */; };
+		D24593870E032237001AAB67 /* dmzInputEventMasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D24593200E032115001AAB67 /* dmzInputEventMasks.cpp */; };
+		D24593880E032237001AAB67 /* dmzInputEventMasks.h in Headers */ = {isa = PBXBuildFile; fileRef = D24593210E032115001AAB67 /* dmzInputEventMasks.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D24593890E032237001AAB67 /* dmzInputObserverUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D24593220E032115001AAB67 /* dmzInputObserverUtil.cpp */; };
+		D245938A0E032237001AAB67 /* dmzInputObserverUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D24593230E032115001AAB67 /* dmzInputObserverUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D245938B0E032237001AAB67 /* dmzInputUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = D24593250E032115001AAB67 /* dmzInputUtilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D245939F0E03227A001AAB67 /* dmzInputModuleBasic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D24593280E032115001AAB67 /* dmzInputModuleBasic.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D24593690E032199001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D24593650E032199001AAB67 /* dmzKernel.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC046055464E500DB518D /* libdmzInputFramework.a */;
+			remoteInfo = dmzKernel;
+		};
+		D245936C0E0321A1001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D24593650E032199001AAB67 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzKernel */;
+			remoteInfo = dmzKernel;
+		};
+		D24593830E03221E001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D24593650E032199001AAB67 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzKernel */;
+			remoteInfo = dmzKernel;
+		};
+		D24593850E032221001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzInputFramework */;
+			remoteInfo = dmzInputFramework;
+		};
+		D24593990E032264001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D24593650E032199001AAB67 /* dmzKernel.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzKernel */;
+			remoteInfo = dmzKernel;
+		};
+		D245939B0E032267001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24593610E032185001AAB67 /* dmzInputEvents */;
+			remoteInfo = dmzInputEvents;
+		};
+		D245939D0E03226D001AAB67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzInputFramework */;
+			remoteInfo = dmzInputFramework;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D245930E0E032115001AAB67 /* dmzInputConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputConsts.h; sourceTree = "<group>"; };
+		D245930F0E032115001AAB67 /* dmzInputFramework.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputFramework.lmk; sourceTree = "<group>"; };
+		D24593100E032115001AAB67 /* dmzInputMaskConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputMaskConsts.h; sourceTree = "<group>"; };
+		D24593110E032115001AAB67 /* dmzInputModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputModule.cpp; sourceTree = "<group>"; };
+		D24593120E032115001AAB67 /* dmzInputModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputModule.h; sourceTree = "<group>"; };
+		D24593130E032115001AAB67 /* dmzInputObserver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputObserver.cpp; sourceTree = "<group>"; };
+		D24593140E032115001AAB67 /* dmzInputObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputObserver.h; sourceTree = "<group>"; };
+		D24593170E032115001AAB67 /* dmzInputEventController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputEventController.cpp; sourceTree = "<group>"; };
+		D24593180E032115001AAB67 /* dmzInputEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputEventController.h; sourceTree = "<group>"; };
+		D24593190E032115001AAB67 /* dmzInputEventKey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputEventKey.cpp; sourceTree = "<group>"; };
+		D245931A0E032115001AAB67 /* dmzInputEventKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputEventKey.h; sourceTree = "<group>"; };
+		D245931B0E032115001AAB67 /* dmzInputEventMouse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputEventMouse.cpp; sourceTree = "<group>"; };
+		D245931C0E032115001AAB67 /* dmzInputEventMouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputEventMouse.h; sourceTree = "<group>"; };
+		D245931D0E032115001AAB67 /* dmzInputEvents.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputEvents.lmk; sourceTree = "<group>"; };
+		D245931E0E032115001AAB67 /* dmzInputEventsExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputEventsExport.h; sourceTree = "<group>"; };
+		D24593200E032115001AAB67 /* dmzInputEventMasks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputEventMasks.cpp; sourceTree = "<group>"; };
+		D24593210E032115001AAB67 /* dmzInputEventMasks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputEventMasks.h; sourceTree = "<group>"; };
+		D24593220E032115001AAB67 /* dmzInputObserverUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputObserverUtil.cpp; sourceTree = "<group>"; };
+		D24593230E032115001AAB67 /* dmzInputObserverUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputObserverUtil.h; sourceTree = "<group>"; };
+		D24593240E032115001AAB67 /* dmzInputUtil.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputUtil.lmk; sourceTree = "<group>"; };
+		D24593250E032115001AAB67 /* dmzInputUtilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputUtilExport.h; sourceTree = "<group>"; };
+		D24593280E032115001AAB67 /* dmzInputModuleBasic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputModuleBasic.cpp; sourceTree = "<group>"; };
+		D24593290E032115001AAB67 /* dmzInputModuleBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputModuleBasic.h; sourceTree = "<group>"; };
+		D245932A0E032115001AAB67 /* dmzInputModuleBasic.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputModuleBasic.lmk; sourceTree = "<group>"; };
+		D245932D0E032115001AAB67 /* dmzInputPluginControllerKey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginControllerKey.cpp; sourceTree = "<group>"; };
+		D245932E0E032115001AAB67 /* dmzInputPluginControllerKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginControllerKey.h; sourceTree = "<group>"; };
+		D245932F0E032115001AAB67 /* dmzInputPluginControllerKey.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginControllerKey.lmk; sourceTree = "<group>"; };
+		D24593300E032115001AAB67 /* dmzInputPluginControllerMacOS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginControllerMacOS.cpp; sourceTree = "<group>"; };
+		D24593310E032115001AAB67 /* dmzInputPluginControllerMacOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginControllerMacOS.h; sourceTree = "<group>"; };
+		D24593320E032115001AAB67 /* dmzInputPluginControllerMacOS.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginControllerMacOS.lmk; sourceTree = "<group>"; };
+		D24593330E032115001AAB67 /* dmzInputPluginControllerWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginControllerWin32.cpp; sourceTree = "<group>"; };
+		D24593340E032115001AAB67 /* dmzInputPluginControllerWin32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginControllerWin32.h; sourceTree = "<group>"; };
+		D24593350E032115001AAB67 /* dmzInputPluginControllerWin32.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginControllerWin32.lmk; sourceTree = "<group>"; };
+		D24593370E032115001AAB67 /* HID Utilities Read Me.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "HID Utilities Read Me.rtf"; sourceTree = "<group>"; };
+		D24593380E032115001AAB67 /* HID_Config_Utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Config_Utilities.c; sourceTree = "<group>"; };
+		D24593390E032115001AAB67 /* HID_Config_Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Config_Utilities.h; sourceTree = "<group>"; };
+		D245933A0E032115001AAB67 /* HID_Error_Handler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Error_Handler.c; sourceTree = "<group>"; };
+		D245933B0E032115001AAB67 /* HID_Error_Handler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Error_Handler.h; sourceTree = "<group>"; };
+		D245933C0E032115001AAB67 /* HID_Name_Lookup.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Name_Lookup.c; sourceTree = "<group>"; };
+		D245933D0E032115001AAB67 /* HID_Name_Lookup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Name_Lookup.h; sourceTree = "<group>"; };
+		D245933E0E032115001AAB67 /* HID_Queue_Utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Queue_Utilities.c; sourceTree = "<group>"; };
+		D245933F0E032115001AAB67 /* HID_Queue_Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Queue_Utilities.h; sourceTree = "<group>"; };
+		D24593400E032115001AAB67 /* HID_Transaction_Utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Transaction_Utilities.c; sourceTree = "<group>"; };
+		D24593410E032115001AAB67 /* HID_Transaction_Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Transaction_Utilities.h; sourceTree = "<group>"; };
+		D24593420E032115001AAB67 /* HID_Utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Utilities.c; sourceTree = "<group>"; };
+		D24593430E032115001AAB67 /* HID_Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Utilities.h; sourceTree = "<group>"; };
+		D24593440E032115001AAB67 /* HID_Utilities_External.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Utilities_External.h; sourceTree = "<group>"; };
+		D24593450E032115001AAB67 /* HID_Utilities_Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Utilities_Internal.h; sourceTree = "<group>"; };
+		D24593470E032115001AAB67 /* dmzInputPluginKeyEventToMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginKeyEventToMessage.cpp; sourceTree = "<group>"; };
+		D24593480E032115001AAB67 /* dmzInputPluginKeyEventToMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginKeyEventToMessage.h; sourceTree = "<group>"; };
+		D24593490E032115001AAB67 /* dmzInputPluginKeyEventToMessage.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginKeyEventToMessage.lmk; sourceTree = "<group>"; };
+		D245934A0E032115001AAB67 /* dmzInputPluginMouseEventToMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginMouseEventToMessage.cpp; sourceTree = "<group>"; };
+		D245934B0E032115001AAB67 /* dmzInputPluginMouseEventToMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginMouseEventToMessage.h; sourceTree = "<group>"; };
+		D245934C0E032115001AAB67 /* dmzInputPluginMouseEventToMessage.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginMouseEventToMessage.lmk; sourceTree = "<group>"; };
+		D245934D0E032115001AAB67 /* sample.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sample.xml; sourceTree = "<group>"; };
+		D245934F0E032115001AAB67 /* dmzInputPluginExit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginExit.cpp; sourceTree = "<group>"; };
+		D24593500E032115001AAB67 /* dmzInputPluginExit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginExit.h; sourceTree = "<group>"; };
+		D24593510E032115001AAB67 /* dmzInputPluginExit.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginExit.lmk; sourceTree = "<group>"; };
+		D24593530E032115001AAB67 /* dmzInputPluginChannelRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginChannelRules.h; sourceTree = "<group>"; };
+		D24593550E032115001AAB67 /* dmzInputPluginChannelSwitch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginChannelSwitch.cpp; sourceTree = "<group>"; };
+		D24593560E032115001AAB67 /* dmzInputPluginChannelSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginChannelSwitch.h; sourceTree = "<group>"; };
+		D24593570E032115001AAB67 /* dmzInputPluginChannelSwitch.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginChannelSwitch.lmk; sourceTree = "<group>"; };
+		D24593620E032185001AAB67 /* libdmzInputEvents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdmzInputEvents.a; path = "../../../../build/Debug-iphonesimulator/libdmzInputEvents.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D24593650E032199001AAB67 /* dmzKernel.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = dmzKernel.xcodeproj; path = ../dmzKernel/dmzKernel.xcodeproj; sourceTree = SOURCE_ROOT; };
+		D24593800E032218001AAB67 /* libdmzInputUtil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdmzInputUtil.a; path = "../../../../build/Debug-iphonesimulator/libdmzInputUtil.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D24593960E03225F001AAB67 /* libdmzInputModuleBasic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libdmzInputModuleBasic.a; path = "../../../../build/Debug-iphonesimulator/libdmzInputModuleBasic.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2AAC046055464E500DB518D /* libdmzInputFramework.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzInputFramework.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D24593600E032185001AAB67 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D245937E0E032218001AAB67 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D24593940E03225F001AAB67 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D289987405E68DCB004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* dmzInputFramework */ = {
+			isa = PBXGroup;
+			children = (
+				D24593650E032199001AAB67 /* dmzKernel.xcodeproj */,
+				D245930C0E032115001AAB67 /* input */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = dmzInputFramework;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC046055464E500DB518D /* libdmzInputFramework.a */,
+				D24593620E032185001AAB67 /* libdmzInputEvents.a */,
+				D24593800E032218001AAB67 /* libdmzInputUtil.a */,
+				D24593960E03225F001AAB67 /* libdmzInputModuleBasic.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D245930C0E032115001AAB67 /* input */ = {
+			isa = PBXGroup;
+			children = (
+				D245930D0E032115001AAB67 /* interfaces */,
+				D24593150E032115001AAB67 /* libs */,
+				D24593260E032115001AAB67 /* modules */,
+				D245932B0E032115001AAB67 /* plugins */,
+			);
+			name = input;
+			path = ../../frameworks/input;
+			sourceTree = SOURCE_ROOT;
+		};
+		D245930D0E032115001AAB67 /* interfaces */ = {
+			isa = PBXGroup;
+			children = (
+				D245930E0E032115001AAB67 /* dmzInputConsts.h */,
+				D245930F0E032115001AAB67 /* dmzInputFramework.lmk */,
+				D24593100E032115001AAB67 /* dmzInputMaskConsts.h */,
+				D24593110E032115001AAB67 /* dmzInputModule.cpp */,
+				D24593120E032115001AAB67 /* dmzInputModule.h */,
+				D24593130E032115001AAB67 /* dmzInputObserver.cpp */,
+				D24593140E032115001AAB67 /* dmzInputObserver.h */,
+			);
+			path = interfaces;
+			sourceTree = "<group>";
+		};
+		D24593150E032115001AAB67 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				D24593160E032115001AAB67 /* events */,
+				D245931F0E032115001AAB67 /* util */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		D24593160E032115001AAB67 /* events */ = {
+			isa = PBXGroup;
+			children = (
+				D24593170E032115001AAB67 /* dmzInputEventController.cpp */,
+				D24593180E032115001AAB67 /* dmzInputEventController.h */,
+				D24593190E032115001AAB67 /* dmzInputEventKey.cpp */,
+				D245931A0E032115001AAB67 /* dmzInputEventKey.h */,
+				D245931B0E032115001AAB67 /* dmzInputEventMouse.cpp */,
+				D245931C0E032115001AAB67 /* dmzInputEventMouse.h */,
+				D245931D0E032115001AAB67 /* dmzInputEvents.lmk */,
+				D245931E0E032115001AAB67 /* dmzInputEventsExport.h */,
+			);
+			path = events;
+			sourceTree = "<group>";
+		};
+		D245931F0E032115001AAB67 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				D24593200E032115001AAB67 /* dmzInputEventMasks.cpp */,
+				D24593210E032115001AAB67 /* dmzInputEventMasks.h */,
+				D24593220E032115001AAB67 /* dmzInputObserverUtil.cpp */,
+				D24593230E032115001AAB67 /* dmzInputObserverUtil.h */,
+				D24593240E032115001AAB67 /* dmzInputUtil.lmk */,
+				D24593250E032115001AAB67 /* dmzInputUtilExport.h */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		D24593260E032115001AAB67 /* modules */ = {
+			isa = PBXGroup;
+			children = (
+				D24593270E032115001AAB67 /* basic */,
+			);
+			path = modules;
+			sourceTree = "<group>";
+		};
+		D24593270E032115001AAB67 /* basic */ = {
+			isa = PBXGroup;
+			children = (
+				D24593280E032115001AAB67 /* dmzInputModuleBasic.cpp */,
+				D24593290E032115001AAB67 /* dmzInputModuleBasic.h */,
+				D245932A0E032115001AAB67 /* dmzInputModuleBasic.lmk */,
+			);
+			path = basic;
+			sourceTree = "<group>";
+		};
+		D245932B0E032115001AAB67 /* plugins */ = {
+			isa = PBXGroup;
+			children = (
+				D245932C0E032115001AAB67 /* controllers */,
+				D24593460E032115001AAB67 /* converters */,
+				D245934E0E032115001AAB67 /* exit */,
+				D24593520E032115001AAB67 /* rules */,
+				D24593540E032115001AAB67 /* switch */,
+			);
+			path = plugins;
+			sourceTree = "<group>";
+		};
+		D245932C0E032115001AAB67 /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D245932D0E032115001AAB67 /* dmzInputPluginControllerKey.cpp */,
+				D245932E0E032115001AAB67 /* dmzInputPluginControllerKey.h */,
+				D245932F0E032115001AAB67 /* dmzInputPluginControllerKey.lmk */,
+				D24593300E032115001AAB67 /* dmzInputPluginControllerMacOS.cpp */,
+				D24593310E032115001AAB67 /* dmzInputPluginControllerMacOS.h */,
+				D24593320E032115001AAB67 /* dmzInputPluginControllerMacOS.lmk */,
+				D24593330E032115001AAB67 /* dmzInputPluginControllerWin32.cpp */,
+				D24593340E032115001AAB67 /* dmzInputPluginControllerWin32.h */,
+				D24593350E032115001AAB67 /* dmzInputPluginControllerWin32.lmk */,
+				D24593360E032115001AAB67 /* macos */,
+			);
+			path = controllers;
+			sourceTree = "<group>";
+		};
+		D24593360E032115001AAB67 /* macos */ = {
+			isa = PBXGroup;
+			children = (
+				D24593370E032115001AAB67 /* HID Utilities Read Me.rtf */,
+				D24593380E032115001AAB67 /* HID_Config_Utilities.c */,
+				D24593390E032115001AAB67 /* HID_Config_Utilities.h */,
+				D245933A0E032115001AAB67 /* HID_Error_Handler.c */,
+				D245933B0E032115001AAB67 /* HID_Error_Handler.h */,
+				D245933C0E032115001AAB67 /* HID_Name_Lookup.c */,
+				D245933D0E032115001AAB67 /* HID_Name_Lookup.h */,
+				D245933E0E032115001AAB67 /* HID_Queue_Utilities.c */,
+				D245933F0E032115001AAB67 /* HID_Queue_Utilities.h */,
+				D24593400E032115001AAB67 /* HID_Transaction_Utilities.c */,
+				D24593410E032115001AAB67 /* HID_Transaction_Utilities.h */,
+				D24593420E032115001AAB67 /* HID_Utilities.c */,
+				D24593430E032115001AAB67 /* HID_Utilities.h */,
+				D24593440E032115001AAB67 /* HID_Utilities_External.h */,
+				D24593450E032115001AAB67 /* HID_Utilities_Internal.h */,
+			);
+			path = macos;
+			sourceTree = "<group>";
+		};
+		D24593460E032115001AAB67 /* converters */ = {
+			isa = PBXGroup;
+			children = (
+				D24593470E032115001AAB67 /* dmzInputPluginKeyEventToMessage.cpp */,
+				D24593480E032115001AAB67 /* dmzInputPluginKeyEventToMessage.h */,
+				D24593490E032115001AAB67 /* dmzInputPluginKeyEventToMessage.lmk */,
+				D245934A0E032115001AAB67 /* dmzInputPluginMouseEventToMessage.cpp */,
+				D245934B0E032115001AAB67 /* dmzInputPluginMouseEventToMessage.h */,
+				D245934C0E032115001AAB67 /* dmzInputPluginMouseEventToMessage.lmk */,
+				D245934D0E032115001AAB67 /* sample.xml */,
+			);
+			path = converters;
+			sourceTree = "<group>";
+		};
+		D245934E0E032115001AAB67 /* exit */ = {
+			isa = PBXGroup;
+			children = (
+				D245934F0E032115001AAB67 /* dmzInputPluginExit.cpp */,
+				D24593500E032115001AAB67 /* dmzInputPluginExit.h */,
+				D24593510E032115001AAB67 /* dmzInputPluginExit.lmk */,
+			);
+			path = exit;
+			sourceTree = "<group>";
+		};
+		D24593520E032115001AAB67 /* rules */ = {
+			isa = PBXGroup;
+			children = (
+				D24593530E032115001AAB67 /* dmzInputPluginChannelRules.h */,
+			);
+			path = rules;
+			sourceTree = "<group>";
+		};
+		D24593540E032115001AAB67 /* switch */ = {
+			isa = PBXGroup;
+			children = (
+				D24593550E032115001AAB67 /* dmzInputPluginChannelSwitch.cpp */,
+				D24593560E032115001AAB67 /* dmzInputPluginChannelSwitch.h */,
+				D24593570E032115001AAB67 /* dmzInputPluginChannelSwitch.lmk */,
+			);
+			path = switch;
+			sourceTree = "<group>";
+		};
+		D24593660E032199001AAB67 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D245936A0E032199001AAB67 /* libdmzKernel.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D245935E0E032185001AAB67 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D245936E0E0321B5001AAB67 /* dmzInputEventController.h in Headers */,
+				D245936F0E0321B5001AAB67 /* dmzInputEventKey.h in Headers */,
+				D24593700E0321B5001AAB67 /* dmzInputEventMouse.h in Headers */,
+				D24593710E0321B5001AAB67 /* dmzInputEventsExport.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D245937C0E032218001AAB67 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D24593880E032237001AAB67 /* dmzInputEventMasks.h in Headers */,
+				D245938A0E032237001AAB67 /* dmzInputObserverUtil.h in Headers */,
+				D245938B0E032237001AAB67 /* dmzInputUtilExport.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D24593920E03225F001AAB67 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2AAC043055464E500DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D245935A0E032154001AAB67 /* dmzInputConsts.h in Headers */,
+				D245935B0E032154001AAB67 /* dmzInputMaskConsts.h in Headers */,
+				D245935C0E032154001AAB67 /* dmzInputModule.h in Headers */,
+				D245935D0E032154001AAB67 /* dmzInputObserver.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D24593610E032185001AAB67 /* dmzInputEvents */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D245936B0E032199001AAB67 /* Build configuration list for PBXNativeTarget "dmzInputEvents" */;
+			buildPhases = (
+				D245935E0E032185001AAB67 /* Headers */,
+				D245935F0E032185001AAB67 /* Sources */,
+				D24593600E032185001AAB67 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D245936D0E0321A1001AAB67 /* PBXTargetDependency */,
+			);
+			name = dmzInputEvents;
+			productName = dmzInputEvents;
+			productReference = D24593620E032185001AAB67 /* libdmzInputEvents.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D245937F0E032218001AAB67 /* dmzInputUtil */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D24593910E03224C001AAB67 /* Build configuration list for PBXNativeTarget "dmzInputUtil" */;
+			buildPhases = (
+				D245937C0E032218001AAB67 /* Headers */,
+				D245937D0E032218001AAB67 /* Sources */,
+				D245937E0E032218001AAB67 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D24593840E03221E001AAB67 /* PBXTargetDependency */,
+				D24593860E032221001AAB67 /* PBXTargetDependency */,
+			);
+			name = dmzInputUtil;
+			productName = dmzInputUtil;
+			productReference = D24593800E032218001AAB67 /* libdmzInputUtil.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D24593950E03225F001AAB67 /* dmzInputModuleBasic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D24593A50E032283001AAB67 /* Build configuration list for PBXNativeTarget "dmzInputModuleBasic" */;
+			buildPhases = (
+				D24593920E03225F001AAB67 /* Headers */,
+				D24593930E03225F001AAB67 /* Sources */,
+				D24593940E03225F001AAB67 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D245939A0E032264001AAB67 /* PBXTargetDependency */,
+				D245939C0E032267001AAB67 /* PBXTargetDependency */,
+				D245939E0E03226D001AAB67 /* PBXTargetDependency */,
+			);
+			name = dmzInputModuleBasic;
+			productName = dmzInputModuleBasic;
+			productReference = D24593960E03225F001AAB67 /* libdmzInputModuleBasic.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D2AAC045055464E500DB518D /* dmzInputFramework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "dmzInputFramework" */;
+			buildPhases = (
+				D2AAC043055464E500DB518D /* Headers */,
+				D2AAC044055464E500DB518D /* Sources */,
+				D289987405E68DCB004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = dmzInputFramework;
+			productName = dmzInputFramework;
+			productReference = D2AAC046055464E500DB518D /* libdmzInputFramework.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "dmzInputFramework" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* dmzInputFramework */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = D24593660E032199001AAB67 /* Products */;
+					ProjectRef = D24593650E032199001AAB67 /* dmzKernel.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				D2AAC045055464E500DB518D /* dmzInputFramework */,
+				D24593610E032185001AAB67 /* dmzInputEvents */,
+				D245937F0E032218001AAB67 /* dmzInputUtil */,
+				D24593950E03225F001AAB67 /* dmzInputModuleBasic */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		D245936A0E032199001AAB67 /* libdmzKernel.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libdmzKernel.a;
+			remoteRef = D24593690E032199001AAB67 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D245935F0E032185001AAB67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D24593720E0321D3001AAB67 /* dmzInputEventController.cpp in Sources */,
+				D24593730E0321D3001AAB67 /* dmzInputEventKey.cpp in Sources */,
+				D24593740E0321D3001AAB67 /* dmzInputEventMouse.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D245937D0E032218001AAB67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D24593870E032237001AAB67 /* dmzInputEventMasks.cpp in Sources */,
+				D24593890E032237001AAB67 /* dmzInputObserverUtil.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D24593930E03225F001AAB67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D245939F0E03227A001AAB67 /* dmzInputModuleBasic.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2AAC044055464E500DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D245936D0E0321A1001AAB67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = dmzKernel;
+			targetProxy = D245936C0E0321A1001AAB67 /* PBXContainerItemProxy */;
+		};
+		D24593840E03221E001AAB67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = dmzKernel;
+			targetProxy = D24593830E03221E001AAB67 /* PBXContainerItemProxy */;
+		};
+		D24593860E032221001AAB67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC045055464E500DB518D /* dmzInputFramework */;
+			targetProxy = D24593850E032221001AAB67 /* PBXContainerItemProxy */;
+		};
+		D245939A0E032264001AAB67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = dmzKernel;
+			targetProxy = D24593990E032264001AAB67 /* PBXContainerItemProxy */;
+		};
+		D245939C0E032267001AAB67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24593610E032185001AAB67 /* dmzInputEvents */;
+			targetProxy = D245939B0E032267001AAB67 /* PBXContainerItemProxy */;
+		};
+		D245939E0E03226D001AAB67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC045055464E500DB518D /* dmzInputFramework */;
+			targetProxy = D245939D0E03226D001AAB67 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91EC08733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = dmzInputFramework;
+			};
+			name = Debug;
+		};
+		1DEB91ED08733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = dmzInputFramework;
+			};
+			name = Release;
+		};
+		1DEB91F008733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = iphonesimulator2.0;
+			};
+			name = Debug;
+		};
+		1DEB91F108733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/usr/local/include";
+				PREBINDING = NO;
+				SDKROOT = iphonesimulator2.0;
+			};
+			name = Release;
+		};
+		D24593630E032186001AAB67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputEvents;
+			};
+			name = Debug;
+		};
+		D24593640E032186001AAB67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputEvents;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		D24593810E032218001AAB67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputUtil;
+			};
+			name = Debug;
+		};
+		D24593820E032218001AAB67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputUtil;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		D24593970E032260001AAB67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputModuleBasic;
+			};
+			name = Debug;
+		};
+		D24593980E032260001AAB67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputModuleBasic;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "dmzInputFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91EC08733DB70010E9CD /* Debug */,
+				1DEB91ED08733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "dmzInputFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91F008733DB70010E9CD /* Debug */,
+				1DEB91F108733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D245936B0E032199001AAB67 /* Build configuration list for PBXNativeTarget "dmzInputEvents" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D24593630E032186001AAB67 /* Debug */,
+				D24593640E032186001AAB67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D24593910E03224C001AAB67 /* Build configuration list for PBXNativeTarget "dmzInputUtil" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D24593810E032218001AAB67 /* Debug */,
+				D24593820E032218001AAB67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D24593A50E032283001AAB67 /* Build configuration list for PBXNativeTarget "dmzInputModuleBasic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D24593970E032260001AAB67 /* Debug */,
+				D24593980E032260001AAB67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

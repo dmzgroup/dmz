@@ -6,6 +6,20 @@
 	objectVersion = 45;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		7A1FF6490E070950000132EF /* build_all */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 7A1FF6820E07097F000132EF /* Build configuration list for PBXAggregateTarget "build_all" */;
+			buildPhases = (
+			);
+			dependencies = (
+				7A1FF64D0E070956000132EF /* PBXTargetDependency */,
+			);
+			name = build_all;
+			productName = build_all;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		7A4931990E01D3A3009C7A49 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A4931980E01D3A3009C7A49 /* CoreFoundation.framework */; };
 		7A49326C0E01D3CC009C7A49 /* dmzKernelExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4931CC0E01D3CC009C7A49 /* dmzKernelExport.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -143,6 +157,16 @@
 		7A4933070E01D3CC009C7A49 /* dmzTypesUUID.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49326A0E01D3CC009C7A49 /* dmzTypesUUID.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		7A4933080E01D3CC009C7A49 /* dmzTypesVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49326B0E01D3CC009C7A49 /* dmzTypesVector.h */; settings = {ATTRIBUTES = (Private, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7A1FF64C0E070956000132EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = dmzKernel;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		7A4931980E01D3A3009C7A49 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -635,6 +659,7 @@
 			projectRoot = "";
 			targets = (
 				D2AAC045055464E500DB518D /* dmzKernel */,
+				7A1FF6490E070950000132EF /* build_all */,
 			);
 		};
 /* End PBXProject section */
@@ -710,6 +735,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		7A1FF64D0E070956000132EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC045055464E500DB518D /* dmzKernel */;
+			targetProxy = 7A1FF64C0E070956000132EF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		1DEB91EC08733DB70010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -770,6 +803,27 @@
 			};
 			name = Release;
 		};
+		7A1FF64A0E070950000132EF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = build_all;
+			};
+			name = Debug;
+		};
+		7A1FF64B0E070950000132EF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = build_all;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -787,6 +841,15 @@
 			buildConfigurations = (
 				1DEB91F008733DB70010E9CD /* Debug */,
 				1DEB91F108733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7A1FF6820E07097F000132EF /* Build configuration list for PBXAggregateTarget "build_all" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A1FF64A0E070950000132EF /* Debug */,
+				7A1FF64B0E070950000132EF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

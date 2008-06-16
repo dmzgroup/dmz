@@ -6,6 +6,27 @@
 	objectVersion = 45;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		7A1FF6D00E070A17000132EF /* build_all */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 7A1FF6EC0E070A4D000132EF /* Build configuration list for PBXAggregateTarget "build_all" */;
+			buildPhases = (
+			);
+			dependencies = (
+				7A1FF6E20E070A1E000132EF /* PBXTargetDependency */,
+				7A1FF6E00E070A1E000132EF /* PBXTargetDependency */,
+				7A1FF6DE0E070A1E000132EF /* PBXTargetDependency */,
+				7A1FF6DC0E070A1E000132EF /* PBXTargetDependency */,
+				7A1FF6DA0E070A1E000132EF /* PBXTargetDependency */,
+				7A1FF6D80E070A1E000132EF /* PBXTargetDependency */,
+				7A1FF6D60E070A1E000132EF /* PBXTargetDependency */,
+				7A1FF6D40E070A1E000132EF /* PBXTargetDependency */,
+			);
+			name = build_all;
+			productName = build_all;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		D24592340E030EC2001AAB67 /* dmzArchiveModule.h in Headers */ = {isa = PBXBuildFile; fileRef = D24592120E030EA4001AAB67 /* dmzArchiveModule.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D24592350E030EC2001AAB67 /* dmzArchiveObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = D24592140E030EA4001AAB67 /* dmzArchiveObserver.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -21,61 +42,68 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		D23BBFFD0E06E41D008937FB /* PBXContainerItemProxy */ = {
+		7A1FF6C40E070A09000132EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D24593A60E0322BF001AAB67 /* dmzInputFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D23BC0400E06E4C3008937FB /* libbuild_all.a */;
+			remoteInfo = build_all;
+		};
+		7A1FF6D30E070A1E000132EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzArchiveFramework */;
-			remoteInfo = dmzArchiveFramework;
+			remoteGlobalIDString = D24593CA0E03233A001AAB67 /* dmzArchivePluginInput */;
+			remoteInfo = dmzArchivePluginInput;
 		};
-		D23BBFFF0E06E420008937FB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D245923A0E030EE3001AAB67 /* dmzArchiveUtil */;
-			remoteInfo = dmzArchiveUtil;
-		};
-		D23BC0010E06E422008937FB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D24592580E030F6A001AAB67 /* dmzArchiveModuleBasic */;
-			remoteInfo = dmzArchiveModuleBasic;
-		};
-		D23BC0030E06E425008937FB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D24592B60E031C81001AAB67 /* dmzArchivePluginAutoLoad */;
-			remoteInfo = dmzArchivePluginAutoLoad;
-		};
-		D23BC0050E06E428008937FB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D24592C60E031CC0001AAB67 /* dmzArchivePluginAutoSave */;
-			remoteInfo = dmzArchivePluginAutoSave;
-		};
-		D23BC0070E06E42B008937FB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D24592E30E031F1A001AAB67 /* dmzArchivePluginQuickSave */;
-			remoteInfo = dmzArchivePluginQuickSave;
-		};
-		D23BC0090E06E42E008937FB /* PBXContainerItemProxy */ = {
+		7A1FF6D50E070A1E000132EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = D24592ED0E031FD5001AAB67 /* dmzArchivePluginUndo */;
 			remoteInfo = dmzArchivePluginUndo;
 		};
-		D23BC00B0E06E431008937FB /* PBXContainerItemProxy */ = {
+		7A1FF6D70E070A1E000132EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D24593CA0E03233A001AAB67 /* dmzArchivePluginInput */;
-			remoteInfo = dmzArchivePluginInput;
+			remoteGlobalIDString = D24592E30E031F1A001AAB67 /* dmzArchivePluginQuickSave */;
+			remoteInfo = dmzArchivePluginQuickSave;
+		};
+		7A1FF6D90E070A1E000132EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24592C60E031CC0001AAB67 /* dmzArchivePluginAutoSave */;
+			remoteInfo = dmzArchivePluginAutoSave;
+		};
+		7A1FF6DB0E070A1E000132EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24592B60E031C81001AAB67 /* dmzArchivePluginAutoLoad */;
+			remoteInfo = dmzArchivePluginAutoLoad;
+		};
+		7A1FF6DD0E070A1E000132EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D24592580E030F6A001AAB67 /* dmzArchiveModuleBasic */;
+			remoteInfo = dmzArchiveModuleBasic;
+		};
+		7A1FF6DF0E070A1E000132EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D245923A0E030EE3001AAB67 /* dmzArchiveUtil */;
+			remoteInfo = dmzArchiveUtil;
+		};
+		7A1FF6E10E070A1E000132EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzArchiveFramework */;
+			remoteInfo = dmzArchiveFramework;
 		};
 		D24592420E030EFE001AAB67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -325,7 +353,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D23BBFFA0E06E419008937FB /* libbuild_all.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libbuild_all.a; path = "../../../../build/Debug-iphonesimulator/libbuild_all.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D24592100E030EA4001AAB67 /* dmzArchiveFramework.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzArchiveFramework.lmk; sourceTree = "<group>"; };
 		D24592110E030EA4001AAB67 /* dmzArchiveModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchiveModule.cpp; sourceTree = "<group>"; };
 		D24592120E030EA4001AAB67 /* dmzArchiveModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchiveModule.h; sourceTree = "<group>"; };
@@ -367,13 +394,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		D23BBFF80E06E419008937FB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D24592390E030EE3001AAB67 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -456,7 +476,6 @@
 				D24592E40E031F1A001AAB67 /* libdmzArchivePluginQuickSave.a */,
 				D24592EE0E031FD5001AAB67 /* libdmzArchivePluginUndo.a */,
 				D24593CB0E03233A001AAB67 /* libdmzArchivePluginInput.a */,
-				D23BBFFA0E06E419008937FB /* libbuild_all.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -605,6 +624,7 @@
 				D24593B00E0322BF001AAB67 /* libdmzInputEvents.a */,
 				D24593B20E0322BF001AAB67 /* libdmzInputUtil.a */,
 				D24593B40E0322BF001AAB67 /* libdmzInputModuleBasic.a */,
+				7A1FF6C50E070A09000132EF /* libbuild_all.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -612,13 +632,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		D23BBFF60E06E419008937FB /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D24592370E030EE3001AAB67 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -682,31 +695,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		D23BBFF90E06E419008937FB /* build_all */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D23BC0120E06E456008937FB /* Build configuration list for PBXNativeTarget "build_all" */;
-			buildPhases = (
-				D23BBFF60E06E419008937FB /* Headers */,
-				D23BBFF70E06E419008937FB /* Sources */,
-				D23BBFF80E06E419008937FB /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D23BBFFE0E06E41D008937FB /* PBXTargetDependency */,
-				D23BC0000E06E420008937FB /* PBXTargetDependency */,
-				D23BC0020E06E422008937FB /* PBXTargetDependency */,
-				D23BC0040E06E425008937FB /* PBXTargetDependency */,
-				D23BC0060E06E428008937FB /* PBXTargetDependency */,
-				D23BC0080E06E42B008937FB /* PBXTargetDependency */,
-				D23BC00A0E06E42E008937FB /* PBXTargetDependency */,
-				D23BC00C0E06E431008937FB /* PBXTargetDependency */,
-			);
-			name = build_all;
-			productName = build_all;
-			productReference = D23BBFFA0E06E419008937FB /* libbuild_all.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		D245923A0E030EE3001AAB67 /* dmzArchiveUtil */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D24592440E030EFE001AAB67 /* Build configuration list for PBXNativeTarget "dmzArchiveUtil" */;
@@ -900,12 +888,19 @@
 				D24592E30E031F1A001AAB67 /* dmzArchivePluginQuickSave */,
 				D24592ED0E031FD5001AAB67 /* dmzArchivePluginUndo */,
 				D24593CA0E03233A001AAB67 /* dmzArchivePluginInput */,
-				D23BBFF90E06E419008937FB /* build_all */,
+				7A1FF6D00E070A17000132EF /* build_all */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		7A1FF6C50E070A09000132EF /* libbuild_all.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libbuild_all.a;
+			remoteRef = 7A1FF6C40E070A09000132EF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D24592430E030EFE001AAB67 /* libdmzKernel.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -993,13 +988,6 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
-		D23BBFF70E06E419008937FB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D24592380E030EE3001AAB67 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1066,45 +1054,45 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		D23BBFFE0E06E41D008937FB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D2AAC045055464E500DB518D /* dmzArchiveFramework */;
-			targetProxy = D23BBFFD0E06E41D008937FB /* PBXContainerItemProxy */;
-		};
-		D23BC0000E06E420008937FB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D245923A0E030EE3001AAB67 /* dmzArchiveUtil */;
-			targetProxy = D23BBFFF0E06E420008937FB /* PBXContainerItemProxy */;
-		};
-		D23BC0020E06E422008937FB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D24592580E030F6A001AAB67 /* dmzArchiveModuleBasic */;
-			targetProxy = D23BC0010E06E422008937FB /* PBXContainerItemProxy */;
-		};
-		D23BC0040E06E425008937FB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D24592B60E031C81001AAB67 /* dmzArchivePluginAutoLoad */;
-			targetProxy = D23BC0030E06E425008937FB /* PBXContainerItemProxy */;
-		};
-		D23BC0060E06E428008937FB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D24592C60E031CC0001AAB67 /* dmzArchivePluginAutoSave */;
-			targetProxy = D23BC0050E06E428008937FB /* PBXContainerItemProxy */;
-		};
-		D23BC0080E06E42B008937FB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D24592E30E031F1A001AAB67 /* dmzArchivePluginQuickSave */;
-			targetProxy = D23BC0070E06E42B008937FB /* PBXContainerItemProxy */;
-		};
-		D23BC00A0E06E42E008937FB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D24592ED0E031FD5001AAB67 /* dmzArchivePluginUndo */;
-			targetProxy = D23BC0090E06E42E008937FB /* PBXContainerItemProxy */;
-		};
-		D23BC00C0E06E431008937FB /* PBXTargetDependency */ = {
+		7A1FF6D40E070A1E000132EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D24593CA0E03233A001AAB67 /* dmzArchivePluginInput */;
-			targetProxy = D23BC00B0E06E431008937FB /* PBXContainerItemProxy */;
+			targetProxy = 7A1FF6D30E070A1E000132EF /* PBXContainerItemProxy */;
+		};
+		7A1FF6D60E070A1E000132EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24592ED0E031FD5001AAB67 /* dmzArchivePluginUndo */;
+			targetProxy = 7A1FF6D50E070A1E000132EF /* PBXContainerItemProxy */;
+		};
+		7A1FF6D80E070A1E000132EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24592E30E031F1A001AAB67 /* dmzArchivePluginQuickSave */;
+			targetProxy = 7A1FF6D70E070A1E000132EF /* PBXContainerItemProxy */;
+		};
+		7A1FF6DA0E070A1E000132EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24592C60E031CC0001AAB67 /* dmzArchivePluginAutoSave */;
+			targetProxy = 7A1FF6D90E070A1E000132EF /* PBXContainerItemProxy */;
+		};
+		7A1FF6DC0E070A1E000132EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24592B60E031C81001AAB67 /* dmzArchivePluginAutoLoad */;
+			targetProxy = 7A1FF6DB0E070A1E000132EF /* PBXContainerItemProxy */;
+		};
+		7A1FF6DE0E070A1E000132EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D24592580E030F6A001AAB67 /* dmzArchiveModuleBasic */;
+			targetProxy = 7A1FF6DD0E070A1E000132EF /* PBXContainerItemProxy */;
+		};
+		7A1FF6E00E070A1E000132EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D245923A0E030EE3001AAB67 /* dmzArchiveUtil */;
+			targetProxy = 7A1FF6DF0E070A1E000132EF /* PBXContainerItemProxy */;
+		};
+		7A1FF6E20E070A1E000132EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2AAC045055464E500DB518D /* dmzArchiveFramework */;
+			targetProxy = 7A1FF6E10E070A1E000132EF /* PBXContainerItemProxy */;
 		};
 		D24592460E030F05001AAB67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1277,26 +1265,22 @@
 			};
 			name = Release;
 		};
-		D23BBFFB0E06E419008937FB /* Debug */ = {
+		7A1FF6D10E070A17000132EF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				PREBINDING = NO;
 				PRODUCT_NAME = build_all;
 			};
 			name = Debug;
 		};
-		D23BBFFC0E06E419008937FB /* Release */ = {
+		7A1FF6D20E070A17000132EF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				PREBINDING = NO;
 				PRODUCT_NAME = build_all;
 				ZERO_LINK = NO;
 			};
@@ -1498,11 +1482,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D23BC0120E06E456008937FB /* Build configuration list for PBXNativeTarget "build_all" */ = {
+		7A1FF6EC0E070A4D000132EF /* Build configuration list for PBXAggregateTarget "build_all" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D23BBFFB0E06E419008937FB /* Debug */,
-				D23BBFFC0E06E419008937FB /* Release */,
+				7A1FF6D10E070A17000132EF /* Debug */,
+				7A1FF6D20E070A17000132EF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

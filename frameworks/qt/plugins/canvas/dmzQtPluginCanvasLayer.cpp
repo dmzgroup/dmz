@@ -165,7 +165,7 @@ dmz::QtPluginCanvasLayerModel::set_active_layer (const Handle Layer) {
 
       //const Handle PrevActiveLayer (_activeLayerHandle);
       
-      const Handle UndoHandle (_undo.start_record ("Layer Visible"));
+      // const Handle UndoHandle (_undo.start_record ("Layer Active"));
                      
       _objectModule->store_flag (Layer, _activeAttrHandle, True);
       
@@ -174,7 +174,7 @@ dmz::QtPluginCanvasLayerModel::set_active_layer (const Handle Layer) {
       //   _objectModule->store_flag (PrevActiveLayer, _activeAttrHandle, False);
       //}
       
-      _undo.stop_record (UndoHandle);
+      // _undo.stop_record (UndoHandle);
    }
 }
 

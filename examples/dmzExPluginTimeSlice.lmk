@@ -1,0 +1,6 @@
+lmk.set_name "dmzExPluginTimeSlice"
+lmk.set_type "plugin"
+lmk.add_files {"dmzExPluginTimeSlice.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+}

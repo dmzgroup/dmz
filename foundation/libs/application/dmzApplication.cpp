@@ -352,7 +352,7 @@ dmz::Application::start () {
       _state.startTime = _state.time.get_frame_time ();
       _state.frameCount = 0.0;
       _state.container.start_plugins ();
-      _state.rt.sync ();
+      _state.rt.update_time_slice ();
 
       FileCache *fc (FileCache::get_interface (_state.rt.get_context ()));
 
@@ -365,13 +365,13 @@ dmz::Application::start () {
 
 /*!
 
-\brief Syncs all Plugins.
-\return Returns dmz::True if sync should continue. Returns dmz::False if and
+\brief TimeSlices all Plugins.
+\return Returns dmz::True if time slices should continue. Returns dmz::False if and
 exit has been requested.
 
 */
 dmz::Boolean
-dmz::Application::sync () {
+dmz::Application::update_time_slice () {
 
    Boolean result (False);
 
@@ -381,7 +381,7 @@ dmz::Application::sync () {
 
       _state.frameCount++;
 
-      if (result) { _state.rt.sync (); }
+      if (result) { _state.rt.update_time_slice (); }
       else {
 
          _state.error = (_state.exitObs.get_status () == ExitStatusError ? True : False);
@@ -402,7 +402,7 @@ dmz::Application::sync () {
 dmz::Boolean
 dmz::Application::stop () {
 
-   _state.rt.sync ();
+   _state.rt.update_time_slice ();
    _state.container.stop_plugins ();
 
    const Float64 StopTime (_state.time.get_frame_time ());

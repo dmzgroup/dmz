@@ -186,7 +186,7 @@ dmz::InputPluginControllerWin32::InputPluginControllerWin32 (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       _log (Info),
       _channels (0) {
 
@@ -223,9 +223,9 @@ dmz::InputPluginControllerWin32::discover_plugin (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::InputPluginControllerWin32::update_sync (const Float64 DeltaTime) {
+dmz::InputPluginControllerWin32::update_time_slice (const Float64 DeltaTime) {
 
    if (_channels) {
 
@@ -235,7 +235,7 @@ dmz::InputPluginControllerWin32::update_sync (const Float64 DeltaTime) {
 
       while (controller) {
 
-         _sync_controller (*controller);
+         _time_slice_controller (*controller);
 
          controller = _controllerTable.get_next (it);
       }
@@ -308,7 +308,9 @@ dmz::InputPluginControllerWin32::_init_controller (Config &controller) {
 
    Definitions defs (get_plugin_runtime_context (), &_log);
    
-   const String ControllerName (config_to_string ("name", controller, "controller_default"));
+   const String ControllerName (
+      config_to_string ("name", controller, "controller_default"));
+
    const Handle SourceHandle (defs.create_named_handle (ControllerName));
    const String DeviceName (config_to_string ("device", controller));
    const UInt32 DeviceHandle (config_to_uint32 ("deviceId", controller, 0));
@@ -466,7 +468,8 @@ dmz::InputPluginControllerWin32::_init_hatswitch (ControllerStruct &cs, Config &
       }
       else {
 
-         _log.error << "Failed to map hatswitch " << AxisXHandle << " " << AxisYHandle<< endl;
+         _log.error << "Failed to map hatswitch " << AxisXHandle << " " << AxisYHandle
+            << endl;
       }
    }
 }
@@ -506,7 +509,7 @@ dmz::InputPluginControllerWin32::_init_button (ControllerStruct &cs, Config &cd)
 
 
 void
-dmz::InputPluginControllerWin32::_sync_controller (ControllerStruct &cs) {
+dmz::InputPluginControllerWin32::_time_slice_controller (ControllerStruct &cs) {
 
    if (_channels) {
 

@@ -5,7 +5,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTestPluginUtil.h>
 
 namespace dmz {
@@ -15,7 +15,7 @@ namespace dmz {
 
    class ObjectObserverUtilTest :
       public Plugin,
-      public Sync,
+      public TimeSlice,
       protected ObjectObserverUtil {
 
       public:
@@ -34,8 +34,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr) {;}
 
-         // Sync Interface
-         void update_sync (const Float64 TimeDelta);
+         // TimeSlice Interface
+         void update_time_slice (const Float64 TimeDelta);
 
          // Object Observer Interface
          void store_object_position (

@@ -41,9 +41,9 @@ dmz::RuntimeContextLog::~RuntimeContextLog () {
 }
 
 
-//! Syncs log messages created in other threads.
+//! TimeSlices log messages created in other threads.
 void
-dmz::RuntimeContextLog::sync () {
+dmz::RuntimeContextLog::update_time_slice () {
 
    if (_eventsToProcess) {
 

@@ -15,7 +15,7 @@ main (int argc, char *argv[]) {
    log.info << "Message 4" << dmz::endl;
    log.debug << "Message 5" << dmz::endl;
 
-   rt.sync ();
+   rt.update_time_slice ();
 
    return 0;
 }

@@ -10,7 +10,9 @@
 #include <QtGui/QtGui>
 
 
-dmz::QtPluginCanvasArchive::QtPluginCanvasArchive (const PluginInfo &Info, Config &local) :
+dmz::QtPluginCanvasArchive::QtPluginCanvasArchive (
+      const PluginInfo &Info,
+      Config &local) :
       Plugin (Info),
       ArchiveObserverUtil (Info, local),
       _log (Info),

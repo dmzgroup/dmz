@@ -52,7 +52,7 @@ namespace dmz {
             const Data *InData,
             Data *outData) const;
 
-         void sync ();
+         void update_time_slice ();
 
          Message create_message_type (
             const String &Name,

@@ -1,6 +1,0 @@
-lmk.set_name "dmzExPluginSync"
-lmk.set_type "plugin"
-lmk.add_files {"dmzExPluginSync.cpp",}
-lmk.add_libs {
-   "dmzKernel",
-}

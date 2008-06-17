@@ -6,7 +6,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimePluginContainer.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <QtGui/QGraphicsItem>
 
@@ -31,7 +31,7 @@ namespace dmz {
 
    class QtPluginCanvasObject : 
       public Plugin,
-      public Sync,
+      public TimeSlice,
       public ObjectObserverUtil {
 
       public:
@@ -47,8 +47,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
          // Object Observer Interface
          virtual void create_object (

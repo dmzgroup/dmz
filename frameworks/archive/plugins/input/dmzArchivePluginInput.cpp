@@ -83,7 +83,7 @@ dmz::ArchivePluginInput::EventStruct::send_event (InputModule *channels) {
 dmz::ArchivePluginInput::ArchivePluginInput (
       const PluginInfo &Info, Config &local) :
       Plugin (Info),
-      Sync (Info, SyncTypeRuntime, SyncModeSingle, 0.0),
+      TimeSlice (Info, TimeSliceTypeRuntime, TimeSliceModeSingle, 0.0),
       _log (Info),
       _defs (Info, &_log),
       _channels (0),
@@ -125,8 +125,8 @@ dmz::ArchivePluginInput::update_plugin_state (
             }
          }
       
-         set_sync_interval (_eventList->Delay);
-         start_sync ();
+         set_time_slice_interval (_eventList->Delay);
+         start_time_slice ();
       }
    }
    else if (State == PluginStateShutdown) { _destroy_events (); }
@@ -153,9 +153,9 @@ dmz::ArchivePluginInput::discover_plugin (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::ArchivePluginInput::update_sync (const Float64 DeltaTime) {
+dmz::ArchivePluginInput::update_time_slice (const Float64 DeltaTime) {
 
    if (_eventList) {
       
@@ -169,8 +169,8 @@ dmz::ArchivePluginInput::update_sync (const Float64 DeltaTime) {
       
       if (_eventList) {
 
-         set_sync_interval (_eventList->Delay);
-         start_sync ();
+         set_time_slice_interval (_eventList->Delay);
+         start_time_slice ();
       }
    }
 }

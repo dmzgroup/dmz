@@ -52,7 +52,7 @@ main (int argc, char *argv[]) {
 
       qtApp.processEvents ();
 
-   } while (app.sync ());
+   } while (app.update_time_slice ());
 
    app.stop ();
    app.unload_plugins ();

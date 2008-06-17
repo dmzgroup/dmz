@@ -17,24 +17,24 @@ dmz::RuntimeContextTime::RuntimeContextTime () :
       targetFrameLength (0.0),
       head (0),
       tail (0),
-      syncCount (0),
-      syncHead (0),
-      syncNext (0) {;}
+      timeSliceCount (0),
+      timeSliceHead (0),
+      timeSliceNext (0) {;}
 
 //! Destructor.
 dmz::RuntimeContextTime::~RuntimeContextTime () {
 
    if (head) { delete head; head = tail = 0; }
 
-   syncHead = 0;
-   syncNext = 0;
-   syncIndexTable.empty ();
+   timeSliceHead = 0;
+   timeSliceNext = 0;
+   timeSliceIndexTable.empty ();
 }
 
 
-//! Updates runtime time and updates Sync derived classes.
+//! Updates runtime time and updates TimeSlice derived classes.
 void
-dmz::RuntimeContextTime::sync () {
+dmz::RuntimeContextTime::update_time_slice () {
 
    const Float64 RealTime (get_time ());
    updateStruct *top = head;
@@ -95,7 +95,7 @@ dmz::RuntimeContextTime::sync () {
       currentTime += deltaTime;
    }
 
-   _update_sync (StartFrameTime, realDeltaTime);
+   _update_time_slice (StartFrameTime, realDeltaTime);
 
    previousRealTime = StartFrameTime;
 }
@@ -126,34 +126,34 @@ dmz::RuntimeContextTime::set_target_frequency (const Float64 Value) {
 
 
 dmz::Int32
-dmz::RuntimeContextTime::move_sync_to_end (const Handle TheHandle) {
+dmz::RuntimeContextTime::move_time_slice_to_end (const Handle TheHandle) {
 
    Int32 result (0);
 
-   Int32 *indexPtr = syncIndexTable.lookup (TheHandle);
+   Int32 *indexPtr = timeSliceIndexTable.lookup (TheHandle);
 
    if (!indexPtr) {
 
-      indexPtr = new Int32 (syncCount++);
+      indexPtr = new Int32 (timeSliceCount++);
 
-      if (!syncIndexTable.store (TheHandle, indexPtr)) {
+      if (!timeSliceIndexTable.store (TheHandle, indexPtr)) {
 
          delete indexPtr; indexPtr = 0;
       }
    }
    else {
 
-      *indexPtr = syncCount++;
-      SyncStruct *found (0);
-      SyncStruct *current (syncHead);
+      *indexPtr = timeSliceCount++;
+      TimeSliceStruct *found (0);
+      TimeSliceStruct *current (timeSliceHead);
 
       while (current && !found) {
 
-         if (current->SyncHandle == TheHandle) { found = current; }
+         if (current->TimeSliceHandle == TheHandle) { found = current; }
          current = current->next;
       }
 
-      if (found) { remove_sync (*found); start_sync (*found); }
+      if (found) { remove_time_slice (*found); start_time_slice (*found); }
    }
 
    if (indexPtr) { result = *indexPtr; }
@@ -162,23 +162,23 @@ dmz::RuntimeContextTime::move_sync_to_end (const Handle TheHandle) {
 }
 
 
-dmz::SyncStruct *
-dmz::RuntimeContextTime::create_sync_struct (
+dmz::TimeSliceStruct *
+dmz::RuntimeContextTime::create_time_slice_struct (
       const Handle TheHandle,
-      const SyncTypeEnum Type,
-      const SyncModeEnum Mode,
+      const TimeSliceTypeEnum Type,
+      const TimeSliceModeEnum Mode,
       const Float64 TimeInterval,
-      Sync &sync) {
+      TimeSlice &timeSlice) {
 
-   SyncStruct *result (0);
+   TimeSliceStruct *result (0);
 
-   Int32 *indexPtr = syncIndexTable.lookup (TheHandle);
+   Int32 *indexPtr = timeSliceIndexTable.lookup (TheHandle);
 
    if (!indexPtr) {
 
-      indexPtr = new Int32 (syncCount++);
+      indexPtr = new Int32 (timeSliceCount++);
 
-      if (!syncIndexTable.store (TheHandle, indexPtr)) {
+      if (!timeSliceIndexTable.store (TheHandle, indexPtr)) {
 
          delete indexPtr; indexPtr = 0;
       }
@@ -186,15 +186,18 @@ dmz::RuntimeContextTime::create_sync_struct (
 
    if (indexPtr) {
 
-      result = new SyncStruct (
+      result = new TimeSliceStruct (
          TheHandle,
          *indexPtr,
          Type,
          Mode,
          TimeInterval,
-         sync);
+         timeSlice);
 
-      if (result && (result->mode == SyncModeRepeating)) { start_sync (*result); }
+      if (result && (result->mode == TimeSliceModeRepeating)) {
+
+         start_time_slice (*result);
+      }
    }
 
    return result;
@@ -202,37 +205,37 @@ dmz::RuntimeContextTime::create_sync_struct (
 
 
 dmz::Boolean
-dmz::RuntimeContextTime::start_sync (SyncStruct &sync) {
+dmz::RuntimeContextTime::start_time_slice (TimeSliceStruct &timeSlice) {
 
-   if (!sync.next && !sync.prev && (syncHead != &sync)) {
+   if (!timeSlice.next && !timeSlice.prev && (timeSliceHead != &timeSlice)) {
 
-      if (!syncHead) { syncHead = &sync; }
+      if (!timeSliceHead) { timeSliceHead = &timeSlice; }
       else {
 
-         SyncStruct *current (syncHead);
+         TimeSliceStruct *current (timeSliceHead);
 
          while (current) {
 
-            if (current->Index > sync.Index) {
+            if (current->Index > timeSlice.Index) {
 
-               if (!current->prev) { sync.prev = 0; syncHead = &sync; }
+               if (!current->prev) { timeSlice.prev = 0; timeSliceHead = &timeSlice; }
                else {
 
-                  current->prev->next = &sync;
-                  sync.prev = current->prev;
+                  current->prev->next = &timeSlice;
+                  timeSlice.prev = current->prev;
                }
 
-               sync.next = current;
-               current->prev = &sync;
+               timeSlice.next = current;
+               current->prev = &timeSlice;
                current = 0;
             }
             else {
 
                if (!current->next) {
 
-                  current->next = &sync;
-                  sync.prev = current;
-                  sync.next = 0;
+                  current->next = &timeSlice;
+                  timeSlice.prev = current;
+                  timeSlice.next = 0;
                   current = 0;
                }
                else { current = current->next; }
@@ -241,11 +244,12 @@ dmz::RuntimeContextTime::start_sync (SyncStruct &sync) {
       }
    }
 
-   sync.active = True;
+   timeSlice.active = True;
 
-   if (!sync.continuous) {
+   if (!timeSlice.continuous) {
 
-      sync.nextSync = sync.timeInterval + (sync.system ? get_time () : currentTime);
+      timeSlice.nextTimeSlice =
+         timeSlice.timeInterval + (timeSlice.system ? get_time () : currentTime);
    }
 
    return True;
@@ -253,27 +257,27 @@ dmz::RuntimeContextTime::start_sync (SyncStruct &sync) {
 
 
 dmz::Boolean
-dmz::RuntimeContextTime::stop_sync (SyncStruct &sync) {
+dmz::RuntimeContextTime::stop_time_slice (TimeSliceStruct &timeSlice) {
 
-   sync.active = False;
+   timeSlice.active = False;
 
    return True;
 }
 
 
 dmz::Boolean
-dmz::RuntimeContextTime::remove_sync (SyncStruct &sync) {
+dmz::RuntimeContextTime::remove_time_slice (TimeSliceStruct &timeSlice) {
 
-   stop_sync (sync);
+   stop_time_slice (timeSlice);
 
-   if (&sync == syncNext) { syncNext = sync.next; }
+   if (&timeSlice == timeSliceNext) { timeSliceNext = timeSlice.next; }
 
-   if (sync.next) { sync.next->prev = sync.prev; }
-   if (sync.prev) { sync.prev->next = sync.next; }
+   if (timeSlice.next) { timeSlice.next->prev = timeSlice.prev; }
+   if (timeSlice.prev) { timeSlice.prev->next = timeSlice.next; }
 
-   if (&sync == syncHead) { syncHead = sync.next; }
+   if (&timeSlice == timeSliceHead) { timeSliceHead = timeSlice.next; }
 
-   sync.next = sync.prev = 0;
+   timeSlice.next = timeSlice.prev = 0;
 
    return True;
 }
@@ -294,61 +298,68 @@ dmz::RuntimeContextTime::_add_update (updateStruct *ptr) {
 
 
 void
-dmz::RuntimeContextTime::_update_sync (const Float64 RealTime, const Float64 RealDelta) {
+dmz::RuntimeContextTime::_update_time_slice (
+      const Float64 RealTime,
+      const Float64 RealDelta) {
 
-   if (syncHead) {
+   if (timeSliceHead) {
 
-      SyncStruct *current = syncHead;
+      TimeSliceStruct *current = timeSliceHead;
 
       while (current) {
 
-         syncNext = current->next;
+         timeSliceNext = current->next;
 
          if (current->active) {
 
             if (current->continuous) {
 
-               current->sync.update_sync (current->system ? RealDelta : deltaTime);
-               if (current->mode == SyncModeSingle) { stop_sync (*current); }
+               current->timeSlice.update_time_slice (
+                  current->system ? RealDelta : deltaTime);
+
+               if (current->mode == TimeSliceModeSingle) { stop_time_slice (*current); }
             }
             else {
 
                const Float64 TheTime (current->system ? RealTime : currentTime);
 
-               if (current->nextSync <= TheTime) {
+               if (current->nextTimeSlice <= TheTime) {
 
                   const Float64 TempDelta (
-                     current->timeInterval + (TheTime - current->nextSync));
+                     current->timeInterval + (TheTime - current->nextTimeSlice));
 
-                  if (current->mode == SyncModeSingle) { stop_sync (*current); }
+                  if (current->mode == TimeSliceModeSingle) {
+
+                     stop_time_slice (*current);
+                  }
                   else {
 
-                     current->nextSync += current->timeInterval;
+                     current->nextTimeSlice += current->timeInterval;
 
-                     if (current->nextSync <= TheTime) {
+                     if (current->nextTimeSlice <= TheTime) {
 
                         if (current->timeInterval > 0.0) {
 
                            double multiplier (0.0);
 
                            modf (
-                              (TheTime - current->nextSync) / current->timeInterval,
+                              (TheTime - current->nextTimeSlice) / current->timeInterval,
                               &multiplier);
 
-                           current->nextSync +=
+                           current->nextTimeSlice +=
                               (multiplier + 1.0) * current->timeInterval;
                         }
                      }
                   }
 
                   // This must be the last usage of current because it may be deleted in
-                  // the update_sync call
-                  current->sync.update_sync (TempDelta);
+                  // the update_time_slice call
+                  current->timeSlice.update_time_slice (TempDelta);
                }
             }
          }
 
-         current = syncNext;
+         current = timeSliceNext;
       }
    }
 }

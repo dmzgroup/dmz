@@ -201,7 +201,8 @@ dmz::QtPluginRenderPick2d::_get_object_handle (const QPoint &ScreenPos) {
 
                   bool ok (false);
 
-                  qlonglong data (item->data (QtCanvasObjectHandleIndex).toULongLong (&ok));
+                  qlonglong data (
+                     item->data (QtCanvasObjectHandleIndex).toULongLong (&ok));
 
                   if (ok && !objectHandle && data) {
                      

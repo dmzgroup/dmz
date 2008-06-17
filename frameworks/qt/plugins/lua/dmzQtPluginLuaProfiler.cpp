@@ -21,7 +21,7 @@ static const QString LocalStop ("Stop");
 
 dmz::QtPluginLuaProfiler::QtPluginLuaProfiler (const PluginInfo &Info, Config &local) :
       Plugin (Info),
-      Sync (Info, SyncTypeSystemTime, SyncModeSingle, 30.0),
+      TimeSlice (Info, TimeSliceTypeSystemTime, TimeSliceModeSingle, 30.0),
       MessageObserver (Info),
       LuaObserver (Info),
       _log (Info),
@@ -35,7 +35,7 @@ dmz::QtPluginLuaProfiler::QtPluginLuaProfiler (const PluginInfo &Info, Config &l
    _ui.startButton->setEnabled (false);
    _ui.startButton->setText (LocalStart);
    _ui.timeSpinBox->setEnabled (false);
-   _ui.timeSpinBox->setValue ((int)get_sync_interval ());
+   _ui.timeSpinBox->setValue ((int)get_time_slice_interval ());
    _ui.stepsSpinBox->setEnabled (false);
 
    _init (local);
@@ -77,9 +77,9 @@ dmz::QtPluginLuaProfiler::update_plugin_state (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::QtPluginLuaProfiler::update_sync (const Float64 TimeDelta) {
+dmz::QtPluginLuaProfiler::update_time_slice (const Float64 TimeDelta) {
 
    if (_profiling) { on_startButton_clicked (); }
 }
@@ -123,7 +123,7 @@ dmz::QtPluginLuaProfiler::remove_lua_module (
       _ui.startButton->setEnabled (false);
       _ui.timeSpinBox->setEnabled (false);
       _ui.stepsSpinBox->setEnabled (false);
-      stop_sync ();
+      stop_time_slice ();
       _luaMod = 0;
    }
 }
@@ -179,7 +179,7 @@ dmz::QtPluginLuaProfiler::on_startButton_clicked () {
          _ui.stepsSpinBox->setEnabled (true);
          _profiling = False;
          _luaMod->release_lua_observer (LuaHookCountMask, *this);
-         stop_sync ();
+         stop_time_slice ();
          _create_profile_table ();
       }
       else {
@@ -191,7 +191,7 @@ dmz::QtPluginLuaProfiler::on_startButton_clicked () {
          _luaMod->register_lua_observer (LuaHookCountMask, *this);
          _hookCount = 0.0;
          _statsTable.empty ();
-         start_sync ();
+         start_time_slice ();
       }
    }
 }
@@ -200,7 +200,7 @@ dmz::QtPluginLuaProfiler::on_startButton_clicked () {
 void
 dmz::QtPluginLuaProfiler::on_timeSpinBox_valueChanged (int value) {
 
-   set_sync_interval ((Float64)value);
+   set_time_slice_interval ((Float64)value);
 }
 
 

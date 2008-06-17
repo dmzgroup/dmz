@@ -16,7 +16,7 @@ dmz::RenderExtViewerOSG::RenderExtViewerOSG (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       _log (Info),
       _core (0),
       _channels (0),
@@ -124,7 +124,7 @@ dmz::RenderExtViewerOSG::discover_plugin (
 
 
 void
-dmz::RenderExtViewerOSG::update_sync (const Float64 TimeDelta) {
+dmz::RenderExtViewerOSG::update_time_slice (const Float64 TimeDelta) {
 
    if (_viewer.valid ()) {
 

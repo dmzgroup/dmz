@@ -66,7 +66,7 @@ dmz::QtPluginCanvasLayerModel::QtPluginCanvasLayerModel (
       QObject *parent) :
       QAbstractItemModel (parent),
       ObjectObserverUtil (Info, Local),
-      Sync (Info),
+      TimeSlice (Info),
       _log (Info),
       _undo (Info),
       _defs (Info, &_log),
@@ -285,7 +285,10 @@ dmz::QtPluginCanvasLayerModel::delete_active_layer () {
 
 // QAbstractItemModel Interface
 QModelIndex
-dmz::QtPluginCanvasLayerModel::index (int row, int column, const QModelIndex &Parent) const {
+dmz::QtPluginCanvasLayerModel::index (
+      int row,
+      int column,
+      const QModelIndex &Parent) const {
 
    QModelIndex retVal;
 
@@ -424,7 +427,8 @@ dmz::QtPluginCanvasLayerModel::setData (
 
                const String Name (qPrintable (Value.toString ()));
                
-               undoHandle = _undo.start_record (String ("Layer name changed to: ") + Name);
+               undoHandle =
+                  _undo.start_record (String ("Layer name changed to: ") + Name);
                
                retVal = _objectModule->store_text (layerHandle, _nameAttrHandle, Name);
             }
@@ -785,7 +789,7 @@ dmz::QtPluginCanvasLayerModel::update_object_text (
 
 
 void
-dmz::QtPluginCanvasLayerModel::update_sync (const Float64 TimeDelta) {
+dmz::QtPluginCanvasLayerModel::update_time_slice (const Float64 TimeDelta) {
 
    if (_layersUpdated) {
 
@@ -1064,7 +1068,8 @@ dmz::QtPluginCanvasLayerModel::_get_item (const Handle ObjectHandle) const {
 
 
 dmz::Handle
-dmz::QtPluginCanvasLayerModel::_get_previous_layer_handle (const Handle ObjectHandle) const {
+dmz::QtPluginCanvasLayerModel::_get_previous_layer_handle (
+      const Handle ObjectHandle) const {
 
    Handle retVal (0);
 
@@ -1179,7 +1184,8 @@ dmz::QtPluginCanvasLayerModel::_remove_layer (const Handle SourceHandle) {
 
          if (SuperHandle) {
 
-            result = _objectModule->link_objects (_orderAttrHandle, SuperHandle, SubHandle);
+            result =
+               _objectModule->link_objects (_orderAttrHandle, SuperHandle, SubHandle);
          }
       }
    }
@@ -1246,10 +1252,12 @@ dmz::QtPluginCanvasLayerModel::_move_layer (
 // ============================================================================
 
 
-dmz::QtPluginCanvasLayer::QtPluginCanvasLayer (const PluginInfo &Info, const Config &Local) :
+dmz::QtPluginCanvasLayer::QtPluginCanvasLayer (
+      const PluginInfo &Info,
+      const Config &Local) :
       QWidget (0),
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       _log (Info),
       _defs (Info, &_log),
       _canvasModule (0),
@@ -1393,7 +1401,8 @@ dmz::QtPluginCanvasLayer::discover_plugin (
          _objectModule = 0;
       }
 
-      if (_mainWindowModule && (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
+      if (_mainWindowModule &&
+            (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
 
          _mainWindowModule->remove_dock_widget (_channel, _dock);
          _mainWindowModule = 0;
@@ -1403,7 +1412,7 @@ dmz::QtPluginCanvasLayer::discover_plugin (
 
 
 void
-dmz::QtPluginCanvasLayer::update_sync (const Float64 TimeDelta) {
+dmz::QtPluginCanvasLayer::update_time_slice (const Float64 TimeDelta) {
    
    if (_layerModel.rowCount (QModelIndex ()) == 0) {
    

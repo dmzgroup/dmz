@@ -4,13 +4,16 @@
 #include <dmzNetModulePacketIO.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableUInt32Template.h>
 #include <nl.h>
 
 namespace dmz {
 
-   class NetModulePacketIOHawkNL : public Plugin, public Sync, public NetModulePacketIO {
+   class NetModulePacketIOHawkNL :
+         public Plugin,
+         public TimeSlice,
+         public NetModulePacketIO {
 
       public:
          NetModulePacketIOHawkNL (const PluginInfo &Info, Config &local);
@@ -25,8 +28,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr) {;}
 
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
          // Net Module Packet IO Interface
          virtual Boolean register_packet_observer (NetPacketObserver &obs);

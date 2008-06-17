@@ -4,7 +4,7 @@
 #include <dmzInputEventController.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableUInt32Template.h>
 
@@ -16,7 +16,7 @@ namespace dmz {
 
    class InputModule;
 
-   class InputPluginControllerWin32 : public Plugin, public Sync {
+   class InputPluginControllerWin32 : public Plugin, public TimeSlice {
 
       public:
          //! \cond
@@ -35,8 +35,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
-         // Sync Interface
-         virtual void update_sync (const Float64 DeltaTime);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 DeltaTime);
 
       protected:
          struct DeviceStruct {
@@ -119,7 +119,7 @@ namespace dmz {
          void _init_axis (ControllerStruct &cs, Config &cd);
          void _init_hatswitch (ControllerStruct &cs, Config &cd);
          void _init_button (ControllerStruct &cs, Config &cd);
-         void _sync_controller (ControllerStruct &cs);
+         void _time_slice_controller (ControllerStruct &cs);
 
          Log _log;
          InputModule *_channels;

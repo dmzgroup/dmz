@@ -265,7 +265,8 @@ dmz::NetModulePacketCodecBasic::_discover_codec (const Plugin *PluginPtr) {
 
             if (objCodec && hs->objects.get_count ()) {
 
-               EncodeObjectStruct *eos (new EncodeObjectStruct (hs->PacketHandle, *objCodec));
+               EncodeObjectStruct *eos (
+                  new EncodeObjectStruct (hs->PacketHandle, *objCodec));
 
                if (eos && _objEncodeTable.store (hs->PacketHandle, eos)) {
 
@@ -285,7 +286,8 @@ dmz::NetModulePacketCodecBasic::_discover_codec (const Plugin *PluginPtr) {
             }
             else if (eventCodec && hs->events.get_count ()) {
 
-               EncodeEventStruct *ees (new EncodeEventStruct (hs->PacketHandle, *eventCodec));
+               EncodeEventStruct *ees (
+                  new EncodeEventStruct (hs->PacketHandle, *eventCodec));
 
                if (ees && _eventEncodeTable.store (hs->PacketHandle, ees)) {
 

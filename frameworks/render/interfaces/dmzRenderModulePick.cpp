@@ -25,13 +25,17 @@ and not equal to the Plugin's name.
 \fn dmz::RenderModulePick::~RenderModulePick ();
 \brief Destructor
          
-\fn dmz::Boolean dmz::RenderModulePick::register_pick_2d (const Handle Source, RenderPick2d &pick)
+\fn dmz::Boolean dmz::RenderModulePick::register_pick_2d (
+const Handle Source,
+RenderPick2d &pick)
 \brief Registers a 2D pick source with the module.
 \param[in] Source Unique runtime handle of the source.
 \param[in] pick Reference to the 2D pick interface.
 \return Returns dmz::True if the 2D pick interface was successfully registered.
 
-\fn dmz::Boolean dmz::RenderModulePick::release_pick_2d (const Handle Source, RenderPick2d &pick)
+\fn dmz::Boolean dmz::RenderModulePick::release_pick_2d (
+const Handle Source,
+RenderPick2d &pick)
 \brief Releases a 2D pick source from the module.
 \param[in] Source Unique runtime handle of the source.
 \param[in] pick Reference to the 2D pick interface to release.

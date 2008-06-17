@@ -8,7 +8,9 @@
 #include <QtGui/QtGui>
 
 
-dmz::QtPluginButtonToChannel::QtPluginButtonToChannel (const PluginInfo &Info, Config &local) :
+dmz::QtPluginButtonToChannel::QtPluginButtonToChannel (
+      const PluginInfo &Info,
+      Config &local) :
       QWidget (0),
       Plugin (Info),
       _log (Info),
@@ -93,7 +95,8 @@ dmz::QtPluginButtonToChannel::discover_plugin (
          _inputModule = 0;
       }
 
-      if (_mainWindowModule && (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
+      if (_mainWindowModule &&
+            (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
 
          _mainWindowModule->remove_dock_widget (_channel, _dock);
 

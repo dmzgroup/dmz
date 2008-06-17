@@ -5,13 +5,13 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 
 namespace dmz {
 
    class ExPluginMessageSend :
          public Plugin,
-         public Sync {
+         public TimeSlice {
 
       public:
          ExPluginMessageSend (const PluginInfo &Info, Config &local);
@@ -26,8 +26,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr) {;}
 
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
       protected:
          void _init (Config &local);

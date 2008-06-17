@@ -55,7 +55,10 @@ dmz::RenderPluginLoadModelOSG::discover_plugin (
                   // Attach transform to static object tree
                   osg::Matrix mat = to_osg_matrix (
                      *_rotationTable.lookup (*currentFileName));
-                  mat.translate (to_osg_vector (*_positionTable.lookup (*currentFileName)));
+
+                  mat.translate (
+                     to_osg_vector (*_positionTable.lookup (*currentFileName)));
+
                   osg::ref_ptr<osg::MatrixTransform> matTransform = 
                      new osg::MatrixTransform (mat);
                   matTransform->addChild (model.get ());

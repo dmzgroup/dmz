@@ -12,7 +12,7 @@ dmz::EntityPluginPortalTether::EntityPluginPortalTether (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       InputObserverUtil (Info, local),
       _handle (0),
@@ -58,9 +58,9 @@ dmz::EntityPluginPortalTether::discover_plugin (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::EntityPluginPortalTether::update_sync (const Float64 TimeDelta) {
+dmz::EntityPluginPortalTether::update_time_slice (const Float64 TimeDelta) {
 
    if (_active > 0) {
 

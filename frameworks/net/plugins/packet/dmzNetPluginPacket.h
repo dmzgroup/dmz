@@ -8,7 +8,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzSystem.h>
 #include <dmzSystemMarshal.h>
 #include <dmzSystemUnmarshal.h>
@@ -18,7 +18,7 @@ namespace dmz {
 
    class NetPluginPacket :
          public Plugin,
-         public Sync,
+         public TimeSlice,
          public NetPacketObserver,
          public ObjectObserverUtil {
 
@@ -40,7 +40,7 @@ namespace dmz {
             const Plugin *PluginPtr);
 
          // Plugin Interface
-         virtual void update_sync (const Float64 TimeDelta);
+         virtual void update_time_slice (const Float64 TimeDelta);
 
          // NetPacketObserver Interface
          virtual void read_packet (const Int32 Size, char *buffer);

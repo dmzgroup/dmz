@@ -7,7 +7,7 @@
 
 dmz::AudioModuleFMOD::AudioModuleFMOD (const PluginInfo &Info, const Config &Local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       AudioModule (Info),
       _log (Info),
       _system (0),
@@ -74,9 +74,9 @@ dmz::AudioModuleFMOD::~AudioModuleFMOD () {
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::AudioModuleFMOD::update_sync (const Float64 TimeDelta) {
+dmz::AudioModuleFMOD::update_time_slice (const Float64 TimeDelta) {
 
    if (_system) { _system->update(); }
 }
@@ -524,7 +524,6 @@ dmz::AudioModuleFMOD::set_listener (
 
       if (listener) {
 
-//         if ((listener->orientation != Orientation) || (listener->position != Position)) {
          listener->orientation = Orientation;
          listener->position = Position;
 
@@ -562,7 +561,6 @@ dmz::AudioModuleFMOD::set_listener (
             
             result = True;
          }
-//         }
       }
    }
 
@@ -676,7 +674,9 @@ dmz::AudioModuleFMOD::destroy_listener (const Handle ListenerHandle) {
 
                      // Reduce reduce listener count in FMOD to erase the old data
                      // of the now duplicated listener at the end. 
-                     FMOD_RESULT fmodResult = _system->set3DNumListeners (numListeners - 1);
+                     FMOD_RESULT fmodResult (
+                        _system->set3DNumListeners (numListeners - 1));
+
                      if (_error_check ("Destroying a Listener", fmodResult)) {
 
                         // Delete the listener

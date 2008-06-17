@@ -28,7 +28,7 @@ namespace dmz {
          virtual QGraphicsScene *get_scene () = 0;
          virtual QGraphicsView *get_view () = 0;
          
-         virtual Boolean add_item (const Handle ObjectHandle, QGraphicsItem *item) = 0;         
+         virtual Boolean add_item (const Handle ObjectHandle, QGraphicsItem *item) = 0;
          virtual QGraphicsItem *lookup_item (const Handle ObjectHandle) = 0;
          virtual QGraphicsItem *remove_item (const Handle ObjectHandle) = 0;
 

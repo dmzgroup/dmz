@@ -130,7 +130,8 @@ dmz::string_to_key_value (const String &Value, Log *log) {
 
 \brief Converts a key value to a String.
 \details The key name is returned as a lowercase string unless the key is an upper
-case letter. The strings returned are the same as those supported in dmz::string_to_key_value().
+case letter. The strings returned are the same as those supported in
+dmz::string_to_key_value().
 \param[in] Key Value of the key.
 \return Returns String containing the key converted to a string.
 
@@ -184,7 +185,10 @@ dmz::key_value_to_string (const UInt32 Key) {
 
 /*!
 
-\fn dmz::UInt32 dmz::config_to_key_value (const String &Name, const Config &Source, Log *log = 0)
+\fn dmz::UInt32 dmz::config_to_key_value (
+const String &Name,
+const Config &Source,
+Log *log = 0)
 \brief Converts a Config to a key constant.
 \details Uses dmz::string_to_key_value() to convert the Config.
 \param[in] Name String containing name of the Config.

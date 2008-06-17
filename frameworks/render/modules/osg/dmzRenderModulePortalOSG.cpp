@@ -52,7 +52,9 @@ dmz::RenderModulePortalOSG::discover_plugin (
             _camera = _core->lookup_camera (_portalName);
             if (_camera.valid ()) {
 
-               _camera->setComputeNearFarMode (osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+               _camera->setComputeNearFarMode (
+                  osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+
                _update_camera ();
             }
          }

@@ -36,7 +36,8 @@ instances of the loaded sound. Returns zero if the file could not be loaded.
 
 \fn dmz::Boolean dmz::AudioModule::destroy_audio_handle (const dmz::Handle AudioHandle)
 \brief Unloads the loaded audio file.
-\note If there are any existing instance of this audio file at the time the handle is destroyed, the resource will not actually released until all the instance have been freed.
+\note If there are any existing instance of this audio file at the time the handle is
+destroyed, the resource will not actually released until all the instance have been freed.
 \param[in] AudioHandle Handle of the loaded audio file to be freed.
 \return Returns dmz::True if the resource is successfully unreferenced. A result of
 dmz::True does not necessarily mean the resource has been freed.

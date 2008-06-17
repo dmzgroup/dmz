@@ -7,7 +7,7 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimePluginContainer.h>
 #include <dmzRuntimePluginLoader.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzSystem.h>
 #include <dmzSystemDynamicLibrary.h>
 
@@ -78,12 +78,12 @@ suitable for all platforms.
 PluginContainer. Will default to true if the attribute is not specified. 
 - \b unload { true | false } Specifies whether the DynamicLibrary is unloaded by
 the PluginContainer. Will default to true if the attribute is not specified.
-- \b reserve { true | false } Specifies that the next slot in the Sync list be
+- \b reserve { true | false } Specifies that the next slot in the TimeSlice list be
 reserved for a Plugin with the given name. If \b reserve is set to true, the
 plugin is \b not loaded. The Plugin must be specified again with out the \b reserve
-attribute set in order to be loaded. This attribute may be used to reserve a Sync slot
-for things like Lua Plugins and extensions that are frequently not loaded until much later
-in the start up process.
+attribute set in order to be loaded. This attribute may be used to reserve a TimeSlice
+slot for things like Lua Plugins and extensions that are frequently not loaded until
+much later in the start up process.
 Will default to false if the attribute is not specified.
 
 The following XML specifies that a Plugin named dmzNetExtLineObjects will be created
@@ -134,7 +134,7 @@ dmz::PluginLoader::load_plugins (
          defaultFactory << NameValue;
 
          const String PluginName (config_to_string ("unique", data, NameValue));
-         const Boolean ReserveSync (config_to_boolean ("reserve", data, False));
+         const Boolean ReserveTimeSlice (config_to_boolean ("reserve", data, False));
          const String LibName (config_to_string ("library", data, NameValue));
          const String FactoryName (config_to_string ("factory", data, defaultFactory));
          const String ScopeName (config_to_string ("scope", data, PluginName));
@@ -152,20 +152,21 @@ dmz::PluginLoader::load_plugins (
 
          Boolean load (True);
 
-         if (load && ReserveSync) {
+         if (load && ReserveTimeSlice) {
 
             const Handle PluginHandle (_state.defs.create_named_handle (PluginName));
 
-            if (reserve_sync_place (PluginHandle, _state.context)) {
+            if (reserve_time_slice_place (PluginHandle, _state.context)) {
 
                if (log) {
 
-                  log->info << "Reserving sync place for: " << PluginName << endl;
+                  log->info << "Reserving time slice place for: " << PluginName << endl;
                }
             }
             else if (log) {
 
-               log->error << "Failed reserving sync place for: " << PluginName << endl;
+               log->error << "Failed reserving time slice place for: " << PluginName
+                  << endl;
             }
 
             load = False;

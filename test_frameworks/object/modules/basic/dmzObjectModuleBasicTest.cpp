@@ -9,7 +9,7 @@ dmz::ObjectModuleBasicTest::ObjectModuleBasicTest (
       Config &local,
       Config &global) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       test (Info.get_name (), Info.get_context ()),
       _objMod (0) {
@@ -20,9 +20,9 @@ dmz::ObjectModuleBasicTest::ObjectModuleBasicTest (
 dmz::ObjectModuleBasicTest::~ObjectModuleBasicTest () {;}
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::ObjectModuleBasicTest::update_sync (const Float64 TimeDelta) {
+dmz::ObjectModuleBasicTest::update_time_slice (const Float64 TimeDelta) {
 
    test.exit ("Test completed");
 }

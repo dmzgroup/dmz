@@ -83,7 +83,7 @@ const UInt32 Level)
 \brief Updates the state of the the Plugin.
 \details This function is invoked after all the Plugins have been discovered.
 It indicates that the runtime is about to being the main simulation loop.
-Any set up that needs to be done before stating the sync phase should be done here.
+Any set up that needs to be done before stating the time slice phase should be done here.
 \param[in] State Specifies the current state of the plugin. The plugin may be
 started, stopped, and shutdown.
 \param[in] Level Specifies the state level. Plugins default to level one which is

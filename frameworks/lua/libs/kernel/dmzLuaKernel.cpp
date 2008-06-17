@@ -161,7 +161,7 @@ dmz::open_lua_kernel_libs (Config &global, lua_State *L, RuntimeContext *context
    open_lua_kernel_message_lib (L);
    open_lua_kernel_object_type_lib (L);
    open_lua_kernel_runtime_lib (L);
-   open_lua_kernel_sync_lib (L);
+   open_lua_kernel_time_slice_lib (L);
    open_lua_kernel_time_lib (L);
    open_lua_kernel_uuid_lib (L);
    open_lua_kernel_undo_lib (L);

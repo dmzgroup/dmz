@@ -169,9 +169,10 @@ dmz::RenderExtWindowOgreQt::init_render_window () {
           
    QX11Info xInfo = x11Info ();
     
-   Ogre::String arg1 = Ogre::StringConverter::toString ((unsigned long) xInfo.display ());        
-   Ogre::String arg2 = Ogre::StringConverter::toString ((unsigned int) xInfo.screen ());        
-   Ogre::String arg3 = Ogre::StringConverter::toString ((unsigned long) (widget->winId ()));      
+   Ogre::String arg1 = Ogre::StringConverter::toString ((unsigned long) xInfo.display ());
+   Ogre::String arg2 = Ogre::StringConverter::toString ((unsigned int) xInfo.screen ());
+   Ogre::String arg3 =
+      Ogre::StringConverter::toString ((unsigned long) (widget->winId ()));      
     
    params["parentWindowHandle"] = arg1 + ":" + arg2 + ":" + arg3;
 #else   
@@ -301,7 +302,9 @@ dmz::RenderExtWindowOgreQt::_save_session () {
 void
 dmz::RenderExtWindowOgreQt::_load_session () {
 
-   Config session (get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
+   Config session (
+      get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
+
    QByteArray geometry (config_to_qbytearray ("geometry", session, saveGeometry ()));
    restoreGeometry (geometry);
 }
@@ -336,9 +339,11 @@ dmz::RenderExtWindowOgreQt::_init (const Config &Local) {
       }
       
       _fsaa = config_to_uint32 ("window.fsaa", Local, _fsaa);
+
       if (_fsaa % 2) {
          
-         _log.warn << "fsaa not even: " << _fsaa <<  " using " << (_fsaa-1) << " instead"<< endl;
+         _log.warn << "fsaa not even: " << _fsaa <<  " using " << (_fsaa-1) << " instead"
+            << endl;
          _fsaa--;
       }
    }
@@ -346,7 +351,8 @@ dmz::RenderExtWindowOgreQt::_init (const Config &Local) {
 
 
 void
-dmz::RenderExtWindowOgreQt::_handle_key_event (const QKeyEvent &Event, const Boolean KeyState) {
+dmz::RenderExtWindowOgreQt::_handle_key_event (
+      const QKeyEvent &Event, const Boolean KeyState) {
 
    if (!Event.isAutoRepeat ()) {
 

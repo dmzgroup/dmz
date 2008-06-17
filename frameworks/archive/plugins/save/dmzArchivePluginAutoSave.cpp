@@ -26,7 +26,7 @@ dmz::ArchivePluginAutoSave::ArchivePluginAutoSave (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info, SyncTypeSystemTime, SyncModeRepeating, 5.0),
+      TimeSlice (Info, TimeSliceTypeSystemTime, TimeSliceModeRepeating, 5.0),
       UndoObserver (Info),
       _appState (Info),
       _archiveMod (0),
@@ -123,9 +123,9 @@ dmz::ArchivePluginAutoSave::discover_plugin (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::ArchivePluginAutoSave::update_sync (const Float64 TimeDelta) {
+dmz::ArchivePluginAutoSave::update_time_slice (const Float64 TimeDelta) {
 
    if (_appStateDirty && _archiveMod && _archiveHandle && _saveFile) {
 
@@ -168,7 +168,8 @@ dmz::ArchivePluginAutoSave::_init (Config &local) {
 
    if (_saveFile) {
 
-      set_sync_interval (config_to_float64 ("save.rate", local, get_sync_interval ()));
+      set_time_slice_interval (
+         config_to_float64 ("save.rate", local, get_time_slice_interval ()));
 
       _archiveHandle = defs.create_named_handle (
          config_to_string ("archive.name", local, ArchiveDefaultName));
@@ -176,7 +177,7 @@ dmz::ArchivePluginAutoSave::_init (Config &local) {
    else {
 
       _log.warn << "No auto save file specified. Auto save disabled." << endl;
-      stop_sync ();
+      stop_time_slice ();
    }
 
 }

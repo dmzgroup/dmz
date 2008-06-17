@@ -14,7 +14,7 @@ dmz::EntityPluginFreeFly::EntityPluginFreeFly (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       InputObserverUtil (Info, local),
       _handle (0),
@@ -50,9 +50,9 @@ dmz::EntityPluginFreeFly::discover_plugin (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::EntityPluginFreeFly::update_sync (const Float64 TimeDelta) {
+dmz::EntityPluginFreeFly::update_time_slice (const Float64 TimeDelta) {
 
    ObjectModule *objMod (get_object_module ());
 

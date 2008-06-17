@@ -67,14 +67,14 @@ dmz::RuntimeContext::~RuntimeContext () {
 }
 
 
-//! Syncs internal kernel objects.
+//! TimeSlices internal kernel objects.
 void
-dmz::RuntimeContext::sync () {
+dmz::RuntimeContext::update_time_slice () {
 
-   if (_messagingContext) { _messagingContext->sync (); }
-   if (_logContext) { _logContext->sync (); }
-   // time context should always sync last
-   if (_timeContext) { _timeContext->sync (); }
+   if (_messagingContext) { _messagingContext->update_time_slice (); }
+   if (_logContext) { _logContext->update_time_slice (); }
+   // time context should always update_time_slice last
+   if (_timeContext) { _timeContext->update_time_slice (); }
 }
 
 

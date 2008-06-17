@@ -162,7 +162,7 @@ dmz::RuntimeContextMessaging::send (
 
 //! Sends messages from other threads.
 void
-dmz::RuntimeContextMessaging::sync () {
+dmz::RuntimeContextMessaging::update_time_slice () {
 
    if (head) {
 

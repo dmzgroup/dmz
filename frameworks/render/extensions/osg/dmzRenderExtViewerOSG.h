@@ -3,7 +3,7 @@
 
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 
 #include <osg/Camera>
 #include <osgViewer/Viewer>
@@ -17,7 +17,7 @@ namespace dmz {
    class RenderEventHandlerOSG;
 
 
-   class RenderExtViewerOSG : public Plugin, public Sync {
+   class RenderExtViewerOSG : public Plugin, public TimeSlice {
 
       public:
          RenderExtViewerOSG (const PluginInfo &Info, Config &local);
@@ -32,8 +32,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
          
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
       protected:
          void _init (const Config &Local);

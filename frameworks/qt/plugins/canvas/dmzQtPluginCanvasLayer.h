@@ -5,7 +5,7 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzRuntimeUndo.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <QtGui/QGraphicsItem>
@@ -41,7 +41,7 @@ namespace dmz {
    class QtPluginCanvasLayerModel :
          public QAbstractItemModel,
          public ObjectObserverUtil,
-         public Sync {
+         public TimeSlice {
 
       Q_OBJECT
 
@@ -155,8 +155,8 @@ namespace dmz {
             const String &Value,
             const String *PreviousValue);
             
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
       protected:
          virtual void _store_object_module (ObjectModule &objMod);
@@ -205,7 +205,7 @@ namespace dmz {
    };
 
 
-   class QtPluginCanvasLayer : public QWidget, public Plugin, public Sync {
+   class QtPluginCanvasLayer : public QWidget, public Plugin, public TimeSlice {
 
       Q_OBJECT
       
@@ -222,8 +222,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
          
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
       protected slots:
          void on_addButton_clicked ();

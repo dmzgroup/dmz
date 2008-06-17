@@ -328,7 +328,9 @@ dmz::QtModuleCanvasBasic::wheelEvent (QWheelEvent *event) {
 
 
 void
-dmz::QtModuleCanvasBasic::_handle_key_event (const QKeyEvent &Event, const Boolean KeyState) {
+dmz::QtModuleCanvasBasic::_handle_key_event (
+      const QKeyEvent &Event,
+      const Boolean KeyState) {
 
    if (!Event.isAutoRepeat ()) {
 

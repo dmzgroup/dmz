@@ -14,7 +14,7 @@ function new (config, name)
    local self = {
 
       log = dmz.log.new ("lua." .. name),
-      sync = dmz.sync.new (),
+      timeSlice = dmz.time_slice.new (),
       message = config:lookup_message ("message.name"),
       target = dmz.handle.new ("dmzExPluginMessageReceive"),
       data = dmz.data.new (),
@@ -23,7 +23,7 @@ function new (config, name)
 
    self.log:info ("Creating plugin: " .. name)
 
-   self.handle = self.sync:create (send, self, name, 1)
+   self.handle = self.timeSlice:create (send, self, name, 1)
 
    return self
 

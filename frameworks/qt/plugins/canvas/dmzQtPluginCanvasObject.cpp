@@ -92,7 +92,7 @@ dmz::QtPluginCanvasObject::QtPluginCanvasObject (
       Config &local,
       Config &global) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
@@ -208,7 +208,7 @@ dmz::QtPluginCanvasObject::discover_plugin (
 
 
 void
-dmz::QtPluginCanvasObject::update_sync (const Float64 TimeDelta) {
+dmz::QtPluginCanvasObject::update_time_slice (const Float64 TimeDelta) {
 
    if (_updateTable.get_count ()) {
 
@@ -302,7 +302,9 @@ dmz::QtPluginCanvasObject::link_objects (
 
          if (superItem && subItem) {
 
-            QGraphicsItemGroup *group (qgraphicsitem_cast <QGraphicsItemGroup *>(subItem));
+            QGraphicsItemGroup *group (
+               qgraphicsitem_cast <QGraphicsItemGroup *>(subItem));
+
             if (group) { superItem->setGroup (group); }
             else { superItem->setParentItem (subItem); }
          }
@@ -329,7 +331,9 @@ dmz::QtPluginCanvasObject::unlink_objects (
 
          if (superItem) {
 
-            QGraphicsItemGroup *group (qgraphicsitem_cast <QGraphicsItemGroup *>(subItem));
+            QGraphicsItemGroup *group (
+               qgraphicsitem_cast <QGraphicsItemGroup *>(subItem));
+
             if (group) { superItem->setGroup (0); }
             else { superItem->setParentItem (0); }
          }

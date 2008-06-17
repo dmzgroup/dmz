@@ -33,7 +33,7 @@ namespace {
 
 dmz::EventModuleBasic::EventModuleBasic (const PluginInfo &Info, Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       EventModule (Info),
       _log (Info),
       _time (Info.get_context ()),
@@ -88,9 +88,9 @@ dmz::EventModuleBasic::~EventModuleBasic () {
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::EventModuleBasic::update_sync (const Float64 TimeDelta) {
+dmz::EventModuleBasic::update_time_slice (const Float64 TimeDelta) {
 
    if (_maxEvents > 0) {
 

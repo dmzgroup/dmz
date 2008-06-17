@@ -13,7 +13,9 @@ for a particular archive group, the registered archive observers are notified so
 they may process or create archive data.
 \sa dmz::ArchiveObserver \n dmz::Definitions::create_named_handle()
 
-\fn dmz::ArchiveModule *dmz::ArchiveModule::cast (const Plugin *PluginPtr, const String &PluginName)
+\fn dmz::ArchiveModule *dmz::ArchiveModule::cast (
+const Plugin *PluginPtr,
+const String &PluginName)
 \brief Casts Plugin pointer to an ArchiveModule.
 \details If the Plugin object implements the AtrchiveModule interface, a pointer to the
 ArchiveModule interface of the Plugin is returned.

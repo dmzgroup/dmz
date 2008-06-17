@@ -373,22 +373,22 @@ dmz.runtime.create_named_handle (string name) [dmz.handle | nil]
 dmz.runtime.send_message (dmz.message_type type, [dmz.handle target], [dmz.data in], [dmz.data out]) [number | nil]
 
 
-dmz.sync.new () [dmz.sync]
-dmz.sync.is_a (value) [dmz.sync | nil]
-dmz.sync.System -- Type
-dmz.sync.Runtime -- Type
-dmz.sync.Repeating -- Mode
-dmz.sync.Single -- Mode
+dmz.time_slice.new () [dmz.time_slice]
+dmz.time_slice.is_a (value) [dmz.time_slice | nil]
+dmz.time_slice.System -- Type
+dmz.time_slice.Runtime -- Type
+dmz.time_slice.Repeating -- Mode
+dmz.time_slice.Single -- Mode
 
-dmz.sync:create (function callback, table self, [string name], [number interval], [integer mode], [integer type]) [dmz.handle | nil]
-dmz.sync:start (dmz.handle handle) [boolean | nil]
-dmz.sync:stop (dmz.handle handle) [boolean | nil]
-dmz.sync:set_interval (dmz.handle handle, number interval) [boolean | nil]
-dmz.sync:get_interval (dmz.handle handle) [number | nil]
-dmz.sync:get_type (dmz.handle handle) [integer | nil]
-dmz.sync:set_mode (dmz.handle handle, integer mode) [boolean | nil]
-dmz.sync:get_mode (dmz.handle handle) [integer | nil]
-dmz.sync:destroy (dmz.handle handle) [boolean | nil]
+dmz.time_slice:create (function callback, table self, [string name], [number interval], [integer mode], [integer type]) [dmz.handle | nil]
+dmz.time_slice:start (dmz.handle handle) [boolean | nil]
+dmz.time_slice:stop (dmz.handle handle) [boolean | nil]
+dmz.time_slice:set_interval (dmz.handle handle, number interval) [boolean | nil]
+dmz.time_slice:get_interval (dmz.handle handle) [number | nil]
+dmz.time_slice:get_type (dmz.handle handle) [integer | nil]
+dmz.time_slice:set_mode (dmz.handle handle, integer mode) [boolean | nil]
+dmz.time_slice:get_mode (dmz.handle handle) [integer | nil]
+dmz.time_slice:destroy (dmz.handle handle) [boolean | nil]
 
 
 dmz.time.frame_time ([number frameTime]) [number]

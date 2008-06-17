@@ -622,7 +622,8 @@ const UndoRecordingStateEnum RecordingState,
 const UndoRecordingTypeEnum RecordingType,
 const UndoTypeEnum UndoType)
 \brief Pure virtual function that is invoked when the recording state changes.
-\param[in] RecordingState UndoRecordingStateEnum Indicates whether actions are currently being
+\param[in] RecordingState UndoRecordingStateEnum Indicates whether actions are
+currently being
 recorded.
 \param[in] RecordingType UndoRecordingTypeEnum Indicates whether the recording was
 started automatically or explicitly. Auto records are started when dmz::Undo::do_next()

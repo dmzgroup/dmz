@@ -143,7 +143,7 @@ dmz::InputPluginControllerMacOS::InputPluginControllerMacOS (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       _log (Info),
       _channels (0) {
 
@@ -182,9 +182,9 @@ dmz::InputPluginControllerMacOS::discover_plugin (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::InputPluginControllerMacOS::update_sync (const Float64 DeltaTime) {
+dmz::InputPluginControllerMacOS::update_time_slice (const Float64 DeltaTime) {
 
    if (_channels) {
 
@@ -194,7 +194,7 @@ dmz::InputPluginControllerMacOS::update_sync (const Float64 DeltaTime) {
 
       while (controller) {
 
-         _sync_controller (*controller);
+         _time_slice_controller (*controller);
 
          controller = _controllerTable.get_next (it);
       }
@@ -514,7 +514,8 @@ dmz::InputPluginControllerMacOS::_init_hatswitch (ControllerStruct &cs, Config &
       }
       else {
 
-       _log.warn << "Failed to map hatswitch " << AxisXHandle << " " << AxisYHandle<< endl;
+       _log.warn << "Failed to map hatswitch " << AxisXHandle << " " << AxisYHandle
+          << endl;
 
        _log.error
           << "element: " << ElementHandle
@@ -572,7 +573,7 @@ dmz::InputPluginControllerMacOS::_init_button (ControllerStruct &cs, Config &cd)
 
 
 void
-dmz::InputPluginControllerMacOS::_sync_controller (ControllerStruct &cs) {
+dmz::InputPluginControllerMacOS::_time_slice_controller (ControllerStruct &cs) {
 
    if (_channels) {
 

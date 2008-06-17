@@ -147,8 +147,8 @@ dmz::RenderModuleIsectOSG::do_isect (
 
                   osg::StateSet *sSet = (drawObject ? drawObject->getStateSet () : 0);
 
-                  osg::CullFace *cf = 
-                     (osg::CullFace*)(sSet ? sSet->getAttribute (osg::StateAttribute::CULLFACE) : 0);
+                  osg::CullFace *cf = (osg::CullFace*)(
+                     sSet ? sSet->getAttribute (osg::StateAttribute::CULLFACE) : 0);
 
                   UInt32 cullMask = 0;
 

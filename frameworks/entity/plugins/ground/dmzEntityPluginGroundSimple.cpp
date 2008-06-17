@@ -15,7 +15,7 @@ dmz::EntityPluginGroundSimple::EntityPluginGroundSimple (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       InputObserverUtil (Info, local),
       _handle (0),
@@ -53,9 +53,9 @@ dmz::EntityPluginGroundSimple::discover_plugin (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::EntityPluginGroundSimple::update_sync (const Float64 TimeDelta) {
+dmz::EntityPluginGroundSimple::update_time_slice (const Float64 TimeDelta) {
 
    ObjectModule *objMod (get_object_module ());
 

@@ -183,7 +183,7 @@ dmz::TimedExit::TimedExit (
       const Float64 TimeInterval,
       const ExitStatusEnum Status,
       RuntimeContext *context) :
-      Sync (0, SyncTypeSystemTime, SyncModeSingle, TimeInterval, context),
+      TimeSlice (0, TimeSliceTypeSystemTime, TimeSliceModeSingle, TimeInterval, context),
       Exit (context),
       _state (*(new State (Status))) {;}
 
@@ -217,7 +217,7 @@ dmz::TimedExit::set_status (const ExitStatusEnum Status) {
 
 //! Internal call.
 void
-dmz::TimedExit::update_sync (const Float64 DeltaTime) {
+dmz::TimedExit::update_time_slice (const Float64 DeltaTime) {
 
    request_exit (ExitStatusNormal, "Exit timer expired");
 }

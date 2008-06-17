@@ -5,7 +5,8 @@
 #include <QtGui/QScrollBar>
 
 
-dmz::QtCanvasViewSession::QtCanvasViewSession (QtCanvasView &canvas) : _canvas (canvas) {;}
+dmz::QtCanvasViewSession::QtCanvasViewSession (QtCanvasView &canvas) :
+      _canvas (canvas) {;}
 
 
 dmz::Config

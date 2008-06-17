@@ -35,7 +35,7 @@ namespace dmz {
          Boolean process_command_line (const CommandLine &CL);
          Boolean load_plugins ();
          Boolean start ();
-         Boolean sync ();
+         Boolean update_time_slice ();
          Boolean stop ();
          Boolean unload_plugins ();
          Boolean save_session ();

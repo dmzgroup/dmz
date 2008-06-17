@@ -4,7 +4,7 @@
 #include <dmzApplicationState.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzRuntimeUndo.h>
 
 namespace dmz {
@@ -13,7 +13,7 @@ namespace dmz {
 
    class ArchivePluginAutoSave :
          public Plugin,
-         public Sync,
+         public TimeSlice,
          public UndoObserver {
 
       //! \cond
@@ -30,8 +30,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
          // UndoObserver Interface
          virtual void update_recording_state (

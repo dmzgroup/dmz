@@ -18,7 +18,7 @@ dmz::RenderModuleCoreOgreBasic::RenderModuleCoreOgreBasic (
       Config &local,
       Config &global) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       OSMSceneCallbacks (),
       RenderModuleCoreOgre (Info),
@@ -112,7 +112,9 @@ dmz::RenderModuleCoreOgreBasic::discover_plugin (
 
                if (obs) {
 
-                  obs->store_object_module (PluginPtr->get_plugin_name (), *_objectModule);
+                  obs->store_object_module (
+                     PluginPtr->get_plugin_name (),
+                     *_objectModule);
                }
 
                ptr = _extensions.get_next (it);
@@ -149,7 +151,7 @@ dmz::RenderModuleCoreOgreBasic::discover_plugin (
 
 
 void
-dmz::RenderModuleCoreOgreBasic::update_sync (const Float64 TimeDelta) {
+dmz::RenderModuleCoreOgreBasic::update_time_slice (const Float64 TimeDelta) {
 
    if (_root) {
       

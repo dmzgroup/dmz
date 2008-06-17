@@ -58,7 +58,10 @@ local_lock (const QString &Name) {
 
    DWORD value (WaitForSingleObject (result, INFINITE));
 
-   if ((value == WAIT_ABANDONED) || (value == WAIT_TIMEOUT)) { CloseHandle (result); result = 0; }
+   if ((value == WAIT_ABANDONED) || (value == WAIT_TIMEOUT)) {
+
+      CloseHandle (result); result = 0;
+   }
 
    return result;
 }
@@ -102,7 +105,11 @@ struct dmz::QtSingletonApplication::State {
    RuntimeContext *context;
    winEventClass *wec;
 
-   State (const QString &TheID, RuntimeContext *theContext) : name (TheID), context (theContext), wec (0) {;}
+   State (const QString &TheID, RuntimeContext *theContext) :
+         name (TheID),
+         context (theContext),
+         wec (0) {;}
+
    ~State () { if (wec) { delete wec; wec = 0; } }
 };
 
@@ -157,7 +164,14 @@ dmz::QtSingletonApplication::send_to_running_application (const QString &Message
       data.lpData = (void*)qPrintable (Message);
       DWORD value (0);
 
-      if (SendMessageTimeout (hwnd, WM_COPYDATA, 0, (LPARAM)&data, SMTO_ABORTIFHUNG, 15000, &value) != 0) {
+      if (SendMessageTimeout (
+            hwnd,
+            WM_COPYDATA,
+            0,
+            (LPARAM)&data,
+            SMTO_ABORTIFHUNG,
+            15000,
+            &value) != 0) {
 
          result = true;
       }

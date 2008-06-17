@@ -14,7 +14,7 @@ dmz::EntityPluginRaceLight::EntityPluginRaceLight (
       Plugin (Info),
       InputObserverUtil (Info, local),
       ObjectObserverUtil (Info, local),
-      Sync (Info, SyncTypeRuntime, SyncModeSingle, 1.0),
+      TimeSlice (Info, TimeSliceTypeRuntime, TimeSliceModeSingle, 1.0),
       _defaultHandle (0),
       _lightHandle (0),
       _on (False),
@@ -52,10 +52,10 @@ dmz::EntityPluginRaceLight::receive_button_event (
 
       if (_list) {
 
-         set_sync_interval (_list->Delay);
+         set_time_slice_interval (_list->Delay);
          _set_state (*_list, _current);
          _current = _list;
-         start_sync ();
+         start_time_slice ();
       }
    }
 }
@@ -107,9 +107,9 @@ dmz::EntityPluginRaceLight::update_object_flag (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::EntityPluginRaceLight::update_sync (const Float64 DeltaTime) {
+dmz::EntityPluginRaceLight::update_time_slice (const Float64 DeltaTime) {
 
    if (_current) {
 
@@ -120,8 +120,8 @@ dmz::EntityPluginRaceLight::update_sync (const Float64 DeltaTime) {
 
          _set_state (*_current, prev);
 
-         set_sync_interval (_current->Delay);
-         start_sync ();
+         set_time_slice_interval (_current->Delay);
+         start_time_slice ();
       }
    }
 }

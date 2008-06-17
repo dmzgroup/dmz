@@ -1,7 +1,7 @@
 #ifndef DMZ_RUNTIME_CONTEXT_TIME_DOT_H
 #define DMZ_RUNTIME_CONTEXT_TIME_DOT_H
 
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzSystemMutex.h>
 #include <dmzSystemRefCount.h>
 #include <dmzTypesBase.h>
@@ -9,58 +9,58 @@
 
 namespace dmz {
 
-   struct SyncStruct {
+   struct TimeSliceStruct {
 
-      const Handle SyncHandle;
+      const Handle TimeSliceHandle;
       const Int32 &Index;
 
       Boolean active;
 
-      SyncTypeEnum type;
-      SyncModeEnum mode;
+      TimeSliceTypeEnum type;
+      TimeSliceModeEnum mode;
       Float64 timeInterval;
-      Float64 nextSync;
-      Sync &sync;
+      Float64 nextTimeSlice;
+      TimeSlice &timeSlice;
 
       Boolean continuous;
       Boolean system;
 
-      SyncStruct *next;
-      SyncStruct *prev;
+      TimeSliceStruct *next;
+      TimeSliceStruct *prev;
 
       void update ()  {
 
-         continuous = (is_zero64 (timeInterval) && (mode == SyncModeRepeating));
-         system = (type == SyncTypeSystemTime);
+         continuous = (is_zero64 (timeInterval) && (mode == TimeSliceModeRepeating));
+         system = (type == TimeSliceTypeSystemTime);
       }
 
-      SyncStruct (
+      TimeSliceStruct (
             const Handle TheHandle,
             const Int32 &TheIndex,
-            const SyncTypeEnum TheType,
-            const SyncModeEnum TheMode,
+            const TimeSliceTypeEnum TheType,
+            const TimeSliceModeEnum TheMode,
             const Float64 TheTimeInterval,
-            Sync &theSync) :
-            SyncHandle (TheHandle),
+            TimeSlice &theTimeSlice) :
+            TimeSliceHandle (TheHandle),
             Index (TheIndex),
             active (False),
             type (TheType),
             mode (TheMode),
             timeInterval (TheTimeInterval),
-            nextSync (0.0),
-            sync (theSync),
+            nextTimeSlice (0.0),
+            timeSlice (theTimeSlice),
             continuous (False),
             system (False),
             next (0),
             prev (0) { update (); }
 
-      void set_type (SyncTypeEnum TheType) {
+      void set_type (TimeSliceTypeEnum TheType) {
 
          type = TheType;
          update ();
       }
 
-      void set_mode (SyncModeEnum TheMode) {
+      void set_mode (TimeSliceModeEnum TheMode) {
 
          mode = TheMode;
          update ();
@@ -95,24 +95,24 @@ namespace dmz {
 
          RuntimeContextTime ();
 
-         void sync ();
+         void update_time_slice ();
 
          void set_current_time (const Float64 Value);
          void set_time_factor (const Float64 Value);
          void set_target_frequency (const Float64 Value);
 
-         Int32 move_sync_to_end (const Handle TheHandle);
+         Int32 move_time_slice_to_end (const Handle TheHandle);
 
-         SyncStruct *create_sync_struct (
+         TimeSliceStruct *create_time_slice_struct (
             const Handle TheHandle,
-            const SyncTypeEnum Type,
-            const SyncModeEnum Mode,
+            const TimeSliceTypeEnum Type,
+            const TimeSliceModeEnum Mode,
             const Float64 TimeInterval,
-            Sync &sync);
+            TimeSlice &timeSlice);
 
-         Boolean start_sync (SyncStruct &sync);
-         Boolean stop_sync (SyncStruct &sync);
-         Boolean remove_sync (SyncStruct &sync);
+         Boolean start_time_slice (TimeSliceStruct &timeSlice);
+         Boolean stop_time_slice (TimeSliceStruct &timeSlice);
+         Boolean remove_time_slice (TimeSliceStruct &timeSlice);
 
          Float64 currentTime; //!< Current frame time.
          Float64 previousTime; //!< Previous frame time.
@@ -126,16 +126,16 @@ namespace dmz {
          updateStruct *head; //!< Head of update list.
          updateStruct *tail; //!< Tail of update list.
 
-         Int32 syncCount;
-         HashTableHandleTemplate<Int32> syncIndexTable;
-         SyncStruct *syncHead;
-         SyncStruct *syncNext;
+         Int32 timeSliceCount;
+         HashTableHandleTemplate<Int32> timeSliceIndexTable;
+         TimeSliceStruct *timeSliceHead;
+         TimeSliceStruct *timeSliceNext;
 
       private:
          ~RuntimeContextTime ();
 
          void _add_update (updateStruct *ptr);
-         void _update_sync (const Float64 RealTime, const Float64 RealDelta);
+         void _update_time_slice (const Float64 RealTime, const Float64 RealDelta);
    };
 };
 

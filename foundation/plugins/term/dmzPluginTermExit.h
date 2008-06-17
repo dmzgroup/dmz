@@ -3,13 +3,13 @@
 
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 
 namespace dmz {
 
    class PluginTermExit :
          public Plugin,
-         public Sync {
+         public TimeSlice {
 
       public:
          //! \cond
@@ -25,7 +25,7 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr) {;}
 
-         virtual void update_sync (const Float64 TimeDelta);
+         virtual void update_time_slice (const Float64 TimeDelta);
 
       protected:
          void _init (Config &local);

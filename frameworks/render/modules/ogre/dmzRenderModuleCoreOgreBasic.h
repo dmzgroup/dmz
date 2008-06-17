@@ -6,7 +6,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimePluginContainer.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
@@ -37,7 +37,10 @@ namespace dmz {
                
             if (Ogre::LML_TRIVIAL == lml) { _log.debug << Message.c_str () << endl; }
             else if (Ogre::LML_NORMAL == lml) { _log.info << Message.c_str () << endl; }
-            else if (Ogre::LML_CRITICAL == lml) { _log.error << Message.c_str () << endl; }
+            else if (Ogre::LML_CRITICAL == lml) {
+
+               _log.error << Message.c_str () << endl;
+            }
          }
    };
 
@@ -46,7 +49,7 @@ namespace dmz {
    
    class RenderModuleCoreOgreBasic : 
          public Plugin,
-         public Sync,
+         public TimeSlice,
          public ObjectObserverUtil,
          private OSMSceneCallbacks,
          private RenderModuleCoreOgre {
@@ -68,8 +71,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
          
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
          // Object Observer Interface
          virtual void update_object_position (
@@ -102,7 +105,9 @@ namespace dmz {
          
       protected:
          // OSMSceneCallback Interface
-         virtual void OnSceneManagerCreate (Ogre::SceneManager *pManager, TiXmlElement* pNodeDesc);
+         virtual void OnSceneManagerCreate (
+            Ogre::SceneManager *pManager,
+            TiXmlElement* pNodeDesc);
 
          struct PortalStruct {
 

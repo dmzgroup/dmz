@@ -2,7 +2,7 @@
 #define DMZ_RUNTIME_EXIT_DOT_H
 
 #include <dmzKernelExport.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
 
@@ -33,7 +33,7 @@ namespace dmz {
          Exit &operator= (const Exit &);
    };
 
-   class DMZ_KERNEL_LINK_SYMBOL TimedExit : public Sync, public Exit {
+   class DMZ_KERNEL_LINK_SYMBOL TimedExit : public TimeSlice, public Exit {
 
       public:
          TimedExit (
@@ -48,7 +48,7 @@ namespace dmz {
 
       protected:
          struct State;
-         void update_sync (const Float64 DeltaTime);
+         void update_time_slice (const Float64 DeltaTime);
          State &_state; //!< Internal state.
 
       private:

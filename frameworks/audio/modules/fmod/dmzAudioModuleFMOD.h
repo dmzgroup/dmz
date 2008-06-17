@@ -7,7 +7,7 @@
 #include <dmzRuntimeConfigRead.h>
 #include <dmzRuntimeHandle.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzSystemRefCount.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesHashTableStringTemplate.h>
@@ -22,7 +22,7 @@ namespace dmz {
 
    class AudioModuleFMOD : 
          public Plugin,
-         public Sync,
+         public TimeSlice,
          private AudioModule {
 
       public:
@@ -38,8 +38,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr) {;}
 
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
          // AudioModule Interface
          virtual Handle create_audio_handle (const String &FileName);

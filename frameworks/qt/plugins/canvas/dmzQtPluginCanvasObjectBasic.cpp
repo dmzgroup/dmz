@@ -159,7 +159,9 @@ dmz::QtCanvasObjectText::paint (
          painter->setPen (pen);
          painter->setBrush (_backgroundColor);
 
-         painter->drawRoundRect (rect, _roundness (rect.width ()), _roundness (rect.height ()));
+         painter->drawRoundRect (
+            rect,
+            _roundness (rect.width ()), _roundness (rect.height ()));
       }
 
       painter->setPen (_textColor);
@@ -373,13 +375,15 @@ dmz::QtPluginCanvasObjectBasic::process_file (
       const String &RequestedFileLocation,
       const String &RequestedFileName) {
 
-   QGraphicsItem *item (_fileRequestTable.remove (RequestedFileLocation + RequestedFileName));
+   QGraphicsItem *item (
+      _fileRequestTable.remove (RequestedFileLocation + RequestedFileName));
 
    if (item) {
    
       if (RequestResult == CacheFileFound) {
 
-         QGraphicsPixmapItem *pixmapItem (qgraphicsitem_cast<QGraphicsPixmapItem *> (item));
+         QGraphicsPixmapItem *pixmapItem (
+            qgraphicsitem_cast<QGraphicsPixmapItem *> (item));
 
          if (pixmapItem) {
 
@@ -401,7 +405,8 @@ dmz::QtPluginCanvasObjectBasic::process_file (
 
          if (svgItem) {
             
-            QSvgRenderer *renderer (_svgRendererTable.lookup (RequestedFileLocation + RequestedFileName));
+            QSvgRenderer *renderer (
+               _svgRendererTable.lookup (RequestedFileLocation + RequestedFileName));
             
             if (!renderer) {
                
@@ -411,7 +416,8 @@ dmz::QtPluginCanvasObjectBasic::process_file (
                
                if (renderer->load (QString (LocalFilePath.get_buffer ()))) {
                   
-                  _svgRendererTable.store (RequestedFileLocation + RequestedFileName, renderer);
+                  _svgRendererTable.store (
+                     RequestedFileLocation + RequestedFileName, renderer);
                }
                else {
                   

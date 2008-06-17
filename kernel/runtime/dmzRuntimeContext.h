@@ -21,7 +21,7 @@ namespace dmz {
       public:
          RuntimeContext ();
 
-         void sync ();
+         void update_time_slice ();
 
          Config get_session_config () const;
          void set_session_config (const Config &Session);

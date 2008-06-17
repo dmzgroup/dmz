@@ -484,7 +484,8 @@ main (int argc, char *argv[]) {
 
    Matrix similarMatrixIn1 (Vector (1, 0, 0), 2);
    Matrix similarMatrixIn2 (Vector (0, 1, 0), 1);
-   Matrix finalMatrix = similarMatrixIn1 * similarMatrixIn2;// * similarMatrixIn2.transpose ();
+   // * similarMatrixIn2.transpose ();
+   Matrix finalMatrix = similarMatrixIn1 * similarMatrixIn2;
    test.validate (
       "test that a combination of 2 euler vectors matches a transformation of rotation matrices built from it's components.",
       (testMatrix == finalMatrix));

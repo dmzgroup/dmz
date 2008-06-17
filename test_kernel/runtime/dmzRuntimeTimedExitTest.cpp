@@ -19,25 +19,25 @@ main (int argc, char *argv[]) {
       "exitObserver does not initially want to quit.",
       !exitObserver.is_exit_requested ());
 
-   test.rt.sync ();
+   test.rt.update_time_slice ();
 
    TimedExit timedExitObject (0.1, ExitStatusNormal, context);
-   timedExitObject.start_sync ();
+   timedExitObject.start_time_slice ();
 
-   test.rt.sync ();
+   test.rt.update_time_slice ();
 
    test.validate (
       "exitObserver has not recieved the timed message instantly.",
       !exitObserver.is_exit_requested ());
 
    sleep (0.05);
-   test.rt.sync ();
+   test.rt.update_time_slice ();
    test.validate (
       "exitObserver has not recieved the timed message in < time period.",
       !exitObserver.is_exit_requested ());
 
    sleep (0.1);
-   test.rt.sync ();
+   test.rt.update_time_slice ();
    test.validate (
       "exitObserver recieves the message after the time has passed.",
       exitObserver.is_exit_requested ());

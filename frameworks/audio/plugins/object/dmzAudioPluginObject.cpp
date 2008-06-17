@@ -14,7 +14,7 @@ dmz::AudioPluginObject::AudioPluginObject (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
@@ -144,9 +144,9 @@ dmz::AudioPluginObject::discover_plugin (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::AudioPluginObject::update_sync (const Float64 TimeDelta) {
+dmz::AudioPluginObject::update_time_slice (const Float64 TimeDelta) {
 
    if (_audioMod) {
 

@@ -316,7 +316,9 @@ dmz::QtModuleMainWindowBasic::remove_dock_widget (QDockWidget *dock) {
 
 
 dmz::Boolean
-dmz::QtModuleMainWindowBasic::remove_dock_widget (const Handle Channel, QDockWidget *dock) {
+dmz::QtModuleMainWindowBasic::remove_dock_widget (
+      const Handle Channel,
+      QDockWidget *dock) {
    
    Boolean retVal (False);
    
@@ -518,7 +520,8 @@ dmz::QtModuleMainWindowBasic::_save_session () {
 void
 dmz::QtModuleMainWindowBasic::_load_session () {
 
-   Config session (get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
+   Config session (
+      get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
 
    QByteArray geometry (config_to_qbytearray ("geometry", session, saveGeometry ()));
    restoreGeometry (geometry);

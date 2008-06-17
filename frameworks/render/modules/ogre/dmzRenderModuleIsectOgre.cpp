@@ -365,7 +365,8 @@ dmz::RenderModuleIsectOgre::_isect_entity (
             segmentEnd,
             boundingSphere.getCenter ()));
 
-      Ogre::Real radiusSquared (boundingSphere.getRadius () * boundingSphere.getRadius ());
+      Ogre::Real radiusSquared (
+         boundingSphere.getRadius () * boundingSphere.getRadius ());
       Ogre::Real distToPointOnRaySquared ((pointOnRay - segmentEnd).squaredLength ());
 
       if (distToPointOnRaySquared > radiusSquared) {
@@ -446,8 +447,8 @@ dmz::RenderModuleIsectOgre::_isect_sub_entity (
                   result.set_object_handle (_extract_object_handle (Entity));
                }
    
-               point =
-                  _entityIsectData.worldMat * _entityIsectData.localRay.getPoint (hit.second);
+               point = _entityIsectData.worldMat *
+                  _entityIsectData.localRay.getPoint (hit.second);
    
                result.set_point (to_dmz_vector (point));
    
@@ -619,8 +620,8 @@ dmz::RenderModuleIsectOgre::__get_mesh_information (
          Ogre::HardwareVertexBufferSharedPtr vbuf =
              vertex_data->vertexBufferBinding->getBuffer (posElem->getSource ());
       
-         unsigned char* vertex =
-            static_cast<unsigned char*> (vbuf->lock (Ogre::HardwareBuffer::HBL_READ_ONLY));
+         unsigned char* vertex = static_cast<unsigned char*> (
+            vbuf->lock (Ogre::HardwareBuffer::HBL_READ_ONLY));
       
          // There is _no_ baseVertexPointerToElement() which takes an Ogre::Real or a
          // double as second argument. So make it float, to avoid trouble when

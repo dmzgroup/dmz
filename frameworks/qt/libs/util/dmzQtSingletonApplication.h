@@ -16,7 +16,12 @@ namespace dmz {
       Q_OBJECT
 
       public:
-         QtSingletonApplication (const QString &id, int argc, char **argv, RuntimeContext *context);
+         QtSingletonApplication (
+            const QString &id,
+            int argc,
+            char **argv,
+            RuntimeContext *context);
+
          ~QtSingletonApplication ();
 
          QString get_requested_file ();

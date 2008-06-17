@@ -550,7 +550,10 @@ dmz::DynamicsPluginODESimple::get_cfm () { return _CFM; }
 
 
 void
-dmz::DynamicsPluginODESimple::_ode_collision_callback (void* data, dGeomID o1, dGeomID o2) {
+dmz::DynamicsPluginODESimple::_ode_collision_callback (
+      void* data,
+      dGeomID o1,
+      dGeomID o2) {
 
    const int MAX_CONTACTS = 50; // maximum number of contact points per body
 

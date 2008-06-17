@@ -84,7 +84,8 @@ continue to receive position updates.
 \param[in] observer ObjectObserver to release.
 \return Returns dmz::True if the object observer was successfully released.
 
-\fn dmz::Boolean dmz::ObjectModule::release_object_observer_all (dmz::ObjectObserver &observer)
+\fn dmz::Boolean dmz::ObjectModule::release_object_observer_all (
+dmz::ObjectObserver &observer)
 \brief Releases object observer from all attribute subscriptions.
 \param[in] observer ObjectObserver to be released.
 \return Returns dmz::True if the observer is released from all attribute subscriptions.
@@ -189,7 +190,9 @@ const dmz::UUID &Value)
 \param[in] Value UUID object to store in object.
 \return Returns dmz::True if the UUID was successfully stored.
 
-\fn dmz::Boolean dmz::ObjectModule::lookup_uuid (const dmz::Handle ObjectHandle, UUID &value)
+\fn dmz::Boolean dmz::ObjectModule::lookup_uuid (
+const dmz::Handle ObjectHandle,
+UUID &value)
 \brief Looks up object's UUID.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[out] value UUID object to store object's uuid.

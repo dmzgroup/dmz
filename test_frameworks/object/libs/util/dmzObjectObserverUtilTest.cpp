@@ -12,7 +12,7 @@ dmz::ObjectObserverUtilTest::ObjectObserverUtilTest (
       Config &local,
       Config &global) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       test (Info.get_name (), Info.get_context ()),
       _log (Info.get_name (), Info.get_context ()),
@@ -27,9 +27,9 @@ dmz::ObjectObserverUtilTest::ObjectObserverUtilTest (
 dmz::ObjectObserverUtilTest::~ObjectObserverUtilTest () {;}
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::ObjectObserverUtilTest::update_sync (const Float64 TimeDelta) {
+dmz::ObjectObserverUtilTest::update_time_slice (const Float64 TimeDelta) {
 
    _objMod = get_object_module ();
 

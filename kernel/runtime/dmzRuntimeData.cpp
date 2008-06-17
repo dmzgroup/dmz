@@ -941,7 +941,10 @@ dmz::Data::lookup_float32 (
 
 */
 dmz::Boolean
-dmz::Data::store_float64 (const Handle AttrHandle, const Int32 Element, const Float64 Value) {
+dmz::Data::store_float64 (
+      const Handle AttrHandle,
+      const Int32 Element,
+      const Float64 Value) {
 
    Boolean result (False);
 

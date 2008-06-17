@@ -325,7 +325,11 @@ dmz::QtExtLuaConsole::update_plugin_state (
          while (current && (count < 100)) {
 
             Config history ("history");
-            history.store_attribute ("value", encode_base64 (qPrintable (current->Value)));
+
+            history.store_attribute (
+               "value",
+                encode_base64 (qPrintable (current->Value)));
+
             session.add_config (history);
             current = current->next;
             count++;

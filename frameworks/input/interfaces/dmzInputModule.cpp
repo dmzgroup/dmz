@@ -6,7 +6,9 @@
 \ingroup Input
 \brief Input channels module interface.
 
-\fn dmz::InputModule *dmz::InputModule::cast (const Plugin *PluginPtr, const String &PluginName)
+\fn dmz::InputModule *dmz::InputModule::cast (
+const Plugin *PluginPtr,
+const String &PluginName)
 \brief Casts Plugin pointer to an InputModule
 \details If the Plugin object implements the InputModule interface, a pointer
 to the InputModule interface of the Plugin is returned.

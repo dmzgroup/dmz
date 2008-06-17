@@ -12,7 +12,7 @@ dmz::QtPluginCanvasAutoTrack::QtPluginCanvasAutoTrack (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defaultAttributeHandle (0),
@@ -55,7 +55,7 @@ dmz::QtPluginCanvasAutoTrack::discover_plugin (
 
 
 void
-dmz::QtPluginCanvasAutoTrack::update_sync (const Float64 TimeDelta) {
+dmz::QtPluginCanvasAutoTrack::update_time_slice (const Float64 TimeDelta) {
 
    if (_updateView && _canvasModule && _hilHandle) {
       

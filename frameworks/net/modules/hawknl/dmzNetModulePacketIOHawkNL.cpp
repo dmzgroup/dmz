@@ -7,7 +7,7 @@ dmz::NetModulePacketIOHawkNL::NetModulePacketIOHawkNL (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       NetModulePacketIO (Info),
       _log (Info.get_name (), Info.get_context ()),
       _sock (NL_INVALID),
@@ -27,9 +27,9 @@ dmz::NetModulePacketIOHawkNL::~NetModulePacketIOHawkNL () {
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::NetModulePacketIOHawkNL::update_sync (const Float64 TimeDelta) {
+dmz::NetModulePacketIOHawkNL::update_time_slice (const Float64 TimeDelta) {
 
    if (_buffer && (_sock != NL_INVALID)) {
 

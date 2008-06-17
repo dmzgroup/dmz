@@ -489,7 +489,11 @@ dmz::InputEventMouse::update (const InputEventMouse &Value) {
 
       set_window_size (Value.get_window_size_x (), Value.get_window_size_y ());
       set_mouse_position (Value.get_mouse_x (), Value.get_mouse_y ());
-      set_mouse_screen_position (Value.get_mouse_screen_x (), Value.get_mouse_screen_y ());
+
+      set_mouse_screen_position (
+         Value.get_mouse_screen_x (),
+         Value.get_mouse_screen_y ());
+
       set_button_mask (Value.get_button_mask ());
       set_scroll_delta (Value.get_scroll_delta_x (), Value.get_scroll_delta_y ());
       

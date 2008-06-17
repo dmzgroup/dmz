@@ -43,8 +43,8 @@
 		7A4934D40E01E07C009C7A49 /* dmzXMLParserExpat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342E0E01DA0B009C7A49 /* dmzXMLParserExpat.cpp */; };
 		7A4934D50E01E07C009C7A49 /* dmzXMLUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49342F0E01DA0B009C7A49 /* dmzXMLUtil.cpp */; };
 		7A4934D60E01E07C009C7A49 /* dmzXMLUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A4934300E01DA0B009C7A49 /* dmzXMLUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A4934EB0E01E8F5009C7A49 /* dmzFileCacheLocal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49341B0E01DA0B009C7A49 /* dmzFileCacheLocal.h */; };
-		7A4934EC0E01E8F5009C7A49 /* dmzFileCacheLocalExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49341D0E01DA0B009C7A49 /* dmzFileCacheLocalExport.h */; };
+		7A4934EB0E01E8F5009C7A49 /* dmzFileCacheLocal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49341B0E01DA0B009C7A49 /* dmzFileCacheLocal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A4934EC0E01E8F5009C7A49 /* dmzFileCacheLocalExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A49341D0E01DA0B009C7A49 /* dmzFileCacheLocalExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A4934F70E01E8F5009C7A49 /* dmzFileCacheLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49341A0E01DA0B009C7A49 /* dmzFileCacheLocal.cpp */; };
 		D20485FC0E02FF1B00F6444C /* dmzPluginMsgDump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A4934330E01DA0B009C7A49 /* dmzPluginMsgDump.cpp */; };
 		D204861E0E03005A00F6444C /* dmzPluginUndoDump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A49343E0E01DA0C009C7A49 /* dmzPluginUndoDump.cpp */; };
@@ -58,49 +58,49 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D24592810E0310D3001AAB67 /* dmzFoundation */;
+			remoteGlobalIDString = D24592810E0310D3001AAB67;
 			remoteInfo = dmzFoundation;
 		};
 		7A1FF68E0E0709A4000132EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A4934E60E01E8F5009C7A49 /* dmzFileCacheLocal */;
+			remoteGlobalIDString = 7A4934E60E01E8F5009C7A49;
 			remoteInfo = dmzFileCacheLocal;
 		};
 		7A1FF6900E0709B4000132EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* dmzXML */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzXML;
 		};
 		7A1FF6920E0709BF000132EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A4935060E01E91D009C7A49 /* expat */;
+			remoteGlobalIDString = 7A4935060E01E91D009C7A49;
 			remoteInfo = expat;
 		};
 		7A1FF6940E0709C1000132EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D20485E80E02FE5D00F6444C /* dmzPluginMsgDump */;
+			remoteGlobalIDString = D20485E80E02FE5D00F6444C;
 			remoteInfo = dmzPluginMsgDump;
 		};
 		7A1FF6960E0709C3000132EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D20486020E02FFBC00F6444C /* dmzPluginUndoDump */;
+			remoteGlobalIDString = D20486020E02FFBC00F6444C;
 			remoteInfo = dmzPluginUndoDump;
 		};
 		7A1FF6980E0709C5000132EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D204860D0E02FFD000F6444C /* dmzPluginUndo */;
+			remoteGlobalIDString = D204860D0E02FFD000F6444C;
 			remoteInfo = dmzPluginUndo;
 		};
 		7A3979020E01EC5E00B484F3 /* PBXContainerItemProxy */ = {
@@ -957,6 +957,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
 				PRODUCT_NAME = dmzXML;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+				SYMROOT = ../build;
 			};
 			name = Debug;
 		};
@@ -976,6 +977,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
 				PRODUCT_NAME = dmzXML;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+				SYMROOT = ../build;
 			};
 			name = Release;
 		};
@@ -1045,6 +1047,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
 				PRODUCT_NAME = dmzFileCacheLocal;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+				SYMROOT = ../build;
 			};
 			name = Debug;
 		};
@@ -1064,6 +1067,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
 				PRODUCT_NAME = dmzFileCacheLocal;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+				SYMROOT = ../build;
 			};
 			name = Release;
 		};
@@ -1086,6 +1090,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
 				PRODUCT_NAME = expat;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+				SYMROOT = ../build;
 			};
 			name = Debug;
 		};
@@ -1105,6 +1110,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
 				PRODUCT_NAME = expat;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+				SYMROOT = ../build;
 			};
 			name = Release;
 		};
@@ -1127,6 +1133,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
 				PRODUCT_NAME = dmzPluginMsgDump;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+				SYMROOT = ../build;
 			};
 			name = Debug;
 		};
@@ -1146,6 +1153,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
 				PRODUCT_NAME = dmzFileCacheLocal;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+				SYMROOT = ../build;
 			};
 			name = Release;
 		};
@@ -1168,6 +1176,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
 				PRODUCT_NAME = dmzPluginUndoDump;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+				SYMROOT = ../build;
 			};
 			name = Debug;
 		};
@@ -1187,6 +1196,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
 				PRODUCT_NAME = dmzFileCacheLocal;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+				SYMROOT = ../build;
 			};
 			name = Release;
 		};
@@ -1209,6 +1219,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
 				PRODUCT_NAME = dmzPluginUndo;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+				SYMROOT = ../build;
 			};
 			name = Debug;
 		};
@@ -1228,6 +1239,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include;
 				PRODUCT_NAME = dmzFileCacheLocal;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+				SYMROOT = ../build;
 			};
 			name = Release;
 		};
@@ -1240,6 +1252,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				PREBINDING = NO;
 				PRODUCT_NAME = dmzFoundation;
+				SYMROOT = ../build;
 			};
 			name = Debug;
 		};
@@ -1252,6 +1265,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				PREBINDING = NO;
 				PRODUCT_NAME = dmzFoundation;
+				SYMROOT = ../build;
 				ZERO_LINK = NO;
 			};
 			name = Release;

@@ -19,11 +19,11 @@
 
 
 namespace dmz {
-   
+
    class DMZ_QT_CANVAS_VIEW_LINK_SYMBOL QtCanvasView : public QGraphicsView {
 
       Q_OBJECT
-      
+
       public:
          QtCanvasView (QWidget *parent = 0);
          ~QtCanvasView ();
@@ -35,7 +35,7 @@ namespace dmz {
 
       signals:
          void scale_changed (qreal);
-         
+
       protected:
          virtual void drawBackground (QPainter *painter, const QRectF &rect);
          virtual void paintEvent (QPaintEvent *event);
@@ -47,7 +47,7 @@ namespace dmz {
          virtual void mousePressEvent (QMouseEvent *event);
          virtual void mouseReleaseEvent (QMouseEvent *event);
          virtual void mouseMoveEvent (QMouseEvent *event);
-         
+
          QPointF _lastDragPos;
 
       private:

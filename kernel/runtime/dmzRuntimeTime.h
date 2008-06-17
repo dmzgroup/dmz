@@ -24,7 +24,7 @@ namespace dmz {
 
          void set_time_factor (const Float64 Value);
          Float64 get_time_factor () const;
-         
+
          void set_target_frame_frequency (const Float64 Value);
          Float64 get_target_frame_frequency () const;
 

@@ -81,15 +81,15 @@ dmz::ObjectModuleBasic::~ObjectModuleBasic () {
    if (_recycleList) { delete _recycleList; _recycleList = 0; }
 
    HashTableHandleIterator it;
-            
+
    SubscriptionStruct *ss (_subscriptionTable.get_first (it));
-   
+
    RuntimeContext *context (_PluginInfoData.get_context ());
-   
+
    while (ss) {
-   
+
       if (ObjectObserver::is_valid (ss->SubHandle, context)) {
-   
+
          ss->obs.remove_object_module (_PluginInfoData.get_name (), *this);
       }
 
@@ -239,7 +239,7 @@ dmz::ObjectModuleBasic::register_object_observer (
 
       if (!attrMaskPtr) {
 
-         attrMaskPtr = new Mask (AttributeMask); 
+         attrMaskPtr = new Mask (AttributeMask);
 
          if (attrMaskPtr) {
 
@@ -1041,7 +1041,7 @@ dmz::ObjectModuleBasic::store_link_attribute_object (
 
       LinkTable *subTable = super->subTable.lookup (ls->AttributeHandle);
 
-      if (AttributeObjectHandle != ls->attrObjectHandle) { 
+      if (AttributeObjectHandle != ls->attrObjectHandle) {
 
          UUID prevUUID;
          const Handle Prev (ls->attrObjectHandle);
@@ -2546,7 +2546,7 @@ dmz::ObjectModuleBasic::remove_object_attribute (
 
       if (ObjectTypeMask & AttrMask) {
 
-         ObjectType *ptr (obj->typeTable.remove (AttributeHandle)); 
+         ObjectType *ptr (obj->typeTable.remove (AttributeHandle));
          if (ptr) { delete ptr; ptr = 0; }
       }
 
@@ -3889,7 +3889,7 @@ dmz::ObjectModuleBasic::_dump_object_attributes_to_observer (
 
    if ((UUIDMask & AttributeMask) && (AttributeHandle == _defaultHandle)) {
 
-      if (Obj.uuid) { 
+      if (Obj.uuid) {
 
          const UUID EmptyUUID;
 

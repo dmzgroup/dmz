@@ -267,8 +267,8 @@ struct dmz::InputEventKey::State {
 
    Boolean operator== (const State &Value) const {
 
-      return (state == Value.state) && 
-         (value == Value.value) && 
+      return (state == Value.state) &&
+         (value == Value.value) &&
          (sourceHandle == Value.sourceHandle);
    }
 
@@ -348,7 +348,7 @@ dmz::InputEventKey::get_key () const { return _state.value; }
 \brief Updates key state.
 \param[in] Value Key state.
 \return Returns dmz::True if the new state is different from the current state.
- 
+
 */
 dmz::Boolean
 dmz::InputEventKey::update_key_state (const Boolean Value) {

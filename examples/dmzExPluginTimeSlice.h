@@ -24,15 +24,15 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr) {;}
-         
+
          // TimeSlice Interface
          virtual void update_time_slice (const Float64 DeltaTime);
-         
+
       protected:
          void _init (Config &local);
 
          Log _log;
-         
+
       private:
          ExPluginTimeSlice ();
          ExPluginTimeSlice (const ExPluginTimeSlice &);

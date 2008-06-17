@@ -410,5 +410,5 @@ dmz::HashTableUUIDTemplate<T>::set_lock (HashTableLock *lock) {
 
 //! Gets the table lock.
 template <class T> inline dmz::HashTableLock *
-dmz::HashTableUUIDTemplate<T>::get_lock () { return __tableLock; } 
+dmz::HashTableUUIDTemplate<T>::get_lock () { return __tableLock; }
 #endif /* DMZ_TYPES_HASH_TABLE_UUID_TEMPLATE_DOT_H */

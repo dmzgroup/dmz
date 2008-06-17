@@ -21,15 +21,15 @@ namespace dmz {
 
          // ObjectModuleSelect Interface
          virtual void get_selected_objects (HandleContainer &container);
-      
+
          virtual Boolean is_selected (const Handle ObjectHandle);
-   
+
          virtual Boolean select_object (
             const Handle ObjectHandle,
             const ObjectSelectModeEnum Mode);
-      
+
          virtual Boolean unselect_object (const Handle ObjectHandle);
-   
+
          virtual void unselect_all_objects ();
 
          // Plugin Interface

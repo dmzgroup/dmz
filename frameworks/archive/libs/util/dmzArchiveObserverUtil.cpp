@@ -20,7 +20,7 @@ struct dmz::ArchiveObserverUtil::State {
    Definitions defs;
    ArchiveModule *module;
    HashTableStringTemplate<Handle> handleTable;
-   
+
    State (const PluginInfo &Info, const Config &Init) :
          ArchiveModuleName (config_to_string ("module.archive.name", Init)),
          log (Info.get_name () + ".ArchiveObserverUtil", Info.get_context ()),

@@ -24,15 +24,15 @@ namespace dmz {
          virtual Boolean destroy_audio_handle (const Handle AudioHandle) = 0;
 
          virtual Handle play_sound (
-            const Handle AudioHandle, 
+            const Handle AudioHandle,
             const SoundAttributes &Attributes) = 0;
 
          virtual Boolean update_sound (
-            const Handle InstanceHandle, 
+            const Handle InstanceHandle,
             const SoundAttributes &Attributes) = 0;
 
          virtual Boolean lookup_sound (
-            const Handle InstanceHandle, 
+            const Handle InstanceHandle,
             SoundAttributes &attributes) = 0;
 
          virtual Boolean stop_sound (const Handle InstanceHandle) = 0;
@@ -52,7 +52,7 @@ namespace dmz {
             const Handle ListenerHandle,
             Vector &position,
             Matrix &orientation) = 0;
-         
+
          virtual Boolean destroy_listener (const Handle ListenerHandle) = 0;
 
       protected:
@@ -68,10 +68,10 @@ namespace dmz {
 
 
 inline dmz::AudioModule *
-dmz::AudioModule::cast (const Plugin *PluginPtr, const String &PluginName) { 
+dmz::AudioModule::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (AudioModule *)lookup_rtti_interface (
-      DMZ_AUDIO_MODULE_INTERFACE_NAME, 
+      DMZ_AUDIO_MODULE_INTERFACE_NAME,
       PluginName,
       PluginPtr);
 }

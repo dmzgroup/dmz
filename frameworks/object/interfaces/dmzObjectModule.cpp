@@ -14,7 +14,7 @@ The object module supports both a push and pull model for attribute updates. The
 lookup_* functions may be used to pull object attributes from the object module.
 An object observer is used to push attribute updates.
 An object observer is registered with the object module and
-may subscribe to specific attributes. After registration, the object observer 
+may subscribe to specific attributes. After registration, the object observer
 will be notified whenever an object's attributes are updated.
 Attribute handles are what allow multiple values to be stored in one
 attribute. Most attributes relating to the current object state are stored with the
@@ -261,7 +261,7 @@ const dmz::Handle LinkHandle,
 const dmz::Handle AttributeObjectHandle)
 \brief Stores link attribute object.
 \details Links may be associated with an object in the object module. This object
-contains the links attributes. This object may define the lines color, thickness, 
+contains the links attributes. This object may define the lines color, thickness,
 direction, etc. The same attribute object may be associated with multiple links.
 There is nothing special about a links attribute object. It is an object like any
 other object in the module. Set \a AttributeObjectHandle to zero to remove the

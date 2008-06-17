@@ -40,7 +40,7 @@ dmz::QtCanvasScene::drawBackground (QPainter *painter, const QRectF &rect) {
 
          lines.append (QLineF (rect.left (), y, rect.right (), y));
       }
- 
+
 //   qDebug () << lines.size ();
       painter->drawLines (lines.data (), lines.size ());
 

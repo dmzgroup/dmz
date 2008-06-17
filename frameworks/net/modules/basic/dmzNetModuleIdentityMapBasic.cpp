@@ -179,7 +179,7 @@ dmz::NetModuleIdentityMapBasic::store_name (
          if (!es->name.is_null ()) { _nameTable.remove (es->name); }
 
          es->name = Name;
-  
+
          if (!es->name.is_null ()) { result = _nameTable.store (Name, es); }
       }
    }

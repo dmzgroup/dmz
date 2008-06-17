@@ -23,11 +23,11 @@ namespace dmz {
          public QtModuleCanvas {
 
       Q_OBJECT
-      
+
       public:
          QtModuleCanvasBasic (const PluginInfo &Info, Config &local);
          ~QtModuleCanvasBasic ();
-         
+
          // Plugin Interface
          virtual void update_plugin_state (
             const PluginStateEnum State,
@@ -36,11 +36,11 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-         
+
          // QtModuleCanvas Interface
          virtual QGraphicsScene *get_scene ();
          virtual QGraphicsView *get_view ();
-         
+
          virtual Boolean add_item (const Handle ObjectHandle, QGraphicsItem *item);
          virtual QGraphicsItem *lookup_item (const Handle ObjectHandle);
          virtual QGraphicsItem *remove_item (const Handle ObjectHandle);
@@ -77,7 +77,7 @@ namespace dmz {
             const Boolean KeyState);
 
          void _handle_mouse_event (QMouseEvent *me, QWheelEvent *we);
-         
+
          void _save_session ();
          void _load_session ();
          void _init (Config &local);
@@ -98,7 +98,7 @@ namespace dmz {
          Float32 _zoomMax;
          Float32 _zoomStep;
          Float32 _zoomDefault;
-         
+
       private:
          QtModuleCanvasBasic ();
          QtModuleCanvasBasic (const QtModuleCanvasBasic &);

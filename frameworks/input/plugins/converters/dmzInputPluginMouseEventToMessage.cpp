@@ -416,7 +416,7 @@ dmz::InputPluginMouseEventToMessage::discover_plugin (
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_pickMod && (_pickMod == RenderModulePick::cast (PluginPtr))) { _pickMod = 0; } 
+      if (_pickMod && (_pickMod == RenderModulePick::cast (PluginPtr))) { _pickMod = 0; }
    }
 }
 
@@ -584,10 +584,10 @@ dmz::InputPluginMouseEventToMessage::_create_converter2d_basic (
          const UInt32 Button (config_to_uint32 ("button", condition, 0));
 
          const MouseConditionEnum MouseCondition (
-            local_config_to_mouse_condition ("action", condition, _log)); 
+            local_config_to_mouse_condition ("action", condition, _log));
 
          const ResultConditionEnum ResultCondition (
-            local_config_to_result_condition ("result", condition, _log)); 
+            local_config_to_result_condition ("result", condition, _log));
 
          Message message (config_create_message_type (
             "message",

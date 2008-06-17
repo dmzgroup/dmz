@@ -427,7 +427,7 @@ dmz::InputObserverUtil::receive_data_event (
 
 /*!
 
-\fn void dmz::InputObserverUtil::_store_input_module (InputModule &module) 
+\fn void dmz::InputObserverUtil::_store_input_module (InputModule &module)
 \brief Callback made when InputModule is discovered.
 
 \fn void dmz::InputObserverUtil::_remove_input_module (InputModule &module) {;}

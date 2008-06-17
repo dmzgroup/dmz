@@ -17,7 +17,7 @@
 #include <dmzRenderUtilOSG.h>
 
 dmz::RenderModuleIsectOSG::RenderModuleIsectOSG (
-      const PluginInfo &Info, 
+      const PluginInfo &Info,
       const Config &Local) :
       Plugin (Info),
       RenderModuleIsect (Info),
@@ -46,7 +46,7 @@ dmz::RenderModuleIsectOSG::discover_plugin (
       }
    }
    else if (Mode == PluginDiscoverRemove) {
-      
+
       if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
 
          _core = 0;
@@ -116,8 +116,8 @@ dmz::RenderModuleIsectOSG::do_isect (
 //            const osgSim::LineOfSight::Intersections& intersections = los.getIntersections (i);
 
 //            osgSim::LineOfSight::Intersections::const_iterator itr;
-//            for (itr = intersections.begin (); 
-//                 itr != intersections.end () && !result; 
+//            for (itr = intersections.begin ();
+//                 itr != intersections.end () && !result;
 //                 itr++) {
             for (unsigned int j=0; j<resultHits.size (); j++) {
 
@@ -130,18 +130,18 @@ dmz::RenderModuleIsectOSG::do_isect (
 
                lsResult.set_point (lsPoint);
 
-               if (Parameters.get_calculate_normal ()) { 
+               if (Parameters.get_calculate_normal ()) {
 
                   lsResult.set_normal (
                      to_dmz_vector (currentHit.getWorldIntersectNormal ()));
                }
 
-               if (Parameters.get_calculate_distance ()) { 
+               if (Parameters.get_calculate_distance ()) {
 
                   lsResult.set_distance ((lsPoint - sourceArray[i]).magnitude ());
                }
 
-               if (Parameters.get_calculate_cull_mode ()) { 
+               if (Parameters.get_calculate_cull_mode ()) {
 
                   osg::Drawable *drawObject = (currentHit.getDrawable ());
 
@@ -154,30 +154,30 @@ dmz::RenderModuleIsectOSG::do_isect (
 
                   if (cf) {
 
-                     if (cf->getMode () == osg::CullFace::FRONT || 
+                     if (cf->getMode () == osg::CullFace::FRONT ||
                            cf->getMode () == osg::CullFace::FRONT_AND_BACK)  {
 
                         cullMask |= IsectPolygonFrontCulledMask;
                      }
 
-                     if (cf->getMode () == osg::CullFace::BACK || 
+                     if (cf->getMode () == osg::CullFace::BACK ||
                            cf->getMode () == osg::CullFace::FRONT_AND_BACK) {
 
                         cullMask |= IsectPolygonBackCulledMask;
                      }
                   }
 
-                  lsResult.set_cull_mode (cullMask); 
+                  lsResult.set_cull_mode (cullMask);
                }
 
-               if (Parameters.get_calculate_object_handle ()) { 
+               if (Parameters.get_calculate_object_handle ()) {
 
                   osg::Geode *hitObject = currentHit.getGeode ();
 //                  _log.out << "need a way to grab object handle" << endl;
                }
 
                resultContainer.add_result (lsResult);
-               
+
                if (firstPoint) {
 
                   result = true;
@@ -188,7 +188,7 @@ dmz::RenderModuleIsectOSG::do_isect (
       }
 
       if (closestPoint && resultContainer.get_result_count () > 1) {
-         
+
          IsectResult current;
          resultContainer.get_first (current);
          IsectResult closest (current);
@@ -202,7 +202,7 @@ dmz::RenderModuleIsectOSG::do_isect (
             if (current.get_distance (testDist)) {
 
                if (testDist < closestDist) {
-                  
+
                   closest = current;
                }
             }
@@ -262,8 +262,8 @@ dmz::RenderModuleIsectOSG::do_isect (
          const osgSim::LineOfSight::Intersections& intersections = los.getIntersections (i);
 
          osgSim::LineOfSight::Intersections::const_iterator itr;
-         for ( itr = intersections.begin (); 
-               itr != intersections.end () && !result; 
+         for ( itr = intersections.begin ();
+               itr != intersections.end () && !result;
                itr++) {
 
             Vector losPoint = to_dmz_vector (intersections[j]);
@@ -273,7 +273,7 @@ dmz::RenderModuleIsectOSG::do_isect (
 
             losResult.set_point (losPoint);
 
-            if (Parameters.get_calculate_normal ()) { 
+            if (Parameters.get_calculate_normal ()) {
 
                Vector null (0.0, 0.0, 0.0);
                losResult.set_normal (null);
@@ -281,25 +281,25 @@ dmz::RenderModuleIsectOSG::do_isect (
                _log.out << "need a way to compute normals" << endl;
             }
 
-            if (Parameters.get_calculate_distance ()) { 
+            if (Parameters.get_calculate_distance ()) {
 
                losResult.set_distance ((losPoint - sourceArray[i]).magnitude ());
             }
 
-            if (Parameters.get_calculate_cull_mode ()) { 
+            if (Parameters.get_calculate_cull_mode ()) {
 
-               losResult.set_cull_mode (IsectPolygonBackCulledMask); 
+               losResult.set_cull_mode (IsectPolygonBackCulledMask);
                // problem
                _log.out << "need a way to read cull modes" << endl;
             }
 
-            if (Parameters.get_calculate_object_handle ()) { 
+            if (Parameters.get_calculate_object_handle ()) {
 
                _log.out << "need a way to grab object handle" << endl;
             }
 
             resultContainer.add_result (losResult);
-            
+
             if (firstPoint) {
 
                result = true;
@@ -309,7 +309,7 @@ dmz::RenderModuleIsectOSG::do_isect (
       }
 
       if (closestPoint && resultContainer.get_result_count () > 1) {
-         
+
          IsectResult current;
          resultContainer.get_first (current);
          IsectResult closest (current);
@@ -323,7 +323,7 @@ dmz::RenderModuleIsectOSG::do_isect (
             if (current.get_distance (testDist)) {
 
                if (testDist < closestDist) {
-                  
+
                   closest = current;
                }
             }
@@ -358,7 +358,7 @@ dmz::RenderModuleIsectOSG::disable_isect (const Handle ObjectHandle) {
 }
 
 
-void 
+void
 dmz::RenderModuleIsectOSG::_init (const Config &Local) {
 
 }

@@ -63,7 +63,7 @@ dmz::QtCanvasObject::paint (
       painter->setBrush (Qt::NoBrush);
       painter->drawRect (boundingRect ().adjusted (-pad, -pad, pad, pad));
    }
-   
+
    // QColor color (Qt::black);
    // color.setAlphaF (0.25);
    // painter->setBrush (color);
@@ -77,11 +77,11 @@ dmz::QtPluginCanvasObject::ObjectStruct::update () {
    if (item) {
 
       QTransform trans;
-      
+
       trans.translate (posX, posY);
       trans.rotateRadians (heading);
       if (scaleX && scaleY) { trans.scale (scaleX, scaleY); }
-      
+
       item->setTransform (trans);
    }
 }
@@ -102,7 +102,7 @@ dmz::QtPluginCanvasObject::QtPluginCanvasObject (
       _canvasModuleName (),
       _objectTable (),
       _updateTable () {
-   
+
    _init (local, global);
 }
 
@@ -242,25 +242,25 @@ dmz::QtPluginCanvasObject::create_object (
       name << "." << ObjectHandle;
 
       ObjectStruct *os (new ObjectStruct (ObjectHandle));
-      
+
       os->item->setData (QtCanvasObjectNameIndex, name.get_buffer ());
-      
+
       ObjectModule *objMod (get_object_module ());
-      
+
       if (objMod) {
-         
+
          Vector pos;
          Matrix ori;
-         
+
          objMod->lookup_position (ObjectHandle, _defaultAttributeHandle, pos);
          objMod->lookup_orientation (ObjectHandle, _defaultAttributeHandle, ori);
-         
+
          os->posX = pos.get_x ();
          os->posY = pos.get_z ();
          os->heading = get_heading (ori);
          os->update ();
       }
-      
+
       _objectTable.store (os->ObjHandle, os);
 
       _canvasModule->add_item (os->ObjHandle, os->item);
@@ -274,7 +274,7 @@ dmz::QtPluginCanvasObject::destroy_object (
       const Handle ObjectHandle) {
 
    ObjectStruct *os (_objectTable.remove (ObjectHandle));
-   
+
    if (os) {
 
       _updateTable.remove (ObjectHandle);
@@ -323,7 +323,7 @@ dmz::QtPluginCanvasObject::unlink_objects (
       const Handle SubHandle) {
 
    if (_canvasModule) {
-      
+
       if (AttributeHandle == _linkAttributeHandle) {
 
          QGraphicsItem *superItem (_canvasModule->lookup_item (SuperHandle));
@@ -375,16 +375,16 @@ dmz::QtPluginCanvasObject::update_object_orientation (
       const Handle AttributeHandle,
       const Matrix &Value,
       const Matrix *PreviousValue) {
-      
+
    if (AttributeHandle == _defaultAttributeHandle) {
 
       ObjectStruct *os (_objectTable.lookup (ObjectHandle));
-      
+
       if (os) {
 
          os->heading = get_heading (Value);
 
-         if (!_updateTable.lookup (ObjectHandle)) { 
+         if (!_updateTable.lookup (ObjectHandle)) {
 
             _updateTable.store (ObjectHandle, os);
          }
@@ -427,7 +427,7 @@ void
 dmz::QtPluginCanvasObject::_init (Config &local, Config &global) {
 
    _canvasModuleName = config_to_string ("module.canvas.name", local);
-   
+
    Config pluginList;
 
    if (local.lookup_all_config ("plugins.plugin", pluginList)) {
@@ -457,24 +457,24 @@ dmz::QtPluginCanvasObject::_init (Config &local, Config &global) {
 
       Config data;
       ConfigIterator it;
-      
+
       Boolean done (!preLoadList.get_first_config (it, data));
 
       while (!done) {
 
          ObjectType objType;
          Mask objState;
-         
+
          if (_defs.lookup_object_type (config_to_string ("type", data), objType)) {
-            
+
             _defs.lookup_state (config_to_string ("state", data), objState);
-            
+
             _log.info << "Pre-Loading object of type: " << objType.get_name () << endl;
             _get_model_struct (objType, objState);
          }
-            
+
          done = !preLoadList.get_next_config (it, data);
-      }      
+      }
    }
 #endif
 }

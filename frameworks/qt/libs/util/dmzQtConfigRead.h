@@ -27,7 +27,7 @@ namespace dmz {
    QPointF config_to_qpointf (const Config &Source);
    QPointF config_to_qpointf (const String &Name, const Config &Source);
    QPointF config_to_qpointf (const Config &Source, const QPointF &DefaultValue);
-   
+
    DMZ_QT_UTIL_LINK_SYMBOL QPointF config_to_qpointf (
       const String &Name,
       const Config &Source,
@@ -36,16 +36,16 @@ namespace dmz {
    QSizeF config_to_qsizef (const Config &Source);
    QSizeF config_to_qsizef (const String &Name, const Config &Source);
    QSizeF config_to_qsizef (const Config &Source, const QSizeF &DefaultValue);
-   
+
    DMZ_QT_UTIL_LINK_SYMBOL QSizeF config_to_qsizef (
       const String &Name,
       const Config &Source,
       const QSizeF &DefaultValue);
-   
+
    QRectF config_to_qrectf (const Config &Source);
    QRectF config_to_qrectf (const String &Name, const Config &Source);
    QRectF config_to_qrectf (const Config &Source, const QRectF &DefaultValue);
-   
+
    DMZ_QT_UTIL_LINK_SYMBOL QRectF config_to_qrectf (
       const String &Name,
       const Config &Source,
@@ -54,7 +54,7 @@ namespace dmz {
    QMatrix config_to_qmatrix (const Config &Source);
    QMatrix config_to_qmatrix (const String &Name, const Config &Source);
    QMatrix config_to_qmatrix (const Config &Source, const QMatrix &DefaultValue);
-   
+
    DMZ_QT_UTIL_LINK_SYMBOL QMatrix config_to_qmatrix (
       const String &Name,
       const Config &Source,
@@ -63,7 +63,7 @@ namespace dmz {
    QByteArray config_to_qbytearray (const Config &Source);
    QByteArray config_to_qbytearray (const String &Name, const Config &Source);
    QByteArray config_to_qbytearray (const Config &Source, const QByteArray &DefaultValue);
-   
+
    DMZ_QT_UTIL_LINK_SYMBOL QByteArray config_to_qbytearray (
       const String &Name,
       const Config &Source,
@@ -77,7 +77,7 @@ namespace dmz {
       const String &Name,
       const Config &Source,
       const QColor &DefaultValue);
-      
+
    DMZ_QT_UTIL_LINK_SYMBOL void qicon_config_read (
       const String &Name,
       const Config &Source,
@@ -265,23 +265,23 @@ dmz::config_to_qcolor (const Config &Data, const QColor &Value) {
 
 // inline QIcon
 // dmz::config_to_qicon (const Config &Data) {
-// 
+//
 //    const QIcon Value;
 //    return config_to_qicon ("", Data, Value);
 // }
-// 
-// 
+//
+//
 // inline QIcon
 // dmz::config_to_qicon (const String &Name, const Config &Data) {
-// 
+//
 //    const QIcon Value;
 //    return config_to_qicon (Name, Data, Value);
 // }
-// 
-// 
+//
+//
 // inline QIcon
 // dmz::config_to_qicon (const Config &Data, const QIcon &Value) {
-// 
+//
 //    return config_to_qicon ("", Data, Value);
 // }
 

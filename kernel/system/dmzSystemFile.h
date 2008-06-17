@@ -44,7 +44,7 @@ namespace dmz {
          Boolean _valid; //!< Set to dmz::True if directory push was successful.
 
       private:
-         PushDirectory (); 
+         PushDirectory ();
          PushDirectory (const PushDirectory &);
          PushDirectory &operator= (const PushDirectory &);
    };
@@ -77,7 +77,7 @@ namespace dmz {
    DMZ_KERNEL_LINK_SYMBOL Boolean create_directory (const String &Path);
    DMZ_KERNEL_LINK_SYMBOL Boolean get_absolute_path (const String &Path, String &absPath);
    DMZ_KERNEL_LINK_SYMBOL Boolean remove_file (const String &Path);
- 
+
    // This is needed because Microsoft has deprecated the ANSI C file calls.
    DMZ_KERNEL_LINK_SYMBOL FILE *open_file (const String &FileName, const String &Opts);
    DMZ_KERNEL_LINK_SYMBOL Int32 read_file (

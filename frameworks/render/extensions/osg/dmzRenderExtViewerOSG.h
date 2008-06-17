@@ -10,7 +10,7 @@
 
 
 namespace dmz {
-   
+
    class InputModule;
    class RenderModuleCoreOSG;
    class RenderCameraManipulatorOSG;
@@ -31,7 +31,7 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-         
+
          // TimeSlice Interface
          virtual void update_time_slice (const Float64 TimeDelta);
 

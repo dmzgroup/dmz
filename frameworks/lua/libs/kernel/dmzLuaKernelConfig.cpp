@@ -523,7 +523,7 @@ config_lookup_uuid (lua_State *L) {
       if (uuidStr && uuid.from_string (uuidStr) && lua_create_uuid (L, uuid)) {
 
          result = 1;
-      }     
+      }
    }
 
    return result;

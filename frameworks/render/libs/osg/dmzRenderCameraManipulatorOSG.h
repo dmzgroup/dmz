@@ -23,7 +23,7 @@ namespace dmz {
          virtual void setByInverseMatrix(const osg::Matrixd& matrix) {;}
 
          // get the position of the manipulator as 4x4 Matrix
-         virtual osg::Matrixd getMatrix() const { 
+         virtual osg::Matrixd getMatrix() const {
 
             const osg::Matrixd rotation (to_osg_matrix (_rotation));
             const osg::Matrixd result (osg::Matrixd::translate (_homeCenter) * rotation);
@@ -32,7 +32,7 @@ namespace dmz {
 
          // get the position of the manipulator as a inverse matrix of the manipulator,
          // typically used as a model view matrix
-         virtual osg::Matrixd getInverseMatrix() const { 
+         virtual osg::Matrixd getInverseMatrix() const {
 
             const osg::Matrixd rotation (to_osg_inverse_matrix (_rotation));
             const osg::Matrixd result (osg::Matrixd::translate (-_homeCenter) * rotation);
@@ -59,7 +59,7 @@ namespace dmz {
 inline
 dmz::RenderCameraManipulatorOSG::RenderCameraManipulatorOSG () :
       osgGA::MatrixManipulator (), _rotation () {;}
-            
+
 
 inline
 dmz::RenderCameraManipulatorOSG::~RenderCameraManipulatorOSG () {;}

@@ -40,7 +40,7 @@ namespace dmz {
          // ObjectObserver Interface.
          virtual void store_object_module (const String &Name, ObjectModule &module);
          virtual void remove_object_module (const String &Name, ObjectModule &module);
-         
+
          virtual void create_object (
             const UUID &Identity,
             const Handle ObjectHandle,

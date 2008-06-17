@@ -203,7 +203,7 @@ dmz::NetModulePacketCodecBasic:: encode_event (
 
       const Int32 Place (outData.get_place ());
       if (_headerCodec->write_header (ees->PacketHandle, outData)) {
-      
+
          if (ees->codec.encode_event (EventHandle, outData)) {
 
             outData.set_place (Place);
@@ -230,7 +230,7 @@ dmz::NetModulePacketCodecBasic::_write_object (
 
       const Int32 Place (outData.get_place ());
       if (_headerCodec->write_header (eos->PacketHandle, outData)) {
-      
+
          if (eos->codec.encode_object (ObjectHandle, Mode, outData)) {
 
             outData.set_place (Place);

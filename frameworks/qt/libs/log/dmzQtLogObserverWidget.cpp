@@ -14,7 +14,7 @@ dmz::QtLogObserverWidget::QtLogObserverWidget (QWidget *parent) :
 
    _ui.setupUi (this);
 
-   QString css = 
+   QString css =
       "tr#debug { color:#888888; } " \
       "tr#info { color:blue; } " \
       "tr#warn { color:orange; } " \
@@ -46,7 +46,7 @@ dmz::QtLogObserverWidget::QtLogObserverWidget (QWidget *parent) :
    _ui.wrappedIcon->hide ();
    _ui.textEdit->setFocus ();
    _logList.append (tr ("All"));
-   
+
    _ui.logLabel->hide ();
    _ui.logComboBox->hide ();
 }
@@ -89,7 +89,7 @@ dmz::QtLogObserverWidget::store_log_message (
             arg (Message.get_buffer ());
 
       _ui.textEdit->append (text);
-      
+
       if (_ui.stackedWidget->currentIndex () == 1) {
 
          if (text.contains (_ui.logComboBox->currentText ())) {
@@ -182,20 +182,20 @@ void
 dmz::QtLogObserverWidget::on_loadButton_clicked () {
 
    QString log =
-      QFileDialog::getOpenFileName (this, tr ("Open Log"), _lastSavedLog, "*.html"); 
+      QFileDialog::getOpenFileName (this, tr ("Open Log"), _lastSavedLog, "*.html");
 
    if (!log.isEmpty ()) {
 
       QFile data (log);
       if (data.open (QIODevice::ReadOnly | QIODevice::Text)) {
-   
+
          QTextStream in (&data);
-   
+
          _logList.clear ();
          _logList.append (tr ("All"));
          _ui.logComboBox->clear ();
          _ui.logComboBox->addItems (_logList);
-   
+
          _ui.textEdit->setHtml (in.readAll ());
       }
    }
@@ -214,7 +214,7 @@ dmz::QtLogObserverWidget::on_saveButton_clicked () {
       defaultLog = "DMZ_Log_";
       defaultLog += QDate::currentDate ().toString ();
       defaultLog += LogExt;
-      defaultLog.replace (QRegExp (" "), "_");   
+      defaultLog.replace (QRegExp (" "), "_");
    }
 
    QString log =
@@ -242,37 +242,37 @@ dmz::QtLogObserverWidget::on_logComboBox_activated (int index) {
    if (index) {
 
 //      _ui.filteredTextEdit->document ()->clear ();
-      
+
 //      QString logText (_ui.textEdit->toHtml ());
-      
+
 //      QTextStream in (&logText);
 //      QString line;
 //      QString number, level, log, message;
-            
+
       // do {
       //    // 4:
       //    // [E]:
       //    // dmzAppQt:
       //    // dmz.plugins.plugin not found. No plugins listed for loading
-      //    
-      //     
+      //
+      //
       //   line = in.readLine ();
-      //   
+      //
       //   if (!line.isEmpty ()) {
-      //   
+      //
       //      QString data (line);
-      //       
+      //
       //      data += in.readLine ();
       //      data += in.readLine ();
       //      data += in.readLine ();
-      //       
+      //
       //      number = data.section (":", 0, 0);
       //      level = data.section (":", 1, 1);
       //      log = data.section (":", 2, 2);
       //      message = data.section (":", 3, 3);
-      //       
+      //
       //      if (log == _ui.logComboBox->itemText (index)) {
-      //          
+      //
       //         QString text =
       //            QString ("<table><tr id=\"%1\">" \
       //                     "  <td>%2:</td>" \
@@ -285,7 +285,7 @@ dmz::QtLogObserverWidget::on_logComboBox_activated (int index) {
       //                      arg (level).
       //                      arg (log).
       //                      arg (message);
-      //                   
+      //
       //         _ui.filteredTextEdit->append (text);
       //       }
       //    }

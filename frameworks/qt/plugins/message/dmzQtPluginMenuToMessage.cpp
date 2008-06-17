@@ -27,7 +27,7 @@ dmz::QtPluginMenuToMessage::QtPluginMenuToMessage (
       _object (0),
       _objectSet (),
       _actionGroup (0),
-      _messageList (),     
+      _messageList (),
       _menu (0) {
 
    _actionGroup = new QActionGroup (this);
@@ -46,7 +46,7 @@ dmz::QtPluginMenuToMessage::QtPluginMenuToMessage (
 dmz::QtPluginMenuToMessage::~QtPluginMenuToMessage () {
 
    if (_menu) { delete _menu; _menu = 0; }
-   
+
    qDeleteAll (_messageList);
    _messageList.clear ();
 }
@@ -95,23 +95,23 @@ dmz::QtPluginMenuToMessage::receive_message (
       Data *outData) {
 
    if (Msg == _showMessage) {
-      
+
       if (InData && _pickModule && _objectModule && _menu) {
-         
+
          Handle obj;
          Vector pos;
-         
+
          if (InData->lookup_handle (_objectAttrHandle, 0, obj) &&
              InData->lookup_vector (_positionAttrHandle, 0, pos)) {
 
             ObjectType type;
-            
+
             _objectModule->lookup_object_type (obj, _defaultAttrHandle, type);
 
             if (_objectSet.contains_exact_type (type)) {
 
-               _object = obj;                
-               
+               _object = obj;
+
                Int32 screenX, screenY;
 
                pos.set_xyz (pos.get_x (), pos.get_z (), 0.0);
@@ -133,13 +133,13 @@ dmz::QtPluginMenuToMessage::_slot_send (QAction *action) {
    if (action && _object) {
 
       foreach (MessageStruct *ms, _messageList) {
-         
+
          if (ms->action == action) {
 
             if (ms->message) {
 
                Data data;
-               
+
                data.store_handle (_objectAttrHandle, 0, _object);
 
                Handle target = ms->targets.get_first ();
@@ -155,7 +155,7 @@ dmz::QtPluginMenuToMessage::_slot_send (QAction *action) {
             break;
          }
       }
-      
+
       _object = 0;
    }
 }
@@ -216,42 +216,42 @@ void
 dmz::QtPluginMenuToMessage::_build_menu (const String &Name, Config &config) {
 
    Config messageList;
-   
+
    if (config.lookup_all_config_merged (Name, messageList)) {
-      
+
       ConfigIterator it;
       Config cd;
-      
+
       while (messageList.get_next_config (it, cd)) {
-       
+
          const String Text (config_to_string ("text", cd));
-         
+
          const String StatusTip (config_to_string ("statusTip", cd, Text));
-         
+
          Message message (config_create_message_type (
             "message", cd, "", get_plugin_runtime_context ()));
-            
+
          if (Text && message && _menu && _actionGroup) {
-            
+
             MessageStruct *next (new MessageStruct ());
 
             if (next) {
-               
+
                next->action = new QAction (Text.get_buffer (), this);
-               
+
                if (next->action) {
-               
+
                   next->action->setStatusTip (StatusTip.get_buffer ());
                   _actionGroup->addAction (next->action);
                }
-               
+
                next->message = message;
                _get_targets ("target", cd, next->targets);
 
                if (config_to_boolean ("separator", cd, False)) { _menu->addSeparator (); }
-               
+
                _menu->addAction (next->action);
-               
+
                _messageList.append (next);
             }
          }
@@ -267,28 +267,28 @@ dmz::QtPluginMenuToMessage::_init (Config &local) {
 
    _objectModuleName = config_to_string ("module.object.name", local);
    _pickModuleName = config_to_string ("module.pick.name", local);
-   
+
    _defaultAttrHandle = _defs.create_named_handle (ObjectAttributeDefaultName);
-   
+
    _source = config_to_named_handle (
       "source.name", local, "dmzQtModuleCanvasBasic", context);
-   
+
    _objectAttrHandle = config_to_named_handle (
       "attribute.object.name", local, "object", context);
-   
+
    _positionAttrHandle = config_to_named_handle (
       "attribute.position.name", local, "position", context);
-      
+
    _showMessage = config_create_message_type (
       "message.show",
       local,
       "ShowObjectMenuMessage",
       context);
-   
+
    subscribe_to_message (_showMessage);
 
    _get_type_set ("object", local, _objectSet);
-   
+
    _build_menu ("menu", local);
 }
 

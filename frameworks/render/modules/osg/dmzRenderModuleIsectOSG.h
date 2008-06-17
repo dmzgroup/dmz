@@ -28,7 +28,7 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-         
+
          virtual Boolean do_isect (
             const IsectParameters &Parameters,
             const IsectTestContainer &TestValues,

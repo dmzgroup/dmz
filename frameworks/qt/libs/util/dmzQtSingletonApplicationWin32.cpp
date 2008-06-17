@@ -49,7 +49,7 @@ class winEventClass : public QWidget {
 
          return result;
       }
-}; 
+};
 
 static HANDLE
 local_lock (const QString &Name) {

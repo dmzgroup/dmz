@@ -185,7 +185,7 @@ dmz::NetExtPacketCodecObjectBasic::encode_object (
             Vector vel;
             ArrayUInt32 stateArray;
             Mask state;
- 
+
             _objMod->lookup_position (ObjectHandle, _defaultHandle, pos);
             _objMod->lookup_orientation (ObjectHandle, _defaultHandle, ori);
             _objMod->lookup_velocity (ObjectHandle, _defaultHandle, vel);

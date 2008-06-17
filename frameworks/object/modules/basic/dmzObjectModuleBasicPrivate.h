@@ -23,7 +23,7 @@ namespace {
       const Handle ObjectHandle;
 
       CreateObjectStruct (const Handle TheHandle) : ObjectHandle (TheHandle) {;}
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.activate_created_object (ObjectHandle);
@@ -35,13 +35,13 @@ namespace {
       const Handle ObjectHandle;
 
       DestroyObjectStruct (const Handle TheHandle) : ObjectHandle (TheHandle) {;}
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.immediate_destroy_object (ObjectHandle);
       }
    };
- 
+
    struct ObjectUUIDStruct : public ostruct {
 
       const Handle ObjectHandle;
@@ -55,13 +55,13 @@ namespace {
             ObjectHandle (TheHandle),
             Identity (TheIdentity),
             PrevIdentity (ThePrevIdentity) {;}
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_uuid (ObjectHandle, Identity, PrevIdentity);
       }
    };
- 
+
    struct RemoveObjectAttrStruct : public ostruct {
 
       const UUID Identity;
@@ -78,7 +78,7 @@ namespace {
             ObjectHandle (TheObjectHandle),
             AttributeHandle (TheAttributeHandle),
             AttrMask (TheAttrMask) {;}
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.remove_object_attribute (
@@ -88,7 +88,7 @@ namespace {
             AttrMask);
       }
    };
- 
+
    struct ObjectLocalityStruct : public ostruct {
 
       const UUID Identity;
@@ -105,13 +105,13 @@ namespace {
             ObjectHandle (TheObjectHandle),
             Locality (TheLocality),
             PrevLocality (ThePrevLocality) {;}
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_locality (Identity, ObjectHandle, Locality, PrevLocality);
       }
    };
- 
+
    struct LinkObjectsStruct : public ostruct {
 
       const Handle LinkHandle;
@@ -134,7 +134,7 @@ namespace {
             SuperHandle (TheSuperHandle),
             SubIdentity (TheSubIdentity),
             SubHandle (TheSubHandle) {;}
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.link_objects (
@@ -146,7 +146,7 @@ namespace {
             SubHandle);
       }
    };
- 
+
    struct UnlinkObjectsStruct : public ostruct {
 
       const Handle LinkHandle;
@@ -169,7 +169,7 @@ namespace {
             SuperHandle (TheSuperHandle),
             SubIdentity (TheSubIdentity),
             SubHandle (TheSubHandle) {;}
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.unlink_objects (
@@ -181,7 +181,7 @@ namespace {
             SubHandle);
       }
    };
- 
+
    struct LinkObjectAttrStruct : public ostruct {
 
       const Handle LinkHandle;
@@ -216,7 +216,7 @@ namespace {
             AttributeObjectHandle (TheAttributeObjectHandle),
             PrevAttributeIdentity (ThePrevAttributeIdentity),
             PrevAttributeObjectHandle (ThePrevAttributeObjectHandle) {;}
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_link_attribute_object (
@@ -232,7 +232,7 @@ namespace {
             PrevAttributeObjectHandle);
       }
    };
- 
+
    struct ObjectTypeStruct : public ostruct {
 
       const UUID Identity;
@@ -254,7 +254,7 @@ namespace {
             PrevValue (ThePrevValue ? new ObjectType (*ThePrevValue) : 0) {;}
 
       virtual ~ObjectTypeStruct () { if (PrevValue) { delete PrevValue; PrevValue = 0; } }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_type (
@@ -265,7 +265,7 @@ namespace {
             PrevValue);
       }
    };
- 
+
    struct ObjectStateStruct : public ostruct {
 
       const UUID Identity;
@@ -290,7 +290,7 @@ namespace {
 
          if (PrevValue) { delete PrevValue; PrevValue = 0; }
       }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_state (
@@ -301,7 +301,7 @@ namespace {
             PrevValue);
       }
    };
- 
+
    struct ObjectFlagStruct : public ostruct {
 
       const UUID Identity;
@@ -326,7 +326,7 @@ namespace {
 
          if (PrevValue) { delete PrevValue; PrevValue = 0; }
       }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_flag (
@@ -337,7 +337,7 @@ namespace {
             PrevValue);
       }
    };
- 
+
    struct ObjectTimeStampStruct : public ostruct {
 
       const UUID Identity;
@@ -362,7 +362,7 @@ namespace {
 
          if (PrevValue) { delete PrevValue; PrevValue = 0; }
       }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_time_stamp (
@@ -373,7 +373,7 @@ namespace {
             PrevValue);
       }
    };
- 
+
    struct ObjectPositionStruct : public ostruct {
 
       const UUID Identity;
@@ -398,7 +398,7 @@ namespace {
 
          if (PrevValue) { delete PrevValue; PrevValue = 0; }
       }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_position (
@@ -409,7 +409,7 @@ namespace {
             PrevValue);
       }
    };
- 
+
    struct ObjectOrientationStruct : public ostruct {
 
       const UUID Identity;
@@ -434,7 +434,7 @@ namespace {
 
          if (PrevValue) { delete PrevValue; PrevValue = 0; }
       }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_orientation (
@@ -470,7 +470,7 @@ namespace {
 
          if (PrevValue) { delete PrevValue; PrevValue = 0; }
       }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_velocity (
@@ -481,7 +481,7 @@ namespace {
             PrevValue);
       }
    };
- 
+
    struct ObjectAccelerationStruct : public ostruct {
 
       const UUID Identity;
@@ -506,7 +506,7 @@ namespace {
 
          if (PrevValue) { delete PrevValue; PrevValue = 0; }
       }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_acceleration (
@@ -517,7 +517,7 @@ namespace {
             PrevValue);
       }
    };
-  
+
    struct ObjectScaleStruct : public ostruct {
 
       const UUID Identity;
@@ -542,7 +542,7 @@ namespace {
 
          if (PrevValue) { delete PrevValue; PrevValue = 0; }
       }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_scale (
@@ -553,7 +553,7 @@ namespace {
             PrevValue);
       }
    };
-   
+
    struct ObjectVectorStruct : public ostruct {
 
       const UUID Identity;
@@ -578,7 +578,7 @@ namespace {
 
          if (PrevValue) { delete PrevValue; PrevValue = 0; }
       }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_vector (
@@ -589,7 +589,7 @@ namespace {
             PrevValue);
       }
    };
-    
+
    struct ObjectScalarStruct : public ostruct {
 
       const UUID Identity;
@@ -614,7 +614,7 @@ namespace {
 
          if (PrevValue) { delete PrevValue; PrevValue = 0; }
       }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_scalar (
@@ -625,7 +625,7 @@ namespace {
             PrevValue);
       }
    };
-     
+
    struct ObjectTextStruct : public ostruct {
 
       const UUID Identity;
@@ -650,7 +650,7 @@ namespace {
 
          if (PrevValue) { delete PrevValue; PrevValue = 0; }
       }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_text (
@@ -661,7 +661,7 @@ namespace {
             PrevValue);
       }
    };
-      
+
    struct ObjectDataStruct : public ostruct {
 
       const UUID Identity;
@@ -686,7 +686,7 @@ namespace {
 
          if (PrevValue) { delete PrevValue; PrevValue = 0; }
       }
-   
+
       virtual void update (ObjectModuleBasic &module) {
 
          module.update_object_data (

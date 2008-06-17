@@ -189,7 +189,7 @@ namespace dmz {
             const Handle EventHandle,
             const Handle AttributeHandle,
             Data &value) = 0;
-            
+
       protected:
          EventModule (const PluginInfo &Info);
          ~EventModule ();

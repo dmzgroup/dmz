@@ -55,7 +55,7 @@ main (int argc, char *argv[]) {
    HashTableUInt32Template<String> testHashTable (4, 0, 0);
    test.validate (
       "HashTableUInt32Template standard constructor.",
-      (testHashTable.get_size () == 4) && !testHashTable.get_count () && 
+      (testHashTable.get_size () == 4) && !testHashTable.get_count () &&
       !testHashTable.get_lock () );
 
    // copy constructor
@@ -65,11 +65,11 @@ main (int argc, char *argv[]) {
    test.validate (
       "HashTableUInt32Template copy constructor.",
       !copyOfNullHashTable.get_size () && !copyOfNullHashTable.get_count () &&
-      (copyOfTestHashTable.get_size () == 4) && !copyOfTestHashTable.get_count () && 
+      (copyOfTestHashTable.get_size () == 4) && !copyOfTestHashTable.get_count () &&
       !copyOfTestHashTable.get_lock () );
 
    // --- lock constructor ---
-   
+
    // ?
 
    // </validate constructors>
@@ -110,7 +110,7 @@ main (int argc, char *argv[]) {
    // validate remove
    test.validate (
       "HashTableUInt32Template test remove function and verify with lookup.",
-      autoGrowHashTable.remove (1248) && 
+      autoGrowHashTable.remove (1248) &&
       !autoGrowHashTable.lookup (1248) );
 
    // what if we try storing a null string
@@ -234,15 +234,15 @@ main (int argc, char *argv[]) {
    test.validate (
       "HashTableUInt32Template check contents of previous (1/4).",
       testHashTable.lookup (1203) &&
-      (testHashTable.lookup (1203) == &dataStringI) ); 
+      (testHashTable.lookup (1203) == &dataStringI) );
    test.validate (
       "HashTableUInt32Template check contents of previous (2/4).",
       testHashTable.lookup (2361) &&
-      (testHashTable.lookup (2361) == &dataStringHeart) ); 
+      (testHashTable.lookup (2361) == &dataStringHeart) );
    test.validate (
       "HashTableUInt32Template check contents of previous (3/4).",
       testHashTable.lookup (8245) &&
-      (testHashTable.lookup (8245) == &dataStringNewJersey) ); 
+      (testHashTable.lookup (8245) == &dataStringNewJersey) );
    test.validate (
       "HashTableUInt32Template check contents of previous (4/4).",
       testHashTable.lookup (5674) &&
@@ -258,21 +258,21 @@ main (int argc, char *argv[]) {
    test.validate (
       "HashTableUInt32Template check contents of previous (1/4).",
       nullHashTable.lookup (1203) &&
-      (nullHashTable.lookup (1203) == &dataStringI) ); 
+      (nullHashTable.lookup (1203) == &dataStringI) );
    test.validate (
       "HashTableUInt32Template check contents of previous (2/4).",
       nullHashTable.lookup (2361) &&
-      (nullHashTable.lookup (2361) == &dataStringHeart) ); 
+      (nullHashTable.lookup (2361) == &dataStringHeart) );
    test.validate (
       "HashTableUInt32Template check contents of previous (3/4).",
       nullHashTable.lookup (8245) &&
-      (nullHashTable.lookup (8245) == &dataStringNewJersey) ); 
+      (nullHashTable.lookup (8245) == &dataStringNewJersey) );
    test.validate (
       "HashTableUInt32Template check contents of previous (4/4).",
       nullHashTable.lookup (5674) &&
-      (nullHashTable.lookup (5674) == &dataStringAGreatDeal) ); 
+      (nullHashTable.lookup (5674) == &dataStringAGreatDeal) );
    nullHashTable.clear(); // back to AGR-4 {}
-   
+
    // </validate assignment operator>
    // ============================================================================ //
    // <validate copy function>
@@ -303,7 +303,7 @@ main (int argc, char *argv[]) {
          dataStringAGreatDeal.get_buffer()));
 
    testHashTable.empty(); // back to STD-4 {}
-   
+
    // try to set a size 4 hash table to a size 8 hash table
    HashTableUInt32Template<String> biggerFixedSizeHashTable (8, 0, 0);
    biggerFixedSizeHashTable.store (3452, &dataStringI);

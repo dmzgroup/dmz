@@ -12,7 +12,7 @@ struct dmz::RenderPick2dUtil::State {
    Log log;
    Definitions defs;
    RenderModulePick *module;
-   
+
    State (const PluginInfo &Info, const Config &Init) :
          RenderModulePickName (config_to_string ("module.pick.name", Init)),
          SourceName (config_to_string ("source.name", Init)),

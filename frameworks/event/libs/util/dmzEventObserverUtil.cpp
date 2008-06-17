@@ -27,7 +27,7 @@ struct dmz::EventObserverUtil::State {
    Mask errorMask;
    Log log;
    Definitions defs;
-   
+
    State (
          const Config &Data,
          const String &LogName,
@@ -46,7 +46,7 @@ struct dmz::EventObserverUtil::State {
    ~State () { table.empty (); }
 
    void register_obs (attrStruct &as, EventObserver &obs) {
-            
+
       if (as.AttrHandle && module) {
 
          module->register_event_observer (as.AttrHandle, as.mask, obs);

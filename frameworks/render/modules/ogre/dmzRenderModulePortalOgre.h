@@ -54,7 +54,7 @@ namespace dmz {
          Float32 _nearClip;
          Float32 _farClip;
          Float32 _fov;
-      
+
       private:
          RenderModulePortalOgre ();
          RenderModulePortalOgre (const RenderModulePortalOgre &);

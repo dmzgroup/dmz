@@ -15,7 +15,7 @@ namespace Ogre { class RenderWindow; class Camera; class Viewport; }
 
 
 namespace dmz {
-   
+
    class InputModule;
    class RenderModuleCoreOgre;
 
@@ -23,7 +23,7 @@ namespace dmz {
          public QWidget,
          public Plugin,
          public RenderExtWindowOgre {
-            
+
       Q_OBJECT
 
       public:
@@ -57,13 +57,13 @@ namespace dmz {
          void _save_session ();
          void _load_session ();
          void _init (const Config &Local);
-         
+
          virtual void _handle_key_event (
             const QKeyEvent &Event,
             const Boolean KeyState);
-            
+
          void _handle_mouse_event (QMouseEvent *me, QWheelEvent *we);
-         
+
          Exit _exit;
          Log _log;
          InputModule *_channels;
@@ -76,7 +76,7 @@ namespace dmz {
          InputEventKey _keyEvent;
          InputEventMouse _mouseEvent;
          HashTableUInt32Template<InputEventKey> _keyDownTable;
-         
+
       private:
          RenderExtWindowOgreQt ();
          RenderExtWindowOgreQt (const RenderExtWindowOgreQt &);

@@ -192,7 +192,7 @@ dmz::LogObserverBasic::store_log_message (
 /*!
 
 \brief Sets log message level that the observer will print to stderr.
-\details This function controls the level of message that is printed to stderr. 
+\details This function controls the level of message that is printed to stderr.
 \param[in] Level Minimum dmz::LogLevelEnum that will be output to stderr.
 
 */

@@ -118,7 +118,7 @@ dmz::InputPluginKeyEventToMessage::_create_targets (
    TargetStruct *current (0);
 
    while (config.get_next_config (it, target)) {
- 
+
       RuntimeContext *context (get_plugin_runtime_context ());
 
       const Handle Source (config_to_named_handle ("source", target, context));

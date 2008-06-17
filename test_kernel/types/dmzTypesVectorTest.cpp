@@ -31,8 +31,8 @@ main (int argc, char *argv[]) {
    testVector.get_xyz (tempX, tempY, tempZ);
    test.validate (
       "Vector standard constructor.",
-      (tempX == 12.0) && 
-      (tempY == 52.0) && 
+      (tempX == 12.0) &&
+      (tempY == 52.0) &&
       (tempZ == 9.0) );
 
    // copy constructor
@@ -40,8 +40,8 @@ main (int argc, char *argv[]) {
    copyOfTestVector.get_xyz (tempX, tempY, tempZ);
    test.validate (
       "Vector copy constructor.",
-      (tempX == 12.0) && 
-      (tempY == 52.0) && 
+      (tempX == 12.0) &&
+      (tempY == 52.0) &&
       (tempZ == 9.0) );
 
    // </validate constructors>
@@ -196,7 +196,7 @@ main (int argc, char *argv[]) {
    // </validate operators>
    // ============================================================================ //
    // <validate magnitude and normalize functions>
-   
+
    // magnitude^2 and magnitude
    testVector.set_xyz (0.0, 3.0, 4.0);
    test.validate (
@@ -230,11 +230,11 @@ main (int argc, char *argv[]) {
    // </validate magnitude and normalize functions>
    // ============================================================================ //
    // <validate vector products>
-   
+
    // dot product
    test.validate (
       "Vector validate dot function.",
-      (vector3.dot (vector2) == 18.0) && 
+      (vector3.dot (vector2) == 18.0) &&
       (vector2.dot (vector3) == 18.0) );
 
    // cross product

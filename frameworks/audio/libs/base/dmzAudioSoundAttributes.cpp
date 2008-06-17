@@ -90,8 +90,8 @@ dmz::SoundAttributes::set_position (const Vector &Pos) {
 
 //! Get position.
 void
-dmz::SoundAttributes::get_position (Vector &pos) const { 
-   
+dmz::SoundAttributes::get_position (Vector &pos) const {
+
    pos = _state.position;
 }
 
@@ -106,8 +106,8 @@ dmz::SoundAttributes::set_velocity (const Vector &Vel) {
 
 //! Get velocity.
 void
-dmz::SoundAttributes::get_velocity (Vector &vel) const { 
-   
+dmz::SoundAttributes::get_velocity (Vector &vel) const {
+
    vel = _state.velocity;
 }
 

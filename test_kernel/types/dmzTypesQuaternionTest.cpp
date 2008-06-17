@@ -40,7 +40,7 @@ int main (int argc, char *argv[]) {
    Float64 arbAngle = (0.7) * Pi64;
    Float64 arbAngleAbove180 = (1.5) * Pi64;
 
-   
+
 
    Quaternion consQuatEmpty;
 
@@ -58,7 +58,7 @@ int main (int argc, char *argv[]) {
 
    // Check for normalization
    test.validate (
-      "Default empty constructor", 
+      "Default empty constructor",
       local_equals (1.0, constQuatEmptyMagnitude));
 
    Quaternion consQuatXYZWValues (1.0, 2.0, 3.0, 4.0);
@@ -91,7 +91,7 @@ int main (int argc, char *argv[]) {
       local_equals (consQuatArbCopy.get_z(), consQuatArb.get_z()) &&
       local_equals (consQuatArbCopy.get_w(), consQuatArb.get_w()));
 
-  
+
    //Assignment operators
    Quaternion assignmentQuat = consQuatXYZWValues;
    test.validate (
@@ -112,28 +112,28 @@ int main (int argc, char *argv[]) {
       "= Operator (Matrix) ",
       (matArbAxisArbAngle == matArbAxisArbAngle2));
 
-  
+
    //Multiplication operators
    Matrix matYawAxis45Angle (yawAxis, HalfPi64/2.0);
    Matrix matPitchAxis45Angle (pitchAxis, HalfPi64/2.0);
    Matrix matRollAxis45Angle (rollAxis, HalfPi64/2.0);
    Matrix matArbAxisAndAngle (vecArbAxis, arbAngle);
 
-   Matrix matCombined1 = 
+   Matrix matCombined1 =
       matYawAxis45Angle *
-      matPitchAxis45Angle * 
+      matPitchAxis45Angle *
       matRollAxis45Angle;
 
-   Matrix matCombined2 = 
-      matPitchAxis45Angle * 
-      matRollAxis45Angle * 
+   Matrix matCombined2 =
+      matPitchAxis45Angle *
+      matRollAxis45Angle *
       matArbAxisAndAngle *
       matYawAxis45Angle;
 
-   Matrix matCombined3 = 
-      matPitchAxis45Angle * 
-      matYawAxis45Angle * 
-      matRollAxis45Angle * 
+   Matrix matCombined3 =
+      matPitchAxis45Angle *
+      matYawAxis45Angle *
+      matRollAxis45Angle *
       matArbAxisAndAngle;
 
    Quaternion quatYawAxis45Angle (yawAxis, HalfPi64/2.0);
@@ -171,25 +171,25 @@ int main (int argc, char *argv[]) {
       (matCombined3 == quatCombined3ToMatrix));
 
 
-   Quaternion quatCombined4 = 
-      quatYawAxis45Angle * 
-      quatPitchAxis45Angle * 
+   Quaternion quatCombined4 =
+      quatYawAxis45Angle *
+      quatPitchAxis45Angle *
       quatRollAxis45Angle;
 
    Matrix quatCombined4ToMatrix (quatCombined4);
 
-   Quaternion quatCombined5 = 
-      quatPitchAxis45Angle * 
-      quatRollAxis45Angle * 
-      quatArbAxisAndAngle * 
+   Quaternion quatCombined5 =
+      quatPitchAxis45Angle *
+      quatRollAxis45Angle *
+      quatArbAxisAndAngle *
       quatYawAxis45Angle;
 
    Matrix quatCombined5ToMatrix (quatCombined5);
 
-   Quaternion quatCombined6 = 
-      quatPitchAxis45Angle * 
-      quatYawAxis45Angle * 
-      quatRollAxis45Angle * 
+   Quaternion quatCombined6 =
+      quatPitchAxis45Angle *
+      quatYawAxis45Angle *
+      quatRollAxis45Angle *
       quatArbAxisAndAngle;
 
    Matrix quatCombined6ToMatrix (quatCombined6);
@@ -286,7 +286,7 @@ int main (int argc, char *argv[]) {
    Quaternion quatFromMatArbBelow180deg2 (matArbAxisAndAngle);
    Quaternion quatFromMatArbAbove180deg2 (matArbAxisAndAngleAbove180);
 
-   
+
    Matrix matFromMatToMat1 (quatFromMat1);
    Matrix matFromMatToMat2 (quatFromMat2);
    Matrix matFromMatToMat3 (quatFromMat3);
@@ -380,7 +380,7 @@ int main (int argc, char *argv[]) {
    quatArbAxisAndAngle2.from_axis_and_angle_radians (vecArbAxis, arbAngle);
    Quaternion quatArbAxisAndAngleAbove180deg2;
    quatArbAxisAndAngleAbove180deg2.from_axis_and_angle_radians (
-      vecArbAxis, 
+      vecArbAxis,
       arbAngleAbove180);
 
    Matrix matYawAxis90Angle (yawAxis, HalfPi64);
@@ -393,18 +393,18 @@ int main (int argc, char *argv[]) {
    Quaternion quatArbAxisAndAngleAbove180FromMat (matArbAxisAndAngleAbove180);
 
 
-   
+
    Vector initialVecUntransformed (1.0, -0.2, 0.3);
    initialVecUntransformed.normalize_in_place ();
 
    Vector initialVecMatConversion (initialVecUntransformed);
    quatArbAxisAndAngleAbove180FromMat.transform_vector (initialVecMatConversion);
-   
+
    //Transform copy of initial vector with constructor converter
    Vector initialVecConsConversion (initialVecUntransformed);
    quatArbAxisAndAngleAbove180deg1.transform_vector (initialVecConsConversion);
 
-   //Transform copy of initial vector with from function 
+   //Transform copy of initial vector with from function
    Vector initialVecFromFunction (initialVecUntransformed);
    quatArbAxisAndAngleAbove180deg2.transform_vector (initialVecFromFunction);
 
@@ -420,7 +420,7 @@ int main (int argc, char *argv[]) {
    test.validate (
       "Constructor conversion from axis and angle (angle < 180)",
       (quatArbAxisAndAngleFromMat == quatArbAxisAndAngle));
-   
+
    //Quaternion will not be same, but transformation will be identical to matrix
    test.validate (
       "Constructor conversion from axis and angle (angle > 180)",
@@ -440,7 +440,7 @@ int main (int argc, char *argv[]) {
       "From_axis_and_angle_radians function conversion from axis and angle (angle < 180)",
       (quatArbAxisAndAngleFromMat == quatArbAxisAndAngle2));
 
-   //Quaternion will not be same, but transformation will be identical to matrix 
+   //Quaternion will not be same, but transformation will be identical to matrix
    test.validate (
       "From_axis_and_angle_radians function conversion from axis and angle (angle > 180)",
       (initialVecMatConversion == initialVecFromFunction));
@@ -475,7 +475,7 @@ int main (int argc, char *argv[]) {
    test.validate (
       "Set/Get Accessors - w",
       (initialW == -3.4) && (quatSetGet.get_w () == 2.4));
-      
+
 
    initialX = initialY = initialZ = initialW = 0.0;
 
@@ -606,7 +606,7 @@ int main (int argc, char *argv[]) {
    quatXAxis90.transform_vector (transformedZAxisQuat);
    matXAxis90.transform_vector (transformedZAxisMat);
 
-   //Rotate the X Axis around the Y Axis 90 Degrees -> Negative Z Axis 
+   //Rotate the X Axis around the Y Axis 90 Degrees -> Negative Z Axis
    quatYAxis90.transform_vector (transformedXAxisQuat);
    matYAxis90.transform_vector (transformedXAxisMat);
 

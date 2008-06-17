@@ -16,7 +16,7 @@ namespace Ogre { class Entity; class SceneNode; }
 namespace dmz {
 
    class RenderModuleCoreOgre;
-   
+
    class RenderExtObjectOgre :
          public Plugin,
          public ObjectObserverUtil {
@@ -33,7 +33,7 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-            
+
          // Object Observer Interface
          virtual void create_object (
             const UUID &Identity,
@@ -92,11 +92,11 @@ namespace dmz {
          Definitions _defs;
          Handle _defaultAttribute;
          RenderModuleCoreOgre *_renderModuleCore;
-         
+
          HashTableHandleTemplate<Ogre::Entity> _entityTable;
          HashTableHandleTemplate<ModelStruct> _modelTable;
          HashTableHandleTemplate<ModelStruct> _entityModelTable;
-         
+
       private:
          RenderExtObjectOgre ();
          RenderExtObjectOgre (const RenderExtObjectOgre &);

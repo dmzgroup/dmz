@@ -19,22 +19,22 @@ namespace Ogre { class Root; class SceneManager; class SceneNode; }
 
 
 namespace dmz {
-   
+
    class OgreLogger : public Ogre::LogListener {
-      
+
       protected:
          Log _log;
-   
+
       public:
          OgreLogger (RuntimeContext *context) : _log ("ogre", context) {;}
          ~OgreLogger () {;}
-      
+
          virtual void messageLogged (
                const Ogre::String &Message,
                Ogre::LogMessageLevel lml,
                bool maskDebug,
                const Ogre::String &LogName) {
-               
+
             if (Ogre::LML_TRIVIAL == lml) { _log.debug << Message.c_str () << endl; }
             else if (Ogre::LML_NORMAL == lml) { _log.info << Message.c_str () << endl; }
             else if (Ogre::LML_CRITICAL == lml) {
@@ -46,8 +46,8 @@ namespace dmz {
 
    class ObjectModule;
 
-   
-   class RenderModuleCoreOgreBasic : 
+
+   class RenderModuleCoreOgreBasic :
          public Plugin,
          public TimeSlice,
          public ObjectObserverUtil,
@@ -59,7 +59,7 @@ namespace dmz {
             const PluginInfo &Info,
             Config &local,
             Config &global);
-            
+
          ~RenderModuleCoreOgreBasic ();
 
          // Plugin Interface
@@ -70,7 +70,7 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-         
+
          // TimeSlice Interface
          virtual void update_time_slice (const Float64 TimeDelta);
 
@@ -88,21 +88,21 @@ namespace dmz {
             const Handle AttributeHandle,
             const Matrix &Value,
             const Matrix *PreviousValue);
-            
+
          // RenderModuloeCoreOgre Interface
          virtual Ogre::SceneManager *get_scene_manager ();
 
          virtual Boolean add_camera (const String &PortalName, Ogre::Camera *camera);
          virtual Ogre::Camera *lookup_camera (const String &PortalName);
          virtual Ogre::Camera *remove_camera (const String &PortalName);
-         
+
          virtual Boolean add_dynamic_object (
             const Handle ObjectHandle,
             Ogre::SceneNode *node);
-         
+
          virtual Ogre::SceneNode *lookup_dynamic_object (const Handle ObjectHandle);
          virtual Ogre::SceneNode *remove_dynamic_object (const Handle ObjectHandle);
-         
+
       protected:
          // OSMSceneCallback Interface
          virtual void OnSceneManagerCreate (
@@ -117,12 +117,12 @@ namespace dmz {
             PortalStruct (const String &TheName);
             ~PortalStruct ();
          };
-         
+
          // OgreOSMSceneCallback Interface
          // void OnCreatedSceneManager (
          //    const OgreMax::OgreMaxScene *scene,
          //    Ogre::SceneManager *sceneManager);
-            
+
          void _init (Config &local, Config &global);
          void _init_root (Config &local);
          void _init_resources (Config &local);
@@ -131,7 +131,7 @@ namespace dmz {
          void _init_scene_manager (Config &local);
 
          PortalStruct *_get_portal_struct (const String &Name);
-         
+
          Log _log;
 
          PluginContainer _extensions;
@@ -141,14 +141,14 @@ namespace dmz {
          Handle _defaultAttributeHandle;
 
          OgreLogger _ogreLogger;
-         
+
          Ogre::Root *_root;
          Ogre::SceneManager *_sceneManager;
          OSMScene *_osmSceneLoader;
 
          HashTableStringTemplate<PortalStruct> _portalTable;
          HashTableHandleTemplate<Ogre::SceneNode> _dynamicObjectTable;
-         
+
       private:
          RenderModuleCoreOgreBasic ();
          RenderModuleCoreOgreBasic (const RenderModuleCoreOgreBasic &);

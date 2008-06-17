@@ -335,7 +335,7 @@ out << "-------------------------------" << endl;
 
       _context->inUndo = False;
    }
-   
+
    return result;
 }
 

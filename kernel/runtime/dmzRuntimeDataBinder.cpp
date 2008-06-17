@@ -283,7 +283,7 @@ DataBinder may then be used to read or write a Data object of the same type
 used to bind the variables. The read Data objects values are automatically stored
 in the bound variables. When writing to a Data object, the values of the bound
 variables are used to store values in the Data object.
-\sa dmz::Data 
+\sa dmz::Data
 
 */
 

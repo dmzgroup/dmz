@@ -79,7 +79,7 @@ dmz::InputPluginExit::_init (Config &local) {
 
             if (keyPtr) {
 
-               if (_keyTable.store (*keyPtr, keyPtr)) { 
+               if (_keyTable.store (*keyPtr, keyPtr)) {
 
                   _log.info << "Setting exit key: "
                   << config_to_string ("value", cd) << endl;
@@ -97,7 +97,7 @@ dmz::InputPluginExit::_init (Config &local) {
 
       if (keyPtr) {
 
-         if (_keyTable.store (*keyPtr, keyPtr)) { 
+         if (_keyTable.store (*keyPtr, keyPtr)) {
 
             _log.info << "Setting 'Esc' as default exit key" << endl;
          }

@@ -51,7 +51,7 @@ struct dmz::Marshal::State {
 
    ~State () { if (buffer) { delete []buffer; buffer = 0; } }
 
-   void reset () { 
+   void reset () {
 
       length = 0;
       place = 0;

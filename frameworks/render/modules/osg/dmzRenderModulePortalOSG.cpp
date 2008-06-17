@@ -13,7 +13,7 @@
 
 
 dmz::RenderModulePortalOSG::RenderModulePortalOSG (
-      const PluginInfo &Info, 
+      const PluginInfo &Info,
       const Config &Local) :
       Plugin (Info),
       RenderModulePortal (Info),
@@ -23,7 +23,7 @@ dmz::RenderModulePortalOSG::RenderModulePortalOSG (
       _manipulator (0),
       _camera (0),
       _nearClip (0.0),
-      _farClip (0.0), 
+      _farClip (0.0),
       _fov (0.0) {
 
    _init (Local);
@@ -31,7 +31,7 @@ dmz::RenderModulePortalOSG::RenderModulePortalOSG (
 
 
 dmz::RenderModulePortalOSG::~RenderModulePortalOSG () {
-   
+
 }
 
 
@@ -72,7 +72,7 @@ dmz::RenderModulePortalOSG::discover_plugin (
 }
 
 
-dmz::Boolean 
+dmz::Boolean
 dmz::RenderModulePortalOSG::is_master_portal () {
 
    Boolean result (False);
@@ -81,21 +81,21 @@ dmz::RenderModulePortalOSG::is_master_portal () {
 }
 
 
-void 
+void
 dmz::RenderModulePortalOSG::set_view (const Vector &Pos, const Matrix &Ori) {
 
    _manipulator->setByVectorAndMatrix (Pos, Ori);
 }
 
 
-void 
+void
 dmz::RenderModulePortalOSG::get_view (Vector &pos, Matrix &ori) const {
 
    _manipulator->getVectorAndMatrix (pos, ori);
 }
 
 
-void 
+void
 dmz::RenderModulePortalOSG::set_fov (const Float32 Value) {
 
    _fov = Value;
@@ -103,14 +103,14 @@ dmz::RenderModulePortalOSG::set_fov (const Float32 Value) {
 }
 
 
-dmz::Float32 
+dmz::Float32
 dmz::RenderModulePortalOSG::get_fov () const {
 
    return _fov;
 }
 
 
-void 
+void
 dmz::RenderModulePortalOSG::set_near_clip_plane (const Float32 Value) {
 
    _nearClip = Value;
@@ -118,14 +118,14 @@ dmz::RenderModulePortalOSG::set_near_clip_plane (const Float32 Value) {
 }
 
 
-dmz::Float32 
+dmz::Float32
 dmz::RenderModulePortalOSG::get_near_clip_plane () const {
 
    return _nearClip;
 }
 
 
-void 
+void
 dmz::RenderModulePortalOSG::set_far_clip_plane (const Float32 Value) {
 
    _farClip = Value;
@@ -133,7 +133,7 @@ dmz::RenderModulePortalOSG::set_far_clip_plane (const Float32 Value) {
 }
 
 
-dmz::Float32 
+dmz::Float32
 dmz::RenderModulePortalOSG::get_far_clip_plane () const {
 
    return _farClip;
@@ -159,12 +159,12 @@ dmz::RenderModulePortalOSG::_init (const Config &Local) {
       }
    }
    else {
-      
+
       _fov = 60.0;
       _nearClip = 1.0f;
       _farClip = 10000.0f;
    }
-   
+
    _log.info << "FOV: " << _fov << endl;
    _log.info << "Clip Planes: " << _nearClip << " / " << _farClip << endl;
 }
@@ -176,9 +176,9 @@ dmz::RenderModulePortalOSG::_update_camera () {
    if (_camera.get ()) {
 
       _camera->setProjectionMatrixAsPerspective(
-         _fov, 
-         _camera->getViewport ()->aspectRatio (), 
-         _nearClip, 
+         _fov,
+         _camera->getViewport ()->aspectRatio (),
+         _nearClip,
          _farClip);
    }
 }

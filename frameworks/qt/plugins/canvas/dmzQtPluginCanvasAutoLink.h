@@ -8,7 +8,7 @@
 
 
 namespace dmz {
-   
+
    class QtPluginCanvasAutoLink :
          public Plugin,
          public ObjectObserverUtil {

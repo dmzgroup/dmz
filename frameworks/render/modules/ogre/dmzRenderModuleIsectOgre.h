@@ -91,7 +91,7 @@ namespace dmz {
          };
 
          HashTableStringTemplate<EntityStruct> _entityTable;
-         
+
       private:
          RenderModuleIsectOgre ();
          RenderModuleIsectOgre (const RenderModuleIsectOgre &);

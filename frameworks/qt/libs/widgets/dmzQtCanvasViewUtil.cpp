@@ -11,27 +11,27 @@ dmz::QtCanvasViewSession::QtCanvasViewSession (QtCanvasView &canvas) :
 
 dmz::Config
 dmz::QtCanvasViewSession::get_config () {
-   
+
    String val;
    Config session ("canvasView");
 
    val.flush () << _canvas.get_scale ();
    session.store_attribute ("scale", val);
-   
+
    val.flush () << _canvas.width ();
    session.store_attribute ("width", val);
-   
+
    val.flush () << _canvas.height ();
    session.store_attribute ("height", val);
-   
+
    Config scrollBars ("scrollBars");
-   
+
    val.flush () << _canvas.verticalScrollBar ()->value ();
    scrollBars.store_attribute ("vertical", val);
 
    val.flush () << _canvas.horizontalScrollBar ()->value ();
    scrollBars.store_attribute ("horizontal", val);
-   
+
    session.add_config (scrollBars);
 
    return session;
@@ -55,7 +55,7 @@ dmz::QtCanvasViewSession::load_config (const Config &Source) {
 
    // _canvas.verticalScrollBar ()->setValue (
    //    config_to_int32 ("canvasView.scrollBars.vertical", Source, 0));
-   // 
+   //
    // _canvas.horizontalScrollBar ()->setValue (
    //    config_to_int32 ("canvasView.scrollBars.horizontal", Source, 0));
 }

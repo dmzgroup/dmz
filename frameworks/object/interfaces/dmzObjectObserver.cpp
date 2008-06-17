@@ -254,8 +254,8 @@ const Vector *PreviousValue)
 \param[in] Identity Object's UUID.
 \param[in] ObjectHandle Objects unique runtime handle.
 \param[in] AttributeHandle Attribute handle.
-\param[in] Value Current object velocity 
-\param[in] PreviousValue Pointer to previous object velocity 
+\param[in] Value Current object velocity
+\param[in] PreviousValue Pointer to previous object velocity
 \note \a PreviousValue will be NULL if the there is no previous value.
 
 \fn void dmz::ObjectObserver::update_object_acceleration (
@@ -268,8 +268,8 @@ const Vector *PreviousValue)
 \param[in] Identity Object's UUID.
 \param[in] ObjectHandle Objects unique runtime handle.
 \param[in] AttributeHandle Attribute handle.
-\param[in] Value Current object acceleration 
-\param[in] PreviousValue Pointer to previous object acceleration 
+\param[in] Value Current object acceleration
+\param[in] PreviousValue Pointer to previous object acceleration
 \note \a PreviousValue will be NULL if the there is no previous value.
 
 \fn void dmz::ObjectObserver::update_object_scale (
@@ -282,8 +282,8 @@ const Vector *PreviousValue)
 \param[in] Identity Object's UUID.
 \param[in] ObjectHandle Objects unique runtime handle.
 \param[in] AttributeHandle Attribute handle.
-\param[in] Value Current object scale 
-\param[in] PreviousValue Pointer to previous object scale 
+\param[in] Value Current object scale
+\param[in] PreviousValue Pointer to previous object scale
 \note \a PreviousValue will be NULL if the there is no previous value.
 
 \fn void dmz::ObjectObserver::update_object_vector (
@@ -296,8 +296,8 @@ const Vector *PreviousValue)
 \param[in] Identity Object's UUID.
 \param[in] ObjectHandle Objects unique runtime handle.
 \param[in] AttributeHandle Attribute handle.
-\param[in] Value Current object vector 
-\param[in] PreviousValue Pointer to previous object vector 
+\param[in] Value Current object vector
+\param[in] PreviousValue Pointer to previous object vector
 \note \a PreviousValue will be NULL if the there is no previous value.
 
 \fn void dmz::ObjectObserver::update_object_scalar (
@@ -310,8 +310,8 @@ const Float64 *PreviousValue)
 \param[in] Identity Object's UUID.
 \param[in] ObjectHandle Objects unique runtime handle.
 \param[in] AttributeHandle Attribute handle.
-\param[in] Value Current object scalar 
-\param[in] PreviousValue Pointer to previous object scalar 
+\param[in] Value Current object scalar
+\param[in] PreviousValue Pointer to previous object scalar
 \note \a PreviousValue will be NULL if the there is no previous value.
 
 \fn void dmz::ObjectObserver::update_object_text (
@@ -324,8 +324,8 @@ const String *PreviousValue)
 \param[in] Identity Object's UUID.
 \param[in] ObjectHandle Objects unique runtime handle.
 \param[in] AttributeHandle Attribute handle.
-\param[in] Value Current object text 
-\param[in] PreviousValue Pointer to previous object text 
+\param[in] Value Current object text
+\param[in] PreviousValue Pointer to previous object text
 \note \a PreviousValue will be NULL if the there is no previous value.
 
 \fn void dmz::ObjectObserver::update_object_data (
@@ -338,8 +338,8 @@ const Data *PreviousValue)
 \param[in] Identity Object's UUID.
 \param[in] ObjectHandle Objects unique runtime handle.
 \param[in] AttributeHandle Attribute handle.
-\param[in] Value Current object Data 
-\param[in] PreviousValue Pointer to previous object Data 
+\param[in] Value Current object Data
+\param[in] PreviousValue Pointer to previous object Data
 \note \a PreviousValue will be NULL if the there is no previous value.
 
 */

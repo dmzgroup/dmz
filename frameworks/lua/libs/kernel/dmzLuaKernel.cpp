@@ -57,7 +57,7 @@ enumMap::create_enum (const String &Name) {
             _count++;
             String *str (new String (Name));
 
-            if (!_nameTable.store (*ptr, str)) { 
+            if (!_nameTable.store (*ptr, str)) {
 
                delete str; str = 0;
             }
@@ -120,14 +120,14 @@ enum_setup (lua_State *L) {
       lua_set_gc (L, -1, enum_delete);
 
       *ptr = new enumMap;
-   
+
       lua_rawset (L, LUA_REGISTRYINDEX);
    }
    else { lua_pop (L, 1); } // pop light user data
 
    LUA_END_VALIDATE (L, 0);
 }
- 
+
 }
 
 
@@ -217,7 +217,7 @@ dmz::lua_create_dmz_namespace (lua_State *L, const String &Name) {
 
       lua_pop (L, 1);
       lua_newtable (L);
-      lua_setglobal (L, DMZName); 
+      lua_setglobal (L, DMZName);
       lua_getglobal (L, DMZName);
    }
 
@@ -225,7 +225,7 @@ dmz::lua_create_dmz_namespace (lua_State *L, const String &Name) {
 
       lua_getfield (L, -1, Name.get_buffer ());
 
-      if (!lua_istable (L, -1)) { 
+      if (!lua_istable (L, -1)) {
 
          lua_pop (L, 1);
          lua_newtable (L);

@@ -61,7 +61,7 @@ namespace dmz {
          Time _time;
 
          ObjectUpdate *_defaultTest;
-        
+
          HashTableUInt32Template<ObjectUpdate> _baseTable;
          HashTableUInt32Template<ObjectUpdate> _typeTable;
 

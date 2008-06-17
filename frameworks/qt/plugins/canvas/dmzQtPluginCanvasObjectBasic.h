@@ -20,15 +20,15 @@ class QSvgRenderer;
 namespace dmz {
 
    class QtModuleCanvas;
-   
+
    class QtCanvasObjectGroup : public QGraphicsItem {
 
       public:
          QtCanvasObjectGroup (QGraphicsItem *parent = 0);
          ~QtCanvasObjectGroup ();
-         
+
          virtual QRectF boundingRect () const;
-         
+
          virtual void paint (
             QPainter *painter,
             const QStyleOptionGraphicsItem *option,
@@ -68,9 +68,9 @@ namespace dmz {
             QColor _outlineColor;
             QColor _backgroundColor;
    };
-   
-   
-   class QtPluginCanvasObjectBasic : 
+
+
+   class QtPluginCanvasObjectBasic :
       public Plugin,
       public ObjectObserverUtil,
       public FileCacheAction {
@@ -145,57 +145,57 @@ namespace dmz {
          typedef HashTableStringTemplate<QtCanvasObjectText> QtCanvasObjectTextTable;
 
          struct StateStruct {
-         
+
             const Mask State;
             HashTableUInt32Template<QGraphicsItem> itemTable;
             StateStruct *next;
-            
+
             StateStruct (const Mask &TheState) :
                State (TheState),
                itemTable (),
                next (0) {;}
-               
+
             ~StateStruct () {
-            
+
                itemTable.clear ();
                if (next) { delete next; next = 0; }
             }
-            
+
             void set_visible (const Boolean Value) {
-               
+
                HashTableUInt32Iterator it;
                QGraphicsItem *item (itemTable.get_first (it));
                while (item) {
-                  
+
                   item->setVisible (Value);
                   item = itemTable.get_next (it);
                }
             }
          };
-         
+
          struct StateGroupStruct {
-         
+
             const String Name;
             Mask groupState;
             StateStruct *stateList;
             StateStruct *defaultState;
             StateGroupStruct *next;
-            
+
             StateGroupStruct (const String &TheName) :
                Name (TheName),
                groupState (),
                stateList (0),
                defaultState (0),
                next (0) {;}
-               
+
             ~StateGroupStruct () {
-               
+
                defaultState = 0;
                if (stateList) { delete stateList; }
                if (next) { delete next; next = 0; }
             }
          };
-         
+
          struct ObjectStruct {
 
             const Handle ObjHandle;
@@ -207,7 +207,7 @@ namespace dmz {
             StateGroupStruct defaultGroup;
             StateGroupStruct *groupList;
             HashTableStringTemplate<StateGroupStruct> groupTable;
-            
+
             ObjectStruct (const Handle TheHandle) :
                ObjHandle (TheHandle),
                objType (),
@@ -220,11 +220,11 @@ namespace dmz {
                groupTable () {;}
 
             ~ObjectStruct () {
-            
+
                groupTable.clear ();
                itemTable.clear ();
                textTable.empty ();
-               
+
                if (groupList) { delete groupList; groupList = 0; }
                //if (item) { delete item; item = 0; }
                item = 0;
@@ -235,7 +235,7 @@ namespace dmz {
             const Handle ObjectHandle,
             const ObjectType &Type,
             ModelStruct &ms);
-         
+
          void _destroy_object (const Handle ObjectHandle);
 
          void _update_object_state (
@@ -247,9 +247,9 @@ namespace dmz {
             StateGroupStruct &group,
             const Mask &Value,
             const Mask &PreviousValue);
-            
+
          void _update_default_group_state (StateGroupStruct &group, const Mask &Value);
-                  
+
          QtCanvasObjectGroup *_create_item (
             ObjectStruct &os,
             QGraphicsItem *parent,
@@ -259,7 +259,7 @@ namespace dmz {
                ObjectStruct &os,
                QGraphicsItem *parent,
                const Config &Data);
-               
+
          QGraphicsPixmapItem *_create_pixmap_item (
             ObjectStruct &os,
             QGraphicsItem *parent,
@@ -274,19 +274,19 @@ namespace dmz {
             ObjectStruct &os,
             QGraphicsItem *parent,
             const Config &Data);
-         
+
          void _process_item_text (ObjectStruct &os, const Config &TextList);
-         
+
          void _process_item_switch (
             ObjectStruct &os,
             const Config &SwitchList);
-               
+
          void _process_item_state (
             ObjectStruct &os,
             const Mask &State,
             const String &GroupName,
             const Config &ItemList);
-                        
+
          Boolean _file_request (QGraphicsItem *item, const Config &Data);
 
          void _lookup_object_state (const Handle ObjectHandle, Mask &objState);

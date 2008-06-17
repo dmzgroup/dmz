@@ -204,36 +204,36 @@ main (int argc, char *argv[]) {
    String strSubRecieved7 = strGetSub.get_sub (-5);
    String strSubRecieved8 = strGetSub.get_sub (-15);
 
-   
+
    test.validate (
       "Get substring - single index",
       strSubRecieved1 == String ("b2c3d4e5f6g7"));
 
-   test.validate ( 
+   test.validate (
       "Get substring - index, index + 1",
       strSubRecieved2 == String ("b2"));
 
-   test.validate ( 
+   test.validate (
       "Get substring - index, index",
       strSubRecieved3 == String ("b"));
 
-   test.validate ( 
+   test.validate (
       "Get substring - lastIndex - 1, lastIndex",
       strSubRecieved4 == String ("g7"));
 
-   test.validate ( 
+   test.validate (
       "Get substring - out of bounds after last index",
       strSubRecieved5.is_null ());
 
-   test.validate ( 
+   test.validate (
       "Get substring - negative index, last character",
       strSubRecieved6 ==  String ("7"));
 
-   test.validate ( 
+   test.validate (
       "Get substring - negative index, last 5 characters",
       strSubRecieved7 ==  String ("5f6g7"));
 
-   test.validate ( 
+   test.validate (
       "Get substring - negative index with magnitude too large",
       strSubRecieved8.is_null ());
 
@@ -245,7 +245,7 @@ main (int argc, char *argv[]) {
    String strFindSub2 ("01234item");
    Boolean findSubResult1 = strFindSub1.find_sub (strFindSubTarget, findIndex);
 
-   test.validate ( 
+   test.validate (
       "Find substring - initial occurance",
       findSubResult1 &&
       (findIndex == 8));
@@ -255,7 +255,7 @@ main (int argc, char *argv[]) {
       findIndex,
       findIndex + strFindSubTarget.get_length());
 
-   test.validate ( 
+   test.validate (
       "Find substring - occurance 2",
       findSubResult2 &&
       (findIndex == 16));
@@ -265,7 +265,7 @@ main (int argc, char *argv[]) {
       findIndex,
       findIndex + strFindSubTarget.get_length());
 
-   test.validate ( 
+   test.validate (
       "Find substring - initial occurance",
       findSubResult3 &&
       (findIndex == 26));
@@ -275,13 +275,13 @@ main (int argc, char *argv[]) {
       findIndex,
       findIndex + strFindSubTarget.get_length());
 
-   test.validate ( 
+   test.validate (
       "Find substring - no more occurances",
       !findSubResult4);
 
    Int32 findIndex2;
    Boolean findSubResult5 = strFindSub2.find_sub (strFindSubTarget, findIndex2);
-   test.validate ( 
+   test.validate (
       "Find substring - initial occurance (test 2)",
       findSubResult5 &&
       (findIndex2 == 5));
@@ -291,7 +291,7 @@ main (int argc, char *argv[]) {
       findIndex2,
       findIndex2 + strFindSubTarget.get_length());
 
-   test.validate ( 
+   test.validate (
       "Find substring - no more occurances (test 2)",
       !findSubResult6);
 

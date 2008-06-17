@@ -20,5 +20,5 @@ namespace dmz {
 
    DMZ_KERNEL_LINK_SYMBOL Config get_session_config (const PluginInfo &Info);
 };
- 
+
 #endif // DMZ_RUNTIME_SESSION_DOT_H

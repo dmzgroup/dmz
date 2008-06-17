@@ -313,7 +313,7 @@ isect_do_batch_isect (lua_State *L) {
 
          lua_pop (L, 1); // pop table from rawget
       }
-      
+
       if (!lua_isnoneornil (L, 2)) { table_to_params (L, *is, 2, params); }
 
       if (is->isect->do_isect (params, tests, iresults)) {

@@ -26,7 +26,7 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-         
+
       protected:
          void _init (const Config &Local);
 

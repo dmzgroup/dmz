@@ -129,7 +129,7 @@ dmz::LuaModuleBasic::update_plugin_state (
       if (!_started) { _start_lua_plugins (); }
       _started = True;
    }
-   else if (State == PluginStateStop) { _extensions.stop_plugins (); } 
+   else if (State == PluginStateStop) { _extensions.stop_plugins (); }
    else if (State == PluginStateShutdown) { _extensions.shutdown_plugins (); }
 }
 
@@ -185,7 +185,7 @@ dmz::LuaModuleBasic::register_lua_observer (
 
    if (CallbackMask & LuaScriptUpdateMask) {
 
-      _obsScriptTable.store (ObsHandle, &observer); 
+      _obsScriptTable.store (ObsHandle, &observer);
    }
 
    if (CallbackMask & LuaErrorMask) {
@@ -356,7 +356,7 @@ dmz::LuaModuleBasic::process_file (
          else if (_started) { _load_script (*ss); }
       }
       else if (RequestResult == UnknownFileLocation) {
-   
+
          _log.error << "Unknown file location. Unable to load Lua script named: "
             << ss->Name << " '" << ss->URL << ss->File << "'" << endl;
       }

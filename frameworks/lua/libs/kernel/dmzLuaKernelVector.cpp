@@ -32,7 +32,7 @@ vector_check (lua_State *L, int index) {
 
       if (ptr) {
 
-         ptr->set_xyz (x, y, z); 
+         ptr->set_xyz (x, y, z);
          lua_replace (L, index);
       }
 

@@ -17,6 +17,6 @@ const dmz::String &PluginName);
 \fn void dmz::AudioModulePortal::set_view (const dmz::Vector &Pos, const dmz::Matrix &Ori)
 \fn void dmz::AudioModulePortal::get_view (dmz::Vector &pos, dmz::Matrix &ori) const
 \fn void dmz::AudioModulePortal::set_mute_state (const dmz::Boolean Value)
-\fn dmz::Boolean dmz::AudioModulePortal::get_mute_state () const 
+\fn dmz::Boolean dmz::AudioModulePortal::get_mute_state () const
 
 */

@@ -19,20 +19,20 @@ namespace dmz {
       Ogre::Vector3 result (Source.get_x (), Source.get_y (), Source.get_z ());
       return result;
    }
-   
-   
+
+
    inline Vector
    to_dmz_vector (const Ogre::Vector3 &Source) {
 
       Vector result (Source.x, Source.y, Source.z);
       return result;
    }
-   
-   
+
+
    // Matrix
    inline Ogre::Matrix3
    to_ogre_matrix (const Matrix &Source) {
-      
+
       Float64 data[9];
       Source.to_array (data);
 
@@ -40,11 +40,11 @@ namespace dmz {
          data[0], data[3], data[6],
          data[1], data[4], data[7],
          data[2], data[5], data[8]);
-      
+
       return result;
    }
-   
-   
+
+
    // Quaternion
    inline Ogre::Quaternion
    to_ogre_quaternion (const Matrix &Source) {

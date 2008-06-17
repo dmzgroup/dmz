@@ -23,7 +23,7 @@ namespace dmz {
 
       public:
          AudioPluginObject (
-            const PluginInfo &Info, 
+            const PluginInfo &Info,
             Config &local);
 
          ~AudioPluginObject ();
@@ -98,7 +98,7 @@ namespace dmz {
             Handle deactivateHandle;
 
             Handle scalarAttributeHandle;
-     
+
             Float64 minScale;
             Float64 maxScale;
 
@@ -107,7 +107,7 @@ namespace dmz {
             SoundDefStruct (const Mask &TheState) :
                State (TheState),
                activateHandle (0),
-               loopHandle (0), 
+               loopHandle (0),
                deactivateHandle (0),
                scalarAttributeHandle (0),
                minScale (0.0),

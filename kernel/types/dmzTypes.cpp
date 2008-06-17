@@ -27,7 +27,7 @@
 \brief Enum for each basic type defined by the platform.
 \details Defined in dmzTypesBase.h.
 Used to define the native type of an attribute. @see Data
- 
+
 */
 
 #if  defined (__APPLE__) || defined (MACOSX)
@@ -165,7 +165,7 @@ dmz::base_type_enum_to_string  (const BaseTypeEnum Value) {
 
    return result;
 }
- 
+
 
 /*!
 

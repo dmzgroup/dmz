@@ -5,11 +5,11 @@
 #include <qdb.h>
 
 /*!
-   
+
 \file dmzRuntimeSession.h
 \brief Contains functions for manipulating the session data stored in the runtime context.
-      
-*/ 
+
+*/
 
 //! \addtogroup Runtime
 //! @{
@@ -49,7 +49,7 @@ dmz::get_session_config (const String &Name, RuntimeContext *context) {
    if (context) {
 
       context->get_session_config ().lookup_all_config_merged (Name, result);
-   } 
+   }
 
    return result;
 }

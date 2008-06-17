@@ -585,7 +585,7 @@ static int
 time_slice_get_type (lua_State *L) {
 
    int result (0);
- 
+
    TimeSliceLua **ts = time_slice_check (L, 1);
    Handle *ptr = lua_check_handle (L, 2);
 
@@ -605,7 +605,7 @@ static int
 time_slice_set_mode (lua_State *L) {
 
    int result (0);
- 
+
    TimeSliceLua **ts = time_slice_check (L, 1);
    Handle *ptr = lua_check_handle (L, 2);
 
@@ -624,7 +624,7 @@ static int
 time_slice_get_mode (lua_State *L) {
 
    int result (0);
- 
+
    TimeSliceLua **ts = time_slice_check (L, 1);
    Handle *ptr = lua_check_handle (L, 2);
 

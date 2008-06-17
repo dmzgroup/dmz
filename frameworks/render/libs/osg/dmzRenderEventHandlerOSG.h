@@ -19,11 +19,11 @@ namespace dmz {
          RenderEventHandlerOSG ();
 
          virtual bool handle (
-               const osgGA::GUIEventAdapter &Event, 
+               const osgGA::GUIEventAdapter &Event,
                osgGA::GUIActionAdapter &action,
                osg::Object *object,
                osg::NodeVisitor *visitor);
-               
+
          void set_input_module_channels (
                InputModule *module,
                const UInt32 SourceHandle) {
@@ -38,7 +38,7 @@ namespace dmz {
          InputModule *_channels;
          InputEventKey _keyEvent;
          InputEventMouse _mouseEvent;
-         
+
       private:
          void __set_key_down (const osgGA::GUIEventAdapter &Event);
          void __set_key_up (const osgGA::GUIEventAdapter &Event);

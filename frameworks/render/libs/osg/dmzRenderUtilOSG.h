@@ -37,7 +37,7 @@ namespace dmz {
 
       return result;
    }
-   
+
    inline osg::Matrixd
    to_osg_inverse_matrix (const Matrix &Source) {
 

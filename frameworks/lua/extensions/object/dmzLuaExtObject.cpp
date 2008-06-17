@@ -111,7 +111,7 @@ check_obj_handle (lua_State *L, int index, ObjectModule *objMod) {
          String typeName (luaL_typename (L, index));
          error << (Int32)index << " was: " << typeName << ". Expecting "
             << " dmz.handle or dmz.uuid type.";
- 
+
          lua_pushstring (L, error.get_buffer ());
          lua_error (L);
       }
@@ -567,7 +567,7 @@ object_link_attribute_object (lua_State *L) {
          }
          else { lua_pushnil (L); }
 
-      } 
+      }
       else {
 
          const Handle Value (
@@ -649,7 +649,7 @@ object_locality (lua_State *L) {
    Boolean setLocality (False);
    int locality (0);
 
-   if (!lua_isnone (L, 2)) { 
+   if (!lua_isnone (L, 2)) {
 
       locality = luaL_checkinteger (L, 2);
       setLocality = True;
@@ -1610,7 +1610,7 @@ dmz::LuaExtObject::open_lua_extension (lua_State *LuaState) {
 
       lua_setfield (L, Table, "DestroyMessage");
    }
- 
+
    lua_make_readonly (L, -1); // make object read only
    lua_pop (L, 1); // pop object table
 
@@ -1635,7 +1635,7 @@ dmz::LuaExtObject::close_lua_extension (lua_State *LuaState) {
    }
 
    _obsTable.clear ();
-   
+
    L = 0;
 }
 

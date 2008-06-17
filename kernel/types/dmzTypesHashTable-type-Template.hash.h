@@ -408,4 +408,4 @@ dmz::HashTable$(type)Template<T>::set_lock (HashTableLock *lock) {
 
 //! Gets the table lock.
 template <class T> inline dmz::HashTableLock *
-dmz::HashTable$(type)Template<T>::get_lock () { return __tableLock; } 
+dmz::HashTable$(type)Template<T>::get_lock () { return __tableLock; }

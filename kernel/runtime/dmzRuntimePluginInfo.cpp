@@ -100,7 +100,7 @@ dmz::PluginInfo::get_name () const { return _state.Name; }
 
 //! Returns Plugin's unique handle.
 dmz::Handle
-dmz::PluginInfo::get_handle () const { return _state.PluginHandle; } 
+dmz::PluginInfo::get_handle () const { return _state.PluginHandle; }
 
 
 //! Returns dmz::True if the plugin uses the specified level.

@@ -212,7 +212,7 @@ dmz::InputPluginControllerKey::_init (Config &local) {
                   _add_axis (AxisHandle, NegKey, PosKey, *cs);
                }
                else if (Type == "button") {
- 
+
                   const UInt32 Key (config_to_key_value (cd, &_log));
                   InputEventButton *button (_buttonTable.lookup (Key));
 

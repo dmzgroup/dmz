@@ -82,7 +82,7 @@ struct dmz::Application::State {
 \brief Constructor.
 \details The \a Name and \a Domain are used in the creation of the session data path.
 \param[in] Name String containing the name of the application.
-\param[in] Domain String containing the application's domain. 
+\param[in] Domain String containing the application's domain.
 
 */
 dmz::Application::Application (

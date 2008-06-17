@@ -12,7 +12,7 @@ using namespace dmz;
 int
 main (int argc, char *argv[]) {
 
-   
+
    Test test ("dmzRuntimeMessageTest", argc, argv);
    RuntimeContext *context (test.rt.get_context ());
 
@@ -129,7 +129,7 @@ main (int argc, char *argv[]) {
 
 
    // validate set_type
-   
+
    anotherType = differentType;
    test.validate (
       "set_type",

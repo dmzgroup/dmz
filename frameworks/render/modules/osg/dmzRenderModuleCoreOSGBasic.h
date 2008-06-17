@@ -23,7 +23,7 @@ namespace dmz {
 
    class ObjectModule;
 
-   class RenderModuleCoreOSGBasic : 
+   class RenderModuleCoreOSGBasic :
          public Plugin,
          public ObjectObserverUtil,
          private RenderModuleCoreOSG {
@@ -33,7 +33,7 @@ namespace dmz {
             const PluginInfo &Info,
             Config &local,
             Config &global);
-            
+
          ~RenderModuleCoreOSGBasic ();
 
          // Plugin Interface
@@ -44,7 +44,7 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-         
+
          // Object Observer Interface
          virtual void update_object_position (
             const UUID &Identity,
@@ -59,7 +59,7 @@ namespace dmz {
             const Handle AttributeHandle,
             const Matrix &Value,
             const Matrix *PreviousValue);
-            
+
          // RenderModuloeCoreOSG Interface
          virtual osg::Group *get_scene ();
          virtual osg::Group *get_static_objects ();
@@ -75,17 +75,17 @@ namespace dmz {
          virtual Boolean add_camera_manipulator (
             const String &PortalName,
             RenderCameraManipulatorOSG *manipulator);
-            
+
          virtual RenderCameraManipulatorOSG *lookup_camera_manipulator (
             const String &PortalName);
-            
+
          virtual RenderCameraManipulatorOSG *remove_camera_manipulator (
             const String &PortalName);
 
          virtual void get_static_triangles (
-            Vector **vertices, 
-            UInt32 &numVerts, 
-            UInt32 **indices, 
+            Vector **vertices,
+            UInt32 &numVerts,
+            UInt32 **indices,
             UInt32 &numIndices);
 
       protected:
@@ -98,13 +98,13 @@ namespace dmz {
             PortalStruct (const String &TheName) :
                Name (TheName), camera (0), cameraManipulator (0) {;}
 
-            ~PortalStruct () { 
-               
+            ~PortalStruct () {
+
                camera.release ();
                cameraManipulator.release ();
             }
          };
-         
+
          void _init (Config &local, Config &global);
          PortalStruct *_get_portal_struct (const String &Name);
 
@@ -114,13 +114,13 @@ namespace dmz {
          void _extractStaticTriangles (osg::Node *nd);
          void _extractStaticTrianglesRecursive (
             osg::Node *nd,
-            const UInt32 StartVertexIndex, 
+            const UInt32 StartVertexIndex,
             UInt32 &endVertexIndex,
             const UInt32 StartIndicesIndex,
             UInt32 &endIndiciesIndex);
 
          void _analyzePrimitiveSet (
-            osg::PrimitiveSet *prset, 
+            osg::PrimitiveSet *prset,
             const osg::Vec3Array *verts);
 
          UInt32 _numStaticVertices;
@@ -128,7 +128,7 @@ namespace dmz {
          UInt32 _numStaticTriIndices;
          UInt32 *_staticTriIndices;
 
-         
+
 
          Log _log;
          PluginContainer _extensions;

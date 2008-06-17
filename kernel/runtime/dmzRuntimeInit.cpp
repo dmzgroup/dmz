@@ -495,7 +495,7 @@ local_init_time (const Config &Init, RuntimeContext *context, Log *log) {
 
    if (Init.lookup_attribute ("factor.value", data)) {
 
-      factor = string_to_float64 (data); 
+      factor = string_to_float64 (data);
       usingDefaultFactor = False;
       rtt.set_time_factor (factor);
    }
@@ -1136,7 +1136,7 @@ dmz::Definitions::lookup_object_type (const Handle TypeHandle, ObjectType &type)
 \brief Looks up states from names.
 \param[in] Name String containing state names.
 \param[out] state Mask object to store found states.
-\return Returns dmz::True if all named states are found. 
+\return Returns dmz::True if all named states are found.
 \note State names should be delineated by the "|" character (a.k.a. the bitwise or
 operator).
 

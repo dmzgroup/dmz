@@ -75,7 +75,7 @@ attribute to the result of dmz::get_system_name. If the values are equal, the Pl
 is loaded. If this attribute is not specified, the loader assumes the Plugin is
 suitable for all platforms.
 - \b delete { true | false } Specifies whether the Plugin should be deleted by the
-PluginContainer. Will default to true if the attribute is not specified. 
+PluginContainer. Will default to true if the attribute is not specified.
 - \b unload { true | false } Specifies whether the DynamicLibrary is unloaded by
 the PluginContainer. Will default to true if the attribute is not specified.
 - \b reserve { true | false } Specifies that the next slot in the TimeSlice list be

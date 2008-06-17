@@ -2,7 +2,7 @@
 	File:		HID_Name_Lookup.h
 
 	Contains:	Definition of the HID device name lookup functions for the HID utilites.
-    
+
 	DRI: George Warner
 
 	Copyright:	Copyright © 2002 Apple Computer, Inc., All Rights Reserved

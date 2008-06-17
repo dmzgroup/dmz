@@ -138,7 +138,7 @@ dmz::HandleAllocator::get_next_handle (const String &Info) {
 \param[in] Info String containing information about the handle. String may be empty.
 \return Returns new handle. Will return zero if the allocator is out of handles. The
 allocator will do its best to return the requested handle. It may return a different
-handle from the one requested if the handle has already been allocator or if it is 
+handle from the one requested if the handle has already been allocator or if it is
 outside the range of the allocator.
 
 */

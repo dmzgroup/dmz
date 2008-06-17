@@ -22,7 +22,7 @@ namespace dmz {
 
       private:
          const PluginInfo &__Info;
- 
+
    };
 
    class NetModulePacketIO {

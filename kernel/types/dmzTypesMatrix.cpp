@@ -1,7 +1,7 @@
 #include <dmzTypesMatrix.h>
 #include <dmzTypesQuaternion.h>
 
-/*!   
+/*!
 
 \class dmz::Matrix
 \brief 3x3 Matrix.
@@ -33,13 +33,13 @@ dmz::Matrix::from_quaternion (const Quaternion &Quat) {
 
    const Float64 ZZ = z * z;
    const Float64 ZW = z * w;
-   
+
 
    //Row 1
    _data[0] = 1.0 - 2.0 * (YY + ZZ);
    _data[1] = 2.0 * (XY - ZW);
    _data[2] = 2.0 * (XZ + YW);
-   
+
    //Row 2
    _data[3] = 2.0 * (XY + ZW);
    _data[4] = 1.0 - 2.0 * (XX + ZZ);

@@ -14,22 +14,22 @@
 namespace dmz {
 
    class QtModuleCanvas;
-   
+
    class QtCanvasObject : public QGraphicsItem {
 
       public:
          QtCanvasObject (QGraphicsItem *parent = 0);
          ~QtCanvasObject ();
-         
+
          virtual QRectF boundingRect () const;
-         
+
          virtual void paint (
             QPainter *painter,
             const QStyleOptionGraphicsItem *option,
             QWidget *widget);
    };
 
-   class QtPluginCanvasObject : 
+   class QtPluginCanvasObject :
       public Plugin,
       public TimeSlice,
       public ObjectObserverUtil {
@@ -110,7 +110,7 @@ namespace dmz {
                heading (0.0f) {;}
 
             ~ObjectStruct () { if (item) { delete item; item = 0; } }
-            
+
             void update ();
          };
 

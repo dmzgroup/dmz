@@ -42,7 +42,7 @@ namespace dmz {
          DataBinder _binder;
          String _value;
          Float64 _time;
-         
+
       private:
          ExPluginMessageReceive ();
          ExPluginMessageReceive (const ExPluginMessageReceive &);

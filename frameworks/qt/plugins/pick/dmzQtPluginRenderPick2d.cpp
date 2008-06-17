@@ -100,15 +100,15 @@ dmz::QtPluginRenderPick2d::world_to_screen (
 
       Int32 sourceX;
       Int32 sourceY;
-      
+
       if (world_to_source (WorldPosition, sourceX, sourceY)) {
-      
+
          QGraphicsView *view (_canvasModule->get_view ());
 
          if (view) {
-         
+
             QPoint screenPoint (view->mapToGlobal (QPoint (sourceX, sourceY)));
-         
+
             screenPosX = screenPoint.x ();
             screenPosY = screenPoint.y ();
 
@@ -205,10 +205,10 @@ dmz::QtPluginRenderPick2d::_get_object_handle (const QPoint &ScreenPos) {
                      item->data (QtCanvasObjectHandleIndex).toULongLong (&ok));
 
                   if (ok && !objectHandle && data) {
-                     
+
                      objectHandle = data;
                   }
-                  
+
                   if (objectHandle) { break; }
                }
             }
@@ -222,7 +222,7 @@ dmz::QtPluginRenderPick2d::_get_object_handle (const QPoint &ScreenPos) {
 
 void
 dmz::QtPluginRenderPick2d::_init (Config &local) {
-   
+
    _canvasModuleName = config_to_string ("module.canvas.name", local);
    _objectModuleName = config_to_string ("module.object.name", local);
 }

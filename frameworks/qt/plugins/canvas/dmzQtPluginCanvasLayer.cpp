@@ -45,7 +45,7 @@ dmz::QtCanvasLayer::paint (
       QPainter *painter,
       const QStyleOptionGraphicsItem *option,
       QWidget *widget) {
-         
+
    // QColor color (Qt::black);
    // color.setAlphaF (0.25);
    // painter->setBrush (color);
@@ -164,16 +164,16 @@ dmz::QtPluginCanvasLayerModel::set_active_layer (const Handle Layer) {
    if (_objectModule) {
 
       //const Handle PrevActiveLayer (_activeLayerHandle);
-      
+
       // const Handle UndoHandle (_undo.start_record ("Layer Active"));
-                     
+
       _objectModule->store_flag (Layer, _activeAttrHandle, True);
-      
+
       //if (PrevActiveLayer) {
-         
+
       //   _objectModule->store_flag (PrevActiveLayer, _activeAttrHandle, False);
       //}
-      
+
       // _undo.stop_record (UndoHandle);
    }
 }
@@ -188,52 +188,52 @@ dmz::QtPluginCanvasLayerModel::create_layer (
       const Boolean Undo) {
 
    Handle layerHandle (0);
-   
+
    if (_objectModule) {
-      
+
       Handle undoHandle (0);
-      
+
       if (Undo) { undoHandle = _undo.start_record ("Create Layer"); }
-      
+
       if (!_rootLayerHandle) {
-         
+
          ObjectType rootLayerType;
          _defs.lookup_object_type ("root_layer", rootLayerType);
-         
+
          layerHandle = _objectModule->create_object (rootLayerType, ObjectLocal);
-            
+
          if (layerHandle) {
-            
+
             _objectModule->activate_object (layerHandle);
-            
+
             _log.debug << "Root Layer Created: " << layerHandle << endl;
          }
       }
 
       ObjectType layerType;
       _defs.lookup_object_type ("layer", layerType);
-      
+
       Handle nameAttrHandle (_defs.create_named_handle (ObjectAttributeLayerName));
 
       layerHandle = _objectModule->create_object (layerType, ObjectLocal);
-      
+
       if (layerHandle) {
-      
+
          _objectModule->store_text (layerHandle, _nameAttrHandle, Name);
          _objectModule->store_flag (layerHandle, _visibleAttrHandle, Visible);
          _objectModule->store_flag (layerHandle, _lockedAttrHandle, Locked);
          _objectModule->store_flag (layerHandle, _activeAttrHandle, Active);
-         
+
          _objectModule->activate_object (layerHandle);
 
          Handle lastLayerHandle (_get_last_layer_handle (_rootLayerHandle));
-         
+
          _objectModule->link_objects (_orderAttrHandle, lastLayerHandle, layerHandle);
       }
-      
+
       if (undoHandle) { _undo.stop_record (undoHandle); }
    }
-   
+
    return layerHandle;
 }
 
@@ -242,43 +242,43 @@ dmz::Boolean
 dmz::QtPluginCanvasLayerModel::delete_active_layer () {
 
    Boolean result (False);
-   
+
    if (_objectModule && _activeLayerHandle) {
-      
+
       const Handle UndoHandle (_undo.start_record ("Delete Layer"));
-      
+
       const Handle Layer (_activeLayerHandle);
       const Handle PreviousLayer (_get_next_layer_handle (Layer));
       const Handle NextLayer (_get_previous_layer_handle (Layer));
-      
+
       HandleContainer links;
 
       if (_objectModule->lookup_super_links (Layer, _linkAttrHandle, links)) {
 
          Handle objHandle = links.get_first ();
-         
+
          while (objHandle) {
-         
+
             _objectModule->destroy_object (objHandle);
-            
+
             objHandle = links.get_next ();
-         }   
+         }
       }
-      
+
       _objectModule->store_flag (Layer, _activeAttrHandle, False);
-      
+
       _remove_layer (Layer);
-      
+
       _objectModule->destroy_object (Layer);
-      
+
       if (NextLayer == _rootLayerHandle) { set_active_layer (PreviousLayer); }
       else { set_active_layer (NextLayer); }
-      
+
       _undo.stop_record (UndoHandle);
-      
+
       result = True;
    }
-   
+
    return result;
 }
 
@@ -293,7 +293,7 @@ dmz::QtPluginCanvasLayerModel::index (
    QModelIndex retVal;
 
    if (row < _get_layer_count ()) {
-      
+
       retVal = createIndex (row, column, (quint32)_get_layer_handle (row));
    }
 
@@ -328,17 +328,17 @@ dmz::QtPluginCanvasLayerModel::data (const QModelIndex &Index, int role) const {
    QVariant retVal;
 
    if (Index.isValid ()) {
-      
-      if (Qt::DisplayRole == role) { 
+
+      if (Qt::DisplayRole == role) {
 
          retVal = _get_display_data (Index);
-         
+
          if (LayerNameColumn == Index.column ()) {
-            
+
             const Handle LayerHandle (_get_layer_handle (Index.row ()));
-         
+
             if (_activeLayerHandle && (LayerHandle == _activeLayerHandle)) {
-         
+
                retVal = retVal.toString () + " (Active)";
             }
          }
@@ -347,7 +347,7 @@ dmz::QtPluginCanvasLayerModel::data (const QModelIndex &Index, int role) const {
 
          if ((LayerLockedColumn == Index.column ()) ||
                (LayerVisibleColumn == Index.column ())) {
-            
+
             retVal = _get_check_state_data (Index);
          }
       }
@@ -371,13 +371,13 @@ dmz::QtPluginCanvasLayerModel::data (const QModelIndex &Index, int role) const {
          }
       }
       // else if (Qt::BackgroundRole == role) {
-      // 
+      //
       //    if (LayerNameColumn == Index.column ()) {
-      // 
+      //
       //       const Handle LayerHandle (_get_layer_handle (Index.row ()));
-      // 
+      //
       //       if (_activeLayerHandle && (LayerHandle == _activeLayerHandle)) {
-      // 
+      //
       //          retVal = QApplication::palette ().dark ();
       //       }
       //    }
@@ -401,11 +401,11 @@ dmz::QtPluginCanvasLayerModel::setData (
       Handle layerHandle (_get_layer_handle (Index.row ()));
 
       if (layerHandle) {
-         
+
          Handle undoHandle (0);
 
          if (role == Qt::CheckStateRole) {
-            
+
             Boolean flag (Value.toBool ());
 
             if (LayerLockedColumn == Index.column ()) {
@@ -417,25 +417,25 @@ dmz::QtPluginCanvasLayerModel::setData (
             else if (LayerVisibleColumn == Index.column ()) {
 
                undoHandle = _undo.start_record (flag ? "Layer Visible" : "Layer Hidden");
-               
+
                retVal = _objectModule->store_flag (layerHandle, _visibleAttrHandle, flag);
             }
          }
          else if (role == Qt::EditRole) {
-            
+
             if (LayerNameColumn == Index.column ()) {
 
                const String Name (qPrintable (Value.toString ()));
-               
+
                undoHandle =
                   _undo.start_record (String ("Layer name changed to: ") + Name);
-               
+
                retVal = _objectModule->store_text (layerHandle, _nameAttrHandle, Name);
             }
          }
-         
+
          if (undoHandle) {
-            
+
             _undo.stop_record (undoHandle);
          }
       }
@@ -488,13 +488,13 @@ dmz::QtPluginCanvasLayerModel::dropMimeData (
       const QModelIndex &Parent) {
 
    bool retVal (false);
-   
+
    if (_objectModule) {
 
       if (action == Qt::MoveAction) {
-   
+
          if (Data->hasText ()) {
-   
+
             UUID uuid (qPrintable (Data->text ()));
 
             Handle dragHandle (_objectModule->lookup_handle_from_uuid (uuid));
@@ -511,7 +511,7 @@ dmz::QtPluginCanvasLayerModel::dropMimeData (
             }
 
             _move_layer (dragHandle, dropHandle);
-            
+
             retVal = true;
          }
       }
@@ -559,7 +559,7 @@ dmz::QtPluginCanvasLayerModel::flags (const QModelIndex &Index) const {
    Qt::ItemFlags retVal;
 
    if (LayerLockedColumn == Index.column ()) {
-   
+
       retVal = Qt::ItemIsEnabled | Qt::ItemIsUserCheckable;
    }
    else if (LayerVisibleColumn == Index.column ()) {
@@ -613,7 +613,7 @@ dmz::QtPluginCanvasLayerModel::create_object (
       if (Type.is_of_exact_type (rootLayerType)) {
 
          _rootLayerHandle = ObjectHandle;
-         
+
          _log.debug << "Found Root Layer: " << _rootLayerHandle << endl;
       }
       else {
@@ -645,14 +645,14 @@ dmz::QtPluginCanvasLayerModel::destroy_object (
    else {
 
       if (_canvasModule) { _canvasModule->remove_item (ObjectHandle); }
-      
+
       _layerItemTable.remove (ObjectHandle);
-      
+
       _layersUpdated = True;
-      
+
 //      beginRemoveRows (QModelIndex (), 0, _get_layer_count ());
 //      endRemoveRows ();
-      
+
    }
 }
 
@@ -670,9 +670,9 @@ dmz::QtPluginCanvasLayerModel::link_objects (
        (_layerItemTable.lookup (SuperHandle) && _layerItemTable.lookup (SubHandle))) {
 
       if (AttributeHandle == _orderAttrHandle) {
-         
+
          _layersUpdated = True;
-         
+
          // beginRemoveRows (QModelIndex (), 0, _get_layer_count () - 1);
          // endRemoveRows ();
       }
@@ -713,10 +713,10 @@ dmz::QtPluginCanvasLayerModel::update_object_type (
    if (_layerItemTable.lookup (ObjectHandle)) {
 
       // if (AttributeHandle == _defaultAttrHandle) {
-      // 
+      //
       //    Mask objState;
       //    _lookup_object_state (ObjectHandle, objState);
-      // 
+      //
       //    _update_object (ObjectHandle, Value, objState);
       // }
    }
@@ -734,10 +734,10 @@ dmz::QtPluginCanvasLayerModel::update_object_state (
    if (_layerItemTable.lookup (ObjectHandle)) {
 
       // if (AttributeHandle == _defaultAttrHandle) {
-      //    
+      //
       //    ObjectType objType;
       //    _lookup_object_type (ObjectHandle, objType);
-      // 
+      //
       //    _update_object (ObjectHandle, objType, Value);
       // }
    }
@@ -755,15 +755,15 @@ dmz::QtPluginCanvasLayerModel::update_object_flag (
    if (_layerItemTable.lookup (ObjectHandle)) {
 
       if (AttributeHandle == _activeAttrHandle) {
-   
+
          _set_layer_active (ObjectHandle, Value);
       }
       else if (AttributeHandle == _lockedAttrHandle) {
-   
+
          _set_layer_locked (ObjectHandle, Value);
       }
       else if (AttributeHandle == _visibleAttrHandle) {
-   
+
          _set_layer_visible (ObjectHandle, Value);
       }
    }
@@ -794,9 +794,9 @@ dmz::QtPluginCanvasLayerModel::update_time_slice (const Float64 TimeDelta) {
    if (_layersUpdated) {
 
       _update_layer_order ();
-      
+
       reset ();
-      
+
       _layersUpdated = False;
    }
 }
@@ -806,7 +806,7 @@ dmz::Int32
 dmz::QtPluginCanvasLayerModel::_get_layer_count () const {
 
    Int32 count (0);
-   
+
    Handle layerHandle (_get_next_layer_handle (_rootLayerHandle));
 
    while (layerHandle) {
@@ -823,11 +823,11 @@ dmz::Handle
 dmz::QtPluginCanvasLayerModel::_get_layer_handle (const Int32 Row) const {
 
    Handle result (0);
-   
+
    const Int32 Count (_get_layer_count ());
 
    if (Row == -1) {
-      
+
       result = 0;
    }
    else if (Row < Count) {
@@ -850,24 +850,24 @@ dmz::QtPluginCanvasLayerModel::_get_layer_row (const Handle ObjectHandle) const 
    Int32 row (0);
 
    if (ObjectHandle) {
-      
+
       Handle layerHandle (_get_next_layer_handle (_rootLayerHandle));
 
       while (layerHandle) {
 
          row++;
-         
+
          if (ObjectHandle == layerHandle) {
 
             layerHandle = 0;
          }
          else {
-            
+
             layerHandle = _get_next_layer_handle (layerHandle);
          }
       }
    }
-   
+
    return (_get_layer_count () - row);
 }
 
@@ -878,7 +878,7 @@ dmz::QtPluginCanvasLayerModel::_get_display_data (const QModelIndex &Index) cons
    QVariant retVal;
 
    const Handle LayerHandle (_get_layer_handle (Index.row ()));
-   
+
    if (_objectModule && LayerHandle) {
 
       if (Index.column () == LayerNameColumn) {
@@ -913,7 +913,7 @@ dmz::QtPluginCanvasLayerModel::_get_check_state_data (const QModelIndex &Index) 
    if (_objectModule && LayerHandle) {
 
       Handle attrHandle (0);
-      
+
       if (Index.column () == LayerLockedColumn) {
 
          attrHandle = _lockedAttrHandle;
@@ -922,13 +922,13 @@ dmz::QtPluginCanvasLayerModel::_get_check_state_data (const QModelIndex &Index) 
 
          attrHandle = _visibleAttrHandle;
       }
-      
+
       if (attrHandle && _objectModule->lookup_flag (LayerHandle, attrHandle)) {
 
          retVal = Qt::Checked;
       }
       else { retVal = Qt::Unchecked; }
-      
+
    }
 
    return retVal;
@@ -941,12 +941,12 @@ dmz::QtPluginCanvasLayerModel::_set_layer_active (
       const Boolean Value) {
 
    if (Value) {
-      
+
       _activeLayerHandle = ObjectHandle;
       _model_changed (ObjectHandle, ObjectHandle);
    }
    else {
-      
+
       if (ObjectHandle == _activeLayerHandle) {
 
          _activeLayerHandle = 0;
@@ -962,7 +962,7 @@ dmz::QtPluginCanvasLayerModel::_set_layer_locked (
       const Boolean Value) {
 
    QtCanvasLayer *item (_layerItemTable.lookup (ObjectHandle));
-      
+
    if (item) {
 
       item->setEnabled (Value);
@@ -977,17 +977,17 @@ dmz::QtPluginCanvasLayerModel::_set_layer_visible (
       const Boolean Value) {
 
    QtCanvasLayer *item (_layerItemTable.lookup (ObjectHandle));
-      
+
    if (item) {
 
       item->setVisible (Value);
-      
+
       if (_canvasModule) {
-         
+
          QGraphicsScene *scene = _canvasModule->get_scene ();
          if (scene) { scene->update (); }
       }
-      
+
       _model_changed (ObjectHandle, ObjectHandle);
    }
 }
@@ -999,18 +999,18 @@ dmz::QtPluginCanvasLayerModel::_update_layer_order () {
    Float32 zValue (10.0f);
 
    Handle layerHandle (_get_next_layer_handle (_rootLayerHandle));
-      
+
    while (layerHandle) {
-   
+
       QGraphicsItem *item (_get_item (layerHandle));
-      
+
       if (item) {
-   
+
          item->setZValue (zValue);
-   
+
          zValue += 10.0f;
       }
-      
+
       layerHandle = _get_next_layer_handle (layerHandle);
    }
 }
@@ -1023,27 +1023,27 @@ dmz::QtPluginCanvasLayerModel::_update_layer_list () {
    Float32 zValue (10.0f);
 
 _log.warn << "_update_layer_list" << endl;
-   
+
    if (!_ignoreUpdates) {
 
 _log.warn << "clear" << endl;
       _layerHandleList.clear ();
-   
+
       Handle layerHandle (_get_next_layer_handle (_rootLayerHandle));
-      
+
       while (layerHandle) {
-   
+
          QGraphicsItem *item (_get_item (layerHandle));
-      
+
          if (item) {
-   
+
             item->setZValue (zValue);
-   
+
             zValue += 10.0f;
          }
-   
+
          _layerHandleList.prepend (layerHandle);
-      
+
          layerHandle = _get_next_layer_handle (layerHandle);
       }
 
@@ -1114,11 +1114,11 @@ dmz::QtPluginCanvasLayerModel::_get_last_layer_handle (const Handle ObjectHandle
    if (_objectModule && ObjectHandle) {
 
       Handle next (_get_next_layer_handle (ObjectHandle));
-      
+
       while (next) {
-         
+
          next = _get_next_layer_handle (result);
-         
+
          if (next) { result = next; }
       }
    }
@@ -1131,24 +1131,24 @@ void
 dmz::QtPluginCanvasLayerModel::_model_changed (
       const Handle FirstObject,
       const Handle LastObject) {
-   
+
    int firstRow (_get_layer_row (FirstObject));
-   
+
    QModelIndex topLeft (createIndex (firstRow, 0, (quint32)FirstObject));
-   
+
    QModelIndex bottomRight (
       createIndex (firstRow, LayerColumnCount - 1, (quint32)FirstObject));
-   
+
    if (LastObject && (LastObject != FirstObject)) {
-      
+
       int lastRow (_get_layer_row (LastObject));
-      
+
       if (lastRow != -1) {
-      
+
          bottomRight = createIndex (lastRow, LayerColumnCount - 1, (quint32)LastObject);
       }
    }
-   
+
    dataChanged (topLeft, bottomRight);
 }
 
@@ -1157,14 +1157,14 @@ dmz::Boolean
 dmz::QtPluginCanvasLayerModel::_remove_layer (const Handle SourceHandle) {
 
    Boolean result (False);
-   
+
    if (SourceHandle && _objectModule) {
 
       const Handle SuperHandle (_get_previous_layer_handle (SourceHandle));
       const Handle SubHandle (_get_next_layer_handle (SourceHandle));
 
       // unlink SourceHandle then relink super to sub
-      
+
       if (SuperHandle) {
 
          _objectModule->unlink_objects (
@@ -1189,7 +1189,7 @@ dmz::QtPluginCanvasLayerModel::_remove_layer (const Handle SourceHandle) {
          }
       }
    }
-   
+
    return result;
 }
 
@@ -1216,27 +1216,27 @@ dmz::QtPluginCanvasLayerModel::_move_layer (
 
          // unlink SourceHandle then relink super to sub
          _remove_layer (SourceHandle);
-   
+
          // unlink TargetHandle then relink super to SourceHandle to sub
          Handle superHandle (TargetHandle);
          Handle subHandle (TargetNextHandle);
-   
+
          if (subHandle) {
-   
+
             _objectModule->unlink_objects (
                _objectModule->lookup_link_handle (
                   _orderAttrHandle,
                   superHandle,
                   subHandle));
          }
-   
+
          _objectModule->link_objects (_orderAttrHandle, superHandle, SourceHandle);
-   
+
          if (subHandle) {
-   
+
             _objectModule->link_objects (_orderAttrHandle, SourceHandle, subHandle);
          }
-   
+
          _undo.stop_record (UndoHandle);
 
          _model_changed (
@@ -1271,13 +1271,13 @@ dmz::QtPluginCanvasLayer::QtPluginCanvasLayer (
       _dock (0),
       _layerModel (Info, Local, this),
       _newLayerCount (1) {
-   
+
    setObjectName (get_plugin_name ().get_buffer ());
 
    _ui.setupUi (this);
 
    _ui.treeView->setModel (&_layerModel);
-   
+
    QHeaderView *header (_ui.treeView->header ());
 
    if (header) {
@@ -1289,13 +1289,13 @@ dmz::QtPluginCanvasLayer::QtPluginCanvasLayer (
       header->hideSection (LayerLockedColumn);
       header->hideSection (LayerZValueColumn);
    }
-   
+
    connect (
       _ui.treeView->selectionModel (),
       SIGNAL (currentRowChanged (const QModelIndex &, const QModelIndex &)),
       this,
       SLOT (_slot_current_changed (const QModelIndex &, const QModelIndex &)));
-   
+
    _init (Local);
 }
 
@@ -1310,7 +1310,7 @@ void
 dmz::QtPluginCanvasLayer::update_plugin_state (
       const PluginStateEnum State,
       const UInt32 Level) {
-   
+
    if (State == PluginStateStart) {
 
       _load_session ();
@@ -1413,23 +1413,23 @@ dmz::QtPluginCanvasLayer::discover_plugin (
 
 void
 dmz::QtPluginCanvasLayer::update_time_slice (const Float64 TimeDelta) {
-   
+
    if (_layerModel.rowCount (QModelIndex ()) == 0) {
-   
+
       _newLayerCount = 0;
-      
+
       String name ("Network-");
       name << _newLayerCount++;
-   
+
       Handle layer (_layerModel.create_layer (name, True, True, False, False));
    }
 
    if (_layerModel.rowCount (QModelIndex ()) > 1) {
-   
+
       _ui.deleteButton->setEnabled (True);
    }
    else {
-   
+
       _ui.deleteButton->setEnabled (False);
    }
 }
@@ -1437,14 +1437,14 @@ dmz::QtPluginCanvasLayer::update_time_slice (const Float64 TimeDelta) {
 
 void
 dmz::QtPluginCanvasLayer::on_addButton_clicked () {
-   
+
    String name ("Network-");
    name << _newLayerCount++;
-      
+
    Handle layer (_layerModel.create_layer (name, True, True, False, True));
-   
+
    // QModelIndex index (_layerModel.index_for_handlered (layer));
-   // 
+   //
    // _ui.treeView->selectionModel ()->setCurrentIndex (
    //    index, QItemSelectionModel::ClearAndSelect);
 }
@@ -1463,7 +1463,7 @@ dmz::QtPluginCanvasLayer::_slot_current_changed (
       const QModelIndex &Previous) {
 
    if (Current.isValid ()) {
-      
+
       const Handle CurrentHandle (Current.internalId ());
       _layerModel.set_active_layer (CurrentHandle);
    }
@@ -1503,15 +1503,15 @@ dmz::QtPluginCanvasLayer::_init (const Config &Local) {
       "dockWidget.title",
       Local,
       qPrintable (_title)).get_buffer ();
-      
+
    _channel = config_to_named_handle (
       "channel.name",
       Local,
       "NetworkAnalysisChannel",
       get_plugin_runtime_context ());
-   
+
    qwidget_config_read ("widget", Local, this);
-   
+
    qtoolbutton_config_read ("addLayer", Local, _ui.addButton);
    qtoolbutton_config_read ("deleteLayer", Local, _ui.deleteButton);
 }

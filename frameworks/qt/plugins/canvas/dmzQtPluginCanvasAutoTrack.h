@@ -10,9 +10,9 @@
 namespace dmz {
 
    class QtModuleCanvas;
-   
 
-   class QtPluginCanvasAutoTrack : 
+
+   class QtPluginCanvasAutoTrack :
       public Plugin,
       public TimeSlice,
       public ObjectObserverUtil {
@@ -29,7 +29,7 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-         
+
          // TimeSlice Interface
          virtual void update_time_slice (const Float64 TimeDelta);
 
@@ -65,7 +65,7 @@ namespace dmz {
          Handle _hilAttributeHandle;
          Handle _hilHandle;
          Boolean _updateView;
-         
+
       private:
          QtPluginCanvasAutoTrack ();
          QtPluginCanvasAutoTrack (const QtPluginCanvasAutoTrack &);

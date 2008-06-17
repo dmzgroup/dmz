@@ -5,7 +5,7 @@
 
 dmz::Float64
 dmz::get_qmatrix_scale (const QMatrix &Source) {
-   
+
    qreal scaleX = Source.m11 ();
    qreal scaleY = Source.m12 ();
    qreal scale = sqrt (scaleX * scaleX + scaleY + scaleY);
@@ -15,9 +15,9 @@ dmz::get_qmatrix_scale (const QMatrix &Source) {
 
 void
 dmz::set_qobject_properties (const String &Name, const Config &Source, QObject *object) {
-   
+
    if (object) {
-      
+
       Config properties;
 
       if (Name) { Source.lookup_all_config_merged (Name, properties); }
@@ -29,7 +29,7 @@ dmz::set_qobject_properties (const String &Name, const Config &Source, QObject *
       while (properties.get_next_config (it, cd)) {
 
          const QVariant Value (config_to_string ("value", cd).get_buffer ());
-         
+
          object->setProperty (cd.get_name ().get_buffer (), Value);
       }
    }
@@ -38,23 +38,23 @@ dmz::set_qobject_properties (const String &Name, const Config &Source, QObject *
 
 dmz::Boolean
 dmz::set_qwidget_stylesheet (const String &Name, const Config &Source, QWidget *widget) {
-   
+
    Boolean result (False);
-   
+
    if (widget) {
-      
+
       Config cd;
 
       if (Name) { Source.lookup_config (Name, cd); }
       else { cd = Source; }
 
       String qss (config_to_string ("file", cd));
-      
+
       if (qss) {
-      
+
          QFile file (qss.get_buffer ());
          if (file.open (QFile::ReadOnly)) {
-            
+
             QString styleSheet (QLatin1String (file.readAll ()));
             widget->setStyleSheet (styleSheet);
 
@@ -63,7 +63,7 @@ dmz::set_qwidget_stylesheet (const String &Name, const Config &Source, QWidget *
          }
       }
    }
-   
+
    return result;
 }
 

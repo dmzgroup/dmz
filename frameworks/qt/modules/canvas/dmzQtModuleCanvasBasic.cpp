@@ -36,7 +36,7 @@ dmz::QtModuleCanvasBasic::QtModuleCanvasBasic (const PluginInfo &Info, Config &l
 
    _scene.setSceneRect (QRectF (-50000, -50000, 100000, 100000));
    //_scene.setItemIndexMethod (QGraphicsScene::NoIndex);
-   
+
    _canvas = new QtCanvasView (this);
    _canvas->setTransformationAnchor (QGraphicsView::AnchorViewCenter);
    _canvas->setHorizontalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
@@ -49,7 +49,7 @@ dmz::QtModuleCanvasBasic::QtModuleCanvasBasic (const PluginInfo &Info, Config &l
    _canvas->setObjectName (objectName () + "View");
 
    _canvas->setScene (&_scene);
-   
+
    //_canvas->setBackgroundBrush (QPixmap ("/assets/images/background1.png"));
 
    QVBoxLayout *layout (new QVBoxLayout ());
@@ -261,7 +261,7 @@ void
 dmz::QtModuleCanvasBasic::zoom_extents () {
 
    if (_canvas) {
-      
+
       _canvas->fitInView (_scene.itemsBoundingRect (), Qt::KeepAspectRatio);
       _canvas->set_scale (_canvas->get_scale ());
    }
@@ -389,18 +389,18 @@ dmz::QtModuleCanvasBasic::_handle_key_event (
 
 void
 dmz::QtModuleCanvasBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we) {
-   
+
    if (_inputModule && _canvas) {
-      
+
       InputEventMouse event (_mouseEvent);
-      
+
       QPoint pointOnCanvas (event.get_mouse_x (), event.get_mouse_y ());
       QPoint pointOnScreen (event.get_mouse_screen_x (), event.get_mouse_screen_y ());
-      
+
       Qt::MouseButtons buttons;
-      
+
       if (me) {
-         
+
          pointOnCanvas = _canvas->mapFrom (this, me->pos ());
          pointOnScreen = me->globalPos ();
 
@@ -410,7 +410,7 @@ dmz::QtModuleCanvasBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we)
 
          pointOnCanvas = _canvas->mapFrom (this, we->pos ());
          pointOnScreen = we->globalPos ();
-         
+
          buttons = we->buttons ();
       }
 
@@ -435,9 +435,9 @@ dmz::QtModuleCanvasBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we)
       event.set_scroll_delta (deltaX, deltaY);
 
       event.set_window_size (width (), height ());
-      
+
       if (_mouseEvent.update (event)) {
-         
+
          _inputModule->send_mouse_event (_mouseEvent);
       }
    }
@@ -448,14 +448,14 @@ void
 dmz::QtModuleCanvasBasic::_save_session () {
 
    // String data;
-   // 
+   //
    // Config session (get_plugin_name ());
-   // 
+   //
    // if (_canvas) {
-   // 
+   //
    //    session.add_config (qgraphicsview_to_config ("canvasView", *_canvas));
    // }
-   // 
+   //
    // set_session_config (get_plugin_runtime_context (), session);
 }
 
@@ -464,9 +464,9 @@ void
 dmz::QtModuleCanvasBasic::_load_session () {
 
    // Config session (get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
-   // 
+   //
    // if (_canvas) {
-   // 
+   //
    //    qgraphicsview_config_read ("canvasView", session, *_canvas);
    //    _canvas->set_scale (_canvas->get_scale ());
    // }
@@ -478,7 +478,7 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
 
    _inputModuleName = config_to_string ("module.input.name", local);
    _mainWindowModuleName = config_to_string ("module.mainWindow.namne", local);
-   
+
    _channel = config_to_named_handle (
       "channel.name",
       local,
@@ -505,7 +505,7 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
          if (value.to_lower () == "true") { enableAntialiasing = True; }
       }
 
-      if (enableOpenGL) { 
+      if (enableOpenGL) {
 
          _canvas->setViewport (new QGLWidget (QGLFormat  (QGL::SampleBuffers)));
          _log.info << "OpenGL enabled" << endl;
@@ -518,7 +518,7 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
             _canvas->setRenderHint (QPainter::HighQualityAntialiasing, true);
             _log.info << "High Quality Antialiasing enabled" << endl;
          }
-         else { 
+         else {
 
             _canvas->setRenderHint (QPainter::Antialiasing, true);
             _log.info << "Antialiasing enabled" << endl;

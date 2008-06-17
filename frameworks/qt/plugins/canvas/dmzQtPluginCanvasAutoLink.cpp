@@ -38,11 +38,11 @@ dmz::QtPluginCanvasAutoLink::create_object (
       const ObjectLocalityEnum Locality) {
 
    ObjectModule *objMod (get_object_module ());
-   
+
    if (_activeLayer && objMod) {
-      
+
       if (!_ignoreSet.contains_type (Type) && _linkSet.contains_type (Type)) {
-      
+
          objMod->link_objects (_linkAttrHandle, ObjectHandle, _activeLayer);
       }
    }
@@ -58,13 +58,13 @@ dmz::QtPluginCanvasAutoLink::update_object_flag (
       const Boolean *PreviousValue) {
 
    if (AttributeHandle == _activeAttrHandle) {
-  
+
       if (Value) {
-         
+
          _activeLayer = ObjectHandle;
       }
       else {
-         
+
          if (ObjectHandle == _activeLayer) { _activeLayer = 0; }
       }
    }
@@ -85,7 +85,7 @@ dmz::QtPluginCanvasAutoLink::_init (Config &local) {
       local,
       ObjectAttributeLayerLinkName,
       get_plugin_runtime_context ());
-      
+
    _get_type_set ("ignore", local, _ignoreSet);
    _get_type_set ("link", local, _linkSet);
 }

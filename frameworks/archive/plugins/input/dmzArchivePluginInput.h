@@ -48,10 +48,10 @@ namespace dmz {
 
          Log _log;
          Definitions _defs;
-         
+
          EventStruct *_eventList;
          EventStruct *_eventListTail;
-         
+
          InputModule *_channels;
          Config _localData;
 

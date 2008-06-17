@@ -22,7 +22,7 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
       _scene (),
       _staticObjects (),
       _dynamicObjects (),
-      _portalTable (),      
+      _portalTable (),
       _numStaticVertices (0),
       _staticVertices (0),
       _numStaticTriIndices (0),
@@ -81,13 +81,13 @@ dmz::RenderModuleCoreOSGBasic::discover_plugin (
       const Plugin *PluginPtr) {
 
    if (Mode == PluginDiscoverAdd) {
-      
+
       _extensions.discover_external_plugin (PluginPtr);
 
       if (!_objectModule) { _objectModule = ObjectModule::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
-      
+
       _extensions.remove_external_plugin (PluginPtr);
 
       if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
@@ -106,7 +106,7 @@ dmz::RenderModuleCoreOSGBasic::update_object_position (
       const Handle AttributeHandle,
       const Vector &Value,
       const Vector *PreviousValue) {
-         
+
 }
 
 
@@ -117,26 +117,26 @@ dmz::RenderModuleCoreOSGBasic::update_object_orientation (
       const Handle AttributeHandle,
       const Matrix &Value,
       const Matrix *PreviousValue) {
-      
+
 }
 
 
 // RenderModuloeCoreOSG Interface
-osg::Group * 
+osg::Group *
 dmz::RenderModuleCoreOSGBasic::get_scene () {
 
    return _scene.get ();
 }
 
 
-osg::Group * 
+osg::Group *
 dmz::RenderModuleCoreOSGBasic::get_static_objects () {
 
    return _staticObjects.get ();
 }
 
 
-osg::Group * 
+osg::Group *
 dmz::RenderModuleCoreOSGBasic::get_dynamic_objects () {
 
    return _dynamicObjects.get ();
@@ -176,7 +176,7 @@ dmz::RenderModuleCoreOSGBasic::add_camera (
    if (ps && camera) {
 
       if (!(ps->camera.valid ())) {
-         
+
          ps->camera = camera;
          result = True;
       }
@@ -228,7 +228,7 @@ dmz::RenderModuleCoreOSGBasic::add_camera_manipulator (
    if (ps && manipulator) {
 
       if (!(ps->cameraManipulator.valid ())) {
-         
+
          ps->cameraManipulator = manipulator;
          result = True;
       }
@@ -270,9 +270,9 @@ dmz::RenderModuleCoreOSGBasic::remove_camera_manipulator (const String &PortalNa
 
 void
 dmz::RenderModuleCoreOSGBasic::get_static_triangles (
-      Vector **vertices, 
-      UInt32 &numVerts, 
-      UInt32 **indices, 
+      Vector **vertices,
+      UInt32 &numVerts,
+      UInt32 **indices,
       UInt32 &numIndices) {
 
       if (!_staticVertices) {
@@ -281,7 +281,7 @@ dmz::RenderModuleCoreOSGBasic::get_static_triangles (
          _extractStaticTriangles (_staticObjects.get());
 
       }
-      
+
 
       (*vertices) = _staticVertices;
       numVerts = _numStaticVertices;
@@ -298,7 +298,7 @@ dmz::RenderModuleCoreOSGBasic::_countStaticVerticesAndIndices (osg::Node *nd) {
 
    _countStaticVertsIndiciesRecursive (nd);
 
-   _log.info << "Number Verts: " << _numStaticVertices 
+   _log.info << "Number Verts: " << _numStaticVertices
       << ", Number Triangles: " << (_numStaticTriIndices/3.0) << endl;
 }
 
@@ -314,7 +314,7 @@ dmz::RenderModuleCoreOSGBasic::_countStaticVertsIndiciesRecursive (osg::Node *nd
 
          osg::Drawable *drawable=geode->getDrawable(i);
          osg::Geometry *geom=dynamic_cast<osg::Geometry *> (drawable);
- 
+
          for (UInt32 ipr = 0; ipr < geom->getNumPrimitiveSets (); ipr++) {
 
             _numStaticVertices += geom->getVertexArray ()->getNumElements ();
@@ -372,7 +372,7 @@ dmz::RenderModuleCoreOSGBasic::_extractStaticTriangles (osg::Node *nd) {
 void
 dmz::RenderModuleCoreOSGBasic::_extractStaticTrianglesRecursive (
       osg::Node *nd,
-      const UInt32 StartVertexIndex, 
+      const UInt32 StartVertexIndex,
       UInt32 &endVertexIndex,
       const UInt32 StartIndicesIndex,
       UInt32 &endIndiciesIndex) {
@@ -398,7 +398,7 @@ dmz::RenderModuleCoreOSGBasic::_extractStaticTrianglesRecursive (
 
             UInt32 vertCount (0);
             for (; vertCount < verts->size (); vertCount ++) {
-               
+
                _staticVertices [outputVertIndex + vertCount].set_xyz (
                   (*verts)[vertCount]. x(),
                   (*verts)[vertCount]. y(),
@@ -414,14 +414,14 @@ dmz::RenderModuleCoreOSGBasic::_extractStaticTrianglesRecursive (
 
                UInt32 indiciesCount (0);
                for (; indiciesCount < prset->getNumIndices () - 2; indiciesCount += 3) {
-                  
-                  _staticTriIndices [outputIndiciesIndex + indiciesCount] = 
+
+                  _staticTriIndices [outputIndiciesIndex + indiciesCount] =
                      prset->index (indiciesCount);
 
-                  _staticTriIndices [outputIndiciesIndex + indiciesCount + 1] = 
+                  _staticTriIndices [outputIndiciesIndex + indiciesCount + 1] =
                      prset->index (indiciesCount + 1);
 
-                  _staticTriIndices [outputIndiciesIndex + indiciesCount + 2] = 
+                  _staticTriIndices [outputIndiciesIndex + indiciesCount + 2] =
                      prset->index (indiciesCount + 2);
                }
                // Update output index for indices
@@ -439,7 +439,7 @@ dmz::RenderModuleCoreOSGBasic::_extractStaticTrianglesRecursive (
          for (UInt32 ic=0; ic < gp->getNumChildren (); ic++) {
 
             _extractStaticTrianglesRecursive (
-               gp->getChild (ic), 
+               gp->getChild (ic),
                outputVertIndex, // Input index
                outputVertIndex, // Result index
                outputIndiciesIndex, // Input index
@@ -457,7 +457,7 @@ dmz::RenderModuleCoreOSGBasic::_extractStaticTrianglesRecursive (
 
 void
 dmz::RenderModuleCoreOSGBasic::_analyzePrimitiveSet (
-      osg::PrimitiveSet *prset, 
+      osg::PrimitiveSet *prset,
       const osg::Vec3Array *verts) {
 
    unsigned int ic;
@@ -465,20 +465,20 @@ dmz::RenderModuleCoreOSGBasic::_analyzePrimitiveSet (
    unsigned int nprim=0;
   // osg::notify(osg::WARN) << "Prim set type "<< prset->getMode() << std::endl;
 
-   for (ic=0; ic<prset->getNumIndices (); ic++) { 
+   for (ic=0; ic<prset->getNumIndices (); ic++) {
       // NB the vertices are held in the drawable -
 
-      //osg::notify(osg::WARN) << "vertex "<< ic << 
+      //osg::notify(osg::WARN) << "vertex "<< ic <<
        //  " is index "<<prset->index(ic) << " at " <<
         // (* verts)[prset->index(ic)].x() << "," <<
-        // (* verts)[prset->index(ic)].y() << "," << 
+        // (* verts)[prset->index(ic)].y() << "," <<
          //(* verts)[prset->index(ic)].z() << std::endl;
    }
    // you might want to handle each type of primset differently: such as:
    switch (prset->getMode ()) {
 
 
-      case osg::PrimitiveSet::TRIANGLES: 
+      case osg::PrimitiveSet::TRIANGLES:
          // get vertices of triangle
          //osg::notify(osg::WARN) << "Triangles "<< nprim << " is index "<<prset->index(ic) << std::endl;
          //for (unsigned int i2=0; i2<prset->getNumIndices()-2; i2+=3) {
@@ -492,7 +492,7 @@ dmz::RenderModuleCoreOSGBasic::_analyzePrimitiveSet (
          _log.out << "Triangle fans found" << endl;
       default:
          _log.out << "Other primitives found: " << String(prset->getName ().c_str ()) << endl;
-         
+
          break;
    // etc for all the primitive types you expect. EG quads, quadstrips lines line loops....
    }
@@ -502,14 +502,14 @@ dmz::RenderModuleCoreOSGBasic::_analyzePrimitiveSet (
 
 dmz::RenderModuleCoreOSGBasic::PortalStruct *
 dmz::RenderModuleCoreOSGBasic::_get_portal_struct (const String &PortalName) {
-   
+
    PortalStruct *ps = _portalTable.lookup (PortalName);
    if (!ps) {
-      
+
       ps = new PortalStruct (PortalName);
       if (!_portalTable.store (PortalName, ps)) { delete ps; ps = 0; }
    }
-   
+
    return ps;
 }
 

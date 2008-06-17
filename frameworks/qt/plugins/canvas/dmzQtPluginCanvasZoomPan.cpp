@@ -153,17 +153,17 @@ dmz::QtPluginCanvasZoomPan::receive_mouse_event (
       QGraphicsView *view (_canvasModule->get_view ());
 
       if (Value.is_button_changed (_mouseButton)) {
-   
+
          if (Value.is_button_pressed (_mouseButton)) {
-   
+
             _handScrolling = True;
-   
+
             if (view) { view->viewport ()->setCursor (Qt::ClosedHandCursor); }
          }
          else {
-   
+
             _handScrolling = False;
-   
+
             if (view) { view->viewport ()->setCursor (Qt::ArrowCursor); }
          }
       }
@@ -287,7 +287,7 @@ dmz::QtPluginCanvasZoomPan::slot_scale_changed (qreal value) {
       const Float32 ZoomRange (ZoomMax - ZoomMin);
       const Float32 SliderRange (_ui.zoomSlider->maximum () - _ui.zoomSlider->minimum ());
       const Float32 SliderValue ((value - ZoomMin) / ZoomRange);
-   
+
       _ui.zoomSlider->setValue (SliderValue * SliderRange);
    }
 }
@@ -295,13 +295,13 @@ dmz::QtPluginCanvasZoomPan::slot_scale_changed (qreal value) {
 
 bool
 dmz::QtPluginCanvasZoomPan::eventFilter (QObject *obj, QEvent *event) {
-   
+
    bool retVal (False);
-   
+
    if (_canvasModule) {
-      
+
       QGraphicsView *view (_canvasModule->get_view ());
-      
+
       if (view && (obj == view)) {
 
          if (event->type() == QEvent::Resize) {
@@ -315,7 +315,7 @@ dmz::QtPluginCanvasZoomPan::eventFilter (QObject *obj, QEvent *event) {
          }
       }
    }
-      
+
    // pass the event on to the parent class
    return QWidget::eventFilter (obj, event);
 }
@@ -348,7 +348,7 @@ dmz::QtPluginCanvasZoomPan::_init (Config &local) {
 
    _canvasModuleName = config_to_string ("module.canvas.name", local);
    _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
-   
+
    init_input_channels (
       local,
       InputEventKeyMask | InputEventMouseMask | InputEventChannelStateMask,
@@ -362,7 +362,7 @@ dmz::QtPluginCanvasZoomPan::_init (Config &local) {
    _zoomMax = config_to_float32 ("zoom.max", local, _zoomMax);
    _zoomStep = config_to_float32 ("zoom.step", local, _zoomStep);
    _zoomDefault = config_to_float32 ("zoom.default", local, _zoomDefault);
-   
+
    qwidget_config_read ("widget", local, this);
    qtoolbutton_config_read ("panLeft", local, _ui.panLeftButton);
    qtoolbutton_config_read ("panRight", local, _ui.panRightButton);

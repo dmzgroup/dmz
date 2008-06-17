@@ -54,10 +54,10 @@ dmz::QtLogObserver::save_session () {
       session.add_config (qbytearray_to_config ("geometry", saveGeometry ()));
 
       if (isVisible ()) {
-         
+
          session.add_config (boolean_to_config ("window", "visible", True));
       }
-      
+
       set_session_config (_context, session);
    }
 }
@@ -72,7 +72,7 @@ dmz::QtLogObserver::load_session () {
 
       QByteArray geometry (config_to_qbytearray ("geometry", session, saveGeometry ()));
       restoreGeometry (geometry);
-      
+
       if (config_to_boolean ("window.visible", session, False)) { show (); }
    }
 }

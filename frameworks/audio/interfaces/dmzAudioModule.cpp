@@ -43,7 +43,7 @@ destroyed, the resource will not actually released until all the instance have b
 dmz::True does not necessarily mean the resource has been freed.
 
 \fn dmz::Handle dmz::AudioModule::play_sound (
-const dmz::Handle AudioHandle, 
+const dmz::Handle AudioHandle,
 const dmz::SoundAttributes &Attributes)
 \brief Creates an instance of a sound file and plays it.
 \param[in] AudioHandle Handle of the audio file to play.
@@ -56,7 +56,7 @@ the sound must be stop in order for the instance to be freed.
 \sa dmz::AudioModule::stop_sound() \n dmz::SoundAttributes
 
 \fn dmz::Boolean dmz::AudioModule::update_sound (
-const dmz::Handle InstanceHandle, 
+const dmz::Handle InstanceHandle,
 const dmz::SoundAttributes &Attributes)
 \brief Updates a sound instance's attributes.
 \param[in] InstanceHandle Handle of the sound instance being updated.
@@ -64,7 +64,7 @@ const dmz::SoundAttributes &Attributes)
 \return Returns dmz::True if the sound instance was successfully updated.
 
 \fn dmz::Boolean dmz::AudioModule::lookup_sound (
-const dmz::Handle InstanceHandle, 
+const dmz::Handle InstanceHandle,
 dmz::SoundAttributes &attributes)
 \brief Looks up a sound instance's current attributes.
 \param[in] InstanceHandle Handle of the sound instance to retrieve the attributes.

@@ -11,12 +11,12 @@ class QGraphicsView;
 
 
 namespace dmz {
-   
+
    const char QtModuleCanvasInterfaceName[] = "QtModuleCanvasInterface";
 
    const UInt32 QtCanvasObjectNameIndex (0);
    const UInt32 QtCanvasObjectHandleIndex (1);
-   
+
 
    class QtModuleCanvas {
 
@@ -24,10 +24,10 @@ namespace dmz {
          static QtModuleCanvas *cast (
             const Plugin *PluginPtr,
             const String &PluginName = "");
-         
+
          virtual QGraphicsScene *get_scene () = 0;
          virtual QGraphicsView *get_view () = 0;
-         
+
          virtual Boolean add_item (const Handle ObjectHandle, QGraphicsItem *item) = 0;
          virtual QGraphicsItem *lookup_item (const Handle ObjectHandle) = 0;
          virtual QGraphicsItem *remove_item (const Handle ObjectHandle) = 0;
@@ -83,7 +83,7 @@ namespace dmz {
          QtModuleCanvas ();
          QtModuleCanvas (const QtModuleCanvas &);
          QtModuleCanvas &operator= (const QtModuleCanvas &);
-         
+
          const PluginInfo &__Info;
    };
 }

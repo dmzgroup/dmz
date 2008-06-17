@@ -105,7 +105,7 @@ namespace dmz {
          String &remainder);
 };
 
-   
+
 DMZ_KERNEL_LINK_SYMBOL dmz::Stream &
 operator<< (dmz::Stream &stream, const dmz::Config &Data);
 

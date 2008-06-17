@@ -129,7 +129,7 @@ dmz::ConfigContext::~ConfigContext () {
    configOrderTable.clear ();
    configTable.empty ();
 }
-  
+
 
 inline dmz::Boolean
 dmz::ConfigContext::add_config (ConfigContext *context) {

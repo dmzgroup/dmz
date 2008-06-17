@@ -137,7 +137,7 @@ dmz::RuntimeContextRTTI::is_valid (const Handle InterfaceHandle) {
    Int32 *countPtr (_countTable.lookup (InterfaceHandle));
 
    Int32 count (countPtr ? *countPtr : 0);
-   
+
    _lock.unlock ();
 
    return count > 0;

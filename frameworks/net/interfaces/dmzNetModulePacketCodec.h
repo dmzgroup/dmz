@@ -15,7 +15,7 @@ namespace dmz {
    class Message;
    class ObjectType;
    class Unmarshal;
-   
+
    class NetModulePacketCodec {
 
       public:

@@ -27,7 +27,7 @@ static const char *get_encode_table () {
 
    if (!init) {
 
-      int ix (0); 
+      int ix (0);
 
       for (ix = 0; ix < 9; ix++) {
 
@@ -62,7 +62,7 @@ static const char *get_encode_table_web () {
 
    if (!init) {
 
-      int ix (0); 
+      int ix (0);
 
       for (ix = 0; ix < 9; ix++) {
 

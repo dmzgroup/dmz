@@ -33,7 +33,7 @@ dmz::RuntimeContextMessaging::RuntimeContextMessaging (
 
       globalContext->unref (); globalContext = 0;
    }
-   
+
    key.ref ();
 }
 

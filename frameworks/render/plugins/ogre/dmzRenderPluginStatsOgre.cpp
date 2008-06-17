@@ -37,7 +37,7 @@ dmz::RenderPluginStatsOgre::discover_plugin (
       const Plugin *PluginPtr) {
 
    if (Mode == PluginDiscoverAdd) {
-      
+
       if (!_core) {
 
          _core = RenderModuleCoreOgre::cast (PluginPtr);
@@ -70,7 +70,7 @@ dmz::RenderPluginStatsOgre::discover_plugin (
       }
    }
    else if (Mode == PluginDiscoverRemove) {
-      
+
       if (_core && (_core == RenderModuleCoreOgre::cast (PluginPtr))) {
 
          if (_debugOverlay) {

@@ -32,9 +32,9 @@ dmz::RenderModuleCoreOgreBasic::RenderModuleCoreOgreBasic (
       _osmSceneLoader (0),
       _portalTable (),
       _dynamicObjectTable () {
-   
+
    _init (local, global);
-   
+
    activate_default_object_attribute (ObjectPositionMask | ObjectOrientationMask);
 }
 
@@ -45,21 +45,21 @@ dmz::RenderModuleCoreOgreBasic::~RenderModuleCoreOgreBasic () {
 
    _extensions.remove_plugins ();
    _portalTable.empty ();
-   
+
    if (_osmSceneLoader) {
-      
+
       delete _osmSceneLoader;
       _osmSceneLoader = 0;
    }
-   
+
    if (_root) {
-      
+
       if (_sceneManager) {
-         
+
          _root->destroySceneManager (_sceneManager);
          _sceneManager = 0;
       }
-      
+
       delete _root;
       _root = 0;
    }
@@ -154,7 +154,7 @@ void
 dmz::RenderModuleCoreOgreBasic::update_time_slice (const Float64 TimeDelta) {
 
    if (_root) {
-      
+
       Ogre::WindowEventUtilities::messagePump();
       _root->renderOneFrame ();
    }
@@ -173,9 +173,9 @@ dmz::RenderModuleCoreOgreBasic::update_object_position (
    if (AttributeHandle == _defaultAttributeHandle) {
 
       Ogre::SceneNode *node = _dynamicObjectTable.lookup (ObjectHandle);
-      
+
       if (node) {
-      
+
          node->setPosition (to_ogre_vector (Value));
       }
    }
@@ -189,21 +189,21 @@ dmz::RenderModuleCoreOgreBasic::update_object_orientation (
       const Handle AttributeHandle,
       const Matrix &Value,
       const Matrix *PreviousValue) {
-      
+
    if (AttributeHandle == _defaultAttributeHandle) {
 
       Ogre::SceneNode *node = _dynamicObjectTable.lookup (ObjectHandle);
-   
+
       if (node) {
-   
+
          node->setOrientation (to_ogre_quaternion (Value));
-      }   
+      }
    }
 }
 
 
 // RenderModuloeCoreOgre Interface
-Ogre::SceneManager * 
+Ogre::SceneManager *
 dmz::RenderModuleCoreOgreBasic::get_scene_manager () { return _sceneManager; }
 
 
@@ -264,16 +264,16 @@ dmz::RenderModuleCoreOgreBasic::add_dynamic_object (
    Boolean retVal (False);
 
    if (node) {
-   
+
       if (_dynamicObjectTable.store (ObjectHandle, node)) {
-         
+
          try {
-            
+
             _sceneManager->getRootSceneNode ()->addChild (node);
             retVal = True;
          }
          catch (Ogre::Exception e) {
-            
+
             _log.error << e.getFullDescription ().c_str () << endl;
          }
       }
@@ -310,9 +310,9 @@ dmz::RenderModuleCoreOgreBasic::OnSceneManagerCreate (
       TiXmlElement* pNodeDesc) {
 
    if (pManager) {
-      
+
       _sceneManager = pManager;
-      
+
       PluginIterator it;
 
       Plugin *ptr (_extensions.get_first (it));
@@ -344,13 +344,13 @@ dmz::RenderModuleCoreOgreBasic::_init (Config &local, Config &global) {
    else {
 
    }
-   
+
    Config ogreLocal;
 
    if (local.lookup_config ("ogre", ogreLocal)) {
 
       try {
-         
+
          _init_root (ogreLocal);
          _init_resources (ogreLocal);
          _init_render_system (ogreLocal);
@@ -373,14 +373,14 @@ dmz::RenderModuleCoreOgreBasic::_init (Config &local, Config &global) {
             delete _root;
             _root = 0;
          }
-         
+
          _log.error << e.getFullDescription ().c_str () << endl;
       }
    }
    else {
-      
+
    }
-   
+
    _extensions.discover_plugins ();
 }
 
@@ -390,20 +390,20 @@ dmz::RenderModuleCoreOgreBasic::_init_root (Config &local) {
 
    String logName ("ogre.log");
    Boolean suppressLogFileOutput (True);
-   
+
    Config logData;
    if (local.lookup_config ("log", logData)) {
 
       suppressLogFileOutput = False;
       logName = config_to_string ("name", logData, logName);
    }
-   
+
    Ogre::LogManager *logManager = new Ogre::LogManager;
-   
-   Ogre::Log *log = 
+
+   Ogre::Log *log =
       Ogre::LogManager::getSingleton ().createLog (
          logName.get_buffer (), True, False, suppressLogFileOutput);
-   
+
    if (suppressLogFileOutput) {
 
       //Ogre::LogManager::getSingleton ().setLogDetail(Ogre::LL_LOW);
@@ -411,19 +411,19 @@ dmz::RenderModuleCoreOgreBasic::_init_root (Config &local) {
    }
 
    _root = new Ogre::Root("", "");
-   
+
    ConfigIterator it;
    Config cd;
-   
+
    Config pluginList;
    if (local.lookup_all_config ("plugins.plugin", pluginList)) {
-   
+
       Boolean done (!pluginList.get_first_config (it, cd));
       while (!done)  {
 
          String name;
          if (cd.lookup_attribute ("name", name)) {
-            
+
             try {
 
                _root->loadPlugin (name.get_buffer ());
@@ -449,21 +449,21 @@ dmz::RenderModuleCoreOgreBasic::_init_resources (Config &local) {
 
       ConfigIterator it;
       Config cd;
-         
+
       Boolean done (!resourceList.get_first_config (it, cd));
       while (!done)  {
 
          String name;
          if (cd.lookup_attribute ("name", name)) {
-            
+
             String type = config_to_string ("type", cd, "FileSystem");
             String group = config_to_string ("group", cd, "General");
             Boolean recursive = config_to_boolean ("recursive", cd, False);
-            
+
             try {
 
                Ogre::ResourceGroupManager::getSingleton ().addResourceLocation (
-                  name.get_buffer (), 
+                  name.get_buffer (),
                   type.get_buffer (),
                   group.get_buffer (),
                   recursive);
@@ -473,7 +473,7 @@ dmz::RenderModuleCoreOgreBasic::_init_resources (Config &local) {
                _log.error << e.getFullDescription ().c_str () << endl;
             }
          }
-         
+
          done = !resourceList.get_next_config (it, cd);
       }
    }
@@ -484,42 +484,42 @@ void
 dmz::RenderModuleCoreOgreBasic::_init_render_system (Config &local) {
 
    if (_root) {
-      
+
       String renderSystemName (
          config_to_string ("renderSystem.name", local, "OpenGL"));
-      
+
       Ogre::RenderSystem *renderSystem (0);
-      
+
       Ogre::RenderSystemList *renderSystemList = _root->getAvailableRenderers ();
       if (renderSystemList) {
-      
+
          Ogre::RenderSystemList::iterator it = renderSystemList->begin ();
          while (it != renderSystemList->end () && !renderSystem) {
-         
+
             if (renderSystemList->size () == 1) {
-               
+
                renderSystem = *it;
             }
             else {
-               
+
                Ogre::String curName ((*it)->getName ());
                if (curName.find (renderSystemName.get_buffer ()) >= 0) {
-                  
+
                   renderSystem = *it;
                }
             }
-            
+
             it++;
          }
       }
-      
+
       if (renderSystem) {
-      
+
          _root->setRenderSystem (renderSystem);
          _root->initialise (false); // don't autocreate a window
       }
       else {
-      
+
          _log.error
             << "Specified render system (" << renderSystemName << ") not found" << endl;
       }
@@ -537,16 +537,16 @@ dmz::RenderModuleCoreOgreBasic::_init_render_windows () {
    while (ptr) {
 
       RenderExtWindowOgre *renderWindowExt = RenderExtWindowOgre::cast (ptr);
-      
+
       if (renderWindowExt) {
 
          if (renderWindowExt->init_render_window ()) {
-            
+
             PortalStruct *ps =
                _get_portal_struct (renderWindowExt->get_render_window_name ());
          }
       }
-      
+
       ptr = _extensions.get_next (it);
    }
 }
@@ -561,11 +561,11 @@ dmz::RenderModuleCoreOgreBasic::_init_scene_manager (Config &local) {
 
       Config sceneData;
       if (local.lookup_config ("scene", sceneData)) {
-    
+
          const String SceneFileName = config_to_string ("file", sceneData);
-    
+
          if (SceneFileName && renderSystem) {
-    
+
             Ogre::RenderWindow *renderWindow =
                dynamic_cast<Ogre::RenderWindow *> (
                   renderSystem->getRenderTarget (DefaultPortalNameOgre));
@@ -575,11 +575,11 @@ dmz::RenderModuleCoreOgreBasic::_init_scene_manager (Config &local) {
                _log.info << "Loading scene: " << SceneFileName << endl;
 
                _osmSceneLoader = new OSMScene (0, renderWindow);
-                    
+
                _osmSceneLoader->initialise (SceneFileName.get_buffer (), this);
-                    
+
                _osmSceneLoader->createScene ();
-                    
+
                _sceneManager = _osmSceneLoader->getSceneManager ();
             }
          }
@@ -594,14 +594,14 @@ dmz::RenderModuleCoreOgreBasic::_init_scene_manager (Config &local) {
 
 dmz::RenderModuleCoreOgreBasic::PortalStruct *
 dmz::RenderModuleCoreOgreBasic::_get_portal_struct (const String &PortalName) {
-   
+
    PortalStruct *ps = _portalTable.lookup (PortalName);
    if (!ps) {
-      
+
       ps = new PortalStruct (PortalName);
       if (!_portalTable.store (PortalName, ps)) { delete ps; ps = 0; }
    }
-   
+
    return ps;
 }
 

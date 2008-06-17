@@ -200,7 +200,7 @@ namespace dmz {
             const Handle EventHandle,
             const Handle AttributeHandle,
             Data &value);
- 
+
       protected:
          struct EventStruct {
 

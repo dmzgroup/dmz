@@ -9,7 +9,7 @@
 
 
 dmz::AudioModulePortalBasic::AudioModulePortalBasic (
-   const PluginInfo &Info, 
+   const PluginInfo &Info,
    const Config &Local) :
       Plugin (Info),
       AudioModulePortal (Info),
@@ -40,12 +40,12 @@ dmz::AudioModulePortalBasic::discover_plugin (
 
          _audioModule = AudioModule::cast (PluginPtr);
 
-         if (_audioModule) { 
+         if (_audioModule) {
 
             _handle = _audioModule->create_listener (_name);
-         
+
             if (_handle) {
-            
+
                // Default to listener at origin
                _audioModule->set_listener (_handle, Vector (0.0, 0.0, 0.0), Matrix ());
             }
@@ -122,7 +122,7 @@ dmz::AudioModulePortalBasic::_init (const Config &Local) {
 
    Config data;
    if (Local.lookup_config ("name", data)) {
-   
+
       _name = config_to_string ("value", data);
    }
 

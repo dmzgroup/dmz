@@ -234,7 +234,7 @@ mask_shift (lua_State *L) {
 
    return result;
 }
- 
+
 
 static int
 mask_to_string (lua_State *L) {

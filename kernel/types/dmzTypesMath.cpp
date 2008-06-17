@@ -7,7 +7,7 @@
 void
 dmz::get_ortho (
       const Vector &Normal,
-      const Vector &Value, 
+      const Vector &Value,
       Vector &ortho,
       Vector *remainder) {
 
@@ -29,7 +29,7 @@ dmz::get_ortho (
 
    mat.transform_vector (ortho);
 }
- 
+
 
 //! Experimental function. Not for public use at this time.
 dmz::Float64

@@ -26,7 +26,7 @@ get_handle_table (lua_State *L) {
    lua_rawget(L, LUA_REGISTRYINDEX);
    HandleTable **ptr = (HandleTable **)lua_touserdata (L, -1);
    lua_pop (L, 1); // pop user data
-   
+
    return ptr ? *ptr : 0;
 }
 
@@ -222,7 +222,7 @@ dmz::open_lua_kernel_handle_lib (lua_State *L) {
       lua_rawset (L, LUA_REGISTRYINDEX);
    }
    else { lua_pop (L, 1); } // pop light user data
-   
+
    lua_pushlightuserdata (L, (void *)&LuaHandleTableKey);
    lua_newtable (L);
    lua_set_weak_table (L, -1, "v");
@@ -278,7 +278,7 @@ dmz::lua_create_handle (lua_State *L, const Handle Value) {
             result = (Handle *)lua_newuserdata (L, sizeof (Handle));
 
             if (result) {
-   
+
                lua_pushvalue (L, -1);
                int index = luaL_ref (L, Table);
 

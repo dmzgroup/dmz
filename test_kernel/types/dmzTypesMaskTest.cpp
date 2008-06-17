@@ -27,7 +27,7 @@ main (int argc, char *argv[]) {
    Mask copyOfTestMask (testMask);
    test.validate (
       "Mask copy constructor.",
-      (copyOfTestMask.get_size () == 2) && 
+      (copyOfTestMask.get_size () == 2) &&
       (copyOfTestMask.get_sub_mask (0) == 0x00) &&
       (copyOfTestMask.get_sub_mask (1) == 0x01) );
 
@@ -55,7 +55,7 @@ main (int argc, char *argv[]) {
 
    test.validate (
       "Mask test get_bit and set_bit and unset_bit.",
-      !bitFuncTestMask1.get_bit (3) && 
+      !bitFuncTestMask1.get_bit (3) &&
       bitFuncTestMask1.set_bit (3) &&
       bitFuncTestMask1.set_bit (3) &&
       bitFuncTestMask1.get_bit (3));
@@ -81,7 +81,7 @@ main (int argc, char *argv[]) {
    operatorTestMask = testMask;
    test.validate (
       "Mask assignment operator.",
-      (operatorTestMask.get_size () == 2) && 
+      (operatorTestMask.get_size () == 2) &&
       (operatorTestMask.get_sub_mask (0) == 0x00) &&
       (operatorTestMask.get_sub_mask (1) == 0x01) );
 

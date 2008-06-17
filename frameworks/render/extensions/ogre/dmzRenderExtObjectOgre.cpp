@@ -27,8 +27,8 @@ struct dmz::RenderExtObjectOgre::ModelStruct {
    ModelStruct *next;
 
    ModelStruct (
-      const ObjectType &TheType, 
-      const Mask &TheState, 
+      const ObjectType &TheType,
+      const Mask &TheState,
       RuntimeContext *theContext);
 
    ~ModelStruct ();
@@ -83,7 +83,7 @@ dmz::RenderExtObjectOgre::RenderExtObjectOgre (
          _modelTable () {
 
    _init (local);
-   
+
    activate_default_object_attribute (
       ObjectCreateMask | ObjectDestroyMask | ObjectTypeMask | ObjectStateMask);
 }
@@ -104,15 +104,15 @@ dmz::RenderExtObjectOgre::discover_plugin (
       const Plugin *PluginPtr) {
 
    if (Mode == PluginDiscoverAdd) {
-      
+
       if (!_renderModuleCore) {
 
          _renderModuleCore = RenderModuleCoreOgre::cast (PluginPtr);
       }
    }
    else if (Mode == PluginDiscoverRemove) {
-      
-      if (_renderModuleCore && 
+
+      if (_renderModuleCore &&
             (_renderModuleCore == RenderModuleCoreOgre::cast (PluginPtr))) {
 
          _renderModuleCore = 0;
@@ -135,13 +135,13 @@ dmz::RenderExtObjectOgre::create_object (
 
       Mask objState;
       _lookup_object_state (ObjectHandle, objState);
-      
+
       ModelStruct *ms (_get_model_struct (Type, objState));
-      
+
       if (ms && ms->entity && sceneManager) {
-         
+
          _entityModelTable.store (ObjectHandle, ms);
-      
+
          String name (ms->get_name (_defs));
          name << "." << ObjectHandle;
 
@@ -151,7 +151,7 @@ dmz::RenderExtObjectOgre::create_object (
          try {
 
             clone = ms->entity->clone (name.get_buffer ());
-      
+
             if (clone) {
 
                node = sceneManager->createSceneNode ();
@@ -163,7 +163,7 @@ dmz::RenderExtObjectOgre::create_object (
 
                   node->attachObject (clone);
                   _entityTable.store (ObjectHandle, clone);
-                  
+
                   _log.info << "create object: " << name << endl;
                }
             }
@@ -178,7 +178,7 @@ dmz::RenderExtObjectOgre::create_object (
 
             _log.error << "create_object failed: " << name << endl;
             _log.error << e.getFullDescription ().c_str () << endl;
-            
+
             _entityModelTable.remove (ObjectHandle);
          }
 
@@ -200,7 +200,7 @@ dmz::RenderExtObjectOgre::create_object (
                node = 0;
 
                _log.error << "Failed to add_dynamic_object: " << ObjectHandle;
-               
+
                _entityModelTable.remove (ObjectHandle);
             }
          }
@@ -224,7 +224,7 @@ dmz::RenderExtObjectOgre::destroy_object (
          sceneManager->destroySceneNode (node->getName ());
          node = 0;
       }
-      
+
       _entityModelTable.remove (ObjectHandle);
    }
 }
@@ -266,10 +266,10 @@ dmz::RenderExtObjectOgre::_get_model_struct (
       const Mask &ObjState) {
 
    ModelStruct *retVal (0);
-   
+
    Config modelList;
    ObjectType currentType (ObjType);
-   
+
    if (_find_model_list_from_type (modelList, currentType)) {
 
       ModelStruct *headMs (_modelTable.lookup (currentType.get_handle ()));
@@ -303,20 +303,20 @@ dmz::RenderExtObjectOgre::_find_model_struct_containing_state (
       while (currentMs && !found) {
 
          if (!defaultMs && !(currentMs->ObjState.is_set ())) {
-               
+
             defaultMs = currentMs;
          }
-            
+
          if (currentMs->ObjState.contains (ObjState)) {
 
             retVal = currentMs;
             found = True;
          }
-            
+
          currentMs = currentMs->next;
       }
-         
-      if (!found) { retVal = defaultMs; }    
+
+      if (!found) { retVal = defaultMs; }
    }
 
    return retVal;
@@ -434,10 +434,10 @@ dmz::RenderExtObjectOgre::_update_object (
                sceneManager->destroyEntity (entity);
                entity = 0;
             }
-            
+
             _entityModelTable.remove (ObjectHandle);
             _entityModelTable.store (ObjectHandle, ms);
-            
+
             String name (ms->get_name (_defs));
             name << "." << ObjectHandle;
 
@@ -458,7 +458,7 @@ dmz::RenderExtObjectOgre::_update_object (
 
                _log.error << "update_object failed: " << name << endl;
                _log.error << e.getFullDescription ().c_str () << endl;
-               
+
                _entityModelTable.remove (ObjectHandle);
             }
          }
@@ -499,11 +499,11 @@ dmz::RenderExtObjectOgre::_config_to_model_struct (
             newMs->entity = _load_mesh (newMs->get_name (_defs), FileName);
 
             _process_model_struct (modelData, *newMs);
-   
+
             if (!headMs) { headMs = newMs; }
-   
+
             if (currentMs) { currentMs->next = newMs; }
-            
+
             currentMs = newMs;
          }
       }
@@ -550,7 +550,7 @@ dmz::RenderExtObjectOgre::_process_model_struct (
       }
 
       found = modelData.get_next_config (it, data);
-   } 
+   }
 }
 
 

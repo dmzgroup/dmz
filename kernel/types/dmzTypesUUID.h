@@ -59,7 +59,7 @@ dmz::UUID::UUID (const UUID &Value) { *this = Value; }
 
 //! Array constructor.
 inline
-dmz::UUID::UUID (const UInt8 Value[16]) { 
+dmz::UUID::UUID (const UInt8 Value[16]) {
 
    if (Value) { from_array (Value); } else  { clear (); }
 }
@@ -141,7 +141,7 @@ dmz::UUID::from_string (const String &Value) {
    UInt8 newData[16];
 
    Boolean doShift (True);
-  
+
    const Int32 Length (Lower.get_length ());
 
    Int32 place (0);
@@ -169,7 +169,7 @@ dmz::UUID::from_string (const String &Value) {
 
          if (doShift) { count++; }
       }
-      else if (Element == '-') { 
+      else if (Element == '-') {
 
          // ignore!
       }

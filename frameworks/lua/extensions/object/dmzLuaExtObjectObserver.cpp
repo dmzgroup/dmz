@@ -256,7 +256,7 @@ obs_release (lua_State *L) {
    Handle *handle (lua_check_handle (L, 2));
    Mask *mask (lua_check_mask (L, 3));
 
-   if (obs && handle && mask) { 
+   if (obs && handle && mask) {
 
       obs->deactivate_object_attribute (*handle, *mask);
       lua_pushboolean (L, 1);

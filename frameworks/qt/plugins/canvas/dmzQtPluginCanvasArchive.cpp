@@ -62,15 +62,15 @@ dmz::QtPluginCanvasArchive::create_archive (
    if (ArchiveHandle == _archiveHandle) {
 
       if (_canvasModule) {
-         
+
          QGraphicsView *view (_canvasModule->get_view ());
-         
+
          if (view) {
-            
+
             QtCanvasView *canvas = dynamic_cast<QtCanvasView *> (view);
-            
+
             if (canvas) {
-            
+
                local.add_config (qgraphicsview_to_config ("canvasView", *canvas));
             }
          }
@@ -88,15 +88,15 @@ dmz::QtPluginCanvasArchive::process_archive (
    if (ArchiveHandle == _archiveHandle) {
 
       if (_canvasModule) {
-         
+
          QGraphicsView *view (_canvasModule->get_view ());
-         
+
          if (view) {
-            
+
             QtCanvasView *canvas = dynamic_cast<QtCanvasView *> (view);
-            
+
             if (canvas) {
-            
+
                qgraphicsview_config_read ("canvasView", local, canvas);
                canvas->set_scale (canvas->get_scale ());
             }
@@ -111,7 +111,7 @@ dmz::QtPluginCanvasArchive::_init (Config &local) {
 
    _archiveHandle = activate_archive (
       config_to_string ("archive.name", local, ArchiveDefaultName));
-      
+
    _canvasModuleName = config_to_string ("module.canvas.name", local);
 }
 

@@ -13,7 +13,7 @@
 \ingroup System
 \brief Unmarshals data from a buffer in a given byte order.
 \details This class is used to unmarshal data in to a desired byte order, either big or
-little endian. 
+little endian.
 \sa dmz::Marshal.
 
 */

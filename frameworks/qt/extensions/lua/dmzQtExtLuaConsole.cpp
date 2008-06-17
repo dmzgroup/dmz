@@ -375,7 +375,7 @@ dmz::QtExtLuaConsole::open_lua_extension (lua_State *luaState) {
       lua_getglobal (L, "_G"); // Get global table
       lua_setfield (L, -2, "__index"); // set __index == _G in meta table
       lua_setmetatable (L, -2); // set meta table in function table
-      // store function table in global table 
+      // store function table in global table
       lua_setglobal (L, get_plugin_name ().get_buffer ());
    }
 }
@@ -384,7 +384,7 @@ dmz::QtExtLuaConsole::open_lua_extension (lua_State *luaState) {
 void
 dmz::QtExtLuaConsole::close_lua_extension (lua_State *luaState) {
 
-   L = 0; 
+   L = 0;
 }
 
 
@@ -553,7 +553,7 @@ dmz::QtExtLuaConsole::_init (Config &local) {
       geometry = config_to_qbytearray ("splitter", session);
 
       if (!geometry.isEmpty ()) { _console.splitter->restoreState (geometry); }
-      
+
       if (config_to_boolean ("window.visible", session, False)) { show (); }
 
       Config historyList;

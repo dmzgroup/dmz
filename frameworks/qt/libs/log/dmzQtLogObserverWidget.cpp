@@ -3,8 +3,9 @@
 
 static const dmz::String LocalPassed ("PASSED");
 static const dmz::String LocalFailed ("FAILED");
-static char *localLevelStr[] = { "[D]:", "[I]:", "[W]:", "[E]:", "" };
-static char *localLevelDivId[] = { "debug", "info", "warn", "error", "out" };
+static const char *localLevelStr[] = { "[D]:", "[I]:", "[W]:", "[E]:", "" };
+static const char *localLevelDivId[] =
+   { "debug", "info", "warn", "error", "out" };
 
 
 dmz::QtLogObserverWidget::QtLogObserverWidget (QWidget *parent) :

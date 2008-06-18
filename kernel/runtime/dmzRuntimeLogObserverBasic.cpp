@@ -19,7 +19,7 @@ functionality by changing the string "FAILED" to red and "PASSED" to green.
 
 static const dmz::String LocalPassed ("PASSED");
 static const dmz::String LocalFailed ("FAILED");
-static char *localLevelStr[] = { "[D]:", "[I]:", "[W]:", "[E]:", "" };
+static const char *localLevelStr[] = { "[D]:", "[I]:", "[W]:", "[E]:", "" };
 
 struct dmz::LogObserverBasic::State {
 

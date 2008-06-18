@@ -11,7 +11,7 @@
 \ingroup Input
 \brief Input exit plugin.
 \details Requests an exit when the mapped key is pressed. The default key value is the
-Escape Key. If not input channels are specified then the default channel is used.
+Escape Key. If no input channels are specified then the default channel is used.
 The Plugin's XML format:
 \code
 <dmz>

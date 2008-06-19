@@ -14,7 +14,34 @@
 namespace dmz {
 
    class RuntimeContext;
+   class RuntimeContextMessaging;
    class RuntimeMessageContext;
+
+   class RuntimeContextMessageContainer : public RefCountDeleteOnZero {
+
+      public:
+         RuntimeContextMessageContainer ();
+
+         Message create_message_type (
+            const String &Name,
+            const String &ParentName,
+            RuntimeContext *context,
+            RuntimeContextMessaging *messagingContext);
+
+         ConfigContextLock messageHandleLock; //!< Lock.
+         HashTableHandleTemplate<Message> messageHandleTable; //!< Table.
+
+         ConfigContextLock messageNameLock; //!< Lock.
+         HashTableStringTemplate<Message> messageNameTable; //!< Table.
+
+      protected:
+         ~RuntimeContextMessageContainer ();
+
+      private:
+         RuntimeContextMessageContainer (const RuntimeContextMessageContainer &);
+         RuntimeContextMessageContainer &operator= (
+            const RuntimeContextMessageContainer &);
+   };
 
    class RuntimeContextMessaging : public RefCountDeleteOnZero {
 
@@ -44,6 +71,7 @@ namespace dmz {
 
          RuntimeContextMessaging (
             RuntimeContextThreadKey &theKey,
+            RuntimeContextMessageContainer &container,
             RuntimeContext *context);
 
          UInt32 send (
@@ -53,12 +81,6 @@ namespace dmz {
             Data *outData) const;
 
          void update_time_slice ();
-
-         Message create_message_type (
-            const String &Name,
-            const String &ParentName,
-            RuntimeContext *context);
-
          Boolean add_observer (MessageObserver &obs);
          Boolean remove_observer (MessageObserver &obs);
 
@@ -69,13 +91,6 @@ namespace dmz {
          UInt32 messageCount; //!< Message count.
          Message globalType; //!< Global message type.
          RuntimeContextThreadKey &key; //!< Thread key.
-
-         ConfigContextLock messageHandleLock; //!< Lock.
-         HashTableHandleTemplate<Message> messageHandleTable; //!< Table.
-
-         ConfigContextLock messageNameLock; //!< Lock.
-         HashTableStringTemplate<Message> messageNameTable; //!< Table.
-
          ConfigContextLock obsHandleLock; //!< Lock.
          HashTableHandleTemplate<MessageObserver> obsHandleTable; //!< Table.
 

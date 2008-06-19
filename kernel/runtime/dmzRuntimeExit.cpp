@@ -34,11 +34,17 @@ namespace {
 
       if (context) {
 
-         dmz::RuntimeContextMessaging *rcm (context->get_messaging_context ());
+         dmz::RuntimeContextMessageContainer *container (
+            context->get_message_container_context ());
 
-         if (rcm) {
+         if (container) {
 
-            result = rcm->create_message_type (Name, "", context);
+            result = container->create_message_type (
+               Name,
+               "",
+               context,
+               context->get_messaging_context ());
+               
          }
       }
 

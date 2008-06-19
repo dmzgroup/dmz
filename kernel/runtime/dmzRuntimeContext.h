@@ -11,6 +11,7 @@ namespace dmz {
    class RuntimeContextDefinitions;
    class RuntimeContextLog;
    class RuntimeContextMessaging;
+   class RuntimeContextMessageContainer;
    class RuntimeContextRTTI;
    class RuntimeContextThreadKey;
    class RuntimeContextTime;
@@ -31,6 +32,7 @@ namespace dmz {
          HandleAllocator *get_handle_allocator ();
 
          RuntimeContextDefinitions *get_definitions_context ();
+         RuntimeContextMessageContainer *get_message_container_context ();
          RuntimeContextMessaging *get_messaging_context ();
          RuntimeContextRTTI *get_rtti_context ();
          RuntimeContextTime *get_time_context ();
@@ -45,6 +47,8 @@ namespace dmz {
          HandleAllocator *_handleAllocator; //!< Handle allocator.
          SpinLock _defLock;
          RuntimeContextDefinitions *_defContext; //!< Attribute definitions.
+         SpinLock _msgContainerLock;
+         RuntimeContextMessageContainer *_messageContainerContext;
          SpinLock _msgLock;
          RuntimeContextMessaging *_messagingContext; //!< Messaging context.
          SpinLock _rttiLock;

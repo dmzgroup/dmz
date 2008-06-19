@@ -2,38 +2,85 @@
 #include "dmzRuntimeMessageContext.h"
 
 //! Constructor.
+dmz::RuntimeContextMessageContainer::RuntimeContextMessageContainer () :
+      messageHandleTable (&messageHandleLock),
+      messageNameTable (&messageNameLock) {;}
+
+
+//! Destructor.
+dmz::RuntimeContextMessageContainer::~RuntimeContextMessageContainer () {
+
+   messageHandleTable.clear ();
+   messageNameTable.empty ();
+}
+
+
+//! Creates message type.
+dmz::Message
+dmz::RuntimeContextMessageContainer::create_message_type (
+      const String &Name,
+      const String &ParentName,
+      RuntimeContext *context,
+      RuntimeContextMessaging *messagingContext) {
+
+   Message result;
+
+   Message *type (messageNameTable.lookup (Name));
+
+   if (!type && context) {
+
+      MessageContext *parentContext (0);
+
+      if (ParentName) {
+
+         Message *parent (messageNameTable.lookup (ParentName));
+
+         if (parent) { parentContext = parent->get_message_type_context (); }
+      }
+
+      MessageContext *mtc =
+         new MessageContext (Name, context, messagingContext, parentContext);
+
+      if (mtc) {
+
+         type = new Message (mtc);
+
+         if (type) {
+
+            if (messageNameTable.store (type->get_name (), type)) {
+
+               messageHandleTable.store (type->get_handle (), type);
+            }
+            else {
+
+               delete type; type = 0;
+               type = messageNameTable.lookup (Name);
+            }
+         }
+
+         mtc->unref (); mtc = 0;
+      }
+   }
+
+   if (type) { result = *type; }
+
+   return result;
+}
+
+
+//! Constructor.
 dmz::RuntimeContextMessaging::RuntimeContextMessaging (
       RuntimeContextThreadKey &theKey,
+      RuntimeContextMessageContainer &container,
       RuntimeContext *context) :
       head (0),
       tail (0),
       messageCount (0),
       key (theKey),
-      messageHandleTable (&messageHandleLock),
-      messageNameTable (&messageNameLock),
       obsHandleTable (&obsHandleLock),
       obsNameTable (&obsNameLock) {
 
-   MessageContext *globalContext (
-      new MessageContext ("Global_Message", context, this, 0));
-
-   if (globalContext) {
-
-      globalType.set_message_type_context (globalContext);
-      Message *ptr (new Message (globalType));
-
-      if (ptr) {
-
-         if (messageNameTable.store (ptr->get_name (), ptr)) {
-
-            messageHandleTable.store (ptr->get_handle (), ptr);
-         }
-         else { delete ptr; ptr = 0; }
-      }
-
-      globalContext->unref (); globalContext = 0;
-   }
-
+   globalType = container.create_message_type ("Global_Message", "", context, this);
    key.ref ();
 }
 
@@ -41,8 +88,6 @@ dmz::RuntimeContextMessaging::RuntimeContextMessaging (
 //! Destructor.
 dmz::RuntimeContextMessaging::~RuntimeContextMessaging () {
 
-   messageHandleTable.clear ();
-   messageNameTable.empty ();
    obsHandleTable.clear ();
    obsNameTable.clear ();
    key.unref ();
@@ -180,56 +225,6 @@ dmz::RuntimeContextMessaging::update_time_slice () {
    }
 }
 
-//! Creates message type.
-dmz::Message
-dmz::RuntimeContextMessaging::create_message_type (
-      const String &Name,
-      const String &ParentName,
-      RuntimeContext *context) {
-
-   Message result;
-
-   Message *type (messageNameTable.lookup (Name));
-
-   if (!type) {
-
-      MessageContext *parentContext (0);
-
-      if (ParentName) {
-
-         Message *parent (messageNameTable.lookup (ParentName));
-
-         if (parent) { parentContext = parent->get_message_type_context (); }
-      }
-
-      MessageContext *mtc =
-         new MessageContext (Name, context, this, parentContext);
-
-      if (mtc) {
-
-         type = new Message (mtc);
-
-         if (type) {
-
-            if (messageNameTable.store (type->get_name (), type)) {
-
-               messageHandleTable.store (type->get_handle (), type);
-            }
-            else {
-
-               delete type; type = 0;
-               type = messageNameTable.lookup (Name);
-            }
-         }
-
-         mtc->unref (); mtc = 0;
-      }
-   }
-
-   if (type) { result = *type; }
-
-   return result;
-}
 
 
 //! Adds message observer.

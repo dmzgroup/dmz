@@ -14,8 +14,8 @@ namespace dmz {
    class UUID;
    class Vector;
 
-   //! \ingroup System
    //! \brief Stream function typedef used by by
+   //! \ingroup System
    //! dmz::Stream &dmz::Stream::operator<<(dmz::stream_operator_func func)
    typedef Stream &(*stream_operator_func) (Stream &);
 

@@ -71,7 +71,8 @@ namespace dmz {
          Unmarshal ();
    };
 
-   //! Use this interface in templates only.
+   //! \brief Use this interface in templates only.
+   //! \ingroup System
    class UnmarshalWrap {
 
       protected:

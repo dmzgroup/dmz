@@ -5,9 +5,11 @@
 /*!
 
 \class dmz::RefCount
+\ingroup System
 \brief Thread safe reference counter.
 
 \class dmz::RefCountDeleteOnZero
+\ingroup System
 \brief Self deleting thread safe reference counter.
 
 \fn dmz::RefCountDeleteOnZero::ref_count_is_zero ()

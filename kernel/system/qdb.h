@@ -4,11 +4,13 @@
 #include <dmzSystemStreamFile.h>
 
 //! \file
+//! \ingroup System
 //! \brief Provides a simple stream class that will output to stderr.
 
 namespace dmz {
 
-   //! Quick debug class for printing to stderr. Defined in qdb.h.
+   //! \brief Quick debug class for printing to stderr. Defined in qdb.h.
+   //! \ingroup System
    typedef StreamFileErr qdb;
 };
 

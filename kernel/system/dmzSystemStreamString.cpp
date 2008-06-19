@@ -3,6 +3,7 @@
 /*!
 
 \class dmz::StreamString
+\ingroup System
 \brief Writes to a dmz::String
 
 */

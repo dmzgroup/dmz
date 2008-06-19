@@ -22,6 +22,13 @@ struct dmz::PathContainer::State {
    ~State () { paths.empty (); }
 };
 
+/*!
+
+\class dmz::PathContainer
+\ingroup System
+\brief Container class for storing Strings containing paths.
+
+*/
 
 //! Base constructor.
 dmz::PathContainer::PathContainer () : _state (*(new State)) {;}

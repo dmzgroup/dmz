@@ -20,7 +20,8 @@ namespace dmz {
          State &_state; //!< Internal state.
    };
 
-   //! Template that wraps ThreadStorage.
+   //! \brief Template that wraps ThreadStorage.
+   //! \ingroup System
    template <class T> class ThreadStorageTemplate {
 
       public:

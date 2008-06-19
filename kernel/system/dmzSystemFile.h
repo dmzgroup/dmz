@@ -8,7 +8,6 @@
 
 namespace dmz {
 
-   //! Container class for storing Strings containing paths.
    class DMZ_KERNEL_LINK_SYMBOL PathContainer {
 
       public:

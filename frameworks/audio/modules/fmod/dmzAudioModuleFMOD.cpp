@@ -5,6 +5,30 @@
 
 #include <stdlib.h>
 
+/*!
+
+\class dmz::AudioModuleFMOD
+\ingroup Audio
+\brief FMOD implementation of the audio module.
+\details
+The FMOD audio module XML format:
+\code
+<dmz>
+<dmzAudioModuleFMOD>
+   <dopplerScale value="Float32"/>
+   <distanceFactor value="Float32"/>
+   <rollOffScale value="Float32"/>
+   <maxChannels value="Int32"/>
+   <rightHandedCoordinate value="Boolean"/>
+   <forceFullDirectSoundHRTF value="Boolean"/>
+</dmzAudioModuleFMOD>
+</dmz>
+\endcode
+
+*/
+ 
+
+//! \cond
 dmz::AudioModuleFMOD::AudioModuleFMOD (const PluginInfo &Info, const Config &Local) :
       Plugin (Info),
       TimeSlice (Info),
@@ -856,6 +880,7 @@ dmz::AudioModuleFMOD::_channel_callback (
 
    return FMOD_OK;
 }
+//! \endcond
 
 
 extern "C" {

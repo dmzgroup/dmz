@@ -6,8 +6,24 @@
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
 
+/*!
 
+\class dmz::AudioModulePortalBasic
+\ingroup Audio
+\brief Basic implementation of the dmz::AudioModulePortal
+\details
+The audio module portal XML format:
+\code
+<dmz>
+<dmzAudioModulePortalBasic>
+   <name value="listener name"/>
+</dmzAudioModulePortalBasic>
+<dmz>
+\endcode
+If the listener name is not specified, the default listener is used.
+*/
 
+//! \cond
 dmz::AudioModulePortalBasic::AudioModulePortalBasic (
    const PluginInfo &Info,
    const Config &Local) :
@@ -127,6 +143,7 @@ dmz::AudioModulePortalBasic::_init (const Config &Local) {
    }
 
 }
+//! \endcond
 
 
 extern "C" {

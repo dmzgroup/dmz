@@ -26,6 +26,7 @@ namespace dmz {
          private AudioModule {
 
       public:
+         //! \cond
          AudioModuleFMOD (const PluginInfo &Info, const Config &Local);
          ~AudioModuleFMOD ();
 
@@ -196,6 +197,7 @@ namespace dmz {
          Boolean _rightHandedCoordinates;
          Boolean _forceFullDirectSoundHRTF;
          Int32 _maxChannels;
+         //! \endcond
 
       private:
          AudioModuleFMOD (const AudioModuleFMOD &);
@@ -204,6 +206,7 @@ namespace dmz {
 };
 
 
+//! \cond
 inline dmz::Boolean
 dmz::AudioModuleFMOD::_error_check (
       const String &HeaderMessage,
@@ -221,5 +224,6 @@ dmz::AudioModuleFMOD::_error_check (
 
    return result;
 }
+//! \endcond
 
 #endif //  DMZ_AUDIO_MODULE_FMOD_DOT_H

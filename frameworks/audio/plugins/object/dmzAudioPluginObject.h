@@ -22,6 +22,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          AudioPluginObject (
             const PluginInfo &Info,
             Config &local);
@@ -99,8 +100,8 @@ namespace dmz {
 
             Handle scalarAttributeHandle;
 
-            Float64 minScale;
-            Float64 maxScale;
+            Float64 offset;
+            Float64 scale;
 
             SoundDefStruct *next;
 
@@ -110,8 +111,8 @@ namespace dmz {
                loopHandle (0),
                deactivateHandle (0),
                scalarAttributeHandle (0),
-               minScale (0.0),
-               maxScale (1.0),
+               offset (0.0),
+               scale (1.0),
                next (0) {;}
 
             ~SoundDefStruct () { if (next) { delete next; next = 0; } }
@@ -179,6 +180,7 @@ namespace dmz {
          HashTableHandleTemplate<SoundDefStruct> _soundTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
          HashTableHandleTemplate<ObjectStruct> _updateTable;
+         //! \endcond
 
       private:
          AudioPluginObject ();

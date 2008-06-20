@@ -12,6 +12,7 @@ struct lua_State;
 
 namespace dmz {
 
+   //! \cond
    class LuaExtObjectObserver;
 
    void lua_init_object_observer (lua_State *L);
@@ -19,10 +20,12 @@ namespace dmz {
    LuaExtObjectObserver *lua_create_object_observer (lua_State *L);
 
    LuaExtObjectObserver *lua_check_object_observer (lua_State *L, int index);
+   //! \endcond
 
    class LuaExtObjectObserver : public PluginInfo, public ObjectObserverUtil {
 
       public:
+         //! \cond
          LuaExtObjectObserver (lua_State *TheState, Config &empty);
          ~LuaExtObjectObserver ();
 
@@ -178,6 +181,7 @@ namespace dmz {
          const RuntimeHandle _Handle;
          lua_State *L;
          int _index;
+         //! \endcond
 
       private:
          LuaExtObjectObserver ();
@@ -187,8 +191,10 @@ namespace dmz {
 };
 
 
+//! \cond
 inline int
 dmz::LuaExtObjectObserver::get_index () const { return _index; }
+//! \endcond
 
 #endif // DMZ_LUA_EXT_OBJECT_OBSERVER_DOT_H
 

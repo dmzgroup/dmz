@@ -26,7 +26,7 @@ namespace dmz {
       public:
          RuntimeContextLog (RuntimeContextThreadKey *key);
 
-         void sync ();
+         void update_time_slice ();
 
          void attach_log_observer (LogObserver &obs);
          void detach_log_observer (LogObserver &obs);

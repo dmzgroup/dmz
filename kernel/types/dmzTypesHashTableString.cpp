@@ -339,7 +339,7 @@ dmz::HashTableString::store (const String &Key, void *data) {
    Boolean result (False);
 
    if (data) {
-   
+
       if ((_state.count + 1) > _state.size) { grow (); }
 
       if (_state.size >= (_state.count + 1)) {

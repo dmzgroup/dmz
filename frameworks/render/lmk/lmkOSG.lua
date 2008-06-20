@@ -16,7 +16,8 @@ function add_libs (list)
       lmk.add_vars {localDefines = "$(lmk.defineFlag)WIN32"}
    end
    if sys == "macos" then
-      local paths = "-Xlinker -executable_path -Xlinker $(DMZ_OSG_LIB_PATH) -F$(DMZ_OSG_LIB_PATH)"
+      local paths = "-Xlinker -executable_path -Xlinker " ..
+         "$(DMZ_OSG_LIB_PATH) -F$(DMZ_OSG_LIB_PATH)"
       for ix, element in ipairs (list) do
          paths = paths .. " -framework " .. element
       end
@@ -30,7 +31,8 @@ function add_libs (list)
          if libs then libs = libs .. " "
          else libs = ""
          end
-         libs = libs .. "$(lmk.libPrefix)" .. element .. "$(DMZ_OSG_DEBUG)$(lmk.libSuffix)"
+         libs = libs .. "$(lmk.libPrefix)" .. element ..
+            "$(DMZ_OSG_DEBUG)$(lmk.libSuffix)"
       end
       lmk.add_vars {
          localIncludes = "$(lmk.includePathFlag)$(DMZ_OSG_INCLUDE_PATH)",

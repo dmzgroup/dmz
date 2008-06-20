@@ -31,7 +31,7 @@ class UndoTest : public MessageObserver {
          const Data *InData,
          Data *outData);
 
-      // Class specific 
+      // Class specific
       Boolean valid ();
       void reset ();
       void set_undo ();
@@ -164,7 +164,7 @@ main (int argc, char *argv[]) {
 
    Undo undo (context);
    TestObserver obs (context);
- 
+
    const String Level1 ("Level1");
    const String Level2 ("Level2");
    const String Level3 ("Level3");

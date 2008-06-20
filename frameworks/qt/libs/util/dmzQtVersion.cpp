@@ -56,7 +56,7 @@ dmz::QtVersion::QtVersion (Config &local, const String &Prefix) :
    }
 
    if (Build) { _state.ui.buildLabel->setText (Build.get_buffer ()); }
-   
+
    // hit Ctrl+V to display a aboutQt message box
    QAction *action = new QAction (this);
    action->setShortcut (Qt::CTRL + Qt::Key_V);

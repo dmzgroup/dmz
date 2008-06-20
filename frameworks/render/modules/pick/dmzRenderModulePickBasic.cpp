@@ -20,7 +20,7 @@ dmz::RenderModulePickBasic::RenderModulePickBasic (
       RenderModulePick (Info),
       _log (Info),
       _pick2dTable () {
-   
+
    _init (local);
 }
 
@@ -54,13 +54,13 @@ dmz::RenderModulePickBasic::discover_plugin (
       const Plugin *PluginPtr) {
 
    RenderPick2d *pick2d (RenderPick2d::cast (PluginPtr));
-   
+
    if (Mode == PluginDiscoverAdd) {
-      
+
       if (pick2d) { pick2d->store_render_module_pick (get_plugin_name (), *this); }
    }
    else if (Mode == PluginDiscoverRemove) {
-      
+
       if (pick2d) { pick2d->remove_render_module_pick (get_plugin_name (), *this); }
    }
 }
@@ -75,7 +75,7 @@ dmz::RenderModulePickBasic::register_pick_2d (
    Boolean result (False);
 
    if (!_pick2dTable.lookup (SourceHandle)) {
-   
+
       if (_pick2dTable.store (SourceHandle, &pick2d)) { result = True; }
    }
 
@@ -91,11 +91,11 @@ dmz::RenderModulePickBasic::release_pick_2d (
    Boolean result (False);
 
    RenderPick2d *pick2dStored (_pick2dTable.lookup (SourceHandle));
-   
+
    if (pick2dStored) {
-      
+
       if (pick2dStored->get_pick_2d_handle () == pick2d.get_pick_2d_handle ()) {
-         
+
          if (_pick2dTable.remove (SourceHandle)) { result = True; }
       }
    }
@@ -118,7 +118,7 @@ dmz::RenderModulePickBasic::screen_to_world (
 
    if (pick2d) {
 
-      retVal = 
+      retVal =
          pick2d->screen_to_world (
             ScreenPosX,
             ScreenPosY,
@@ -164,7 +164,7 @@ dmz::RenderModulePickBasic::source_to_world (
 
    if (pick2d) {
 
-      retVal = 
+      retVal =
          pick2d->source_to_world (
             SourcePosX,
             SourcePosY,
@@ -198,7 +198,7 @@ dmz::RenderModulePickBasic::world_to_source (
 
 void
 dmz::RenderModulePickBasic::_init (Config &local) {
-   
+
 }
 //! \endcond
 

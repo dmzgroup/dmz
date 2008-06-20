@@ -19,7 +19,7 @@ namespace dmz {
          void set_session_config (const Config &Session);
          void get_session_config (Config &session);
 
-         void sync ();
+         void update_time_slice ();
 
       protected:
          struct State;

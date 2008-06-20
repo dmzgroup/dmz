@@ -7,7 +7,7 @@
 
 dmz::NetPluginRemoteDR::NetPluginRemoteDR (const PluginInfo &Info, Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
       _time (Info.get_context ()),
@@ -50,9 +50,9 @@ dmz::NetPluginRemoteDR::discover_plugin (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::NetPluginRemoteDR::update_sync (const Float64 TimeDelta) {
+dmz::NetPluginRemoteDR::update_time_slice (const Float64 TimeDelta) {
 
    if (_objMod && _lnvHandle && _defaultHandle) {
 

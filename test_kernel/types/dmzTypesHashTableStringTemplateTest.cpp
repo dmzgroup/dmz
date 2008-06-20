@@ -23,12 +23,12 @@ class DestructorCounter {
 };
 
 
-DestructorCounter::DestructorCounter (Int32 &counter) 
+DestructorCounter::DestructorCounter (Int32 &counter)
    : _destructCount (counter) { }
 
 
 
-DestructorCounter::DestructorCounter (const DestructorCounter &original) 
+DestructorCounter::DestructorCounter (const DestructorCounter &original)
    : _destructCount (original.get_destruct_count ()) {
 }
 
@@ -67,10 +67,10 @@ int main (int argc, char *argv[]) {
    // Constructor Test - With size and no autogrow mask
    HashTableStringTemplate<String> constructorTable2(3, 0, NULL);
 
-   
+
    test.validate (
       "Hash Table with predefined size, mask, and lock",
-      (constructorTable2.get_size () == 3) && 
+      (constructorTable2.get_size () == 3) &&
       !constructorTable2.get_count ());
 
    // Storing values
@@ -79,17 +79,17 @@ int main (int argc, char *argv[]) {
    String value3CopyForStoreAndRetrieve (value3);
 
    test.validate (
-      "Storing first value", 
+      "Storing first value",
       constructorTable1.store (key1, &value1CopyForStoreAndRetrieve) &&
       (constructorTable1.get_count () == 1));
 
    test.validate (
-      "Storing a second value", 
+      "Storing a second value",
       constructorTable1.store (key2, &value2CopyForStoreAndRetrieve) &&
       (constructorTable1.get_count () == 2));
 
   test.validate (
-      "Storing a null value ", 
+      "Storing a null value ",
       !constructorTable1.store (key5, NULL) &&
       (constructorTable1.get_count () == 2));
 
@@ -97,7 +97,7 @@ int main (int argc, char *argv[]) {
    String *storedStr1 = constructorTable1.lookup (key1);
    test.validate (
       "Retrieving first value",
-      storedStr1 && 
+      storedStr1 &&
       ((*storedStr1) == value1) &&
       (constructorTable1.get_count () == 2));
 
@@ -105,10 +105,10 @@ int main (int argc, char *argv[]) {
    String *storedStr2 = constructorTable1.lookup (key2);
    test.validate (
       "Retrieving second value",
-      storedStr2 && 
+      storedStr2 &&
       ((*storedStr2) == value2) &&
       (constructorTable1.get_count () == 2));
-   
+
    // Removing a value
    test.validate (
       "Removing values",
@@ -117,24 +117,24 @@ int main (int argc, char *argv[]) {
       !constructorTable1.lookup (key1) &&
       !constructorTable1.lookup (key2) &&
       !constructorTable1.get_count ());
- 
+
    // Replacing a value
    constructorTable1.remove (key1);
    constructorTable1.store (key1, &value3CopyForStoreAndRetrieve);
    String *storedStr3 = constructorTable1.lookup (key1);
    test.validate (
-      "Replacing a value", 
-       storedStr3 && 
+      "Replacing a value",
+       storedStr3 &&
        ((*storedStr3) == value3));
 
- 
+
 
    // Testing autogrow disable mask
    String value1CopyForAutogrow (value1);
    String value2CopyForAutogrow (value2);
    String value3CopyForAutogrow (value3);
    String value4CopyForAutogrow (value4);
- 
+
    test.validate (
       "Overflow prevention on non autogrowing table.",
       constructorTable2.store (key1, &value1CopyForAutogrow) &&
@@ -148,7 +148,7 @@ int main (int argc, char *argv[]) {
    HashTableStringTemplate<String> tableEmptyCopy (tableEmpty);
    test.validate (
       "Using copy constructor with empty input hashtable",
-      !tableEmptyCopy.get_size () && 
+      !tableEmptyCopy.get_size () &&
       !tableEmptyCopy.get_count ());
 
    String value1CopyForCopyCons (value1);
@@ -266,20 +266,20 @@ int main (int argc, char *argv[]) {
 
    String *iteratorString = iteratorTable.get_first (it);
    String iteratorKey = it.get_hash_key ();
- 
+
    test.validate (
       "Getting first value of iterator",
       (iteratorTable.get_count() == 3) &&
-      iteratorString && 
-      ((*iteratorString) == value1) && 
-      iteratorKey && 
+      iteratorString &&
+      ((*iteratorString) == value1) &&
+      iteratorKey &&
       (iteratorKey == key1));
 
-   
+
    // Go back to before first (should have null return)
    iteratorString = iteratorTable.get_prev (it);
    iteratorKey = it.get_hash_key ();
-   
+
    test.validate (
       "Getting value before first",
       !iteratorString);
@@ -291,9 +291,9 @@ int main (int argc, char *argv[]) {
 
    test.validate (
       "Getting next value of iterator (1)",
-      iteratorString && 
-      ((*iteratorString) == value2) && 
-      iteratorKey && 
+      iteratorString &&
+      ((*iteratorString) == value2) &&
+      iteratorKey &&
       (iteratorKey == key2));
 
 
@@ -303,9 +303,9 @@ int main (int argc, char *argv[]) {
 
    test.validate (
       "Getting previous value of iterator (1)",
-      iteratorString && 
-      ((*iteratorString) == value1) && 
-      iteratorKey && 
+      iteratorString &&
+      ((*iteratorString) == value1) &&
+      iteratorKey &&
       (iteratorKey == key1));
 
    // Proceed to value 3
@@ -315,9 +315,9 @@ int main (int argc, char *argv[]) {
 
    test.validate (
       "Getting next value of iterator (2)",
-      iteratorString && 
-      ((*iteratorString) == value3) && 
-      iteratorKey && 
+      iteratorString &&
+      ((*iteratorString) == value3) &&
+      iteratorKey &&
       (iteratorKey == key3));
 
    // Go back to value 2
@@ -326,9 +326,9 @@ int main (int argc, char *argv[]) {
 
    test.validate (
       "Getting previous value of iterator (2)",
-      iteratorString && 
-      ((*iteratorString) == value2) && 
-      iteratorKey && 
+      iteratorString &&
+      ((*iteratorString) == value2) &&
+      iteratorKey &&
       (iteratorKey == key2));
 
    // Go to value after last (should have null return)
@@ -353,14 +353,14 @@ int main (int argc, char *argv[]) {
 
    test.validate (
       "Getting last value of iterator",
-      iteratorStringLast && 
-      ((*iteratorStringLast) == value3) && 
-      iteratorKeyLast && 
+      iteratorStringLast &&
+      ((*iteratorStringLast) == value3) &&
+      iteratorKeyLast &&
       (iteratorKeyLast == key3));
 
    test.validate (
       "Comparing last iterator value to last value reached using get_next calls",
-      ((*iteratorStringLast) == (*iteratorStringLast2)) && 
+      ((*iteratorStringLast) == (*iteratorStringLast2)) &&
       (iteratorKeyLast == iteratorKeyLast2));
 
    return test.result ();

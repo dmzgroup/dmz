@@ -2,7 +2,7 @@
 	File:		HID_Config_Utilities.h
 
 	Contains:   Definition of the interfaces to <HID_Config_Utilities.c>
-    
+
 	DRI: George Warner
 
 	Copyright:	Copyright © 2002 Apple Computer, Inc., All Rights Reserved

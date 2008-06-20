@@ -46,7 +46,7 @@ namespace dmz {
 };
 
 
-inline dmz::String 
+inline dmz::String
 dmz::RenderModulePortal::get_render_portal_name () {
 
    String result;
@@ -82,7 +82,7 @@ dmz::RenderModulePortal::RenderModulePortal (const PluginInfo &Info) :
 
 
 inline
-dmz::RenderModulePortal::~RenderModulePortal () { 
+dmz::RenderModulePortal::~RenderModulePortal () {
 
    remove_rtti_interface (DMZ_RENDER_MODULE_PORTAL_INTERFACE_NAME, __Info);
 }

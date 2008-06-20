@@ -38,7 +38,7 @@ struct dmz::ObjectObserverUtil::State {
    HashTableHandleTemplate<attrStruct> handleTable;
    Mask errorMask;
    Boolean global;
-   
+
    State (const PluginInfo &Info, const Config &Init) :
          ObjectModuleName (config_to_string ("module.object.name", Init)),
          log (Info.get_name () + ".ObjectObserverUtil", Info.get_context ()),
@@ -147,7 +147,7 @@ dmz::ObjectObserverUtil::deactivate_global_object_observer () {
 /*!
 
 \brief Activates callbacks for specific object attribute updates.
-\details 
+\details
 \param[in] AttributeTypeName String containing the name of the attribute type to activate.
 \param[in] AttributeMask Mask containing the attributes to activate. The masks defined
 in dmzObjectAttributeMasks.h should be used to compose \a AttributeMask.
@@ -169,7 +169,7 @@ dmz::ObjectObserverUtil::activate_object_attribute (
 /*!
 
 \brief Activates callbacks for specific object attribute updates.
-\details 
+\details
 \param[in] AttributeType Handle containing the attribute type handle to activate.
 \param[in] AttributeMask Mask containing the attributes to activate. The masks defined
 in dmzObjectAttributeMasks.h should be used to compose \a AttributeMask.
@@ -210,7 +210,7 @@ dmz::ObjectObserverUtil::activate_object_attribute (
 /*!
 
 \brief Activates callbacks for default object attribute updates.
-\details 
+\details
 \param[in] AttributeMask Mask containing the attributes to activate. The masks defined
 in dmzObjectAttributeMasks.h should be used to compose \a AttributeMask.
 \return Returns the default attribute handle.
@@ -227,7 +227,7 @@ dmz::ObjectObserverUtil::activate_default_object_attribute (const Mask &Attribut
 /*!
 
 \brief Deactivates callbacks for specific object attribute updates.
-\details 
+\details
 \param[in] AttributeTypeName String containing the name of the attribute type to
 deactivate.
 \param[in] AttributeMask Mask containing the attributes to deactivate. The masks defined
@@ -249,7 +249,7 @@ dmz::ObjectObserverUtil::deactivate_object_attribute (
 /*!
 
 \brief Deactivates callbacks for specific object attribute updates.
-\details 
+\details
 \param[in] AttributeHandle Handle containing the attribute type handle to deactivate.
 \param[in] AttributeMask Mask containing the attributes to deactivate. The masks defined
 in dmzObjectAttributeMasks.h should be used to compose \a AttributeMask.
@@ -270,7 +270,7 @@ dmz::ObjectObserverUtil::deactivate_object_attribute (
 /*!
 
 \brief Deactivates callbacks for default object attribute updates.
-\details 
+\details
 \param[in] AttributeMask Mask containing the attributes to deactivate. The masks defined
 in dmzObjectAttributeMasks.h should be used to compose \a AttributeMask.
 \sa ObjectModule

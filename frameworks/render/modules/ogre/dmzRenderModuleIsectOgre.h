@@ -64,7 +64,9 @@ namespace dmz {
             const Ogre::Entity &Entity,
             const UInt32 SubEntityIndex);
 
-         void _find_closest_result (IsectResultContainer &container, IsectResult &closest);
+         void _find_closest_result (
+            IsectResultContainer &container,
+            IsectResult &closest);
 
          RenderModuleCoreOgre *_core;
          Ogre::SceneManager *_sceneManager;
@@ -89,7 +91,7 @@ namespace dmz {
          };
 
          HashTableStringTemplate<EntityStruct> _entityTable;
-         
+
       private:
          RenderModuleIsectOgre ();
          RenderModuleIsectOgre (const RenderModuleIsectOgre &);

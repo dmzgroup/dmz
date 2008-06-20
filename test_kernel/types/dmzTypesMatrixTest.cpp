@@ -142,7 +142,7 @@ main (int argc, char *argv[]) {
    // </validate constructors>
    // ============================================================================ //
    // <validate operators>
-   
+
    // test comparison operators
    const Float64 somethingData[9] = { 0.0, 5.0, 0.0,
                                       1.0, 0.0, 7.0,
@@ -312,7 +312,7 @@ main (int argc, char *argv[]) {
    test.validate (
       "Test negate () function",
       (negateMatrix == matMinus1));
-   
+
    Matrix negateMatrixPartDeux (mat1); negateMatrixPartDeux.negate_in_place ();
    test.validate (
       "Test negate_in_place () function",
@@ -484,7 +484,8 @@ main (int argc, char *argv[]) {
 
    Matrix similarMatrixIn1 (Vector (1, 0, 0), 2);
    Matrix similarMatrixIn2 (Vector (0, 1, 0), 1);
-   Matrix finalMatrix = similarMatrixIn1 * similarMatrixIn2;// * similarMatrixIn2.transpose ();
+   // * similarMatrixIn2.transpose ();
+   Matrix finalMatrix = similarMatrixIn1 * similarMatrixIn2;
    test.validate (
       "test that a combination of 2 euler vectors matches a transformation of rotation matrices built from it's components.",
       (testMatrix == finalMatrix));
@@ -505,20 +506,20 @@ main (int argc, char *argv[]) {
    test.validate (
       "Test from_axis_and_angle_radians with (0, 1, 0) & Pi/2 makes the yaw45 matrix.",
       (testMatrix == yaw45ForcedData));
-   
+
    // make sure it normalizes axis vectors
    Vector severiouslyNotNormalizedAxis (0, 52007.4431, 0);
    testMatrix.from_axis_and_angle_radians (severiouslyNotNormalizedAxis, rotationAngle);
    test.validate (
       "Test that the from_axis_and_angle_radians () call normalizes the axis.",
       (testMatrix == yaw45ForcedData));
-   
+
    // test the quaternion conversions
 
    // create a Quat and Matrix, see if they match
    Vector arbitraryRotationAxis (14, 32, 24);
    Float64 arbitraryAngle (2.9953);
-   
+
    Matrix matrixVersion (arbitraryRotationAxis, arbitraryAngle);
    Quaternion quaternionVersion (arbitraryRotationAxis, arbitraryAngle);
 

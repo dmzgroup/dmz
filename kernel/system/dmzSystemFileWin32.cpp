@@ -187,7 +187,7 @@ dmz::get_absolute_path (const String &Path, String &absPath) {
       result = True;
    }
    if (ptr) { free (ptr); ptr = 0; }
-   
+
    return result;
 }
 

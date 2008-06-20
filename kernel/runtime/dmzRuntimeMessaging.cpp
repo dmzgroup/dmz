@@ -318,7 +318,7 @@ runtime handle but is instead a running counter that will roll over when max uns
 integer messages have been sent.
 \note The outData should only be used when sending a message to a specific message
 observer, otherwise the outData may be over written if more than one message
-observer has subscribed to the sent message. 
+observer has subscribed to the sent message.
 
 */
 dmz::UInt32
@@ -505,7 +505,7 @@ dmz::MessageObserver::subscribe_to_message (const Message &Type) {
 
    Boolean result (False);
 
-   if (_msgObsState.context && !_msgObsState.msgTable.lookup (Type.get_handle ())) { 
+   if (_msgObsState.context && !_msgObsState.msgTable.lookup (Type.get_handle ())) {
 
       if (_msgObsState.context->key.is_main_thread ()) {
 
@@ -551,7 +551,7 @@ dmz::MessageObserver::unsubscribe_to_message (const Message &Type) {
 
    Boolean result (False);
 
-   if (_msgObsState.context) { 
+   if (_msgObsState.context) {
 
       if (_msgObsState.context->key.is_main_thread ()) {
 
@@ -583,7 +583,7 @@ dmz::MessageObserver::unsubscribe_to_all_messages () {
 
    Boolean result (False);
 
-   if (_msgObsState.context) { 
+   if (_msgObsState.context) {
 
       if (_msgObsState.context->key.is_main_thread ()) {
 

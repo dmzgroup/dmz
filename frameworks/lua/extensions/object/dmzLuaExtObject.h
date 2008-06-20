@@ -13,10 +13,12 @@ struct lua_State;
 
 namespace dmz {
 
+   //! \cond
    void lua_register_object_observer (lua_State *L, ObjectObserver &obs);
    void lua_release_object_observer (lua_State *L, ObjectObserver &obs);
    Handle lua_get_default_handle (lua_State *L);
    int lua_locality_to_int (lua_State *L, const ObjectLocalityEnum Locality);
+   //! \endcond
 
    class LuaExtObject :
          public Plugin,
@@ -24,6 +26,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          struct ObjectStruct {
 
             ObjectModule *objMod;
@@ -98,6 +101,7 @@ namespace dmz {
          HashTableHandleTemplate<ObjectObserver> _obsTable;
 
          Log _log;
+         //! \endcond
 
       private:
          LuaExtObject ();

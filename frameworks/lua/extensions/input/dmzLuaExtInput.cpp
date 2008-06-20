@@ -292,7 +292,7 @@ mouse_event_to_table (lua_State *L, const InputEventMouse &Value) {
 
    lua_pushinteger (L, (int)Value.get_previous_mouse_y ());
    lua_setfield (L, Table, "previous_y");
-   
+
    lua_pushinteger (L, (int)Value.get_mouse_delta_x ());
    lua_setfield (L, Table, "delta_x");
 
@@ -310,7 +310,7 @@ mouse_event_to_table (lua_State *L, const InputEventMouse &Value) {
 
    lua_pushinteger (L, (int)Value.get_previous_mouse_screen_y ());
    lua_setfield (L, Table, "screen_previous_y");
-   
+
    lua_pushinteger (L, (int)Value.get_mouse_screen_delta_x ());
    lua_setfield (L, Table, "screen_delta_x");
 
@@ -364,7 +364,7 @@ obs_process_state (
 
             lua_rawgeti (L, CallBackTable, 2);
 
-            lua_createtable (L, 0, 2); 
+            lua_createtable (L, 0, 2);
             const int Table (lua_gettop (L));
 
             lua_create_handle (L, Channel);
@@ -373,7 +373,7 @@ obs_process_state (
             lua_createtable (L, 0, 1);
 
             lua_pushboolean (L, State ? 1 : 0);
-            lua_setfield (L, -2, "active"); 
+            lua_setfield (L, -2, "active");
 
             lua_setfield (L, Table, "state");
 
@@ -416,14 +416,14 @@ input_obs_new (lua_State *L) {
 
       InputObserverLua **ptr =
          (InputObserverLua **)lua_newuserdata (L, sizeof (InputObserverLua *));
-   
+
       if (ptr) {
 
          *ptr = new InputObserverLua (*input);
 
          luaL_getmetatable (L, InputObserverLuaName);
          lua_setmetatable (L, -2);
-   
+
          result = *ptr;
       }
    }
@@ -775,7 +775,7 @@ dmz::LuaExtInput::store_observer (InputObserverLua *obs) {
    Boolean retVal (False);
 
    if (obs) {
-   
+
       if (_observerTable.store (obs->get_handle (), obs)) {
 
          retVal = True;
@@ -815,17 +815,17 @@ dmz::LuaExtInput::register_observer (
       retVal = _defs.create_named_handle (ChannelName);
 
       ChannelStruct *cs (_channelTable.lookup (retVal));
-   
+
       if (!cs) {
-   
+
          cs = new ChannelStruct (retVal);
-   
+
          _channelTable.store (cs->Channel, cs);
       }
 
       activate_input_channel (ChannelName, EventMask);
 
-      if (EventMask.contains (InputEventChannelStateMask)) { 
+      if (EventMask.contains (InputEventChannelStateMask)) {
 
          if (cs->stateTable.store (obs->get_handle (), obs)) {
 
@@ -834,22 +834,22 @@ dmz::LuaExtInput::register_observer (
                lua_pushlightuserdata (L, (void *)&InputObserverLuaKey);
                lua_rawget (L, LUA_REGISTRYINDEX);
                const int InputTable (lua_gettop (L));
-   
+
                if (!obs_process_state (L, InputTable, obs, cs->Channel, cs->active)) {
-   
+
                   cs->stateTable.remove (obs->get_handle ());
                }
-   
+
                lua_pop (L, 1); // pop the input table
             }
          }
       }
 
-      if (EventMask.contains (InputEventAxisMask)) { 
+      if (EventMask.contains (InputEventAxisMask)) {
 
          cs->axisTable.store (obs->get_handle (), obs);
       }
-   
+
       if (EventMask.contains (InputEventButtonMask)) {
 
          cs->buttonTable.store (obs->get_handle (), obs);
@@ -957,7 +957,7 @@ dmz::LuaExtInput::open_lua_extension (lua_State *LuaState) {
 
    lua_create_dmz_namespace (L, "input");
    luaL_register (L, NULL, arrayFunc);
-   
+
    const Mask InputChannelState (InputEventChannelStateMask);
    lua_create_mask (L, &InputChannelState);
    lua_setfield (L, -2, "ChannelState");
@@ -965,7 +965,7 @@ dmz::LuaExtInput::open_lua_extension (lua_State *LuaState) {
    const Mask InputAxis (InputEventAxisMask);
    lua_create_mask (L, &InputAxis);
    lua_setfield (L, -2, "Axis");
-   
+
    const Mask InputButton (InputEventButtonMask);
    lua_create_mask (L, &InputButton);
    lua_setfield (L, -2, "Button");
@@ -1013,7 +1013,7 @@ dmz::LuaExtInput::open_lua_extension (lua_State *LuaState) {
    lua_setfield (L, -2, "__index");
    lua_create_dmz_namespace (L, "input_observer");
    luaL_register (L, NULL, obsArrayFunc);
-   
+
    lua_make_readonly (L, -1);
    lua_pop (L, 2); // pop meta table and dmz.input_observer table
 
@@ -1037,7 +1037,7 @@ dmz::LuaExtInput::close_lua_extension (lua_State *LuaState) {
       lua_pushlightuserdata (L, (void *)&InputObserverLuaKey);
       lua_pushnil (L);
       lua_rawset (L, LUA_REGISTRYINDEX);
-   
+
       LUA_END_VALIDATE (L, 0);
 
       L = 0;
@@ -1122,23 +1122,23 @@ dmz::LuaExtInput::receive_axis_event (
 
                lua_rawgeti (L, CallBackTable, 2);
 
-               lua_createtable (L, 0, 2); 
+               lua_createtable (L, 0, 2);
                const int Table (lua_gettop (L));
-   
-               lua_create_handle (L, Channel); 
+
+               lua_create_handle (L, Channel);
                lua_setfield (L, Table, "channel");
-   
+
                axis_event_to_table (L, Value);
                lua_setfield (L, Table, "axis");
-   
+
                if (lua_pcall (L, 2, 0, Handler)) {
-   
+
                   cs->axisTable.remove (obs->get_handle ());
-   
+
                   lua_pop (L, 1); // pop error message
                }
             }
-   
+
             lua_pop (L, 1); // pop error handler function
          }
 
@@ -1189,7 +1189,7 @@ dmz::LuaExtInput::receive_button_event (
 
                lua_rawgeti (L, CallBackTable, 2);
 
-               lua_createtable (L, 0, 2); 
+               lua_createtable (L, 0, 2);
                const int Table (lua_gettop (L));
 
                lua_create_handle (L, Channel);
@@ -1256,7 +1256,7 @@ dmz::LuaExtInput::receive_switch_event (
 
                lua_rawgeti (L, CallBackTable, 2);
 
-               lua_createtable (L, 0, 2); 
+               lua_createtable (L, 0, 2);
                const int Table (lua_gettop (L));
 
                lua_create_handle (L, Channel);
@@ -1323,7 +1323,7 @@ dmz::LuaExtInput::receive_key_event (
 
                lua_rawgeti (L, CallBackTable, 2);
 
-               lua_createtable (L, 0, 2); 
+               lua_createtable (L, 0, 2);
                const int Table (lua_gettop (L));
 
                lua_create_handle (L, Channel);
@@ -1390,7 +1390,7 @@ dmz::LuaExtInput::receive_mouse_event (
 
                lua_rawgeti (L, CallBackTable, 2);
 
-               lua_createtable (L, 0, 2); 
+               lua_createtable (L, 0, 2);
                const int Table (lua_gettop (L));
 
                lua_create_handle (L, Channel);
@@ -1458,7 +1458,7 @@ dmz::LuaExtInput::receive_data_event (
 
                lua_rawgeti (L, CallBackTable, 2);
 
-               lua_createtable (L, 0, 2); 
+               lua_createtable (L, 0, 2);
                const int Table (lua_gettop (L));
 
                lua_create_handle (L, Channel);

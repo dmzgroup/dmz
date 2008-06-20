@@ -36,7 +36,7 @@ dmz::QtCanvasObjectGroup::paint (
       QPainter *painter,
       const QStyleOptionGraphicsItem *option,
       QWidget *widget) {
-         
+
    // QColor color (Qt::black);
    // color.setAlphaF (0.25);
    // painter->setBrush (color);
@@ -52,7 +52,7 @@ dmz::QtCanvasObjectText::QtCanvasObjectText (QGraphicsItem *parent) :
          _textColor (Qt::black),
          _outlineColor (Qt::black),
          _backgroundColor (Qt::white) {
-            
+
 //   setFlag (ItemIsSelectable, true);
 }
 
@@ -115,13 +115,13 @@ QRectF
 dmz::QtCanvasObjectText::boundingRect () const {
 
    QRectF rect;
-   
+
    if (_text.length ()) {
-      
+
       const int Margin (1);
       rect = _outline_rect ().adjusted (-Margin, -Margin, Margin, Margin);
    }
-   
+
    return rect;
 }
 
@@ -130,13 +130,13 @@ QPainterPath
 dmz::QtCanvasObjectText::shape () const {
 
    QPainterPath path;
-   
+
    if (_text.length ()) {
-      
+
       QRectF rect (_outline_rect ());
       path.addRoundRect (rect, _roundness (rect.width ()), _roundness (rect.height ()));
    }
-   
+
    return path;
 }
 
@@ -148,7 +148,7 @@ dmz::QtCanvasObjectText::paint (
       QWidget *widget) {
 
    if (_text.length ()) {
-      
+
       QRectF rect (_outline_rect ());
 
       if (_drawBackground) {
@@ -159,7 +159,9 @@ dmz::QtCanvasObjectText::paint (
          painter->setPen (pen);
          painter->setBrush (_backgroundColor);
 
-         painter->drawRoundRect (rect, _roundness (rect.width ()), _roundness (rect.height ()));
+         painter->drawRoundRect (
+            rect,
+            _roundness (rect.width ()), _roundness (rect.height ()));
       }
 
       painter->setPen (_textColor);
@@ -172,16 +174,16 @@ QRectF
 dmz::QtCanvasObjectText::_outline_rect () const {
 
    QRectF rect;
-   
+
    if (_text.length ()) {
-      
+
       const int Padding (8);
       QFontMetricsF metrics = qApp->font ();
-      
+
       rect = metrics.boundingRect (_text);
-   
+
       if (_drawBackground) {
-      
+
          rect.adjust (-Padding, -Padding, Padding, Padding);
       }
 
@@ -198,14 +200,14 @@ dmz::QtCanvasObjectText::_outline_rect () const {
          rect.translate (-rect.center ());
       }
    }
-   
+
    return rect;
 }
 
 
 dmz::Int32
 dmz::QtCanvasObjectText::_roundness (const Float32 Size) const {
-   
+
    Int32 retVal (0);
    const Int32 Diameter (12);
    if (Size) { retVal = 100 * Diameter / Int32 (Size); }
@@ -278,14 +280,14 @@ dmz::QtPluginCanvasObjectBasic::create_object (
       const ObjectLocalityEnum Locality) {
 
    ModelStruct *ms (_get_model_struct (Type));
-   
+
    if (ms) {
-      
+
       if (_create_object (ObjectHandle, Type, *ms)) {
-         
+
          Mask objState;
          _lookup_object_state (ObjectHandle, objState);
-         
+
          _update_object_state (ObjectHandle, objState, 0);
       }
    }
@@ -312,10 +314,10 @@ dmz::QtPluginCanvasObjectBasic::update_object_type (
    if (AttributeHandle == _defaultAttributeHandle) {
 
       ObjectStruct *os (_objectTable.lookup (ObjectHandle));
-      if (os && (os->objType != Value)) { 
-         
+      if (os && (os->objType != Value)) {
+
          _destroy_object (ObjectHandle);
-      
+
          ModelStruct *ms (_get_model_struct (Value));
          if (ms) { _create_object (ObjectHandle, Value, *ms); }
       }
@@ -350,14 +352,14 @@ dmz::QtPluginCanvasObjectBasic::update_object_text (
    if (os) {
 
       QtCanvasObjectTextTable *textTable (os->textTable.lookup (AttributeHandle));
-      
+
       if (textTable) {
 
          HashTableStringIterator it;
          QtCanvasObjectText *item (textTable->get_first (it));
-         
+
          while (item) {
-            
+
             item->set_text (Value.get_buffer ());
             item = textTable->get_next (it);
          }
@@ -373,58 +375,62 @@ dmz::QtPluginCanvasObjectBasic::process_file (
       const String &RequestedFileLocation,
       const String &RequestedFileName) {
 
-   QGraphicsItem *item (_fileRequestTable.remove (RequestedFileLocation + RequestedFileName));
+   QGraphicsItem *item (
+      _fileRequestTable.remove (RequestedFileLocation + RequestedFileName));
 
    if (item) {
-   
+
       if (RequestResult == CacheFileFound) {
 
-         QGraphicsPixmapItem *pixmapItem (qgraphicsitem_cast<QGraphicsPixmapItem *> (item));
+         QGraphicsPixmapItem *pixmapItem (
+            qgraphicsitem_cast<QGraphicsPixmapItem *> (item));
 
          if (pixmapItem) {
 
             QPixmap pixmap;
-            
+
             _log.info << "Loading pixmap file: " << LocalFilePath << endl;
-            
+
             if (pixmap.load (LocalFilePath.get_buffer ())) {
-               
+
                pixmapItem->setPixmap (pixmap);
             }
             else {
-               
+
                _log.error << "Pixmap failed to load: " << LocalFilePath << endl;
             }
          }
-         
+
          QGraphicsSvgItem *svgItem (qgraphicsitem_cast<QGraphicsSvgItem *> (item));
 
          if (svgItem) {
-            
-            QSvgRenderer *renderer (_svgRendererTable.lookup (RequestedFileLocation + RequestedFileName));
-            
+
+            QSvgRenderer *renderer (
+               _svgRendererTable.lookup (RequestedFileLocation + RequestedFileName));
+
             if (!renderer) {
-               
+
                renderer = new QSvgRenderer ();
-               
+
                _log.info << "Loading SVG file: " << LocalFilePath << endl;
-               
+
                if (renderer->load (QString (LocalFilePath.get_buffer ()))) {
-                  
-                  _svgRendererTable.store (RequestedFileLocation + RequestedFileName, renderer);
+
+                  _svgRendererTable.store (
+                     RequestedFileLocation + RequestedFileName, renderer);
                }
                else {
-                  
+
                   _log.error << "SVG failed to load: " << LocalFilePath << endl;
                   delete renderer; renderer = 0;
                }
             }
-            
+
             if (renderer) { svgItem->setSharedRenderer (renderer); }
          }
       }
       else if (RequestResult == UnknownFileLocation) {
-   
+
          _log.error << "Unknown file location: "
             << RequestedFileLocation << " " << RequestedFileName << endl;
       }
@@ -440,7 +446,7 @@ dmz::QtPluginCanvasObjectBasic::process_file (
       }
    }
    else {
-      
+
       _log.error << "Unable to process unknown file: " << LocalFilePath << endl;
    }
 }
@@ -453,19 +459,19 @@ dmz::QtPluginCanvasObjectBasic::_create_object (
       ModelStruct &ms) {
 
    Boolean retVal (False);
-   
+
    if (_canvasModule) {
-         
+
       QGraphicsItem *parent (_canvasModule->lookup_item (ObjectHandle));
-      
+
       if (parent) {
-         
+
          ObjectStruct  *os (new ObjectStruct (ObjectHandle));
 
          os->objType = Type;
 
          os->item = _create_item (*os, parent, ms.itemData);
-         
+
          _process_item_text (*os, ms.textData);
          _process_item_switch (*os, ms.switchData);
 
@@ -473,7 +479,7 @@ dmz::QtPluginCanvasObjectBasic::_create_object (
          else { delete os; os = 0; }
       }
    }
-   
+
    return retVal;
 }
 
@@ -491,7 +497,7 @@ dmz::QtPluginCanvasObjectBasic::_update_object_state (
       const Handle ObjectHandle,
       const Mask &Value,
       const Mask *PreviousValue) {
-         
+
    ObjectStruct *os (_objectTable.lookup (ObjectHandle));
 
    if (os) {
@@ -499,7 +505,7 @@ dmz::QtPluginCanvasObjectBasic::_update_object_state (
 #if 0
       String sName, psName;
       _defs.lookup_state_name (Value, sName);
-      
+
       _log.error << "_update_object_state: " << ObjectHandle << endl;
       _log.error << "Value: " << sName << endl;
 
@@ -523,24 +529,24 @@ dmz::QtPluginCanvasObjectBasic::_update_object_state (
             _update_group_state (*group, newState, prevState);
          }
          else if (group->defaultState) {
-            
+
             group->defaultState->set_visible (True);
          }
 
          group = group->next;
       }
-      
+
       Mask newState (Value & os->defaultGroup.groupState);
-      
+
       Mask prevState;
       if (PreviousValue) { prevState = (*PreviousValue) & os->defaultGroup.groupState; }
-      
+
       if (newState || prevState) {
-         
+
          _update_default_group_state (os->defaultGroup, newState);
       }
       else if (os->defaultGroup.defaultState){
-         
+
          os->defaultGroup.defaultState->set_visible (True);
       }
    }
@@ -558,11 +564,11 @@ dmz::QtPluginCanvasObjectBasic::_update_group_state (
 
    StateStruct *ss (group.stateList);
    Boolean done (False);
-   
+
    while (ss && !done) {
 
       if (!ssToShow) {
-         
+
          if (!Value) {
 
             ssToShow = group.defaultState;
@@ -574,7 +580,7 @@ dmz::QtPluginCanvasObjectBasic::_update_group_state (
       }
 
       if (!ssToHide) {
-         
+
          if (!PreviousValue) {
 
             ssToHide = group.defaultState;
@@ -586,13 +592,13 @@ dmz::QtPluginCanvasObjectBasic::_update_group_state (
       }
 
       if (ssToShow && ssToHide) { done = True; }
-      
+
       ss = ss->next;
    }
-   
+
    if (ssToHide) { ssToHide->set_visible (False); }
    else if (group.defaultState) { group.defaultState->set_visible (False); }
-   
+
    if (ssToShow) { ssToShow->set_visible (True); }
    else if (group.defaultState) { group.defaultState->set_visible (True); }
 }
@@ -602,41 +608,41 @@ void
 dmz::QtPluginCanvasObjectBasic::_update_default_group_state (
       StateGroupStruct &group,
       const Mask &Value) {
-         
+
    Boolean showDefault (True);
    StateStruct *ssDefault (0);
    StateStruct *ss (group.stateList);
-   
+
    while (ss) {
 
       if (!ssDefault && !(ss->State)) {
-      
+
          ssDefault = ss;
       }
-      
+
       if (ss->State) {
-         
+
          if (Value.contains (ss->State)) {
-            
+
             ss->set_visible (True);
             showDefault = False;
          }
          else {
-            
+
             ss->set_visible (False);
          }
       }
       else if (!Value) {
-         
+
          ss->set_visible (True);
          showDefault = False;
       }
-      
+
       ss = ss->next;
    }
-   
+
    if (showDefault && ssDefault) {
-      
+
       ssDefault->set_visible (True);
    }
 }
@@ -649,13 +655,13 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
       const Config &ItemList) {
 
    QtCanvasObjectGroup *group (0);
-   
+
    if (parent) {
 
       group = new QtCanvasObjectGroup (parent);
 
       QGraphicsItem *item (0);
-      
+
       ConfigIterator it;
       Config cd;
       Float32 z (1.0);
@@ -664,7 +670,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
 
          const String DataName (cd.get_name ().to_lower ());
          const String ItemName (config_to_string ("name", cd));
-         
+
          if (DataName == "image") {
 
             item = _create_image_item (os, group, cd);
@@ -683,12 +689,12 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
          if (item) {
 
             item->setZValue (z++);
-            
+
             if (ItemName) {
-               
+
                String name (ItemName);
                name << "." << os.ObjHandle;
-               
+
                item->setData (QtCanvasObjectNameIndex, name.get_buffer ());
 
                os.itemTable.store (ItemName, item);
@@ -696,7 +702,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
          }
       }
    }
-   
+
    return group;
 }
 
@@ -708,10 +714,10 @@ dmz::QtPluginCanvasObjectBasic::_create_image_item (
       const Config &Data) {
 
    QGraphicsItem *item (0);
-   
+
    const String File (config_to_string ("file", Data).to_lower ());
    QFileInfo fi (File.get_buffer ());
-   
+
    if (fi.suffix () == QLatin1String ("svg")) {
 
       item = _create_svg_item (os, parent, Data);
@@ -720,7 +726,7 @@ dmz::QtPluginCanvasObjectBasic::_create_image_item (
 
       item = _create_pixmap_item (os, parent, Data);
    }
-   
+
    return item;
 }
 
@@ -734,9 +740,9 @@ dmz::QtPluginCanvasObjectBasic::_create_pixmap_item (
    QGraphicsPixmapItem *item (new QGraphicsPixmapItem (parent));
 
    if (_file_request (item, Data)) {
-      
+
       item->setTransformationMode (Qt::SmoothTransformation);
-      
+
       ConfigIterator it;
       Config cd;
 
@@ -766,8 +772,8 @@ dmz::QtPluginCanvasObjectBasic::_create_pixmap_item (
       }
    }
    else { delete item; item = 0; }
-   
-   return item;   
+
+   return item;
 }
 
 
@@ -780,7 +786,7 @@ dmz::QtPluginCanvasObjectBasic::_create_svg_item (
    QGraphicsSvgItem *item (new QGraphicsSvgItem (parent));
 
    if (_file_request (item, Data)) {
-      
+
       ConfigIterator it;
       Config cd;
 
@@ -805,7 +811,7 @@ dmz::QtPluginCanvasObjectBasic::_create_svg_item (
       }
    }
    else { delete item; item = 0; }
-   
+
    return item;
 }
 
@@ -847,7 +853,7 @@ dmz::QtPluginCanvasObjectBasic::_create_text_item (
          item->enable_background (config_to_boolean ("value", cd, true));
       }
       else if (DataName == "alignment") {
-         
+
          String alignmentName (config_to_string (cd).to_lower ());
          if (alignmentName == "center") {  item->set_alignment (Qt::AlignCenter); }
          else if (alignmentName == "right") {  item->set_alignment (Qt::AlignRight); }
@@ -886,19 +892,19 @@ dmz::QtPluginCanvasObjectBasic::_process_item_text (
       const String Name (config_to_string ("name", cd));
       const String AttrName (config_to_string ("attribute", cd));
       const Handle AttrHandle (activate_object_attribute (AttrName, ObjectTextMask));
-      
+
       QGraphicsItem *item (os.itemTable.lookup (Name));
-      
+
       if (AttrHandle && item) {
-         
+
          QtCanvasObjectTextTable *textTable (os.textTable.lookup (AttrHandle));
-         
+
          if (!textTable) {
 
             textTable = new QtCanvasObjectTextTable ();
             os.textTable.store (AttrHandle, textTable);
          }
-         
+
          QtCanvasObjectText *text (qgraphicsitem_cast<QtCanvasObjectText *>(item));
 
          if (textTable && text) {
@@ -921,20 +927,20 @@ dmz::QtPluginCanvasObjectBasic::_process_item_switch (
    while (SwitchList.get_next_config (it, cd)) {
 
       const String DataName (cd.get_name ().to_lower ());
-      
+
       if (DataName == "state") {
-         
+
          const String StateName (config_to_string ("name", cd));
 
          Mask state;
          _defs.lookup_state (StateName, state);
-         
+
          const String StateGroup (config_to_string ("group", cd));
-         
+
          _process_item_state (os, state, StateGroup, cd);
       }
       else if (DataName == "flag") {
-         
+
          const String AttrName (config_to_string ("attribute", cd));
          const Handle AttrHandle (activate_object_attribute (AttrName, ObjectFlagMask));
 //         _process_item_flag (os, cd);
@@ -951,7 +957,7 @@ dmz::QtPluginCanvasObjectBasic::_process_item_state (
       const Config &ItemList) {
 
    StateGroupStruct *group (os.groupTable.lookup (GroupName));
-   
+
    if (!group) {
 
       if (!GroupName) {
@@ -959,7 +965,7 @@ dmz::QtPluginCanvasObjectBasic::_process_item_state (
          group = &(os.defaultGroup);
       }
       else {
-         
+
          group = new StateGroupStruct (GroupName);
 
          if (os.groupTable.store (GroupName, group)) {
@@ -972,18 +978,18 @@ dmz::QtPluginCanvasObjectBasic::_process_item_state (
    }
 
    if (group) {
-      
+
       StateStruct *ss (new StateStruct (State));
 
       ss->next = group->stateList;
       group->stateList = ss;
       group->groupState |= ss->State;
-      
+
       if (!(group->defaultState) && !(ss->State)) {
-         
+
          group->defaultState = ss;
       }
-      
+
       ConfigIterator it;
       Config cd;
 
@@ -993,7 +999,7 @@ dmz::QtPluginCanvasObjectBasic::_process_item_state (
          QGraphicsItem *item (os.itemTable.lookup (Name));
 
          if (item) {
-            
+
             item->setVisible (False);
             ss->itemTable.store (ss->itemTable.get_count (), item);
          }
@@ -1014,13 +1020,13 @@ dmz::QtPluginCanvasObjectBasic::_file_request (QGraphicsItem *item, const Config
    if (File && item && fc) {
 
       if (_fileRequestTable.store (Url + File, item)) {
-         
+
          //_log.info << "Adding file request: " << Url << File << endl;
          fc->add_file_request (Url, File, *this);
          retVal = True;
       }
    }
-   
+
    return retVal;
 }
 
@@ -1057,9 +1063,9 @@ dmz::QtPluginCanvasObjectBasic::ModelStruct *
 dmz::QtPluginCanvasObjectBasic::_get_model_struct (const ObjectType &ObjType) {
 
    ModelStruct *retVal (_masterModelTable.lookup (ObjType.get_handle ()));
-   
+
    if (!retVal) {
-      
+
       Config local;
       ObjectType currentType (ObjType);
 
@@ -1080,9 +1086,9 @@ dmz::QtPluginCanvasObjectBasic::_get_model_struct (const ObjectType &ObjType) {
          retVal = ms;
       }
    }
-   
+
    if (retVal) {
-      
+
       _masterModelTable.store (ObjType.get_handle (), retVal);
    }
 
@@ -1126,15 +1132,15 @@ dmz::QtPluginCanvasObjectBasic::_config_to_model_struct (
       const ObjectType &ObjType) {
 
    ModelStruct *ms (new ModelStruct (ObjType));
-   
+
    if (local.lookup_all_config_merged ("items", ms->itemData)) {
-      
+
       local.lookup_all_config_merged ("text", ms->textData);
-      
+
       local.lookup_all_config_merged ("switch", ms->switchData);
    }
    else { delete ms; ms = 0; }
-   
+
    return ms;
 }
 
@@ -1158,7 +1164,7 @@ void
 dmz::QtPluginCanvasObjectBasic::_init (Config &local) {
 
    _canvasModuleName = config_to_string ("module.canvas.name", local);
-   
+
    _defaultAttributeHandle = activate_default_object_attribute (
       ObjectCreateMask |
       ObjectDestroyMask |

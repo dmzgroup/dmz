@@ -27,7 +27,7 @@ namespace dmz {
          public Plugin,
          public ObjectObserverUtil,
          public InputObserverUtil {
-           
+
       public:
          DynamicsPluginODESimple (const PluginInfo &Info,
             const String &InputModuleName,
@@ -82,9 +82,9 @@ namespace dmz {
          virtual void receive_switch_event (
             const UInt32 Channel,
             const InputEventSwitch &Value);
-         
+
          dWorldID get_world_id ();
-         dJointGroupID get_joint_group_id (); 
+         dJointGroupID get_joint_group_id ();
          Float32 get_erp ();
          Float32 get_cfm ();
 

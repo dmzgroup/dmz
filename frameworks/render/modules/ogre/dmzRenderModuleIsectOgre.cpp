@@ -12,11 +12,11 @@ Ogre::Vector3
 nearest_point (
       const Ogre::Vector3 &Point1,
       const Ogre::Vector3 &Point2,
-      const Ogre::Vector3 &TestPoint) { 
+      const Ogre::Vector3 &TestPoint) {
 
    Ogre::Vector3 A = TestPoint - Point1;
    Ogre::Vector3 u = (Point2-Point1).normalisedCopy ();
-   
+
    return Point1 + (A.dotProduct (u)) * u;
 }
 
@@ -38,14 +38,14 @@ struct dmz::RenderModuleIsectOgre::EntityIsectStruct {
 
       worldMat = Entity._getParentNodeFullTransform ();
       worldMat.extract3x3Matrix (worldMat3);
-   
+
       invWorldMat = worldMat.inverse ();
       invWorldMat3 = worldMat3.Inverse ();
-   
+
       Ogre::Vector3 localPos (invWorldMat * WorldRay.getOrigin ());
       Ogre::Vector3 localDir (invWorldMat3 * WorldRay.getDirection ());
       localDir.normalise ();
-   
+
       localRay.setOrigin (localPos);
       localRay.setDirection (localDir);
    }
@@ -81,7 +81,7 @@ struct dmz::RenderModuleIsectOgre::MeshStruct {
       indexCount = TheIndexCount;
 
       if (TheVertexCount > maxVertexCount) {
-         
+
          if (vertices) { delete []vertices; }
          maxVertexCount = TheVertexCount;
          vertices = new Ogre::Vector3[maxVertexCount];
@@ -98,7 +98,7 @@ struct dmz::RenderModuleIsectOgre::MeshStruct {
 
 
 dmz::RenderModuleIsectOgre::RenderModuleIsectOgre (
-      const PluginInfo &Info, 
+      const PluginInfo &Info,
       const Config &Local) :
       Plugin (Info),
       RenderModuleIsect (Info),
@@ -187,25 +187,25 @@ dmz::RenderModuleIsectOgre::do_isect (
    resultContainer.clear ();
 
    if (_core && _raySceneQuery) {
-      
+
       if (Parameters.get_test_result_type () == IsectClosestPoint) {
 
          _raySceneQuery->setSortByDistance (True);
       }
       else {
-         
+
          _raySceneQuery->setSortByDistance (False);
       }
-      
+
       UInt32 testHandle (0);
       IsectTestTypeEnum testType;
       Vector vec1, vec2;
-      
+
       TestValues.get_first_test (testHandle, testType, vec1, vec2);
       do {
 
          _isectRay.setOrigin (to_ogre_vector (vec1));
-         
+
          if (testType == IsectRayTest) {
 
             _maxSegmentDistance = -1.0;
@@ -218,9 +218,9 @@ dmz::RenderModuleIsectOgre::do_isect (
             dirVec.normalise ();
             _isectRay.setDirection (dirVec);
          }
-         
+
          _raySceneQuery->setRay (_isectRay);
-         
+
          Boolean done (False);
          Ogre::RaySceneQueryResult &queryResult = _raySceneQuery->execute ();
          Ogre::RaySceneQueryResult::iterator it = queryResult.begin ();
@@ -232,9 +232,9 @@ dmz::RenderModuleIsectOgre::do_isect (
             if (entity) {
 
                Handle objHandle (_extract_object_handle (*entity));
-   
+
                // only do intersection if no object handle was found or
-               // if an object handle was found make sure it is not in the 
+               // if an object handle was found make sure it is not in the
                // disabled table
                if (!objHandle || !_disabledTable.lookup (objHandle)) {
 
@@ -246,7 +246,7 @@ dmz::RenderModuleIsectOgre::do_isect (
 
                   // no need to continue checking if all we want is the first point
                   if ((Parameters.get_test_result_type () == IsectFirstPoint) &&
-                      resultContainer.get_result_count ()) { 
+                      resultContainer.get_result_count ()) {
 
                      done = True;
                   }
@@ -288,7 +288,7 @@ dmz::RenderModuleIsectOgre::enable_isect (const Handle ObjectHandle) {
          (*count)--;
          result = *count;
       }
-      else { 
+      else {
 
          _disabledTable.remove (ObjectHandle);
          delete count; count = 0;
@@ -327,10 +327,10 @@ dmz::RenderModuleIsectOgre::_extract_object_handle (const Ogre::Entity &Entity) 
    Handle objHandle (0);
 
    // if the mesh belongs to a object in the object module then
-   // its handle was stashed in the entity class so lets retrieve it 
+   // its handle was stashed in the entity class so lets retrieve it
    Ogre::Any userAny (Entity.getUserAny ());
    if (!userAny.isEmpty ()) {
-      
+
       try { objHandle = Ogre::any_cast<Handle> (userAny); }
       catch (Ogre::Exception e) { objHandle = 0; }
    }
@@ -365,7 +365,8 @@ dmz::RenderModuleIsectOgre::_isect_entity (
             segmentEnd,
             boundingSphere.getCenter ()));
 
-      Ogre::Real radiusSquared (boundingSphere.getRadius () * boundingSphere.getRadius ());
+      Ogre::Real radiusSquared (
+         boundingSphere.getRadius () * boundingSphere.getRadius ());
       Ogre::Real distToPointOnRaySquared ((pointOnRay - segmentEnd).squaredLength ());
 
       if (distToPointOnRaySquared > radiusSquared) {
@@ -409,19 +410,19 @@ dmz::RenderModuleIsectOgre::_isect_sub_entity (
    if (subEntity && currentMesh) {
 
       Ogre::Vector3 v1, v2, normal, point;
-   
+
       // test for hitting individual triangles on the mesh
       for (UInt32 ix = 0; ix < currentMesh->indexCount; ix += 3) {
-   
+
          v1 = currentMesh->vertices[currentMesh->indices[ix]] -
               currentMesh->vertices[currentMesh->indices[ix+1]];
-   
+
          v2 = currentMesh->vertices[currentMesh->indices[ix+2]] -
               currentMesh->vertices[currentMesh->indices[ix+1]];
-   
+
          normal = v2.crossProduct (v1);
          normal.normalise ();
-   
+
          // check for a hit against this triangle
          std::pair<bool, Ogre::Real> hit =
             Ogre::Math::intersects(
@@ -432,67 +433,67 @@ dmz::RenderModuleIsectOgre::_isect_sub_entity (
                normal,
                true,
                true);
-   
+
          if (hit.first) {
-   
+
             if (_maxSegmentDistance < 0.0 || hit.second < _maxSegmentDistance) {
-   
+
                IsectResult result;
-   
+
                result.set_isect_test_id (TestHandle);
-   
+
                if (Parameters.get_calculate_object_handle ()) {
-   
+
                   result.set_object_handle (_extract_object_handle (Entity));
                }
-   
-               point =
-                  _entityIsectData.worldMat * _entityIsectData.localRay.getPoint (hit.second);
-   
+
+               point = _entityIsectData.worldMat *
+                  _entityIsectData.localRay.getPoint (hit.second);
+
                result.set_point (to_dmz_vector (point));
-   
+
                // we need to save distance if test type is closest point
                // because we need to find the closest point once all points are found
                if (Parameters.get_calculate_distance () ||
                    Parameters.get_test_result_type () == IsectClosestPoint) {
-   
+
                   result.set_distance (hit.second);
                }
-   
-               if (Parameters.get_calculate_normal ()) { 
-   
+
+               if (Parameters.get_calculate_normal ()) {
+
                   normal = _entityIsectData.worldMat3 * normal;
                   normal.normalise ();
-   
+
                   result.set_normal (to_dmz_vector (normal));
                }
-   
-               if (Parameters.get_calculate_cull_mode ()) { 
-   
+
+               if (Parameters.get_calculate_cull_mode ()) {
+
                   Ogre::Technique *technique (subEntity->getTechnique ());
                   if (technique) {
-   
+
                      Ogre::Pass *pass0 (technique->getPass (0));
                      if (pass0) {
-   
+
                         UInt32 cullMask (0);
-   
+
                         if (pass0->getCullingMode () == Ogre::CULL_CLOCKWISE) {
-   
+
                            cullMask |= IsectPolygonBackCulledMask;
                         }
                         else if (pass0->getCullingMode () == Ogre::CULL_ANTICLOCKWISE) {
-   
+
                               cullMask |= IsectPolygonFrontCulledMask;
                         }
-   
-                        result.set_cull_mode (cullMask); 
+
+                        result.set_cull_mode (cullMask);
                      }
                   }
                }
-   
+
                resultContainer.add_result (result);
-   
+
                if (Parameters.get_test_result_type () == IsectFirstPoint) { break; }
             }
          }
@@ -553,7 +554,7 @@ dmz::RenderModuleIsectOgre::_get_current_mesh_data (
          }
 
          if (entityData) {
-            
+
             meshData = entityData->meshTable.lookup (SubEntityIndex);
 
             if (!meshData) {
@@ -608,73 +609,73 @@ dmz::RenderModuleIsectOgre::__get_mesh_information (
       if (vertexCount && indexCount) {
 
          meshStruct.resize (vertexCount, indexCount);
-      
+
          Ogre::VertexData* vertex_data =
-            subMesh->useSharedVertices ? subMesh->parent->sharedVertexData : 
+            subMesh->useSharedVertices ? subMesh->parent->sharedVertexData :
                                          subMesh->vertexData;
-      
+
          const Ogre::VertexElement *posElem =
             vertex_data->vertexDeclaration->findElementBySemantic (Ogre::VES_POSITION);
-      
+
          Ogre::HardwareVertexBufferSharedPtr vbuf =
              vertex_data->vertexBufferBinding->getBuffer (posElem->getSource ());
-      
-         unsigned char* vertex =
-            static_cast<unsigned char*> (vbuf->lock (Ogre::HardwareBuffer::HBL_READ_ONLY));
-      
+
+         unsigned char* vertex = static_cast<unsigned char*> (
+            vbuf->lock (Ogre::HardwareBuffer::HBL_READ_ONLY));
+
          // There is _no_ baseVertexPointerToElement() which takes an Ogre::Real or a
          // double as second argument. So make it float, to avoid trouble when
          // Ogre::Real will be comiled/typedefed as double:
          //      Ogre::Real* pReal;
          float* pReal;
-      
+
          for (size_t j = 0; j < vertex_data->vertexCount;
               ++j, vertex += vbuf->getVertexSize ()) {
-   
+
             posElem->baseVertexPointerToElement (vertex, &pReal);
             Ogre::Vector3 pt(pReal[0], pReal[1], pReal[2]);
             meshStruct.vertices[current_offset + j] = pt;
          }
-      
+
          vbuf->unlock();
       }
-      
+
       Ogre::IndexData* index_data = subMesh->indexData;
       size_t numTris = index_data->indexCount / 3;
       Ogre::HardwareIndexBufferSharedPtr ibuf = index_data->indexBuffer;
-      
+
       bool use32bitindexes = (ibuf->getType () == Ogre::HardwareIndexBuffer::IT_32BIT);
-      
+
       unsigned long*  pLong =
         static_cast<unsigned long*> (ibuf->lock (Ogre::HardwareBuffer::HBL_READ_ONLY));
-                 
+
       unsigned short* pShort = reinterpret_cast<unsigned short*> (pLong);
-      
+
       size_t offset = current_offset;
-      
+
       if (use32bitindexes) {
-   
+
          for (size_t k = 0; k < numTris*3; ++k) {
-   
+
             meshStruct.indices[index_offset++] =
                pLong[k] + static_cast<unsigned long> (offset);
          }
       }
       else {
-   
+
          for (size_t k = 0; k < numTris*3; ++k) {
-   
-            meshStruct.indices[index_offset++] = 
+
+            meshStruct.indices[index_offset++] =
                static_cast<unsigned long> (pShort[k]) +
                static_cast<unsigned long> (offset);
          }
       }
-      
+
       ibuf->unlock();
    }
 }
 
-void 
+void
 dmz::RenderModuleIsectOgre::_init (const Config &Local) {
 
    _cacheSceneData = config_to_boolean ("scene.useCache", Local, _cacheSceneData);

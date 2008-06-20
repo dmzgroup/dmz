@@ -136,7 +136,7 @@ dmz::Time::get_frame_delta () const {
 \brief Sets time factor.
 \details \a Value may be either negative or positive. A time factor of 2.0 would
 cause the runtime time to increment at double that of real time. A time factor of
--3.0 would cause the runtime time to decrement at three times that of real time. 
+-3.0 would cause the runtime time to decrement at three times that of real time.
 \param[in] Value Time factor in seconds.
 
 */

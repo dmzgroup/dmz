@@ -5,7 +5,7 @@
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 
 namespace dmz {
@@ -14,7 +14,7 @@ namespace dmz {
          public Plugin,
          public InputObserverUtil,
          public ObjectObserverUtil,
-         public Sync {
+         public TimeSlice {
 
       public:
          EntityPluginRaceLight (const PluginInfo &Info, Config &local);
@@ -50,8 +50,8 @@ namespace dmz {
             const Boolean Value,
             const Boolean *PreviousValue);
 
-         // Sync Interface
-         virtual void update_sync (const Float64 DeltaTime);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 DeltaTime);
 
       protected:
          struct StateStruct {

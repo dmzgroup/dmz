@@ -38,7 +38,7 @@ namespace dmz {
 
          Matrix &operator*= (const Matrix &Mat);
          Matrix &operator*= (const Float64 Scalar);
-      
+
          Matrix operator* (const Matrix &Mat) const;
          Matrix operator* (const Float64 Scalar) const;
 
@@ -60,7 +60,7 @@ namespace dmz {
 
          Boolean set_element (const Int32 Row, const Int32 Col, const Float64 Data);
          Boolean get_element (const Int32 Row, const Int32 Col, Float64 &data) const;
-         
+
          void from_array (const Float64 Array[9]);
          void to_array (Float64 array[9]) const;
          void from_array32 (const Float32 Array[9]);
@@ -68,13 +68,13 @@ namespace dmz {
 
          void from_euler_angles_radians (
             const Float64 Rx,
-            const Float64 Ry, 
+            const Float64 Ry,
             const Float64 Rz);
 
          void to_euler_angles_radians (Float64 &rx, Float64 &ry, Float64 &rz)  const;
 
          void from_axis_and_angle_radians (
-            const Vector &Axis, 
+            const Vector &Axis,
             const Float64 AngleRadians);
 
          void to_axis_and_angle_radians (Vector &axis, Float64 &angleRadians) const;
@@ -101,7 +101,7 @@ namespace dmz {
 \details Initializes the Matrix as an identity Matrix.
 
 */
-inline 
+inline
 dmz::Matrix::Matrix () {
 
    //Identity Matrix
@@ -117,7 +117,7 @@ dmz::Matrix::Matrix () {
 \param[in] Array contains a row-major 3x3 matrix stored in a dmz::Float64[9] array.
 
 */
-inline 
+inline
 dmz::Matrix::Matrix (const Float64 Array[9]) {
 
    for (Int32 count = 0; count < 9; count++) {
@@ -133,7 +133,7 @@ dmz::Matrix::Matrix (const Float64 Array[9]) {
 \param[in] Array contains a row-major 3x3 matrix stored in a dmz::Float32[9] array.
 
 */
-inline 
+inline
 dmz::Matrix::Matrix (const Float32 Array[9]) {
 
    for (Int32 count = 0; count < 9; count++) {
@@ -148,10 +148,10 @@ dmz::Matrix::Matrix (const Float32 Array[9]) {
 \brief \b Not currently working.
 
 */
-inline 
+inline
 dmz::Matrix::Matrix (
-      const Float64 RadiansX, 
-      const Float64 RadiansY, 
+      const Float64 RadiansX,
+      const Float64 RadiansY,
       const Float64 RadiansZ) {
 
    from_euler_angles_radians (RadiansX, RadiansY, RadiansZ);
@@ -165,7 +165,7 @@ dmz::Matrix::Matrix (
 \param[in] AngleRadians Rotation about arbitrary axis in radians.
 
 */
-inline 
+inline
 dmz::Matrix::Matrix (const Vector &Axis, const Float64 AngleRadians) {
 
    from_axis_and_angle_radians (Axis, AngleRadians);
@@ -191,12 +191,12 @@ dmz::Matrix::Matrix (const Vector &FromValue, const Vector &ToValue) {
 \brief \b Not currently working.
 
 */
-inline 
+inline
 dmz::Matrix::Matrix (const Quaternion &Quat) { from_quaternion (Quat); }
 
 
 //! Copy constructor.
-inline 
+inline
 dmz::Matrix::Matrix (const Matrix &Mat) { Mat.to_array (_data); }
 
 
@@ -245,7 +245,7 @@ dmz::Matrix::operator+ (const Matrix &Mat) const {
 
 
 //! Subtraction operator.
-inline dmz::Matrix 
+inline dmz::Matrix
 dmz::Matrix::operator- () const {
 
    Matrix result (*this);
@@ -289,12 +289,12 @@ dmz::Matrix::operator*= (const Matrix &Mat) {
 
       for (Int32 col = 0; col < 3; col++) {
 
-         offset0 = (row * 3) + col; 
+         offset0 = (row * 3) + col;
          sum = 0.0;
 
          for (Int32 count = 0; count < 3; count++) {
 
-            offset1 = (row * 3) + count; 
+            offset1 = (row * 3) + count;
             offset2 = (count * 3) + col;
             sum += _data[offset1] * Mat._data[offset2];
          }
@@ -358,9 +358,9 @@ dmz::Matrix::operator== (const Matrix &Mat) const {
 
 //! Relational "not equal to" operator.
 inline dmz::Boolean
-dmz::Matrix::operator!= (const Matrix &Mat) const { 
+dmz::Matrix::operator!= (const Matrix &Mat) const {
 
-   return !(*this == Mat); 
+   return !(*this == Mat);
 }
 
 
@@ -406,7 +406,7 @@ dmz::Matrix::transpose_in_place () {
    _data[7] = _data[5];
    _data[5] = tempVal;
 
-   return *this;  
+   return *this;
 }
 
 
@@ -435,7 +435,7 @@ dmz::Matrix::negate () const {
 inline dmz::Matrix &
 dmz::Matrix::negate_in_place () {
 
-   for (Int32 count = 0; count < 9; count++) { _data[count] *= -1.0; } 
+   for (Int32 count = 0; count < 9; count++) { _data[count] *= -1.0; }
    return *this;
 }
 
@@ -452,7 +452,7 @@ dmz::Matrix::invert (Matrix &value) const {
 
    Boolean result (False);
 
-   Float64 determinant = 
+   Float64 determinant =
       _data[0] * (_data[4] * _data[8] - _data[7] * _data[5]) -
       _data[1] * (_data[3] * _data[8] - _data[6] * _data[5]) +
       _data[2] * (_data[3] * _data[7] - _data[6] * _data[4]);
@@ -515,7 +515,7 @@ dmz::Matrix::pitch_in_place (const Float64 Angle) {
 
    const Float64 AngleCos (cos (Angle));
    const Float64 AngleSin (sin (Angle));
-   
+
 	Float64 tmp1 = (AngleCos * _data[3]) - (AngleSin * _data[6]);
 	Float64 tmp2 = (AngleSin * _data[3]) + (AngleCos * _data[6]);
 
@@ -587,7 +587,7 @@ dmz::Matrix::transform_vector (Vector &vec) const {
 */
 inline dmz::Boolean
 dmz::Matrix::set_element (const Int32 Row, const Int32 Col, const Float64 Data) {
-   
+
    Boolean result (False);
    Int32 offset = (Row * 3) + Col;
    result = ((Row < 3) && (Row > -1) && (Col < 3) && (Col > -1));
@@ -687,8 +687,8 @@ dmz::Matrix::to_array32 (Float32 array[9]) const {
 //! \b Not currently working.
 inline void
 dmz::Matrix::from_euler_angles_radians (
-      const Float64 Rx, 
-      const Float64 Ry, 
+      const Float64 Rx,
+      const Float64 Ry,
       const Float64 Rz) {
 
    const Float64 A  = cos (Rx);
@@ -752,10 +752,10 @@ dmz::Matrix::to_euler_angles_radians (Float64 &rx, Float64 &ry, Float64 &rz)  co
 //! Sets Matrix from arbitrary axis and rotation angle in radians.
 inline void
 dmz::Matrix::from_axis_and_angle_radians (
-      const Vector &Axis, 
+      const Vector &Axis,
       const Float64 AngleRadians) {
 
-   Float64 x (0.0), y (0.0), z (0.0); 
+   Float64 x (0.0), y (0.0), z (0.0);
 
    Vector axisNorm (Axis);
 
@@ -763,7 +763,7 @@ dmz::Matrix::from_axis_and_angle_radians (
 
       axisNorm.normalize_in_place ();
    }
-      
+
    axisNorm.get_xyz (x, y, z);
 
    const Float64 AngleSin = sin (AngleRadians);
@@ -805,16 +805,16 @@ dmz::Matrix::to_axis_and_angle_radians (Vector &axis, Float64 &angleRadians) con
          resultZ = 0.0;
          resultAngle = 0.0;
       }
-      else { 
+      else {
          // Singularity: angle = 180
          resultAngle = Pi64;
 
          resultX = (_data[0] + 1.0) / 2.0;
 
-         if (resultX > 0.0) { resultX = sqrt(resultX); }  // Should always be true for 
+         if (resultX > 0.0) { resultX = sqrt(resultX); }  // Should always be true for
                                                           // orthogonal matrix
          else { resultX = 0.0; }// in case matrix has become de-orthogonalized
-           
+
          resultY = (_data[4] + 1.0) / 2.0;
          if (resultY > 0) { resultY = sqrt(resultY); }
          else { resultY = 0.0; } // in case matrix has become de-orthogonalized
@@ -842,7 +842,7 @@ dmz::Matrix::to_axis_and_angle_radians (Vector &axis, Float64 &angleRadians) con
          ((_data[2] - _data[6]) * (_data[2] - _data[6])) +
          ((_data[3] - _data[1]) * (_data[3] - _data[1]))); // Used to Normalize
 
-      // This prevents a divide by zero, should not happen if matrix is orthogonal 
+      // This prevents a divide by zero, should not happen if matrix is orthogonal
       // and should be caught by singularity test above, but I've left it in just in case
       if (fabs(s) < Epsilon64) { s = 1.0; }
 

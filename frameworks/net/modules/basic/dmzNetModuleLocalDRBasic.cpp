@@ -266,7 +266,7 @@ posSkewTest::update_object (
    dmz::Boolean result (dmz::False);
 
    dmz::Vector pos, lnvPos, lnvVel;
-   
+
    if (module.lookup_position (ObjectHandle, _CurrentHandle, pos) &&
          module.lookup_position (ObjectHandle, _PreviousHandle, lnvPos) &&
          module.lookup_velocity (ObjectHandle, _PreviousHandle, lnvVel)) {

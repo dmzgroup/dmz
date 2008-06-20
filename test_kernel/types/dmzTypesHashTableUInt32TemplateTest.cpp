@@ -55,7 +55,7 @@ main (int argc, char *argv[]) {
    HashTableUInt32Template<String> testHashTable (4, 0, 0);
    test.validate (
       "HashTableUInt32Template standard constructor.",
-      (testHashTable.get_size () == 4) && !testHashTable.get_count () && 
+      (testHashTable.get_size () == 4) && !testHashTable.get_count () &&
       !testHashTable.get_lock () );
 
    // copy constructor
@@ -65,11 +65,11 @@ main (int argc, char *argv[]) {
    test.validate (
       "HashTableUInt32Template copy constructor.",
       !copyOfNullHashTable.get_size () && !copyOfNullHashTable.get_count () &&
-      (copyOfTestHashTable.get_size () == 4) && !copyOfTestHashTable.get_count () && 
+      (copyOfTestHashTable.get_size () == 4) && !copyOfTestHashTable.get_count () &&
       !copyOfTestHashTable.get_lock () );
 
    // --- lock constructor ---
-   
+
    // ?
 
    // </validate constructors>
@@ -110,7 +110,7 @@ main (int argc, char *argv[]) {
    // validate remove
    test.validate (
       "HashTableUInt32Template test remove function and verify with lookup.",
-      autoGrowHashTable.remove (1248) && 
+      autoGrowHashTable.remove (1248) &&
       !autoGrowHashTable.lookup (1248) );
 
    // what if we try storing a null string
@@ -136,7 +136,8 @@ main (int argc, char *argv[]) {
       (fixedSizeHashTable.get_size () == 4) && (fixedSizeHashTable.get_count () == 3) );
    test.validate (
       "D) Verify adding and item increases count.",
-      fixedSizeHashTable.store (1111, &dataStringAlbertBurton) && // stick something new in
+      // stick something new in
+      fixedSizeHashTable.store (1111, &dataStringAlbertBurton) &&
       (fixedSizeHashTable.get_size () == 4) && (fixedSizeHashTable.get_count () == 4) );
    test.validate (
       "E) Verify overloading doesn't increase count.",
@@ -148,22 +149,23 @@ main (int argc, char *argv[]) {
       (fixedSizeHashTable.get_size () == 4) && (fixedSizeHashTable.get_count () == 4) );
    test.validate (
       "G) Verify removing everything gives count of 0",
-      fixedSizeHashTable.remove (1111) && fixedSizeHashTable.remove (1248) && // kill ...
-      fixedSizeHashTable.remove (3425) && fixedSizeHashTable.remove (3246) && // ... everything
+      fixedSizeHashTable.remove (1111) && fixedSizeHashTable.remove (1248) &&
+      fixedSizeHashTable.remove (3425) && fixedSizeHashTable.remove (3246) &&
       (fixedSizeHashTable.get_size () == 4) && !fixedSizeHashTable.get_count () );
 
    test.validate (
       "HashTableUInt32Template test getSize&getCount on autoGrow hash table -- A) Verify initial length.",
-      autoGrowHashTable.get_size () == 4 && autoGrowHashTable.get_count () == 2 ); // start at 4-2
+      // start at 4-2
+      autoGrowHashTable.get_size () == 4 && autoGrowHashTable.get_count () == 2 );
    test.validate (
       "B) Fill in the list and verify the size in unchanged and count is full.",
-      autoGrowHashTable.store (1234, &dataStringAnd ) && //   fill it...
-      autoGrowHashTable.store (1235, &dataStringBeans ) && //      ...in
-      autoGrowHashTable.get_size () == 4 && autoGrowHashTable.get_count () == 4 ); // now 4-4
+      autoGrowHashTable.store (1234, &dataStringAnd ) &&
+      autoGrowHashTable.store (1235, &dataStringBeans ) &&
+      autoGrowHashTable.get_size () == 4 && autoGrowHashTable.get_count () == 4 );
    test.validate (
       "C) Add an item to make the list grow, verify size and count.",
       autoGrowHashTable.store (9021, &dataStringWithRice ) && // autoGrow
-      autoGrowHashTable.get_size () == 8 && autoGrowHashTable.get_count () == 5 ); // now 8-5
+      autoGrowHashTable.get_size () == 8 && autoGrowHashTable.get_count () == 5 );
 
    // </validate get_size & get_count functions>
    // ============================================================================ //
@@ -191,19 +193,21 @@ main (int argc, char *argv[]) {
    emptyTestHashTable.empty();
    test.validate (
       "HashTableUInt32Template test empty () on fixedSize hashTable.",
-      (emptyTestHashTable.get_size () == 4) && !emptyTestHashTable.get_count () ); // empty
+      (emptyTestHashTable.get_size () == 4) && !emptyTestHashTable.get_count ());
    test.validate (
       "HashTableUInt32Template test that prev empty () cleared it memory.",
       DestructionTestClass::destructionCount == 4 ); // data is still there
 
-   HashTableUInt32Template<DestructionTestClass> emptyTestAutoGrowHashTable (1, AutoGrow, 0);
+   HashTableUInt32Template<DestructionTestClass>
+      emptyTestAutoGrowHashTable (1, AutoGrow, 0);
    emptyTestAutoGrowHashTable.store (4252, new DestructionTestClass);
    emptyTestAutoGrowHashTable.store (6856, new DestructionTestClass);
    DestructionTestClass::destructionCount = 0;
    emptyTestAutoGrowHashTable.empty();
    test.validate (
       "HashTableUInt32Template test empty () on autoGrow hashTable.",
-      (emptyTestAutoGrowHashTable.get_size () == 2) && !emptyTestAutoGrowHashTable.get_count () ); // empty
+      (emptyTestAutoGrowHashTable.get_size () == 2) &&
+         !emptyTestAutoGrowHashTable.get_count () );
    test.validate (
       "HashTableUInt32Template test that prev empty () cleared it memory.",
       DestructionTestClass::destructionCount == 2 ); // data is still there
@@ -225,20 +229,20 @@ main (int argc, char *argv[]) {
    testHashTable = fixedSizeHashTable;
    test.validate (
       "HashTableUInt32Template test assignment operator: STD-size:4 = STD-size:4.",
-      (fixedSizeHashTable.get_size () == 4) && (fixedSizeHashTable.get_count () == 4) && // source 4-4
-      (testHashTable.get_size () == 4) && (testHashTable.get_count () == 4) ); // target 4-4
+      (fixedSizeHashTable.get_size () == 4) && (fixedSizeHashTable.get_count () == 4) &&
+      (testHashTable.get_size () == 4) && (testHashTable.get_count () == 4));
    test.validate (
       "HashTableUInt32Template check contents of previous (1/4).",
       testHashTable.lookup (1203) &&
-      (testHashTable.lookup (1203) == &dataStringI) ); 
+      (testHashTable.lookup (1203) == &dataStringI) );
    test.validate (
       "HashTableUInt32Template check contents of previous (2/4).",
       testHashTable.lookup (2361) &&
-      (testHashTable.lookup (2361) == &dataStringHeart) ); 
+      (testHashTable.lookup (2361) == &dataStringHeart) );
    test.validate (
       "HashTableUInt32Template check contents of previous (3/4).",
       testHashTable.lookup (8245) &&
-      (testHashTable.lookup (8245) == &dataStringNewJersey) ); 
+      (testHashTable.lookup (8245) == &dataStringNewJersey) );
    test.validate (
       "HashTableUInt32Template check contents of previous (4/4).",
       testHashTable.lookup (5674) &&
@@ -249,26 +253,26 @@ main (int argc, char *argv[]) {
    nullHashTable = fixedSizeHashTable;
    test.validate (
       "HashTableUInt32Template test assignment operator: AGrow-size:0 = STD-size:4.",
-      (fixedSizeHashTable.get_size () == 4) && (fixedSizeHashTable.get_count () == 4) && // source 4-4
-      (nullHashTable.get_size () == 4) && (nullHashTable.get_count () == 4) ); // target 4-4
+      (fixedSizeHashTable.get_size () == 4) && (fixedSizeHashTable.get_count () == 4) &&
+      (nullHashTable.get_size () == 4) && (nullHashTable.get_count () == 4) );
    test.validate (
       "HashTableUInt32Template check contents of previous (1/4).",
       nullHashTable.lookup (1203) &&
-      (nullHashTable.lookup (1203) == &dataStringI) ); 
+      (nullHashTable.lookup (1203) == &dataStringI) );
    test.validate (
       "HashTableUInt32Template check contents of previous (2/4).",
       nullHashTable.lookup (2361) &&
-      (nullHashTable.lookup (2361) == &dataStringHeart) ); 
+      (nullHashTable.lookup (2361) == &dataStringHeart) );
    test.validate (
       "HashTableUInt32Template check contents of previous (3/4).",
       nullHashTable.lookup (8245) &&
-      (nullHashTable.lookup (8245) == &dataStringNewJersey) ); 
+      (nullHashTable.lookup (8245) == &dataStringNewJersey) );
    test.validate (
       "HashTableUInt32Template check contents of previous (4/4).",
       nullHashTable.lookup (5674) &&
-      (nullHashTable.lookup (5674) == &dataStringAGreatDeal) ); 
+      (nullHashTable.lookup (5674) == &dataStringAGreatDeal) );
    nullHashTable.clear(); // back to AGR-4 {}
-   
+
    // </validate assignment operator>
    // ============================================================================ //
    // <validate copy function>
@@ -277,8 +281,8 @@ main (int argc, char *argv[]) {
    testHashTable.copy (fixedSizeHashTable);
    test.validate (
       "HashTableUInt32Template test copy Function: STD-size:4 = STD-size:4.",
-      (fixedSizeHashTable.get_size () == 4) && (fixedSizeHashTable.get_count () == 4) && // source 4-4
-      (testHashTable.get_size () == 4) && (testHashTable.get_count () == 4) ); // target 4-4
+      (fixedSizeHashTable.get_size () == 4) && (fixedSizeHashTable.get_count () == 4) &&
+      (testHashTable.get_size () == 4) && (testHashTable.get_count () == 4) );
    test.validate (
       "HashTableUInt32Template check contents of previous (1/4).",
       testHashTable.lookup (1203) &&
@@ -290,13 +294,16 @@ main (int argc, char *argv[]) {
    test.validate (
       "HashTableUInt32Template check contents of previous (3/4).",
       testHashTable.lookup (8245) &&
-      !strcmp (testHashTable.lookup (8245)->get_buffer(), dataStringNewJersey.get_buffer()) );
+      !strcmp (testHashTable.lookup (8245)->get_buffer(),
+         dataStringNewJersey.get_buffer()));
    test.validate (
       "HashTableUInt32Template check contents of previous (4/4).",
       testHashTable.lookup (5674) &&
-      !strcmp (testHashTable.lookup (5674)->get_buffer(), dataStringAGreatDeal.get_buffer()) );
+      !strcmp (testHashTable.lookup (5674)->get_buffer(),
+         dataStringAGreatDeal.get_buffer()));
+
    testHashTable.empty(); // back to STD-4 {}
-   
+
    // try to set a size 4 hash table to a size 8 hash table
    HashTableUInt32Template<String> biggerFixedSizeHashTable (8, 0, 0);
    biggerFixedSizeHashTable.store (3452, &dataStringI);
@@ -310,8 +317,9 @@ main (int argc, char *argv[]) {
    testHashTable.copy (biggerFixedSizeHashTable);
    test.validate (
       "HashTableUInt32Template test copy Function: STD-size:4 = STD-size:8.",
-      (biggerFixedSizeHashTable.get_size () == 8) && (biggerFixedSizeHashTable.get_count () == 8) && // source 8-8
-      (testHashTable.get_size () == 8) && (testHashTable.get_count () == 8) ); // target 8-8
+      (biggerFixedSizeHashTable.get_size () == 8) &&
+         (biggerFixedSizeHashTable.get_count () == 8) && // source 8-8
+         (testHashTable.get_size () == 8) && (testHashTable.get_count () == 8));
    test.validate (
       "HashTableUInt32Template check contents of previous (1/4).",
       testHashTable.lookup (3452) &&
@@ -334,8 +342,8 @@ main (int argc, char *argv[]) {
    nullHashTable.copy (fixedSizeHashTable);
    test.validate (
       "HashTableUInt32Template test copy Function: AGrow-size:0 = STD-size:4.",
-      (fixedSizeHashTable.get_size () == 4) && (fixedSizeHashTable.get_count () == 4) && // source 4-4
-      (nullHashTable.get_size () == 4) && (nullHashTable.get_count () == 4) ); // target 4-4
+      (fixedSizeHashTable.get_size () == 4) && (fixedSizeHashTable.get_count () == 4) &&
+      (nullHashTable.get_size () == 4) && (nullHashTable.get_count () == 4));
    test.validate (
       "HashTableUInt32Template check contents of previous (1/4).",
       nullHashTable.lookup (1203) &&
@@ -347,11 +355,16 @@ main (int argc, char *argv[]) {
    test.validate (
       "HashTableUInt32Template check contents of previous (3/4).",
       nullHashTable.lookup (8245) &&
-      !strcmp (nullHashTable.lookup (8245)->get_buffer(), dataStringNewJersey.get_buffer()) );
+      !strcmp (
+         nullHashTable.lookup (8245)->get_buffer(),
+         dataStringNewJersey.get_buffer()));
+
    test.validate (
       "HashTableUInt32Template check contents of previous (4/4).",
       nullHashTable.lookup (5674) &&
-      !strcmp (nullHashTable.lookup (5674)->get_buffer(), dataStringAGreatDeal.get_buffer()) );
+      !strcmp (
+         nullHashTable.lookup (5674)->get_buffer(),
+         dataStringAGreatDeal.get_buffer()));
    nullHashTable.empty(); // back to AGR-4 {}
 
    // </validate copy function>

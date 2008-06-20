@@ -7,10 +7,10 @@
 
 dmz::LuaPluginTimedReset::LuaPluginTimedReset (const PluginInfo &Info, Config &local) :
       Plugin (Info),
-      Sync (
+      TimeSlice (
          Info,
-         SyncTypeSystemTime,
-         SyncModeRepeating,
+         TimeSliceTypeSystemTime,
+         TimeSliceModeRepeating,
          config_to_float64 ("time.value", local, 6.0)),
       _luaMod (0),
       _log (Info) {
@@ -41,9 +41,9 @@ dmz::LuaPluginTimedReset::discover_plugin (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::LuaPluginTimedReset::update_sync (const Float64 TimeDelta) {
+dmz::LuaPluginTimedReset::update_time_slice (const Float64 TimeDelta) {
 
    _log.error << "Reseting Lua" << endl;
    if (_luaMod) { _luaMod->reset_lua (); }

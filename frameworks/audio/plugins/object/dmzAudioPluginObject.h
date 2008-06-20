@@ -5,7 +5,7 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
@@ -18,12 +18,13 @@ namespace dmz {
 
    class AudioPluginObject :
          public Plugin,
-         public Sync,
+         public TimeSlice,
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          AudioPluginObject (
-            const PluginInfo &Info, 
+            const PluginInfo &Info,
             Config &local);
 
          ~AudioPluginObject ();
@@ -37,8 +38,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
          // Object Observer Interface
          virtual void create_object (
@@ -98,20 +99,20 @@ namespace dmz {
             Handle deactivateHandle;
 
             Handle scalarAttributeHandle;
-     
-            Float64 minScale;
-            Float64 maxScale;
+
+            Float64 offset;
+            Float64 scale;
 
             SoundDefStruct *next;
 
             SoundDefStruct (const Mask &TheState) :
                State (TheState),
                activateHandle (0),
-               loopHandle (0), 
+               loopHandle (0),
                deactivateHandle (0),
                scalarAttributeHandle (0),
-               minScale (0.0),
-               maxScale (1.0),
+               offset (0.0),
+               scale (1.0),
                next (0) {;}
 
             ~SoundDefStruct () { if (next) { delete next; next = 0; } }
@@ -179,6 +180,7 @@ namespace dmz {
          HashTableHandleTemplate<SoundDefStruct> _soundTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
          HashTableHandleTemplate<ObjectStruct> _updateTable;
+         //! \endcond
 
       private:
          AudioPluginObject ();

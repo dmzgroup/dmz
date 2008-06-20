@@ -15,7 +15,7 @@ namespace dmz {
    const char DefaultPortalNameOSG[] = "default";
 
    class RenderCameraManipulatorOSG;
-   
+
 
    class RenderModuleCoreOSG {
 
@@ -25,7 +25,7 @@ namespace dmz {
          virtual osg::Group *get_scene () = 0;
          virtual osg::Group *get_static_objects () = 0;
          virtual osg::Group *get_dynamic_objects () = 0;
-         
+
 
 //         virtual void update_dynamic_object_position (const ObjectHandle Handle, const Vector &Pos) = 0;
 
@@ -39,19 +39,19 @@ namespace dmz {
          virtual Boolean add_camera_manipulator (
             const String &PortalName,
             RenderCameraManipulatorOSG *manipulator) = 0;
-            
+
          virtual RenderCameraManipulatorOSG *lookup_camera_manipulator (
             const String &PortalName) = 0;
-            
+
          virtual RenderCameraManipulatorOSG *remove_camera_manipulator (
             const String &PortalName) = 0;
 
          virtual void get_static_triangles (
-            Vector **vertices, 
-            UInt32 &numVerts, 
-            UInt32 **indices, 
+            Vector **vertices,
+            UInt32 &numVerts,
+            UInt32 **indices,
             UInt32 &numIndices) = 0;
-         
+
       protected:
          RenderModuleCoreOSG (const PluginInfo &Info);
          ~RenderModuleCoreOSG ();

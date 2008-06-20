@@ -149,7 +149,7 @@ dmz::EventObserver::EventObserver (const PluginInfo &Info) :
       __Info (Info) {
 
    store_rtti_interface (DMZ_EVENT_OBSERVER_INTERFACE_NAME, __Info, (void *)this);
-} 
+}
 
 
 inline

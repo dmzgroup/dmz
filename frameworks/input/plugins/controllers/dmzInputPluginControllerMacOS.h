@@ -4,7 +4,7 @@
 #include <dmzInputEventController.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableUInt32Template.h>
@@ -15,7 +15,7 @@ namespace dmz {
 
    class InputModule;
 
-   class InputPluginControllerMacOS : public Plugin, public Sync {
+   class InputPluginControllerMacOS : public Plugin, public TimeSlice {
 
       public:
          //! \cond
@@ -34,23 +34,23 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
-         // Sync Interface
-         virtual void update_sync (const Float64 DeltaTime);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 DeltaTime);
 
       protected:
          struct DeviceStruct {
-            
+
             const UInt32 Handle;
             const String Name;
-            
+
             pRecDevice device;
             HashTableUInt32Template<recElement> axisTable;
             HashTableUInt32Template<recElement> buttonTable;
-            
+
             DeviceStruct (const UInt32 TheHandle, const String &TheName);
             ~DeviceStruct ();
          };
-         
+
          struct DirectionStruct {
 
             UInt32 northwest, north,    northeast;
@@ -68,7 +68,7 @@ namespace dmz {
 
             HashTableUInt32Template<AxisStruct> axisTable;
             HashTableUInt32Template<ButtonStruct> buttonTable;
-            
+
             DirectionStruct hatswitch;
 
             ControllerStruct (const Handle &TheSource, DeviceStruct &theDevice);
@@ -86,7 +86,7 @@ namespace dmz {
 
             Boolean hatswitchAsX;
             Boolean hatswitchAsY;
-            
+
             Boolean flip;
             Float32 min;
             Float32 max;
@@ -97,7 +97,7 @@ namespace dmz {
                ControllerStruct &theController);
 
             ~AxisStruct ();
-            
+
             Float32 get_value () const;
          };
 
@@ -109,25 +109,25 @@ namespace dmz {
             ControllerStruct &cs;
 
             InputEventButton event;
-            
+
             ButtonStruct (
                const UInt32 TheHandle,
                const UInt32 TheElementHandle,
                ControllerStruct &theController);
 
             ~ButtonStruct ();
-            
+
             Boolean get_value () const;
          };
 
          void _init (Config &local);
          void _init_devices ();
-         void _add_device (const UInt32 DeviceId, pRecDevice device);       
+         void _add_device (const UInt32 DeviceId, pRecDevice device);
          void _init_controller (Config &controller);
-         void _init_axis (ControllerStruct &cs, Config &cd);       
+         void _init_axis (ControllerStruct &cs, Config &cd);
          void _init_hatswitch (ControllerStruct &cs, Config &cd);
          void _init_button (ControllerStruct &cs, Config &cd);
-         void _sync_controller (ControllerStruct &cs);
+         void _time_slice_controller (ControllerStruct &cs);
 
          Log _log;
          InputModule *_channels;
@@ -159,7 +159,7 @@ dmz::InputPluginControllerMacOS::DeviceStruct::DeviceStruct (
 
 inline
 dmz::InputPluginControllerMacOS::DeviceStruct::~DeviceStruct () {
-   
+
    device = 0;
    axisTable.clear ();
    buttonTable.clear ();

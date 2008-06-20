@@ -2,8 +2,8 @@
 <dmz>
 <plugins>
    <plugin name="dmzPluginTermExit"/>
-   <plugin name="dmzExPluginSync"/>
+   <plugin name="dmzExPluginTimeSlice"/>
 </plugins>
-<dmzExPluginSync>
-</dmzExPluginSync>
+<dmzExPluginTimeSlice>
+</dmzExPluginTimeSlice>
 </dmz>

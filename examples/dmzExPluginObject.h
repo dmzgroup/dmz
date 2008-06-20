@@ -75,7 +75,7 @@ namespace dmz {
             const Handle AttributeHandle,
             const Vector &Value,
             const Vector *PreviousValue);
-            
+
       protected:
          void _init (Config &local);
 

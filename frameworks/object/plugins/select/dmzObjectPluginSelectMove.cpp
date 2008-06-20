@@ -40,7 +40,7 @@ dmz::ObjectPluginSelectMove::~ObjectPluginSelectMove () {
 // Plugin Interface
 void
 dmz::ObjectPluginSelectMove::discover_plugin (
-      const PluginDiscoverEnum Mode, 
+      const PluginDiscoverEnum Mode,
       const Plugin *PluginPtr) {
 
    if (Mode == PluginDiscoverAdd) {

@@ -10,7 +10,7 @@
 
 dmz::Config
 dmz::qpointf_to_config (const String &Name, const QPointF &Value) {
-   
+
    Config result (Name);
 
    String val;
@@ -27,7 +27,7 @@ dmz::qpointf_to_config (const String &Name, const QPointF &Value) {
 
 dmz::Config
 dmz::qsizef_to_config (const String &Name, const QSizeF &Value) {
-   
+
    Config result (Name);
 
    String val;
@@ -44,7 +44,7 @@ dmz::qsizef_to_config (const String &Name, const QSizeF &Value) {
 
 dmz::Config
 dmz::qrectf_to_config (const String &Name, const QRectF &Value) {
-   
+
    Config result (Name);
 
    result.add_config (qpointf_to_config ("point", Value.topLeft ()));
@@ -56,7 +56,7 @@ dmz::qrectf_to_config (const String &Name, const QRectF &Value) {
 
 dmz::Config
 dmz::qmatrix_to_config (const String &Name, const QMatrix &Value) {
-   
+
    Config result (Name);
 
    String val;
@@ -85,7 +85,7 @@ dmz::qmatrix_to_config (const String &Name, const QMatrix &Value) {
 
 dmz::Config
 dmz::qbytearray_to_config (const String &Name, const QByteArray &Value) {
-   
+
    Config result (Name);
 
    QByteArray base64 (Value.toBase64 ());
@@ -100,11 +100,11 @@ dmz::qbytearray_to_config (const String &Name, const QByteArray &Value) {
 
 dmz::Config
 dmz::qgraphicsview_to_config (const String &Name, const QGraphicsView &Value) {
-   
+
    Config result (Name);
 
    result.add_config (qmatrix_to_config ("matrix", Value.matrix ()));
-   
+
    QSize vpSize (Value.viewport ()->size ());
    QPoint center (vpSize.width () / 2, vpSize.height () / 2);
    result.add_config (qpointf_to_config ("center", Value.mapToScene (center)));

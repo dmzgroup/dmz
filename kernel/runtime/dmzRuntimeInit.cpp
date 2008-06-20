@@ -48,17 +48,8 @@ static void local_init_state (
    RuntimeContextDefinitions &def,
    Log *log);
 
-static void local_create_message_type (
-   const String &Name,
-   const Message *Parent,
-   RuntimeContextMessaging &def,
-   RuntimeContext *context,
-   Log *log,
-   Message &msg);
-
 static void local_init_message_type (
    const Config &Init,
-   RuntimeContextMessaging &def,
    RuntimeContext *context,
    Log *log);
 
@@ -386,95 +377,48 @@ local_init_state (
 
 
 void
-local_create_message_type (
-      const String &Name,
-      const Message *Parent,
-      RuntimeContextMessaging &def,
-      RuntimeContext *context,
-      Log *log,
-      Message &msg) {
-
-   MessageContext *ptr (new MessageContext (
-      Name,
-      context,
-      &def,
-      Parent ? Parent->get_message_type_context () : 0));
-
-   if (ptr) {
-
-      Message *type (new Message (ptr));
-
-      if (type) {
-
-         if (log) { log->info << "Created message type: " << Name << endl; }
-
-         if (def.messageNameTable.store (type->get_name (), type)) {
-
-            msg = *type;
-            def.messageHandleTable.store (type->get_handle (), type);
-         }
-         else { delete type; type = 0; }
-      }
-
-      ptr->unref (); ptr = 0;
-   }
-}
-
-
-void
 local_init_message_type (
       const Config &Init,
-      RuntimeContextMessaging &def,
       RuntimeContext *context,
       Log *log) {
 
-   ConfigIterator it;
-   Config current;
+   RuntimeContextMessageContainer *container (
+      context ? context->get_message_container_context () : 0);
 
-   for (
-         Boolean found = Init.get_first_config (it, current);
-         found;
-         found = Init.get_next_config (it, current)) {
+   if (container) {
 
-      String name;
+      RuntimeContextMessaging *rcm (context ? context->get_messaging_context () : 0);
 
-      if (current.lookup_attribute ("name", name)) {
+      ConfigIterator it;
+      Config current;
 
-         Message *parent (0);
+      for (
+            Boolean found = Init.get_first_config (it, current);
+            found;
+            found = Init.get_next_config (it, current)) {
 
-         String parentName;
+         String name;
 
-         if (current.lookup_attribute ("parent", parentName)) {
+         if (current.lookup_attribute ("name", name)) {
 
-            parent = def.messageNameTable.lookup (parentName);
+            String parentName;
 
-            if (!parent && log) {
+            current.lookup_attribute ("parent", parentName);
 
-            }
-         }
+            Message tmp = container->create_message_type (name, parentName, context, rcm);
 
-         Message *msg (def.messageNameTable.lookup (name));
+            const String FoundParentName (tmp.get_parent ().get_name ());
 
-         if (msg) {
-
-            Message tmp (msg->get_parent ());
-
-            if (tmp.get_message_type_context () !=
-                  (parent ? parent->get_message_type_context () : 0)) {
+            if (FoundParentName != parentName) {
 
                if (log) {
 
-                  log->error << "Message type: " << msg->get_name ()
-                     << " with parent: " << (tmp.get_name () ? tmp.get_name () : "<NULL>")
+                  log->error << "Message type: " << tmp.get_name ()
+                     << " with parent: " << (FoundParentName ? FoundParentName : "<NULL>")
                      << " attempted redefinition with parent: "
-                     << (parent ? parent->get_name () : "<NULL>") << endl;
+                     << (parentName ? parentName : "<NULL>") << endl;
                }
             }
-         }
-         else {
-
-            Message tmp;
-            local_create_message_type (name, parent, def, context, log, tmp);
          }
       }
    }
@@ -495,7 +439,7 @@ local_init_time (const Config &Init, RuntimeContext *context, Log *log) {
 
    if (Init.lookup_attribute ("factor.value", data)) {
 
-      factor = string_to_float64 (data); 
+      factor = string_to_float64 (data);
       usingDefaultFactor = False;
       rtt.set_time_factor (factor);
    }
@@ -599,14 +543,7 @@ dmz::runtime_init (const Config &Init, RuntimeContext *context, Log *log) {
 
       if (mconfig) {
 
-         RuntimeContextMessaging *cm (context->get_messaging_context ());
-
-         if (cm) {
-
-            cm->ref ();
-            local_init_message_type (mconfig, *cm, context, log);
-            cm->unref ();
-         }
+         local_init_message_type (mconfig, context, log);
       }
       else if (log) { log->debug << "Message type config not found" << endl; }
 
@@ -833,38 +770,15 @@ dmz::Definitions::create_message_type (const String &Name, Message &type) {
 
    if (_state.context) {
 
-      RuntimeContextMessaging *rcm = _state.context->get_messaging_context ();
+      RuntimeContextMessageContainer *container (
+         _state.context->get_message_container_context ());
 
-      if (rcm) {
+      RuntimeContextMessaging *rcm (_state.context->get_messaging_context ());
 
-         rcm->ref ();
+      if (container) {
 
-         Message *ptr (rcm->messageNameTable.lookup (Name));
-
-         if (ptr) { type = *ptr; }
-         else {
-
-            local_create_message_type (Name, 0, *rcm, _state.context, _state.log, type);
-         }
-
-         if (type) { result = True; }
-         else if (_state.log) {
-
-            _state.log->warn << "Unable to create dmz::Message: " << Name << endl;
-         }
-
-         rcm->unref ();
+         type = container->create_message_type (Name, "", _state.context, rcm);
       }
-      else if (_state.log) {
-
-         _state.log->error << "Internal Error, Unable to create dmz::MessgeType: "
-            << Name << endl;
-      }
-   }
-   else if (_state.log) {
-
-      _state.log->error << "NULL Runtime context. Unable to create dmz::Message: "
-         << Name << endl;
    }
 
    return result;
@@ -886,19 +800,17 @@ dmz::Definitions::lookup_message_type (const String &Name, Message &type) const 
 
    if (_state.context) {
 
-      RuntimeContextMessaging *rcm = _state.context->get_messaging_context ();
+      RuntimeContextMessageContainer *container (
+         _state.context->get_message_container_context ());
 
-      if (rcm) {
+      if (container) {
 
-         rcm->ref ();
-         Message *ptr (rcm->messageNameTable.lookup (Name));
+         Message *ptr (container->messageNameTable.lookup (Name));
          if (ptr) { type = *ptr; result = True; }
          else if (_state.log) {
 
             _state.log->warn << "Unable to find dmz::Message: " << Name << endl;
          }
-
-         rcm->unref ();
       }
       else if (_state.log) {
 
@@ -931,19 +843,17 @@ dmz::Definitions::lookup_message_type (const Handle TypeHandle, Message &type) c
 
    if (_state.context) {
 
-      RuntimeContextMessaging *rcm = _state.context->get_messaging_context ();
+      RuntimeContextMessageContainer *container (
+         _state.context->get_message_container_context ());
 
-      if (rcm) {
+      if (container) {
 
-         rcm->ref ();
-         Message *ptr (rcm->messageHandleTable.lookup (TypeHandle));
+         Message *ptr (container->messageHandleTable.lookup (TypeHandle));
          if (ptr) { type = *ptr; result = True; }
          else if (_state.log) {
 
             _state.log->warn << "Unable to find dmz::Message: " << TypeHandle << endl;
          }
-
-         rcm->unref ();
       }
       else if (_state.log) {
 
@@ -1136,7 +1046,7 @@ dmz::Definitions::lookup_object_type (const Handle TypeHandle, ObjectType &type)
 \brief Looks up states from names.
 \param[in] Name String containing state names.
 \param[out] state Mask object to store found states.
-\return Returns dmz::True if all named states are found. 
+\return Returns dmz::True if all named states are found.
 \note State names should be delineated by the "|" character (a.k.a. the bitwise or
 operator).
 

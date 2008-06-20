@@ -20,7 +20,8 @@ namespace dmz {
          State &_state; //!< Internal state.
    };
 
-   //! Template that wraps ThreadStorage.
+   //! \brief Template that wraps ThreadStorage.
+   //! \ingroup System
    template <class T> class ThreadStorageTemplate {
 
       public:
@@ -34,7 +35,7 @@ namespace dmz {
          ThreadStorage _ts; //!< ThreadStorage object wrapped by template.
 
       private:
-         ThreadStorageTemplate (const ThreadStorageTemplate<T> &Ts); 
+         ThreadStorageTemplate (const ThreadStorageTemplate<T> &Ts);
          ThreadStorageTemplate<T> &operator= (const ThreadStorageTemplate<T> &Ts);
    };
 

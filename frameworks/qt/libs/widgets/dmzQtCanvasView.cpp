@@ -25,7 +25,7 @@ dmz::QtCanvasView::get_scale () const {
 
    qreal scaleX = transform.m11 ();
    qreal scaleY = transform.m12 ();
-   
+
    qreal scale = sqrt (scaleX * scaleX + scaleY + scaleY);
    return scale;
 }
@@ -40,7 +40,7 @@ dmz::QtCanvasView::set_scale (const qreal Value) {
 
    transform.reset ();
    transform.scale (scaleValue, scaleValue);
-   
+
    setMatrix (transform);
 
    emit scale_changed (scaleValue);
@@ -65,7 +65,7 @@ void
 dmz::QtCanvasView::drawBackground (QPainter *painter, const QRectF &rect) {
 
    QGraphicsView::drawBackground(painter, rect);
-   
+
 #if 0
    painter->save();
    painter->setPen(Qt::gray);
@@ -116,9 +116,9 @@ dmz::QtCanvasView::paintEvent (QPaintEvent *event) {
 
 // void
 // dmz::QtCanvasView::resizeEvent (QResizeEvent *event) {
-// 
+//
 //    if (event) {
-// 
+//
 //       qWarning () << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-";
 //       qDebug () << event->size ();
 //       qDebug () << " scale: " << get_scale ();
@@ -185,7 +185,7 @@ void
 dmz::QtCanvasView::mouseReleaseEvent (QMouseEvent *event) {
 
    if (event) {
-      
+
       QGraphicsView::mouseReleaseEvent (event);
       event->ignore ();
    }

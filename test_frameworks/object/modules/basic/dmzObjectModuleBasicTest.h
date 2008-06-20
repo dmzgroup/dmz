@@ -2,7 +2,7 @@
 #define DMZ_OBJECT_MODULE_BASIC_TEST_DOT_H
 
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTestPluginUtil.h>
 #include <dmzObjectObserverUtil.h>
 
@@ -13,7 +13,7 @@ namespace dmz {
 
    class ObjectModuleBasicTest :
       public Plugin,
-      public Sync,
+      public TimeSlice,
       protected ObjectObserverUtil {
 
       public:
@@ -32,7 +32,7 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr) {;}
 
-         void update_sync (const Float64 TimeDelta);
+         void update_time_slice (const Float64 TimeDelta);
 
       protected:
          TestPluginUtil test;

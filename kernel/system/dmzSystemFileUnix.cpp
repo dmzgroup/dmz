@@ -279,7 +279,7 @@ dmz::get_absolute_path (const String &Path, String &absPath) {
             result = True;
             absPath.flush () <<  get_current_directory () << file << ext;
          }
-      }  
+      }
 
       absPath = format_path (absPath);
    }

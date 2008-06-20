@@ -8,7 +8,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzRuntimeTime.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
@@ -21,7 +21,7 @@ namespace dmz {
 
    class EventModuleBasic :
          public Plugin,
-         public Sync,
+         public TimeSlice,
          public EventModule {
 
       public:
@@ -37,8 +37,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr) {;}
 
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
          // EventModule Interface
          virtual Boolean register_event_observer (
@@ -200,7 +200,7 @@ namespace dmz {
             const Handle EventHandle,
             const Handle AttributeHandle,
             Data &value);
- 
+
       protected:
          struct EventStruct {
 

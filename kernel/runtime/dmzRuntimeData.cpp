@@ -189,7 +189,7 @@ struct dataStruct {
    Boolean operator== (const dataStruct &Value) {
 
       Boolean result (False);
-     
+
       if (!data && !Value.data) { result = True; }
       else if (data && Value.data && (Value.size == size) && (&Value.Attr == &Attr)) {
 
@@ -550,7 +550,7 @@ dmz::Data::operator== (const Data &Value) const {
                      else {
 
                         String str1, str2;
-   
+
                         _state.to_string (*ds, elCount, str1);
                         Value._state.to_string (*compareDs, elCount, str2);
 
@@ -941,7 +941,10 @@ dmz::Data::lookup_float32 (
 
 */
 dmz::Boolean
-dmz::Data::store_float64 (const Handle AttrHandle, const Int32 Element, const Float64 Value) {
+dmz::Data::store_float64 (
+      const Handle AttrHandle,
+      const Int32 Element,
+      const Float64 Value) {
 
    Boolean result (False);
 
@@ -1063,7 +1066,7 @@ dmz::Data::store_string (
          result = uint64Convert.write (Converted, Element, _state.stringTable, *ds);
       }
    }
- 
+
    return result;
 }
 
@@ -1185,7 +1188,7 @@ dmz::Data::lookup_string (
          value.flush () << converted;
       }
    }
- 
+
    return result;
 }
 
@@ -1218,7 +1221,7 @@ dmz::Data::store_vector (
       const Int32 Offset (Element * 3);
 
       result =
-         float64Convert.write (Value.get_x (), Offset, _state.stringTable, *ds) && 
+         float64Convert.write (Value.get_x (), Offset, _state.stringTable, *ds) &&
          float64Convert.write (Value.get_y (), Offset + 1, _state.stringTable, *ds) &&
          float64Convert.write (Value.get_z (), Offset + 2, _state.stringTable, *ds);
    }
@@ -1256,7 +1259,7 @@ dmz::Data::lookup_vector (
 
       Float64 x (0.0), y (0.0), z (0.0);
 
-      if (float64Convert.read (*ds, Offset, _state.stringTable, x) && 
+      if (float64Convert.read (*ds, Offset, _state.stringTable, x) &&
             float64Convert.read (*ds, Offset + 1, _state.stringTable, y) &&
             float64Convert.read (*ds, Offset + 2, _state.stringTable, z)) {
 
@@ -1264,7 +1267,7 @@ dmz::Data::lookup_vector (
          result = True;
       }
    }
- 
+
    return result;
 }
 
@@ -1299,7 +1302,7 @@ dmz::Data::store_matrix (
       Value.to_array (array);
 
       result =
-         float64Convert.write (array[0], Offset, _state.stringTable, *ds) && 
+         float64Convert.write (array[0], Offset, _state.stringTable, *ds) &&
          float64Convert.write (array[1], Offset + 1, _state.stringTable, *ds) &&
          float64Convert.write (array[2], Offset + 2, _state.stringTable, *ds) &&
          float64Convert.write (array[3], Offset + 3, _state.stringTable, *ds) &&
@@ -1343,7 +1346,7 @@ dmz::Data::lookup_matrix (
       const Int32 Offset (Element * 9);
       Float64 array[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-      if (float64Convert.read (*ds, Offset, _state.stringTable, array[0]) && 
+      if (float64Convert.read (*ds, Offset, _state.stringTable, array[0]) &&
             float64Convert.read (*ds, Offset + 1, _state.stringTable, array[1]) &&
             float64Convert.read (*ds, Offset + 2, _state.stringTable, array[2]) &&
             float64Convert.read (*ds, Offset + 3, _state.stringTable, array[3]) &&
@@ -1358,7 +1361,7 @@ dmz::Data::lookup_matrix (
          result = True;
       }
    }
- 
+
    return result;
 }
 

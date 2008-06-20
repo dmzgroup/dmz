@@ -7,13 +7,13 @@
 namespace dmz {
 
    class QtCanvasScene : public QGraphicsScene {
-      
+
       Q_OBJECT
-      
+
       public:
          QtCanvasScene (QObject *parent = 0);
          ~QtCanvasScene ();
-         
+
       protected:
          virtual void drawBackground (QPainter *painter, const QRectF &rect);
          virtual void mouseMoveEvent (QGraphicsSceneMouseEvent *event);

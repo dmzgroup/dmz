@@ -13,7 +13,7 @@ namespace dmz {
 
    class QtModuleCanvas;
    class QtModuleMainWindow;
-   
+
 
    class QtPluginCanvasZoomPan :
          public QWidget,
@@ -21,7 +21,7 @@ namespace dmz {
          public InputObserverUtil {
 
       Q_OBJECT
-      
+
       public:
          QtPluginCanvasZoomPan (const PluginInfo &Info, Config &local);
          ~QtPluginCanvasZoomPan ();
@@ -71,12 +71,12 @@ namespace dmz {
          void slot_scale_changed (qreal);
 
       protected:
-         virtual bool eventFilter (QObject *obj, QEvent *event); 
+         virtual bool eventFilter (QObject *obj, QEvent *event);
 
          void _save_session ();
          void _load_session ();
          void _init (Config &local);
-         
+
          Log _log;
          Definitions _rti;
          Ui::zoomPanForm _ui;

@@ -69,7 +69,7 @@ namespace dmz {
          Int32 get_scroll_delta_y () const;
 
          Boolean update (const InputEventMouse &Value);
-         
+
       protected:
          struct State;
          State &_state; //!< Internal state.

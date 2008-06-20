@@ -9,7 +9,7 @@ dmz::NetPluginPacket::NetPluginPacket (
       const ByteOrderEnum Endian,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       NetPacketObserver (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
@@ -119,9 +119,9 @@ dmz::NetPluginPacket::discover_plugin (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::NetPluginPacket::update_sync (const Float64 TimeDelta) {
+dmz::NetPluginPacket::update_time_slice (const Float64 TimeDelta) {
 
    if (_codecMod && _ioMod) {
 

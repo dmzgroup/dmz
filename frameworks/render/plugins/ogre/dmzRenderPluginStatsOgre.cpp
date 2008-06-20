@@ -13,7 +13,7 @@ dmz::RenderPluginStatsOgre::RenderPluginStatsOgre (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       InputObserverUtil (Info, local),
       _portalName (DefaultPortalNameOgre),
       _core (0),
@@ -37,7 +37,7 @@ dmz::RenderPluginStatsOgre::discover_plugin (
       const Plugin *PluginPtr) {
 
    if (Mode == PluginDiscoverAdd) {
-      
+
       if (!_core) {
 
          _core = RenderModuleCoreOgre::cast (PluginPtr);
@@ -70,7 +70,7 @@ dmz::RenderPluginStatsOgre::discover_plugin (
       }
    }
    else if (Mode == PluginDiscoverRemove) {
-      
+
       if (_core && (_core == RenderModuleCoreOgre::cast (PluginPtr))) {
 
          if (_debugOverlay) {
@@ -87,7 +87,7 @@ dmz::RenderPluginStatsOgre::discover_plugin (
 
 
 void
-dmz::RenderPluginStatsOgre::update_sync (const Float64 TimeDelta) {
+dmz::RenderPluginStatsOgre::update_time_slice (const Float64 TimeDelta) {
 
    _update_stats ();
 }
@@ -182,7 +182,8 @@ dmz::RenderPluginStatsOgre::_update_stats () {
 
          guiTris->setCaption(tris + Ogre::StringConverter::toString(stats.triangleCount));
 
-         guiBatches->setCaption(batches + Ogre::StringConverter::toString(stats.batchCount));
+         guiBatches->setCaption(
+            batches + Ogre::StringConverter::toString(stats.batchCount));
       }
       catch(...) { /* ignore */ }
    }

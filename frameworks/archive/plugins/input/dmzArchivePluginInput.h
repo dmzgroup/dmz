@@ -5,7 +5,7 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzRuntimeTime.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableUInt32Template.h>
@@ -14,7 +14,7 @@ namespace dmz {
 
 // Not commenting until Plugin finalized.
 //! \cond
-   class ArchivePluginInput : public Plugin, public Sync {
+   class ArchivePluginInput : public Plugin, public TimeSlice {
 
       public:
          ArchivePluginInput (const PluginInfo &Info, Config &local);
@@ -29,8 +29,8 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
-         // Sync Interface
-         virtual void update_sync (const Float64 DeltaTime);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 DeltaTime);
 
       protected:
          struct ChannelState;
@@ -48,10 +48,10 @@ namespace dmz {
 
          Log _log;
          Definitions _defs;
-         
+
          EventStruct *_eventList;
          EventStruct *_eventListTail;
-         
+
          InputModule *_channels;
          Config _localData;
 

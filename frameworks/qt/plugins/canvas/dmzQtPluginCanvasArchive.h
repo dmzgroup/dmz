@@ -6,14 +6,14 @@
 #include <dmzRuntimePlugin.h>
 
 namespace dmz {
-   
+
    class QtModuleCanvas;
-   
-   
+
+
    class QtPluginCanvasArchive :
          public Plugin,
          public ArchiveObserverUtil {
-      
+
       public:
          QtPluginCanvasArchive (const PluginInfo &Info, Config &local);
          ~QtPluginCanvasArchive ();

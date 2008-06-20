@@ -203,7 +203,7 @@ dmz::NetModulePacketCodecBasic:: encode_event (
 
       const Int32 Place (outData.get_place ());
       if (_headerCodec->write_header (ees->PacketHandle, outData)) {
-      
+
          if (ees->codec.encode_event (EventHandle, outData)) {
 
             outData.set_place (Place);
@@ -230,7 +230,7 @@ dmz::NetModulePacketCodecBasic::_write_object (
 
       const Int32 Place (outData.get_place ());
       if (_headerCodec->write_header (eos->PacketHandle, outData)) {
-      
+
          if (eos->codec.encode_object (ObjectHandle, Mode, outData)) {
 
             outData.set_place (Place);
@@ -265,7 +265,8 @@ dmz::NetModulePacketCodecBasic::_discover_codec (const Plugin *PluginPtr) {
 
             if (objCodec && hs->objects.get_count ()) {
 
-               EncodeObjectStruct *eos (new EncodeObjectStruct (hs->PacketHandle, *objCodec));
+               EncodeObjectStruct *eos (
+                  new EncodeObjectStruct (hs->PacketHandle, *objCodec));
 
                if (eos && _objEncodeTable.store (hs->PacketHandle, eos)) {
 
@@ -285,7 +286,8 @@ dmz::NetModulePacketCodecBasic::_discover_codec (const Plugin *PluginPtr) {
             }
             else if (eventCodec && hs->events.get_count ()) {
 
-               EncodeEventStruct *ees (new EncodeEventStruct (hs->PacketHandle, *eventCodec));
+               EncodeEventStruct *ees (
+                  new EncodeEventStruct (hs->PacketHandle, *eventCodec));
 
                if (ees && _eventEncodeTable.store (hs->PacketHandle, ees)) {
 

@@ -106,7 +106,7 @@ dmz::InputObserver::InputObserver (const PluginInfo &Info) :
       __Info (Info) {
 
    store_rtti_interface (DMZ_INPUT_OBSERVER_INTERFACE_NAME, __Info, (void *)this);
-} 
+}
 
 
 inline

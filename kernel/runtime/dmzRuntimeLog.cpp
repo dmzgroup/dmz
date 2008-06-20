@@ -388,7 +388,7 @@ dmz::LogObserver::~LogObserver () {
 dmz::Handle
 dmz::LogObserver::get_log_observer_handle () {
 
-   return _logObsState.Handle.get_runtime_handle (); 
+   return _logObsState.Handle.get_runtime_handle ();
 }
 
 
@@ -413,7 +413,7 @@ dmz::LogObserver::detach_log_observer () {
 \fn dmz::LogObserver::store_log_message (
             const String &LogName,
             const LogLevelEnum Level,
-            const String &Message) 
+            const String &Message)
 \brief Pure virtual function that is invoked every time a log publishes a message.
 \details Derived classes need to implement this function in order to receive log messages.
 

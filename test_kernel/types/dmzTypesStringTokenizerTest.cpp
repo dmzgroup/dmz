@@ -60,7 +60,8 @@ int main (int argc, char *argv[]) {
    test.validate (
       "Default constructor with space delimiter and multiple items - item 1",
       (stringTokConsDefaultMultiItem.get_next () == item1) &&
-      (spaceDelim == spaceDelimCopy)); // Ensure that original inputted string was not modified
+      // Ensure that original inputted string was not modified
+      (spaceDelim == spaceDelimCopy));
 
    test.validate (
       "Default constructor with space delimiter and multiple items - item 2",

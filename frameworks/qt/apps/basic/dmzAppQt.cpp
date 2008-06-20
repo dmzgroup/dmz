@@ -11,11 +11,11 @@ using namespace dmz;
 
 int
 main (int argc, char *argv[]) {
-   
+
    Q_INIT_RESOURCE (dmzAppQt);
-   
-   QApplication qtApp (argc, argv); 
-   
+
+   QApplication qtApp (argc, argv);
+
    Application app ("dmzAppQt", "dmz");
 
    qsrand (QTime (0,0,0).secsTo (QTime::currentTime ()));
@@ -32,7 +32,7 @@ main (int argc, char *argv[]) {
 
    app.load_session ();
    qtLogObs.load_session ();
-   
+
    QtSplashScreen *splash = new QtSplashScreen (app.get_context ());
    splash->show ();
 
@@ -52,7 +52,7 @@ main (int argc, char *argv[]) {
 
       qtApp.processEvents ();
 
-   } while (app.sync ());
+   } while (app.update_time_slice ());
 
    app.stop ();
    app.unload_plugins ();
@@ -61,7 +61,7 @@ main (int argc, char *argv[]) {
 
       String errorMsg (app.get_error ());
       errorMsg << "\n\nStart up errors encountered.\nShutting down.";
-      
+
       QMessageBox::critical (0, "Start Up Error", errorMsg.get_buffer ());
    }
    else {
@@ -75,7 +75,7 @@ main (int argc, char *argv[]) {
       // wait for log window to close
       qtApp.processEvents ();
    }
-      
+
    qtApp.quit ();
 
    return app.is_error () ? -1 : 0;

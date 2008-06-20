@@ -95,7 +95,7 @@ dmz::RenderPick2d::RenderPick2d (const PluginInfo &Info) :
       __Info (Info) {
 
    store_rtti_interface (DMZ_RENDER_PICK_2D_INTERFACE_NAME, __Info, (void *)this);
-} 
+}
 
 
 inline

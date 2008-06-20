@@ -49,16 +49,16 @@ dmz::config_to_qrectf (
       const String &Name,
       const Config &Source,
       const QRectF &DefaultValue) {
-   
+
    Config cd;
-   
+
    if (Name) { Source.lookup_config (Name, cd); }
    else { cd = Source; }
-   
+
    const QRectF Result (
       config_to_qpointf ("point", cd, DefaultValue.topLeft ()),
       config_to_qsizef ("size", cd, DefaultValue.size ()));
-   
+
    return Result;
 }
 
@@ -68,12 +68,12 @@ dmz::config_to_qmatrix (
       const String &Name,
       const Config &Source,
       const QMatrix &DefaultValue) {
-   
+
    Config cd;
-   
+
    if (Name) { Source.lookup_config (Name, cd); }
    else { cd = Source; }
-   
+
    const QMatrix Result (
       config_to_float64 ("m11", cd, DefaultValue.m11()),
       config_to_float64 ("m12", cd, DefaultValue.m12 ()),
@@ -81,7 +81,7 @@ dmz::config_to_qmatrix (
       config_to_float64 ("m22", cd, DefaultValue.m22 ()),
       config_to_float64 ("dx", cd, DefaultValue.dx ()),
       config_to_float64 ("dy", cd, DefaultValue.dy ()));
-   
+
    return Result;
 }
 
@@ -91,17 +91,17 @@ dmz::config_to_qbytearray (
       const String &Name,
       const Config &Source,
       const QByteArray &DefaultValue) {
-   
+
    Config cd;
-   
+
    if (Name) { Source.lookup_config (Name, cd); }
    else { cd = Source; }
-   
+
    String base64 (config_to_string ("data", cd));
 
    QByteArray result (QByteArray::fromBase64 (base64.get_buffer ()));
    if (!base64) { result = DefaultValue; }
-   
+
    return result;
 }
 
@@ -134,13 +134,13 @@ dmz::config_to_qcolor (
       result.setRgbF (rgb.get_x (), rgb.get_y (), rgb.get_z ());
    }
    else if (colorData.lookup_config ("string", cd)) {
-      
+
       String name (config_to_string (cd));
       if (name) { result.setNamedColor (name.get_buffer ()); }
    }
-   
+
    if (colorData.lookup_config ("alpha", cd)) {
-      
+
       result.setAlphaF (config_to_float64 ("value", cd, 1.0));
    }
 
@@ -203,7 +203,7 @@ dmz::qobject_config_read (
       QObject *object) {
 
    if (object) {
-      
+
       Config cd;
 
       if (Name) { Source.lookup_config (Name, cd); }
@@ -230,7 +230,7 @@ void
 dmz::qwidget_config_read (const String &Name, const Config &Source, QWidget *widget) {
 
    if (widget) {
-      
+
       Config cd;
 
       if (Name) { Source.lookup_config (Name, cd); }
@@ -246,9 +246,9 @@ dmz::qwidget_config_read (const String &Name, const Config &Source, QWidget *wid
 #endif
 
       qobject_config_read ("object", cd, widget);
-      
+
       String value;
-  
+
       value = config_to_string ("statusTip", cd);
       if (value) { widget->setStatusTip (value.get_buffer ()); }
 
@@ -257,10 +257,10 @@ dmz::qwidget_config_read (const String &Name, const Config &Source, QWidget *wid
 
       value = config_to_string ("whatsThis", cd);
       if (value) { widget->setWhatsThis (value.get_buffer ()); }
-      
+
       value = config_to_string ("windowTitle", cd);
       if (value) { widget->setWindowTitle (value.get_buffer ()); }
-      
+
       set_qwidget_stylesheet ("stylesheet", cd, widget);
    }
 }
@@ -270,12 +270,12 @@ void
 dmz::qaction_config_read (const String &Name, const Config &Source, QAction *action) {
 
    if (action) {
-      
+
       Config cd;
 
       if (Name) { Source.lookup_config (Name, cd); }
       else { cd = Source; }
-      
+
 #if 0
       <action
          autoRepeat="Boolean"
@@ -317,7 +317,7 @@ dmz::qaction_config_read (const String &Name, const Config &Source, QAction *act
       if (value) { action->setIconText (value.get_buffer ()); }
 
       if (config_to_boolean ("separator", cd, False)) {
-         
+
          action->setSeparator (True);
       }
 
@@ -332,22 +332,22 @@ dmz::qaction_config_read (const String &Name, const Config &Source, QAction *act
 
       value = config_to_string ("shortcut", cd);
       if (value) {
-         
+
          QKeySequence shortcut (value.get_buffer ());
          action->setShortcut (shortcut);
       }
 
       // use "&#38" in the xml to represent '&'
-      
+
       value = config_to_string ("text", cd);
       if (value) { action->setText (value.get_buffer ()); }
-      
+
       action->setChecked (
          config_to_boolean ("checked", cd, action->isChecked ()));
-      
+
       action->setEnabled (
          config_to_boolean ("enabled", cd, action->isEnabled ()));
-      
+
       action->setVisible (
          config_to_boolean ("visible", cd, action->isVisible ()));
    }
@@ -358,7 +358,7 @@ void
 dmz::qtoolbar_config_read (const String &Name, const Config &Source, QToolBar *toolBar) {
 
    if (toolBar) {
-      
+
       Config cd;
 
       if (Name) { Source.lookup_config (Name, cd); }
@@ -395,7 +395,7 @@ dmz::qgraphicsview_config_read (
       QGraphicsView *view) {
 
    if (view) {
-      
+
       Config cd;
 
       if (Name) { Source.lookup_config (Name, cd); }
@@ -460,11 +460,11 @@ dmz::qabstractbutton_config_read (
 
       value = config_to_string ("shortcut", cd);
       if (value) {
-         
+
          QKeySequence shortcut (value.get_buffer ());
          button->setShortcut (shortcut);
       }
-      
+
       value = config_to_string ("text", cd);
       if (value) { button->setText (value.get_buffer ()); }
    }
@@ -478,19 +478,19 @@ dmz::qpushbutton_config_read (
       QPushButton *button) {
 
    if (button) {
-      
+
       Config cd;
 
       if (Name) { Source.lookup_config (Name, cd); }
       else { cd = Source; }
 
       qabstractbutton_config_read ("button", cd, button);
-      
+
       if (config_to_boolean ("autoDefault", cd, False)) {
-         
+
          button->setAutoDefault (True);
       }
-      
+
       button->setDefault (config_to_boolean ("default", cd, button->isDefault ()));
       button->setFlat (config_to_boolean ("flat", cd, button->isFlat ()));
    }
@@ -504,25 +504,25 @@ dmz::qtoolbutton_config_read (
       QToolButton *button) {
 
    if (button) {
-      
+
       Config cd;
 
       if (Name) { Source.lookup_config (Name, cd); }
       else { cd = Source; }
 
       qabstractbutton_config_read ("button", cd, button);
-      
+
       button->setAutoRaise (config_to_boolean ("autoRaise", cd, button->autoRaise ()));
-      
+
       const String StyleName (config_to_string ("style", cd).to_lower ());
       Qt::ToolButtonStyle style (Qt::ToolButtonIconOnly);
       if (StyleName == "textonly") { style = Qt::ToolButtonTextOnly; }
       if (StyleName == "textundericon") { style = Qt::ToolButtonTextUnderIcon; }
       button->setToolButtonStyle (style);
-      
+
       Config actionData;
       if (cd.lookup_config ("action", actionData)) {
-         
+
          QAction *action = new QAction (0);
          qaction_config_read ("", actionData, action);
          button->setDefaultAction (action);

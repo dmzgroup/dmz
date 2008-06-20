@@ -20,8 +20,8 @@ namespace dmz {
    class ObjectModule;
    class QtModuleCanvas;
    class RenderModulePick;
-   
-   
+
+
    class QtPluginMenuToMessage :
          public QObject,
          public Plugin,
@@ -52,34 +52,34 @@ namespace dmz {
 
       protected slots:
          void _slot_send (QAction *action);
-      
+
       protected:
          struct MessageStruct {
 
             QAction *action;
             Message message;
             HandleContainer targets;
-         
+
             MessageStruct () :
                action (0),
                message (),
                targets () {;}
          };
-         
+
          void _get_targets (
             const String &Name,
             Config &config,
             HandleContainer &targets);
-               
+
          void _get_type_set (
             const String &Name,
             Config &config,
             ObjectTypeSet &set);
 
          void _build_menu (const String &Name, Config &config);
-         
+
          void _init (Config &local);
-          
+
          Log _log;
          Definitions _defs;
          ObjectModule *_objectModule;
@@ -94,9 +94,9 @@ namespace dmz {
          Handle _object;
          ObjectTypeSet _objectSet;
          QActionGroup *_actionGroup;
-         QList<MessageStruct *> _messageList;   
+         QList<MessageStruct *> _messageList;
          QMenu *_menu;
-         
+
       private:
          QtPluginMenuToMessage ();
          QtPluginMenuToMessage (const QtPluginMenuToMessage &);

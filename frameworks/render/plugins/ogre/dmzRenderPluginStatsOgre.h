@@ -5,7 +5,7 @@
 #include <dmzRenderModuleCoreOgre.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 
 namespace Ogre { class Overlay; class OverlayElement; }
 
@@ -15,7 +15,7 @@ namespace dmz {
 
    class RenderPluginStatsOgre :
          public Plugin,
-         public Sync,
+         public TimeSlice,
          public InputObserverUtil {
 
       public:
@@ -30,9 +30,9 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-         
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
          // Input Observer Interface
          virtual void update_channel_state (const UInt32 Channel, const Boolean State);
@@ -60,7 +60,7 @@ namespace dmz {
       protected:
          void _init (Config &local);
          void _update_stats ();
-         
+
          String _portalName;
 
          RenderModuleCoreOgre *_core;

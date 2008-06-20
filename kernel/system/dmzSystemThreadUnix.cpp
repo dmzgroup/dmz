@@ -89,11 +89,11 @@ dmz::thread_exit () {
 }
 
 
+//! @}
+
 /*!
 
 \fn dmz::ThreadFunction::run_thread_function ().
 \brief Pure virtual function invoked in thread created by dmz::create_thread.
 
 */
-
-//! @}

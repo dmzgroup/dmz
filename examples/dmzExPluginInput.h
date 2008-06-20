@@ -34,14 +34,14 @@ namespace dmz {
          virtual void receive_button_event (
             const UInt32 Channel,
             const InputEventButton &Value);
-            
+
          virtual void receive_key_event (
             const UInt32 Channel,
             const InputEventKey &Value);
 
       protected:
          void _init (Config &local);
-         
+
          Log _log;
 
       private:

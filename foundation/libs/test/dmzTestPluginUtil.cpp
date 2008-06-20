@@ -7,7 +7,7 @@
 \class dmz::TestPluginUtil
 \ingroup Foundation
 \brief Plugin unit test utility class.
-\details This class provides basic unit test support for creating a unit test with 
+\details This class provides basic unit test support for creating a unit test with
 Plugins.
 
 */

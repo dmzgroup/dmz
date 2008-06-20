@@ -24,7 +24,7 @@ dmz::DynamicsPluginODESimple::DynamicsPluginODESimple (
       _throttleHandle (0),
       _objMod (0),
       _isect (0),
-      _renderCoreOSG (0), 
+      _renderCoreOSG (0),
       _heading (0),
       _pitch (0),
       _log (Info.get_name (), Info.get_context ()),
@@ -35,14 +35,14 @@ dmz::DynamicsPluginODESimple::DynamicsPluginODESimple (
       _ERP (0.9f),
       _CFM (0.1f),
       _vehicleTotalMass (0.0),
-      _vehicleLength (0.0), 
+      _vehicleLength (0.0),
       _vehicleForceScale (0.0),
       _gravity (0.0),
-      _maxTimeStep (0.0), 
-      _world (0), 
-      _space (0), 
-      _vehicleGeom (0), 
-      _vehicleBody (0), 
+      _maxTimeStep (0.0),
+      _world (0),
+      _space (0),
+      _vehicleGeom (0),
+      _vehicleBody (0),
       _groundGeom (0),
       _contactGroup (0) {
 
@@ -105,7 +105,7 @@ void
 dmz::DynamicsPluginODESimple::start_plugin () {
 
    if (_renderCoreOSG) {
-  
+
       // Get and then copy the terrain data from OSG render core
       UInt32 numVerts (0);
       UInt32 numIndices (0);
@@ -129,25 +129,25 @@ dmz::DynamicsPluginODESimple::start_plugin () {
 
       if (_terrainMeshVertices) {
          for (
-               UInt32 vertexCount = 0; 
-               vertexCount < _numTerrainMeshVertices; 
+               UInt32 vertexCount = 0;
+               vertexCount < _numTerrainMeshVertices;
                vertexCount++) {
 
-            (_terrainMeshVertices [vertexCount])[0] = 
+            (_terrainMeshVertices [vertexCount])[0] =
                dReal (vertices [vertexCount].get_x ());
 
-            (_terrainMeshVertices [vertexCount])[1] = 
+            (_terrainMeshVertices [vertexCount])[1] =
                dReal (vertices [vertexCount].get_y ());
 
-            (_terrainMeshVertices [vertexCount])[2] = 
+            (_terrainMeshVertices [vertexCount])[2] =
                dReal (vertices [vertexCount].get_z ());
          }
       }
 
       if (_terrainMeshTriangleIndices) {
          for (
-               UInt32 indicesCount = 0; 
-               indicesCount < _numTerrainMeshTriangleIndices; 
+               UInt32 indicesCount = 0;
+               indicesCount < _numTerrainMeshTriangleIndices;
                indicesCount++) {
 
             _terrainMeshTriangleIndices [indicesCount] = (int) (indicies [indicesCount]);
@@ -179,11 +179,11 @@ dmz::DynamicsPluginODESimple::start_plugin () {
 
          dTriMeshDataID Data = dGeomTriMeshDataCreate();
           dGeomTriMeshDataBuildSingle (
-            Data, 
+            Data,
             (dReal *)_terrainMeshVertices,
             3 * sizeof (dReal),
-            _numTerrainMeshVertices, 
-            _terrainMeshTriangleIndices,     
+            _numTerrainMeshVertices,
+            _terrainMeshTriangleIndices,
             _numTerrainMeshTriangleIndices,
             3 * sizeof (int));
 
@@ -200,36 +200,36 @@ dmz::DynamicsPluginODESimple::start_plugin () {
          dGeomTriMeshEnableTC(_groundGeom, dSphereClass, False);
          dGeomTriMeshEnableTC(_groundGeom, dBoxClass, False);
 
-         // The terrain geometry has no associated body (it has a body id of zero), 
+         // The terrain geometry has no associated body (it has a body id of zero),
          // and is placed in the world as just a lone geometry. This results in ODE
-         // performing collision detection with this geometry, but not keeping track of 
-         // dynamics on the object. With a body id of zero, the geometry will be 
+         // performing collision detection with this geometry, but not keeping track of
+         // dynamics on the object. With a body id of zero, the geometry will be
          // considered part of the static environment, which it should be.
 
       }
-      
+
 
       // Create Vehicle Body
 
- 
+
       _vehicleBody = dBodyCreate (_world);
        dMass mass;
 
       // Sphere mass matrix generation
       //dMassSetSphereTotal (
-      //   &mass, 
+      //   &mass,
       //   _vehicleTotalMass,
       //   _vehicleLength / 2.0f);
 
       //dBodySetMass (_vehicleBody, &mass);
 
       //Box mass matrix generation
-      
+
       dMassSetBoxTotal (
-         &mass, 
-         _vehicleTotalMass, 
-         _vehicleLength, 
-         _vehicleLength / 2.0f, 
+         &mass,
+         _vehicleTotalMass,
+         _vehicleLength,
+         _vehicleLength / 2.0f,
          _vehicleLength * 2.0f);
 
       dBodySetMass (_vehicleBody, &mass);
@@ -239,14 +239,14 @@ dmz::DynamicsPluginODESimple::start_plugin () {
       // Box geometry - box has a height of 1/2 of the requested length, and is
       // twice as long as the requested length in one dimension
       _vehicleGeom = dCreateBox (
-         0, 
-         _vehicleLength, 
-         _vehicleLength / 2.0f, 
+         0,
+         _vehicleLength,
+         _vehicleLength / 2.0f,
          _vehicleLength * 2.0f);
 
       //Sphere Geometry - sphere has radius of 1/2 of the requested length
       //_vehicleGeom = dCreateSphere(0, _vehicleLength / 2.0f);
-     
+
       // Link geometry to the body (geometry is used for collision, body is used
       // for keeping track of dynamics)
       dGeomSetBody (_vehicleGeom, _vehicleBody);
@@ -257,13 +257,13 @@ dmz::DynamicsPluginODESimple::start_plugin () {
       dRSetIdentity (vehicleRot);
 
       dBodySetPosition (
-         _vehicleBody, 
-         Float32 (_vehicleInitialPos.get_x ()), 
-         Float32 (_vehicleInitialPos.get_y ()), 
+         _vehicleBody,
+         Float32 (_vehicleInitialPos.get_x ()),
+         Float32 (_vehicleInitialPos.get_y ()),
          Float32 (_vehicleInitialPos.get_z ()));
-      
+
       if (_objMod) {
-         
+
          _objMod->store_position (_handle, _defaultHandle, _vehicleInitialPos);
       }
 
@@ -293,12 +293,12 @@ dmz::DynamicsPluginODESimple::sync_plugin (const Float64 TimeDelta) {
       _objMod->lookup_orientation (_handle, _defaultHandle, currentOri);
 
 
-  
+
       Vector right (1.0, 0.0, 0.0);
       Vector up (0.0, 1.0, 0.0);
       Vector forward (0.0, 0.0, -1.0);
 
-     
+
 
 
       currentOri.transform_vector (right);
@@ -337,17 +337,17 @@ dmz::DynamicsPluginODESimple::sync_plugin (const Float64 TimeDelta) {
          // NOTE: for some reason, the forward force causes backwards movement
          // on the screen
          dBodyAddForce (
-            _vehicleBody, 
-            dReal (directionForce.get_x ()), 
-            dReal (directionForce.get_y ()), 
+            _vehicleBody,
+            dReal (directionForce.get_x ()),
+            dReal (directionForce.get_y ()),
             dReal (directionForce.get_z ()));
 
          dBodyAddTorque (
-            _vehicleBody, 
-            dReal (totalTorque.get_x ()), 
-            dReal (totalTorque.get_y ()), 
+            _vehicleBody,
+            dReal (totalTorque.get_x ()),
+            dReal (totalTorque.get_y ()),
             dReal (totalTorque.get_z ()));
-            
+
 
 
          // Call collision detection.
@@ -359,7 +359,7 @@ dmz::DynamicsPluginODESimple::sync_plugin (const Float64 TimeDelta) {
 
          // Take a simulation step
          Float64 step (0.0);
-         
+
          if (_maxTimeStep < deltaSecs) { step = _maxTimeStep; }
          else { step = deltaSecs; }
 
@@ -380,11 +380,11 @@ dmz::DynamicsPluginODESimple::sync_plugin (const Float64 TimeDelta) {
       const dReal* vehicleLinearVel (dBodyGetLinearVel  (_vehicleBody));
 
       Vector newPos (
-         (Float64) (vehiclePosition[0]), 
-         (Float64) (vehiclePosition[1]), 
+         (Float64) (vehiclePosition[0]),
+         (Float64) (vehiclePosition[1]),
          (Float64) (vehiclePosition[2]));
 
-      
+
       // ODE's returned rotation matrix is an array arranged
       // as 4 columns and 3 rows, row-major. The final element
       // in each row is an unused zero
@@ -400,10 +400,10 @@ dmz::DynamicsPluginODESimple::sync_plugin (const Float64 TimeDelta) {
       newRot.set_element (2, 2, Float64 (vehicleRotation[10]));
 
       Vector newVel (
-         (Float64) (vehicleLinearVel[0]), 
-         (Float64) (vehicleLinearVel[1]), 
+         (Float64) (vehicleLinearVel[0]),
+         (Float64) (vehicleLinearVel[1]),
          (Float64) (vehicleLinearVel[2]));
-      
+
       _objMod->store_position (_handle, _defaultHandle, newPos);
       _objMod->store_velocity (_handle, _defaultHandle, newVel);
       _objMod->store_orientation (_handle, _defaultHandle, newRot);
@@ -447,9 +447,9 @@ dmz::DynamicsPluginODESimple::update_object_flag (
       const Boolean Value,
       const Boolean *PreviousValue) {
 
-   if ((AttributeHandle == _hilHandle) && Value) { 
-      _handle = Handle; 
-      
+   if ((AttributeHandle == _hilHandle) && Value) {
+      _handle = Handle;
+
    }
 }
 
@@ -550,7 +550,10 @@ dmz::DynamicsPluginODESimple::get_cfm () { return _CFM; }
 
 
 void
-dmz::DynamicsPluginODESimple::_ode_collision_callback (void* data, dGeomID o1, dGeomID o2) {
+dmz::DynamicsPluginODESimple::_ode_collision_callback (
+      void* data,
+      dGeomID o1,
+      dGeomID o2) {
 
    const int MAX_CONTACTS = 50; // maximum number of contact points per body
 
@@ -592,11 +595,11 @@ dmz::DynamicsPluginODESimple::_ode_collision_callback (void* data, dGeomID o1, d
             //  dContactSoftERP;
 
             // Alternative 3 (taken from ode_basket demo code)
-            contact[i].surface.mode = 
-               dContactSoftERP | 
-               dContactSoftCFM | 
-               dContactApprox1 | 
-               dContactSlip1 | 
+            contact[i].surface.mode =
+               dContactSoftERP |
+               dContactSoftCFM |
+               dContactApprox1 |
+               dContactSlip1 |
                dContactSlip2;
 
             // taken from ode_basket demo code
@@ -611,7 +614,7 @@ dmz::DynamicsPluginODESimple::_ode_collision_callback (void* data, dGeomID o1, d
          if (numc != 0) {
 
             for (int i = 0; i < numc; i++) {
-               
+
                dJointID c = dJointCreateContact (odePlugin->get_world_id (),
                                                  odePlugin->get_joint_group_id (),
                                                  contact+i);
@@ -683,7 +686,7 @@ dmz::DynamicsPluginODESimple::_init (Config &local) {
 
    Config data;
    if (local.lookup_data ("gravity", data)) {
-   
+
       _gravity = config_to_float32 ("value", data, -0.5);
    }
 
@@ -701,7 +704,7 @@ dmz::DynamicsPluginODESimple::_init (Config &local) {
       _vehicleTotalMass = config_to_float32 ("mass", data, 100.0f);
       _vehicleLength = config_to_float32 ("length", data, 0.5f);
       _vehicleForceScale = config_to_float32 ("force", data, 8000.0f);
-      
+
    }
 
 }

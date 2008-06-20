@@ -72,10 +72,10 @@ dmz::ExPluginObject::link_objects (
       const Handle SubHandle) {
 
    String attributeName (_defs.lookup_named_handle_name (AttributeHandle));
-   
+
    if (AttributeHandle == _link1AttributeHandle ||
        AttributeHandle == _link2AttributeHandle) {
-      
+
       _log.out << "[link_objects] super: " << SuperHandle << " sub: " << SubHandle
          << " for attribute '" << attributeName << "'" << endl;
    }
@@ -111,8 +111,8 @@ dmz::ExPluginObject::store_object_type (
       const ObjectType *PreviousValue) {
 
    if (AttributeHandle == _defaultAttributeHandle) {
-      
-      _log.out << "[store_object_type] handle: " << ObjectHandle 
+
+      _log.out << "[store_object_type] handle: " << ObjectHandle
                << " type: " << Value.get_name () << endl;
    }
 }
@@ -127,10 +127,10 @@ dmz::ExPluginObject::store_object_flag (
       const Boolean *PreviousValue) {
 
    String attributeName (_defs.lookup_named_handle_name (AttributeHandle));
-   
+
    if (AttributeHandle == _flagAttributeHandle) {
 
-      _log.out << "[store_object_flag] handle: " << ObjectHandle 
+      _log.out << "[store_object_flag] handle: " << ObjectHandle
                << " flag: " << (Value ? "True" : "False")
                << " for attribute '" << attributeName << "'" << endl;
    }
@@ -147,7 +147,7 @@ dmz::ExPluginObject::store_object_position (
 
    if (AttributeHandle == _defaultAttributeHandle) {
 
-      _log.out << "[store_object_position] handle: " << ObjectHandle 
+      _log.out << "[store_object_position] handle: " << ObjectHandle
                << " pos: " << Value << endl;
    }
 }
@@ -162,15 +162,15 @@ dmz::ExPluginObject::_init (Config &local) {
       ObjectUUIDMask |
       ObjectTypeMask |
       ObjectPositionMask);
-   
+
    _link1AttributeHandle = activate_object_attribute (
       "Ex_Link1",
       ObjectLinkMask | ObjectUnlinkMask);
-      
+
    _link2AttributeHandle = activate_object_attribute (
       "Ex_Link2",
       ObjectLinkMask | ObjectUnlinkMask);
-   
+
    _flagAttributeHandle = activate_object_attribute (
       "Ex_Flag_Visible",
       ObjectFlagMask);

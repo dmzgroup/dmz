@@ -16,8 +16,9 @@ namespace dmz {
    class AudioModulePortalBasic : public Plugin, private AudioModulePortal {
 
       public:
+         //! \cond
          AudioModulePortalBasic (const PluginInfo &Info, const Config &Local);
-         ~AudioModulePortalBasic (); 
+         ~AudioModulePortalBasic ();
 
          // Plugin Interface
          virtual void update_plugin_state (
@@ -44,11 +45,12 @@ namespace dmz {
          Handle _handle;
          AudioModule *_audioModule;
          String _name;
+         //! \endcond
 
       private:
          AudioModulePortalBasic (const AudioModulePortalBasic &);
          AudioModulePortalBasic &operator= (const AudioModulePortalBasic &);
-         
+
    };
 };
 

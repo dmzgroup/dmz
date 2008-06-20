@@ -21,7 +21,7 @@ namespace dmz {
       public:
          DataBinder (RuntimeContext *context, Log *log = 0);
          ~DataBinder ();
-        
+
          Boolean read_data (const Data &InData);
          Boolean write_data (Data &outData) const;
 

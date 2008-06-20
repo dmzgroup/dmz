@@ -104,7 +104,7 @@ dmz::ObjectPluginDump::link_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-   _log.debug << "Linking object: " << SuperHandle << " to " << SubHandle 
+   _log.debug << "Linking object: " << SuperHandle << " to " << SubHandle
       << " for " << _attr_name (AttributeHandle)
       << " Link handle: " << LinkHandle << endl
       << "\t" << SuperIdentity << endl
@@ -163,7 +163,7 @@ dmz::ObjectPluginDump::update_object_type (
 
    _log.debug << "ObjectType[" << ObjectHandle << "]:" << _attr_name (AttributeHandle)
       << ":" << Value.get_name () << " previous: "
-      << (PreviousValue ? PreviousValue->get_name () : "<NULL>") << endl; 
+      << (PreviousValue ? PreviousValue->get_name () : "<NULL>") << endl;
 }
 
 

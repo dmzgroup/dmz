@@ -10,6 +10,7 @@
 for basic DMZ Types (i.e. Vector, Matrix, UUID etc.)
 
 \class dmz::Stream
+\ingroup System
 \brief Stream pure virtual interface.
 \details The Stream class provides an interface for writing data. Derived class
 write the data to various destinations depending on the actual implementation.

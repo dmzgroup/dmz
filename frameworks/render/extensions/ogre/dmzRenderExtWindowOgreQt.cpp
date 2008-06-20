@@ -24,7 +24,7 @@ dmz::RenderExtWindowOgreQt::RenderExtWindowOgreQt (
       Plugin (Info),
       RenderExtWindowOgre (Info),
       _exit (get_plugin_runtime_context ()),
-      _log (Info), 
+      _log (Info),
       _channels (0),
       _core (0),
       _portalName (DefaultPortalNameOgre),
@@ -58,13 +58,13 @@ dmz::RenderExtWindowOgreQt::update_plugin_state (
       const UInt32 Level) {
 
    if (State == PluginStateStart) {
-      
+
       _load_session ();
       show ();
       setFocus (Qt::ActiveWindowFocusReason);
    }
    else if (State == PluginStateStop) {
-      
+
       _save_session ();
       close ();
    }
@@ -94,7 +94,7 @@ dmz::RenderExtWindowOgreQt::discover_plugin (
 
                   _core->add_camera (_portalName, _camera);
 
-                  _viewport = _window->addViewport (_camera); 
+                  _viewport = _window->addViewport (_camera);
 
                   if (_viewport) {
 
@@ -149,32 +149,33 @@ dmz::RenderExtWindowOgreQt::discover_plugin (
 
 
 dmz::Boolean
-dmz::RenderExtWindowOgreQt::init_render_window () { 
-   
+dmz::RenderExtWindowOgreQt::init_render_window () {
+
    Boolean retVal (False);
-   
+
    Ogre::Root &root = Ogre::Root::getSingleton ();
-      
+
    Ogre::NameValuePairList params;
-   
+
    if (_fsaa) {
-      
+
       params["FSAA"] = Ogre::StringConverter::toString (_fsaa);
    }
 
-#if defined(Q_WS_X11)        
+#if defined(Q_WS_X11)
 
    QWidget *widget = dynamic_cast<QWidget *> (parent());
    if (!widget) { widget = this; }
-          
+
    QX11Info xInfo = x11Info ();
-    
-   Ogre::String arg1 = Ogre::StringConverter::toString ((unsigned long) xInfo.display ());        
-   Ogre::String arg2 = Ogre::StringConverter::toString ((unsigned int) xInfo.screen ());        
-   Ogre::String arg3 = Ogre::StringConverter::toString ((unsigned long) (widget->winId ()));      
-    
+
+   Ogre::String arg1 = Ogre::StringConverter::toString ((unsigned long) xInfo.display ());
+   Ogre::String arg2 = Ogre::StringConverter::toString ((unsigned int) xInfo.screen ());
+   Ogre::String arg3 =
+      Ogre::StringConverter::toString ((unsigned long) (widget->winId ()));
+
    params["parentWindowHandle"] = arg1 + ":" + arg2 + ":" + arg3;
-#else   
+#else
    params["externalWindowHandle"] =
       Ogre::StringConverter::toString ((size_t)winId ());
 #endif
@@ -188,7 +189,7 @@ dmz::RenderExtWindowOgreQt::init_render_window () {
          &params);
 
    if (_window) {
-      
+
       _window->windowMovedOrResized ();
       retVal = True;
    }
@@ -203,7 +204,7 @@ dmz::RenderExtWindowOgreQt::get_render_window_name () const { return _portalName
 
 void
 dmz::RenderExtWindowOgreQt::closeEvent (QCloseEvent *event) {
-   
+
    _exit.request_exit (dmz::ExitStatusNormal, "RenderExtWindowOgreQt Closed");
 }
 
@@ -229,18 +230,18 @@ dmz::RenderExtWindowOgreQt::focusOutEvent (QFocusEvent *event) {
 
 void
 dmz::RenderExtWindowOgreQt::resizeEvent (QResizeEvent *event) {
-   
+
    if (event) {
 
       if (_window) { _window->windowMovedOrResized (); }
-      
+
       if (_camera && _viewport) {
-         
+
          _camera->setAspectRatio (
             Ogre::Real (_viewport->getActualWidth ()) /
             Ogre::Real (_viewport->getActualHeight ()));
       }
-      
+
       _handle_mouse_event (0, 0);
    }
 }
@@ -301,7 +302,9 @@ dmz::RenderExtWindowOgreQt::_save_session () {
 void
 dmz::RenderExtWindowOgreQt::_load_session () {
 
-   Config session (get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
+   Config session (
+      get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
+
    QByteArray geometry (config_to_qbytearray ("geometry", session, saveGeometry ()));
    restoreGeometry (geometry);
 }
@@ -332,13 +335,15 @@ dmz::RenderExtWindowOgreQt::_init (const Config &Local) {
          UInt32 width = config_to_uint32 ("width", cd, 800);
          UInt32 height = config_to_uint32 ("height", cd, 600);
          resize (width, height);
-         
+
       }
-      
+
       _fsaa = config_to_uint32 ("window.fsaa", Local, _fsaa);
+
       if (_fsaa % 2) {
-         
-         _log.warn << "fsaa not even: " << _fsaa <<  " using " << (_fsaa-1) << " instead"<< endl;
+
+         _log.warn << "fsaa not even: " << _fsaa <<  " using " << (_fsaa-1) << " instead"
+            << endl;
          _fsaa--;
       }
    }
@@ -346,7 +351,8 @@ dmz::RenderExtWindowOgreQt::_init (const Config &Local) {
 
 
 void
-dmz::RenderExtWindowOgreQt::_handle_key_event (const QKeyEvent &Event, const Boolean KeyState) {
+dmz::RenderExtWindowOgreQt::_handle_key_event (
+      const QKeyEvent &Event, const Boolean KeyState) {
 
    if (!Event.isAutoRepeat ()) {
 
@@ -397,12 +403,12 @@ dmz::RenderExtWindowOgreQt::_handle_key_event (const QKeyEvent &Event, const Boo
 
       _keyEvent.set_key (theKey);
       _keyEvent.set_key_state (KeyState);
-      
+
       if (_channels) { _channels->send_key_event (_keyEvent); }
 
       // keep track of all keys that are pressed when widget gets a focusOut event
       // all pressed keys need to be sent out as released
-      
+
       if (KeyState) {
 
          InputEventKey *downKeyEvent (_keyDownTable.lookup (theKey));
@@ -428,18 +434,18 @@ dmz::RenderExtWindowOgreQt::_handle_key_event (const QKeyEvent &Event, const Boo
 
 void
 dmz::RenderExtWindowOgreQt::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we) {
-   
+
    if (_channels) {
-      
+
       InputEventMouse event (_mouseEvent);
-      
+
       QPoint pointOnWindow (event.get_mouse_x (), event.get_mouse_y ());
       QPoint pointOnScreen (event.get_mouse_screen_x (), event.get_mouse_screen_y ());
-      
+
       Qt::MouseButtons buttons;
-      
+
       if (me) {
-         
+
          pointOnWindow = me->pos ();
          pointOnScreen = me->globalPos ();
 
@@ -449,7 +455,7 @@ dmz::RenderExtWindowOgreQt::_handle_mouse_event (QMouseEvent *me, QWheelEvent *w
 
          pointOnWindow = we->pos ();
          pointOnScreen = we->globalPos ();
-         
+
          buttons = we->buttons ();
       }
 
@@ -474,9 +480,9 @@ dmz::RenderExtWindowOgreQt::_handle_mouse_event (QMouseEvent *me, QWheelEvent *w
       event.set_scroll_delta (deltaX, deltaY);
 
       event.set_window_size (width (), height ());
-      
+
       if (_mouseEvent.update (event)) {
-         
+
          _channels->send_mouse_event (_mouseEvent);
       }
    }

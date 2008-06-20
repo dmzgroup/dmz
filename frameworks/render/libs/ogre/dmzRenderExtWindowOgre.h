@@ -25,7 +25,7 @@ namespace dmz {
          ~RenderExtWindowOgre ();
 
          const PluginInfo &_Info;
-         
+
       private:
          RenderExtWindowOgre ();
          RenderExtWindowOgre (const RenderExtWindowOgre &);

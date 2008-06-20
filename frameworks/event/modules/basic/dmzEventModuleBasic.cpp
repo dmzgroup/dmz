@@ -33,7 +33,7 @@ namespace {
 
 dmz::EventModuleBasic::EventModuleBasic (const PluginInfo &Info, Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       EventModule (Info),
       _log (Info),
       _time (Info.get_context ()),
@@ -88,9 +88,9 @@ dmz::EventModuleBasic::~EventModuleBasic () {
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::EventModuleBasic::update_sync (const Float64 TimeDelta) {
+dmz::EventModuleBasic::update_time_slice (const Float64 TimeDelta) {
 
    if (_maxEvents > 0) {
 
@@ -155,42 +155,42 @@ dmz::EventModuleBasic::register_event_observer (
       const Mask &AttributeMask,
       EventObserver &Observer) {
 
-   Boolean result (False); 
- 
-   const Handle ObsHandle (Observer.get_event_observer_handle ()); 
-   SubscriptionStruct *sub (_subscriptionTable.lookup (ObsHandle)); 
- 
-   if (!sub) { 
- 
-      sub = new SubscriptionStruct (Observer); 
- 
-      if (!_subscriptionTable.store (ObsHandle, sub)) { delete sub; sub = 0; } 
-   } 
- 
-   if (sub) { 
- 
-      Mask *attrMaskPtr (sub->table.lookup (AttributeHandle)); 
- 
-      if (!attrMaskPtr) { 
- 
-         attrMaskPtr = new Mask (AttributeMask);  
- 
-         if (attrMaskPtr) { 
- 
-            if (!sub->table.store (AttributeHandle, attrMaskPtr)) { 
- 
-               delete attrMaskPtr; attrMaskPtr = 0; 
-            } 
-         } 
-      } 
-      else { *attrMaskPtr |= AttributeMask; } 
- 
-      if (attrMaskPtr) { 
- 
-         result = True; 
- 
-         _update_subscription (AttributeHandle, AttributeMask, True, Observer); 
-      } 
+   Boolean result (False);
+
+   const Handle ObsHandle (Observer.get_event_observer_handle ());
+   SubscriptionStruct *sub (_subscriptionTable.lookup (ObsHandle));
+
+   if (!sub) {
+
+      sub = new SubscriptionStruct (Observer);
+
+      if (!_subscriptionTable.store (ObsHandle, sub)) { delete sub; sub = 0; }
+   }
+
+   if (sub) {
+
+      Mask *attrMaskPtr (sub->table.lookup (AttributeHandle));
+
+      if (!attrMaskPtr) {
+
+         attrMaskPtr = new Mask (AttributeMask);
+
+         if (attrMaskPtr) {
+
+            if (!sub->table.store (AttributeHandle, attrMaskPtr)) {
+
+               delete attrMaskPtr; attrMaskPtr = 0;
+            }
+         }
+      }
+      else { *attrMaskPtr |= AttributeMask; }
+
+      if (attrMaskPtr) {
+
+         result = True;
+
+         _update_subscription (AttributeHandle, AttributeMask, True, Observer);
+      }
    }
 
    return result;

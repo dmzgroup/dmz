@@ -107,7 +107,7 @@ message_send (lua_State *L) {
    if (type) {
 
       lua_pushnumber (
-         L, 
+         L,
          (lua_Number)type->send (toPtr ? *toPtr : 0, inData, outData));
 
       result = 1;

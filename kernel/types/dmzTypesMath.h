@@ -11,11 +11,11 @@ namespace dmz {
 
    DMZ_KERNEL_LINK_SYMBOL void get_ortho (
       const Vector &Normal,
-      const Vector &Value, 
+      const Vector &Value,
       Vector &ortho,
       Vector *remainder = 0);
-      
+
    DMZ_KERNEL_LINK_SYMBOL Float64 get_heading (const Matrix &Ori);
 };
- 
+
 #endif // DMZ_TYPES_MATH_DOT_H

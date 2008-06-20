@@ -10,7 +10,7 @@ struct dmz::SpinLock::State {
 };
 
 
-dmz::SpinLock::SpinLock () : _state (*(new State)) {;} 
+dmz::SpinLock::SpinLock () : _state (*(new State)) {;}
 
 
 dmz::SpinLock::~SpinLock () { delete &_state; }

@@ -4,17 +4,17 @@
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 
 
 namespace dmz {
 
    class QtModuleCanvas;
-   
 
-   class QtPluginCanvasAutoTrack : 
+
+   class QtPluginCanvasAutoTrack :
       public Plugin,
-      public Sync,
+      public TimeSlice,
       public ObjectObserverUtil {
 
       public:
@@ -29,9 +29,9 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-         
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
          // Object Observer Interface
          virtual void update_object_position (
@@ -65,7 +65,7 @@ namespace dmz {
          Handle _hilAttributeHandle;
          Handle _hilHandle;
          Boolean _updateView;
-         
+
       private:
          QtPluginCanvasAutoTrack ();
          QtPluginCanvasAutoTrack (const QtPluginCanvasAutoTrack &);

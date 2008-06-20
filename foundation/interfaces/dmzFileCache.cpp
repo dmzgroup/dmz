@@ -13,7 +13,7 @@ This file is NOT compiled and is strictly for documentation purposes.
 \class dmz::FileCacheAction
 \ingroup Foundation
 \brief Provides interface for processing file cache requests.
-\details The results from a dmz::FileCach::add_file_request are returned to 
+\details The results from a dmz::FileCach::add_file_request are returned to
 the requester via the dmz::FileCacheAction::process_file pure virtual function.
 
 \fn void dmz::FileCacheAction::process_file (

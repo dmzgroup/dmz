@@ -14,7 +14,7 @@ The object module supports both a push and pull model for attribute updates. The
 lookup_* functions may be used to pull object attributes from the object module.
 An object observer is used to push attribute updates.
 An object observer is registered with the object module and
-may subscribe to specific attributes. After registration, the object observer 
+may subscribe to specific attributes. After registration, the object observer
 will be notified whenever an object's attributes are updated.
 Attribute handles are what allow multiple values to be stored in one
 attribute. Most attributes relating to the current object state are stored with the
@@ -37,7 +37,7 @@ const dmz::String &PluginName);
 the ObjectModule interface of the Plugin is returned.
 \param[in] PluginPtr Pointer to the Plugin to cast.
 \param[in] PluginName String containing the name of the desired ObjectModule.
-\return Returns pointer to the ObjectModule. Return NULL if the PluginPtr does not
+\return Returns pointer to the ObjectModule. Returns NULL if the PluginPtr does not
 implement the ObjectModule interface or the \a PluginName is not empty
 and not equal to the Plugin's name.
 
@@ -84,7 +84,8 @@ continue to receive position updates.
 \param[in] observer ObjectObserver to release.
 \return Returns dmz::True if the object observer was successfully released.
 
-\fn dmz::Boolean dmz::ObjectModule::release_object_observer_all (dmz::ObjectObserver &observer)
+\fn dmz::Boolean dmz::ObjectModule::release_object_observer_all (
+dmz::ObjectObserver &observer)
 \brief Releases object observer from all attribute subscriptions.
 \param[in] observer ObjectObserver to be released.
 \return Returns dmz::True if the observer is released from all attribute subscriptions.
@@ -189,7 +190,9 @@ const dmz::UUID &Value)
 \param[in] Value UUID object to store in object.
 \return Returns dmz::True if the UUID was successfully stored.
 
-\fn dmz::Boolean dmz::ObjectModule::lookup_uuid (const dmz::Handle ObjectHandle, UUID &value)
+\fn dmz::Boolean dmz::ObjectModule::lookup_uuid (
+const dmz::Handle ObjectHandle,
+UUID &value)
 \brief Looks up object's UUID.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[out] value UUID object to store object's uuid.
@@ -258,7 +261,7 @@ const dmz::Handle LinkHandle,
 const dmz::Handle AttributeObjectHandle)
 \brief Stores link attribute object.
 \details Links may be associated with an object in the object module. This object
-contains the links attributes. This object may define the lines color, thickness, 
+contains the links attributes. This object may define the lines color, thickness,
 direction, etc. The same attribute object may be associated with multiple links.
 There is nothing special about a links attribute object. It is an object like any
 other object in the module. Set \a AttributeObjectHandle to zero to remove the
@@ -380,7 +383,7 @@ const dmz::Handle AttributeHandle)
 \brief Looks up flag stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
-\return Returns dmz::True if the flag was set. Return dmz::False if the flag is not set
+\return Returns dmz::True if the flag was set. Returns dmz::False if the flag is not set
 or the object does not exist.
 
 \fn dmz::Boolean dmz::ObjectModule::store_time_stamp (

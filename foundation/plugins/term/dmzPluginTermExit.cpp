@@ -69,7 +69,7 @@ serves no purpose. The default key to request an exit is the "esc" key.
 //! \cond
 dmz::PluginTermExit::PluginTermExit (const PluginInfo &Info, Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       _log (Info) {
 
    _init (local);
@@ -95,9 +95,9 @@ dmz::PluginTermExit::~PluginTermExit () {
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::PluginTermExit::update_sync (const Float64 TimeDelta) {
+dmz::PluginTermExit::update_time_slice (const Float64 TimeDelta) {
 
 #ifdef _WIN32
    DWORD eventCount (0);

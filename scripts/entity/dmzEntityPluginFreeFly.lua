@@ -2,7 +2,7 @@ local Right = dmz.math.right ()
 local Up = dmz.math.up ()
 local Forward = dmz.math.forward ()
 
-function update_sync (self, time)
+function update_time_slice (self, time)
 
    local hil = dmz.object.get_human_in_the_loop ()
 
@@ -81,8 +81,8 @@ function receive_input_event (self, event)
       if event.state.active then  self.active = self.active + 1
       else self.active = self.active - 1 end
 
-      if self.active == 1 then self.sync:start (self.handle)
-      elseif self.active == 0 then self.sync:stop (self.handle)
+      if self.active == 1 then self.timeSlice:start (self.handle)
+      elseif self.active == 0 then self.timeSlice:stop (self.handle)
       end
    end
 
@@ -102,7 +102,7 @@ end
 
 
 function start (self)
-   self.handle = self.sync:create (update_sync, self, self.name)
+   self.handle = self.timeSlice:create (update_time_slice, self, self.name)
 
    self.obs:init_channels (
       self.config,
@@ -110,12 +110,12 @@ function start (self)
       receive_input_event,
       self);
 
-   if self.handle and self.active == 0 then self.sync:stop (self.handle) end
+   if self.handle and self.active == 0 then self.timeSlice:stop (self.handle) end
 end
 
 
 function stop (self)
-   if self.handle and self.sync then self.sync:destroy (self.handle) end
+   if self.handle and self.timeSlice then self.timeSlice:destroy (self.handle) end
    self.obs:release_all ()
 end
 
@@ -126,7 +126,7 @@ function new (config, name)
       stop_plugin = stop,
       name = name,
       log = dmz.log.new ("lua." .. name),
-      sync = dmz.sync.new (),
+      timeSlice = dmz.time_slice.new (),
       obs = dmz.input_observer.new (),
       active = 0,
       moveSpeed = config:lookup_number ("movement.speed", 1.0),

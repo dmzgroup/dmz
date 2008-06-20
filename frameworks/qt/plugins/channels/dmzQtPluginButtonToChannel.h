@@ -20,7 +20,7 @@ namespace dmz {
    class QtPluginButtonToChannel : public QWidget, public Plugin {
 
       Q_OBJECT
-      
+
       public:
          QtPluginButtonToChannel (const PluginInfo &Info, Config &local);
          ~QtPluginButtonToChannel ();
@@ -53,7 +53,7 @@ namespace dmz {
          };
 
          void _init (Config &local);
-         
+
          Log _log;
          Definitions _defs;
          InputModule *_inputModule;
@@ -66,7 +66,7 @@ namespace dmz {
          QActionGroup *_actionGroup;
          ChannelStruct *_channelList;
          Handle _defaultChannel;
-         
+
       private:
          QtPluginButtonToChannel ();
          QtPluginButtonToChannel (const QtPluginButtonToChannel &);

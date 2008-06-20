@@ -7,7 +7,7 @@
 
 dmz::ExPluginMessageSend::ExPluginMessageSend (const PluginInfo &Info, Config &local) :
       Plugin (Info),
-      Sync (Info, SyncTypeRuntime, SyncModeRepeating, 1.0),
+      TimeSlice (Info, TimeSliceTypeRuntime, TimeSliceModeRepeating, 1.0),
       _log (Info),
       _type (),
       _binder (Info.get_context (), &_log),
@@ -16,7 +16,7 @@ dmz::ExPluginMessageSend::ExPluginMessageSend (const PluginInfo &Info, Config &l
 
    _binder.bind ("value", 0, _value);
    _binder.bind ("time", 0, _time);
-   
+
    _init (local);
 }
 
@@ -26,14 +26,14 @@ dmz::ExPluginMessageSend::~ExPluginMessageSend () {
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::ExPluginMessageSend::update_sync (const Float64 TimeDelta) {
+dmz::ExPluginMessageSend::update_time_slice (const Float64 TimeDelta) {
 
    Data data;
    _value << ".";
    _time = get_time ();
-   
+
    if (_binder.write_data (data)) {
 
       _log.out << "[sync_plugin] _type.send (&data)" << endl;
@@ -51,7 +51,7 @@ dmz::ExPluginMessageSend::_init (Config &local) {
          local,
          get_plugin_runtime_context (),
          &_log);
-   
+
    _value = config_to_string ("message.value", local, _value);
 }
 

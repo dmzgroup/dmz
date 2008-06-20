@@ -4,7 +4,7 @@
 #include <dmzInputEventController.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableUInt32Template.h>
 
@@ -16,7 +16,7 @@ namespace dmz {
 
    class InputModule;
 
-   class InputPluginControllerWin32 : public Plugin, public Sync {
+   class InputPluginControllerWin32 : public Plugin, public TimeSlice {
 
       public:
          //! \cond
@@ -35,22 +35,22 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
-         // Sync Interface
-         virtual void update_sync (const Float64 DeltaTime);
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 DeltaTime);
 
       protected:
          struct DeviceStruct {
-            
+
             const UInt32 Handle;
             const String Name;
-            
+
             JOYCAPS joyCaps;
             JOYINFOEX joyInfo;
-            
+
             DeviceStruct (const UInt32 TheHandle, const String &TheName);
             ~DeviceStruct ();
          };
-         
+
          struct AxisStruct;
          struct ButtonStruct;
 
@@ -61,10 +61,10 @@ namespace dmz {
 
             HashTableUInt32Template<AxisStruct> axisTable;
             HashTableUInt32Template<ButtonStruct> buttonTable;
-            
+
             ControllerStruct (const Handle &TheSource, DeviceStruct &theDevice);
             ~ControllerStruct ();
-            
+
             Boolean poll ();
          };
 
@@ -79,7 +79,7 @@ namespace dmz {
 
             Boolean hatswitchAsX;
             Boolean hatswitchAsY;
-            
+
             Boolean flip;
             Float32 minValue;
             Float32 maxValue;
@@ -90,7 +90,7 @@ namespace dmz {
                ControllerStruct &theController);
 
             ~AxisStruct ();
-            
+
             Float32 get_value () const;
          };
 
@@ -102,14 +102,14 @@ namespace dmz {
             ControllerStruct &cs;
 
             InputEventButton event;
-            
+
             ButtonStruct (
                const UInt32 TheHandle,
                const UInt32 TheElementHandle,
                ControllerStruct &theController);
 
             ~ButtonStruct ();
-            
+
             Boolean get_value () const;
          };
 
@@ -119,7 +119,7 @@ namespace dmz {
          void _init_axis (ControllerStruct &cs, Config &cd);
          void _init_hatswitch (ControllerStruct &cs, Config &cd);
          void _init_button (ControllerStruct &cs, Config &cd);
-         void _sync_controller (ControllerStruct &cs);
+         void _time_slice_controller (ControllerStruct &cs);
 
          Log _log;
          InputModule *_channels;
@@ -146,11 +146,11 @@ dmz::InputPluginControllerWin32::DeviceStruct::DeviceStruct (
          Name (TheName),
          joyCaps (),
          joyInfo () {
-            
+
    memset (&joyInfo, 0x00, sizeof (JOYINFOEX));
    joyInfo.dwSize = sizeof (JOYINFOEX);
    joyInfo.dwFlags = JOY_RETURNALL;
-   
+
    if (joyGetPosEx (Handle, &joyInfo) == JOYERR_NOERROR) {
 
       joyGetDevCaps (Handle, &joyCaps, sizeof (joyCaps));

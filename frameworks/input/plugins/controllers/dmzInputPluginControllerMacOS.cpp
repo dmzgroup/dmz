@@ -41,26 +41,26 @@ dmz::InputPluginControllerMacOS::AxisStruct::get_value () const {
    pRecElement element = cs.device.axisTable.lookup (ElementHandle);
 
    if (HIDIsValidElement (device, element)) {
-      
+
       UInt32 value = HIDGetElementValue (device, element);
-      
+
       Float32 scaledValue (0.0f);
 
       if (element->usage == kHIDUsage_GD_Hatswitch) {
 
          if (hatswitchAsX) {
-            
+
             if ((value == cs.hatswitch.west) ||
                 (value == cs.hatswitch.northwest) ||
                 (value == cs.hatswitch.southwest)) {
-            
+
                scaledValue = -1.0f;
             }
 
             if ((value == cs.hatswitch.east) ||
                 (value == cs.hatswitch.northeast) ||
                 (value == cs.hatswitch.southeast)) {
-            
+
                scaledValue = 1.0f;
             }
          }
@@ -69,32 +69,32 @@ dmz::InputPluginControllerMacOS::AxisStruct::get_value () const {
             if ((value == cs.hatswitch.south) ||
                 (value == cs.hatswitch.southwest) ||
                 (value == cs.hatswitch.southeast)) {
-            
+
                scaledValue = -1.0f;
             }
 
             if ((value == cs.hatswitch.north) ||
                 (value == cs.hatswitch.northwest) ||
                 (value == cs.hatswitch.northeast)) {
-            
+
                scaledValue = 1.0f;
             }
          }
       }
       else {
-         
+
          // Convert the raw value (0-255) to a value between -1 and 1
-         scaledValue = 
+         scaledValue =
             ((Float32 (value - element->min) /
               Float32 (element->max - element->min) * 2) - 1);
       }
-      
+
       // Convert scaled value to a value between min and max
-      retVal = (scaledValue * (max - min) + (max + min)) * 0.5f; 
-   
+      retVal = (scaledValue * (max - min) + (max + min)) * 0.5f;
+
       if (flip) { retVal *= -1; }
    }
-   
+
    return retVal;
 }
 
@@ -107,14 +107,14 @@ dmz::InputPluginControllerMacOS::AxisStruct::get_name () const {
 
    pRecDevice device = cs.device.device;
    pRecElement element = cs.device.axisTable.lookup (ElementHandle);
-   
+
    if (HIDIsValidElement (device, element)) {
-      
+
       char name[256];
       HIDGetUsageName (element->usagePage, element->usage, name);
       retVal = name;
    }
-   
+
    return retVal;
 }
 #endif
@@ -131,10 +131,10 @@ dmz::InputPluginControllerMacOS::ButtonStruct::get_value () const {
    if (HIDIsValidElement (device, element)) {
 
       UInt32 value = HIDGetElementValue (device, element);
-       
+
       retVal = value ? True : False;
    }
-   
+
    return retVal;
 }
 
@@ -143,7 +143,7 @@ dmz::InputPluginControllerMacOS::InputPluginControllerMacOS (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       _log (Info),
       _channels (0) {
 
@@ -154,7 +154,7 @@ dmz::InputPluginControllerMacOS::InputPluginControllerMacOS (
 dmz::InputPluginControllerMacOS::~InputPluginControllerMacOS () {
 
    _controllerTable.clear ();
-   
+
    _deviceHandleTable.empty ();
    _deviceNameTable.clear ();
 
@@ -175,16 +175,16 @@ dmz::InputPluginControllerMacOS::discover_plugin (
    else if (Mode == PluginDiscoverRemove) {
 
       if (_channels && (_channels == InputModule::cast (PluginPtr))) {
-   
+
          _channels = 0;
       }
    }
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::InputPluginControllerMacOS::update_sync (const Float64 DeltaTime) {
+dmz::InputPluginControllerMacOS::update_time_slice (const Float64 DeltaTime) {
 
    if (_channels) {
 
@@ -194,7 +194,7 @@ dmz::InputPluginControllerMacOS::update_sync (const Float64 DeltaTime) {
 
       while (controller) {
 
-         _sync_controller (*controller);
+         _time_slice_controller (*controller);
 
          controller = _controllerTable.get_next (it);
       }
@@ -206,7 +206,7 @@ void
 dmz::InputPluginControllerMacOS::_init (Config &local) {
 
    _init_devices ();
-   
+
    Config controllerList;
 
    if (local.lookup_all_config ("controller", controllerList)) {
@@ -233,7 +233,7 @@ dmz::InputPluginControllerMacOS::_init_devices () {
    _log.info << "Discovering devices..." << endl;
 
    HIDBuildDeviceList (NULL, NULL);
-   
+
    if (HIDHaveDeviceList ()) {
 
       pRecDevice deviceCandidate = HIDGetFirstDevice ();
@@ -241,39 +241,39 @@ dmz::InputPluginControllerMacOS::_init_devices () {
       Int32 num_devices = HIDCountDevices ();
 
       Int32 ix (0);
-      
+
       while (ix < num_devices) {
-         
+
          if (deviceCandidate) {
-            
+
             // filter out keyboards, mice and totally unrelated devices
             if ((deviceCandidate->usage == kHIDUsage_GD_Keyboard) ||
                 (deviceCandidate->usagePage != kHIDPage_GenericDesktop) ||
                 (deviceCandidate->usage == kHIDUsage_GD_Mouse)) {
-                    
+
                if (HIDIsValidDevice (deviceCandidate)) {
                   //skip this one and just go on to the next one
                   deviceCandidate = HIDGetNextDevice (deviceCandidate);
                }
                else  {
-                  
+
                   //handle error
                }
             }
             else {
 
                if (HIDIsValidDevice (deviceCandidate)) {
-                  
+
                   _add_device (ix, deviceCandidate);
                   deviceCandidate = HIDGetNextDevice (deviceCandidate);
                }
                else {
-                  
+
                   //handle error
                }
             }
          }
-         
+
          ix++;
       }
    }
@@ -284,23 +284,23 @@ void
 dmz::InputPluginControllerMacOS::_add_device (const UInt32 DeviceId, pRecDevice device) {
 
    if (HIDIsValidDevice (device)) {
-      
+
       const String DeviceName (device->product);
 
       DeviceStruct *ds = new DeviceStruct (DeviceId, DeviceName);
 
       ds->device = device;
-      
+
       if (!_deviceHandleTable.store (ds->Handle, ds) ||
           !_deviceNameTable.store (ds->Name, ds)) {
-             
+
          _deviceHandleTable.remove (ds->Handle);
          _deviceNameTable.remove (ds->Name);
- 
+
          delete ds; ds = 0;
       }
       else {
-         
+
          _log.info <<  "Added device[" << DeviceId << "]: " << DeviceName << endl;
 
          UInt32 axisId = AXIS_UNSUPPORTED;
@@ -349,13 +349,13 @@ void
 dmz::InputPluginControllerMacOS::_init_controller (Config &controller) {
 
    Definitions defs (get_plugin_runtime_context (), &_log);
-   
+
    const String ControllerName (
       config_to_string ("name", controller, "controller_default"));
 
    const String DeviceName (config_to_string ("device", controller));
    const UInt32 DeviceHandle (config_to_uint32 ("deviceId", controller, 0));
-   
+
    DeviceStruct *ds = _deviceNameTable.lookup (DeviceName);
 
    if (!ds) { ds = _deviceHandleTable.lookup (DeviceHandle); }
@@ -366,47 +366,47 @@ dmz::InputPluginControllerMacOS::_init_controller (Config &controller) {
                  << "] to device[" << ds->Handle << "] " << ds->Name << endl;
 
       const Handle ControllerHandle (defs.create_named_handle (ControllerName));
-   
+
       ControllerStruct *cs (_controllerTable.lookup (ControllerHandle));
-   
+
       if (!cs) {
-   
+
          cs = new ControllerStruct (ControllerHandle, *ds);
-   
+
          if (!_controllerTable.store (ControllerHandle, cs)) {
-   
+
             delete cs; cs = 0;
          }
       }
-   
+
       if (cs) {
-         
+
          ConfigIterator elementIt;
-   
+
          Config cd;
-   
+
          Boolean elementFound (controller.get_first_config (elementIt, cd));
-   
+
          while (elementFound) {
-   
+
             const String Type (cd.get_name ().get_lower ());
-   
+
             if (Type == "axis") {
-   
+
                _init_axis (*cs, cd);
             }
             else if (Type == "hatswitch") {
-   
+
                _init_hatswitch (*cs, cd);
             }
             else if (Type == "button") {
-   
+
                _init_button (*cs, cd);
             }
             else {
-   
+
             }
-   
+
             elementFound = controller.get_next_config (elementIt, cd);
          }
       }
@@ -446,7 +446,7 @@ dmz::InputPluginControllerMacOS::_init_axis (ControllerStruct &cs, Config &cd) {
 
             if (axis->min < -1.0f) { axis->min = -1.0f; }
             else if (axis->min > 1.0f) { axis->min = 1.0f; }
-            
+
             if (axis->max > 1.0f) { axis->max = 1.0f; }
             else if (axis->max < -1.0f) { axis->max = -1.0f; }
          }
@@ -503,10 +503,10 @@ dmz::InputPluginControllerMacOS::_init_hatswitch (ControllerStruct &cs, Config &
 
             if (xAxis->min < -1.0f) { xAxis->min = -1.0f; }
             else if (xAxis->min > 1.0f) { xAxis->min = 1.0f; }
-            
+
             if (xAxis->max > 1.0f) { xAxis->max = 1.0f; }
             else if (xAxis->max < -1.0f) { xAxis->max = -1.0f; }
-            
+
             yAxis->flip = xAxis->flip;
             yAxis->min = xAxis->min;
             yAxis->max = xAxis->max;
@@ -514,7 +514,8 @@ dmz::InputPluginControllerMacOS::_init_hatswitch (ControllerStruct &cs, Config &
       }
       else {
 
-       _log.warn << "Failed to map hatswitch " << AxisXHandle << " " << AxisYHandle<< endl;
+       _log.warn << "Failed to map hatswitch " << AxisXHandle << " " << AxisYHandle
+          << endl;
 
        _log.error
           << "element: " << ElementHandle
@@ -572,7 +573,7 @@ dmz::InputPluginControllerMacOS::_init_button (ControllerStruct &cs, Config &cd)
 
 
 void
-dmz::InputPluginControllerMacOS::_sync_controller (ControllerStruct &cs) {
+dmz::InputPluginControllerMacOS::_time_slice_controller (ControllerStruct &cs) {
 
    if (_channels) {
 
@@ -595,7 +596,7 @@ dmz::InputPluginControllerMacOS::_sync_controller (ControllerStruct &cs) {
       while (button) {
 
          if (button->event.update_button_value (button->get_value ())) {
-               
+
             _channels->send_button_event (button->event);
          }
 

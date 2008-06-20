@@ -10,7 +10,7 @@
 #include <osgUtil/Optimizer>
 
 dmz::RenderPluginLoadModelOSG::RenderPluginLoadModelOSG (
-      const PluginInfo &Info, 
+      const PluginInfo &Info,
       const Config &Local) :
       Plugin (Info),
       _core (0),
@@ -46,7 +46,7 @@ dmz::RenderPluginLoadModelOSG::discover_plugin (
                   currentFileName;
                   currentFileName = _fileNameTable.get_next (it)) {
 
-               osg::ref_ptr<osg::Node> model = 
+               osg::ref_ptr<osg::Node> model =
                   osgDB::readNodeFile (currentFileName->get_buffer ());
 
                if (model.valid ()) {
@@ -55,8 +55,11 @@ dmz::RenderPluginLoadModelOSG::discover_plugin (
                   // Attach transform to static object tree
                   osg::Matrix mat = to_osg_matrix (
                      *_rotationTable.lookup (*currentFileName));
-                  mat.translate (to_osg_vector (*_positionTable.lookup (*currentFileName)));
-                  osg::ref_ptr<osg::MatrixTransform> matTransform = 
+
+                  mat.translate (
+                     to_osg_vector (*_positionTable.lookup (*currentFileName)));
+
+                  osg::ref_ptr<osg::MatrixTransform> matTransform =
                      new osg::MatrixTransform (mat);
                   matTransform->addChild (model.get ());
 
@@ -104,19 +107,19 @@ dmz::RenderPluginLoadModelOSG::_init (const Config &Local) {
 
          if (namePtr) {
 
-            if (_fileNameTable.store (modelKeyName, namePtr)) { 
+            if (_fileNameTable.store (modelKeyName, namePtr)) {
 
                _log.info << "Loading Model: "
                << config_to_string ("file", cd) << endl;
 
                Matrix *rotationMatrix = new Matrix (
-                     rotation->get_x (), 
-                     rotation->get_y (), 
+                     rotation->get_x (),
+                     rotation->get_y (),
                      rotation->get_z ());
                _positionTable.store (modelFileName, position);
                _rotationTable.store (modelFileName, rotationMatrix);
                _log.out << *rotationMatrix << endl;
-               
+
 //               delete rotationMatrix;
             }
             else { delete namePtr; namePtr = 0; }

@@ -14,7 +14,7 @@
 namespace dmz {
 
    class QtModuleCanvas;
-   
+
    class QtCanvasLink : public QGraphicsLineItem {
 
       public:
@@ -23,25 +23,25 @@ namespace dmz {
             const Handle SuberHandle,
             const Handle SubHandle,
             QGraphicsItem *parent = 0);
-            
+
          ~QtCanvasLink ();
 
          Handle get_link_handle () const;
-         
+
          void update (const Handle ObjHandle, const Vector &Value);
-         
+
          virtual void paint (
             QPainter *painter,
             const QStyleOptionGraphicsItem *option,
             QWidget *widget);
-            
+
       protected:
          Handle _LinkHandle;
          Handle _SuperHandle;
          Handle _SubHandle;
    };
 
-   class QtPluginCanvasLink : 
+   class QtPluginCanvasLink :
       public Plugin,
       public ObjectObserverUtil {
 
@@ -118,21 +118,21 @@ namespace dmz {
 
             ~ObjectStruct () { if (item) { delete item; item = 0; } }
          };
-         
+
          struct NodeStruct {
 
             HashTableHandleTemplate<QtCanvasLink> edgeTable;
             NodeStruct () : edgeTable () {;}
             ~NodeStruct () { edgeTable.clear (); }
          };
-         
+
          void _lookup_object_position (const Handle ObjectHandle, Vector &pos);
-         
+
          void _create_link_attribute_object (const Handle LinkHandle);
-         
+
          void _store_edge (const Handle ObjectHandle, QtCanvasLink *item);
          void _remove_edge (const Handle ObjectHandle, QtCanvasLink *item);
-         
+
          void _init (Config &local);
 
          Log _log;
@@ -145,7 +145,7 @@ namespace dmz {
          HashTableHandle _linkAttrTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
          HashTableHandleTemplate<NodeStruct> _nodeTable;
-         
+
       private:
          QtPluginCanvasLink ();
          QtPluginCanvasLink (const QtPluginCanvasLink &);

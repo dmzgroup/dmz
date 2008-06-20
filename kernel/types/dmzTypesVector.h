@@ -165,7 +165,7 @@ dmz::Vector::operator+ (const Float64 Value) const {
 \details Negates the Vector.
 
 */
-inline dmz::Vector 
+inline dmz::Vector
 dmz::Vector::operator- () const {
 
    Vector result (-_x, -_y, -_z);
@@ -476,7 +476,7 @@ enough to zero to be considered zero.
 
 */
 inline dmz::Boolean
-dmz::Vector::is_zero () const { 
+dmz::Vector::is_zero () const {
 
    return is_zero64 (_x) && is_zero64 (_y) && is_zero64 (_z);
 }
@@ -492,7 +492,7 @@ of the Vector is near enough to zero to be considered zero.
 
 */
 inline dmz::Boolean
-dmz::Vector::is_zero (const Float64 Epsilon) const { 
+dmz::Vector::is_zero (const Float64 Epsilon) const {
 
    return is_zero64 (magnitude (), fabs (Epsilon));
 }

@@ -40,7 +40,7 @@ namespace dmz {
 
           void save_session ();
           void load_session ();
-          
+
       public slots:
          void toggle_visibility ();
 

@@ -535,7 +535,7 @@ namespace dmz {
                   HashTableHandleIterator it;
                   void *ptr = attrTable.get_next (it);
 
-                  while (ptr) { 
+                  while (ptr) {
 
                      result->attrTable.store (it.get_hash_key (), ptr);
                      ptr = attrTable.get_next (it);
@@ -670,7 +670,7 @@ namespace dmz {
 inline dmz::ObjectModuleBasic::ObjectStruct *
 dmz::ObjectModuleBasic::_lookup_object (const Handle ObjectHandle) {
 
-   if (!_objectCache || (ObjectHandle != _objectCache->handle)) { 
+   if (!_objectCache || (ObjectHandle != _objectCache->handle)) {
 
       _objectCache = _objectTable.lookup (ObjectHandle);
    }

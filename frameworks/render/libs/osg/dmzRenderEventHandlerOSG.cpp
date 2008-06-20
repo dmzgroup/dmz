@@ -13,15 +13,15 @@ dmz::RenderEventHandlerOSG::~RenderEventHandlerOSG () {;}
 
 bool
 dmz::RenderEventHandlerOSG::handle (
-      const osgGA::GUIEventAdapter &Event, 
+      const osgGA::GUIEventAdapter &Event,
       osgGA::GUIActionAdapter &acion,
       osg::Object *object,
       osg::NodeVisitor *visitor) {
 
    Boolean result (false);
-   
+
    if (_channels) {
-      
+
       switch (Event.getEventType ()) {
 
          case (osgGA::GUIEventAdapter::KEYDOWN): {
@@ -55,7 +55,7 @@ dmz::RenderEventHandlerOSG::handle (
             _mouseEvent.set_window_size (
                Event.getWindowWidth (),
                Event.getWindowHeight ());
-               
+
             _channels->send_mouse_event (_mouseEvent);
             result = true;
             break;
@@ -97,7 +97,7 @@ dmz::RenderEventHandlerOSG::handle (
 
 void
 dmz::RenderEventHandlerOSG::__set_key_down (const osgGA::GUIEventAdapter &Event) {
-   
+
    _keyEvent.set_key_state (true);
    _keyEvent.set_key (__to_dmz_key (Event.getKey ()));
 }
@@ -105,7 +105,7 @@ dmz::RenderEventHandlerOSG::__set_key_down (const osgGA::GUIEventAdapter &Event)
 
 void
 dmz::RenderEventHandlerOSG::__set_key_up (const osgGA::GUIEventAdapter &Event) {
-   
+
    _keyEvent.set_key_state (false);
    _keyEvent.set_key (__to_dmz_key (Event.getKey ()));
 }
@@ -130,15 +130,15 @@ dmz::RenderEventHandlerOSG::__to_dmz_key (const dmz::UInt32 Key) {
       case osgGA::GUIEventAdapter::KEY_Insert: { result = KeyInsert; } break;
       case osgGA::GUIEventAdapter::KEY_Delete: { result = KeyDelete; } break;
       case osgGA::GUIEventAdapter::KEY_Space: { result = KeySpace; } break;
-      case osgGA::GUIEventAdapter::KEY_BackSpace: { 
+      case osgGA::GUIEventAdapter::KEY_BackSpace: {
          result = KeyBackspace; } break;
       case osgGA::GUIEventAdapter::KEY_Tab: { result = KeyTab; } break;
       case osgGA::GUIEventAdapter::KEY_Return: { result = KeyEnter; } break;
-      case osgGA::GUIEventAdapter::KEY_Shift_L: 
-      case osgGA::GUIEventAdapter::KEY_Shift_R: { 
+      case osgGA::GUIEventAdapter::KEY_Shift_L:
+      case osgGA::GUIEventAdapter::KEY_Shift_R: {
          result = KeyShift; } break;
-      case osgGA::GUIEventAdapter::KEY_Control_L: 
-      case osgGA::GUIEventAdapter::KEY_Control_R: { 
+      case osgGA::GUIEventAdapter::KEY_Control_L:
+      case osgGA::GUIEventAdapter::KEY_Control_R: {
          result = KeyControl; } break;
       case osgGA::GUIEventAdapter::KEY_Meta_L:
       case osgGA::GUIEventAdapter::KEY_Meta_R: { result = KeyMeta; } break;

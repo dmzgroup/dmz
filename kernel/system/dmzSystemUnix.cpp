@@ -77,7 +77,7 @@ dmz::get_time () {
 #elif defined (__linux)
    static Boolean firstCall (True);
    static Float64 firstTime (0.0);
- 
+
    struct timespec tv;
    clock_gettime (CLOCK_REALTIME, &tv);
 
@@ -111,7 +111,7 @@ dmz::get_time () {
 \details Defined in dmzSystem.h. This function typically supports a higher resolution
 of time than most system level Sleep function calls. It does this by calculating the
 granularity of the system's Sleep function and then only using the system call to
-sleep for an interval that will allow it to wake up before the requested time to 
+sleep for an interval that will allow it to wake up before the requested time to
 sleep has elapsed. The function then goes in to a busy wait loop until the remaining
 time has elapsed. While this may cause a slight CPU usage spike while in the busy wait,
 The function is continuously yielding control of the thread so that system responsiveness
@@ -160,7 +160,7 @@ dmz::sleep (const Float64 Time) {
          else { nanosleep (&ms, 0); }
 
          if (!done) { clock_gettime (CLOCK_REALTIME, &ctime); }
-      } 
+      }
    }
    else { ::sleep (0); }
 #else

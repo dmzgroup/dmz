@@ -33,7 +33,7 @@ dmz::isect_validate_point (
    const Vector Up (0.0, 1.0, 0.0);
 
    const Boolean TestingUp (Dir.get_angle (Up) < HalfPi64 ? True : False);
-  
+
    IsectResult isResult;
 
    Boolean found (IsectResults.get_first (isResult));

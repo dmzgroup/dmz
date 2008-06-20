@@ -17,7 +17,7 @@ namespace dmz {
 
       public:
          static NetModuleAttributeMap *cast (
-            const Plugin *PluginPtr, 
+            const Plugin *PluginPtr,
             const String &PluginName = "");
 
          virtual UInt32 lookup_which_handle (const String &Name) = 0;

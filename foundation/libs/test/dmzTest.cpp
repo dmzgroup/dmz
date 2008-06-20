@@ -21,7 +21,7 @@ libraries.
 \param[in] argv Array of char arrays containing the command line arguments.
 
 */
-dmz::Test::Test (const String &AppName, int argc, char *argv[]) : 
+dmz::Test::Test (const String &AppName, int argc, char *argv[]) :
       obs (rt.get_context ()),
       config ("global"),
       log ("", rt.get_context ()),

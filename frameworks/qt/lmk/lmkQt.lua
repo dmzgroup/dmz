@@ -36,7 +36,8 @@ function add_libs (list)
          if libs then libs = libs .. " "
          else libs = ""
          end
-         libs = libs .. "$(lmk.libPrefix)" .. element .. libDebug .. libNumber .. "$(lmk.libSuffix)"
+         libs = libs .. "$(lmk.libPrefix)" .. element .. libDebug .. libNumber ..
+            "$(lmk.libSuffix)"
       end
       lmk.add_vars {
          localIncludes = "$(lmk.includePathFlag)$(DMZ_QT_INCLUDE_PATH)",

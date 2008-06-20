@@ -67,7 +67,7 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr) {;}
-         
+
          // MessageObserver Interface
          virtual void receive_message (
             const Message &Type,

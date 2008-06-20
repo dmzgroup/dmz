@@ -316,7 +316,7 @@ dmz::InputEventMouse::get_previous_mouse_screen_position (
 //! Gets mouse's previous screen X position.
 dmz::Int32
 dmz::InputEventMouse::get_previous_mouse_screen_x () const {
-   
+
    return _state.screenXPrevious;
 }
 
@@ -324,7 +324,7 @@ dmz::InputEventMouse::get_previous_mouse_screen_x () const {
 //! Gets mouse's previous screen Y position.
 dmz::Int32
 dmz::InputEventMouse::get_previous_mouse_screen_y () const {
-   
+
    return _state.screenYPrevious;
 }
 
@@ -489,10 +489,14 @@ dmz::InputEventMouse::update (const InputEventMouse &Value) {
 
       set_window_size (Value.get_window_size_x (), Value.get_window_size_y ());
       set_mouse_position (Value.get_mouse_x (), Value.get_mouse_y ());
-      set_mouse_screen_position (Value.get_mouse_screen_x (), Value.get_mouse_screen_y ());
+
+      set_mouse_screen_position (
+         Value.get_mouse_screen_x (),
+         Value.get_mouse_screen_y ());
+
       set_button_mask (Value.get_button_mask ());
       set_scroll_delta (Value.get_scroll_delta_x (), Value.get_scroll_delta_y ());
-      
+
       result = True;
    }
 

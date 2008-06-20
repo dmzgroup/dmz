@@ -22,6 +22,7 @@ dmz::RuntimeContext::RuntimeContext () :
       _key (new RuntimeContextThreadKey ((void *)this)),
       _handleAllocator (0),
       _defContext (0),
+      _messageContainerContext (0),
       _messagingContext (0),
       _rttiContext (0),
       _timeContext (0),
@@ -43,6 +44,13 @@ dmz::RuntimeContext::~RuntimeContext () {
    _defLock.lock ();
    if (_defContext) { _defContext->unref (); _defContext = 0; }
    _defLock.unlock ();
+
+   _msgContainerLock.lock ();
+   if (_messageContainerContext) {
+
+      _messageContainerContext->unref (); _messageContainerContext = 0;
+   }
+   _msgContainerLock.unlock ();
 
    _msgLock.lock ();
    if (_messagingContext) { _messagingContext->unref (); _messagingContext = 0; }
@@ -67,14 +75,14 @@ dmz::RuntimeContext::~RuntimeContext () {
 }
 
 
-//! Syncs internal kernel objects.
+//! TimeSlices internal kernel objects.
 void
-dmz::RuntimeContext::sync () {
+dmz::RuntimeContext::update_time_slice () {
 
-   if (_messagingContext) { _messagingContext->sync (); }
-   if (_logContext) { _logContext->sync (); }
-   // time context should always sync last
-   if (_timeContext) { _timeContext->sync (); }
+   if (_messagingContext) { _messagingContext->update_time_slice (); }
+   if (_logContext) { _logContext->update_time_slice (); }
+   // time context should always update_time_slice last
+   if (_timeContext) { _timeContext->update_time_slice (); }
 }
 
 
@@ -127,16 +135,36 @@ dmz::RuntimeContext::get_definitions_context () {
 }
 
 
+//! Gets message container context.
+dmz::RuntimeContextMessageContainer *
+dmz::RuntimeContext::get_message_container_context () {
+
+   if (!_messageContainerContext && _key) {
+
+      _msgContainerLock.lock ();
+      if (!_messageContainerContext) {
+
+         _messageContainerContext = new RuntimeContextMessageContainer;
+      }
+      _msgContainerLock.unlock ();
+   }
+
+   return _messageContainerContext;
+}
+
+
 //! Gets messaging context.
 dmz::RuntimeContextMessaging *
 dmz::RuntimeContext::get_messaging_context () {
 
    if (!_messagingContext && _key) {
 
-      _msgLock.lock ();
-      if (!_messagingContext) {
+      RuntimeContextMessageContainer *container (get_message_container_context ());
 
-         _messagingContext = new RuntimeContextMessaging (*_key, this);
+      _msgLock.lock ();
+      if (!_messagingContext && container) {
+
+         _messagingContext = new RuntimeContextMessaging (*_key, *container, this);
       }
       _msgLock.unlock ();
    }

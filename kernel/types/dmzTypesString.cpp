@@ -16,7 +16,7 @@
 \brief dmz::String interface.
 \details File contains dmz::String class interface as well as basic dmz::String stream
 operator function prototypes.
-      
+
 */
 
 /*!
@@ -76,7 +76,7 @@ dmz::String::String (const char *Buffer, const Int32 Length, const Int32 Size) :
 /*!
 
 \brief Creates storage and copies buffer.
-\details Calls String::set_buffer (\a Buffer, \a Length, \a Length) 
+\details Calls String::set_buffer (\a Buffer, \a Length, \a Length)
 \param[in] Buffer character buffer to copy.
 \param[in] Length number of characters to copy from \a Buffer.
 
@@ -288,7 +288,7 @@ dmz::String::get_size () const { return _size; }
 \brief Creates buffer of \a Size and copies \a Length bytes from \a Buffer
 \details Function will only copy \a Buffer if \a Size \>= \a Length. If Size == Length
 then the internal size of the buffer will be Size + 1 so that a NULL byte may be set
-at the end. A NULL character is appended to the end of the buffer to facilitate 
+at the end. A NULL character is appended to the end of the buffer to facilitate
 the use of the buffer in Standard C string functions and to prevent buffer
 overruns. If the string already has a buffer allocated it will either delete
 the existing buffer and allocate a new one if the existing one is too small or
@@ -326,7 +326,7 @@ dmz::String::set_buffer (const char *Buffer, const Int32 Length, const Int32 Siz
 
       if (Size != _size) {
 
-         empty (); 
+         empty ();
          _buffer = new char[Size];
          _size = Size;
       }
@@ -520,7 +520,7 @@ dmz::String::append (const String &Value) {
 
 /*!
 
-\brief Makes multiple copies of \a Buffer 
+\brief Makes multiple copies of \a Buffer
 \details Copies \a Buffer the number of times specified by \a Count.
 If string has preexisting buffer, it is overwritten.
 Calling str.repeat (" ", 5) would create an internal buffer of five spaces.
@@ -1047,7 +1047,7 @@ operator<< (dmz::String &str, const dmz::Mask &Value) {
    const dmz::Int32 Size ((Value.get_size () * 32) - 1);
 
    str << "[";
- 
+
    for (dmz::Int32 place = Size; place >= 0; place--) {
 
       if (place && !((place + 1) % 32) && (str.get_length ()!= 1)) { str << " | "; }
@@ -1065,17 +1065,17 @@ operator<< (dmz::String &str, const dmz::Matrix &Value) {
    dmz::Float64 matrixData[9];
    Value.to_array (matrixData);
 
-   str << "("    
-      << 0 << "[" 
+   str << "("
+      << 0 << "["
       << matrixData[0] << ", " << matrixData[1] << ", " << matrixData[2]
       << "] "
-      << 1 << "[" 
+      << 1 << "["
       << matrixData[3] << ", " << matrixData[4] << ", " << matrixData[5]
       << "] "
-      << 2 << "[" 
+      << 2 << "["
       << matrixData[6] << ", " << matrixData[7] << ", " << matrixData[8]
       << "])";
-   
+
    return str;
 }
 

@@ -17,26 +17,30 @@ const String &PluginName)
 \return Returns pointer to the RenderModulePick. Returns NULL if the PluginPtr does not
 implement the RenderModulePick interface or the \a PluginName is not empty
 and not equal to the Plugin's name.
-        
+
 \fn dmz::RenderModulePick::RenderModulePick (const PluginInfo &Info);
 \brief Constructor.
 \param[in] Info Reference to the PluginInfo.
 
 \fn dmz::RenderModulePick::~RenderModulePick ();
 \brief Destructor
-         
-\fn dmz::Boolean dmz::RenderModulePick::register_pick_2d (const Handle Source, RenderPick2d &pick)
+
+\fn dmz::Boolean dmz::RenderModulePick::register_pick_2d (
+const Handle Source,
+RenderPick2d &pick)
 \brief Registers a 2D pick source with the module.
 \param[in] Source Unique runtime handle of the source.
 \param[in] pick Reference to the 2D pick interface.
 \return Returns dmz::True if the 2D pick interface was successfully registered.
 
-\fn dmz::Boolean dmz::RenderModulePick::release_pick_2d (const Handle Source, RenderPick2d &pick)
+\fn dmz::Boolean dmz::RenderModulePick::release_pick_2d (
+const Handle Source,
+RenderPick2d &pick)
 \brief Releases a 2D pick source from the module.
 \param[in] Source Unique runtime handle of the source.
 \param[in] pick Reference to the 2D pick interface to release.
 \return Returns dmz::True if the 2D pick interface was successfully released.
-         
+
 \fn dmz::Boolean dmz::RenderModulePick::screen_to_world (
 const Handle Source,
 const Int32 ScreenPosX,
@@ -53,7 +57,7 @@ Handle &objectHandle)
 been clicked on in the scene. It will be zero if an object was not clicked on.
 \return Returns dmz::True if the source is known and screen coordinates can be converted
 into world coordinates.
-         
+
 \fn dmz::Boolean dmz::RenderModulePick::world_to_screen (
 const Handle Source,
 const Vector &WorldPosition,

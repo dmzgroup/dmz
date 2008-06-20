@@ -20,7 +20,7 @@
 \brief Sets default directory used for file open and save.
 \param[in] DirName String containing the name of the default directory.
 
-\fn dmz::String dmz::ApplicationState::get_default_directory () const 
+\fn dmz::String dmz::ApplicationState::get_default_directory () const
 \brief Gets default directory used for file open and save.
 \return Returns a String containing the name of the default directory.
 

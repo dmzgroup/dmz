@@ -10,7 +10,7 @@
 namespace dmz {
 
 
-   class RenderModulePickBasic : 
+   class RenderModulePickBasic :
       public Plugin,
       private RenderModulePick {
 
@@ -27,7 +27,7 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-         
+
          // RenderModule2dPick Interface
          virtual Boolean register_pick_2d (const Handle Source, RenderPick2d &pick);
          virtual Boolean release_pick_2d (const Handle Source, RenderPick2d &pick);
@@ -44,20 +44,20 @@ namespace dmz {
             const Vector &WorldPosition,
             Int32 &screenPosX,
             Int32 &screenPosY);
-            
+
          virtual Boolean source_to_world (
             const Handle Source,
             const Int32 ScreenPosX,
             const Int32 ScreenPosY,
             Vector &worldPosition,
             Handle &objectHandle);
-         
+
          virtual Boolean world_to_source (
             const Handle Source,
             const Vector &WorldPosition,
             Int32 &screenPosX,
             Int32 &screenPosY);
-         
+
       protected:
          void _init (Config &local);
 

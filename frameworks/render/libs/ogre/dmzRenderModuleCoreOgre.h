@@ -9,7 +9,7 @@
 
 
 namespace Ogre {
-   
+
    class Root;
    class SceneManager;
    class SceneNode;
@@ -29,7 +29,7 @@ namespace dmz {
             const String &PluginName = "");
 
          virtual Ogre::SceneManager *get_scene_manager () = 0;
-         
+
          virtual Boolean add_camera (const String &PortalName, Ogre::Camera *camera) = 0;
          virtual Ogre::Camera *lookup_camera (const String &PortalName) = 0;
          virtual Ogre::Camera *remove_camera (const String &PortalName) = 0;
@@ -37,7 +37,7 @@ namespace dmz {
          virtual Boolean add_dynamic_object (
             const Handle ObjectHandle,
             Ogre::SceneNode *node) = 0;
-         
+
          virtual Ogre::SceneNode *lookup_dynamic_object (const Handle ObjectHandle) = 0;
          virtual Ogre::SceneNode *remove_dynamic_object (const Handle ObjectHandle) = 0;
 
@@ -49,7 +49,7 @@ namespace dmz {
          RenderModuleCoreOgre ();
          RenderModuleCoreOgre (const RenderModuleCoreOgre &);
          RenderModuleCoreOgre &operator= (const RenderModuleCoreOgre &);
-         
+
          const PluginInfo &__RenderModuleCoreOgrePluginInfo;
    };
 }

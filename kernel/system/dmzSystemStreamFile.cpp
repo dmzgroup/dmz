@@ -3,12 +3,15 @@
 /*!
 
 \class dmz::StreamFile
+\ingroup System
 \brief Writes to a Standard C FILE stream.
 
 \class dmz::StreamFileOut
+\ingroup System
 \brief Writes to stdout stream.
 
 \class dmz::StreamFileErr
+\ingroup System
 \brief Writes to stderr stream.
 
 */

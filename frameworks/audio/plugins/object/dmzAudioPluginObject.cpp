@@ -9,12 +9,62 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::AudioPluginObject
+\ingroup Audio
+\brief Maps object attributes to audio instances.
+\details The object audio XML format:
+\code
+<dmz>
+<runtime>
+   <types>
+      <object name="object type name">
+         <audio>
+            <sound
+               state="state name"
+               activatefile="audio file name"
+               loopedfile="audio file name"
+               deactivatefile="audio file name"
+               scalar="scalar attribute name"
+               minscale="minimum scalar value"
+               scale="scalars scale"
+            />
+         </audio>
+      </object>
+   </types>
+</runtime>
+</dmz>
+\endcode
+
+- \b state: Name of the state that activates the sound.
+- \b activatefile: Audio file to play when the state is set. (Optional)
+- \b loopedfile: Audio file to play continuously while the state is set. (Optional)
+- \b deactivatefile: Audio file to play when the state is unset. (Optional)
+- \b scalar: Name of the objects scalar attribute to used to adjust the looped
+file's pitch. (Optional)
+- \b offset: Minimum value the scalar will have. Defaults to 0.0. (Optional)
+- \b scale: Defines the scalar's scale. Defaults to 1.0. (Optional)
+
+At least one sound type needs to be defined (i.e.
+\b activatefile, \b loopedfile, \b deactivatefile).
+
+Pitch is calculated as follows:
+\code
+   value = scalar - offset
+   if value < 0.0 then value = 0.0 end
+   pitch = value / scale
+\endcode
+
+*/
+
+//! \cond
 
 dmz::AudioPluginObject::AudioPluginObject (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
@@ -144,9 +194,9 @@ dmz::AudioPluginObject::discover_plugin (
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::AudioPluginObject::update_sync (const Float64 TimeDelta) {
+dmz::AudioPluginObject::update_time_slice (const Float64 TimeDelta) {
 
    if (_audioMod) {
 
@@ -358,9 +408,15 @@ dmz::AudioPluginObject::update_object_scalar (
 
          if (AttributeHandle == current->Data.scalarAttributeHandle) {
 
-            current->scale = Value;
+            if (current->Data.scale > 0.0) {
 
-            _updateTable.store (ObjectHandle, os);
+               Float64 offset = Value - current->Data.offset;
+               if (offset < 0.0) { offset = 0.0; }
+            
+               current->scale = offset / current->Data.scale;
+
+               _updateTable.store (ObjectHandle, os);
+            }
          }
 
          current = current->next;
@@ -467,8 +523,8 @@ dmz::AudioPluginObject::_init_sound_struct (Config &data, SoundDefStruct &ss) {
       ss.scalarAttributeHandle = activate_object_attribute (ScalarName, ObjectScalarMask);
    }
 
-   ss.minScale = config_to_float64 ("minscale", data, ss.minScale);
-   ss.maxScale = config_to_float64 ("maxscale", data, ss.maxScale);
+   ss.offset = config_to_float64 ("offset", data, ss.offset);
+   ss.scale = config_to_float64 ("scale", data, ss.scale);
 }
 
 
@@ -536,6 +592,7 @@ void
 dmz::AudioPluginObject::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

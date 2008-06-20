@@ -6,7 +6,7 @@
 \class dmz::DataConverterString
 \ingroup Runtime
 \brief Class for converting between a String and a Data object.
-\note This class does not serialize a Data object into a String. It provides 
+\note This class does not serialize a Data object into a String. It provides
 a simple way to package a string into a Data object and then extract that String.
 
 */

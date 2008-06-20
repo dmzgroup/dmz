@@ -12,7 +12,7 @@ dmz::QtPluginCanvasAutoTrack::QtPluginCanvasAutoTrack (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defaultAttributeHandle (0),
@@ -21,7 +21,7 @@ dmz::QtPluginCanvasAutoTrack::QtPluginCanvasAutoTrack (
       _canvasModule (0),
       _canvasModuleName (),
       _updateView (False) {
-   
+
    _init (local);
 }
 
@@ -55,15 +55,15 @@ dmz::QtPluginCanvasAutoTrack::discover_plugin (
 
 
 void
-dmz::QtPluginCanvasAutoTrack::update_sync (const Float64 TimeDelta) {
+dmz::QtPluginCanvasAutoTrack::update_time_slice (const Float64 TimeDelta) {
 
    if (_updateView && _canvasModule && _hilHandle) {
-      
+
       QGraphicsView *view (_canvasModule->get_view ());
       QGraphicsItem *item (_canvasModule->lookup_item (_hilHandle));
 
       if (item && view) { view->ensureVisible (item); }
-      
+
       _updateView = False;
    }
 }
@@ -92,7 +92,7 @@ dmz::QtPluginCanvasAutoTrack::update_object_orientation (
    const Handle AttributeHandle,
    const Matrix &Value,
    const Matrix *PreviousValue) {
-      
+
    if (AttributeHandle == _defaultAttributeHandle) {
 
       if (ObjectHandle == _hilHandle) { _updateView = True; }
@@ -109,9 +109,9 @@ dmz::QtPluginCanvasAutoTrack::update_object_flag (
       const Boolean *PreviousValue) {
 
    if (AttributeHandle == _hilAttributeHandle) {
-      
+
       if (Value) {
-      
+
          _hilHandle = ObjectHandle;
          _updateView = True;
       }
@@ -122,9 +122,9 @@ dmz::QtPluginCanvasAutoTrack::update_object_flag (
 
 void
 dmz::QtPluginCanvasAutoTrack::_init (Config &local) {
-   
+
    _canvasModuleName = config_to_string ("module.canvas.name", local);
-   
+
    _defaultAttributeHandle = activate_default_object_attribute (
       ObjectPositionMask | ObjectOrientationMask);
 

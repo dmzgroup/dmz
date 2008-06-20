@@ -8,7 +8,7 @@
 
 	IMPLEMENTED BY: Andres Carrera
 
-	HISTORY: 
+	HISTORY:
 
 		Original implementation by Lasse Tassing (Channex)
 		2005 ITE ApS, Lasse Tassing
@@ -28,7 +28,7 @@ class TiXmlElement;
 namespace Ogre { class Entity; class Light; class SimpleSpline; class StaticGeometry; }
 
 
-// Callback interface. Use this if you want to set special properties on the 
+// Callback interface. Use this if you want to set special properties on the
 // objects during creation (and/or read custom attribute values).
 class OSMSceneCallbacks
 {
@@ -60,8 +60,8 @@ public:
 	};
 
 	// Called when a static geometry has been created
-	virtual bool OnStaticGeometryCreated(Ogre::StaticGeometry* pStatic, const NodeList& nodeList) 
-	{ 
+	virtual bool OnStaticGeometryCreated(Ogre::StaticGeometry* pStatic, const NodeList& nodeList)
+	{
 		// Return true to keep the added nodes (will be hidden)
 		// Return false to delete the added nodes from the scene manager
 

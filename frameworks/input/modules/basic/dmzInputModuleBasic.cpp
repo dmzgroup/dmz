@@ -1087,7 +1087,7 @@ dmz::InputModuleBasic::_decrement_active_count (
          InputEventMouse event (_mouseCache);
 
          if (event.get_button_mask ()) {
-            
+
             event.set_button_mask (0);
 
             os.obs.receive_mouse_event (Channel, event);
@@ -1131,7 +1131,7 @@ dmz::InputModuleBasic::_do_qued_events () {
    }
 }
 
- 
+
 dmz::InputModuleBasic::ChannelStruct *
 dmz::InputModuleBasic::_create_channel (const Handle Channel) {
 

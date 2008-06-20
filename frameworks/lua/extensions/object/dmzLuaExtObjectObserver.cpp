@@ -29,8 +29,8 @@ static const char ObjectCreateFunc[]          = "create_object";
 static const char ObjectDestroyFunc[]         = "destroy_object";
 static const char ObjectUUIDFunc[]            = "update_object_uuid";
 static const char ObjectRemoveAttributeFunc[] = "remove_object_attribute";
-static const char ObjectLinkFunc[]            = "link_object";
-static const char ObjectUnlinkFunc[]          = "unlink_object";
+static const char ObjectLinkFunc[]            = "link_objects";
+static const char ObjectUnlinkFunc[]          = "unlink_objects";
 static const char ObjectLinkAttributeFunc[]   = "update_link_object";
 static const char ObjectLocalityFunc[]        = "update_object_locality";
 static const char ObjectTypeFunc[]            = "update_object_type";
@@ -256,7 +256,7 @@ obs_release (lua_State *L) {
    Handle *handle (lua_check_handle (L, 2));
    Mask *mask (lua_check_mask (L, 3));
 
-   if (obs && handle && mask) { 
+   if (obs && handle && mask) {
 
       obs->deactivate_object_attribute (*handle, *mask);
       lua_pushboolean (L, 1);
@@ -287,6 +287,7 @@ static const luaL_Reg arrayFunc [] = {
 };
 
 
+//! \cond
 void
 dmz::lua_init_object_observer (lua_State *L) {
 
@@ -855,4 +856,5 @@ dmz::LuaExtObjectObserver::update_object_data (
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 

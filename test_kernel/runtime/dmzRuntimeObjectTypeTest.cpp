@@ -18,7 +18,7 @@ main (int argc, char *argv[]) {
    ObjectType testObjectType;
    test.validate (
       "test default constructor",
-      !testObjectType.get_type_context () && 
+      !testObjectType.get_type_context () &&
       !testObjectType.get_name ().get_length ());
 
 
@@ -87,13 +87,13 @@ main (int argc, char *argv[]) {
       "test = operator - (pre state)",
       (nothingThatBecomesSomething == shouldBeNothing) &&
       !(nothingThatBecomesSomething == anotherCat));
-   
+
    nothingThatBecomesSomething = anotherCat;
    test.validate (
       "test = operator - (equal something)",
       !(nothingThatBecomesSomething == shouldBeNothing) &&
       (nothingThatBecomesSomething == anotherCat));
-   
+
    nothingThatBecomesSomething = shouldBeNothing;
    test.validate (
       "test = operator - (equal null)",
@@ -214,7 +214,7 @@ main (int argc, char *argv[]) {
    test.validate (
       "test lookup_config",
       anotherCaracal.get_config ().lookup_all_config_merged ("info", returnCaracalData));
-   
+
    test.validate (
       "test lookup_config->lookup_attribute -- success",
       returnCaracalData.lookup_attribute ("ears", data2) &&

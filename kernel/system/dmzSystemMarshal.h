@@ -74,7 +74,8 @@ namespace dmz {
          Marshal ();
    };
 
-   //! Use this interface in templates only.
+   //! \brief Use this interface in templates only.
+   //! \ingroup System
    class MarshalWrap {
 
       protected:

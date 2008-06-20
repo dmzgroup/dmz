@@ -5,7 +5,7 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeSync.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzRuntimeUndo.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <QtGui/QGraphicsItem>
@@ -33,7 +33,7 @@ namespace dmz {
             QPainter *painter,
             const QStyleOptionGraphicsItem *option,
             QWidget *widget);
-            
+
          virtual void setVisible (bool visible);
    };
 
@@ -41,7 +41,7 @@ namespace dmz {
    class QtPluginCanvasLayerModel :
          public QAbstractItemModel,
          public ObjectObserverUtil,
-         public Sync {
+         public TimeSlice {
 
       Q_OBJECT
 
@@ -55,18 +55,18 @@ namespace dmz {
 
          void store_canvas_module (QtModuleCanvas &module);
          void remove_canvas_module (QtModuleCanvas &module);
-         
+
          QModelIndex index_for_handle (const Handle ObjectHandle);
-         
+
          void set_active_layer (const Handle Layer);
-         
+
          Handle create_layer (
             const String &Name,
             const Boolean Visible,
             const Boolean Active,
             const Boolean Locked,
             const Boolean Undo);
-         
+
          Boolean delete_active_layer ();
 
          // QAbstractItemModel Interface
@@ -154,9 +154,9 @@ namespace dmz {
             const Handle AttributeHandle,
             const String &Value,
             const String *PreviousValue);
-            
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
       protected:
          virtual void _store_object_module (ObjectModule &objMod);
@@ -178,7 +178,7 @@ namespace dmz {
          void _move_layer (const Handle SourceHandle, const Handle TargetHandle);
          void _model_changed (const Handle FirstObject, const Handle LastObject);
          void _update_layer_order ();
-         
+
          Log _log;
          Undo _undo;
          Definitions _defs;
@@ -205,10 +205,10 @@ namespace dmz {
    };
 
 
-   class QtPluginCanvasLayer : public QWidget, public Plugin, public Sync {
+   class QtPluginCanvasLayer : public QWidget, public Plugin, public TimeSlice {
 
       Q_OBJECT
-      
+
       public:
          QtPluginCanvasLayer (const PluginInfo &Info, const Config &Local);
          ~QtPluginCanvasLayer ();
@@ -221,9 +221,9 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-         
-         // Sync Interface
-         virtual void update_sync (const Float64 TimeDelta);
+
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
       protected slots:
          void on_addButton_clicked ();
@@ -232,12 +232,12 @@ namespace dmz {
          void _slot_current_changed (
             const QModelIndex &Current,
             const QModelIndex &Previous);
-         
+
       protected:
          void _save_session ();
          void _load_session ();
          void _init (const Config &Local);
-         
+
          Log _log;
          Definitions _defs;
          Ui::layersForm _ui;
@@ -252,7 +252,7 @@ namespace dmz {
          QDockWidget *_dock;
          QtPluginCanvasLayerModel _layerModel;
          Int32 _newLayerCount;
-         
+
       private:
          QtPluginCanvasLayer ();
          QtPluginCanvasLayer (const QtPluginCanvasLayer &);

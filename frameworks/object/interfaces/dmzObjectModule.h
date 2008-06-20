@@ -247,7 +247,7 @@ namespace dmz {
             const Handle ObjectHandle,
             const Handle AttributeHandle,
             Data &value) = 0;
-            
+
       protected:
          ObjectModule (const PluginInfo &Info);
          ~ObjectModule ();

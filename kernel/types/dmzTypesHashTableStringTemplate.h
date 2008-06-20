@@ -410,5 +410,5 @@ dmz::HashTableStringTemplate<T>::set_lock (HashTableLock *lock) {
 
 //! Gets the table lock.
 template <class T> inline dmz::HashTableLock *
-dmz::HashTableStringTemplate<T>::get_lock () { return __tableLock; } 
+dmz::HashTableStringTemplate<T>::get_lock () { return __tableLock; }
 #endif /* DMZ_TYPES_HASH_TABLE_STRING_TEMPLATE_DOT_H */

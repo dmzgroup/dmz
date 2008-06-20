@@ -20,7 +20,7 @@ namespace dmz {
          public QtModuleMainWindow {
 
       Q_OBJECT
-      
+
       public:
          QtModuleMainWindowBasic (const PluginInfo &Info, Config &local);
          ~QtModuleMainWindowBasic ();
@@ -62,48 +62,48 @@ namespace dmz {
          virtual QWidget *get_widget ();
          virtual QMenuBar *get_menu_bar ();
          virtual QStatusBar *get_status_bar ();
-         
+
          virtual Boolean add_tool_bar (QToolBar *toolBar);
          virtual Boolean add_tool_bar (const Handle Channel, QToolBar *toolBar);
-         
+
          virtual Boolean remove_tool_bar (QToolBar *toolBar);
          virtual Boolean remove_tool_bar (const Handle Channel, QToolBar *toolBar);
-            
+
          virtual void add_tool_bar_break (const Qt::ToolBarArea Area);
-            
+
          virtual Boolean add_dock_widget (
             const Qt::DockWidgetArea Area,
             QDockWidget *dock);
-            
+
          virtual Boolean add_dock_widget (
             const Handle Channel,
             const Qt::DockWidgetArea Area,
             QDockWidget *dock);
-         
+
          virtual Boolean remove_dock_widget (QDockWidget *dock);
          virtual Boolean remove_dock_widget (const Handle Channel, QDockWidget *dock);
-         
+
          virtual Boolean add_central_widget (const Handle Channel, QWidget *widget);
          virtual Boolean remove_central_widget (const Handle Channel);
-         
+
       protected:
          struct ToolBarStruct {
-         
+
             QToolBar *toolBar;
             Qt::ToolBarArea area;
             Boolean visible;
          };
-         
+
          struct DockWidgetStruct {
-           
+
             QDockWidget *dockWidget;
-            Qt::DockWidgetArea area; 
+            Qt::DockWidgetArea area;
             Boolean visible;
          };
-         
+
          typedef QList<ToolBarStruct *> ToolBarList;
          typedef QList<DockWidgetStruct *> DockWidgetList;
-         
+
          virtual void closeEvent (QCloseEvent *event);
 
          void _create_actions ();
@@ -112,7 +112,7 @@ namespace dmz {
          void _create_status_bar ();
 
          void _update ();
-         
+
          void _save_session ();
          void _load_session ();
          void _init (Config &local);

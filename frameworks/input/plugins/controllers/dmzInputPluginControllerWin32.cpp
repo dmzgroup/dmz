@@ -49,12 +49,12 @@ dmz::Boolean
 dmz::InputPluginControllerWin32::ControllerStruct::poll () {
 
    Boolean retVal (False);
-   
+
    if (joyGetPosEx (device.Handle, &(device.joyInfo)) == JOYERR_NOERROR) {
-    
-      retVal = True;  
+
+      retVal = True;
    }
-   
+
    return retVal;
 }
 
@@ -63,15 +63,15 @@ dmz::Float32
 dmz::InputPluginControllerWin32::AxisStruct::get_value () const {
 
    Float32 retVal (0.0f);
-   
+
    UInt32 axisMin (0);
    UInt32 axisMax (65535);
    UInt32 axisValue (axisMax / 2);
    Float32 scaledAxisValue (0.0f);
-   
+
    JOYINFOEX &joyInfo (cs.device.joyInfo);
    JOYCAPS &joyCaps (cs.device.joyCaps);
-         
+
    switch (ElementHandle) {
 
       case AXIS_X:
@@ -109,7 +109,7 @@ dmz::InputPluginControllerWin32::AxisStruct::get_value () const {
          axisMin = joyCaps.wVmin;
          axisMax = joyCaps.wVmax;
          break;
-         
+
       case AXIS_POV_X:
          if ((joyInfo.dwPOV == POV_WEST) ||
              (joyInfo.dwPOV == POV_NORTHWEST) ||
@@ -128,7 +128,7 @@ dmz::InputPluginControllerWin32::AxisStruct::get_value () const {
             axisValue = axisMax / 2;
          }
          break;
-         
+
       case AXIS_POV_Y:
          if ((joyInfo.dwPOV == POV_SOUTH) ||
              (joyInfo.dwPOV == POV_SOUTHWEST) ||
@@ -158,9 +158,9 @@ dmz::InputPluginControllerWin32::AxisStruct::get_value () const {
    // Convert the raw value (0-65535) to a value between -1 and 1
    scaledAxisValue =
       ((Float32 (axisValue - axisMin) / Float32 (axisMax - axisMin)) * 2) - 1;
-   
+
    // Convert scaled value to a value between min and max
-   retVal = (scaledAxisValue * (maxValue - minValue) + (maxValue + minValue)) * 0.5f; 
+   retVal = (scaledAxisValue * (maxValue - minValue) + (maxValue + minValue)) * 0.5f;
 
    if (flip) { retVal *= -1; }
 
@@ -172,12 +172,12 @@ dmz::Boolean
 dmz::InputPluginControllerWin32::ButtonStruct::get_value () const {
 
    Boolean retVal (False);
-   
+
    if (cs.device.joyInfo.dwButtons & (1<<(ElementHandle-1))) {
-      
+
       retVal = True;
    }
-   
+
    return retVal;
 }
 
@@ -186,7 +186,7 @@ dmz::InputPluginControllerWin32::InputPluginControllerWin32 (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       _log (Info),
       _channels (0) {
 
@@ -197,7 +197,7 @@ dmz::InputPluginControllerWin32::InputPluginControllerWin32 (
 dmz::InputPluginControllerWin32::~InputPluginControllerWin32 () {
 
    _controllerTable.empty ();
-   
+
    _deviceHandleTable.empty ();
    _deviceNameTable.clear ();
 }
@@ -216,16 +216,16 @@ dmz::InputPluginControllerWin32::discover_plugin (
    else if (Mode == PluginDiscoverRemove) {
 
       if (_channels && (_channels == InputModule::cast (PluginPtr))) {
-   
+
          _channels = 0;
       }
    }
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::InputPluginControllerWin32::update_sync (const Float64 DeltaTime) {
+dmz::InputPluginControllerWin32::update_time_slice (const Float64 DeltaTime) {
 
    if (_channels) {
 
@@ -235,7 +235,7 @@ dmz::InputPluginControllerWin32::update_sync (const Float64 DeltaTime) {
 
       while (controller) {
 
-         _sync_controller (*controller);
+         _time_slice_controller (*controller);
 
          controller = _controllerTable.get_next (it);
       }
@@ -247,7 +247,7 @@ void
 dmz::InputPluginControllerWin32::_init (Config &local) {
 
    _init_devices ();
-   
+
    Config controllerList;
 
    if (local.lookup_all_config ("controller", controllerList)) {
@@ -283,15 +283,15 @@ dmz::InputPluginControllerWin32::_init_devices () {
       if (joyGetPosEx (ix, &joyInfo) == JOYERR_NOERROR) {
 
          joyGetDevCaps (ix, &joyCaps, sizeof (joyCaps));
-         
+
          DeviceStruct *ds = new DeviceStruct (ix, joyCaps.szPname);
-         
+
          if (!_deviceHandleTable.store (ds->Handle, ds) ||
              !_deviceNameTable.store (ds->Name, ds)) {
 
             _deviceHandleTable.remove (ds->Handle);
             _deviceNameTable.remove (ds->Name);
-            
+
             delete ds; ds = 0;
          }
          else {
@@ -307,8 +307,10 @@ void
 dmz::InputPluginControllerWin32::_init_controller (Config &controller) {
 
    Definitions defs (get_plugin_runtime_context (), &_log);
-   
-   const String ControllerName (config_to_string ("name", controller, "controller_default"));
+
+   const String ControllerName (
+      config_to_string ("name", controller, "controller_default"));
+
    const Handle SourceHandle (defs.create_named_handle (ControllerName));
    const String DeviceName (config_to_string ("device", controller));
    const UInt32 DeviceHandle (config_to_uint32 ("deviceId", controller, 0));
@@ -321,47 +323,47 @@ dmz::InputPluginControllerWin32::_init_controller (Config &controller) {
 
       _log.info  << "Mapping controller[" << ControllerName
                  << "] to device[" << ds->Handle << "] " << ds->Name << endl;
-   
+
       ControllerStruct *cs (_controllerTable.lookup (SourceHandle));
-   
+
       if (!cs) {
-   
+
          cs = new ControllerStruct (SourceHandle, *ds);
-   
+
          if (!_controllerTable.store (SourceHandle, cs)) {
-   
+
             delete cs; cs = 0;
          }
       }
-   
+
       if (cs) {
-         
+
          ConfigIterator elementIt;
-   
+
          Config cd;
-   
+
          Boolean elementFound (controller.get_first_config (elementIt, cd));
-   
+
          while (elementFound) {
-   
+
             const String Type (cd.get_name ().get_lower ());
-   
+
             if (Type == "axis") {
-   
+
                _init_axis (*cs, cd);
             }
             else if (Type == "hatswitch") {
-   
+
                _init_hatswitch (*cs, cd);
             }
             else if (Type == "button") {
-   
+
                _init_button (*cs, cd);
             }
             else {
-   
+
             }
-   
+
             elementFound = controller.get_next_config (elementIt, cd);
          }
       }
@@ -401,7 +403,7 @@ dmz::InputPluginControllerWin32::_init_axis (ControllerStruct &cs, Config &cd) {
 
             if (axis->minValue < -1.0f) { axis->minValue = -1.0f; }
             else if (axis->minValue > 1.0f) { axis->minValue = 1.0f; }
-            
+
             if (axis->maxValue > 1.0f) { axis->maxValue = 1.0f; }
             else if (axis->maxValue < -1.0f) { axis->maxValue = -1.0f; }
          }
@@ -455,7 +457,7 @@ dmz::InputPluginControllerWin32::_init_hatswitch (ControllerStruct &cs, Config &
 
             if (xAxis->minValue < -1.0f) { xAxis->minValue = -1.0f; }
             else if (xAxis->minValue > 1.0f) { xAxis->minValue = 1.0f; }
-            
+
             if (xAxis->maxValue > 1.0f) { xAxis->maxValue = 1.0f; }
             else if (xAxis->maxValue < -1.0f) { xAxis->maxValue = -1.0f; }
 
@@ -466,7 +468,8 @@ dmz::InputPluginControllerWin32::_init_hatswitch (ControllerStruct &cs, Config &
       }
       else {
 
-         _log.error << "Failed to map hatswitch " << AxisXHandle << " " << AxisYHandle<< endl;
+         _log.error << "Failed to map hatswitch " << AxisXHandle << " " << AxisYHandle
+            << endl;
       }
    }
 }
@@ -506,12 +509,12 @@ dmz::InputPluginControllerWin32::_init_button (ControllerStruct &cs, Config &cd)
 
 
 void
-dmz::InputPluginControllerWin32::_sync_controller (ControllerStruct &cs) {
+dmz::InputPluginControllerWin32::_time_slice_controller (ControllerStruct &cs) {
 
    if (_channels) {
 
       if (cs.poll ()) {
-         
+
          HashTableUInt32Iterator it;
 
          AxisStruct *axis = cs.axisTable.get_first (it);
@@ -531,7 +534,7 @@ dmz::InputPluginControllerWin32::_sync_controller (ControllerStruct &cs) {
          while (button) {
 
             if (button->event.update_button_value (button->get_value ())) {
-               
+
                _channels->send_button_event (button->event);
             }
 
@@ -539,7 +542,7 @@ dmz::InputPluginControllerWin32::_sync_controller (ControllerStruct &cs) {
          }
       }
       else {
-      
+
          _log.warn << "Error polling controller: " << cs.device.Name << endl;
          _log.warn << "Controller might be unplugged" << endl;
       }

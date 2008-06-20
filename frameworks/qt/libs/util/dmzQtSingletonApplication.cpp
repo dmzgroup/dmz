@@ -42,7 +42,10 @@ dmz::QtSingletonApplication::start_application () { return true; }
 
 
 bool
-dmz::QtSingletonApplication::send_to_running_application (const QString &Message) { return false; }
+dmz::QtSingletonApplication::send_to_running_application (const QString &Message) {
+
+   return false;
+}
 
 
 bool

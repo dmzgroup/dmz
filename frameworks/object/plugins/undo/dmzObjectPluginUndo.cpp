@@ -131,7 +131,7 @@ dmz::ObjectPluginUndo::receive_message (
          const Handle ObjectHandle (local_uuid_to_handle (*InData, _uuidHandle, *objMod));
          const Handle AttrHandle (
             local_attr_name_to_handle (*InData, _handleHandle, _defs));
- 
+
          Mask mask;
          InData->lookup_mask (_maskHandle, mask);
          if (mask) { objMod->remove_attribute (ObjectHandle, AttrHandle, mask); }
@@ -1067,7 +1067,7 @@ dmz::ObjectPluginUndo::_remove_attribute (
    data.store_uuid (_uuidHandle, 0, Identity);
    data.store_string (_stringHandle, 0, _defs.lookup_named_handle_name (AttrHandle));
    data.store_mask (_maskHandle, RemoveMask);
-   _undo.store_action (_removeAttribute, get_plugin_handle (), &data); 
+   _undo.store_action (_removeAttribute, get_plugin_handle (), &data);
 }
 
 
@@ -1108,7 +1108,7 @@ dmz::ObjectPluginUndo::_init (Config &local) {
 
    _defs.create_message_type ("Object_Plugin_Undo_Store_Type_Message", _storeType);
    _defs.create_message_type ("Object_Plugin_Undo_Store_State_Message", _storeState);
-   _defs.create_message_type ("Object_Plugin_Undo_Store_Flag_Message", _storeFlag); 
+   _defs.create_message_type ("Object_Plugin_Undo_Store_Flag_Message", _storeFlag);
 
    _defs.create_message_type (
       "Object_Plugin_Undo_Store_Time_Stamp_Message",

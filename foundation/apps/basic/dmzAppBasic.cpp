@@ -20,7 +20,7 @@ main (int argc, char *argv[]) {
    app.process_command_line (cl);
    app.load_plugins ();
    app.start ();
-   while (app.sync ()) {;}
+   while (app.update_time_slice ()) {;}
    app.stop ();
    app.unload_plugins ();
    app.save_session ();

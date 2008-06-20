@@ -16,7 +16,7 @@ dmz::RenderExtViewerOSG::RenderExtViewerOSG (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       _log (Info),
       _core (0),
       _channels (0),
@@ -70,7 +70,7 @@ dmz::RenderExtViewerOSG::discover_plugin (
       const Plugin *PluginPtr) {
 
    if (Mode == PluginDiscoverAdd) {
-      
+
       if (!_core) {
 
          _core = RenderModuleCoreOSG::cast (PluginPtr);
@@ -103,7 +103,7 @@ dmz::RenderExtViewerOSG::discover_plugin (
       }
    }
    else if (Mode == PluginDiscoverRemove) {
-      
+
       if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
 
          _viewer->setCameraManipulator (0);
@@ -124,7 +124,7 @@ dmz::RenderExtViewerOSG::discover_plugin (
 
 
 void
-dmz::RenderExtViewerOSG::update_sync (const Float64 TimeDelta) {
+dmz::RenderExtViewerOSG::update_time_slice (const Float64 TimeDelta) {
 
    if (_viewer.valid ()) {
 
@@ -190,7 +190,7 @@ dmz::RenderExtViewerOSG::__init_viewer_window (
       UInt32 windowWidth,
       UInt32 windowHeight,
       UInt32 screen) {
-         
+
    if (_viewer.valid ()) {
 
       _viewer->setUpViewInWindow (

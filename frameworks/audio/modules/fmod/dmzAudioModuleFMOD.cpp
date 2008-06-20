@@ -5,9 +5,33 @@
 
 #include <stdlib.h>
 
+/*!
+
+\class dmz::AudioModuleFMOD
+\ingroup Audio
+\brief FMOD implementation of the audio module.
+\details
+The FMOD audio module XML format:
+\code
+<dmz>
+<dmzAudioModuleFMOD>
+   <dopplerScale value="Float32"/>
+   <distanceFactor value="Float32"/>
+   <rollOffScale value="Float32"/>
+   <maxChannels value="Int32"/>
+   <rightHandedCoordinate value="Boolean"/>
+   <forceFullDirectSoundHRTF value="Boolean"/>
+</dmzAudioModuleFMOD>
+</dmz>
+\endcode
+
+*/
+ 
+
+//! \cond
 dmz::AudioModuleFMOD::AudioModuleFMOD (const PluginInfo &Info, const Config &Local) :
       Plugin (Info),
-      Sync (Info),
+      TimeSlice (Info),
       AudioModule (Info),
       _log (Info),
       _system (0),
@@ -31,7 +55,7 @@ dmz::AudioModuleFMOD::~AudioModuleFMOD () {
    for (InstanceStruct *instance = _instanceTable.get_first (it);
          instance;
          instance = _instanceTable.get_next (it)) {
-      
+
       // This will cause a callback, which will remove the instance from the list
       // and properly dereference the sound data
       if (instance->channel) { instance->channel->stop (); }
@@ -53,7 +77,7 @@ dmz::AudioModuleFMOD::~AudioModuleFMOD () {
          SoundStruct *data = _soundHandleTable.get_first (it);
          data;
          data = _soundHandleTable.get_next (it)) {
-      
+
       // This will automatically cause a delete, which will also release the sound
       // within FMOD
       data->unref ();
@@ -74,9 +98,9 @@ dmz::AudioModuleFMOD::~AudioModuleFMOD () {
 }
 
 
-// Sync Interface
+// TimeSlice Interface
 void
-dmz::AudioModuleFMOD::update_sync (const Float64 TimeDelta) {
+dmz::AudioModuleFMOD::update_time_slice (const Float64 TimeDelta) {
 
    if (_system) { _system->update(); }
 }
@@ -99,31 +123,31 @@ dmz::AudioModuleFMOD::create_audio_handle (const String &Filename) {
          SoundStruct *soundData = _soundNameTable.lookup (absPath);
 
          if (soundData) {
-            
-            result = soundData->get_handle (); 
+
+            result = soundData->get_handle ();
          }
          else {
-         
+
             FMOD::Sound *newSound (0);
 
             FMOD_RESULT fmodResult = _system->createSound (
-               absPath.get_buffer (), 
-               FMOD_3D, 
-               0, 
+               absPath.get_buffer (),
+               FMOD_3D,
+               0,
                &newSound);
 
             String loadingErrorHeader ("Loading Sound '");
             loadingErrorHeader << absPath << "'";
 
             if (_error_check (loadingErrorHeader, fmodResult)) {
-               
+
                SoundStruct *newSoundData = new SoundStruct (
-                  absPath, 
-                  newSound, 
+                  absPath,
+                  newSound,
                   get_plugin_runtime_context ());
 
                if (newSoundData && _soundNameTable.store (absPath, newSoundData)) {
-                  
+
                   Handle newHandle = newSoundData->get_handle ();
 
                   if (newHandle && _soundHandleTable.store (newHandle, newSoundData)) {
@@ -137,7 +161,7 @@ dmz::AudioModuleFMOD::create_audio_handle (const String &Filename) {
          }
       }
    }
-  
+
    return result;
 }
 
@@ -150,7 +174,7 @@ dmz::AudioModuleFMOD::destroy_audio_handle (const Handle AudioHandle) {
    if (_system) {
 
       SoundStruct *data = _soundHandleTable.lookup (AudioHandle);
-      
+
       if (data) {
 
          _soundHandleTable.remove (AudioHandle);
@@ -170,7 +194,7 @@ dmz::AudioModuleFMOD::destroy_audio_handle (const Handle AudioHandle) {
 
 dmz::Handle
 dmz::AudioModuleFMOD::play_sound (
-      const Handle AudioHandle, 
+      const Handle AudioHandle,
       const SoundAttributes &Attributes) {
 
    Handle result (0);
@@ -189,7 +213,7 @@ dmz::AudioModuleFMOD::play_sound (
 
             Handle instanceHandle = instance->get_handle ();
 
-            if (instanceHandle && 
+            if (instanceHandle &&
                   _instanceTable.store (instanceHandle, instance)) {
 
                String errorHeader ("Playing Sound '");
@@ -228,22 +252,22 @@ dmz::AudioModuleFMOD::play_sound (
 
                         fmodResult = instance->channel->setPaused(false);
 
-                        if (_error_check (errorHeader, fmodResult)) { 
+                        if (_error_check (errorHeader, fmodResult)) {
 
                            _log.info << errorHeader << endl;
-                           result = instanceHandle; 
+                           result = instanceHandle;
                         }
                      }
-                  } 
+                  }
                }
 
-               // FMOD is unsuccessful in attempting to play sound 
+               // FMOD is unsuccessful in attempting to play sound
                if (!result) { _remove_instance (instanceHandle); }
             }
             else if (instance){
 
                instance->reset ();
- 
+
                instance->next = _instanceRecycle;
                _instanceRecycle = instance;
             }
@@ -257,7 +281,7 @@ dmz::AudioModuleFMOD::play_sound (
 
 dmz::Boolean
 dmz::AudioModuleFMOD::update_sound (
-      const Handle InstanceHandle, 
+      const Handle InstanceHandle,
       const SoundAttributes &Attributes) {
 
    Boolean result (False);
@@ -267,7 +291,7 @@ dmz::AudioModuleFMOD::update_sound (
       String errorHeader;
 
       InstanceStruct *instance = _instanceTable.lookup (InstanceHandle);
-      
+
       if (instance && instance->channel) {
 
          FMOD_RESULT fmodResult (FMOD_OK);
@@ -286,7 +310,7 @@ dmz::AudioModuleFMOD::update_sound (
 
          // Set pitch/frequency with scale value
          fmodResult = instance->channel->setFrequency (
-               Float32 (Attributes.get_pitch_scale() * 
+               Float32 (Attributes.get_pitch_scale() *
                         instance->defaultFrequency));
 
          _error_check (errorHeader, fmodResult);
@@ -321,7 +345,7 @@ dmz::AudioModuleFMOD::update_sound (
 
 dmz::Boolean
 dmz::AudioModuleFMOD::lookup_sound (
-      const Handle InstanceHandle, 
+      const Handle InstanceHandle,
       SoundAttributes &attributes) {
 
    Boolean result (False);
@@ -342,7 +366,7 @@ dmz::AudioModuleFMOD::lookup_sound (
 
          if (_error_check ("Getting Sound Pitch", fmodResult)) {
 
-            pitchScale = Float64 (currentFrequency) / 
+            pitchScale = Float64 (currentFrequency) /
                Float64 (instance->defaultFrequency);
 
             result = True;
@@ -350,7 +374,7 @@ dmz::AudioModuleFMOD::lookup_sound (
       }
 #endif
    }
- 
+
    return result;
 }
 
@@ -368,17 +392,17 @@ dmz::AudioModuleFMOD::stop_sound (const Handle InstanceHandle) {
       if (instance->data) { infoString << instance->data->Filename << "'"; }
       else { infoString << "UNKNOWN'"; }
 
-      // Stop channel, which will automatically cause a callback to the 
+      // Stop channel, which will automatically cause a callback to the
       // user defined callback function that removes it from the instance table
 
       if (instance->channel) {
 
          FMOD_RESULT fmodResult = instance->channel->stop ();
 
-         if (_error_check (infoString, fmodResult)) { 
+         if (_error_check (infoString, fmodResult)) {
 
             _log.info << infoString << endl;
-            result = True; 
+            result = True;
          }
       }
    }
@@ -403,9 +427,9 @@ dmz::AudioModuleFMOD::set_mute_all_state (const Boolean Mute) {
 
          fmodResult = masterChannelGroup->setMute (Mute);
 
-         if (_error_check ("Setting mute state for all sounds", fmodResult)) { 
-            
-            result = True; 
+         if (_error_check ("Setting mute state for all sounds", fmodResult)) {
+
+            result = True;
          }
       }
    }
@@ -429,9 +453,9 @@ dmz::AudioModuleFMOD::get_mute_all_state (Boolean &mute) {
 
          fmodResult = masterChannelGroup->getMute (&mute);
 
-         if (_error_check ("Getting mute state for all sounds", fmodResult)) { 
+         if (_error_check ("Getting mute state for all sounds", fmodResult)) {
 
-            result = True; 
+            result = True;
          }
       }
    }
@@ -448,10 +472,10 @@ dmz::AudioModuleFMOD::create_listener (const String &Name) {
    Int32 numListeners = _listenerNameTable.get_count ();
 
    if (_system && (numListeners <= 4)) {
-      
+
       ListenerStruct *newListener = new ListenerStruct (
-         Name, 
-         numListeners, 
+         Name,
+         numListeners,
          get_plugin_runtime_context ());
 
       if (newListener) {
@@ -459,19 +483,19 @@ dmz::AudioModuleFMOD::create_listener (const String &Name) {
          Boolean storeResults = True;
 
          storeResults = storeResults && _listenerNameTable.store (Name, newListener);
-         storeResults =  storeResults && 
+         storeResults =  storeResults &&
             _listenerHandleTable.store (newListener->get_handle (), newListener);
-         storeResults = storeResults && 
+         storeResults = storeResults &&
             _listenerIndexTable.store (numListeners, newListener);
 
-         if (storeResults) { 
+         if (storeResults) {
 
             FMOD_RESULT fmodResult = _system->set3DNumListeners (numListeners + 1);
 
             if (_error_check ("Creating a Listener", fmodResult)) {
 
                if (numListeners == 0)  {
-                  
+
                   // First listener being added - unmute all sounds
                   Boolean muteSuccess = set_mute_all_state (False);
 
@@ -479,7 +503,7 @@ dmz::AudioModuleFMOD::create_listener (const String &Name) {
 
                      result = newListener->get_handle ();
                   }
-               }   
+               }
             }
          }
          else {
@@ -524,12 +548,11 @@ dmz::AudioModuleFMOD::set_listener (
 
       if (listener) {
 
-//         if ((listener->orientation != Orientation) || (listener->position != Position)) {
          listener->orientation = Orientation;
          listener->position = Position;
 
          Vector lookVector (0.0, 0.0, -1.0);
-         Vector upVector (0.0, 1.0, 0.0); 
+         Vector upVector (0.0, 1.0, 0.0);
          Orientation.transform_vector (lookVector);
          Orientation.transform_vector (upVector);
 
@@ -559,10 +582,9 @@ dmz::AudioModuleFMOD::set_listener (
             &fmodUpVector);
 
          if (_error_check ("Setting 3D Attributes", fmodResult)) {
-            
+
             result = True;
          }
-//         }
       }
    }
 
@@ -583,7 +605,7 @@ dmz::AudioModuleFMOD::get_listener (
       ListenerStruct *listener = _listenerHandleTable.lookup (ListenerHandle);
 
       if (listener) {
-         
+
          // Get vectors and positions from stored values. We are not using the
          // internal FMOD data because conversion from look/up vectors to an orientaton
          // is unnecessary extra computation. Since our class is the only code to modify
@@ -606,7 +628,7 @@ dmz::AudioModuleFMOD::get_listener (
 
 dmz::Boolean
 dmz::AudioModuleFMOD::destroy_listener (const Handle ListenerHandle) {
-      
+
    Boolean result (False);
    if (_system) {
 
@@ -619,12 +641,12 @@ dmz::AudioModuleFMOD::destroy_listener (const Handle ListenerHandle) {
          if (listener->index == (numListeners - 1)) {
 
             // Can simply reduce listener count in FMOD without rearranging indices
-            
+
             FMOD_RESULT fmodResult (FMOD_OK);
             Boolean muteSuccess (True);
 
             // FMOD requires at least one listener
-            if (numListeners > 1) { 
+            if (numListeners > 1) {
 
                fmodResult = _system->set3DNumListeners (numListeners - 1);
             }
@@ -645,7 +667,7 @@ dmz::AudioModuleFMOD::destroy_listener (const Handle ListenerHandle) {
             }
          }
          else {
-            // FMOD only allows the adjustment of the total number of listeners, so 
+            // FMOD only allows the adjustment of the total number of listeners, so
             // we must swap the listener to be deleted with the last listener and
             // then reduce the total number of listeners in FMOD
 
@@ -653,30 +675,32 @@ dmz::AudioModuleFMOD::destroy_listener (const Handle ListenerHandle) {
             ListenerStruct *lastListener = _listenerIndexTable.lookup (numListeners - 1);
 
             if (lastListener) {
-               
+
                // Get the position and orientation of listener to be moved
                Vector copiedPosition;
                Matrix copiedOrientation;
 
                if (get_listener (
-                     listener->get_handle (), 
-                     copiedPosition, 
+                     listener->get_handle (),
+                     copiedPosition,
                      copiedOrientation)) {
 
                   // Change the FMOD listener index to the index of the listener to be
                   // deleted
                   lastListener->index = listener->index;
-               
+
                   // Override the listener attributes in the index location of the deleted
                   // listener
                   if (set_listener (
-                     lastListener->get_handle (), 
-                     copiedPosition, 
+                     lastListener->get_handle (),
+                     copiedPosition,
                      copiedOrientation)) {
 
                      // Reduce reduce listener count in FMOD to erase the old data
-                     // of the now duplicated listener at the end. 
-                     FMOD_RESULT fmodResult = _system->set3DNumListeners (numListeners - 1);
+                     // of the now duplicated listener at the end.
+                     FMOD_RESULT fmodResult (
+                        _system->set3DNumListeners (numListeners - 1));
+
                      if (_error_check ("Destroying a Listener", fmodResult)) {
 
                         // Delete the listener
@@ -700,7 +724,7 @@ dmz::AudioModuleFMOD::destroy_listener (const Handle ListenerHandle) {
 
 void
 dmz::AudioModuleFMOD::_init (const Config &Local) {
-    
+
     // Create a System object
    FMOD_RESULT createResult = FMOD::System_Create(&_system);
    _error_check ("Enabling FMOD", createResult);
@@ -737,7 +761,7 @@ dmz::AudioModuleFMOD::_init (const Config &Local) {
          _error_check ("Setting speaker mode", result);
          _log.warn << "Audio hardware is being emulated" << endl;
       }
-      
+
       FMOD_INITFLAGS flags = FMOD_INIT_NORMAL;
 
       if (_rightHandedCoordinates) { flags |= FMOD_INIT_3D_RIGHTHANDED; }
@@ -793,7 +817,7 @@ dmz::AudioModuleFMOD::_get_new_instance (SoundStruct *soundData) {
          result = new InstanceStruct (
             soundData->Filename,
             (*this),
-            soundData, 
+            soundData,
             get_plugin_runtime_context ());
       }
    }
@@ -806,7 +830,7 @@ void
 dmz::AudioModuleFMOD::_remove_instance (Handle InstanceHandle) {
 
    InstanceStruct *instance = _instanceTable.lookup (InstanceHandle);
-   
+
    if (instance) {
 
       // Remove from channel list
@@ -833,12 +857,12 @@ dmz::AudioModuleFMOD::_remove_instance (Handle InstanceHandle) {
 }
 
 
-FMOD_RESULT F_CALLBACK 
+FMOD_RESULT F_CALLBACK
 dmz::AudioModuleFMOD::_channel_callback (
-      FMOD_CHANNEL *channelPointer, 
-      FMOD_CHANNEL_CALLBACKTYPE type, 
-      int command, 
-      unsigned int commanddata1, 
+      FMOD_CHANNEL *channelPointer,
+      FMOD_CHANNEL_CALLBACKTYPE type,
+      int command,
+      unsigned int commanddata1,
       unsigned int commanddata2) {
 
    FMOD::Channel *channel = (FMOD::Channel *)channelPointer;
@@ -848,7 +872,7 @@ dmz::AudioModuleFMOD::_channel_callback (
 
    if (rawData) {
 
-      InstanceStruct *instance = (InstanceStruct *) rawData; 
+      InstanceStruct *instance = (InstanceStruct *) rawData;
 
       instance->module._remove_instance (instance->get_handle ());
    }
@@ -856,6 +880,7 @@ dmz::AudioModuleFMOD::_channel_callback (
 
    return FMOD_OK;
 }
+//! \endcond
 
 
 extern "C" {

@@ -11,6 +11,7 @@ namespace dmz {
 
    class LuaModule;
 
+   //! Lua extension interface name.
    const char LuaExtInterfaceName[] = "LuaExtInterface";
 
    class LuaExt {

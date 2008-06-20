@@ -37,7 +37,7 @@ const dmz::String &PluginName);
 the ObjectModule interface of the Plugin is returned.
 \param[in] PluginPtr Pointer to the Plugin to cast.
 \param[in] PluginName String containing the name of the desired ObjectModule.
-\return Returns pointer to the ObjectModule. Return NULL if the PluginPtr does not
+\return Returns pointer to the ObjectModule. Returns NULL if the PluginPtr does not
 implement the ObjectModule interface or the \a PluginName is not empty
 and not equal to the Plugin's name.
 
@@ -383,7 +383,7 @@ const dmz::Handle AttributeHandle)
 \brief Looks up flag stored with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
-\return Returns dmz::True if the flag was set. Return dmz::False if the flag is not set
+\return Returns dmz::True if the flag was set. Returns dmz::False if the flag is not set
 or the object does not exist.
 
 \fn dmz::Boolean dmz::ObjectModule::store_time_stamp (

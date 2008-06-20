@@ -17,6 +17,8 @@
 
 #include <luacpp.h>
 
+// NOTE: Doxygen markup at end of file including Lua object API reference.
+
 using namespace dmz;
 
 namespace {
@@ -1347,6 +1349,7 @@ static const luaL_Reg arrayFunc[] = {
 };
 
 
+//! \cond
 void
 dmz::lua_register_object_observer (lua_State *L, ObjectObserver &obs) {
 
@@ -1716,6 +1719,7 @@ dmz::LuaExtObject::_remove_object_module (ObjectModule &objMod) {
       }
    }
 }
+//! \endcond
 
 
 extern "C" {
@@ -1730,3 +1734,117 @@ create_dmzLuaExtObject (
 }
 
 };
+
+
+/*!
+
+\class dmz::LuaExtObject
+\ingroup Lua
+\brief Lua extension that provides an interface to the Object Framework.
+\details
+\code
+dmz.object.Local -- Locality
+dmz.object.Remote -- Locality
+dmz.object.RetainLinks -- Mode
+dmz.object.IgnoreLinks -- Mode
+dmz.object.SelectNew -- Mode
+dmz.object.SelectAdd -- Mode
+dmz.object.CreateMask -- dmz.mask
+dmz.object.DestroyMask -- dmz.mask
+dmz.object.UUIDMask -- dmz.mask
+dmz.object.RemoveAtrributeMask -- dmz.mask
+dmz.object.LinkMask -- dmz.mask
+dmz.object.UnlinkMask -- dmz.mask
+dmz.object.LinkAttriuteObjectMaks -- dmz.mask
+dmz.object.LocalityMask -- dmz.mask
+dmz.object.TypeMask -- dmz.mask
+dmz.object.StateMask -- dmz.mask
+dmz.object.FlagMask -- dmz.mask
+dmz.object.TimeStampMask -- dmz.mask
+dmz.object.PositionMask -- dmz.mask
+dmz.object.OrientationMask -- dmz.mask
+dmz.object.VelocityMask -- dmz.mask
+dmz.object.AccelerationMask -- dmz.mask
+dmz.object.ScaleMask -- dmz.mask
+dmz.object.VectorMask -- dmz.mask
+dmz.object.ScalarMask -- dmz.mask
+dmz.object.TextMask -- dmz.mask
+dmz.object.DataMask -- dmz.mask
+dmz.object.AllMask -- dmz.mask
+dmz.object.AttributeDefaultName -- string
+dmz.object.AttributeLastNetworkValueName -- string
+dmz.object.AttributeHumanInTheLoopName -- string
+dmz.object.AttributeSelectName -- string
+dmz.object.CreateMessage -- dmz.message_type
+dmz.object.DestroyMessage -- dmz.message_type
+dmz.object.create_last_network_value_name (string name) [string]
+dmz.object.get_human_in_the_loop () [dmz.handle | nil]
+dmz.object.is_object (dmz.handle) [boolean | nil]
+dmz.object.is_link (dmz.handle) [boolean | nil]
+dmz.object.get_all () [{dmz.handle} | nil]
+dmz.object.create (dmz.object_type type, [integer locality]) [dmz.handle | nil]
+dmz.object.activate (dmz.handle handle) [boolean | nil]
+dmz.object.destroy (dmz.handle handle) [boolean | nil]
+dmz.object.clone (dmz.handle handle, [integer mode]) [dmz.handle | nil]
+dmz.object.uuid_to_handle (dmz.uuid uuid) [dmz.handle | nil]
+dmz.object.uuid (dmz.handle, [dmz.uuid uuid]) [dmz.uuid | nil]
+dmz.object.remove_attribute (dmz.handle handle, dmz.mask mask) [boolean | nil]
+dmz.object.link (dmz.handle attr_handle, dmz.handle super_handle, dmz.handle sub_handle) [dmz.handle | nil]
+dmz.object.lookup_link_handle (dmz.handle attr_handle, dmz.handle super_handle, dmz.handle sub_handle) [dmz.handle | nil]
+dmz.object.lookup_linked_objects (dmz.handle link_handle) [dmz.handle attr_handle, dmz.handle super_handle, dmz.handle sub_handle | nil]
+dmz.object.unlink (dmz.handle link_handle) [boolean | nil]
+dmz.object.link_attribute_object (dmz.handle link_handle, dmz.handle attr_object_handle) [boolean | nil]
+dmz.object.super_links (dmz.handle obj_handle, dmz.handle attr_handle) [{dmz.handle} | nil]
+dmz.object.sub_links (dmz.handle obj_handle, dmz.handle attr_handle) [{dmz.handle} | nil]
+dmz.object.locality (dmz.handle obj_handle, [integer locality]) [integer | nil]
+dmz.object.type (dmz.handle obj_handle, dmz.handle attr_handle, [dmz.object_type type]) [dmz.object_type | nil]
+dmz.object.state (dmz.handle obj_handle, dmz.handle attr_handle, [dmz.mask state]) [dmz.mask | nil]
+dmz.object.flag (dmz.handle obj_handle, dmz.handle attr_handle, [boolean flag]) [boolean | nil]
+dmz.object.time_stamp (dmz.handle obj_handle, dmz.handle attr_handle, [number time_stamp]) [number | nil]
+dmz.object.position (dmz.handle obj_handle, dmz.handle attr_handle, [dmz.vector position]) [dmz.vector | nil]
+dmz.object.orientation (dmz.handle obj_handle, dmz.handle attr_handle, [dmz.matrix orientation]) [dmz.matrix | nil]
+dmz.object.velocity (dmz.handle obj_handle, dmz.handle attr_handle, [dmz.vector velocity]) [dmz.vector | nil]
+dmz.object.acceleration (dmz.handle obj_handle, dmz.handle attr_handle, [dmz.vector acceleration]) [dmz.vector | nil]
+dmz.object.scale (dmz.handle obj_handle, dmz.handle attr_handle, [dmz.vector scale]) [dmz.vector | nil]
+dmz.object.vector (dmz.handle obj_handle, dmz.handle attr_handle, [dmz.vector vector]) [dmz.vector | nil]
+dmz.object.scalar (dmz.handle obj_handle, dmz.handle attr_handle, [number scalar]) [number | nil]
+dmz.object.text (dmz.handle obj_handle, dmz.handle attr_handle, [string value]) [string | nil]
+dmz.object.data (dmz.handle obj_handle, dmz.handle attr_handle, [dmz.data data]) [dmz.data | nil]
+dmz.object.get_selected () [{dmz.handle}]
+dmz.object.is_selected (dmz.handle object) [boolean | nil]
+dmz.object.select (dmz.handle object, [int mode]) [boolean | nil]
+dmz.object.unselect (dmz.handle object) [boolean | nil]
+dmz.object.unselect_all ()
+
+dmz.object_observer.new () [dmz.object_observer]
+
+dmz.object_observer:register (dmz.handle attr_handle, table callbacks, self) [boolean | nil]
+dmz.object_observer:release (dmz.handle attr_handle, dmz.mask mask) [boolean | nil]
+
+-- object_observer callback table function names and signatures
+callbacks = {
+   create_object (self, dmz.handle obj_handle, dmz.object_type type, integer locality),
+   destroy_object (self, dmz.handle obj_handle),
+   update_object_uuid (self, dmz.handle obj_handle, dmz.uuid uuid, dmz.uuid prev_uuid),
+   remove_object_attribute (self, dmz.handle obj_handle, dmz.handle attr_handle, dmz.mask mask),
+   link_objects (self, dmz.handle link_handle, dmz.handle attr_handle, dmz.handle super_handle, dmz.handle sub_handle),
+   unlink_objects (self, dmz.handle link_handle, dmz.handle attr_handle, dmz.handle super_handle, dmz.handle sub_handle),
+   update_link_object  (self, dmz.handle link_handle, dmz.handle attr_handle, dmz.handle super_handle, dmz.handle sub_handle, dmz.handle attr_obj_handle),
+   update_object_locality (self, dmz.handle obj_handle, integer locality, [integer prev_locality]),
+   update_object_type (self, dmz.handle object_handle, dmz.handle attr_handle, dmz.type type, [dmz.type prev_type]),
+   update_object_state (self, dmz.handle object_handle, dmz.handle attr_handle, dmz.mask state, [dmz.mask prev_state]),
+   update_object_flag (self, dmz.handle object_handle, dmz.handle attr_handle, boolean flag, [boolean prev_flag]),
+   update_object_time_stamp (self, dmz.handle object_handle, dmz.handle attr_handle, number time_stamp, [number prev_time_stamp]),
+   update_object_position (self, dmz.handle object_handle, dmz.handle attr_handle, dmz.vector value, [dmz.vector prev_value])
+   update_object_orientation (self, dmz.handle object_handle, dmz.handle attr_handle, dmz.matrix value, [dmz.matrix prev_value]),
+   update_object_velocity (self, dmz.handle object_handle, dmz.handle attr_handle, dmz.vector value, [dmz.vector prev_value])
+   update_object_acceleration (self, dmz.handle object_handle, dmz.handle attr_handle, dmz.vector value, [dmz.vector prev_value])
+   update_object_scale (self, dmz.handle object_handle, dmz.handle attr_handle, dmz.vector value, [dmz.vector prev_value])
+   update_object_vector (self, dmz.handle object_handle, dmz.handle attr_handle, dmz.vector value, [dmz.vector prev_value])
+   update_object_scalar (self, dmz.handle object_handle, dmz.handle attr_handle, number value, [number prev_value]),
+   update_object_text (self, dmz.handle object_handle, dmz.handle attr_handle, string value, [string prev_value]),
+   update_object_data (self, dmz.handle object_handle, dmz.handle attr_handle, dmz.data value, [dmz.data prev_value]),
+}
+\endcode
+*/
+

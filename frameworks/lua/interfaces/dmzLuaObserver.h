@@ -10,19 +10,23 @@ struct lua_Debug;
 
 namespace dmz {
 
+   //! Lua observer interface name.
    const char LuaObserverInterfaceName[] = "LuaObserverInterface";
 
    class LuaModule;
 
-   const UInt32 LuaHookCallMask        = 0x0001;
-   const UInt32 LuaHookReturnMask      = 0x0002;
-   const UInt32 LuaHookLineMask        = 0x0004;
-   const UInt32 LuaHookCountMask       = 0x0008;
-   const UInt32 LuaHookCountUpdateMask = 0x0010;
-   const UInt32 LuaHookAllMask         = 0x0FFF;
-   const UInt32 LuaScriptUpdateMask    = 0x1000;
-   const UInt32 LuaErrorMask           = 0x2000;
-   const UInt32 LuaAllCallbacksMask    = 0xFFFF;
+   //! \addtogroup Lua
+   //! @{
+   const UInt32 LuaHookCallMask        = 0x0001; //!< Call hook mask.
+   const UInt32 LuaHookReturnMask      = 0x0002; //!< Return hook mask.
+   const UInt32 LuaHookLineMask        = 0x0004; //!< Line hook mask.
+   const UInt32 LuaHookCountMask       = 0x0008; //!< Count hook mask.
+   const UInt32 LuaHookCountUpdateMask = 0x0010; //!< Count hook update mask.
+   const UInt32 LuaHookAllMask         = 0x0FFF; //!< All hooks mask.
+   const UInt32 LuaScriptUpdateMask    = 0x1000; //!< Script update mask.
+   const UInt32 LuaErrorMask           = 0x2000; //!< Lua error mask.
+   const UInt32 LuaAllCallbacksMask    = 0xFFFF; //!< All callbacks mask.
+   //! @}
 
    class LuaObserver {
 

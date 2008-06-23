@@ -8,6 +8,7 @@
 
 namespace dmz {
 
+   class Log;
    class Plugin;
 
    class DMZ_KERNEL_LINK_SYMBOL PluginIterator {

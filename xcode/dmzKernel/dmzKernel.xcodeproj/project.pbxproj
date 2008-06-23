@@ -87,8 +87,6 @@
 		7A7632710E0976B2002526C4 /* dmzRuntimeRTTINamed.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631D20E097646002526C4 /* dmzRuntimeRTTINamed.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A7632720E0976B2002526C4 /* dmzRuntimeSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631D30E097646002526C4 /* dmzRuntimeSession.cpp */; };
 		7A7632730E0976B2002526C4 /* dmzRuntimeSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631D40E097646002526C4 /* dmzRuntimeSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632740E0976B2002526C4 /* dmzRuntimeSync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631D50E097646002526C4 /* dmzRuntimeSync.cpp */; };
-		7A7632750E0976B2002526C4 /* dmzRuntimeSync.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631D60E097646002526C4 /* dmzRuntimeSync.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A7632760E0976B2002526C4 /* dmzRuntimeTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631D70E097646002526C4 /* dmzRuntimeTime.cpp */; };
 		7A7632770E0976B2002526C4 /* dmzRuntimeTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631D80E097646002526C4 /* dmzRuntimeTime.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A7632780E0976B2002526C4 /* dmzRuntimeTypeContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631D90E097646002526C4 /* dmzRuntimeTypeContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -163,6 +161,8 @@
 		7A7632BD0E097701002526C4 /* dmzTypesStringUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76322F0E097646002526C4 /* dmzTypesStringUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A7632BE0E097701002526C4 /* dmzTypesUUID.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632300E097646002526C4 /* dmzTypesUUID.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A7632BF0E097701002526C4 /* dmzTypesVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632310E097646002526C4 /* dmzTypesVector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D29DDE890E0C347D005B5107 /* dmzRuntimeTimeSlice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D29DDE870E0C347D005B5107 /* dmzRuntimeTimeSlice.cpp */; };
+		D29DDE8A0E0C347D005B5107 /* dmzRuntimeTimeSlice.h in Headers */ = {isa = PBXBuildFile; fileRef = D29DDE880E0C347D005B5107 /* dmzRuntimeTimeSlice.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -244,8 +244,6 @@
 		7A7631D20E097646002526C4 /* dmzRuntimeRTTINamed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeRTTINamed.h; sourceTree = "<group>"; };
 		7A7631D30E097646002526C4 /* dmzRuntimeSession.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeSession.cpp; sourceTree = "<group>"; };
 		7A7631D40E097646002526C4 /* dmzRuntimeSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeSession.h; sourceTree = "<group>"; };
-		7A7631D50E097646002526C4 /* dmzRuntimeSync.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeSync.cpp; sourceTree = "<group>"; };
-		7A7631D60E097646002526C4 /* dmzRuntimeSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeSync.h; sourceTree = "<group>"; };
 		7A7631D70E097646002526C4 /* dmzRuntimeTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeTime.cpp; sourceTree = "<group>"; };
 		7A7631D80E097646002526C4 /* dmzRuntimeTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeTime.h; sourceTree = "<group>"; };
 		7A7631D90E097646002526C4 /* dmzRuntimeTypeContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeTypeContext.h; sourceTree = "<group>"; };
@@ -335,6 +333,8 @@
 		7A76322F0E097646002526C4 /* dmzTypesStringUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesStringUtil.h; sourceTree = "<group>"; };
 		7A7632300E097646002526C4 /* dmzTypesUUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesUUID.h; sourceTree = "<group>"; };
 		7A7632310E097646002526C4 /* dmzTypesVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesVector.h; sourceTree = "<group>"; };
+		D29DDE870E0C347D005B5107 /* dmzRuntimeTimeSlice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeTimeSlice.cpp; sourceTree = "<group>"; };
+		D29DDE880E0C347D005B5107 /* dmzRuntimeTimeSlice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeTimeSlice.h; sourceTree = "<group>"; };
 		D2AAC046055464E500DB518D /* libdmzKernel.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzKernel.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -448,10 +448,10 @@
 				7A7631D20E097646002526C4 /* dmzRuntimeRTTINamed.h */,
 				7A7631D30E097646002526C4 /* dmzRuntimeSession.cpp */,
 				7A7631D40E097646002526C4 /* dmzRuntimeSession.h */,
-				7A7631D50E097646002526C4 /* dmzRuntimeSync.cpp */,
-				7A7631D60E097646002526C4 /* dmzRuntimeSync.h */,
 				7A7631D70E097646002526C4 /* dmzRuntimeTime.cpp */,
 				7A7631D80E097646002526C4 /* dmzRuntimeTime.h */,
+				D29DDE870E0C347D005B5107 /* dmzRuntimeTimeSlice.cpp */,
+				D29DDE880E0C347D005B5107 /* dmzRuntimeTimeSlice.h */,
 				7A7631D90E097646002526C4 /* dmzRuntimeTypeContext.h */,
 				7A7631DA0E097646002526C4 /* dmzRuntimeUndo.cpp */,
 				7A7631DB0E097646002526C4 /* dmzRuntimeUndo.h */,
@@ -601,7 +601,6 @@
 				7A7632700E0976B2002526C4 /* dmzRuntimeRTTI.h in Headers */,
 				7A7632710E0976B2002526C4 /* dmzRuntimeRTTINamed.h in Headers */,
 				7A7632730E0976B2002526C4 /* dmzRuntimeSession.h in Headers */,
-				7A7632750E0976B2002526C4 /* dmzRuntimeSync.h in Headers */,
 				7A7632770E0976B2002526C4 /* dmzRuntimeTime.h in Headers */,
 				7A7632780E0976B2002526C4 /* dmzRuntimeTypeContext.h in Headers */,
 				7A76327A0E0976B2002526C4 /* dmzRuntimeUndo.h in Headers */,
@@ -645,6 +644,7 @@
 				7A7632BD0E097701002526C4 /* dmzTypesStringUtil.h in Headers */,
 				7A7632BE0E097701002526C4 /* dmzTypesUUID.h in Headers */,
 				7A7632BF0E097701002526C4 /* dmzTypesVector.h in Headers */,
+				D29DDE8A0E0C347D005B5107 /* dmzRuntimeTimeSlice.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -720,7 +720,6 @@
 				7A76326D0E0976B2002526C4 /* dmzRuntimePluginLoader.cpp in Sources */,
 				7A76326F0E0976B2002526C4 /* dmzRuntimeRTTI.cpp in Sources */,
 				7A7632720E0976B2002526C4 /* dmzRuntimeSession.cpp in Sources */,
-				7A7632740E0976B2002526C4 /* dmzRuntimeSync.cpp in Sources */,
 				7A7632760E0976B2002526C4 /* dmzRuntimeTime.cpp in Sources */,
 				7A7632790E0976B2002526C4 /* dmzRuntimeUndo.cpp in Sources */,
 				7A76327C0E0976F2002526C4 /* dmzSystemCommon.cpp in Sources */,
@@ -752,6 +751,7 @@
 				7A7632B70E097701002526C4 /* dmzTypesQuaternion.cpp in Sources */,
 				7A7632B90E097701002526C4 /* dmzTypesString.cpp in Sources */,
 				7A7632BC0E097701002526C4 /* dmzTypesStringUtil.cpp in Sources */,
+				D29DDE890E0C347D005B5107 /* dmzRuntimeTimeSlice.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -795,6 +795,7 @@
 		};
 		1DEB91F008733DB70010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7A7631870E097618002526C4 /* dmz.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
@@ -803,19 +804,20 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.5;
+				SDKROOT = iphonesimulator2.0;
 			};
 			name = Debug;
 		};
 		1DEB91F108733DB70010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7A7631870E097618002526C4 /* dmz.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.5;
+				SDKROOT = iphonesimulator2.0;
 			};
 			name = Release;
 		};

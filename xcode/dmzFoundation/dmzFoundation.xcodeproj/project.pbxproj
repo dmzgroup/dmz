@@ -13,7 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
-				7A76337B0E097C31002526C4 /* PBXTargetDependency */,
+				D2C84C690E0C38880002DBC9 /* PBXTargetDependency */,
 				7A7633A70E097D44002526C4 /* PBXTargetDependency */,
 				7A7633D20E097DFC002526C4 /* PBXTargetDependency */,
 				7A7633E40E097E6F002526C4 /* PBXTargetDependency */,
@@ -27,8 +27,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		7A7633750E097C1A002526C4 /* dmzApplicationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76333C0E097BD9002526C4 /* dmzApplicationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7633760E097C1A002526C4 /* dmzFileCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76333E0E097BD9002526C4 /* dmzFileCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A7633870E097CC7002526C4 /* ascii.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7633160E097BD9002526C4 /* ascii.h */; };
 		7A7633880E097CC7002526C4 /* asciitab.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7633170E097BD9002526C4 /* asciitab.h */; };
 		7A7633890E097CC7002526C4 /* expat.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7633190E097BD9002526C4 /* expat.h */; };
@@ -67,16 +65,11 @@
 		7A76340C0E097F2D002526C4 /* dmzPluginUndo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76336F0E097BD9002526C4 /* dmzPluginUndo.h */; };
 		7A76341D0E097F7A002526C4 /* dmzPluginUndoDump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7633710E097BD9002526C4 /* dmzPluginUndoDump.cpp */; };
 		7A76341E0E097F7A002526C4 /* dmzPluginUndoDump.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7633720E097BD9002526C4 /* dmzPluginUndoDump.h */; };
+		D2C84C6C0E0C38970002DBC9 /* dmzApplicationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76333C0E097BD9002526C4 /* dmzApplicationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D2C84C6D0E0C38970002DBC9 /* dmzFileCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76333E0E097BD9002526C4 /* dmzFileCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		7A76337A0E097C31002526C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
-			remoteInfo = dmzFoundation;
-		};
 		7A7633A60E097D44002526C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
@@ -98,13 +91,6 @@
 			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzKernel;
 		};
-		7A7633C20E097DB3002526C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
-			remoteInfo = dmzFoundation;
-		};
 		7A7633C40E097DB7002526C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
@@ -125,13 +111,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = dmzKernel;
-		};
-		7A7633DE0E097E48002526C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
-			remoteInfo = dmzFoundation;
 		};
 		7A7633E30E097E6F002526C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -181,6 +160,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7A7634140E097F5D002526C4;
 			remoteInfo = dmzPluginUndoDump;
+		};
+		D2C84C680E0C38880002DBC9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2C84C640E0C38710002DBC9 /* dmzFoundation */;
+			remoteInfo = dmzFoundation;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -273,7 +259,7 @@
 		7A7633F20E097EC1002526C4 /* libdmzPluginMsgDump.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzPluginMsgDump.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A7634030E097F16002526C4 /* libdmzPluginUndo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzPluginUndo.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A7634150E097F5D002526C4 /* libdmzPluginUndoDump.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzPluginUndoDump.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2AAC046055464E500DB518D /* libdmzFoundation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzFoundation.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2C84C650E0C38710002DBC9 /* libdmzFoundation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzFoundation.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -319,7 +305,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D289987405E68DCB004EDB86 /* Frameworks */ = {
+		D2C84C630E0C38710002DBC9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -343,13 +329,13 @@
 		1AB674ADFE9D54B511CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D2AAC046055464E500DB518D /* libdmzFoundation.a */,
 				7A7633830E097C6D002526C4 /* libexpat.a */,
 				7A7633BD0E097DA9002526C4 /* libdmzXML.a */,
 				7A7633D90E097E31002526C4 /* libdmzFileCacheLocal.a */,
 				7A7633F20E097EC1002526C4 /* libdmzPluginMsgDump.a */,
 				7A7634030E097F16002526C4 /* libdmzPluginUndo.a */,
 				7A7634150E097F5D002526C4 /* libdmzPluginUndoDump.a */,
+				D2C84C650E0C38710002DBC9 /* libdmzFoundation.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -647,12 +633,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D2AAC043055464E500DB518D /* Headers */ = {
+		D2C84C610E0C38710002DBC9 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A7633750E097C1A002526C4 /* dmzApplicationState.h in Headers */,
-				7A7633760E097C1A002526C4 /* dmzFileCache.h in Headers */,
+				D2C84C6C0E0C38970002DBC9 /* dmzApplicationState.h in Headers */,
+				D2C84C6D0E0C38970002DBC9 /* dmzFileCache.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,7 +674,6 @@
 			);
 			dependencies = (
 				7A7633C10E097DAE002526C4 /* PBXTargetDependency */,
-				7A7633C30E097DB3002526C4 /* PBXTargetDependency */,
 				7A7633C50E097DB7002526C4 /* PBXTargetDependency */,
 			);
 			name = dmzXML;
@@ -708,7 +693,6 @@
 			);
 			dependencies = (
 				7A7633DD0E097E45002526C4 /* PBXTargetDependency */,
-				7A7633DF0E097E48002526C4 /* PBXTargetDependency */,
 			);
 			name = dmzFileCacheLocal;
 			productName = dmzFileCacheLocal;
@@ -769,13 +753,13 @@
 			productReference = 7A7634150E097F5D002526C4 /* libdmzPluginUndoDump.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		D2AAC045055464E500DB518D /* dmzFoundation */ = {
+		D2C84C640E0C38710002DBC9 /* dmzFoundation */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "dmzFoundation" */;
+			buildConfigurationList = D2C84C770E0C38A60002DBC9 /* Build configuration list for PBXNativeTarget "dmzFoundation" */;
 			buildPhases = (
-				D2AAC043055464E500DB518D /* Headers */,
-				D2AAC044055464E500DB518D /* Sources */,
-				D289987405E68DCB004EDB86 /* Frameworks */,
+				D2C84C610E0C38710002DBC9 /* Headers */,
+				D2C84C620E0C38710002DBC9 /* Sources */,
+				D2C84C630E0C38710002DBC9 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -783,7 +767,7 @@
 			);
 			name = dmzFoundation;
 			productName = dmzFoundation;
-			productReference = D2AAC046055464E500DB518D /* libdmzFoundation.a */;
+			productReference = D2C84C650E0C38710002DBC9 /* libdmzFoundation.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -805,7 +789,7 @@
 			projectRoot = "";
 			targets = (
 				7A7633770E097C2E002526C4 /* build_all */,
-				D2AAC045055464E500DB518D /* dmzFoundation */,
+				D2C84C640E0C38710002DBC9 /* dmzFoundation */,
 				7A7633820E097C6D002526C4 /* expat */,
 				7A7633BC0E097DA9002526C4 /* dmzXML */,
 				7A7633D80E097E31002526C4 /* dmzFileCacheLocal */,
@@ -883,7 +867,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D2AAC044055464E500DB518D /* Sources */ = {
+		D2C84C620E0C38710002DBC9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -893,11 +877,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		7A76337B0E097C31002526C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D2AAC045055464E500DB518D /* dmzFoundation */;
-			targetProxy = 7A76337A0E097C31002526C4 /* PBXContainerItemProxy */;
-		};
 		7A7633A70E097D44002526C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7A7633820E097C6D002526C4 /* expat */;
@@ -907,11 +886,6 @@
 			isa = PBXTargetDependency;
 			name = dmzKernel;
 			targetProxy = 7A7633C00E097DAE002526C4 /* PBXContainerItemProxy */;
-		};
-		7A7633C30E097DB3002526C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D2AAC045055464E500DB518D /* dmzFoundation */;
-			targetProxy = 7A7633C20E097DB3002526C4 /* PBXContainerItemProxy */;
 		};
 		7A7633C50E097DB7002526C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -927,11 +901,6 @@
 			isa = PBXTargetDependency;
 			name = dmzKernel;
 			targetProxy = 7A7633DC0E097E45002526C4 /* PBXContainerItemProxy */;
-		};
-		7A7633DF0E097E48002526C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D2AAC045055464E500DB518D /* dmzFoundation */;
-			targetProxy = 7A7633DE0E097E48002526C4 /* PBXContainerItemProxy */;
 		};
 		7A7633E40E097E6F002526C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -968,36 +937,14 @@
 			target = 7A7634140E097F5D002526C4 /* dmzPluginUndoDump */;
 			targetProxy = 7A76341F0E097F82002526C4 /* PBXContainerItemProxy */;
 		};
+		D2C84C690E0C38880002DBC9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2C84C640E0C38710002DBC9 /* dmzFoundation */;
+			targetProxy = D2C84C680E0C38880002DBC9 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		1DEB91EC08733DB70010E9CD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A7633100E097BC8002526C4 /* dmz.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/lib;
-				PRODUCT_NAME = dmzFoundation;
-			};
-			name = Debug;
-		};
-		1DEB91ED08733DB70010E9CD /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A7633100E097BC8002526C4 /* dmz.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/lib;
-				PRODUCT_NAME = dmzFoundation;
-			};
-			name = Release;
-		};
 		1DEB91F008733DB70010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7A7633100E097BC8002526C4 /* dmz.xcconfig */;
@@ -1243,18 +1190,41 @@
 			};
 			name = Release;
 		};
+		D2C84C660E0C38720002DBC9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7A7633100E097BC8002526C4 /* dmz.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzFoundation;
+			};
+			name = Debug;
+		};
+		D2C84C670E0C38720002DBC9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7A7633100E097BC8002526C4 /* dmz.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzFoundation;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "dmzFoundation" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1DEB91EC08733DB70010E9CD /* Debug */,
-				1DEB91ED08733DB70010E9CD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "dmzFoundation" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1323,6 +1293,15 @@
 			buildConfigurations = (
 				7A7634160E097F5D002526C4 /* Debug */,
 				7A7634170E097F5D002526C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D2C84C770E0C38A60002DBC9 /* Build configuration list for PBXNativeTarget "dmzFoundation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2C84C660E0C38720002DBC9 /* Debug */,
+				D2C84C670E0C38720002DBC9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -2,7 +2,9 @@
 #include <dlfcn.h>
 
 #if defined(__APPLE__) || defined(MACOSX)
-#include <CoreServices/CoreServices.h>
+#   ifndef DMZ_IPHONE_BUILD
+#      include <CoreServices/CoreServices.h>
+#   endif
 #endif
 
 
@@ -64,6 +66,7 @@ dmz::DynamicLibrary::DynamicLibrary (
    _state.name = LibName;
 
 #if defined(__APPLE__) || defined(MACOSX)
+#   ifndef DMZ_IPHONE_BUILD
    if (!_state.handle) {
 
       char *error = dlerror ();
@@ -83,6 +86,7 @@ dmz::DynamicLibrary::DynamicLibrary (
       _state.handle = dlopen (soName.get_buffer (), Mode);
       _state.name = soName;
    }
+#   endif
 #endif
 
    if (!_state.handle) {
@@ -119,6 +123,7 @@ dmz::DynamicLibrary::DynamicLibrary (
    }
 
 #if defined(__APPLE__) || defined(MACOSX)
+#   ifndef DMZ_IPHONE_BUILD
    if (!_state.handle) {
 
       char *error = dlerror ();
@@ -129,6 +134,7 @@ dmz::DynamicLibrary::DynamicLibrary (
       _state.handle = dlopen (dylibName.get_buffer (), Mode);
       _state.name = dylibName;
    }
+#   endif
 #endif
 
    if (!_state.handle) {

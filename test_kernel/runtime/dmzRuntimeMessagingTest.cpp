@@ -42,7 +42,7 @@ int
 main (int argc, char *argv[]) {
 
    Test test ("dmzRuntimeMessagingTest", argc, argv);
-   RuntimeContext *context (test.rt.get_context ());
+   // RuntimeContext *context (test.rt.get_context ());
 
    Config runtimeConfig;
 

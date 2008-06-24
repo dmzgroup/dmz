@@ -1074,7 +1074,7 @@ dmz::ObjectPluginUndo::_remove_attribute (
 void
 dmz::ObjectPluginUndo::_init (Config &local) {
 
-   RuntimeContext *context (get_plugin_runtime_context ());
+   // RuntimeContext *context (get_plugin_runtime_context ());
 
    _defs.create_message_type ("Object_Plugin_Undo_Create_Object_Message", _createObject);
 

@@ -10,7 +10,7 @@
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
-#include <dmzRuntimePluginLoader.h>
+#include <dmzRuntimeLoadPlugins.h>
 #include <dmzRuntimeSession.h>
 #include <dmzTypesMask.h>
 #include <dmzTypesMath.h>
@@ -432,9 +432,9 @@ dmz::QtPluginCanvasObject::_init (Config &local, Config &global) {
 
    if (local.lookup_all_config ("plugins.plugin", pluginList)) {
 
-      PluginLoader loader (get_plugin_runtime_context ());
+      RuntimeContext *context (get_plugin_runtime_context ());
 
-      if (loader.load_plugins (pluginList, local, global, _extensions, &_log)) {
+      if (dmz::load_plugins (context, pluginList, local, global, _extensions, &_log)) {
 
          _extensions.discover_plugins ();
       }

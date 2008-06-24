@@ -8,7 +8,7 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
-#include <dmzRuntimePluginLoader.h>
+#include <dmzRuntimeLoadPlugins.h>
 #include <Ogre/Ogre.h>
 #include "osmscene/OgreOSMScene.h"
 
@@ -338,8 +338,8 @@ dmz::RenderModuleCoreOgreBasic::_init (Config &local, Config &global) {
 
    if (local.lookup_all_config ("plugins.plugin", pluginList)) {
 
-      PluginLoader loader (get_plugin_runtime_context ());
-      loader.load_plugins (pluginList, local, global, _extensions, &_log);
+      RuntimeContext *context (get_plugin_runtime_context ());
+      dmz::load_plugins (context, pluginList, local, global, _extensions, &_log);
    }
    else {
 

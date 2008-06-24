@@ -6,340 +6,316 @@
 	objectVersion = 45;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		7A7632C50E09775B002526C4 /* build_all */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 7A7632CC0E09777A002526C4 /* Build configuration list for PBXAggregateTarget "build_all" */;
-			buildPhases = (
-			);
-			dependencies = (
-				7A7632C90E09775F002526C4 /* PBXTargetDependency */,
-			);
-			name = build_all;
-			productName = build_all;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
-		7A7632320E097671002526C4 /* dmzKernelExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631920E097646002526C4 /* dmzKernelExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632330E0976B2002526C4 /* dmzRuntime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631940E097646002526C4 /* dmzRuntime.cpp */; };
-		7A7632340E0976B2002526C4 /* dmzRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631950E097646002526C4 /* dmzRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632350E0976B2002526C4 /* dmzRuntimeConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631960E097646002526C4 /* dmzRuntimeConfig.cpp */; };
-		7A7632360E0976B2002526C4 /* dmzRuntimeConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631970E097646002526C4 /* dmzRuntimeConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632370E0976B2002526C4 /* dmzRuntimeConfigContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631980E097646002526C4 /* dmzRuntimeConfigContext.h */; settings = {ATTRIBUTES = (); }; };
-		7A7632380E0976B2002526C4 /* dmzRuntimeConfigRead.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631990E097646002526C4 /* dmzRuntimeConfigRead.cpp */; };
-		7A7632390E0976B2002526C4 /* dmzRuntimeConfigRead.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76319A0E097646002526C4 /* dmzRuntimeConfigRead.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76323A0E0976B2002526C4 /* dmzRuntimeConfigUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A76319B0E097646002526C4 /* dmzRuntimeConfigUtil.cpp */; };
-		7A76323B0E0976B2002526C4 /* dmzRuntimeConfigWrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A76319C0E097646002526C4 /* dmzRuntimeConfigWrite.cpp */; };
-		7A76323C0E0976B2002526C4 /* dmzRuntimeConfigWrite.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76319D0E097646002526C4 /* dmzRuntimeConfigWrite.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76323D0E0976B2002526C4 /* dmzRuntimeContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A76319E0E097646002526C4 /* dmzRuntimeContext.cpp */; };
-		7A76323E0E0976B2002526C4 /* dmzRuntimeContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76319F0E097646002526C4 /* dmzRuntimeContext.h */; settings = {ATTRIBUTES = (); }; };
-		7A76323F0E0976B2002526C4 /* dmzRuntimeContextDefinitions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631A00E097646002526C4 /* dmzRuntimeContextDefinitions.cpp */; };
-		7A7632400E0976B2002526C4 /* dmzRuntimeContextDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631A10E097646002526C4 /* dmzRuntimeContextDefinitions.h */; settings = {ATTRIBUTES = (); }; };
-		7A7632410E0976B2002526C4 /* dmzRuntimeContextLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631A20E097646002526C4 /* dmzRuntimeContextLog.cpp */; };
-		7A7632420E0976B2002526C4 /* dmzRuntimeContextLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631A30E097646002526C4 /* dmzRuntimeContextLog.h */; settings = {ATTRIBUTES = (); }; };
-		7A7632430E0976B2002526C4 /* dmzRuntimeContextMessaging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631A40E097646002526C4 /* dmzRuntimeContextMessaging.cpp */; };
-		7A7632440E0976B2002526C4 /* dmzRuntimeContextMessaging.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631A50E097646002526C4 /* dmzRuntimeContextMessaging.h */; settings = {ATTRIBUTES = (); }; };
-		7A7632450E0976B2002526C4 /* dmzRuntimeContextRTTI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631A60E097646002526C4 /* dmzRuntimeContextRTTI.cpp */; };
-		7A7632460E0976B2002526C4 /* dmzRuntimeContextRTTI.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631A70E097646002526C4 /* dmzRuntimeContextRTTI.h */; settings = {ATTRIBUTES = (); }; };
-		7A7632470E0976B2002526C4 /* dmzRuntimeContextThreadKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631A80E097646002526C4 /* dmzRuntimeContextThreadKey.h */; settings = {ATTRIBUTES = (); }; };
-		7A7632480E0976B2002526C4 /* dmzRuntimeContextTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631A90E097646002526C4 /* dmzRuntimeContextTime.cpp */; };
-		7A7632490E0976B2002526C4 /* dmzRuntimeContextTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631AA0E097646002526C4 /* dmzRuntimeContextTime.h */; settings = {ATTRIBUTES = (); }; };
-		7A76324A0E0976B2002526C4 /* dmzRuntimeContextUndo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631AB0E097646002526C4 /* dmzRuntimeContextUndo.h */; settings = {ATTRIBUTES = (); }; };
-		7A76324B0E0976B2002526C4 /* dmzRuntimeData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631AC0E097646002526C4 /* dmzRuntimeData.cpp */; };
-		7A76324C0E0976B2002526C4 /* dmzRuntimeData.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631AD0E097646002526C4 /* dmzRuntimeData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76324D0E0976B2002526C4 /* dmzRuntimeDataBinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631AE0E097646002526C4 /* dmzRuntimeDataBinder.cpp */; };
-		7A76324E0E0976B2002526C4 /* dmzRuntimeDataBinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631AF0E097646002526C4 /* dmzRuntimeDataBinder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76324F0E0976B2002526C4 /* dmzRuntimeDataConverters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631B00E097646002526C4 /* dmzRuntimeDataConverters.cpp */; };
-		7A7632500E0976B2002526C4 /* dmzRuntimeDataConverters.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631B10E097646002526C4 /* dmzRuntimeDataConverters.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632510E0976B2002526C4 /* dmzRuntimeDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631B20E097646002526C4 /* dmzRuntimeDefinitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632520E0976B2002526C4 /* dmzRuntimeEventType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631B30E097646002526C4 /* dmzRuntimeEventType.cpp */; };
-		7A7632530E0976B2002526C4 /* dmzRuntimeEventType.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631B40E097646002526C4 /* dmzRuntimeEventType.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632540E0976B2002526C4 /* dmzRuntimeExit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631B50E097646002526C4 /* dmzRuntimeExit.cpp */; };
-		7A7632550E0976B2002526C4 /* dmzRuntimeExit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631B60E097646002526C4 /* dmzRuntimeExit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632560E0976B2002526C4 /* dmzRuntimeHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631B70E097646002526C4 /* dmzRuntimeHandle.cpp */; };
-		7A7632570E0976B2002526C4 /* dmzRuntimeHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631B80E097646002526C4 /* dmzRuntimeHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632580E0976B2002526C4 /* dmzRuntimeHandleAllocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631B90E097646002526C4 /* dmzRuntimeHandleAllocator.cpp */; };
-		7A7632590E0976B2002526C4 /* dmzRuntimeHandleAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631BA0E097646002526C4 /* dmzRuntimeHandleAllocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76325A0E0976B2002526C4 /* dmzRuntimeInit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631BB0E097646002526C4 /* dmzRuntimeInit.cpp */; };
-		7A76325B0E0976B2002526C4 /* dmzRuntimeInit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631BC0E097646002526C4 /* dmzRuntimeInit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76325C0E0976B2002526C4 /* dmzRuntimeInternalDocs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631BD0E097646002526C4 /* dmzRuntimeInternalDocs.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76325D0E0976B2002526C4 /* dmzRuntimeLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631BE0E097646002526C4 /* dmzRuntimeLog.cpp */; };
-		7A76325E0E0976B2002526C4 /* dmzRuntimeLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631BF0E097646002526C4 /* dmzRuntimeLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76325F0E0976B2002526C4 /* dmzRuntimeLogObserverBasic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631C00E097646002526C4 /* dmzRuntimeLogObserverBasic.cpp */; };
-		7A7632600E0976B2002526C4 /* dmzRuntimeLogObserverBasic.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631C10E097646002526C4 /* dmzRuntimeLogObserverBasic.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632610E0976B2002526C4 /* dmzRuntimeMessageContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631C20E097646002526C4 /* dmzRuntimeMessageContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632620E0976B2002526C4 /* dmzRuntimeMessaging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631C30E097646002526C4 /* dmzRuntimeMessaging.cpp */; };
-		7A7632630E0976B2002526C4 /* dmzRuntimeMessaging.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631C40E097646002526C4 /* dmzRuntimeMessaging.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632640E0976B2002526C4 /* dmzRuntimeObjectType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631C50E097646002526C4 /* dmzRuntimeObjectType.cpp */; };
-		7A7632650E0976B2002526C4 /* dmzRuntimeObjectType.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631C60E097646002526C4 /* dmzRuntimeObjectType.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632660E0976B2002526C4 /* dmzRuntimePlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631C70E097646002526C4 /* dmzRuntimePlugin.cpp */; };
-		7A7632670E0976B2002526C4 /* dmzRuntimePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631C80E097646002526C4 /* dmzRuntimePlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632680E0976B2002526C4 /* dmzRuntimePluginContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631C90E097646002526C4 /* dmzRuntimePluginContainer.cpp */; };
-		7A7632690E0976B2002526C4 /* dmzRuntimePluginContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631CA0E097646002526C4 /* dmzRuntimePluginContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76326A0E0976B2002526C4 /* dmzRuntimePluginFactoryLinkSymbol.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631CB0E097646002526C4 /* dmzRuntimePluginFactoryLinkSymbol.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76326B0E0976B2002526C4 /* dmzRuntimePluginInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631CC0E097646002526C4 /* dmzRuntimePluginInfo.cpp */; };
-		7A76326C0E0976B2002526C4 /* dmzRuntimePluginInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631CD0E097646002526C4 /* dmzRuntimePluginInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76326D0E0976B2002526C4 /* dmzRuntimePluginLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631CE0E097646002526C4 /* dmzRuntimePluginLoader.cpp */; };
-		7A76326E0E0976B2002526C4 /* dmzRuntimePluginLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631CF0E097646002526C4 /* dmzRuntimePluginLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76326F0E0976B2002526C4 /* dmzRuntimeRTTI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631D00E097646002526C4 /* dmzRuntimeRTTI.cpp */; };
-		7A7632700E0976B2002526C4 /* dmzRuntimeRTTI.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631D10E097646002526C4 /* dmzRuntimeRTTI.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632710E0976B2002526C4 /* dmzRuntimeRTTINamed.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631D20E097646002526C4 /* dmzRuntimeRTTINamed.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632720E0976B2002526C4 /* dmzRuntimeSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631D30E097646002526C4 /* dmzRuntimeSession.cpp */; };
-		7A7632730E0976B2002526C4 /* dmzRuntimeSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631D40E097646002526C4 /* dmzRuntimeSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632760E0976B2002526C4 /* dmzRuntimeTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631D70E097646002526C4 /* dmzRuntimeTime.cpp */; };
-		7A7632770E0976B2002526C4 /* dmzRuntimeTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631D80E097646002526C4 /* dmzRuntimeTime.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632780E0976B2002526C4 /* dmzRuntimeTypeContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631D90E097646002526C4 /* dmzRuntimeTypeContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632790E0976B2002526C4 /* dmzRuntimeUndo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631DA0E097646002526C4 /* dmzRuntimeUndo.cpp */; };
-		7A76327A0E0976B2002526C4 /* dmzRuntimeUndo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631DB0E097646002526C4 /* dmzRuntimeUndo.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76327B0E0976F2002526C4 /* dmzSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631DD0E097646002526C4 /* dmzSystem.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76327C0E0976F2002526C4 /* dmzSystemCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631DE0E097646002526C4 /* dmzSystemCommon.cpp */; };
-		7A76327D0E0976F2002526C4 /* dmzSystemDynamicLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631DF0E097646002526C4 /* dmzSystemDynamicLibrary.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76327E0E0976F2002526C4 /* dmzSystemDynamicLibraryUnix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631E00E097646002526C4 /* dmzSystemDynamicLibraryUnix.cpp */; };
-		7A76327F0E0976F2002526C4 /* dmzSystemFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631E20E097646002526C4 /* dmzSystemFile.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632800E0976F2002526C4 /* dmzSystemFileCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631E30E097646002526C4 /* dmzSystemFileCommon.cpp */; };
-		7A7632810E0976F2002526C4 /* dmzSystemFileUnix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631E40E097646002526C4 /* dmzSystemFileUnix.cpp */; };
-		7A7632820E0976F2002526C4 /* dmzSystemMarshal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631E80E097646002526C4 /* dmzSystemMarshal.cpp */; };
-		7A7632830E0976F2002526C4 /* dmzSystemMarshal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631E90E097646002526C4 /* dmzSystemMarshal.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632840E0976F2002526C4 /* dmzSystemMutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631EA0E097646002526C4 /* dmzSystemMutex.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632850E0976F2002526C4 /* dmzSystemMutexUnix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631EB0E097646002526C4 /* dmzSystemMutexUnix.cpp */; };
-		7A7632860E0976F2002526C4 /* dmzSystemRefCount.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631ED0E097646002526C4 /* dmzSystemRefCount.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632870E0976F2002526C4 /* dmzSystemRefCountMacOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631F00E097646002526C4 /* dmzSystemRefCountMacOS.cpp */; };
-		7A7632880E0976F2002526C4 /* dmzSystemSpinLock.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631F20E097646002526C4 /* dmzSystemSpinLock.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632890E0976F2002526C4 /* dmzSystemSpinLockMacOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631F40E097646002526C4 /* dmzSystemSpinLockMacOS.cpp */; };
-		7A76328A0E0976F2002526C4 /* dmzSystemStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631F60E097646002526C4 /* dmzSystemStream.cpp */; };
-		7A76328B0E0976F2002526C4 /* dmzSystemStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631F70E097646002526C4 /* dmzSystemStream.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76328C0E0976F2002526C4 /* dmzSystemStreamFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631F80E097646002526C4 /* dmzSystemStreamFile.cpp */; };
-		7A76328D0E0976F2002526C4 /* dmzSystemStreamFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631F90E097646002526C4 /* dmzSystemStreamFile.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76328E0E0976F2002526C4 /* dmzSystemStreamString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631FA0E097646002526C4 /* dmzSystemStreamString.cpp */; };
-		7A76328F0E0976F2002526C4 /* dmzSystemStreamString.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631FB0E097646002526C4 /* dmzSystemStreamString.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632900E0976F2002526C4 /* dmzSystemThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7631FC0E097646002526C4 /* dmzSystemThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632910E0976F2002526C4 /* dmzSystemThreadCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631FD0E097646002526C4 /* dmzSystemThreadCommon.cpp */; };
-		7A7632920E0976F2002526C4 /* dmzSystemThreadUnix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7631FE0E097646002526C4 /* dmzSystemThreadUnix.cpp */; };
-		7A7632930E0976F2002526C4 /* dmzSystemUnix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7632000E097646002526C4 /* dmzSystemUnix.cpp */; };
-		7A7632940E0976F2002526C4 /* dmzSystemUnmarshal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7632010E097646002526C4 /* dmzSystemUnmarshal.cpp */; };
-		7A7632950E0976F2002526C4 /* dmzSystemUnmarshal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632020E097646002526C4 /* dmzSystemUnmarshal.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632960E0976F2002526C4 /* qdb.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632040E097646002526C4 /* qdb.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632970E097701002526C4 /* dmzTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7632060E097646002526C4 /* dmzTypes.cpp */; };
-		7A7632980E097701002526C4 /* dmzTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632070E097646002526C4 /* dmzTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632990E097701002526C4 /* dmzTypesArrays.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632080E097646002526C4 /* dmzTypesArrays.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76329A0E097701002526C4 /* dmzTypesArrayTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632090E097646002526C4 /* dmzTypesArrayTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76329B0E097701002526C4 /* dmzTypesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76320A0E097646002526C4 /* dmzTypesBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76329C0E097701002526C4 /* dmzTypesBooleanOperator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76320B0E097646002526C4 /* dmzTypesBooleanOperator.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76329D0E097701002526C4 /* dmzTypesConsts.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76320C0E097646002526C4 /* dmzTypesConsts.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A76329E0E097701002526C4 /* dmzTypesHandleContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A76320D0E097646002526C4 /* dmzTypesHandleContainer.cpp */; };
-		7A76329F0E097701002526C4 /* dmzTypesHandleContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76320E0E097646002526C4 /* dmzTypesHandleContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632A00E097701002526C4 /* dmzTypesHashTableHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7632120E097646002526C4 /* dmzTypesHashTableHandle.cpp */; };
-		7A7632A10E097701002526C4 /* dmzTypesHashTableHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632130E097646002526C4 /* dmzTypesHashTableHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632A20E097701002526C4 /* dmzTypesHashTableHandleTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632140E097646002526C4 /* dmzTypesHashTableHandleTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632A30E097701002526C4 /* dmzTypesHashTableLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7632150E097646002526C4 /* dmzTypesHashTableLock.cpp */; };
-		7A7632A40E097701002526C4 /* dmzTypesHashTableLock.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632160E097646002526C4 /* dmzTypesHashTableLock.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632A50E097701002526C4 /* dmzTypesHashTableString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7632170E097646002526C4 /* dmzTypesHashTableString.cpp */; };
-		7A7632A60E097701002526C4 /* dmzTypesHashTableString.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632180E097646002526C4 /* dmzTypesHashTableString.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632A70E097701002526C4 /* dmzTypesHashTableStringTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632190E097646002526C4 /* dmzTypesHashTableStringTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632A80E097701002526C4 /* dmzTypesHashTableUInt32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A76321A0E097646002526C4 /* dmzTypesHashTableUInt32.cpp */; };
-		7A7632A90E097701002526C4 /* dmzTypesHashTableUInt32.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76321B0E097646002526C4 /* dmzTypesHashTableUInt32.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632AA0E097701002526C4 /* dmzTypesHashTableUInt32Template.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76321C0E097646002526C4 /* dmzTypesHashTableUInt32Template.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632AB0E097701002526C4 /* dmzTypesHashTableUInt64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A76321D0E097646002526C4 /* dmzTypesHashTableUInt64.cpp */; };
-		7A7632AC0E097701002526C4 /* dmzTypesHashTableUInt64.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76321E0E097646002526C4 /* dmzTypesHashTableUInt64.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632AD0E097701002526C4 /* dmzTypesHashTableUInt64Template.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76321F0E097646002526C4 /* dmzTypesHashTableUInt64Template.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632AE0E097701002526C4 /* dmzTypesHashTableUUID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7632200E097646002526C4 /* dmzTypesHashTableUUID.cpp */; };
-		7A7632AF0E097701002526C4 /* dmzTypesHashTableUUID.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632210E097646002526C4 /* dmzTypesHashTableUUID.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632B00E097701002526C4 /* dmzTypesHashTableUUIDTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632220E097646002526C4 /* dmzTypesHashTableUUIDTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632B10E097701002526C4 /* dmzTypesMask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7632230E097646002526C4 /* dmzTypesMask.cpp */; };
-		7A7632B20E097701002526C4 /* dmzTypesMask.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632240E097646002526C4 /* dmzTypesMask.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632B30E097701002526C4 /* dmzTypesMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7632250E097646002526C4 /* dmzTypesMath.cpp */; };
-		7A7632B40E097701002526C4 /* dmzTypesMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632260E097646002526C4 /* dmzTypesMath.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632B50E097701002526C4 /* dmzTypesMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7632270E097646002526C4 /* dmzTypesMatrix.cpp */; };
-		7A7632B60E097701002526C4 /* dmzTypesMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632280E097646002526C4 /* dmzTypesMatrix.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632B70E097701002526C4 /* dmzTypesQuaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A7632290E097646002526C4 /* dmzTypesQuaternion.cpp */; };
-		7A7632B80E097701002526C4 /* dmzTypesQuaternion.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76322A0E097646002526C4 /* dmzTypesQuaternion.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632B90E097701002526C4 /* dmzTypesString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A76322B0E097646002526C4 /* dmzTypesString.cpp */; };
-		7A7632BA0E097701002526C4 /* dmzTypesString.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76322C0E097646002526C4 /* dmzTypesString.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632BB0E097701002526C4 /* dmzTypesStringTokenizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76322D0E097646002526C4 /* dmzTypesStringTokenizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632BC0E097701002526C4 /* dmzTypesStringUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A76322E0E097646002526C4 /* dmzTypesStringUtil.cpp */; };
-		7A7632BD0E097701002526C4 /* dmzTypesStringUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A76322F0E097646002526C4 /* dmzTypesStringUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632BE0E097701002526C4 /* dmzTypesUUID.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632300E097646002526C4 /* dmzTypesUUID.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A7632BF0E097701002526C4 /* dmzTypesVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A7632310E097646002526C4 /* dmzTypesVector.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D29DDE890E0C347D005B5107 /* dmzRuntimeTimeSlice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D29DDE870E0C347D005B5107 /* dmzRuntimeTimeSlice.cpp */; };
-		D29DDE8A0E0C347D005B5107 /* dmzRuntimeTimeSlice.h in Headers */ = {isa = PBXBuildFile; fileRef = D29DDE880E0C347D005B5107 /* dmzRuntimeTimeSlice.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BA20E10647B0081BE9D /* dmzKernelExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B020E10647A0081BE9D /* dmzKernelExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BA30E10647B0081BE9D /* dmzRuntime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B040E10647A0081BE9D /* dmzRuntime.cpp */; };
+		7AA82BA40E10647B0081BE9D /* dmzRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B050E10647A0081BE9D /* dmzRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BA50E10647B0081BE9D /* dmzRuntimeConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B060E10647A0081BE9D /* dmzRuntimeConfig.cpp */; };
+		7AA82BA60E10647B0081BE9D /* dmzRuntimeConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B070E10647A0081BE9D /* dmzRuntimeConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BA70E10647B0081BE9D /* dmzRuntimeConfigContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B080E10647A0081BE9D /* dmzRuntimeConfigContext.h */; settings = {ATTRIBUTES = (); }; };
+		7AA82BA80E10647B0081BE9D /* dmzRuntimeConfigRead.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B090E10647A0081BE9D /* dmzRuntimeConfigRead.cpp */; };
+		7AA82BA90E10647B0081BE9D /* dmzRuntimeConfigRead.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B0A0E10647A0081BE9D /* dmzRuntimeConfigRead.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BAA0E10647B0081BE9D /* dmzRuntimeConfigUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B0B0E10647A0081BE9D /* dmzRuntimeConfigUtil.cpp */; };
+		7AA82BAB0E10647B0081BE9D /* dmzRuntimeConfigWrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B0C0E10647A0081BE9D /* dmzRuntimeConfigWrite.cpp */; };
+		7AA82BAC0E10647B0081BE9D /* dmzRuntimeConfigWrite.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B0D0E10647A0081BE9D /* dmzRuntimeConfigWrite.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BAD0E10647B0081BE9D /* dmzRuntimeContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B0E0E10647A0081BE9D /* dmzRuntimeContext.cpp */; };
+		7AA82BAE0E10647B0081BE9D /* dmzRuntimeContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B0F0E10647A0081BE9D /* dmzRuntimeContext.h */; settings = {ATTRIBUTES = (); }; };
+		7AA82BAF0E10647B0081BE9D /* dmzRuntimeContextDefinitions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B100E10647A0081BE9D /* dmzRuntimeContextDefinitions.cpp */; };
+		7AA82BB00E10647B0081BE9D /* dmzRuntimeContextDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B110E10647A0081BE9D /* dmzRuntimeContextDefinitions.h */; settings = {ATTRIBUTES = (); }; };
+		7AA82BB10E10647B0081BE9D /* dmzRuntimeContextLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B120E10647A0081BE9D /* dmzRuntimeContextLog.cpp */; };
+		7AA82BB20E10647B0081BE9D /* dmzRuntimeContextLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B130E10647A0081BE9D /* dmzRuntimeContextLog.h */; settings = {ATTRIBUTES = (); }; };
+		7AA82BB30E10647B0081BE9D /* dmzRuntimeContextMessaging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B140E10647A0081BE9D /* dmzRuntimeContextMessaging.cpp */; };
+		7AA82BB40E10647B0081BE9D /* dmzRuntimeContextMessaging.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B150E10647A0081BE9D /* dmzRuntimeContextMessaging.h */; settings = {ATTRIBUTES = (); }; };
+		7AA82BB50E10647B0081BE9D /* dmzRuntimeContextRTTI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B160E10647A0081BE9D /* dmzRuntimeContextRTTI.cpp */; };
+		7AA82BB60E10647B0081BE9D /* dmzRuntimeContextRTTI.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B170E10647A0081BE9D /* dmzRuntimeContextRTTI.h */; settings = {ATTRIBUTES = (); }; };
+		7AA82BB70E10647B0081BE9D /* dmzRuntimeContextThreadKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B180E10647A0081BE9D /* dmzRuntimeContextThreadKey.h */; settings = {ATTRIBUTES = (); }; };
+		7AA82BB80E10647B0081BE9D /* dmzRuntimeContextTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B190E10647A0081BE9D /* dmzRuntimeContextTime.cpp */; };
+		7AA82BB90E10647B0081BE9D /* dmzRuntimeContextTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B1A0E10647A0081BE9D /* dmzRuntimeContextTime.h */; settings = {ATTRIBUTES = (); }; };
+		7AA82BBA0E10647B0081BE9D /* dmzRuntimeContextUndo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B1B0E10647A0081BE9D /* dmzRuntimeContextUndo.h */; settings = {ATTRIBUTES = (); }; };
+		7AA82BBB0E10647B0081BE9D /* dmzRuntimeData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B1C0E10647A0081BE9D /* dmzRuntimeData.cpp */; };
+		7AA82BBC0E10647B0081BE9D /* dmzRuntimeData.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B1D0E10647A0081BE9D /* dmzRuntimeData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BBD0E10647B0081BE9D /* dmzRuntimeDataBinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B1E0E10647A0081BE9D /* dmzRuntimeDataBinder.cpp */; };
+		7AA82BBE0E10647B0081BE9D /* dmzRuntimeDataBinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B1F0E10647A0081BE9D /* dmzRuntimeDataBinder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BBF0E10647B0081BE9D /* dmzRuntimeDataConverters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B200E10647A0081BE9D /* dmzRuntimeDataConverters.cpp */; };
+		7AA82BC00E10647B0081BE9D /* dmzRuntimeDataConverters.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B210E10647A0081BE9D /* dmzRuntimeDataConverters.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BC10E10647B0081BE9D /* dmzRuntimeDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B220E10647A0081BE9D /* dmzRuntimeDefinitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BC20E10647B0081BE9D /* dmzRuntimeEventType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B230E10647A0081BE9D /* dmzRuntimeEventType.cpp */; };
+		7AA82BC30E10647B0081BE9D /* dmzRuntimeEventType.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B240E10647A0081BE9D /* dmzRuntimeEventType.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BC40E10647B0081BE9D /* dmzRuntimeExit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B250E10647A0081BE9D /* dmzRuntimeExit.cpp */; };
+		7AA82BC50E10647B0081BE9D /* dmzRuntimeExit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B260E10647A0081BE9D /* dmzRuntimeExit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BC60E10647B0081BE9D /* dmzRuntimeHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B270E10647A0081BE9D /* dmzRuntimeHandle.cpp */; };
+		7AA82BC70E10647B0081BE9D /* dmzRuntimeHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B280E10647A0081BE9D /* dmzRuntimeHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BC80E10647B0081BE9D /* dmzRuntimeHandleAllocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B290E10647A0081BE9D /* dmzRuntimeHandleAllocator.cpp */; };
+		7AA82BC90E10647B0081BE9D /* dmzRuntimeHandleAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B2A0E10647A0081BE9D /* dmzRuntimeHandleAllocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BCA0E10647B0081BE9D /* dmzRuntimeInit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B2B0E10647A0081BE9D /* dmzRuntimeInit.cpp */; };
+		7AA82BCB0E10647B0081BE9D /* dmzRuntimeInit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B2C0E10647A0081BE9D /* dmzRuntimeInit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BCC0E10647B0081BE9D /* dmzRuntimeInternalDocs.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B2D0E10647A0081BE9D /* dmzRuntimeInternalDocs.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BCD0E10647B0081BE9D /* dmzRuntimeLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B2E0E10647A0081BE9D /* dmzRuntimeLog.cpp */; };
+		7AA82BCE0E10647B0081BE9D /* dmzRuntimeLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B2F0E10647A0081BE9D /* dmzRuntimeLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BCF0E10647B0081BE9D /* dmzRuntimeLogObserverBasic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B300E10647A0081BE9D /* dmzRuntimeLogObserverBasic.cpp */; };
+		7AA82BD00E10647B0081BE9D /* dmzRuntimeLogObserverBasic.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B310E10647A0081BE9D /* dmzRuntimeLogObserverBasic.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BD10E10647B0081BE9D /* dmzRuntimeMessageContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B320E10647A0081BE9D /* dmzRuntimeMessageContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BD20E10647B0081BE9D /* dmzRuntimeMessaging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B330E10647A0081BE9D /* dmzRuntimeMessaging.cpp */; };
+		7AA82BD30E10647B0081BE9D /* dmzRuntimeMessaging.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B340E10647A0081BE9D /* dmzRuntimeMessaging.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BD40E10647B0081BE9D /* dmzRuntimeObjectType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B350E10647A0081BE9D /* dmzRuntimeObjectType.cpp */; };
+		7AA82BD50E10647B0081BE9D /* dmzRuntimeObjectType.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B360E10647A0081BE9D /* dmzRuntimeObjectType.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BD60E10647B0081BE9D /* dmzRuntimePlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B370E10647A0081BE9D /* dmzRuntimePlugin.cpp */; };
+		7AA82BD70E10647B0081BE9D /* dmzRuntimePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B380E10647A0081BE9D /* dmzRuntimePlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BD80E10647B0081BE9D /* dmzRuntimePluginContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B390E10647A0081BE9D /* dmzRuntimePluginContainer.cpp */; };
+		7AA82BD90E10647B0081BE9D /* dmzRuntimePluginContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B3A0E10647A0081BE9D /* dmzRuntimePluginContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BDA0E10647B0081BE9D /* dmzRuntimePluginFactoryLinkSymbol.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B3B0E10647A0081BE9D /* dmzRuntimePluginFactoryLinkSymbol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BDB0E10647B0081BE9D /* dmzRuntimePluginInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B3C0E10647A0081BE9D /* dmzRuntimePluginInfo.cpp */; };
+		7AA82BDC0E10647B0081BE9D /* dmzRuntimePluginInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B3D0E10647A0081BE9D /* dmzRuntimePluginInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BDD0E10647B0081BE9D /* dmzRuntimePluginLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B3E0E10647A0081BE9D /* dmzRuntimePluginLoader.cpp */; };
+		7AA82BDE0E10647B0081BE9D /* dmzRuntimePluginLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B3F0E10647A0081BE9D /* dmzRuntimePluginLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BDF0E10647B0081BE9D /* dmzRuntimeRTTI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B400E10647A0081BE9D /* dmzRuntimeRTTI.cpp */; };
+		7AA82BE00E10647B0081BE9D /* dmzRuntimeRTTI.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B410E10647A0081BE9D /* dmzRuntimeRTTI.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BE10E10647B0081BE9D /* dmzRuntimeRTTINamed.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B420E10647A0081BE9D /* dmzRuntimeRTTINamed.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BE20E10647B0081BE9D /* dmzRuntimeSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B430E10647A0081BE9D /* dmzRuntimeSession.cpp */; };
+		7AA82BE30E10647B0081BE9D /* dmzRuntimeSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B440E10647A0081BE9D /* dmzRuntimeSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BE40E10647B0081BE9D /* dmzRuntimeTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B450E10647A0081BE9D /* dmzRuntimeTime.cpp */; };
+		7AA82BE50E10647B0081BE9D /* dmzRuntimeTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B460E10647A0081BE9D /* dmzRuntimeTime.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BE60E10647B0081BE9D /* dmzRuntimeTimeSlice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B470E10647A0081BE9D /* dmzRuntimeTimeSlice.cpp */; };
+		7AA82BE70E10647B0081BE9D /* dmzRuntimeTimeSlice.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B480E10647A0081BE9D /* dmzRuntimeTimeSlice.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BE80E10647B0081BE9D /* dmzRuntimeTypeContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B490E10647A0081BE9D /* dmzRuntimeTypeContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BE90E10647B0081BE9D /* dmzRuntimeUndo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B4A0E10647A0081BE9D /* dmzRuntimeUndo.cpp */; };
+		7AA82BEA0E10647B0081BE9D /* dmzRuntimeUndo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B4B0E10647A0081BE9D /* dmzRuntimeUndo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BEB0E10647B0081BE9D /* dmzSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B4D0E10647A0081BE9D /* dmzSystem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BEC0E10647B0081BE9D /* dmzSystemCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B4E0E10647A0081BE9D /* dmzSystemCommon.cpp */; };
+		7AA82BED0E10647B0081BE9D /* dmzSystemDynamicLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B4F0E10647A0081BE9D /* dmzSystemDynamicLibrary.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BEE0E10647B0081BE9D /* dmzSystemDynamicLibraryUnix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B500E10647A0081BE9D /* dmzSystemDynamicLibraryUnix.cpp */; };
+		7AA82BF00E10647B0081BE9D /* dmzSystemFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B520E10647B0081BE9D /* dmzSystemFile.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BF10E10647B0081BE9D /* dmzSystemFileCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B530E10647B0081BE9D /* dmzSystemFileCommon.cpp */; };
+		7AA82BF20E10647B0081BE9D /* dmzSystemFileUnix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B540E10647B0081BE9D /* dmzSystemFileUnix.cpp */; };
+		7AA82BF60E10647B0081BE9D /* dmzSystemMarshal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B580E10647B0081BE9D /* dmzSystemMarshal.cpp */; };
+		7AA82BF70E10647B0081BE9D /* dmzSystemMarshal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B590E10647B0081BE9D /* dmzSystemMarshal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BF80E10647B0081BE9D /* dmzSystemMutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B5A0E10647B0081BE9D /* dmzSystemMutex.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BF90E10647B0081BE9D /* dmzSystemMutexUnix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B5B0E10647B0081BE9D /* dmzSystemMutexUnix.cpp */; };
+		7AA82BFB0E10647B0081BE9D /* dmzSystemRefCount.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B5D0E10647B0081BE9D /* dmzSystemRefCount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82BFE0E10647B0081BE9D /* dmzSystemRefCountMacOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B600E10647B0081BE9D /* dmzSystemRefCountMacOS.cpp */; };
+		7AA82C000E10647B0081BE9D /* dmzSystemSpinLock.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B620E10647B0081BE9D /* dmzSystemSpinLock.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C020E10647B0081BE9D /* dmzSystemSpinLockMacOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B640E10647B0081BE9D /* dmzSystemSpinLockMacOS.cpp */; };
+		7AA82C040E10647B0081BE9D /* dmzSystemStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B660E10647B0081BE9D /* dmzSystemStream.cpp */; };
+		7AA82C050E10647B0081BE9D /* dmzSystemStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B670E10647B0081BE9D /* dmzSystemStream.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C060E10647B0081BE9D /* dmzSystemStreamFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B680E10647B0081BE9D /* dmzSystemStreamFile.cpp */; };
+		7AA82C070E10647B0081BE9D /* dmzSystemStreamFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B690E10647B0081BE9D /* dmzSystemStreamFile.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C080E10647B0081BE9D /* dmzSystemStreamString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B6A0E10647B0081BE9D /* dmzSystemStreamString.cpp */; };
+		7AA82C090E10647B0081BE9D /* dmzSystemStreamString.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B6B0E10647B0081BE9D /* dmzSystemStreamString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C0A0E10647B0081BE9D /* dmzSystemThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B6C0E10647B0081BE9D /* dmzSystemThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C0B0E10647B0081BE9D /* dmzSystemThreadCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B6D0E10647B0081BE9D /* dmzSystemThreadCommon.cpp */; };
+		7AA82C0C0E10647B0081BE9D /* dmzSystemThreadUnix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B6E0E10647B0081BE9D /* dmzSystemThreadUnix.cpp */; };
+		7AA82C0E0E10647B0081BE9D /* dmzSystemUnix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B700E10647B0081BE9D /* dmzSystemUnix.cpp */; };
+		7AA82C0F0E10647B0081BE9D /* dmzSystemUnmarshal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B710E10647B0081BE9D /* dmzSystemUnmarshal.cpp */; };
+		7AA82C100E10647B0081BE9D /* dmzSystemUnmarshal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B720E10647B0081BE9D /* dmzSystemUnmarshal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C120E10647B0081BE9D /* qdb.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B740E10647B0081BE9D /* qdb.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C130E10647B0081BE9D /* dmzTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B760E10647B0081BE9D /* dmzTypes.cpp */; };
+		7AA82C140E10647B0081BE9D /* dmzTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B770E10647B0081BE9D /* dmzTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C150E10647B0081BE9D /* dmzTypesArrays.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B780E10647B0081BE9D /* dmzTypesArrays.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C160E10647B0081BE9D /* dmzTypesArrayTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B790E10647B0081BE9D /* dmzTypesArrayTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C170E10647B0081BE9D /* dmzTypesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B7A0E10647B0081BE9D /* dmzTypesBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C180E10647B0081BE9D /* dmzTypesBooleanOperator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B7B0E10647B0081BE9D /* dmzTypesBooleanOperator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C190E10647B0081BE9D /* dmzTypesConsts.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B7C0E10647B0081BE9D /* dmzTypesConsts.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C1A0E10647B0081BE9D /* dmzTypesHandleContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B7D0E10647B0081BE9D /* dmzTypesHandleContainer.cpp */; };
+		7AA82C1B0E10647B0081BE9D /* dmzTypesHandleContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B7E0E10647B0081BE9D /* dmzTypesHandleContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C1F0E10647B0081BE9D /* dmzTypesHashTableHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B820E10647B0081BE9D /* dmzTypesHashTableHandle.cpp */; };
+		7AA82C200E10647B0081BE9D /* dmzTypesHashTableHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B830E10647B0081BE9D /* dmzTypesHashTableHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C210E10647B0081BE9D /* dmzTypesHashTableHandleTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B840E10647B0081BE9D /* dmzTypesHashTableHandleTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C220E10647B0081BE9D /* dmzTypesHashTableLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B850E10647B0081BE9D /* dmzTypesHashTableLock.cpp */; };
+		7AA82C230E10647B0081BE9D /* dmzTypesHashTableLock.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B860E10647B0081BE9D /* dmzTypesHashTableLock.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C240E10647B0081BE9D /* dmzTypesHashTableString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B870E10647B0081BE9D /* dmzTypesHashTableString.cpp */; };
+		7AA82C250E10647B0081BE9D /* dmzTypesHashTableString.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B880E10647B0081BE9D /* dmzTypesHashTableString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C260E10647B0081BE9D /* dmzTypesHashTableStringTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B890E10647B0081BE9D /* dmzTypesHashTableStringTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C270E10647B0081BE9D /* dmzTypesHashTableUInt32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B8A0E10647B0081BE9D /* dmzTypesHashTableUInt32.cpp */; };
+		7AA82C280E10647B0081BE9D /* dmzTypesHashTableUInt32.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B8B0E10647B0081BE9D /* dmzTypesHashTableUInt32.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C290E10647B0081BE9D /* dmzTypesHashTableUInt32Template.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B8C0E10647B0081BE9D /* dmzTypesHashTableUInt32Template.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C2A0E10647B0081BE9D /* dmzTypesHashTableUInt64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B8D0E10647B0081BE9D /* dmzTypesHashTableUInt64.cpp */; };
+		7AA82C2B0E10647B0081BE9D /* dmzTypesHashTableUInt64.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B8E0E10647B0081BE9D /* dmzTypesHashTableUInt64.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C2C0E10647B0081BE9D /* dmzTypesHashTableUInt64Template.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B8F0E10647B0081BE9D /* dmzTypesHashTableUInt64Template.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C2D0E10647B0081BE9D /* dmzTypesHashTableUUID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B900E10647B0081BE9D /* dmzTypesHashTableUUID.cpp */; };
+		7AA82C2E0E10647B0081BE9D /* dmzTypesHashTableUUID.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B910E10647B0081BE9D /* dmzTypesHashTableUUID.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C2F0E10647B0081BE9D /* dmzTypesHashTableUUIDTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B920E10647B0081BE9D /* dmzTypesHashTableUUIDTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C300E10647B0081BE9D /* dmzTypesMask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B930E10647B0081BE9D /* dmzTypesMask.cpp */; };
+		7AA82C310E10647B0081BE9D /* dmzTypesMask.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B940E10647B0081BE9D /* dmzTypesMask.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C320E10647B0081BE9D /* dmzTypesMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B950E10647B0081BE9D /* dmzTypesMath.cpp */; };
+		7AA82C330E10647B0081BE9D /* dmzTypesMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B960E10647B0081BE9D /* dmzTypesMath.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C340E10647B0081BE9D /* dmzTypesMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B970E10647B0081BE9D /* dmzTypesMatrix.cpp */; };
+		7AA82C350E10647B0081BE9D /* dmzTypesMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B980E10647B0081BE9D /* dmzTypesMatrix.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C360E10647B0081BE9D /* dmzTypesQuaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B990E10647B0081BE9D /* dmzTypesQuaternion.cpp */; };
+		7AA82C370E10647B0081BE9D /* dmzTypesQuaternion.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B9A0E10647B0081BE9D /* dmzTypesQuaternion.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C380E10647B0081BE9D /* dmzTypesString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B9B0E10647B0081BE9D /* dmzTypesString.cpp */; };
+		7AA82C390E10647B0081BE9D /* dmzTypesString.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B9C0E10647B0081BE9D /* dmzTypesString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C3A0E10647B0081BE9D /* dmzTypesStringTokenizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B9D0E10647B0081BE9D /* dmzTypesStringTokenizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C3B0E10647B0081BE9D /* dmzTypesStringUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AA82B9E0E10647B0081BE9D /* dmzTypesStringUtil.cpp */; };
+		7AA82C3C0E10647B0081BE9D /* dmzTypesStringUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82B9F0E10647B0081BE9D /* dmzTypesStringUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C3D0E10647B0081BE9D /* dmzTypesUUID.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82BA00E10647B0081BE9D /* dmzTypesUUID.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AA82C3E0E10647B0081BE9D /* dmzTypesVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA82BA10E10647B0081BE9D /* dmzTypesVector.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		7A7632C80E09775F002526C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
-			remoteInfo = dmzKernel;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		7A7631870E097618002526C4 /* dmz.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dmz.xcconfig; path = ../dmz.xcconfig; sourceTree = SOURCE_ROOT; };
-		7A7631910E097646002526C4 /* dmzKernel.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzKernel.lmk; sourceTree = "<group>"; };
-		7A7631920E097646002526C4 /* dmzKernelExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzKernelExport.h; sourceTree = "<group>"; };
-		7A7631940E097646002526C4 /* dmzRuntime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntime.cpp; sourceTree = "<group>"; };
-		7A7631950E097646002526C4 /* dmzRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntime.h; sourceTree = "<group>"; };
-		7A7631960E097646002526C4 /* dmzRuntimeConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeConfig.cpp; sourceTree = "<group>"; };
-		7A7631970E097646002526C4 /* dmzRuntimeConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfig.h; sourceTree = "<group>"; };
-		7A7631980E097646002526C4 /* dmzRuntimeConfigContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigContext.h; sourceTree = "<group>"; };
-		7A7631990E097646002526C4 /* dmzRuntimeConfigRead.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeConfigRead.cpp; sourceTree = "<group>"; };
-		7A76319A0E097646002526C4 /* dmzRuntimeConfigRead.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigRead.h; sourceTree = "<group>"; };
-		7A76319B0E097646002526C4 /* dmzRuntimeConfigUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeConfigUtil.cpp; sourceTree = "<group>"; };
-		7A76319C0E097646002526C4 /* dmzRuntimeConfigWrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeConfigWrite.cpp; sourceTree = "<group>"; };
-		7A76319D0E097646002526C4 /* dmzRuntimeConfigWrite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigWrite.h; sourceTree = "<group>"; };
-		7A76319E0E097646002526C4 /* dmzRuntimeContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeContext.cpp; sourceTree = "<group>"; };
-		7A76319F0E097646002526C4 /* dmzRuntimeContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContext.h; sourceTree = "<group>"; };
-		7A7631A00E097646002526C4 /* dmzRuntimeContextDefinitions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeContextDefinitions.cpp; sourceTree = "<group>"; };
-		7A7631A10E097646002526C4 /* dmzRuntimeContextDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextDefinitions.h; sourceTree = "<group>"; };
-		7A7631A20E097646002526C4 /* dmzRuntimeContextLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeContextLog.cpp; sourceTree = "<group>"; };
-		7A7631A30E097646002526C4 /* dmzRuntimeContextLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextLog.h; sourceTree = "<group>"; };
-		7A7631A40E097646002526C4 /* dmzRuntimeContextMessaging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeContextMessaging.cpp; sourceTree = "<group>"; };
-		7A7631A50E097646002526C4 /* dmzRuntimeContextMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextMessaging.h; sourceTree = "<group>"; };
-		7A7631A60E097646002526C4 /* dmzRuntimeContextRTTI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeContextRTTI.cpp; sourceTree = "<group>"; };
-		7A7631A70E097646002526C4 /* dmzRuntimeContextRTTI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextRTTI.h; sourceTree = "<group>"; };
-		7A7631A80E097646002526C4 /* dmzRuntimeContextThreadKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextThreadKey.h; sourceTree = "<group>"; };
-		7A7631A90E097646002526C4 /* dmzRuntimeContextTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeContextTime.cpp; sourceTree = "<group>"; };
-		7A7631AA0E097646002526C4 /* dmzRuntimeContextTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextTime.h; sourceTree = "<group>"; };
-		7A7631AB0E097646002526C4 /* dmzRuntimeContextUndo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextUndo.h; sourceTree = "<group>"; };
-		7A7631AC0E097646002526C4 /* dmzRuntimeData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeData.cpp; sourceTree = "<group>"; };
-		7A7631AD0E097646002526C4 /* dmzRuntimeData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeData.h; sourceTree = "<group>"; };
-		7A7631AE0E097646002526C4 /* dmzRuntimeDataBinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeDataBinder.cpp; sourceTree = "<group>"; };
-		7A7631AF0E097646002526C4 /* dmzRuntimeDataBinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeDataBinder.h; sourceTree = "<group>"; };
-		7A7631B00E097646002526C4 /* dmzRuntimeDataConverters.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeDataConverters.cpp; sourceTree = "<group>"; };
-		7A7631B10E097646002526C4 /* dmzRuntimeDataConverters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeDataConverters.h; sourceTree = "<group>"; };
-		7A7631B20E097646002526C4 /* dmzRuntimeDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeDefinitions.h; sourceTree = "<group>"; };
-		7A7631B30E097646002526C4 /* dmzRuntimeEventType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeEventType.cpp; sourceTree = "<group>"; };
-		7A7631B40E097646002526C4 /* dmzRuntimeEventType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeEventType.h; sourceTree = "<group>"; };
-		7A7631B50E097646002526C4 /* dmzRuntimeExit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeExit.cpp; sourceTree = "<group>"; };
-		7A7631B60E097646002526C4 /* dmzRuntimeExit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeExit.h; sourceTree = "<group>"; };
-		7A7631B70E097646002526C4 /* dmzRuntimeHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeHandle.cpp; sourceTree = "<group>"; };
-		7A7631B80E097646002526C4 /* dmzRuntimeHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeHandle.h; sourceTree = "<group>"; };
-		7A7631B90E097646002526C4 /* dmzRuntimeHandleAllocator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeHandleAllocator.cpp; sourceTree = "<group>"; };
-		7A7631BA0E097646002526C4 /* dmzRuntimeHandleAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeHandleAllocator.h; sourceTree = "<group>"; };
-		7A7631BB0E097646002526C4 /* dmzRuntimeInit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeInit.cpp; sourceTree = "<group>"; };
-		7A7631BC0E097646002526C4 /* dmzRuntimeInit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeInit.h; sourceTree = "<group>"; };
-		7A7631BD0E097646002526C4 /* dmzRuntimeInternalDocs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeInternalDocs.h; sourceTree = "<group>"; };
-		7A7631BE0E097646002526C4 /* dmzRuntimeLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeLog.cpp; sourceTree = "<group>"; };
-		7A7631BF0E097646002526C4 /* dmzRuntimeLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeLog.h; sourceTree = "<group>"; };
-		7A7631C00E097646002526C4 /* dmzRuntimeLogObserverBasic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeLogObserverBasic.cpp; sourceTree = "<group>"; };
-		7A7631C10E097646002526C4 /* dmzRuntimeLogObserverBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeLogObserverBasic.h; sourceTree = "<group>"; };
-		7A7631C20E097646002526C4 /* dmzRuntimeMessageContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeMessageContext.h; sourceTree = "<group>"; };
-		7A7631C30E097646002526C4 /* dmzRuntimeMessaging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeMessaging.cpp; sourceTree = "<group>"; };
-		7A7631C40E097646002526C4 /* dmzRuntimeMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeMessaging.h; sourceTree = "<group>"; };
-		7A7631C50E097646002526C4 /* dmzRuntimeObjectType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeObjectType.cpp; sourceTree = "<group>"; };
-		7A7631C60E097646002526C4 /* dmzRuntimeObjectType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeObjectType.h; sourceTree = "<group>"; };
-		7A7631C70E097646002526C4 /* dmzRuntimePlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimePlugin.cpp; sourceTree = "<group>"; };
-		7A7631C80E097646002526C4 /* dmzRuntimePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimePlugin.h; sourceTree = "<group>"; };
-		7A7631C90E097646002526C4 /* dmzRuntimePluginContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimePluginContainer.cpp; sourceTree = "<group>"; };
-		7A7631CA0E097646002526C4 /* dmzRuntimePluginContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimePluginContainer.h; sourceTree = "<group>"; };
-		7A7631CB0E097646002526C4 /* dmzRuntimePluginFactoryLinkSymbol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimePluginFactoryLinkSymbol.h; sourceTree = "<group>"; };
-		7A7631CC0E097646002526C4 /* dmzRuntimePluginInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimePluginInfo.cpp; sourceTree = "<group>"; };
-		7A7631CD0E097646002526C4 /* dmzRuntimePluginInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimePluginInfo.h; sourceTree = "<group>"; };
-		7A7631CE0E097646002526C4 /* dmzRuntimePluginLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimePluginLoader.cpp; sourceTree = "<group>"; };
-		7A7631CF0E097646002526C4 /* dmzRuntimePluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimePluginLoader.h; sourceTree = "<group>"; };
-		7A7631D00E097646002526C4 /* dmzRuntimeRTTI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeRTTI.cpp; sourceTree = "<group>"; };
-		7A7631D10E097646002526C4 /* dmzRuntimeRTTI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeRTTI.h; sourceTree = "<group>"; };
-		7A7631D20E097646002526C4 /* dmzRuntimeRTTINamed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeRTTINamed.h; sourceTree = "<group>"; };
-		7A7631D30E097646002526C4 /* dmzRuntimeSession.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeSession.cpp; sourceTree = "<group>"; };
-		7A7631D40E097646002526C4 /* dmzRuntimeSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeSession.h; sourceTree = "<group>"; };
-		7A7631D70E097646002526C4 /* dmzRuntimeTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeTime.cpp; sourceTree = "<group>"; };
-		7A7631D80E097646002526C4 /* dmzRuntimeTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeTime.h; sourceTree = "<group>"; };
-		7A7631D90E097646002526C4 /* dmzRuntimeTypeContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeTypeContext.h; sourceTree = "<group>"; };
-		7A7631DA0E097646002526C4 /* dmzRuntimeUndo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeUndo.cpp; sourceTree = "<group>"; };
-		7A7631DB0E097646002526C4 /* dmzRuntimeUndo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeUndo.h; sourceTree = "<group>"; };
-		7A7631DD0E097646002526C4 /* dmzSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystem.h; sourceTree = "<group>"; };
-		7A7631DE0E097646002526C4 /* dmzSystemCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemCommon.cpp; sourceTree = "<group>"; };
-		7A7631DF0E097646002526C4 /* dmzSystemDynamicLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemDynamicLibrary.h; sourceTree = "<group>"; };
-		7A7631E00E097646002526C4 /* dmzSystemDynamicLibraryUnix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemDynamicLibraryUnix.cpp; sourceTree = "<group>"; };
-		7A7631E10E097646002526C4 /* dmzSystemDynamicLibraryWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemDynamicLibraryWin32.cpp; sourceTree = "<group>"; };
-		7A7631E20E097646002526C4 /* dmzSystemFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemFile.h; sourceTree = "<group>"; };
-		7A7631E30E097646002526C4 /* dmzSystemFileCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemFileCommon.cpp; sourceTree = "<group>"; };
-		7A7631E40E097646002526C4 /* dmzSystemFileUnix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemFileUnix.cpp; sourceTree = "<group>"; };
-		7A7631E50E097646002526C4 /* dmzSystemFileWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemFileWin32.cpp; sourceTree = "<group>"; };
-		7A7631E60E097646002526C4 /* dmzSystemLocalWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemLocalWin32.cpp; sourceTree = "<group>"; };
-		7A7631E70E097646002526C4 /* dmzSystemLocalWin32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemLocalWin32.h; sourceTree = "<group>"; };
-		7A7631E80E097646002526C4 /* dmzSystemMarshal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemMarshal.cpp; sourceTree = "<group>"; };
-		7A7631E90E097646002526C4 /* dmzSystemMarshal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemMarshal.h; sourceTree = "<group>"; };
-		7A7631EA0E097646002526C4 /* dmzSystemMutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemMutex.h; sourceTree = "<group>"; };
-		7A7631EB0E097646002526C4 /* dmzSystemMutexUnix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemMutexUnix.cpp; sourceTree = "<group>"; };
-		7A7631EC0E097646002526C4 /* dmzSystemMutexWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemMutexWin32.cpp; sourceTree = "<group>"; };
-		7A7631ED0E097646002526C4 /* dmzSystemRefCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemRefCount.h; sourceTree = "<group>"; };
-		7A7631EE0E097646002526C4 /* dmzSystemRefCountCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemRefCountCommon.cpp; sourceTree = "<group>"; };
-		7A7631EF0E097646002526C4 /* dmzSystemRefCountLinux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemRefCountLinux.cpp; sourceTree = "<group>"; };
-		7A7631F00E097646002526C4 /* dmzSystemRefCountMacOS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemRefCountMacOS.cpp; sourceTree = "<group>"; };
-		7A7631F10E097646002526C4 /* dmzSystemRefCountWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemRefCountWin32.cpp; sourceTree = "<group>"; };
-		7A7631F20E097646002526C4 /* dmzSystemSpinLock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemSpinLock.h; sourceTree = "<group>"; };
-		7A7631F30E097646002526C4 /* dmzSystemSpinLockLinux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemSpinLockLinux.cpp; sourceTree = "<group>"; };
-		7A7631F40E097646002526C4 /* dmzSystemSpinLockMacOS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemSpinLockMacOS.cpp; sourceTree = "<group>"; };
-		7A7631F50E097646002526C4 /* dmzSystemSpinLockWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemSpinLockWin32.cpp; sourceTree = "<group>"; };
-		7A7631F60E097646002526C4 /* dmzSystemStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemStream.cpp; sourceTree = "<group>"; };
-		7A7631F70E097646002526C4 /* dmzSystemStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemStream.h; sourceTree = "<group>"; };
-		7A7631F80E097646002526C4 /* dmzSystemStreamFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemStreamFile.cpp; sourceTree = "<group>"; };
-		7A7631F90E097646002526C4 /* dmzSystemStreamFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemStreamFile.h; sourceTree = "<group>"; };
-		7A7631FA0E097646002526C4 /* dmzSystemStreamString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemStreamString.cpp; sourceTree = "<group>"; };
-		7A7631FB0E097646002526C4 /* dmzSystemStreamString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemStreamString.h; sourceTree = "<group>"; };
-		7A7631FC0E097646002526C4 /* dmzSystemThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemThread.h; sourceTree = "<group>"; };
-		7A7631FD0E097646002526C4 /* dmzSystemThreadCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemThreadCommon.cpp; sourceTree = "<group>"; };
-		7A7631FE0E097646002526C4 /* dmzSystemThreadUnix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemThreadUnix.cpp; sourceTree = "<group>"; };
-		7A7631FF0E097646002526C4 /* dmzSystemThreadWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemThreadWin32.cpp; sourceTree = "<group>"; };
-		7A7632000E097646002526C4 /* dmzSystemUnix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemUnix.cpp; sourceTree = "<group>"; };
-		7A7632010E097646002526C4 /* dmzSystemUnmarshal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemUnmarshal.cpp; sourceTree = "<group>"; };
-		7A7632020E097646002526C4 /* dmzSystemUnmarshal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemUnmarshal.h; sourceTree = "<group>"; };
-		7A7632030E097646002526C4 /* dmzSystemWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemWin32.cpp; sourceTree = "<group>"; };
-		7A7632040E097646002526C4 /* qdb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qdb.h; sourceTree = "<group>"; };
-		7A7632060E097646002526C4 /* dmzTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypes.cpp; sourceTree = "<group>"; };
-		7A7632070E097646002526C4 /* dmzTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypes.h; sourceTree = "<group>"; };
-		7A7632080E097646002526C4 /* dmzTypesArrays.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesArrays.h; sourceTree = "<group>"; };
-		7A7632090E097646002526C4 /* dmzTypesArrayTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesArrayTemplate.h; sourceTree = "<group>"; };
-		7A76320A0E097646002526C4 /* dmzTypesBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesBase.h; sourceTree = "<group>"; };
-		7A76320B0E097646002526C4 /* dmzTypesBooleanOperator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesBooleanOperator.h; sourceTree = "<group>"; };
-		7A76320C0E097646002526C4 /* dmzTypesConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesConsts.h; sourceTree = "<group>"; };
-		7A76320D0E097646002526C4 /* dmzTypesHandleContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHandleContainer.cpp; sourceTree = "<group>"; };
-		7A76320E0E097646002526C4 /* dmzTypesHandleContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHandleContainer.h; sourceTree = "<group>"; };
-		7A76320F0E097646002526C4 /* dmzTypesHashTable-type-.hash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dmzTypesHashTable-type-.hash.cpp"; sourceTree = "<group>"; };
-		7A7632100E097646002526C4 /* dmzTypesHashTable-type-.hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dmzTypesHashTable-type-.hash.h"; sourceTree = "<group>"; };
-		7A7632110E097646002526C4 /* dmzTypesHashTable-type-Template.hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dmzTypesHashTable-type-Template.hash.h"; sourceTree = "<group>"; };
-		7A7632120E097646002526C4 /* dmzTypesHashTableHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHashTableHandle.cpp; sourceTree = "<group>"; };
-		7A7632130E097646002526C4 /* dmzTypesHashTableHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableHandle.h; sourceTree = "<group>"; };
-		7A7632140E097646002526C4 /* dmzTypesHashTableHandleTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableHandleTemplate.h; sourceTree = "<group>"; };
-		7A7632150E097646002526C4 /* dmzTypesHashTableLock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHashTableLock.cpp; sourceTree = "<group>"; };
-		7A7632160E097646002526C4 /* dmzTypesHashTableLock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableLock.h; sourceTree = "<group>"; };
-		7A7632170E097646002526C4 /* dmzTypesHashTableString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHashTableString.cpp; sourceTree = "<group>"; };
-		7A7632180E097646002526C4 /* dmzTypesHashTableString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableString.h; sourceTree = "<group>"; };
-		7A7632190E097646002526C4 /* dmzTypesHashTableStringTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableStringTemplate.h; sourceTree = "<group>"; };
-		7A76321A0E097646002526C4 /* dmzTypesHashTableUInt32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHashTableUInt32.cpp; sourceTree = "<group>"; };
-		7A76321B0E097646002526C4 /* dmzTypesHashTableUInt32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableUInt32.h; sourceTree = "<group>"; };
-		7A76321C0E097646002526C4 /* dmzTypesHashTableUInt32Template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableUInt32Template.h; sourceTree = "<group>"; };
-		7A76321D0E097646002526C4 /* dmzTypesHashTableUInt64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHashTableUInt64.cpp; sourceTree = "<group>"; };
-		7A76321E0E097646002526C4 /* dmzTypesHashTableUInt64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableUInt64.h; sourceTree = "<group>"; };
-		7A76321F0E097646002526C4 /* dmzTypesHashTableUInt64Template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableUInt64Template.h; sourceTree = "<group>"; };
-		7A7632200E097646002526C4 /* dmzTypesHashTableUUID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHashTableUUID.cpp; sourceTree = "<group>"; };
-		7A7632210E097646002526C4 /* dmzTypesHashTableUUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableUUID.h; sourceTree = "<group>"; };
-		7A7632220E097646002526C4 /* dmzTypesHashTableUUIDTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableUUIDTemplate.h; sourceTree = "<group>"; };
-		7A7632230E097646002526C4 /* dmzTypesMask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesMask.cpp; sourceTree = "<group>"; };
-		7A7632240E097646002526C4 /* dmzTypesMask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesMask.h; sourceTree = "<group>"; };
-		7A7632250E097646002526C4 /* dmzTypesMath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesMath.cpp; sourceTree = "<group>"; };
-		7A7632260E097646002526C4 /* dmzTypesMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesMath.h; sourceTree = "<group>"; };
-		7A7632270E097646002526C4 /* dmzTypesMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesMatrix.cpp; sourceTree = "<group>"; };
-		7A7632280E097646002526C4 /* dmzTypesMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesMatrix.h; sourceTree = "<group>"; };
-		7A7632290E097646002526C4 /* dmzTypesQuaternion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesQuaternion.cpp; sourceTree = "<group>"; };
-		7A76322A0E097646002526C4 /* dmzTypesQuaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesQuaternion.h; sourceTree = "<group>"; };
-		7A76322B0E097646002526C4 /* dmzTypesString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesString.cpp; sourceTree = "<group>"; };
-		7A76322C0E097646002526C4 /* dmzTypesString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesString.h; sourceTree = "<group>"; };
-		7A76322D0E097646002526C4 /* dmzTypesStringTokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesStringTokenizer.h; sourceTree = "<group>"; };
-		7A76322E0E097646002526C4 /* dmzTypesStringUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesStringUtil.cpp; sourceTree = "<group>"; };
-		7A76322F0E097646002526C4 /* dmzTypesStringUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesStringUtil.h; sourceTree = "<group>"; };
-		7A7632300E097646002526C4 /* dmzTypesUUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesUUID.h; sourceTree = "<group>"; };
-		7A7632310E097646002526C4 /* dmzTypesVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesVector.h; sourceTree = "<group>"; };
-		D29DDE870E0C347D005B5107 /* dmzRuntimeTimeSlice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeTimeSlice.cpp; sourceTree = "<group>"; };
-		D29DDE880E0C347D005B5107 /* dmzRuntimeTimeSlice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeTimeSlice.h; sourceTree = "<group>"; };
-		D2AAC046055464E500DB518D /* libdmzKernel.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzKernel.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7AA82AF70E1063350081BE9D /* dmz.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dmz.xcconfig; path = ../dmz.xcconfig; sourceTree = SOURCE_ROOT; };
+		7AA82AFC0E1063650081BE9D /* libdmzKernel.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzKernel.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7AA82B010E10647A0081BE9D /* dmzKernel.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzKernel.lmk; sourceTree = "<group>"; };
+		7AA82B020E10647A0081BE9D /* dmzKernelExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzKernelExport.h; sourceTree = "<group>"; };
+		7AA82B040E10647A0081BE9D /* dmzRuntime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntime.cpp; sourceTree = "<group>"; };
+		7AA82B050E10647A0081BE9D /* dmzRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntime.h; sourceTree = "<group>"; };
+		7AA82B060E10647A0081BE9D /* dmzRuntimeConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeConfig.cpp; sourceTree = "<group>"; };
+		7AA82B070E10647A0081BE9D /* dmzRuntimeConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfig.h; sourceTree = "<group>"; };
+		7AA82B080E10647A0081BE9D /* dmzRuntimeConfigContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigContext.h; sourceTree = "<group>"; };
+		7AA82B090E10647A0081BE9D /* dmzRuntimeConfigRead.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeConfigRead.cpp; sourceTree = "<group>"; };
+		7AA82B0A0E10647A0081BE9D /* dmzRuntimeConfigRead.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigRead.h; sourceTree = "<group>"; };
+		7AA82B0B0E10647A0081BE9D /* dmzRuntimeConfigUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeConfigUtil.cpp; sourceTree = "<group>"; };
+		7AA82B0C0E10647A0081BE9D /* dmzRuntimeConfigWrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeConfigWrite.cpp; sourceTree = "<group>"; };
+		7AA82B0D0E10647A0081BE9D /* dmzRuntimeConfigWrite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigWrite.h; sourceTree = "<group>"; };
+		7AA82B0E0E10647A0081BE9D /* dmzRuntimeContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeContext.cpp; sourceTree = "<group>"; };
+		7AA82B0F0E10647A0081BE9D /* dmzRuntimeContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContext.h; sourceTree = "<group>"; };
+		7AA82B100E10647A0081BE9D /* dmzRuntimeContextDefinitions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeContextDefinitions.cpp; sourceTree = "<group>"; };
+		7AA82B110E10647A0081BE9D /* dmzRuntimeContextDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextDefinitions.h; sourceTree = "<group>"; };
+		7AA82B120E10647A0081BE9D /* dmzRuntimeContextLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeContextLog.cpp; sourceTree = "<group>"; };
+		7AA82B130E10647A0081BE9D /* dmzRuntimeContextLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextLog.h; sourceTree = "<group>"; };
+		7AA82B140E10647A0081BE9D /* dmzRuntimeContextMessaging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeContextMessaging.cpp; sourceTree = "<group>"; };
+		7AA82B150E10647A0081BE9D /* dmzRuntimeContextMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextMessaging.h; sourceTree = "<group>"; };
+		7AA82B160E10647A0081BE9D /* dmzRuntimeContextRTTI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeContextRTTI.cpp; sourceTree = "<group>"; };
+		7AA82B170E10647A0081BE9D /* dmzRuntimeContextRTTI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextRTTI.h; sourceTree = "<group>"; };
+		7AA82B180E10647A0081BE9D /* dmzRuntimeContextThreadKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextThreadKey.h; sourceTree = "<group>"; };
+		7AA82B190E10647A0081BE9D /* dmzRuntimeContextTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeContextTime.cpp; sourceTree = "<group>"; };
+		7AA82B1A0E10647A0081BE9D /* dmzRuntimeContextTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextTime.h; sourceTree = "<group>"; };
+		7AA82B1B0E10647A0081BE9D /* dmzRuntimeContextUndo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContextUndo.h; sourceTree = "<group>"; };
+		7AA82B1C0E10647A0081BE9D /* dmzRuntimeData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeData.cpp; sourceTree = "<group>"; };
+		7AA82B1D0E10647A0081BE9D /* dmzRuntimeData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeData.h; sourceTree = "<group>"; };
+		7AA82B1E0E10647A0081BE9D /* dmzRuntimeDataBinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeDataBinder.cpp; sourceTree = "<group>"; };
+		7AA82B1F0E10647A0081BE9D /* dmzRuntimeDataBinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeDataBinder.h; sourceTree = "<group>"; };
+		7AA82B200E10647A0081BE9D /* dmzRuntimeDataConverters.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeDataConverters.cpp; sourceTree = "<group>"; };
+		7AA82B210E10647A0081BE9D /* dmzRuntimeDataConverters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeDataConverters.h; sourceTree = "<group>"; };
+		7AA82B220E10647A0081BE9D /* dmzRuntimeDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeDefinitions.h; sourceTree = "<group>"; };
+		7AA82B230E10647A0081BE9D /* dmzRuntimeEventType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeEventType.cpp; sourceTree = "<group>"; };
+		7AA82B240E10647A0081BE9D /* dmzRuntimeEventType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeEventType.h; sourceTree = "<group>"; };
+		7AA82B250E10647A0081BE9D /* dmzRuntimeExit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeExit.cpp; sourceTree = "<group>"; };
+		7AA82B260E10647A0081BE9D /* dmzRuntimeExit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeExit.h; sourceTree = "<group>"; };
+		7AA82B270E10647A0081BE9D /* dmzRuntimeHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeHandle.cpp; sourceTree = "<group>"; };
+		7AA82B280E10647A0081BE9D /* dmzRuntimeHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeHandle.h; sourceTree = "<group>"; };
+		7AA82B290E10647A0081BE9D /* dmzRuntimeHandleAllocator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeHandleAllocator.cpp; sourceTree = "<group>"; };
+		7AA82B2A0E10647A0081BE9D /* dmzRuntimeHandleAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeHandleAllocator.h; sourceTree = "<group>"; };
+		7AA82B2B0E10647A0081BE9D /* dmzRuntimeInit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeInit.cpp; sourceTree = "<group>"; };
+		7AA82B2C0E10647A0081BE9D /* dmzRuntimeInit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeInit.h; sourceTree = "<group>"; };
+		7AA82B2D0E10647A0081BE9D /* dmzRuntimeInternalDocs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeInternalDocs.h; sourceTree = "<group>"; };
+		7AA82B2E0E10647A0081BE9D /* dmzRuntimeLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeLog.cpp; sourceTree = "<group>"; };
+		7AA82B2F0E10647A0081BE9D /* dmzRuntimeLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeLog.h; sourceTree = "<group>"; };
+		7AA82B300E10647A0081BE9D /* dmzRuntimeLogObserverBasic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeLogObserverBasic.cpp; sourceTree = "<group>"; };
+		7AA82B310E10647A0081BE9D /* dmzRuntimeLogObserverBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeLogObserverBasic.h; sourceTree = "<group>"; };
+		7AA82B320E10647A0081BE9D /* dmzRuntimeMessageContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeMessageContext.h; sourceTree = "<group>"; };
+		7AA82B330E10647A0081BE9D /* dmzRuntimeMessaging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeMessaging.cpp; sourceTree = "<group>"; };
+		7AA82B340E10647A0081BE9D /* dmzRuntimeMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeMessaging.h; sourceTree = "<group>"; };
+		7AA82B350E10647A0081BE9D /* dmzRuntimeObjectType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeObjectType.cpp; sourceTree = "<group>"; };
+		7AA82B360E10647A0081BE9D /* dmzRuntimeObjectType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeObjectType.h; sourceTree = "<group>"; };
+		7AA82B370E10647A0081BE9D /* dmzRuntimePlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimePlugin.cpp; sourceTree = "<group>"; };
+		7AA82B380E10647A0081BE9D /* dmzRuntimePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimePlugin.h; sourceTree = "<group>"; };
+		7AA82B390E10647A0081BE9D /* dmzRuntimePluginContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimePluginContainer.cpp; sourceTree = "<group>"; };
+		7AA82B3A0E10647A0081BE9D /* dmzRuntimePluginContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimePluginContainer.h; sourceTree = "<group>"; };
+		7AA82B3B0E10647A0081BE9D /* dmzRuntimePluginFactoryLinkSymbol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimePluginFactoryLinkSymbol.h; sourceTree = "<group>"; };
+		7AA82B3C0E10647A0081BE9D /* dmzRuntimePluginInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimePluginInfo.cpp; sourceTree = "<group>"; };
+		7AA82B3D0E10647A0081BE9D /* dmzRuntimePluginInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimePluginInfo.h; sourceTree = "<group>"; };
+		7AA82B3E0E10647A0081BE9D /* dmzRuntimePluginLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimePluginLoader.cpp; sourceTree = "<group>"; };
+		7AA82B3F0E10647A0081BE9D /* dmzRuntimePluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimePluginLoader.h; sourceTree = "<group>"; };
+		7AA82B400E10647A0081BE9D /* dmzRuntimeRTTI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeRTTI.cpp; sourceTree = "<group>"; };
+		7AA82B410E10647A0081BE9D /* dmzRuntimeRTTI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeRTTI.h; sourceTree = "<group>"; };
+		7AA82B420E10647A0081BE9D /* dmzRuntimeRTTINamed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeRTTINamed.h; sourceTree = "<group>"; };
+		7AA82B430E10647A0081BE9D /* dmzRuntimeSession.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeSession.cpp; sourceTree = "<group>"; };
+		7AA82B440E10647A0081BE9D /* dmzRuntimeSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeSession.h; sourceTree = "<group>"; };
+		7AA82B450E10647A0081BE9D /* dmzRuntimeTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeTime.cpp; sourceTree = "<group>"; };
+		7AA82B460E10647A0081BE9D /* dmzRuntimeTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeTime.h; sourceTree = "<group>"; };
+		7AA82B470E10647A0081BE9D /* dmzRuntimeTimeSlice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeTimeSlice.cpp; sourceTree = "<group>"; };
+		7AA82B480E10647A0081BE9D /* dmzRuntimeTimeSlice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeTimeSlice.h; sourceTree = "<group>"; };
+		7AA82B490E10647A0081BE9D /* dmzRuntimeTypeContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeTypeContext.h; sourceTree = "<group>"; };
+		7AA82B4A0E10647A0081BE9D /* dmzRuntimeUndo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeUndo.cpp; sourceTree = "<group>"; };
+		7AA82B4B0E10647A0081BE9D /* dmzRuntimeUndo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeUndo.h; sourceTree = "<group>"; };
+		7AA82B4D0E10647A0081BE9D /* dmzSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystem.h; sourceTree = "<group>"; };
+		7AA82B4E0E10647A0081BE9D /* dmzSystemCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemCommon.cpp; sourceTree = "<group>"; };
+		7AA82B4F0E10647A0081BE9D /* dmzSystemDynamicLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemDynamicLibrary.h; sourceTree = "<group>"; };
+		7AA82B500E10647A0081BE9D /* dmzSystemDynamicLibraryUnix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemDynamicLibraryUnix.cpp; sourceTree = "<group>"; };
+		7AA82B510E10647B0081BE9D /* dmzSystemDynamicLibraryWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemDynamicLibraryWin32.cpp; sourceTree = "<group>"; };
+		7AA82B520E10647B0081BE9D /* dmzSystemFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemFile.h; sourceTree = "<group>"; };
+		7AA82B530E10647B0081BE9D /* dmzSystemFileCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemFileCommon.cpp; sourceTree = "<group>"; };
+		7AA82B540E10647B0081BE9D /* dmzSystemFileUnix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemFileUnix.cpp; sourceTree = "<group>"; };
+		7AA82B550E10647B0081BE9D /* dmzSystemFileWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemFileWin32.cpp; sourceTree = "<group>"; };
+		7AA82B560E10647B0081BE9D /* dmzSystemLocalWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemLocalWin32.cpp; sourceTree = "<group>"; };
+		7AA82B570E10647B0081BE9D /* dmzSystemLocalWin32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemLocalWin32.h; sourceTree = "<group>"; };
+		7AA82B580E10647B0081BE9D /* dmzSystemMarshal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemMarshal.cpp; sourceTree = "<group>"; };
+		7AA82B590E10647B0081BE9D /* dmzSystemMarshal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemMarshal.h; sourceTree = "<group>"; };
+		7AA82B5A0E10647B0081BE9D /* dmzSystemMutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemMutex.h; sourceTree = "<group>"; };
+		7AA82B5B0E10647B0081BE9D /* dmzSystemMutexUnix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemMutexUnix.cpp; sourceTree = "<group>"; };
+		7AA82B5C0E10647B0081BE9D /* dmzSystemMutexWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemMutexWin32.cpp; sourceTree = "<group>"; };
+		7AA82B5D0E10647B0081BE9D /* dmzSystemRefCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemRefCount.h; sourceTree = "<group>"; };
+		7AA82B5E0E10647B0081BE9D /* dmzSystemRefCountCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemRefCountCommon.cpp; sourceTree = "<group>"; };
+		7AA82B5F0E10647B0081BE9D /* dmzSystemRefCountLinux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemRefCountLinux.cpp; sourceTree = "<group>"; };
+		7AA82B600E10647B0081BE9D /* dmzSystemRefCountMacOS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemRefCountMacOS.cpp; sourceTree = "<group>"; };
+		7AA82B610E10647B0081BE9D /* dmzSystemRefCountWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemRefCountWin32.cpp; sourceTree = "<group>"; };
+		7AA82B620E10647B0081BE9D /* dmzSystemSpinLock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemSpinLock.h; sourceTree = "<group>"; };
+		7AA82B630E10647B0081BE9D /* dmzSystemSpinLockLinux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemSpinLockLinux.cpp; sourceTree = "<group>"; };
+		7AA82B640E10647B0081BE9D /* dmzSystemSpinLockMacOS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemSpinLockMacOS.cpp; sourceTree = "<group>"; };
+		7AA82B650E10647B0081BE9D /* dmzSystemSpinLockWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemSpinLockWin32.cpp; sourceTree = "<group>"; };
+		7AA82B660E10647B0081BE9D /* dmzSystemStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemStream.cpp; sourceTree = "<group>"; };
+		7AA82B670E10647B0081BE9D /* dmzSystemStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemStream.h; sourceTree = "<group>"; };
+		7AA82B680E10647B0081BE9D /* dmzSystemStreamFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemStreamFile.cpp; sourceTree = "<group>"; };
+		7AA82B690E10647B0081BE9D /* dmzSystemStreamFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemStreamFile.h; sourceTree = "<group>"; };
+		7AA82B6A0E10647B0081BE9D /* dmzSystemStreamString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemStreamString.cpp; sourceTree = "<group>"; };
+		7AA82B6B0E10647B0081BE9D /* dmzSystemStreamString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemStreamString.h; sourceTree = "<group>"; };
+		7AA82B6C0E10647B0081BE9D /* dmzSystemThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemThread.h; sourceTree = "<group>"; };
+		7AA82B6D0E10647B0081BE9D /* dmzSystemThreadCommon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemThreadCommon.cpp; sourceTree = "<group>"; };
+		7AA82B6E0E10647B0081BE9D /* dmzSystemThreadUnix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemThreadUnix.cpp; sourceTree = "<group>"; };
+		7AA82B6F0E10647B0081BE9D /* dmzSystemThreadWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemThreadWin32.cpp; sourceTree = "<group>"; };
+		7AA82B700E10647B0081BE9D /* dmzSystemUnix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemUnix.cpp; sourceTree = "<group>"; };
+		7AA82B710E10647B0081BE9D /* dmzSystemUnmarshal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemUnmarshal.cpp; sourceTree = "<group>"; };
+		7AA82B720E10647B0081BE9D /* dmzSystemUnmarshal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzSystemUnmarshal.h; sourceTree = "<group>"; };
+		7AA82B730E10647B0081BE9D /* dmzSystemWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzSystemWin32.cpp; sourceTree = "<group>"; };
+		7AA82B740E10647B0081BE9D /* qdb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qdb.h; sourceTree = "<group>"; };
+		7AA82B760E10647B0081BE9D /* dmzTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypes.cpp; sourceTree = "<group>"; };
+		7AA82B770E10647B0081BE9D /* dmzTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypes.h; sourceTree = "<group>"; };
+		7AA82B780E10647B0081BE9D /* dmzTypesArrays.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesArrays.h; sourceTree = "<group>"; };
+		7AA82B790E10647B0081BE9D /* dmzTypesArrayTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesArrayTemplate.h; sourceTree = "<group>"; };
+		7AA82B7A0E10647B0081BE9D /* dmzTypesBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesBase.h; sourceTree = "<group>"; };
+		7AA82B7B0E10647B0081BE9D /* dmzTypesBooleanOperator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesBooleanOperator.h; sourceTree = "<group>"; };
+		7AA82B7C0E10647B0081BE9D /* dmzTypesConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesConsts.h; sourceTree = "<group>"; };
+		7AA82B7D0E10647B0081BE9D /* dmzTypesHandleContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHandleContainer.cpp; sourceTree = "<group>"; };
+		7AA82B7E0E10647B0081BE9D /* dmzTypesHandleContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHandleContainer.h; sourceTree = "<group>"; };
+		7AA82B7F0E10647B0081BE9D /* dmzTypesHashTable-type-.hash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dmzTypesHashTable-type-.hash.cpp"; sourceTree = "<group>"; };
+		7AA82B800E10647B0081BE9D /* dmzTypesHashTable-type-.hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dmzTypesHashTable-type-.hash.h"; sourceTree = "<group>"; };
+		7AA82B810E10647B0081BE9D /* dmzTypesHashTable-type-Template.hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dmzTypesHashTable-type-Template.hash.h"; sourceTree = "<group>"; };
+		7AA82B820E10647B0081BE9D /* dmzTypesHashTableHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHashTableHandle.cpp; sourceTree = "<group>"; };
+		7AA82B830E10647B0081BE9D /* dmzTypesHashTableHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableHandle.h; sourceTree = "<group>"; };
+		7AA82B840E10647B0081BE9D /* dmzTypesHashTableHandleTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableHandleTemplate.h; sourceTree = "<group>"; };
+		7AA82B850E10647B0081BE9D /* dmzTypesHashTableLock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHashTableLock.cpp; sourceTree = "<group>"; };
+		7AA82B860E10647B0081BE9D /* dmzTypesHashTableLock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableLock.h; sourceTree = "<group>"; };
+		7AA82B870E10647B0081BE9D /* dmzTypesHashTableString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHashTableString.cpp; sourceTree = "<group>"; };
+		7AA82B880E10647B0081BE9D /* dmzTypesHashTableString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableString.h; sourceTree = "<group>"; };
+		7AA82B890E10647B0081BE9D /* dmzTypesHashTableStringTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableStringTemplate.h; sourceTree = "<group>"; };
+		7AA82B8A0E10647B0081BE9D /* dmzTypesHashTableUInt32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHashTableUInt32.cpp; sourceTree = "<group>"; };
+		7AA82B8B0E10647B0081BE9D /* dmzTypesHashTableUInt32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableUInt32.h; sourceTree = "<group>"; };
+		7AA82B8C0E10647B0081BE9D /* dmzTypesHashTableUInt32Template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableUInt32Template.h; sourceTree = "<group>"; };
+		7AA82B8D0E10647B0081BE9D /* dmzTypesHashTableUInt64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHashTableUInt64.cpp; sourceTree = "<group>"; };
+		7AA82B8E0E10647B0081BE9D /* dmzTypesHashTableUInt64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableUInt64.h; sourceTree = "<group>"; };
+		7AA82B8F0E10647B0081BE9D /* dmzTypesHashTableUInt64Template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableUInt64Template.h; sourceTree = "<group>"; };
+		7AA82B900E10647B0081BE9D /* dmzTypesHashTableUUID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesHashTableUUID.cpp; sourceTree = "<group>"; };
+		7AA82B910E10647B0081BE9D /* dmzTypesHashTableUUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableUUID.h; sourceTree = "<group>"; };
+		7AA82B920E10647B0081BE9D /* dmzTypesHashTableUUIDTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesHashTableUUIDTemplate.h; sourceTree = "<group>"; };
+		7AA82B930E10647B0081BE9D /* dmzTypesMask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesMask.cpp; sourceTree = "<group>"; };
+		7AA82B940E10647B0081BE9D /* dmzTypesMask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesMask.h; sourceTree = "<group>"; };
+		7AA82B950E10647B0081BE9D /* dmzTypesMath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesMath.cpp; sourceTree = "<group>"; };
+		7AA82B960E10647B0081BE9D /* dmzTypesMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesMath.h; sourceTree = "<group>"; };
+		7AA82B970E10647B0081BE9D /* dmzTypesMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesMatrix.cpp; sourceTree = "<group>"; };
+		7AA82B980E10647B0081BE9D /* dmzTypesMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesMatrix.h; sourceTree = "<group>"; };
+		7AA82B990E10647B0081BE9D /* dmzTypesQuaternion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesQuaternion.cpp; sourceTree = "<group>"; };
+		7AA82B9A0E10647B0081BE9D /* dmzTypesQuaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesQuaternion.h; sourceTree = "<group>"; };
+		7AA82B9B0E10647B0081BE9D /* dmzTypesString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesString.cpp; sourceTree = "<group>"; };
+		7AA82B9C0E10647B0081BE9D /* dmzTypesString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesString.h; sourceTree = "<group>"; };
+		7AA82B9D0E10647B0081BE9D /* dmzTypesStringTokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesStringTokenizer.h; sourceTree = "<group>"; };
+		7AA82B9E0E10647B0081BE9D /* dmzTypesStringUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesStringUtil.cpp; sourceTree = "<group>"; };
+		7AA82B9F0E10647B0081BE9D /* dmzTypesStringUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesStringUtil.h; sourceTree = "<group>"; };
+		7AA82BA00E10647B0081BE9D /* dmzTypesUUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesUUID.h; sourceTree = "<group>"; };
+		7AA82BA10E10647B0081BE9D /* dmzTypesVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesVector.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		D289987405E68DCB004EDB86 /* Frameworks */ = {
+		7AA82AFA0E1063650081BE9D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -349,210 +325,210 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		08FB7794FE84155DC02AAC07 /* dmzKernel */ = {
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7A7631870E097618002526C4 /* dmz.xcconfig */,
-				7A7631900E097646002526C4 /* kernel */,
-				1AB674ADFE9D54B511CA2CBB /* Products */,
-			);
-			name = dmzKernel;
-			sourceTree = "<group>";
-		};
-		1AB674ADFE9D54B511CA2CBB /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D2AAC046055464E500DB518D /* libdmzKernel.a */,
+				7AA82AFC0E1063650081BE9D /* libdmzKernel.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7A7631900E097646002526C4 /* kernel */ = {
+		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				7A7631910E097646002526C4 /* dmzKernel.lmk */,
-				7A7631920E097646002526C4 /* dmzKernelExport.h */,
-				7A7631930E097646002526C4 /* runtime */,
-				7A7631DC0E097646002526C4 /* system */,
-				7A7632050E097646002526C4 /* types */,
+				7AA82AF70E1063350081BE9D /* dmz.xcconfig */,
+				7AA82B000E10647A0081BE9D /* kernel */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = CustomTemplate;
+			sourceTree = "<group>";
+		};
+		7AA82B000E10647A0081BE9D /* kernel */ = {
+			isa = PBXGroup;
+			children = (
+				7AA82B010E10647A0081BE9D /* dmzKernel.lmk */,
+				7AA82B020E10647A0081BE9D /* dmzKernelExport.h */,
+				7AA82B030E10647A0081BE9D /* runtime */,
+				7AA82B4C0E10647A0081BE9D /* system */,
+				7AA82B750E10647B0081BE9D /* types */,
 			);
 			name = kernel;
 			path = ../../kernel;
 			sourceTree = SOURCE_ROOT;
 		};
-		7A7631930E097646002526C4 /* runtime */ = {
+		7AA82B030E10647A0081BE9D /* runtime */ = {
 			isa = PBXGroup;
 			children = (
-				7A7631940E097646002526C4 /* dmzRuntime.cpp */,
-				7A7631950E097646002526C4 /* dmzRuntime.h */,
-				7A7631960E097646002526C4 /* dmzRuntimeConfig.cpp */,
-				7A7631970E097646002526C4 /* dmzRuntimeConfig.h */,
-				7A7631980E097646002526C4 /* dmzRuntimeConfigContext.h */,
-				7A7631990E097646002526C4 /* dmzRuntimeConfigRead.cpp */,
-				7A76319A0E097646002526C4 /* dmzRuntimeConfigRead.h */,
-				7A76319B0E097646002526C4 /* dmzRuntimeConfigUtil.cpp */,
-				7A76319C0E097646002526C4 /* dmzRuntimeConfigWrite.cpp */,
-				7A76319D0E097646002526C4 /* dmzRuntimeConfigWrite.h */,
-				7A76319E0E097646002526C4 /* dmzRuntimeContext.cpp */,
-				7A76319F0E097646002526C4 /* dmzRuntimeContext.h */,
-				7A7631A00E097646002526C4 /* dmzRuntimeContextDefinitions.cpp */,
-				7A7631A10E097646002526C4 /* dmzRuntimeContextDefinitions.h */,
-				7A7631A20E097646002526C4 /* dmzRuntimeContextLog.cpp */,
-				7A7631A30E097646002526C4 /* dmzRuntimeContextLog.h */,
-				7A7631A40E097646002526C4 /* dmzRuntimeContextMessaging.cpp */,
-				7A7631A50E097646002526C4 /* dmzRuntimeContextMessaging.h */,
-				7A7631A60E097646002526C4 /* dmzRuntimeContextRTTI.cpp */,
-				7A7631A70E097646002526C4 /* dmzRuntimeContextRTTI.h */,
-				7A7631A80E097646002526C4 /* dmzRuntimeContextThreadKey.h */,
-				7A7631A90E097646002526C4 /* dmzRuntimeContextTime.cpp */,
-				7A7631AA0E097646002526C4 /* dmzRuntimeContextTime.h */,
-				7A7631AB0E097646002526C4 /* dmzRuntimeContextUndo.h */,
-				7A7631AC0E097646002526C4 /* dmzRuntimeData.cpp */,
-				7A7631AD0E097646002526C4 /* dmzRuntimeData.h */,
-				7A7631AE0E097646002526C4 /* dmzRuntimeDataBinder.cpp */,
-				7A7631AF0E097646002526C4 /* dmzRuntimeDataBinder.h */,
-				7A7631B00E097646002526C4 /* dmzRuntimeDataConverters.cpp */,
-				7A7631B10E097646002526C4 /* dmzRuntimeDataConverters.h */,
-				7A7631B20E097646002526C4 /* dmzRuntimeDefinitions.h */,
-				7A7631B30E097646002526C4 /* dmzRuntimeEventType.cpp */,
-				7A7631B40E097646002526C4 /* dmzRuntimeEventType.h */,
-				7A7631B50E097646002526C4 /* dmzRuntimeExit.cpp */,
-				7A7631B60E097646002526C4 /* dmzRuntimeExit.h */,
-				7A7631B70E097646002526C4 /* dmzRuntimeHandle.cpp */,
-				7A7631B80E097646002526C4 /* dmzRuntimeHandle.h */,
-				7A7631B90E097646002526C4 /* dmzRuntimeHandleAllocator.cpp */,
-				7A7631BA0E097646002526C4 /* dmzRuntimeHandleAllocator.h */,
-				7A7631BB0E097646002526C4 /* dmzRuntimeInit.cpp */,
-				7A7631BC0E097646002526C4 /* dmzRuntimeInit.h */,
-				7A7631BD0E097646002526C4 /* dmzRuntimeInternalDocs.h */,
-				7A7631BE0E097646002526C4 /* dmzRuntimeLog.cpp */,
-				7A7631BF0E097646002526C4 /* dmzRuntimeLog.h */,
-				7A7631C00E097646002526C4 /* dmzRuntimeLogObserverBasic.cpp */,
-				7A7631C10E097646002526C4 /* dmzRuntimeLogObserverBasic.h */,
-				7A7631C20E097646002526C4 /* dmzRuntimeMessageContext.h */,
-				7A7631C30E097646002526C4 /* dmzRuntimeMessaging.cpp */,
-				7A7631C40E097646002526C4 /* dmzRuntimeMessaging.h */,
-				7A7631C50E097646002526C4 /* dmzRuntimeObjectType.cpp */,
-				7A7631C60E097646002526C4 /* dmzRuntimeObjectType.h */,
-				7A7631C70E097646002526C4 /* dmzRuntimePlugin.cpp */,
-				7A7631C80E097646002526C4 /* dmzRuntimePlugin.h */,
-				7A7631C90E097646002526C4 /* dmzRuntimePluginContainer.cpp */,
-				7A7631CA0E097646002526C4 /* dmzRuntimePluginContainer.h */,
-				7A7631CB0E097646002526C4 /* dmzRuntimePluginFactoryLinkSymbol.h */,
-				7A7631CC0E097646002526C4 /* dmzRuntimePluginInfo.cpp */,
-				7A7631CD0E097646002526C4 /* dmzRuntimePluginInfo.h */,
-				7A7631CE0E097646002526C4 /* dmzRuntimePluginLoader.cpp */,
-				7A7631CF0E097646002526C4 /* dmzRuntimePluginLoader.h */,
-				7A7631D00E097646002526C4 /* dmzRuntimeRTTI.cpp */,
-				7A7631D10E097646002526C4 /* dmzRuntimeRTTI.h */,
-				7A7631D20E097646002526C4 /* dmzRuntimeRTTINamed.h */,
-				7A7631D30E097646002526C4 /* dmzRuntimeSession.cpp */,
-				7A7631D40E097646002526C4 /* dmzRuntimeSession.h */,
-				7A7631D70E097646002526C4 /* dmzRuntimeTime.cpp */,
-				7A7631D80E097646002526C4 /* dmzRuntimeTime.h */,
-				D29DDE870E0C347D005B5107 /* dmzRuntimeTimeSlice.cpp */,
-				D29DDE880E0C347D005B5107 /* dmzRuntimeTimeSlice.h */,
-				7A7631D90E097646002526C4 /* dmzRuntimeTypeContext.h */,
-				7A7631DA0E097646002526C4 /* dmzRuntimeUndo.cpp */,
-				7A7631DB0E097646002526C4 /* dmzRuntimeUndo.h */,
+				7AA82B040E10647A0081BE9D /* dmzRuntime.cpp */,
+				7AA82B050E10647A0081BE9D /* dmzRuntime.h */,
+				7AA82B060E10647A0081BE9D /* dmzRuntimeConfig.cpp */,
+				7AA82B070E10647A0081BE9D /* dmzRuntimeConfig.h */,
+				7AA82B080E10647A0081BE9D /* dmzRuntimeConfigContext.h */,
+				7AA82B090E10647A0081BE9D /* dmzRuntimeConfigRead.cpp */,
+				7AA82B0A0E10647A0081BE9D /* dmzRuntimeConfigRead.h */,
+				7AA82B0B0E10647A0081BE9D /* dmzRuntimeConfigUtil.cpp */,
+				7AA82B0C0E10647A0081BE9D /* dmzRuntimeConfigWrite.cpp */,
+				7AA82B0D0E10647A0081BE9D /* dmzRuntimeConfigWrite.h */,
+				7AA82B0E0E10647A0081BE9D /* dmzRuntimeContext.cpp */,
+				7AA82B0F0E10647A0081BE9D /* dmzRuntimeContext.h */,
+				7AA82B100E10647A0081BE9D /* dmzRuntimeContextDefinitions.cpp */,
+				7AA82B110E10647A0081BE9D /* dmzRuntimeContextDefinitions.h */,
+				7AA82B120E10647A0081BE9D /* dmzRuntimeContextLog.cpp */,
+				7AA82B130E10647A0081BE9D /* dmzRuntimeContextLog.h */,
+				7AA82B140E10647A0081BE9D /* dmzRuntimeContextMessaging.cpp */,
+				7AA82B150E10647A0081BE9D /* dmzRuntimeContextMessaging.h */,
+				7AA82B160E10647A0081BE9D /* dmzRuntimeContextRTTI.cpp */,
+				7AA82B170E10647A0081BE9D /* dmzRuntimeContextRTTI.h */,
+				7AA82B180E10647A0081BE9D /* dmzRuntimeContextThreadKey.h */,
+				7AA82B190E10647A0081BE9D /* dmzRuntimeContextTime.cpp */,
+				7AA82B1A0E10647A0081BE9D /* dmzRuntimeContextTime.h */,
+				7AA82B1B0E10647A0081BE9D /* dmzRuntimeContextUndo.h */,
+				7AA82B1C0E10647A0081BE9D /* dmzRuntimeData.cpp */,
+				7AA82B1D0E10647A0081BE9D /* dmzRuntimeData.h */,
+				7AA82B1E0E10647A0081BE9D /* dmzRuntimeDataBinder.cpp */,
+				7AA82B1F0E10647A0081BE9D /* dmzRuntimeDataBinder.h */,
+				7AA82B200E10647A0081BE9D /* dmzRuntimeDataConverters.cpp */,
+				7AA82B210E10647A0081BE9D /* dmzRuntimeDataConverters.h */,
+				7AA82B220E10647A0081BE9D /* dmzRuntimeDefinitions.h */,
+				7AA82B230E10647A0081BE9D /* dmzRuntimeEventType.cpp */,
+				7AA82B240E10647A0081BE9D /* dmzRuntimeEventType.h */,
+				7AA82B250E10647A0081BE9D /* dmzRuntimeExit.cpp */,
+				7AA82B260E10647A0081BE9D /* dmzRuntimeExit.h */,
+				7AA82B270E10647A0081BE9D /* dmzRuntimeHandle.cpp */,
+				7AA82B280E10647A0081BE9D /* dmzRuntimeHandle.h */,
+				7AA82B290E10647A0081BE9D /* dmzRuntimeHandleAllocator.cpp */,
+				7AA82B2A0E10647A0081BE9D /* dmzRuntimeHandleAllocator.h */,
+				7AA82B2B0E10647A0081BE9D /* dmzRuntimeInit.cpp */,
+				7AA82B2C0E10647A0081BE9D /* dmzRuntimeInit.h */,
+				7AA82B2D0E10647A0081BE9D /* dmzRuntimeInternalDocs.h */,
+				7AA82B2E0E10647A0081BE9D /* dmzRuntimeLog.cpp */,
+				7AA82B2F0E10647A0081BE9D /* dmzRuntimeLog.h */,
+				7AA82B300E10647A0081BE9D /* dmzRuntimeLogObserverBasic.cpp */,
+				7AA82B310E10647A0081BE9D /* dmzRuntimeLogObserverBasic.h */,
+				7AA82B320E10647A0081BE9D /* dmzRuntimeMessageContext.h */,
+				7AA82B330E10647A0081BE9D /* dmzRuntimeMessaging.cpp */,
+				7AA82B340E10647A0081BE9D /* dmzRuntimeMessaging.h */,
+				7AA82B350E10647A0081BE9D /* dmzRuntimeObjectType.cpp */,
+				7AA82B360E10647A0081BE9D /* dmzRuntimeObjectType.h */,
+				7AA82B370E10647A0081BE9D /* dmzRuntimePlugin.cpp */,
+				7AA82B380E10647A0081BE9D /* dmzRuntimePlugin.h */,
+				7AA82B390E10647A0081BE9D /* dmzRuntimePluginContainer.cpp */,
+				7AA82B3A0E10647A0081BE9D /* dmzRuntimePluginContainer.h */,
+				7AA82B3B0E10647A0081BE9D /* dmzRuntimePluginFactoryLinkSymbol.h */,
+				7AA82B3C0E10647A0081BE9D /* dmzRuntimePluginInfo.cpp */,
+				7AA82B3D0E10647A0081BE9D /* dmzRuntimePluginInfo.h */,
+				7AA82B3E0E10647A0081BE9D /* dmzRuntimePluginLoader.cpp */,
+				7AA82B3F0E10647A0081BE9D /* dmzRuntimePluginLoader.h */,
+				7AA82B400E10647A0081BE9D /* dmzRuntimeRTTI.cpp */,
+				7AA82B410E10647A0081BE9D /* dmzRuntimeRTTI.h */,
+				7AA82B420E10647A0081BE9D /* dmzRuntimeRTTINamed.h */,
+				7AA82B430E10647A0081BE9D /* dmzRuntimeSession.cpp */,
+				7AA82B440E10647A0081BE9D /* dmzRuntimeSession.h */,
+				7AA82B450E10647A0081BE9D /* dmzRuntimeTime.cpp */,
+				7AA82B460E10647A0081BE9D /* dmzRuntimeTime.h */,
+				7AA82B470E10647A0081BE9D /* dmzRuntimeTimeSlice.cpp */,
+				7AA82B480E10647A0081BE9D /* dmzRuntimeTimeSlice.h */,
+				7AA82B490E10647A0081BE9D /* dmzRuntimeTypeContext.h */,
+				7AA82B4A0E10647A0081BE9D /* dmzRuntimeUndo.cpp */,
+				7AA82B4B0E10647A0081BE9D /* dmzRuntimeUndo.h */,
 			);
 			path = runtime;
 			sourceTree = "<group>";
 		};
-		7A7631DC0E097646002526C4 /* system */ = {
+		7AA82B4C0E10647A0081BE9D /* system */ = {
 			isa = PBXGroup;
 			children = (
-				7A7631DD0E097646002526C4 /* dmzSystem.h */,
-				7A7631DE0E097646002526C4 /* dmzSystemCommon.cpp */,
-				7A7631DF0E097646002526C4 /* dmzSystemDynamicLibrary.h */,
-				7A7631E00E097646002526C4 /* dmzSystemDynamicLibraryUnix.cpp */,
-				7A7631E10E097646002526C4 /* dmzSystemDynamicLibraryWin32.cpp */,
-				7A7631E20E097646002526C4 /* dmzSystemFile.h */,
-				7A7631E30E097646002526C4 /* dmzSystemFileCommon.cpp */,
-				7A7631E40E097646002526C4 /* dmzSystemFileUnix.cpp */,
-				7A7631E50E097646002526C4 /* dmzSystemFileWin32.cpp */,
-				7A7631E60E097646002526C4 /* dmzSystemLocalWin32.cpp */,
-				7A7631E70E097646002526C4 /* dmzSystemLocalWin32.h */,
-				7A7631E80E097646002526C4 /* dmzSystemMarshal.cpp */,
-				7A7631E90E097646002526C4 /* dmzSystemMarshal.h */,
-				7A7631EA0E097646002526C4 /* dmzSystemMutex.h */,
-				7A7631EB0E097646002526C4 /* dmzSystemMutexUnix.cpp */,
-				7A7631EC0E097646002526C4 /* dmzSystemMutexWin32.cpp */,
-				7A7631ED0E097646002526C4 /* dmzSystemRefCount.h */,
-				7A7631EE0E097646002526C4 /* dmzSystemRefCountCommon.cpp */,
-				7A7631EF0E097646002526C4 /* dmzSystemRefCountLinux.cpp */,
-				7A7631F00E097646002526C4 /* dmzSystemRefCountMacOS.cpp */,
-				7A7631F10E097646002526C4 /* dmzSystemRefCountWin32.cpp */,
-				7A7631F20E097646002526C4 /* dmzSystemSpinLock.h */,
-				7A7631F30E097646002526C4 /* dmzSystemSpinLockLinux.cpp */,
-				7A7631F40E097646002526C4 /* dmzSystemSpinLockMacOS.cpp */,
-				7A7631F50E097646002526C4 /* dmzSystemSpinLockWin32.cpp */,
-				7A7631F60E097646002526C4 /* dmzSystemStream.cpp */,
-				7A7631F70E097646002526C4 /* dmzSystemStream.h */,
-				7A7631F80E097646002526C4 /* dmzSystemStreamFile.cpp */,
-				7A7631F90E097646002526C4 /* dmzSystemStreamFile.h */,
-				7A7631FA0E097646002526C4 /* dmzSystemStreamString.cpp */,
-				7A7631FB0E097646002526C4 /* dmzSystemStreamString.h */,
-				7A7631FC0E097646002526C4 /* dmzSystemThread.h */,
-				7A7631FD0E097646002526C4 /* dmzSystemThreadCommon.cpp */,
-				7A7631FE0E097646002526C4 /* dmzSystemThreadUnix.cpp */,
-				7A7631FF0E097646002526C4 /* dmzSystemThreadWin32.cpp */,
-				7A7632000E097646002526C4 /* dmzSystemUnix.cpp */,
-				7A7632010E097646002526C4 /* dmzSystemUnmarshal.cpp */,
-				7A7632020E097646002526C4 /* dmzSystemUnmarshal.h */,
-				7A7632030E097646002526C4 /* dmzSystemWin32.cpp */,
-				7A7632040E097646002526C4 /* qdb.h */,
+				7AA82B4D0E10647A0081BE9D /* dmzSystem.h */,
+				7AA82B4E0E10647A0081BE9D /* dmzSystemCommon.cpp */,
+				7AA82B4F0E10647A0081BE9D /* dmzSystemDynamicLibrary.h */,
+				7AA82B500E10647A0081BE9D /* dmzSystemDynamicLibraryUnix.cpp */,
+				7AA82B510E10647B0081BE9D /* dmzSystemDynamicLibraryWin32.cpp */,
+				7AA82B520E10647B0081BE9D /* dmzSystemFile.h */,
+				7AA82B530E10647B0081BE9D /* dmzSystemFileCommon.cpp */,
+				7AA82B540E10647B0081BE9D /* dmzSystemFileUnix.cpp */,
+				7AA82B550E10647B0081BE9D /* dmzSystemFileWin32.cpp */,
+				7AA82B560E10647B0081BE9D /* dmzSystemLocalWin32.cpp */,
+				7AA82B570E10647B0081BE9D /* dmzSystemLocalWin32.h */,
+				7AA82B580E10647B0081BE9D /* dmzSystemMarshal.cpp */,
+				7AA82B590E10647B0081BE9D /* dmzSystemMarshal.h */,
+				7AA82B5A0E10647B0081BE9D /* dmzSystemMutex.h */,
+				7AA82B5B0E10647B0081BE9D /* dmzSystemMutexUnix.cpp */,
+				7AA82B5C0E10647B0081BE9D /* dmzSystemMutexWin32.cpp */,
+				7AA82B5D0E10647B0081BE9D /* dmzSystemRefCount.h */,
+				7AA82B5E0E10647B0081BE9D /* dmzSystemRefCountCommon.cpp */,
+				7AA82B5F0E10647B0081BE9D /* dmzSystemRefCountLinux.cpp */,
+				7AA82B600E10647B0081BE9D /* dmzSystemRefCountMacOS.cpp */,
+				7AA82B610E10647B0081BE9D /* dmzSystemRefCountWin32.cpp */,
+				7AA82B620E10647B0081BE9D /* dmzSystemSpinLock.h */,
+				7AA82B630E10647B0081BE9D /* dmzSystemSpinLockLinux.cpp */,
+				7AA82B640E10647B0081BE9D /* dmzSystemSpinLockMacOS.cpp */,
+				7AA82B650E10647B0081BE9D /* dmzSystemSpinLockWin32.cpp */,
+				7AA82B660E10647B0081BE9D /* dmzSystemStream.cpp */,
+				7AA82B670E10647B0081BE9D /* dmzSystemStream.h */,
+				7AA82B680E10647B0081BE9D /* dmzSystemStreamFile.cpp */,
+				7AA82B690E10647B0081BE9D /* dmzSystemStreamFile.h */,
+				7AA82B6A0E10647B0081BE9D /* dmzSystemStreamString.cpp */,
+				7AA82B6B0E10647B0081BE9D /* dmzSystemStreamString.h */,
+				7AA82B6C0E10647B0081BE9D /* dmzSystemThread.h */,
+				7AA82B6D0E10647B0081BE9D /* dmzSystemThreadCommon.cpp */,
+				7AA82B6E0E10647B0081BE9D /* dmzSystemThreadUnix.cpp */,
+				7AA82B6F0E10647B0081BE9D /* dmzSystemThreadWin32.cpp */,
+				7AA82B700E10647B0081BE9D /* dmzSystemUnix.cpp */,
+				7AA82B710E10647B0081BE9D /* dmzSystemUnmarshal.cpp */,
+				7AA82B720E10647B0081BE9D /* dmzSystemUnmarshal.h */,
+				7AA82B730E10647B0081BE9D /* dmzSystemWin32.cpp */,
+				7AA82B740E10647B0081BE9D /* qdb.h */,
 			);
 			path = system;
 			sourceTree = "<group>";
 		};
-		7A7632050E097646002526C4 /* types */ = {
+		7AA82B750E10647B0081BE9D /* types */ = {
 			isa = PBXGroup;
 			children = (
-				7A7632060E097646002526C4 /* dmzTypes.cpp */,
-				7A7632070E097646002526C4 /* dmzTypes.h */,
-				7A7632080E097646002526C4 /* dmzTypesArrays.h */,
-				7A7632090E097646002526C4 /* dmzTypesArrayTemplate.h */,
-				7A76320A0E097646002526C4 /* dmzTypesBase.h */,
-				7A76320B0E097646002526C4 /* dmzTypesBooleanOperator.h */,
-				7A76320C0E097646002526C4 /* dmzTypesConsts.h */,
-				7A76320D0E097646002526C4 /* dmzTypesHandleContainer.cpp */,
-				7A76320E0E097646002526C4 /* dmzTypesHandleContainer.h */,
-				7A76320F0E097646002526C4 /* dmzTypesHashTable-type-.hash.cpp */,
-				7A7632100E097646002526C4 /* dmzTypesHashTable-type-.hash.h */,
-				7A7632110E097646002526C4 /* dmzTypesHashTable-type-Template.hash.h */,
-				7A7632120E097646002526C4 /* dmzTypesHashTableHandle.cpp */,
-				7A7632130E097646002526C4 /* dmzTypesHashTableHandle.h */,
-				7A7632140E097646002526C4 /* dmzTypesHashTableHandleTemplate.h */,
-				7A7632150E097646002526C4 /* dmzTypesHashTableLock.cpp */,
-				7A7632160E097646002526C4 /* dmzTypesHashTableLock.h */,
-				7A7632170E097646002526C4 /* dmzTypesHashTableString.cpp */,
-				7A7632180E097646002526C4 /* dmzTypesHashTableString.h */,
-				7A7632190E097646002526C4 /* dmzTypesHashTableStringTemplate.h */,
-				7A76321A0E097646002526C4 /* dmzTypesHashTableUInt32.cpp */,
-				7A76321B0E097646002526C4 /* dmzTypesHashTableUInt32.h */,
-				7A76321C0E097646002526C4 /* dmzTypesHashTableUInt32Template.h */,
-				7A76321D0E097646002526C4 /* dmzTypesHashTableUInt64.cpp */,
-				7A76321E0E097646002526C4 /* dmzTypesHashTableUInt64.h */,
-				7A76321F0E097646002526C4 /* dmzTypesHashTableUInt64Template.h */,
-				7A7632200E097646002526C4 /* dmzTypesHashTableUUID.cpp */,
-				7A7632210E097646002526C4 /* dmzTypesHashTableUUID.h */,
-				7A7632220E097646002526C4 /* dmzTypesHashTableUUIDTemplate.h */,
-				7A7632230E097646002526C4 /* dmzTypesMask.cpp */,
-				7A7632240E097646002526C4 /* dmzTypesMask.h */,
-				7A7632250E097646002526C4 /* dmzTypesMath.cpp */,
-				7A7632260E097646002526C4 /* dmzTypesMath.h */,
-				7A7632270E097646002526C4 /* dmzTypesMatrix.cpp */,
-				7A7632280E097646002526C4 /* dmzTypesMatrix.h */,
-				7A7632290E097646002526C4 /* dmzTypesQuaternion.cpp */,
-				7A76322A0E097646002526C4 /* dmzTypesQuaternion.h */,
-				7A76322B0E097646002526C4 /* dmzTypesString.cpp */,
-				7A76322C0E097646002526C4 /* dmzTypesString.h */,
-				7A76322D0E097646002526C4 /* dmzTypesStringTokenizer.h */,
-				7A76322E0E097646002526C4 /* dmzTypesStringUtil.cpp */,
-				7A76322F0E097646002526C4 /* dmzTypesStringUtil.h */,
-				7A7632300E097646002526C4 /* dmzTypesUUID.h */,
-				7A7632310E097646002526C4 /* dmzTypesVector.h */,
+				7AA82B760E10647B0081BE9D /* dmzTypes.cpp */,
+				7AA82B770E10647B0081BE9D /* dmzTypes.h */,
+				7AA82B780E10647B0081BE9D /* dmzTypesArrays.h */,
+				7AA82B790E10647B0081BE9D /* dmzTypesArrayTemplate.h */,
+				7AA82B7A0E10647B0081BE9D /* dmzTypesBase.h */,
+				7AA82B7B0E10647B0081BE9D /* dmzTypesBooleanOperator.h */,
+				7AA82B7C0E10647B0081BE9D /* dmzTypesConsts.h */,
+				7AA82B7D0E10647B0081BE9D /* dmzTypesHandleContainer.cpp */,
+				7AA82B7E0E10647B0081BE9D /* dmzTypesHandleContainer.h */,
+				7AA82B7F0E10647B0081BE9D /* dmzTypesHashTable-type-.hash.cpp */,
+				7AA82B800E10647B0081BE9D /* dmzTypesHashTable-type-.hash.h */,
+				7AA82B810E10647B0081BE9D /* dmzTypesHashTable-type-Template.hash.h */,
+				7AA82B820E10647B0081BE9D /* dmzTypesHashTableHandle.cpp */,
+				7AA82B830E10647B0081BE9D /* dmzTypesHashTableHandle.h */,
+				7AA82B840E10647B0081BE9D /* dmzTypesHashTableHandleTemplate.h */,
+				7AA82B850E10647B0081BE9D /* dmzTypesHashTableLock.cpp */,
+				7AA82B860E10647B0081BE9D /* dmzTypesHashTableLock.h */,
+				7AA82B870E10647B0081BE9D /* dmzTypesHashTableString.cpp */,
+				7AA82B880E10647B0081BE9D /* dmzTypesHashTableString.h */,
+				7AA82B890E10647B0081BE9D /* dmzTypesHashTableStringTemplate.h */,
+				7AA82B8A0E10647B0081BE9D /* dmzTypesHashTableUInt32.cpp */,
+				7AA82B8B0E10647B0081BE9D /* dmzTypesHashTableUInt32.h */,
+				7AA82B8C0E10647B0081BE9D /* dmzTypesHashTableUInt32Template.h */,
+				7AA82B8D0E10647B0081BE9D /* dmzTypesHashTableUInt64.cpp */,
+				7AA82B8E0E10647B0081BE9D /* dmzTypesHashTableUInt64.h */,
+				7AA82B8F0E10647B0081BE9D /* dmzTypesHashTableUInt64Template.h */,
+				7AA82B900E10647B0081BE9D /* dmzTypesHashTableUUID.cpp */,
+				7AA82B910E10647B0081BE9D /* dmzTypesHashTableUUID.h */,
+				7AA82B920E10647B0081BE9D /* dmzTypesHashTableUUIDTemplate.h */,
+				7AA82B930E10647B0081BE9D /* dmzTypesMask.cpp */,
+				7AA82B940E10647B0081BE9D /* dmzTypesMask.h */,
+				7AA82B950E10647B0081BE9D /* dmzTypesMath.cpp */,
+				7AA82B960E10647B0081BE9D /* dmzTypesMath.h */,
+				7AA82B970E10647B0081BE9D /* dmzTypesMatrix.cpp */,
+				7AA82B980E10647B0081BE9D /* dmzTypesMatrix.h */,
+				7AA82B990E10647B0081BE9D /* dmzTypesQuaternion.cpp */,
+				7AA82B9A0E10647B0081BE9D /* dmzTypesQuaternion.h */,
+				7AA82B9B0E10647B0081BE9D /* dmzTypesString.cpp */,
+				7AA82B9C0E10647B0081BE9D /* dmzTypesString.h */,
+				7AA82B9D0E10647B0081BE9D /* dmzTypesStringTokenizer.h */,
+				7AA82B9E0E10647B0081BE9D /* dmzTypesStringUtil.cpp */,
+				7AA82B9F0E10647B0081BE9D /* dmzTypesStringUtil.h */,
+				7AA82BA00E10647B0081BE9D /* dmzTypesUUID.h */,
+				7AA82BA10E10647B0081BE9D /* dmzTypesVector.h */,
 			);
 			path = types;
 			sourceTree = "<group>";
@@ -560,104 +536,104 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		D2AAC043055464E500DB518D /* Headers */ = {
+		7AA82AF80E1063650081BE9D /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A7632320E097671002526C4 /* dmzKernelExport.h in Headers */,
-				7A7632340E0976B2002526C4 /* dmzRuntime.h in Headers */,
-				7A7632360E0976B2002526C4 /* dmzRuntimeConfig.h in Headers */,
-				7A7632370E0976B2002526C4 /* dmzRuntimeConfigContext.h in Headers */,
-				7A7632390E0976B2002526C4 /* dmzRuntimeConfigRead.h in Headers */,
-				7A76323C0E0976B2002526C4 /* dmzRuntimeConfigWrite.h in Headers */,
-				7A76323E0E0976B2002526C4 /* dmzRuntimeContext.h in Headers */,
-				7A7632400E0976B2002526C4 /* dmzRuntimeContextDefinitions.h in Headers */,
-				7A7632420E0976B2002526C4 /* dmzRuntimeContextLog.h in Headers */,
-				7A7632440E0976B2002526C4 /* dmzRuntimeContextMessaging.h in Headers */,
-				7A7632460E0976B2002526C4 /* dmzRuntimeContextRTTI.h in Headers */,
-				7A7632470E0976B2002526C4 /* dmzRuntimeContextThreadKey.h in Headers */,
-				7A7632490E0976B2002526C4 /* dmzRuntimeContextTime.h in Headers */,
-				7A76324A0E0976B2002526C4 /* dmzRuntimeContextUndo.h in Headers */,
-				7A76324C0E0976B2002526C4 /* dmzRuntimeData.h in Headers */,
-				7A76324E0E0976B2002526C4 /* dmzRuntimeDataBinder.h in Headers */,
-				7A7632500E0976B2002526C4 /* dmzRuntimeDataConverters.h in Headers */,
-				7A7632510E0976B2002526C4 /* dmzRuntimeDefinitions.h in Headers */,
-				7A7632530E0976B2002526C4 /* dmzRuntimeEventType.h in Headers */,
-				7A7632550E0976B2002526C4 /* dmzRuntimeExit.h in Headers */,
-				7A7632570E0976B2002526C4 /* dmzRuntimeHandle.h in Headers */,
-				7A7632590E0976B2002526C4 /* dmzRuntimeHandleAllocator.h in Headers */,
-				7A76325B0E0976B2002526C4 /* dmzRuntimeInit.h in Headers */,
-				7A76325C0E0976B2002526C4 /* dmzRuntimeInternalDocs.h in Headers */,
-				7A76325E0E0976B2002526C4 /* dmzRuntimeLog.h in Headers */,
-				7A7632600E0976B2002526C4 /* dmzRuntimeLogObserverBasic.h in Headers */,
-				7A7632610E0976B2002526C4 /* dmzRuntimeMessageContext.h in Headers */,
-				7A7632630E0976B2002526C4 /* dmzRuntimeMessaging.h in Headers */,
-				7A7632650E0976B2002526C4 /* dmzRuntimeObjectType.h in Headers */,
-				7A7632670E0976B2002526C4 /* dmzRuntimePlugin.h in Headers */,
-				7A7632690E0976B2002526C4 /* dmzRuntimePluginContainer.h in Headers */,
-				7A76326A0E0976B2002526C4 /* dmzRuntimePluginFactoryLinkSymbol.h in Headers */,
-				7A76326C0E0976B2002526C4 /* dmzRuntimePluginInfo.h in Headers */,
-				7A76326E0E0976B2002526C4 /* dmzRuntimePluginLoader.h in Headers */,
-				7A7632700E0976B2002526C4 /* dmzRuntimeRTTI.h in Headers */,
-				7A7632710E0976B2002526C4 /* dmzRuntimeRTTINamed.h in Headers */,
-				7A7632730E0976B2002526C4 /* dmzRuntimeSession.h in Headers */,
-				7A7632770E0976B2002526C4 /* dmzRuntimeTime.h in Headers */,
-				7A7632780E0976B2002526C4 /* dmzRuntimeTypeContext.h in Headers */,
-				7A76327A0E0976B2002526C4 /* dmzRuntimeUndo.h in Headers */,
-				7A76327B0E0976F2002526C4 /* dmzSystem.h in Headers */,
-				7A76327D0E0976F2002526C4 /* dmzSystemDynamicLibrary.h in Headers */,
-				7A76327F0E0976F2002526C4 /* dmzSystemFile.h in Headers */,
-				7A7632830E0976F2002526C4 /* dmzSystemMarshal.h in Headers */,
-				7A7632840E0976F2002526C4 /* dmzSystemMutex.h in Headers */,
-				7A7632860E0976F2002526C4 /* dmzSystemRefCount.h in Headers */,
-				7A7632880E0976F2002526C4 /* dmzSystemSpinLock.h in Headers */,
-				7A76328B0E0976F2002526C4 /* dmzSystemStream.h in Headers */,
-				7A76328D0E0976F2002526C4 /* dmzSystemStreamFile.h in Headers */,
-				7A76328F0E0976F2002526C4 /* dmzSystemStreamString.h in Headers */,
-				7A7632900E0976F2002526C4 /* dmzSystemThread.h in Headers */,
-				7A7632950E0976F2002526C4 /* dmzSystemUnmarshal.h in Headers */,
-				7A7632960E0976F2002526C4 /* qdb.h in Headers */,
-				7A7632980E097701002526C4 /* dmzTypes.h in Headers */,
-				7A7632990E097701002526C4 /* dmzTypesArrays.h in Headers */,
-				7A76329A0E097701002526C4 /* dmzTypesArrayTemplate.h in Headers */,
-				7A76329B0E097701002526C4 /* dmzTypesBase.h in Headers */,
-				7A76329C0E097701002526C4 /* dmzTypesBooleanOperator.h in Headers */,
-				7A76329D0E097701002526C4 /* dmzTypesConsts.h in Headers */,
-				7A76329F0E097701002526C4 /* dmzTypesHandleContainer.h in Headers */,
-				7A7632A10E097701002526C4 /* dmzTypesHashTableHandle.h in Headers */,
-				7A7632A20E097701002526C4 /* dmzTypesHashTableHandleTemplate.h in Headers */,
-				7A7632A40E097701002526C4 /* dmzTypesHashTableLock.h in Headers */,
-				7A7632A60E097701002526C4 /* dmzTypesHashTableString.h in Headers */,
-				7A7632A70E097701002526C4 /* dmzTypesHashTableStringTemplate.h in Headers */,
-				7A7632A90E097701002526C4 /* dmzTypesHashTableUInt32.h in Headers */,
-				7A7632AA0E097701002526C4 /* dmzTypesHashTableUInt32Template.h in Headers */,
-				7A7632AC0E097701002526C4 /* dmzTypesHashTableUInt64.h in Headers */,
-				7A7632AD0E097701002526C4 /* dmzTypesHashTableUInt64Template.h in Headers */,
-				7A7632AF0E097701002526C4 /* dmzTypesHashTableUUID.h in Headers */,
-				7A7632B00E097701002526C4 /* dmzTypesHashTableUUIDTemplate.h in Headers */,
-				7A7632B20E097701002526C4 /* dmzTypesMask.h in Headers */,
-				7A7632B40E097701002526C4 /* dmzTypesMath.h in Headers */,
-				7A7632B60E097701002526C4 /* dmzTypesMatrix.h in Headers */,
-				7A7632B80E097701002526C4 /* dmzTypesQuaternion.h in Headers */,
-				7A7632BA0E097701002526C4 /* dmzTypesString.h in Headers */,
-				7A7632BB0E097701002526C4 /* dmzTypesStringTokenizer.h in Headers */,
-				7A7632BD0E097701002526C4 /* dmzTypesStringUtil.h in Headers */,
-				7A7632BE0E097701002526C4 /* dmzTypesUUID.h in Headers */,
-				7A7632BF0E097701002526C4 /* dmzTypesVector.h in Headers */,
-				D29DDE8A0E0C347D005B5107 /* dmzRuntimeTimeSlice.h in Headers */,
+				7AA82BA20E10647B0081BE9D /* dmzKernelExport.h in Headers */,
+				7AA82BA40E10647B0081BE9D /* dmzRuntime.h in Headers */,
+				7AA82BA60E10647B0081BE9D /* dmzRuntimeConfig.h in Headers */,
+				7AA82BA70E10647B0081BE9D /* dmzRuntimeConfigContext.h in Headers */,
+				7AA82BA90E10647B0081BE9D /* dmzRuntimeConfigRead.h in Headers */,
+				7AA82BAC0E10647B0081BE9D /* dmzRuntimeConfigWrite.h in Headers */,
+				7AA82BAE0E10647B0081BE9D /* dmzRuntimeContext.h in Headers */,
+				7AA82BB00E10647B0081BE9D /* dmzRuntimeContextDefinitions.h in Headers */,
+				7AA82BB20E10647B0081BE9D /* dmzRuntimeContextLog.h in Headers */,
+				7AA82BB40E10647B0081BE9D /* dmzRuntimeContextMessaging.h in Headers */,
+				7AA82BB60E10647B0081BE9D /* dmzRuntimeContextRTTI.h in Headers */,
+				7AA82BB70E10647B0081BE9D /* dmzRuntimeContextThreadKey.h in Headers */,
+				7AA82BB90E10647B0081BE9D /* dmzRuntimeContextTime.h in Headers */,
+				7AA82BBA0E10647B0081BE9D /* dmzRuntimeContextUndo.h in Headers */,
+				7AA82BBC0E10647B0081BE9D /* dmzRuntimeData.h in Headers */,
+				7AA82BBE0E10647B0081BE9D /* dmzRuntimeDataBinder.h in Headers */,
+				7AA82BC00E10647B0081BE9D /* dmzRuntimeDataConverters.h in Headers */,
+				7AA82BC10E10647B0081BE9D /* dmzRuntimeDefinitions.h in Headers */,
+				7AA82BC30E10647B0081BE9D /* dmzRuntimeEventType.h in Headers */,
+				7AA82BC50E10647B0081BE9D /* dmzRuntimeExit.h in Headers */,
+				7AA82BC70E10647B0081BE9D /* dmzRuntimeHandle.h in Headers */,
+				7AA82BC90E10647B0081BE9D /* dmzRuntimeHandleAllocator.h in Headers */,
+				7AA82BCB0E10647B0081BE9D /* dmzRuntimeInit.h in Headers */,
+				7AA82BCC0E10647B0081BE9D /* dmzRuntimeInternalDocs.h in Headers */,
+				7AA82BCE0E10647B0081BE9D /* dmzRuntimeLog.h in Headers */,
+				7AA82BD00E10647B0081BE9D /* dmzRuntimeLogObserverBasic.h in Headers */,
+				7AA82BD10E10647B0081BE9D /* dmzRuntimeMessageContext.h in Headers */,
+				7AA82BD30E10647B0081BE9D /* dmzRuntimeMessaging.h in Headers */,
+				7AA82BD50E10647B0081BE9D /* dmzRuntimeObjectType.h in Headers */,
+				7AA82BD70E10647B0081BE9D /* dmzRuntimePlugin.h in Headers */,
+				7AA82BD90E10647B0081BE9D /* dmzRuntimePluginContainer.h in Headers */,
+				7AA82BDA0E10647B0081BE9D /* dmzRuntimePluginFactoryLinkSymbol.h in Headers */,
+				7AA82BDC0E10647B0081BE9D /* dmzRuntimePluginInfo.h in Headers */,
+				7AA82BDE0E10647B0081BE9D /* dmzRuntimePluginLoader.h in Headers */,
+				7AA82BE00E10647B0081BE9D /* dmzRuntimeRTTI.h in Headers */,
+				7AA82BE10E10647B0081BE9D /* dmzRuntimeRTTINamed.h in Headers */,
+				7AA82BE30E10647B0081BE9D /* dmzRuntimeSession.h in Headers */,
+				7AA82BE50E10647B0081BE9D /* dmzRuntimeTime.h in Headers */,
+				7AA82BE70E10647B0081BE9D /* dmzRuntimeTimeSlice.h in Headers */,
+				7AA82BE80E10647B0081BE9D /* dmzRuntimeTypeContext.h in Headers */,
+				7AA82BEA0E10647B0081BE9D /* dmzRuntimeUndo.h in Headers */,
+				7AA82BEB0E10647B0081BE9D /* dmzSystem.h in Headers */,
+				7AA82BED0E10647B0081BE9D /* dmzSystemDynamicLibrary.h in Headers */,
+				7AA82BF00E10647B0081BE9D /* dmzSystemFile.h in Headers */,
+				7AA82BF70E10647B0081BE9D /* dmzSystemMarshal.h in Headers */,
+				7AA82BF80E10647B0081BE9D /* dmzSystemMutex.h in Headers */,
+				7AA82BFB0E10647B0081BE9D /* dmzSystemRefCount.h in Headers */,
+				7AA82C000E10647B0081BE9D /* dmzSystemSpinLock.h in Headers */,
+				7AA82C050E10647B0081BE9D /* dmzSystemStream.h in Headers */,
+				7AA82C070E10647B0081BE9D /* dmzSystemStreamFile.h in Headers */,
+				7AA82C090E10647B0081BE9D /* dmzSystemStreamString.h in Headers */,
+				7AA82C0A0E10647B0081BE9D /* dmzSystemThread.h in Headers */,
+				7AA82C100E10647B0081BE9D /* dmzSystemUnmarshal.h in Headers */,
+				7AA82C120E10647B0081BE9D /* qdb.h in Headers */,
+				7AA82C140E10647B0081BE9D /* dmzTypes.h in Headers */,
+				7AA82C150E10647B0081BE9D /* dmzTypesArrays.h in Headers */,
+				7AA82C160E10647B0081BE9D /* dmzTypesArrayTemplate.h in Headers */,
+				7AA82C170E10647B0081BE9D /* dmzTypesBase.h in Headers */,
+				7AA82C180E10647B0081BE9D /* dmzTypesBooleanOperator.h in Headers */,
+				7AA82C190E10647B0081BE9D /* dmzTypesConsts.h in Headers */,
+				7AA82C1B0E10647B0081BE9D /* dmzTypesHandleContainer.h in Headers */,
+				7AA82C200E10647B0081BE9D /* dmzTypesHashTableHandle.h in Headers */,
+				7AA82C210E10647B0081BE9D /* dmzTypesHashTableHandleTemplate.h in Headers */,
+				7AA82C230E10647B0081BE9D /* dmzTypesHashTableLock.h in Headers */,
+				7AA82C250E10647B0081BE9D /* dmzTypesHashTableString.h in Headers */,
+				7AA82C260E10647B0081BE9D /* dmzTypesHashTableStringTemplate.h in Headers */,
+				7AA82C280E10647B0081BE9D /* dmzTypesHashTableUInt32.h in Headers */,
+				7AA82C290E10647B0081BE9D /* dmzTypesHashTableUInt32Template.h in Headers */,
+				7AA82C2B0E10647B0081BE9D /* dmzTypesHashTableUInt64.h in Headers */,
+				7AA82C2C0E10647B0081BE9D /* dmzTypesHashTableUInt64Template.h in Headers */,
+				7AA82C2E0E10647B0081BE9D /* dmzTypesHashTableUUID.h in Headers */,
+				7AA82C2F0E10647B0081BE9D /* dmzTypesHashTableUUIDTemplate.h in Headers */,
+				7AA82C310E10647B0081BE9D /* dmzTypesMask.h in Headers */,
+				7AA82C330E10647B0081BE9D /* dmzTypesMath.h in Headers */,
+				7AA82C350E10647B0081BE9D /* dmzTypesMatrix.h in Headers */,
+				7AA82C370E10647B0081BE9D /* dmzTypesQuaternion.h in Headers */,
+				7AA82C390E10647B0081BE9D /* dmzTypesString.h in Headers */,
+				7AA82C3A0E10647B0081BE9D /* dmzTypesStringTokenizer.h in Headers */,
+				7AA82C3C0E10647B0081BE9D /* dmzTypesStringUtil.h in Headers */,
+				7AA82C3D0E10647B0081BE9D /* dmzTypesUUID.h in Headers */,
+				7AA82C3E0E10647B0081BE9D /* dmzTypesVector.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		D2AAC045055464E500DB518D /* dmzKernel */ = {
+		7AA82AFB0E1063650081BE9D /* dmzKernel */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "dmzKernel" */;
+			buildConfigurationList = 7AA82AFF0E10638C0081BE9D /* Build configuration list for PBXNativeTarget "dmzKernel" */;
 			buildPhases = (
-				D2AAC043055464E500DB518D /* Headers */,
-				D2AAC044055464E500DB518D /* Sources */,
-				D289987405E68DCB004EDB86 /* Frameworks */,
+				7AA82AF80E1063650081BE9D /* Headers */,
+				7AA82AF90E1063650081BE9D /* Sources */,
+				7AA82AFA0E1063650081BE9D /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -665,216 +641,174 @@
 			);
 			name = dmzKernel;
 			productName = dmzKernel;
-			productReference = D2AAC046055464E500DB518D /* libdmzKernel.a */;
+			productReference = 7AA82AFC0E1063650081BE9D /* libdmzKernel.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		08FB7793FE84155DC02AAC07 /* Project object */ = {
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "dmzKernel" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "dmzKernel" */;
 			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;
-			mainGroup = 08FB7794FE84155DC02AAC07 /* dmzKernel */;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7A7632C50E09775B002526C4 /* build_all */,
-				D2AAC045055464E500DB518D /* dmzKernel */,
+				7AA82AFB0E1063650081BE9D /* dmzKernel */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		D2AAC044055464E500DB518D /* Sources */ = {
+		7AA82AF90E1063650081BE9D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A7632330E0976B2002526C4 /* dmzRuntime.cpp in Sources */,
-				7A7632350E0976B2002526C4 /* dmzRuntimeConfig.cpp in Sources */,
-				7A7632380E0976B2002526C4 /* dmzRuntimeConfigRead.cpp in Sources */,
-				7A76323A0E0976B2002526C4 /* dmzRuntimeConfigUtil.cpp in Sources */,
-				7A76323B0E0976B2002526C4 /* dmzRuntimeConfigWrite.cpp in Sources */,
-				7A76323D0E0976B2002526C4 /* dmzRuntimeContext.cpp in Sources */,
-				7A76323F0E0976B2002526C4 /* dmzRuntimeContextDefinitions.cpp in Sources */,
-				7A7632410E0976B2002526C4 /* dmzRuntimeContextLog.cpp in Sources */,
-				7A7632430E0976B2002526C4 /* dmzRuntimeContextMessaging.cpp in Sources */,
-				7A7632450E0976B2002526C4 /* dmzRuntimeContextRTTI.cpp in Sources */,
-				7A7632480E0976B2002526C4 /* dmzRuntimeContextTime.cpp in Sources */,
-				7A76324B0E0976B2002526C4 /* dmzRuntimeData.cpp in Sources */,
-				7A76324D0E0976B2002526C4 /* dmzRuntimeDataBinder.cpp in Sources */,
-				7A76324F0E0976B2002526C4 /* dmzRuntimeDataConverters.cpp in Sources */,
-				7A7632520E0976B2002526C4 /* dmzRuntimeEventType.cpp in Sources */,
-				7A7632540E0976B2002526C4 /* dmzRuntimeExit.cpp in Sources */,
-				7A7632560E0976B2002526C4 /* dmzRuntimeHandle.cpp in Sources */,
-				7A7632580E0976B2002526C4 /* dmzRuntimeHandleAllocator.cpp in Sources */,
-				7A76325A0E0976B2002526C4 /* dmzRuntimeInit.cpp in Sources */,
-				7A76325D0E0976B2002526C4 /* dmzRuntimeLog.cpp in Sources */,
-				7A76325F0E0976B2002526C4 /* dmzRuntimeLogObserverBasic.cpp in Sources */,
-				7A7632620E0976B2002526C4 /* dmzRuntimeMessaging.cpp in Sources */,
-				7A7632640E0976B2002526C4 /* dmzRuntimeObjectType.cpp in Sources */,
-				7A7632660E0976B2002526C4 /* dmzRuntimePlugin.cpp in Sources */,
-				7A7632680E0976B2002526C4 /* dmzRuntimePluginContainer.cpp in Sources */,
-				7A76326B0E0976B2002526C4 /* dmzRuntimePluginInfo.cpp in Sources */,
-				7A76326D0E0976B2002526C4 /* dmzRuntimePluginLoader.cpp in Sources */,
-				7A76326F0E0976B2002526C4 /* dmzRuntimeRTTI.cpp in Sources */,
-				7A7632720E0976B2002526C4 /* dmzRuntimeSession.cpp in Sources */,
-				7A7632760E0976B2002526C4 /* dmzRuntimeTime.cpp in Sources */,
-				7A7632790E0976B2002526C4 /* dmzRuntimeUndo.cpp in Sources */,
-				7A76327C0E0976F2002526C4 /* dmzSystemCommon.cpp in Sources */,
-				7A76327E0E0976F2002526C4 /* dmzSystemDynamicLibraryUnix.cpp in Sources */,
-				7A7632800E0976F2002526C4 /* dmzSystemFileCommon.cpp in Sources */,
-				7A7632810E0976F2002526C4 /* dmzSystemFileUnix.cpp in Sources */,
-				7A7632820E0976F2002526C4 /* dmzSystemMarshal.cpp in Sources */,
-				7A7632850E0976F2002526C4 /* dmzSystemMutexUnix.cpp in Sources */,
-				7A7632870E0976F2002526C4 /* dmzSystemRefCountMacOS.cpp in Sources */,
-				7A7632890E0976F2002526C4 /* dmzSystemSpinLockMacOS.cpp in Sources */,
-				7A76328A0E0976F2002526C4 /* dmzSystemStream.cpp in Sources */,
-				7A76328C0E0976F2002526C4 /* dmzSystemStreamFile.cpp in Sources */,
-				7A76328E0E0976F2002526C4 /* dmzSystemStreamString.cpp in Sources */,
-				7A7632910E0976F2002526C4 /* dmzSystemThreadCommon.cpp in Sources */,
-				7A7632920E0976F2002526C4 /* dmzSystemThreadUnix.cpp in Sources */,
-				7A7632930E0976F2002526C4 /* dmzSystemUnix.cpp in Sources */,
-				7A7632940E0976F2002526C4 /* dmzSystemUnmarshal.cpp in Sources */,
-				7A7632970E097701002526C4 /* dmzTypes.cpp in Sources */,
-				7A76329E0E097701002526C4 /* dmzTypesHandleContainer.cpp in Sources */,
-				7A7632A00E097701002526C4 /* dmzTypesHashTableHandle.cpp in Sources */,
-				7A7632A30E097701002526C4 /* dmzTypesHashTableLock.cpp in Sources */,
-				7A7632A50E097701002526C4 /* dmzTypesHashTableString.cpp in Sources */,
-				7A7632A80E097701002526C4 /* dmzTypesHashTableUInt32.cpp in Sources */,
-				7A7632AB0E097701002526C4 /* dmzTypesHashTableUInt64.cpp in Sources */,
-				7A7632AE0E097701002526C4 /* dmzTypesHashTableUUID.cpp in Sources */,
-				7A7632B10E097701002526C4 /* dmzTypesMask.cpp in Sources */,
-				7A7632B30E097701002526C4 /* dmzTypesMath.cpp in Sources */,
-				7A7632B50E097701002526C4 /* dmzTypesMatrix.cpp in Sources */,
-				7A7632B70E097701002526C4 /* dmzTypesQuaternion.cpp in Sources */,
-				7A7632B90E097701002526C4 /* dmzTypesString.cpp in Sources */,
-				7A7632BC0E097701002526C4 /* dmzTypesStringUtil.cpp in Sources */,
-				D29DDE890E0C347D005B5107 /* dmzRuntimeTimeSlice.cpp in Sources */,
+				7AA82BA30E10647B0081BE9D /* dmzRuntime.cpp in Sources */,
+				7AA82BA50E10647B0081BE9D /* dmzRuntimeConfig.cpp in Sources */,
+				7AA82BA80E10647B0081BE9D /* dmzRuntimeConfigRead.cpp in Sources */,
+				7AA82BAA0E10647B0081BE9D /* dmzRuntimeConfigUtil.cpp in Sources */,
+				7AA82BAB0E10647B0081BE9D /* dmzRuntimeConfigWrite.cpp in Sources */,
+				7AA82BAD0E10647B0081BE9D /* dmzRuntimeContext.cpp in Sources */,
+				7AA82BAF0E10647B0081BE9D /* dmzRuntimeContextDefinitions.cpp in Sources */,
+				7AA82BB10E10647B0081BE9D /* dmzRuntimeContextLog.cpp in Sources */,
+				7AA82BB30E10647B0081BE9D /* dmzRuntimeContextMessaging.cpp in Sources */,
+				7AA82BB50E10647B0081BE9D /* dmzRuntimeContextRTTI.cpp in Sources */,
+				7AA82BB80E10647B0081BE9D /* dmzRuntimeContextTime.cpp in Sources */,
+				7AA82BBB0E10647B0081BE9D /* dmzRuntimeData.cpp in Sources */,
+				7AA82BBD0E10647B0081BE9D /* dmzRuntimeDataBinder.cpp in Sources */,
+				7AA82BBF0E10647B0081BE9D /* dmzRuntimeDataConverters.cpp in Sources */,
+				7AA82BC20E10647B0081BE9D /* dmzRuntimeEventType.cpp in Sources */,
+				7AA82BC40E10647B0081BE9D /* dmzRuntimeExit.cpp in Sources */,
+				7AA82BC60E10647B0081BE9D /* dmzRuntimeHandle.cpp in Sources */,
+				7AA82BC80E10647B0081BE9D /* dmzRuntimeHandleAllocator.cpp in Sources */,
+				7AA82BCA0E10647B0081BE9D /* dmzRuntimeInit.cpp in Sources */,
+				7AA82BCD0E10647B0081BE9D /* dmzRuntimeLog.cpp in Sources */,
+				7AA82BCF0E10647B0081BE9D /* dmzRuntimeLogObserverBasic.cpp in Sources */,
+				7AA82BD20E10647B0081BE9D /* dmzRuntimeMessaging.cpp in Sources */,
+				7AA82BD40E10647B0081BE9D /* dmzRuntimeObjectType.cpp in Sources */,
+				7AA82BD60E10647B0081BE9D /* dmzRuntimePlugin.cpp in Sources */,
+				7AA82BD80E10647B0081BE9D /* dmzRuntimePluginContainer.cpp in Sources */,
+				7AA82BDB0E10647B0081BE9D /* dmzRuntimePluginInfo.cpp in Sources */,
+				7AA82BDD0E10647B0081BE9D /* dmzRuntimePluginLoader.cpp in Sources */,
+				7AA82BDF0E10647B0081BE9D /* dmzRuntimeRTTI.cpp in Sources */,
+				7AA82BE20E10647B0081BE9D /* dmzRuntimeSession.cpp in Sources */,
+				7AA82BE40E10647B0081BE9D /* dmzRuntimeTime.cpp in Sources */,
+				7AA82BE60E10647B0081BE9D /* dmzRuntimeTimeSlice.cpp in Sources */,
+				7AA82BE90E10647B0081BE9D /* dmzRuntimeUndo.cpp in Sources */,
+				7AA82BEC0E10647B0081BE9D /* dmzSystemCommon.cpp in Sources */,
+				7AA82BEE0E10647B0081BE9D /* dmzSystemDynamicLibraryUnix.cpp in Sources */,
+				7AA82BF10E10647B0081BE9D /* dmzSystemFileCommon.cpp in Sources */,
+				7AA82BF20E10647B0081BE9D /* dmzSystemFileUnix.cpp in Sources */,
+				7AA82BF60E10647B0081BE9D /* dmzSystemMarshal.cpp in Sources */,
+				7AA82BF90E10647B0081BE9D /* dmzSystemMutexUnix.cpp in Sources */,
+				7AA82BFE0E10647B0081BE9D /* dmzSystemRefCountMacOS.cpp in Sources */,
+				7AA82C020E10647B0081BE9D /* dmzSystemSpinLockMacOS.cpp in Sources */,
+				7AA82C040E10647B0081BE9D /* dmzSystemStream.cpp in Sources */,
+				7AA82C060E10647B0081BE9D /* dmzSystemStreamFile.cpp in Sources */,
+				7AA82C080E10647B0081BE9D /* dmzSystemStreamString.cpp in Sources */,
+				7AA82C0B0E10647B0081BE9D /* dmzSystemThreadCommon.cpp in Sources */,
+				7AA82C0C0E10647B0081BE9D /* dmzSystemThreadUnix.cpp in Sources */,
+				7AA82C0E0E10647B0081BE9D /* dmzSystemUnix.cpp in Sources */,
+				7AA82C0F0E10647B0081BE9D /* dmzSystemUnmarshal.cpp in Sources */,
+				7AA82C130E10647B0081BE9D /* dmzTypes.cpp in Sources */,
+				7AA82C1A0E10647B0081BE9D /* dmzTypesHandleContainer.cpp in Sources */,
+				7AA82C1F0E10647B0081BE9D /* dmzTypesHashTableHandle.cpp in Sources */,
+				7AA82C220E10647B0081BE9D /* dmzTypesHashTableLock.cpp in Sources */,
+				7AA82C240E10647B0081BE9D /* dmzTypesHashTableString.cpp in Sources */,
+				7AA82C270E10647B0081BE9D /* dmzTypesHashTableUInt32.cpp in Sources */,
+				7AA82C2A0E10647B0081BE9D /* dmzTypesHashTableUInt64.cpp in Sources */,
+				7AA82C2D0E10647B0081BE9D /* dmzTypesHashTableUUID.cpp in Sources */,
+				7AA82C300E10647B0081BE9D /* dmzTypesMask.cpp in Sources */,
+				7AA82C320E10647B0081BE9D /* dmzTypesMath.cpp in Sources */,
+				7AA82C340E10647B0081BE9D /* dmzTypesMatrix.cpp in Sources */,
+				7AA82C360E10647B0081BE9D /* dmzTypesQuaternion.cpp in Sources */,
+				7AA82C380E10647B0081BE9D /* dmzTypesString.cpp in Sources */,
+				7AA82C3B0E10647B0081BE9D /* dmzTypesStringUtil.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		7A7632C90E09775F002526C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D2AAC045055464E500DB518D /* dmzKernel */;
-			targetProxy = 7A7632C80E09775F002526C4 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
-		1DEB91EC08733DB70010E9CD /* Debug */ = {
+		7AA82AFD0E1063660081BE9D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A7631870E097618002526C4 /* dmz.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
 				PRODUCT_NAME = dmzKernel;
 			};
 			name = Debug;
 		};
-		1DEB91ED08733DB70010E9CD /* Release */ = {
+		7AA82AFE0E1063660081BE9D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A7631870E097618002526C4 /* dmz.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/lib;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PREBINDING = NO;
 				PRODUCT_NAME = dmzKernel;
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
-		1DEB91F008733DB70010E9CD /* Debug */ = {
+		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A7631870E097618002526C4 /* dmz.xcconfig */;
+			baseConfigurationReference = 7AA82AF70E1063350081BE9D /* dmz.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = iphonesimulator2.0;
+				SDKROOT = iphoneos2.0;
 			};
 			name = Debug;
 		};
-		1DEB91F108733DB70010E9CD /* Release */ = {
+		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A7631870E097618002526C4 /* dmz.xcconfig */;
+			baseConfigurationReference = 7AA82AF70E1063350081BE9D /* dmz.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = iphonesimulator2.0;
-			};
-			name = Release;
-		};
-		7A7632C60E09775B002526C4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A7631870E097618002526C4 /* dmz.xcconfig */;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = build_all;
-			};
-			name = Debug;
-		};
-		7A7632C70E09775B002526C4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A7631870E097618002526C4 /* dmz.xcconfig */;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				PRODUCT_NAME = build_all;
-				ZERO_LINK = NO;
+				SDKROOT = iphoneos2.0;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "dmzKernel" */ = {
+		7AA82AFF0E10638C0081BE9D /* Build configuration list for PBXNativeTarget "dmzKernel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB91EC08733DB70010E9CD /* Debug */,
-				1DEB91ED08733DB70010E9CD /* Release */,
+				7AA82AFD0E1063660081BE9D /* Debug */,
+				7AA82AFE0E1063660081BE9D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "dmzKernel" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "dmzKernel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB91F008733DB70010E9CD /* Debug */,
-				1DEB91F108733DB70010E9CD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		7A7632CC0E09777A002526C4 /* Build configuration list for PBXAggregateTarget "build_all" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7A7632C60E09775B002526C4 /* Debug */,
-				7A7632C70E09775B002526C4 /* Release */,
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
 }

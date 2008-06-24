@@ -2,7 +2,8 @@
 #include <dlfcn.h>
 
 #if defined(__APPLE__) || defined(MACOSX)
-#   ifndef DMZ_IPHONE_BUILD
+#include <TargetConditionals.h>
+#   ifndef TARGET_OS_IPHONE
 #      include <CoreServices/CoreServices.h>
 #   endif
 #endif
@@ -66,7 +67,7 @@ dmz::DynamicLibrary::DynamicLibrary (
    _state.name = LibName;
 
 #if defined(__APPLE__) || defined(MACOSX)
-#   ifndef DMZ_IPHONE_BUILD
+#   ifndef TARGET_OS_IPHONE
    if (!_state.handle) {
 
       char *error = dlerror ();
@@ -123,7 +124,7 @@ dmz::DynamicLibrary::DynamicLibrary (
    }
 
 #if defined(__APPLE__) || defined(MACOSX)
-#   ifndef DMZ_IPHONE_BUILD
+#   ifndef TARGET_OS_IPHONE
    if (!_state.handle) {
 
       char *error = dlerror ();

@@ -6,55 +6,15 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimePluginContainer.h>
-#include <dmzRuntimePluginLoader.h>
+#include <dmzRuntimeLoadPlugins.h>
 #include <dmzRuntimeTimeSlice.h>
 #include <dmzSystem.h>
 #include <dmzSystemDynamicLibrary.h>
 
 /*!
 
-\class dmz::PluginLoader
-\ingroup Runtime
-\brief Class loads Plugins and stores them in a PluginContainer.
-\details This class parses Config and uses the data to load and initialize Plugin
-instances.
-
-*/
-
-struct dmz::PluginLoader::State {
-
-   RuntimeContext *context;
-   Definitions defs;
-
-   State (RuntimeContext *theContext) :
-         context (theContext), defs (theContext) { if (context) { context->ref (); } }
-
-   ~State () { if (context) { context->unref (); context = 0; } }
-};
-
-
-/*!
-
-\brief Constructor.
-\param[in] context Pointer to runtime context.
-
-*/
-dmz::PluginLoader::PluginLoader (RuntimeContext *context) :
-      _state (*(new State (context))) {;}
-
-
-/*!
-
-\brief Destructor.
-\details Does not unload any of the Plugin instances.
-
-*/
-dmz::PluginLoader::~PluginLoader () { delete &_state; }
-
-
-/*!
-
 \brief Creates Plugin instances and stores them in PluginContainer.
+\ingroup Runtime
 \details The Config \a pluginList should contain a set of Config objects. Each Config
 object may contain the flowing attributes:
 - \b name [\b Required] Name of the plugin. This attribute is used to create default
@@ -106,7 +66,8 @@ named create_dmzNetExtLineObjects.
 
 */
 dmz::Boolean
-dmz::PluginLoader::load_plugins (
+dmz::load_plugins (
+      RuntimeContext *context,
       Config &pluginList,
       Config &pluginInit,
       Config &global,
@@ -115,10 +76,12 @@ dmz::PluginLoader::load_plugins (
 
    Boolean error (False);
 
+   Definitions defs (context);
+
    ConfigIterator it;
    Config data;
 
-   Boolean done (!pluginList.get_first_config (it, data) || !_state.context);
+   Boolean done (!pluginList.get_first_config (it, data) || !context);
 
    if (done && log) { log->info << "No plugins found in plugin list" << endl; }
 
@@ -154,9 +117,9 @@ dmz::PluginLoader::load_plugins (
 
          if (load && ReserveTimeSlice) {
 
-            const Handle PluginHandle (_state.defs.create_named_handle (PluginName));
+            const Handle PluginHandle (defs.create_named_handle (PluginName));
 
-            if (reserve_time_slice_place (PluginHandle, _state.context)) {
+            if (reserve_time_slice_place (PluginHandle, context)) {
 
                if (log) {
 
@@ -174,7 +137,7 @@ dmz::PluginLoader::load_plugins (
 
          if (load) {
 
-            const Handle PluginHandle (_state.defs.lookup_named_handle (PluginName));
+            const Handle PluginHandle (defs.lookup_named_handle (PluginName));
 
             if (PluginHandle && container.lookup_plugin (PluginHandle)) {
 
@@ -187,7 +150,7 @@ dmz::PluginLoader::load_plugins (
             }
          }
 
-         if (load && !_state.defs.create_unique_name (PluginName)) {
+         if (load && !defs.create_unique_name (PluginName)) {
 
             if (log) {
 
@@ -224,7 +187,7 @@ dmz::PluginLoader::load_plugins (
                      new PluginInfo (
                         PluginName,
                         DeleteMode,
-                        _state.context,
+                        context,
                         lib));
 
                   if (info) {

@@ -10,7 +10,7 @@
 #include <dmzRuntimeInit.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePluginContainer.h>
-#include <dmzRuntimePluginLoader.h>
+#include <dmzRuntimeLoadPlugins.h>
 #include <dmzRuntimeSession.h>
 #include <dmzRuntimeTime.h>
 #include <dmzSystemFile.h>
@@ -326,9 +326,9 @@ dmz::Application::load_plugins () {
 
       _state.global.lookup_all_config_merged ("dmz", pluginInit);
 
-      PluginLoader loader (_state.rt.get_context ());
 
-      loader.load_plugins (
+      dmz::load_plugins (
+         _state.rt.get_context (),
          pluginList,
          pluginInit,
          _state.global,

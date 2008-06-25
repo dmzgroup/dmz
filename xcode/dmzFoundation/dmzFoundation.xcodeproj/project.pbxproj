@@ -88,7 +88,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 7A7633AF0E097D6F002526C4 /* dmzKernel.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteGlobalIDString = 7AA82AFB0E1063650081BE9D /* dmzKernel */;
 			remoteInfo = dmzKernel;
 		};
 		7A7633C40E097DB7002526C4 /* PBXContainerItemProxy */ = {
@@ -109,7 +109,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 7A7633AF0E097D6F002526C4 /* dmzKernel.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteGlobalIDString = 7AA82AFB0E1063650081BE9D /* dmzKernel */;
 			remoteInfo = dmzKernel;
 		};
 		7A7633E30E097E6F002526C4 /* PBXContainerItemProxy */ = {
@@ -123,7 +123,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 7A7633AF0E097D6F002526C4 /* dmzKernel.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteGlobalIDString = 7AA82AFB0E1063650081BE9D /* dmzKernel */;
 			remoteInfo = dmzKernel;
 		};
 		7A7633FC0E097EF6002526C4 /* PBXContainerItemProxy */ = {
@@ -137,7 +137,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 7A7633AF0E097D6F002526C4 /* dmzKernel.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteGlobalIDString = 7AA82AFB0E1063650081BE9D /* dmzKernel */;
 			remoteInfo = dmzKernel;
 		};
 		7A76340D0E097F38002526C4 /* PBXContainerItemProxy */ = {
@@ -151,7 +151,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 7A7633AF0E097D6F002526C4 /* dmzKernel.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteGlobalIDString = 7AA82AFB0E1063650081BE9D /* dmzKernel */;
 			remoteInfo = dmzKernel;
 		};
 		7A76341F0E097F82002526C4 /* PBXContainerItemProxy */ = {
@@ -165,7 +165,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = D2C84C640E0C38710002DBC9 /* dmzFoundation */;
+			remoteGlobalIDString = D2C84C640E0C38710002DBC9;
 			remoteInfo = dmzFoundation;
 		};
 /* End PBXContainerItemProxy section */

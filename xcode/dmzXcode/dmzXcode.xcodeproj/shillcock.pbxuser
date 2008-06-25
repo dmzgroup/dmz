@@ -2,10 +2,9 @@
 {
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
 		activeBuildConfigurationName = debug;
-		activeSDKPreference = iphonesimulator2.0;
+		activeSDKPreference = iphoneos2.0;
 		activeTarget = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
 		addToTargets = (
-			7A0E0D5C0E117CC100E55011 /* dmzKernel */,
 		);
 		codeSenseManager = 7A0E0D570E117CB600E55011 /* Code sense */;
 		perUserDictionary = {
@@ -67,21 +66,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 236029705;
-			PBXWorkspaceStateSaveDate = 236029705;
-		};
-		perUserProjectItems = {
-			7A09AF690E1188B1003C5B32 /* PBXTextBookmark */ = 7A09AF690E1188B1003C5B32 /* PBXTextBookmark */;
-			7A09AF6F0E1188EC003C5B32 /* PBXTextBookmark */ = 7A09AF6F0E1188EC003C5B32 /* PBXTextBookmark */;
-			7A09AF740E11890E003C5B32 /* PBXTextBookmark */ = 7A09AF740E11890E003C5B32 /* PBXTextBookmark */;
-			7A09AF780E118967003C5B32 /* PBXTextBookmark */ = 7A09AF780E118967003C5B32 /* PBXTextBookmark */;
-			7A09AF790E1189D5003C5B32 /* PBXBookmark */ = 7A09AF790E1189D5003C5B32 /* PBXBookmark */;
-			7A09AF7C0E118A0E003C5B32 /* PBXTextBookmark */ = 7A09AF7C0E118A0E003C5B32 /* PBXTextBookmark */;
-			7A09AF7D0E118A0E003C5B32 /* PBXTextBookmark */ = 7A09AF7D0E118A0E003C5B32 /* PBXTextBookmark */;
-			7A09AF7E0E118A37003C5B32 /* PBXTextBookmark */ = 7A09AF7E0E118A37003C5B32 /* PBXTextBookmark */;
-			7A09AF7F0E118A37003C5B32 /* PBXTextBookmark */ = 7A09AF7F0E118A37003C5B32 /* PBXTextBookmark */;
-			7A09AF810E118A6A003C5B32 /* PBXTextBookmark */ = 7A09AF810E118A6A003C5B32 /* PBXTextBookmark */;
-			7A09AF820E118A6A003C5B32 /* PBXTextBookmark */ = 7A09AF820E118A6A003C5B32 /* PBXTextBookmark */;
+			PBXPerProjectTemplateStateSaveDate = 236037938;
+			PBXWorkspaceStateSaveDate = 236037938;
 		};
 		sourceControlManager = 7A0E0D560E117CB600E55011 /* Source Control */;
 		userBuildSettings = {
@@ -95,107 +81,56 @@
 			sepNavWindowFrame = "{{15, 374}, {649, 649}}";
 		};
 	};
-	7A09AF690E1188B1003C5B32 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "error: 'CFURLRef' was not declared in this scope";
-		fRef = 7A01476C0E118421001813A7 /* dmzSystemDynamicLibraryUnix.cpp */;
-		rLen = 1;
-		rLoc = 75;
-		rType = 1;
+	7A09AFB40E118D16003C5B32 /* dmzFileCache.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {590, 882}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 1433}";
+			sepNavWindowFrame = "{{38, 353}, {649, 649}}";
+		};
 	};
-	7A09AF6F0E1188EC003C5B32 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 7A01476C0E118421001813A7 /* dmzSystemDynamicLibraryUnix.cpp */;
-		name = "dmzSystemDynamicLibraryUnix.cpp: 5";
-		rLen = 0;
-		rLoc = 129;
-		rType = 0;
-		vrLen = 901;
-		vrLoc = 0;
+	7A09AFC40E118D16003C5B32 /* dmzFileCacheLocal.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {590, 1624}}";
+			sepNavSelRange = "{0, 31}";
+			sepNavVisRange = "{0, 720}";
+			sepNavWindowFrame = "{{176, 227}, {649, 649}}";
+		};
 	};
-	7A09AF740E11890E003C5B32 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 7A01476C0E118421001813A7 /* dmzSystemDynamicLibraryUnix.cpp */;
-		name = "dmzSystemDynamicLibraryUnix.cpp: 5";
-		rLen = 0;
-		rLoc = 129;
-		rType = 0;
-		vrLen = 901;
-		vrLoc = 0;
+	7A09AFD20E118D16003C5B32 /* dmzXMLBase64.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {590, 1162}}";
+			sepNavSelRange = "{61, 28}";
+			sepNavVisRange = "{0, 993}";
+			sepNavWindowFrame = "{{61, 332}, {649, 649}}";
+		};
 	};
-	7A09AF780E118967003C5B32 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 7A01476C0E118421001813A7 /* dmzSystemDynamicLibraryUnix.cpp */;
-		name = "dmzSystemDynamicLibraryUnix.cpp: 5";
-		rLen = 0;
-		rLoc = 129;
-		rType = 0;
-		vrLen = 901;
-		vrLoc = 0;
+	7A09AFEF0E118D45003C5B32 /* expat */ = {
+		activeExec = 0;
 	};
-	7A09AF790E1189D5003C5B32 /* PBXBookmark */ = {
-		isa = PBXBookmark;
-		fRef = 7A0E0D610E117CD800E55011 /* dmz.xcconfig */;
+	7A09B0150E118F86003C5B32 /* dmzXML */ = {
+		activeExec = 0;
 	};
-	7A09AF7C0E118A0E003C5B32 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 7A0E0D610E117CD800E55011 /* dmz.xcconfig */;
-		name = "dmz.xcconfig: 10";
-		rLen = 0;
-		rLoc = 336;
-		rType = 0;
-		vrLen = 470;
-		vrLoc = 0;
+	7A09B0670E1193B4003C5B32 /* dmzFoundation */ = {
+		activeExec = 0;
 	};
-	7A09AF7D0E118A0E003C5B32 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 7A01476C0E118421001813A7 /* dmzSystemDynamicLibraryUnix.cpp */;
-		name = "dmzSystemDynamicLibraryUnix.cpp: 5";
-		rLen = 0;
-		rLoc = 129;
-		rType = 0;
-		vrLen = 901;
-		vrLoc = 0;
+	7A09B0850E119A3C003C5B32 /* dmzPluginMsgDump */ = {
+		activeExec = 0;
 	};
-	7A09AF7E0E118A37003C5B32 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 7A0E0D610E117CD800E55011 /* dmz.xcconfig */;
-		name = "dmz.xcconfig: 13";
-		rLen = 0;
-		rLoc = 474;
-		rType = 0;
-		vrLen = 474;
-		vrLoc = 0;
+	7A09B0920E119A72003C5B32 /* dmzPluginUndo */ = {
+		activeExec = 0;
 	};
-	7A09AF7F0E118A37003C5B32 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 7A01476C0E118421001813A7 /* dmzSystemDynamicLibraryUnix.cpp */;
-		name = "dmzSystemDynamicLibraryUnix.cpp: 5";
-		rLen = 0;
-		rLoc = 129;
-		rType = 0;
-		vrLen = 901;
-		vrLoc = 0;
+	7A09B09F0E119A9A003C5B32 /* dmzPluginUndoDump */ = {
+		activeExec = 0;
 	};
-	7A09AF810E118A6A003C5B32 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 7A0E0D610E117CD800E55011 /* dmz.xcconfig */;
-		name = "dmz.xcconfig: 10";
-		rLen = 0;
-		rLoc = 332;
-		rType = 0;
-		vrLen = 474;
-		vrLoc = 0;
+	7A09B0CE0E119B2D003C5B32 /* dmzExPluginMessageReceive */ = {
+		activeExec = 0;
 	};
-	7A09AF820E118A6A003C5B32 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 7A01476C0E118421001813A7 /* dmzSystemDynamicLibraryUnix.cpp */;
-		name = "dmzSystemDynamicLibraryUnix.cpp: 5";
-		rLen = 0;
-		rLoc = 129;
-		rType = 0;
-		vrLen = 901;
-		vrLoc = 0;
+	7A09B0DD0E119B5A003C5B32 /* dmzExPluginMessageSend */ = {
+		activeExec = 0;
+	};
+	7A09B1650E11A688003C5B32 /* dmzFileCacheLocal */ = {
+		activeExec = 0;
 	};
 	7A0E0D560E117CB600E55011 /* Source Control */ = {
 		isa = PBXSourceControlManager;
@@ -214,8 +149,8 @@
 	7A0E0D610E117CD800E55011 /* dmz.xcconfig */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {590, 521}}";
-			sepNavSelRange = "{332, 0}";
-			sepNavVisRange = "{0, 474}";
+			sepNavSelRange = "{421, 0}";
+			sepNavVisRange = "{0, 515}";
 			sepNavWindowFrame = "{{35, 114}, {649, 649}}";
 		};
 	};

@@ -2,8 +2,8 @@
 {
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
 		activeBuildConfigurationName = debug;
-		activeSDKPreference = iphoneos2.0;
-		activeTarget = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+		activeSDKPreference = iphonesimulator2.0;
+		activeTarget = 7A8535DA0E12EC30008CEAEB /* build_all */;
 		addToTargets = (
 		);
 		codeSenseManager = 7A0E0D570E117CB600E55011 /* Code sense */;
@@ -66,8 +66,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 236037938;
-			PBXWorkspaceStateSaveDate = 236037938;
+			PBXPerProjectTemplateStateSaveDate = 236118300;
+			PBXWorkspaceStateSaveDate = 236118300;
 		};
 		sourceControlManager = 7A0E0D560E117CB600E55011 /* Source Control */;
 		userBuildSettings = {
@@ -95,6 +95,14 @@
 			sepNavSelRange = "{0, 31}";
 			sepNavVisRange = "{0, 720}";
 			sepNavWindowFrame = "{{176, 227}, {649, 649}}";
+		};
+	};
+	7A09AFC50E118D16003C5B32 /* dmzFileCacheLocal.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {590, 546}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 938}";
+			sepNavWindowFrame = "{{61, 332}, {649, 649}}";
 		};
 	};
 	7A09AFD20E118D16003C5B32 /* dmzXMLBase64.h */ = {
@@ -153,5 +161,36 @@
 			sepNavVisRange = "{0, 515}";
 			sepNavWindowFrame = "{{35, 114}, {649, 649}}";
 		};
+	};
+	7A560AC00E12D27A0049409D /* lua.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {590, 5726}}";
+			sepNavSelRange = "{278, 21}";
+			sepNavVisRange = "{0, 826}";
+			sepNavWindowFrame = "{{15, 374}, {649, 649}}";
+		};
+	};
+	7A560AC20E12D27A0049409D /* luaconf.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {590, 10976}}";
+			sepNavSelRange = "{7456, 0}";
+			sepNavVisRange = "{6922, 1299}";
+			sepNavWindowFrame = "{{38, 353}, {649, 649}}";
+		};
+	};
+	7A560B6A0E12D2F60049409D /* lua */ = {
+		activeExec = 0;
+	};
+	7A560BA60E12D6B90049409D /* dmzLuaKernel */ = {
+		activeExec = 0;
+	};
+	7A560BD00E12D9490049409D /* dmzLuaModuleBasic */ = {
+		activeExec = 0;
+	};
+	7A560BDF0E12D99C0049409D /* dmzLuaFramework */ = {
+		activeExec = 0;
+	};
+	7A8535DA0E12EC30008CEAEB /* build_all */ = {
+		activeExec = 0;
 	};
 }

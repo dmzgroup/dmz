@@ -395,98 +395,98 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
 			remoteInfo = dmzKernel;
 		};
 		7A8535DF0E12EC3A008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A09B0670E1193B4003C5B32 /* dmzFoundation */;
+			remoteGlobalIDString = 7A09B0670E1193B4003C5B32;
 			remoteInfo = dmzFoundation;
 		};
 		7A8535E10E12EC3D008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A09AFEF0E118D45003C5B32 /* expat */;
+			remoteGlobalIDString = 7A09AFEF0E118D45003C5B32;
 			remoteInfo = expat;
 		};
 		7A8535E30E12EC3F008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A09B0150E118F86003C5B32 /* dmzXML */;
+			remoteGlobalIDString = 7A09B0150E118F86003C5B32;
 			remoteInfo = dmzXML;
 		};
 		7A8535E50E12EC41008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A09B0850E119A3C003C5B32 /* dmzPluginMsgDump */;
+			remoteGlobalIDString = 7A09B0850E119A3C003C5B32;
 			remoteInfo = dmzPluginMsgDump;
 		};
 		7A8535E70E12EC44008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A09B0920E119A72003C5B32 /* dmzPluginUndo */;
+			remoteGlobalIDString = 7A09B0920E119A72003C5B32;
 			remoteInfo = dmzPluginUndo;
 		};
 		7A8535E90E12EC46008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A09B09F0E119A9A003C5B32 /* dmzPluginUndoDump */;
+			remoteGlobalIDString = 7A09B09F0E119A9A003C5B32;
 			remoteInfo = dmzPluginUndoDump;
 		};
 		7A8535EB0E12EC48008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A09B0CE0E119B2D003C5B32 /* dmzExPluginMessageReceive */;
+			remoteGlobalIDString = 7A09B0CE0E119B2D003C5B32;
 			remoteInfo = dmzExPluginMessageReceive;
 		};
 		7A8535ED0E12EC4A008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A09B0DD0E119B5A003C5B32 /* dmzExPluginMessageSend */;
+			remoteGlobalIDString = 7A09B0DD0E119B5A003C5B32;
 			remoteInfo = dmzExPluginMessageSend;
 		};
 		7A8535EF0E12EC4D008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A09B1650E11A688003C5B32 /* dmzFileCacheLocal */;
+			remoteGlobalIDString = 7A09B1650E11A688003C5B32;
 			remoteInfo = dmzFileCacheLocal;
 		};
 		7A8535F20E12EC4F008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A560BDF0E12D99C0049409D /* dmzLuaFramework */;
+			remoteGlobalIDString = 7A560BDF0E12D99C0049409D;
 			remoteInfo = dmzLuaFramework;
 		};
 		7A8535F40E12EC51008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A560B6A0E12D2F60049409D /* lua */;
+			remoteGlobalIDString = 7A560B6A0E12D2F60049409D;
 			remoteInfo = lua;
 		};
 		7A8535F60E12EC53008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A560BA60E12D6B90049409D /* dmzLuaKernel */;
+			remoteGlobalIDString = 7A560BA60E12D6B90049409D;
 			remoteInfo = dmzLuaKernel;
 		};
 		7A8535F80E12EC55008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7A560BD00E12D9490049409D /* dmzLuaModuleBasic */;
+			remoteGlobalIDString = 7A560BD00E12D9490049409D;
 			remoteInfo = dmzLuaModuleBasic;
 		};
 /* End PBXContainerItemProxy section */

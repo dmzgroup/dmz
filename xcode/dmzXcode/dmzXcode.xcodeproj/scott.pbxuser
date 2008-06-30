@@ -1,0 +1,155 @@
+// !$*UTF8*$!
+{
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = debug;
+		activeSDKPreference = iphonesimulator2.0;
+		activeTarget = 7A8535DA0E12EC30008CEAEB /* build_all */;
+		codeSenseManager = D27300840E14385A003D640F /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					425,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					385,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 236288024;
+			PBXWorkspaceStateSaveDate = 236288024;
+		};
+		perUserProjectItems = {
+			D273030D0E15683C003D640F /* PBXTextBookmark */ = D273030D0E15683C003D640F /* PBXTextBookmark */;
+			D278EBC00E1586F100EE05F2 /* PBXTextBookmark */ = D278EBC00E1586F100EE05F2 /* PBXTextBookmark */;
+		};
+		sourceControlManager = D27300830E14385A003D640F /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	7A09AFE80E118D16003C5B32 /* dmzPluginUndoDump.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {603, 1386}}";
+			sepNavSelRange = "{1763, 0}";
+			sepNavVisRange = "{0, 0}";
+			sepNavWindowFrame = "{{65, 363}, {713, 660}}";
+		};
+	};
+	7A09AFEF0E118D45003C5B32 /* expat */ = {
+		activeExec = 0;
+	};
+	7A09B0150E118F86003C5B32 /* dmzXML */ = {
+		activeExec = 0;
+	};
+	7A09B0670E1193B4003C5B32 /* dmzFoundation */ = {
+		activeExec = 0;
+	};
+	7A09B0850E119A3C003C5B32 /* dmzPluginMsgDump */ = {
+		activeExec = 0;
+	};
+	7A09B0920E119A72003C5B32 /* dmzPluginUndo */ = {
+		activeExec = 0;
+	};
+	7A09B09F0E119A9A003C5B32 /* dmzPluginUndoDump */ = {
+		activeExec = 0;
+	};
+	7A09B0BE0E119B14003C5B32 /* dmzExPluginMessageSend.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {649, 994}}";
+			sepNavSelRange = "{932, 0}";
+			sepNavVisRange = "{670, 368}";
+		};
+	};
+	7A09B0CE0E119B2D003C5B32 /* dmzExPluginMessageReceive */ = {
+		activeExec = 0;
+	};
+	7A09B0DD0E119B5A003C5B32 /* dmzExPluginMessageSend */ = {
+		activeExec = 0;
+	};
+	7A09B1650E11A688003C5B32 /* dmzFileCacheLocal */ = {
+		activeExec = 0;
+	};
+	7A0E0D5C0E117CC100E55011 /* dmzKernel */ = {
+		activeExec = 0;
+	};
+	7A560B6A0E12D2F60049409D /* lua */ = {
+		activeExec = 0;
+	};
+	7A560BA60E12D6B90049409D /* dmzLuaKernel */ = {
+		activeExec = 0;
+	};
+	7A560BD00E12D9490049409D /* dmzLuaModuleBasic */ = {
+		activeExec = 0;
+	};
+	7A560BDF0E12D99C0049409D /* dmzLuaFramework */ = {
+		activeExec = 0;
+	};
+	7A8535DA0E12EC30008CEAEB /* build_all */ = {
+		activeExec = 0;
+	};
+	D27300830E14385A003D640F /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+	};
+	D27300840E14385A003D640F /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	D273030D0E15683C003D640F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A09AFE80E118D16003C5B32 /* dmzPluginUndoDump.cpp */;
+		name = "dmzPluginUndoDump.cpp: 80";
+		rLen = 0;
+		rLoc = 1763;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	D278EBC00E1586F100EE05F2 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A09AFE80E118D16003C5B32 /* dmzPluginUndoDump.cpp */;
+		name = "dmzPluginUndoDump.cpp: 80";
+		rLen = 0;
+		rLoc = 1763;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+}

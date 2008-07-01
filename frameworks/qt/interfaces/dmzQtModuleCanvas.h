@@ -50,6 +50,7 @@ namespace dmz {
 
          virtual void pan_direction (const Int32 Dx, const Int32 Dy) = 0;
 
+         virtual void center_on (const Handle ObjectHandle) = 0;
          // virtual void center_on (const Vector &Value) = 0;
 
 #if 0

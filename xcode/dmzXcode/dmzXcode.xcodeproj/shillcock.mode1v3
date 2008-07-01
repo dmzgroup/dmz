@@ -333,7 +333,7 @@
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 257}, {357, 712}}</string>
+							<string>{{0, 0}, {357, 712}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -352,7 +352,7 @@
 							<real>357</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>18 242 979 771 0 0 1680 1028 </string>
+						<string>30 257 979 771 0 0 1680 1028 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -389,7 +389,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {600, 0}}</string>
 								<key>RubberWindowFrame</key>
-								<string>18 242 979 771 0 0 1680 1028 </string>
+								<string>30 257 979 771 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -409,7 +409,7 @@
 								<key>Frame</key>
 								<string>{{0, 5}, {600, 725}}</string>
 								<key>RubberWindowFrame</key>
-								<string>18 242 979 771 0 0 1680 1028 </string>
+								<string>30 257 979 771 0 0 1680 1028 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -433,9 +433,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>7A8535A60E12E12A008CEAEB</string>
+				<string>7A70E8E10E19A38900A685C6</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>7A8535A70E12E12A008CEAEB</string>
+				<string>7A70E8E20E19A38900A685C6</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -554,7 +554,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>236131294.903752</real>
+	<real>236561289.11398599</real>
 	<key>ToolbarDisplayMode</key>
 	<integer>1</integer>
 	<key>ToolbarIsVisible</key>
@@ -570,9 +570,10 @@
 	<key>WindowOrderList</key>
 	<array>
 		<string>7A0E0D6C0E11837200E55011</string>
+		<string>/Users/shillcock/cm/src/dmz/xcode/dmzXcode/dmzXcode.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>18 242 979 771 0 0 1680 1028 </string>
+	<string>30 257 979 771 0 0 1680 1028 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
@@ -653,7 +654,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>7A0E0D6C0E11837200E55011</string>
-				<string>7A8535FC0E12EC6C008CEAEB</string>
+				<string>7A70E8DB0E19A2D800A685C6</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>

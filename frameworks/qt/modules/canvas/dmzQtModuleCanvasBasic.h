@@ -63,6 +63,8 @@ namespace dmz {
 
          virtual void pan_direction (const Int32 Dx, const Int32 Dy);
 
+         virtual void center_on (const Handle ObjectHandle);
+
       protected:
          virtual void resizeEvent (QResizeEvent* event);
          virtual void keyPressEvent (QKeyEvent *event);

@@ -279,6 +279,16 @@ dmz::QtModuleCanvasBasic::pan_direction (const Int32 Dx, const Int32 Dy) {
 
 
 void
+dmz::QtModuleCanvasBasic::center_on (const Handle ObjectHandle) {
+
+   if (_canvas && ObjectHandle) {
+
+      _canvas->centerOn (_itemTable.lookup (ObjectHandle));
+   }
+}
+
+
+void
 dmz::QtModuleCanvasBasic::resizeEvent (QResizeEvent *event) {
 
    _handle_mouse_event (0, 0);

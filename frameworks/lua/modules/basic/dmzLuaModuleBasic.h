@@ -114,6 +114,7 @@ namespace dmz {
          void _instance_script (InstanceStruct &is);
          void _register_instance (InstanceStruct &is);
          void _discover_ext (const Plugin *PluginPtr);
+         void _remove_ext (const Plugin *PluginPtr);
          void _add_lua_paths ();
          void _start_optimizer ();
          void _init (Config &local, Config &global);

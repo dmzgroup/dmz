@@ -145,6 +145,8 @@ dmz::LuaModuleBasic::discover_plugin (
 
       if (obs) { obs->store_lua_module (get_plugin_name (), *this); }
 
+      _discover_ext (PluginPtr);
+
       _extensions.discover_external_plugin (PluginPtr);
    }
    else if (Mode == PluginDiscoverRemove) {
@@ -158,6 +160,8 @@ dmz::LuaModuleBasic::discover_plugin (
       }
 
       _extensions.remove_external_plugin (PluginPtr);
+
+      _remove_ext (PluginPtr);
    }
 }
 
@@ -803,6 +807,24 @@ dmz::LuaModuleBasic::_discover_ext (const Plugin *PluginPtr) {
       if (_luaState) { ext->open_lua_extension (_luaState); }
 
       _extTable.store (ExtHandle, ext);
+   }
+}
+
+
+void
+dmz::LuaModuleBasic::_remove_ext (const Plugin *PluginPtr) {
+
+   const Handle ExtHandle (PluginPtr ? PluginPtr->get_plugin_handle () : 0);
+
+   LuaExt *ext = LuaExt::cast (PluginPtr);
+
+   if (ext && ExtHandle) {
+
+      if (_luaState) { ext->close_lua_extension (_luaState); }
+
+      ext->remove_lua_module (*this);
+
+      _extTable.remove (ExtHandle);
    }
 }
 

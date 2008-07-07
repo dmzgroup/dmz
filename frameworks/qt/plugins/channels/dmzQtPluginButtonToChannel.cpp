@@ -54,15 +54,17 @@ dmz::QtPluginButtonToChannel::discover_plugin (
 
          if (_inputModule) {
 
-            _inputModule->create_channel (_defaultChannel);
-            _inputModule->set_channel_state (_defaultChannel, True);
+            // _inputModule->create_channel (_defaultChannel);
+            // _inputModule->set_channel_state (_defaultChannel, True);
 
             ChannelStruct *current (_channelList);
 
             while (current) {
 
                _inputModule->create_channel (current->Channel);
-               _inputModule->set_channel_state (current->Channel, False);
+               
+               _inputModule->set_channel_state (
+                  current->Channel, current->action->isChecked ());
 
                current = current->next;
             }
@@ -111,16 +113,16 @@ dmz::QtPluginButtonToChannel::_slot_change_channel (QAction *theAction) {
 
    if (_inputModule && theAction) {
 
-      if (theAction->isChecked ()) {
-
-         foreach (QAction *action, _actionGroup->actions ()) {
-
-            if (action != theAction) { action->setChecked (False); }
-         }
-
-         _inputModule->set_channel_state (_defaultChannel, False);
-      }
-      else { _inputModule->set_channel_state (_defaultChannel, True); }
+      // if (theAction->isChecked ()) {
+      // 
+      //    foreach (QAction *action, _actionGroup->actions ()) {
+      // 
+      //       if (action != theAction) { action->setChecked (False); }
+      //    }
+      // 
+      //    _inputModule->set_channel_state (_defaultChannel, False);
+      // }
+      // else { _inputModule->set_channel_state (_defaultChannel, True); }
 
       ChannelStruct *current (_channelList);
 
@@ -157,7 +159,7 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
 
    const String DefaultName = config_to_string ("defaultChannel.name", local);
 
-   _defaultChannel = defs.create_named_handle (DefaultName);
+//   _defaultChannel = defs.create_named_handle (DefaultName);
 
    qwidget_config_read ("widget", local, this);
 
@@ -171,7 +173,7 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
       Config cd;
 
       _actionGroup = new QActionGroup (this);
-      _actionGroup->setExclusive (False);
+//      _actionGroup->setExclusive (True);
 
       connect (
          _actionGroup, SIGNAL (triggered (QAction *)),

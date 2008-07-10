@@ -15,7 +15,50 @@ static const char MatrixName[] = "dmz.types.matrix";
 inline Matrix**
 matrix_check (lua_State *L, int index) {
 
-   return (Matrix **)luaL_checkudata (L, index, MatrixName);
+   if (index < 0) { index = lua_gettop (L) + index + 1; }
+
+   Matrix **result = 0;
+
+   if (lua_istable (L, index)) {
+
+      lua_rawgeti (L, index, 1);
+      lua_rawgeti (L, index, 2);
+      lua_rawgeti (L, index, 3);
+      lua_rawgeti (L, index, 4);
+      lua_rawgeti (L, index, 5);
+      lua_rawgeti (L, index, 6);
+      lua_rawgeti (L, index, 7);
+      lua_rawgeti (L, index, 8);
+      lua_rawgeti (L, index, 9);
+
+      Float64 array[9];
+
+      array[0] = luaL_checknumber (L, -9);
+      array[1] = luaL_checknumber (L, -8);
+      array[2] = luaL_checknumber (L, -7);
+      array[3] = luaL_checknumber (L, -6);
+      array[4] = luaL_checknumber (L, -5);
+      array[5] = luaL_checknumber (L, -4);
+      array[6] = luaL_checknumber (L, -3);
+      array[7] = luaL_checknumber (L, -2);
+      array[8] = luaL_checknumber (L, -1);
+
+      Matrix *ptr = lua_create_matrix (L);
+
+      if (ptr) {
+
+         ptr->from_array (array);
+         lua_replace (L, index);
+      }
+
+      lua_pop (L, 9);
+
+      result = matrix_check (L, index);
+
+   }
+   else { result = (Matrix **)luaL_checkudata (L, index, MatrixName); }
+
+   return result;
 }
 
 
@@ -111,8 +154,22 @@ matrix_to_string (lua_State *L) {
 
    if (mat && *mat) {
 
+      Float64 array[9];
+      (*mat)->to_array (array);
+
       String str;
-      str << **mat;
+
+      str << "{"
+         << array[0] << ", "
+         << array[1] << ", "
+         << array[2] << ", "
+         << array[3] << ", "
+         << array[4] << ", "
+         << array[5] << ", "
+         << array[6] << ", "
+         << array[7] << ", "
+         << array[8] << "}";
+
       lua_pushstring (L, str.get_buffer ());
       result = 1;
    }

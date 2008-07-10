@@ -61,9 +61,19 @@ dmz::RenderPluginLoadModelOSG::discover_plugin (
 
                   osg::ref_ptr<osg::MatrixTransform> matTransform =
                      new osg::MatrixTransform (mat);
+                  matTransform->setDataVariance (osg::Object::STATIC);
                   matTransform->addChild (model.get ());
+#   if 0
+                  osg::ref_ptr<osg::Group> g = new osg::Group;
+                  g->addChild (matTransform.get ());
 
+                  osgUtil::Optimizer opt;
+                  opt.optimize (g.get ());
+
+                  _core->get_static_objects ()->addChild (g.get ());
+#   else
                   _core->get_static_objects ()->addChild (matTransform.get ());
+#   endif
 #else
                   _core->get_static_objects ()->addChild (model.get ());
 #endif

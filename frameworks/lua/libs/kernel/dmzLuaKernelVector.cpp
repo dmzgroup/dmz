@@ -133,7 +133,11 @@ vector_to_string (lua_State *L) {
    if (vec && *vec) {
 
       String str;
-      str << **vec;
+      str << "{"
+         << (*vec)->get_x () << ", "
+         << (*vec)->get_y () << ", "
+         << (*vec)->get_z () << "}";
+
       lua_pushstring (L, str.get_buffer ());
       result = 1;
    }

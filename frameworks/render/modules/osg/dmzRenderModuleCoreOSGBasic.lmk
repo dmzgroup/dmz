@@ -5,13 +5,13 @@ lmkOSG.set_name ("dmzRenderModuleCoreOSGBasic")
 lmk.set_type "plugin"
 
 lmk.add_preqs {
-   "dmzRenderUtilOSG",
    "dmzRenderModuleCoreOSG",
    "dmzRenderFramework",
    "dmzObjectFramework",
 }
 
 lmk.add_libs {
+   "dmzRenderUtilOSG",
    "dmzObjectUtil",
    "dmzKernel",
 }

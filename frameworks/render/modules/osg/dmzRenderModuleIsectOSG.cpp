@@ -1,20 +1,17 @@
 #include "dmzRenderModuleIsectOSG.h"
+#include <dmzRenderUtilOSG.h>
+#include <dmzRenderObjectDataOSG.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
-#include <osg/Node>
-#include <osg/Group>
-
-#include <osg/LineSegment>
-#include <osg/Drawable>
-#include <osg/CullFace>
-//#include <osgSim/HeightAboveTerrain>
-//#include <osgSim/ElevationSlice>
-
-#include <osgUtil/IntersectVisitor>
-
 #include <dmzTypesVector.h>
 #include <dmzTypesString.h>
 
-#include <dmzRenderUtilOSG.h>
+#include <osg/CullFace>
+#include <osg/Drawable>
+#include <osg/Group>
+#include <osg/LineSegment>
+#include <osg/Node>
+#include <osgUtil/IntersectVisitor>
+
 
 dmz::RenderModuleIsectOSG::RenderModuleIsectOSG (
       const PluginInfo &Info,
@@ -60,13 +57,16 @@ dmz::RenderModuleIsectOSG::do_isect (
       const IsectParameters &Parameters,
       const IsectTestContainer &TestValues,
       IsectResultContainer &resultContainer) {
+
    if (_core) {
+
       osg::ref_ptr<osg::Group> scene = _core->get_scene ();
+//      osg::ref_ptr<osg::Group> scene = _core->get_static_objects ();
 
       osg::BoundingSphere bs = scene->getBound();
 
-//      osgSim::LineOfSight los;
       std::vector<osg::LineSegment*> lsList;// = new osg::LineSegment[TestValues];
+
       osgUtil::IntersectVisitor visitor;
 
       UInt32 testHandle;
@@ -77,22 +77,24 @@ dmz::RenderModuleIsectOSG::do_isect (
       std::vector<Vector> sourceArray;
 
       TestValues.get_first_test (testHandle, testType, vec1, vec2);
+
       do {
 
          if (testType == IsectRayTest) {
 
             vec2 = (vec1 + (vec2 * (bs.radius () * 2)));
          }
+
          osg::LineSegment *ls = new osg::LineSegment;
          ls->set (to_osg_vector (vec1), to_osg_vector (vec2));
          visitor.addLineSegment (ls);
          lsList.push_back (ls);//addLOS (to_osg_vector (vec1), to_osg_vector (vec2));
          handleArray.push_back (testHandle);
          sourceArray.push_back (vec1);
+
       } while (TestValues.get_next_test (testHandle, testType, vec1, vec2));
 
       scene->accept (visitor);
-//      los.computeIntersections (scene.get ());
 
       IsectTestResultTypeEnum param = Parameters.get_test_result_type ();
       bool closestPoint = (param == IsectClosestPoint);
@@ -105,84 +107,110 @@ dmz::RenderModuleIsectOSG::do_isect (
 
       Boolean result (False);
 
-      for (unsigned int i=0; i<lsList.size () && !result; i++) {
+      for (unsigned int ix = 0; ix < lsList.size () && !result; ix++) {
 
          osgUtil::IntersectVisitor::HitList resultHits;
-         resultHits = visitor.getHitList (lsList[i]);
+         resultHits = visitor.getHitList (lsList[ix]);
 
          if (!resultHits.empty ()) {
 
-//            int j;// j=0;
-//            const osgSim::LineOfSight::Intersections& intersections = los.getIntersections (i);
+            for (unsigned int jy = 0; jy < resultHits.size (); jy++) {
 
-//            osgSim::LineOfSight::Intersections::const_iterator itr;
-//            for (itr = intersections.begin ();
-//                 itr != intersections.end () && !result;
-//                 itr++) {
-            for (unsigned int j=0; j<resultHits.size (); j++) {
+               Handle objHandle (0);
 
-               osgUtil::Hit currentHit = resultHits[j];
+               osgUtil::Hit currentHit = resultHits[jy];
 
-               Vector lsPoint = to_dmz_vector (currentHit.getWorldIntersectPoint ());
-               IsectResult lsResult;
+               Boolean disabled (False);
 
-               lsResult.set_isect_test_id (handleArray[i]);
+               osg::NodePath path = currentHit.getNodePath ();
 
-               lsResult.set_point (lsPoint);
+               for (
+                     osg::NodePath::iterator it = path.begin ();
+                     (it != path.end ()) && !disabled;
+                     it++) {
 
-               if (Parameters.get_calculate_normal ()) {
+                  osg::Node *node (*it);
+                  osg::Referenced *r (node ? node->getUserData () : 0);
 
-                  lsResult.set_normal (
-                     to_dmz_vector (currentHit.getWorldIntersectNormal ()));
-               }
+                  if (r) {
 
-               if (Parameters.get_calculate_distance ()) {
+                     RenderObjectDataOSG *data (dynamic_cast<RenderObjectDataOSG *> (r));
 
-                  lsResult.set_distance ((lsPoint - sourceArray[i]).magnitude ());
-               }
+                     if (data) {
 
-               if (Parameters.get_calculate_cull_mode ()) {
-
-                  osg::Drawable *drawObject = (currentHit.getDrawable ());
-
-                  osg::StateSet *sSet = (drawObject ? drawObject->getStateSet () : 0);
-
-                  osg::CullFace *cf = (osg::CullFace*)(
-                     sSet ? sSet->getAttribute (osg::StateAttribute::CULLFACE) : 0);
-
-                  UInt32 cullMask = 0;
-
-                  if (cf) {
-
-                     if (cf->getMode () == osg::CullFace::FRONT ||
-                           cf->getMode () == osg::CullFace::FRONT_AND_BACK)  {
-
-                        cullMask |= IsectPolygonFrontCulledMask;
-                     }
-
-                     if (cf->getMode () == osg::CullFace::BACK ||
-                           cf->getMode () == osg::CullFace::FRONT_AND_BACK) {
-
-                        cullMask |= IsectPolygonBackCulledMask;
+                        if (!data->do_isect ()) { disabled = True; }
+                        else { objHandle = data->get_handle (); }
+                        //else if (!objHandle) { objHandle = data->get_handle (); }
                      }
                   }
-
-                  lsResult.set_cull_mode (cullMask);
                }
 
-               if (Parameters.get_calculate_object_handle ()) {
+               if (!disabled) {
 
-                  osg::Geode *hitObject = currentHit.getGeode ();
-//                  _log.out << "need a way to grab object handle" << endl;
+                  Vector lsPoint = to_dmz_vector (currentHit.getWorldIntersectPoint ());
+                  IsectResult lsResult;
+
+                  lsResult.set_isect_test_id (handleArray[ix]);
+
+                  lsResult.set_point (lsPoint);
+ 
+                  if (Parameters.get_calculate_object_handle ()) {
+
+                    lsResult.set_object_handle (objHandle);
+                  }
+
+                  if (Parameters.get_calculate_normal ()) {
+
+                     lsResult.set_normal (
+                        to_dmz_vector (currentHit.getWorldIntersectNormal ()));
+                  }
+
+                  if (Parameters.get_calculate_distance ()) {
+
+                     lsResult.set_distance ((lsPoint - sourceArray[ix]).magnitude ());
+                  }
+
+                  if (Parameters.get_calculate_cull_mode ()) {
+
+                     osg::Drawable *drawObject = (currentHit.getDrawable ());
+
+                     osg::StateSet *sSet = (drawObject ? drawObject->getStateSet () : 0);
+
+                     osg::CullFace *cf = (osg::CullFace*)(
+                        sSet ? sSet->getAttribute (osg::StateAttribute::CULLFACE) : 0);
+
+                     UInt32 cullMask = 0;
+
+                     if (cf) {
+
+                        if (cf->getMode () == osg::CullFace::FRONT ||
+                              cf->getMode () == osg::CullFace::FRONT_AND_BACK)  {
+
+                           cullMask |= IsectPolygonFrontCulledMask;
+                        }
+
+                        if (cf->getMode () == osg::CullFace::BACK ||
+                              cf->getMode () == osg::CullFace::FRONT_AND_BACK) {
+
+                           cullMask |= IsectPolygonBackCulledMask;
+                        }
+                     }
+
+                     lsResult.set_cull_mode (cullMask);
+                  }
+
+                  if (Parameters.get_calculate_object_handle ()) {
+
+                     osg::Geode *hitObject = currentHit.getGeode ();
+                  }
+
+                  resultContainer.add_result (lsResult);
+
+                  if (firstPoint) {
+
+                     result = true;
+                  }
                }
-
-               resultContainer.add_result (lsResult);
-
-               if (firstPoint) {
-
-                  result = true;
-               }
-//               ++j;
             }
          }
       }
@@ -215,128 +243,6 @@ dmz::RenderModuleIsectOSG::do_isect (
    }
 
    return resultContainer.get_result_count () > 0;
-
-/*
-   if (_core) {
-      osg::ref_ptr<osg::Group> scene = _core->get_scene ();
-
-      osg::BoundingSphere bs = scene->getBound();
-
-      osgSim::LineOfSight los;
-
-      UInt32 testHandle;
-      IsectTestTypeEnum testType;
-      Vector vec1, vec2;
-
-      std::vector<UInt32> handleArray;
-      std::vector<Vector> sourceArray;
-
-      TestValues.get_first_test (testHandle, testType, vec1, vec2);
-      do {
-
-         if (testType == IsectRayTest) {
-
-            vec2 = (vec1 + (vec2 * (bs.radius () * 2)));
-         }
-         los.addLOS (to_osg_vector (vec1), to_osg_vector (vec2));
-         handleArray.push_back (testHandle);
-         sourceArray.push_back (vec1);
-      } while (TestValues.get_next_test (testHandle, testType, vec1, vec2));
-
-      los.computeIntersections (scene.get ());
-
-      IsectTestResultTypeEnum param = Parameters.get_test_result_type ();
-      bool closestPoint = (param == IsectClosestPoint);
-      bool firstPoint = (param == IsectFirstPoint);
-
-      if (closestPoint && !Parameters.get_calculate_distance ()) {
-         firstPoint = true;
-         closestPoint = false;
-      }
-
-      Boolean result (False);
-
-      for (unsigned int i=0; i<los.getNumLOS () && !result; i++) {
-
-         int j; j=0;
-         const osgSim::LineOfSight::Intersections& intersections = los.getIntersections (i);
-
-         osgSim::LineOfSight::Intersections::const_iterator itr;
-         for ( itr = intersections.begin ();
-               itr != intersections.end () && !result;
-               itr++) {
-
-            Vector losPoint = to_dmz_vector (intersections[j]);
-            IsectResult losResult;
-
-            losResult.set_isect_test_id (handleArray[i]);
-
-            losResult.set_point (losPoint);
-
-            if (Parameters.get_calculate_normal ()) {
-
-               Vector null (0.0, 0.0, 0.0);
-               losResult.set_normal (null);
-               // problem
-               _log.out << "need a way to compute normals" << endl;
-            }
-
-            if (Parameters.get_calculate_distance ()) {
-
-               losResult.set_distance ((losPoint - sourceArray[i]).magnitude ());
-            }
-
-            if (Parameters.get_calculate_cull_mode ()) {
-
-               losResult.set_cull_mode (IsectPolygonBackCulledMask);
-               // problem
-               _log.out << "need a way to read cull modes" << endl;
-            }
-
-            if (Parameters.get_calculate_object_handle ()) {
-
-               _log.out << "need a way to grab object handle" << endl;
-            }
-
-            resultContainer.add_result (losResult);
-
-            if (firstPoint) {
-
-               result = true;
-            }
-            ++j;
-         }
-      }
-
-      if (closestPoint && resultContainer.get_result_count () > 1) {
-
-         IsectResult current;
-         resultContainer.get_first (current);
-         IsectResult closest (current);
-
-         double closestDist;
-         current.get_distance (closestDist);
-
-         while (resultContainer.get_next (current)) {
-
-            double testDist;
-            if (current.get_distance (testDist)) {
-
-               if (testDist < closestDist) {
-
-                  closest = current;
-               }
-            }
-         }
-
-         IsectResultContainer closestContainer;
-         closestContainer.add_result (closest);
-         resultContainer = closestContainer;
-      }
-   }
-
-   return resultContainer.get_result_count () > 0;
-*/
 }
 
 
@@ -344,6 +250,19 @@ dmz::UInt32
 dmz::RenderModuleIsectOSG::enable_isect (const Handle ObjectHandle) {
 
    UInt32 result (0);
+
+   if (_core) {
+
+      osg::Group *g (_core->lookup_dynamic_object (ObjectHandle));
+
+      if (g) {
+
+         RenderObjectDataOSG *data (
+            dynamic_cast<RenderObjectDataOSG *> (g->getUserData ()));
+
+         if (data) { result = UInt32 (data->enable_isect ()); }
+      }
+   }
 
    return result;
 }
@@ -353,6 +272,19 @@ dmz::UInt32
 dmz::RenderModuleIsectOSG::disable_isect (const Handle ObjectHandle) {
 
    UInt32 result (0);
+
+   if (_core) {
+
+      osg::Group *g (_core->lookup_dynamic_object (ObjectHandle));
+
+      if (g) {
+
+         RenderObjectDataOSG *data (
+            dynamic_cast<RenderObjectDataOSG *> (g->getUserData ()));
+
+         if (data) { result = UInt32 (data->disable_isect ()); }
+      }
+   }
 
    return result;
 }

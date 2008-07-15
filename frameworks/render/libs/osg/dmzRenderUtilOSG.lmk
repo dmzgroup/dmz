@@ -16,11 +16,13 @@ lmk.add_libs {
 lmk.add_files {
    "dmzRenderEventHandlerOSG.h",
    "dmzRenderCameraManipulatorOSG.h",
+   "dmzRenderObjectDataOSG.h",
    "dmzRenderUtilOSG.h",
    "dmzRenderUtilOSGExport.h",
 }
 
 lmk.add_files {
+   "dmzRenderObjectDataOSG.cpp",
    "dmzRenderEventHandlerOSG.cpp",
 }
 

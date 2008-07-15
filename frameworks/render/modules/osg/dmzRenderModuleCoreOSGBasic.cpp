@@ -35,7 +35,7 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
    osg::Light *light = new osg::Light;
    light->setLightNum (0);
    light->setPosition (osg::Vec4 (0.0, 1000.0, 0.0, 1.0));
-   osg::Vec3 dir (0.0, -1.0, -0.0);
+   osg::Vec3 dir (0.0, -1.0, 0.0);
    light->setDirection (dir);
    ls->setLight (light);
    ls->setLocalStateSetModes (osg::StateAttribute::ON);

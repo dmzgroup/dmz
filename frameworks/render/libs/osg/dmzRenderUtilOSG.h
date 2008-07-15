@@ -39,6 +39,21 @@ namespace dmz {
    }
 
    inline osg::Matrixd
+   to_osg_matrix (const Matrix &Source, const Vector &Trans) {
+
+      Float64 data[9];
+      Source.to_array (data);
+      osg::Matrixd result (
+         data[0], data[1], data[2], 0.0,
+         data[3], data[4], data[5], 0.0,
+         data[6], data[7], data[8], 0.0,
+         Trans.get_x (), Trans.get_y (), Trans.get_z (), 1.0);
+
+      return result;
+   }
+
+
+   inline osg::Matrixd
    to_osg_inverse_matrix (const Matrix &Source) {
 
       Float64 data[9];

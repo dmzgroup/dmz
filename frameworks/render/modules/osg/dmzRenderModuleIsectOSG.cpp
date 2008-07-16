@@ -121,6 +121,7 @@ dmz::RenderModuleIsectOSG::do_isect (
                osgUtil::Hit currentHit = resultHits[jy];
 
                Boolean disabled (False);
+               osg::CullFace *cf (0);
 
                osg::NodePath path = currentHit.getNodePath ();
 
@@ -130,17 +131,33 @@ dmz::RenderModuleIsectOSG::do_isect (
                      it++) {
 
                   osg::Node *node (*it);
-                  osg::Referenced *r (node ? node->getUserData () : 0);
 
-                  if (r) {
+                  if (node) {
 
-                     RenderObjectDataOSG *data (dynamic_cast<RenderObjectDataOSG *> (r));
 
-                     if (data) {
+                     osg::StateSet *sSet = (node->getStateSet ());
 
-                        if (!data->do_isect ()) { disabled = True; }
-                        else { objHandle = data->get_handle (); }
-                        //else if (!objHandle) { objHandle = data->get_handle (); }
+                     if (sSet) {
+
+                        osg::CullFace *cfTmp (
+                           (osg::CullFace*)(sSet->getAttribute (
+                              osg::StateAttribute::CULLFACE)));
+
+                        if (cfTmp) { cf = cfTmp; }
+                     }
+
+                     osg::Referenced *r (node->getUserData ());
+
+                     if (r) {
+
+                        RenderObjectDataOSG *data (
+                           dynamic_cast<RenderObjectDataOSG *> (r));
+
+                        if (data) {
+
+                           if (!data->do_isect ()) { disabled = True; }
+                           else { objHandle = data->get_handle (); }
+                        }
                      }
                   }
                }
@@ -172,13 +189,6 @@ dmz::RenderModuleIsectOSG::do_isect (
 
                   if (Parameters.get_calculate_cull_mode ()) {
 
-                     osg::Drawable *drawObject = (currentHit.getDrawable ());
-
-                     osg::StateSet *sSet = (drawObject ? drawObject->getStateSet () : 0);
-
-                     osg::CullFace *cf = (osg::CullFace*)(
-                        sSet ? sSet->getAttribute (osg::StateAttribute::CULLFACE) : 0);
-
                      UInt32 cullMask = 0;
 
                      if (cf) {
@@ -195,6 +205,8 @@ dmz::RenderModuleIsectOSG::do_isect (
                            cullMask |= IsectPolygonBackCulledMask;
                         }
                      }
+                     else { cullMask |= IsectPolygonBackCulledMask; }
+
 
                      lsResult.set_cull_mode (cullMask);
                   }

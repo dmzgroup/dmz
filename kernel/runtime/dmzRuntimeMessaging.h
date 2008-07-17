@@ -6,11 +6,14 @@
 
 namespace dmz {
 
+   class Config;
    class Data;
+   class Log;
    class MessageContext;
    class PluginInfo;
    class RuntimeContext;
    class RuntimeContextMessaging;
+   class String;
 
    enum MessageMonostateEnum {
       MessageMonostateOn, //!< Enables message's monostate.
@@ -103,6 +106,19 @@ namespace dmz {
          MessageObserver (const MessageObserver &);
          MessageObserver &operator= (const MessageObserver &);
    };
+
+   DMZ_KERNEL_LINK_SYMBOL Message config_to_message_type (
+      const String &Name,
+      const Config &Source,
+      RuntimeContext *context,
+      Log *log = 0);
+
+   DMZ_KERNEL_LINK_SYMBOL Message config_create_message_type (
+      const String &Name,
+      const Config &Source,
+      const String &DefaultValue,
+      RuntimeContext *context,
+      Log *log = 0);
 };
 
 #endif // DMZ_RUNTIME_MESSAGING_DOT_H

@@ -917,7 +917,7 @@ dmz::LuaModuleBasic::_init (Config &local, Config &global) {
 
       while (pathList.get_next_config (it, path)) {
 
-         const String PathName (config_to_string ("name", path));
+         const String PathName (config_to_string ("value", path));
          _log.info << "Adding Lua path: " << PathName << endl;
          _luaPaths.add_path (PathName);
       }

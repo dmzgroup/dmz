@@ -2,7 +2,8 @@
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginObjectOSG.h"
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToBase.h>
+#include <dmzRuntimeConfigToPathContainer.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeObjectType.h>
@@ -82,6 +83,8 @@ dmz::RenderPluginObjectOSG::create_object (
       if (ds) {
 
          ObjectStruct *os (new ObjectStruct (*ds));
+
+         if (os && !_objectTable.store (ObjectHandle, os)) { delete os; os = 0; }
 
          if (os && os->model.valid ()) {
 
@@ -273,19 +276,32 @@ dmz::RenderPluginObjectOSG::_create_def_struct (const ObjectType &Type) {
 dmz::RenderPluginObjectOSG::ModelStruct *
 dmz::RenderPluginObjectOSG::_load_model (const String &FileName) {
 
-   ModelStruct *result (_modelTable.lookup (FileName));
+   ModelStruct *result (0);
+   String foundFile;
 
-   if (!result) {
+   if (find_file (_pathContainer, FileName, foundFile)) {
 
-      result = new ModelStruct;
-      result->model = osgDB::readNodeFile (FileName.get_buffer ());
+      result = _modelTable.lookup (foundFile);
 
-      if (!result->model.valid ()) {
+      if (!result) {
 
-         delete result; result = 0;
-         _log.error << "Failed loading file: " << FileName << endl;
+         result = new ModelStruct;
+         result->model = osgDB::readNodeFile (foundFile.get_buffer ());
+
+         if (result->model.valid ()) {
+
+            _log.info << "Loaded file: " << foundFile << " (" << FileName << ")" << endl;
+            _modelTable.store (foundFile, result);
+         }
+         else {
+
+            delete result; result = 0;
+            _log.error << "Failed loading file: " << foundFile << " (" << FileName << ")"
+               << endl;
+         }
       }
    }
+   else { _log.error << "Failed finding file: " << FileName << endl; }
 
    return result;
 }
@@ -300,6 +316,7 @@ dmz::RenderPluginObjectOSG::_init (Config &local) {
       ObjectTypeMask |
       ObjectStateMask);
 
+   _pathContainer = config_to_path_container ("search", local);
 }
 
 

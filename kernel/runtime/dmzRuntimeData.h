@@ -4,14 +4,16 @@
 #include <dmzKernelExport.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesBooleanOperator.h>
+#include <dmzTypesString.h>
 
 namespace dmz {
 
+   class Config;
+   class Log;
    class Mask;
    class Matrix;
    class RuntimeContext;
    class Stream;
-   class String;
    class UUID;
    class Vector;
 
@@ -176,7 +178,28 @@ namespace dmz {
          struct State;
          State &_state; //!< Internal state.
    };
+
+   DMZ_KERNEL_LINK_SYMBOL Boolean config_to_data (
+      const String &Name,
+      const Config &Source,
+      RuntimeContext *context,
+      Data &target,
+      Log *log = 0);
+
+   Boolean config_to_data (
+      const Config &Source,
+      RuntimeContext *context,
+      Data &target,
+      Log *log = 0);
 };
+
+
+inline dmz::Boolean
+dmz::config_to_data (
+      const Config &Source,
+      RuntimeContext *context,
+      Data &target,
+      Log *log) { return config_to_data ("", Source, context, target, log); }
 
 
 DMZ_KERNEL_LINK_SYMBOL dmz::Stream &

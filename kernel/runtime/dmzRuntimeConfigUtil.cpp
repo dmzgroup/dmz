@@ -1,12 +1,13 @@
-#include <dmzTypesBase.h>
-#include <dmzTypesString.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigRead.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
+#include <dmzRuntimeConfigToPathContainer.h>
 #include <dmzRuntimeConfigWrite.h>
+#include <dmzTypesBase.h>
+#include <dmzTypesString.h>
 
 /*!
 
@@ -34,6 +35,28 @@ local_config_to_string (
 
 //! \addtogroup Runtime
 //! @{
+
+
+dmz::PathContainer
+dmz::config_to_path_container (const String &Name, const Config &Source) {
+
+   PathContainer result;
+
+   Config pathList;
+
+   if (Name) { Source.lookup_all_config (Name + ".path", pathList); }
+   else { Source.lookup_all_config ("path", pathList); }
+
+   ConfigIterator it;
+   Config path;
+
+   while (pathList.get_next_config (it, path)) {
+
+      result.add_path (config_to_string ("value", path));
+   }
+
+   return result;
+}
 
 
 /*!

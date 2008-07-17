@@ -21,6 +21,7 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
       ObjectObserverUtil (Info, local),
       RenderModuleCoreOSG (Info),
       _log (Info),
+      _defaultHandle (0),
       _dirtyObjects (0) {
 
    _scene = new osg::Group;
@@ -122,7 +123,9 @@ dmz::RenderModuleCoreOSGBasic::update_time_slice (const Float64 DeltaTime) {
 
 // Object Observer Interface
 void
-dmz::RenderModuleCoreOSGBasic::destroy_object (const Handle ObjectHandle) {
+dmz::RenderModuleCoreOSGBasic::destroy_object (
+      const UUID &Identity,
+      const Handle ObjectHandle) {
 
    ObjectStruct *os (_objectTable.remove (ObjectHandle));
 
@@ -225,7 +228,22 @@ dmz::RenderModuleCoreOSGBasic::create_dynamic_object (const Handle ObjectHandle)
 
       if (os && !_objectTable.store (ObjectHandle, os)) { delete os; os = 0; }
 
-      if (os) { os->transform->setUserData (new RenderObjectDataOSG (ObjectHandle)); }
+      if (os) {
+
+         os->transform->setUserData (new RenderObjectDataOSG (ObjectHandle));
+
+         ObjectModule *objMod (get_object_module ());
+
+         if (objMod) {
+
+            objMod->lookup_position (ObjectHandle, _defaultHandle, os->pos);
+            objMod->lookup_orientation (ObjectHandle, _defaultHandle, os->ori);
+
+            os->dirty = True;
+            os->next = _dirtyObjects;
+            _dirtyObjects = os;
+         }
+      }
    }
 
    if (os) {
@@ -388,7 +406,7 @@ dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
       }
    }
 
-   activate_default_object_attribute (
+   _defaultHandle = activate_default_object_attribute (
       ObjectDestroyMask | ObjectPositionMask | ObjectOrientationMask);
 }
 

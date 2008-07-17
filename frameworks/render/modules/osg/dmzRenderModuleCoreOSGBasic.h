@@ -53,7 +53,7 @@ namespace dmz {
          virtual void update_time_slice (const Float64 DeltaTime);
 
          // Object Observer Interface
-         virtual void destroy_object (const Handle ObjectHandle);
+         virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
 
          virtual void update_object_position (
             const UUID &Identity,
@@ -129,6 +129,7 @@ namespace dmz {
          PortalStruct *_get_portal_struct (const String &Name);
 
          Log _log;
+         Handle _defaultHandle;
          PluginContainer _extensions;
          osg::ref_ptr<osg::Group> _scene;
          osg::ref_ptr<osg::Group> _staticObjects;

@@ -159,7 +159,7 @@ dmz::NetModulePacketCodecBasic::register_object (
 
 
 dmz::Boolean
-dmz::NetModulePacketCodecBasic:: encode_object (
+dmz::NetModulePacketCodecBasic::encode_object (
       const Handle ObjectHandle,
       Marshal &outData) {
 
@@ -168,7 +168,7 @@ dmz::NetModulePacketCodecBasic:: encode_object (
 
 
 dmz::Boolean
-dmz::NetModulePacketCodecBasic:: release_object (
+dmz::NetModulePacketCodecBasic::release_object (
       const Handle ObjectHandle,
       Marshal &outData) {
 
@@ -179,7 +179,7 @@ dmz::NetModulePacketCodecBasic:: release_object (
 
 
 dmz::Boolean
-dmz::NetModulePacketCodecBasic:: encode_event (
+dmz::NetModulePacketCodecBasic::encode_event (
       const EventType &Type,
       const Handle EventHandle,
       Marshal &outData) {

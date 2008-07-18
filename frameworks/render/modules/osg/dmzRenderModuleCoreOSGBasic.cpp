@@ -4,6 +4,7 @@
 #include <dmzRenderObjectDataOSG.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToPathContainer.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeLoadPlugins.h>
@@ -194,6 +195,17 @@ dmz::RenderModuleCoreOSGBasic::update_object_orientation (
 
 
 // RenderModuloeCoreOSG Interface
+dmz::String
+dmz::RenderModuleCoreOSGBasic::find_file (const String &FileName) {
+
+   String result;
+
+   dmz::find_file (_searchPath, FileName, result);
+
+   return result;
+}
+
+
 osg::Group *
 dmz::RenderModuleCoreOSGBasic::get_scene () {
 
@@ -405,6 +417,8 @@ dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
          _extensions.discover_plugins ();
       }
    }
+
+   _searchPath = config_to_path_container ("search", local);
 
    _defaultHandle = activate_default_object_attribute (
       ObjectDestroyMask | ObjectPositionMask | ObjectOrientationMask);

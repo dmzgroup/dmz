@@ -277,9 +277,9 @@ dmz::RenderPluginObjectOSG::ModelStruct *
 dmz::RenderPluginObjectOSG::_load_model (const String &FileName) {
 
    ModelStruct *result (0);
-   String foundFile;
+   String foundFile (_core ? _core->find_file (FileName) : "");
 
-   if (find_file (_pathContainer, FileName, foundFile)) {
+   if (foundFile) {
 
       result = _modelTable.lookup (foundFile);
 
@@ -315,8 +315,6 @@ dmz::RenderPluginObjectOSG::_init (Config &local) {
       ObjectDestroyMask |
       ObjectTypeMask |
       ObjectStateMask);
-
-   _pathContainer = config_to_path_container ("search", local);
 }
 
 

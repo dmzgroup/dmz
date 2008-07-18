@@ -35,6 +35,8 @@ namespace dmz {
 
          Log _log;
 
+         String _imageFile;
+
          osg::ref_ptr<osg::Camera> _camera;
          osg::ref_ptr<osg::Camera> _masterCamera;
          RenderModuleCoreOSG *_core;

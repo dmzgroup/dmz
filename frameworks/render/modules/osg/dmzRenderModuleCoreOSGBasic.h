@@ -8,6 +8,7 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimePluginContainer.h>
 #include <dmzRuntimeTimeSlice.h>
+#include <dmzSystemFile.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
@@ -70,6 +71,7 @@ namespace dmz {
             const Matrix *PreviousValue);
 
          // RenderModuloeCoreOSG Interface
+         virtual String find_file (const String &FileName);
          virtual osg::Group *get_scene ();
          virtual osg::Group *get_static_objects ();
          virtual osg::Group *get_dynamic_objects ();
@@ -136,6 +138,7 @@ namespace dmz {
          osg::ref_ptr<osg::Group> _dynamicObjects;
          HashTableStringTemplate<PortalStruct> _portalTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
+         PathContainer _searchPath;
          ObjectStruct *_dirtyObjects;
    };
 }

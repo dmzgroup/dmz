@@ -3,6 +3,7 @@
 #include <dmzRuntimeConfigRead.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzTypesUUID.h>
 
 dmz::NetPluginPacket::NetPluginPacket (
       const PluginInfo &Info,
@@ -67,6 +68,19 @@ dmz::NetPluginPacket::update_plugin_state (
       }
 
       _preRegObjTable.clear ();
+   }
+   else if (State == PluginStateShutdown) {
+
+      // Sends deactivation packet for all object that haven't been destroyed yet.
+      HashTableHandleIterator it;
+      UUID empty;
+      ObjStruct *ptr (_objTable.get_first (it));
+
+      while (ptr) {
+
+         destroy_object (empty, ptr->ObjectHandle);
+         ptr = _objTable.get_next (it);
+      }
    }
 }
 

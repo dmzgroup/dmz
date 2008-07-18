@@ -1,5 +1,6 @@
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginLogoOSG.h"
+#include <dmzRuntimeConfigToBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
@@ -102,85 +103,75 @@ dmz::RenderPluginLogoOSG::update_time_slice (const Float64 TimeDelta) {
 void
 dmz::RenderPluginLogoOSG::_create_logo () {
 
-   _camera = new osg::Camera;
-   _camera->setProjectionMatrix (osg::Matrix::ortho2D (0.0, 640.0, 0.0, 480.0));
-   _camera->setReferenceFrame(osg::Transform::ABSOLUTE_RF);
-   _camera->setViewMatrix(osg::Matrix::identity());
-   _camera->setClearMask(GL_DEPTH_BUFFER_BIT);
-   _camera->setRenderOrder(osg::Camera::POST_RENDER);
-   _camera->setAllowEventFocus(false);
+   const String FoundFile (_core ? _core->find_file (_imageFile) : "");
 
-   osg::Geode* geode = new osg::Geode();
-   osg::StateSet* stateset = geode->getOrCreateStateSet();
-   stateset->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
-
-   osg::Geometry* geom = new osg::Geometry;
-#if 0
-   osg::Vec3Array* vertices = new osg::Vec3Array;
-   float depth = -0.1;
-   float max = 200.0;
-   vertices->push_back(osg::Vec3(10.0,max -100.0,depth));
-   vertices->push_back(osg::Vec3(10.0,-100,depth));
-   vertices->push_back(osg::Vec3(max * 2.0 + 10.0,-100,depth));
-   vertices->push_back(osg::Vec3(max * 2.0 + 10.0,max -100.0,depth));
-   geom->setVertexArray(vertices);
-#endif
-
-   osg::Vec3Array* normals = new osg::Vec3Array;
-   normals->push_back(osg::Vec3(0.0f,0.0f,1.0f));
-   geom->setNormalArray(normals);
-   geom->setNormalBinding(osg::Geometry::BIND_OVERALL);
-
-   osg::Vec4Array* colors = new osg::Vec4Array;
-   colors->push_back(osg::Vec4(1.0f,1.0,0.8f,1.0f));
-   geom->setColorArray(colors);
-   geom->setColorBinding(osg::Geometry::BIND_OVERALL);
-
-   geom->addPrimitiveSet(new osg::DrawArrays(GL_QUADS,0,4));
-
-   stateset = geom->getOrCreateStateSet();
-   stateset->setMode(GL_BLEND,osg::StateAttribute::ON);
-   stateset->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-
-   osg::Image *img = osgDB::readImageFile ("../../assets/RenderPluginStatsOgre/DMZ.png");
+   osg::Image *img = osgDB::readImageFile (FoundFile.get_buffer ());
 
    if (img) {
 
-      int w = img->s ();
-      int h = img->t ();
-      float maxh = float (h) / 2.0 + 5.0;
-      float minh = -maxh + 5.0;
+      _camera = new osg::Camera;
+      _camera->setProjectionMatrix (osg::Matrix::ortho2D (0.0, 640.0, 0.0, 480.0));
+      _camera->setReferenceFrame (osg::Transform::ABSOLUTE_RF);
+      _camera->setViewMatrix (osg::Matrix::identity ());
+      _camera->setClearMask (GL_DEPTH_BUFFER_BIT);
+      _camera->setRenderOrder (osg::Camera::POST_RENDER);
+      _camera->setAllowEventFocus (false);
+
+      osg::Geode* geode = new osg::Geode ();
+      osg::StateSet* stateset = geode->getOrCreateStateSet ();
+      stateset->setMode (GL_LIGHTING, osg::StateAttribute::OFF);
+
+      osg::Geometry* geom = new osg::Geometry;
+
+      osg::Vec3Array* normals = new osg::Vec3Array;
+      normals->push_back (osg::Vec3 (0.0f, 0.0f, 1.0f));
+      geom->setNormalArray (normals);
+      geom->setNormalBinding (osg::Geometry::BIND_OVERALL);
+
+      osg::Vec4Array* colors = new osg::Vec4Array;
+      colors->push_back (osg::Vec4 (1.0f, 1.0, 1.0f, 1.0f));
+      geom->setColorArray (colors);
+      geom->setColorBinding (osg::Geometry::BIND_OVERALL);
+
+      geom->addPrimitiveSet (new osg::DrawArrays (GL_QUADS, 0, 4));
+
+      stateset = geom->getOrCreateStateSet ();
+      stateset->setMode (GL_BLEND, osg::StateAttribute::ON);
+      stateset->setRenderingHint (osg::StateSet::TRANSPARENT_BIN);
+
+      float w = (float)img->s ();
+      float h = (float)img->t ();
+      float d = -0.1f;
 
       osg::Vec3Array* vertices = new osg::Vec3Array;
-      float depth = -0.1;
-      vertices->push_back(osg::Vec3(10.0, maxh, depth));
-      vertices->push_back(osg::Vec3(10.0, minh, depth));
-      vertices->push_back(osg::Vec3(float (w) + 10.0, minh, depth));
-      vertices->push_back(osg::Vec3(float (w) + 10.0, maxh, depth));
-      geom->setVertexArray(vertices);
+      vertices->push_back (osg::Vec3 (0.0, h, d));
+      vertices->push_back (osg::Vec3 (0.0, 0.0, d));
+      vertices->push_back (osg::Vec3 (w, 0.0, d));
+      vertices->push_back (osg::Vec3 (w, h, d));
+      geom->setVertexArray (vertices);
 
       osg::Texture2D *tex = new osg::Texture2D (img);
-      tex->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-      tex->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+      tex->setWrap (osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE);
+      tex->setWrap (osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE);
 
       stateset->setTextureAttributeAndModes (0, tex, osg::StateAttribute::ON);
-      osg::Vec2Array *tcoords = new osg::Vec2Array(4);
+      osg::Vec2Array *tcoords = new osg::Vec2Array (4);
       (*tcoords)[0].set (0, 1.0);
       (*tcoords)[1].set (0, 0);
       (*tcoords)[2].set (1.0, 0);
       (*tcoords)[3].set (1.0, 1.0);
       geom->setTexCoordArray (0, tcoords);
-   }
 
-   geode->addDrawable(geom);
+      geode->addDrawable (geom);
 
-   _camera->addChild(geode);
+      _camera->addChild (geode);
 
-   if (_core) {
+      if (_core) {
 
-      osg::Group *s = _core->get_scene ();
+         osg::Group *s = _core->get_scene ();
 
-      if (s) { s->addChild (_camera.get ()); }
+         if (s) { s->addChild (_camera.get ()); }
+      }
    }
 }
 
@@ -188,6 +179,7 @@ dmz::RenderPluginLogoOSG::_create_logo () {
 void
 dmz::RenderPluginLogoOSG::_init (Config &local) {
 
+   _imageFile = config_to_string ("image.file", local, "DMZ.png");
 }
 
 

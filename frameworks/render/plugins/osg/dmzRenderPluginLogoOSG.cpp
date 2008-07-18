@@ -92,7 +92,8 @@ dmz::RenderPluginLogoOSG::update_time_slice (const Float64 TimeDelta) {
 
       if (vp) {
 
-         _camera->setProjectionMatrix (osg::Matrix::ortho2D (0.0, vp->width (), 0.0, vp->height ()));
+         _camera->setProjectionMatrix (
+            osg::Matrix::ortho2D (0.0, vp->width (), 0.0, vp->height ()));
       }
    }
 }
@@ -114,6 +115,7 @@ dmz::RenderPluginLogoOSG::_create_logo () {
    stateset->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
 
    osg::Geometry* geom = new osg::Geometry;
+#if 0
    osg::Vec3Array* vertices = new osg::Vec3Array;
    float depth = -0.1;
    float max = 200.0;
@@ -122,6 +124,7 @@ dmz::RenderPluginLogoOSG::_create_logo () {
    vertices->push_back(osg::Vec3(max * 2.0 + 10.0,-100,depth));
    vertices->push_back(osg::Vec3(max * 2.0 + 10.0,max -100.0,depth));
    geom->setVertexArray(vertices);
+#endif
 
    osg::Vec3Array* normals = new osg::Vec3Array;
    normals->push_back(osg::Vec3(0.0f,0.0f,1.0f));
@@ -142,6 +145,19 @@ dmz::RenderPluginLogoOSG::_create_logo () {
    osg::Image *img = osgDB::readImageFile ("../../assets/RenderPluginStatsOgre/DMZ.png");
 
    if (img) {
+
+      int w = img->s ();
+      int h = img->t ();
+      float maxh = float (h) / 2.0 + 5.0;
+      float minh = -maxh + 5.0;
+
+      osg::Vec3Array* vertices = new osg::Vec3Array;
+      float depth = -0.1;
+      vertices->push_back(osg::Vec3(10.0, maxh, depth));
+      vertices->push_back(osg::Vec3(10.0, minh, depth));
+      vertices->push_back(osg::Vec3(float (w) + 10.0, minh, depth));
+      vertices->push_back(osg::Vec3(float (w) + 10.0, maxh, depth));
+      geom->setVertexArray(vertices);
 
       osg::Texture2D *tex = new osg::Texture2D (img);
       tex->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );

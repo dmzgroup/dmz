@@ -1,5 +1,7 @@
 #include "dmzAudioModuleFMOD.h"
 #include <dmzAudioSoundAttributes.h>
+#include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzSystemFile.h>
 

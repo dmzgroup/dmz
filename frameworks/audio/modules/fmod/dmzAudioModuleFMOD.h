@@ -3,8 +3,6 @@
 
 #include <dmzAudioModule.h>
 #include <dmzRuntimeLog.h>
-#include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
 #include <dmzRuntimeHandle.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>

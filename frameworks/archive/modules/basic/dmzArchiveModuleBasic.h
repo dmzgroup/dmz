@@ -4,6 +4,7 @@
 #include <dmzApplicationState.h>
 #include <dmzArchiveModule.h>
 #include <dmzArchiveObserver.h>
+#include <dmzRuntimeConfig.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>

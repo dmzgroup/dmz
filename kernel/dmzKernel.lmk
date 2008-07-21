@@ -66,6 +66,7 @@ lmk.add_files {
    "types/dmzTypesHashTableLock.h",
    "types/dmzTypesMask.h",
    "types/dmzTypesString.h",
+   "types/dmzTypesStringContainer.h",
    "types/dmzTypesStringTokenizer.h",
    "types/dmzTypesStringUtil.h",
    "types/dmzTypesMath.h",
@@ -120,6 +121,7 @@ lmk.add_files {
    "types/dmzTypesMatrix.cpp",
    "types/dmzTypesQuaternion.cpp",
    "types/dmzTypesString.cpp",
+   "types/dmzTypesStringContainer.cpp",
    "types/dmzTypesStringUtil.cpp",
 }
 

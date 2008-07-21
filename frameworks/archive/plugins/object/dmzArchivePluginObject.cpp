@@ -1,5 +1,5 @@
 #include <dmzArchiveModule.h>
-#include "dmzObjectPluginArchive.h"
+#include "dmzArchivePluginObject.h"
 #include <dmzObjectAttributeMasks.h>
 #include <dmzRuntimeConfigRead.h>
 #include <dmzRuntimeConfigWrite.h>
@@ -13,13 +13,13 @@
 
 /*!
 
-\class dmz::ObjectPluginArchive
-\ingroup Object
+\class dmz::ArchivePluginObject
+\ingroup Archive
 \brief Creates and process archives of objects stored in the ObjectModule.
 \details The archive XML format:
 \code
 <dmz>
-<dmzObjectPluginArchive>
+<dmzArchivePluginObject>
    <!-- If name is not specified, the UUID is used in its place -->
    <object type="Type Name" uuid="UUID String" name="unique name">
       <!-- If name is not specified, the default attribute handle is used. -->
@@ -57,13 +57,13 @@
       </attributes>
       <!-- more object attributes -->
    </object>
-</dmzObjectPluginArchive>
+</dmzArchivePluginObject>
 </dmz>
 \endcode
 The filter XML format:
 \code
 <dmz>
-<dmzObjectPluginArchive>
+<dmzArchivePluginObject>
    <archive name="Archive Name" import="Boolean Value" export="Boolean Value">
       <objects>
          <type name="Object Type Name" exclude="Boolean Value"/>
@@ -77,7 +77,7 @@ The filter XML format:
       <state name="State Names" attribute="Attribute Name"/>
       <!-- more object attributes -->
    </archive>
-</dmzObjectPluginArchive>
+</dmzArchivePluginObject>
 </dmz>
 \endcode
 
@@ -118,7 +118,7 @@ local_config_to_mask (Config config, Log &log) {
 
 
 //! \cond
-dmz::ObjectPluginArchive::ObjectPluginArchive (
+dmz::ArchivePluginObject::ArchivePluginObject (
       const PluginInfo &Info, Config &local) :
       Plugin (Info),
       ArchiveObserverUtil (Info, local),
@@ -132,7 +132,7 @@ dmz::ObjectPluginArchive::ObjectPluginArchive (
 }
 
 
-dmz::ObjectPluginArchive::~ObjectPluginArchive () {
+dmz::ArchivePluginObject::~ArchivePluginObject () {
 
    _filterTable.empty ();
    _linkTable.empty ();
@@ -142,7 +142,7 @@ dmz::ObjectPluginArchive::~ObjectPluginArchive () {
 
 // ArchiveObserver Interface.
 void
-dmz::ObjectPluginArchive::create_archive (
+dmz::ArchivePluginObject::create_archive (
       const Handle ArchiveHandle,
       Config &local,
       Config &global) {
@@ -179,7 +179,7 @@ dmz::ObjectPluginArchive::create_archive (
 
 
 void
-dmz::ObjectPluginArchive::process_archive (
+dmz::ArchivePluginObject::process_archive (
       const Handle ArchiveHandle,
       Config &local,
       Config &global) {
@@ -200,7 +200,7 @@ dmz::ObjectPluginArchive::process_archive (
 
 
 void
-dmz::ObjectPluginArchive::create_object (
+dmz::ArchivePluginObject::create_object (
       const UUID &Identity,
       const Handle ObjectHandle,
       const ObjectType &Type,
@@ -211,7 +211,7 @@ dmz::ObjectPluginArchive::create_object (
 
 
 void
-dmz::ObjectPluginArchive::destroy_object (
+dmz::ArchivePluginObject::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
@@ -220,7 +220,7 @@ dmz::ObjectPluginArchive::destroy_object (
 
 
 void
-dmz::ObjectPluginArchive::update_object_uuid (
+dmz::ArchivePluginObject::update_object_uuid (
       const Handle ObjectHandle,
       const UUID &Identity,
       const UUID &PrevIdentity) {
@@ -230,7 +230,7 @@ dmz::ObjectPluginArchive::update_object_uuid (
 
 
 void
-dmz::ObjectPluginArchive::remove_object_attribute (
+dmz::ArchivePluginObject::remove_object_attribute (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -241,7 +241,7 @@ dmz::ObjectPluginArchive::remove_object_attribute (
 
 
 void
-dmz::ObjectPluginArchive::update_object_locality (
+dmz::ArchivePluginObject::update_object_locality (
       const UUID &Identity,
       const Handle ObjectHandle,
       const ObjectLocalityEnum Locality,
@@ -252,7 +252,7 @@ dmz::ObjectPluginArchive::update_object_locality (
 
 
 void
-dmz::ObjectPluginArchive::link_objects (
+dmz::ArchivePluginObject::link_objects (
       const Handle LinkHandle,
       const Handle AttributeHandle,
       const UUID &SuperIdentity,
@@ -298,7 +298,7 @@ dmz::ObjectPluginArchive::link_objects (
 
 
 void
-dmz::ObjectPluginArchive::unlink_objects (
+dmz::ArchivePluginObject::unlink_objects (
       const Handle LinkHandle,
       const Handle AttributeHandle,
       const UUID &SuperIdentity,
@@ -311,7 +311,7 @@ dmz::ObjectPluginArchive::unlink_objects (
 
 
 void
-dmz::ObjectPluginArchive::update_link_attribute_object (
+dmz::ArchivePluginObject::update_link_attribute_object (
       const Handle LinkHandle,
       const Handle AttributeHandle,
       const UUID &SuperIdentity,
@@ -328,7 +328,7 @@ dmz::ObjectPluginArchive::update_link_attribute_object (
 
 
 void
-dmz::ObjectPluginArchive::update_object_type (
+dmz::ArchivePluginObject::update_object_type (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -348,7 +348,7 @@ dmz::ObjectPluginArchive::update_object_type (
 
 
 void
-dmz::ObjectPluginArchive::update_object_state (
+dmz::ArchivePluginObject::update_object_state (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -378,7 +378,7 @@ dmz::ObjectPluginArchive::update_object_state (
 
 
 void
-dmz::ObjectPluginArchive::update_object_flag (
+dmz::ArchivePluginObject::update_object_flag (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -395,7 +395,7 @@ dmz::ObjectPluginArchive::update_object_flag (
 
 
 void
-dmz::ObjectPluginArchive::update_object_time_stamp (
+dmz::ArchivePluginObject::update_object_time_stamp (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -412,7 +412,7 @@ dmz::ObjectPluginArchive::update_object_time_stamp (
 
 
 void
-dmz::ObjectPluginArchive::update_object_position (
+dmz::ArchivePluginObject::update_object_position (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -429,7 +429,7 @@ dmz::ObjectPluginArchive::update_object_position (
 
 
 void
-dmz::ObjectPluginArchive::update_object_orientation (
+dmz::ArchivePluginObject::update_object_orientation (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -446,7 +446,7 @@ dmz::ObjectPluginArchive::update_object_orientation (
 
 
 void
-dmz::ObjectPluginArchive::update_object_velocity (
+dmz::ArchivePluginObject::update_object_velocity (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -463,7 +463,7 @@ dmz::ObjectPluginArchive::update_object_velocity (
 
 
 void
-dmz::ObjectPluginArchive::update_object_acceleration (
+dmz::ArchivePluginObject::update_object_acceleration (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -480,7 +480,7 @@ dmz::ObjectPluginArchive::update_object_acceleration (
 
 
 void
-dmz::ObjectPluginArchive::update_object_scale (
+dmz::ArchivePluginObject::update_object_scale (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -497,7 +497,7 @@ dmz::ObjectPluginArchive::update_object_scale (
 
 
 void
-dmz::ObjectPluginArchive::update_object_vector (
+dmz::ArchivePluginObject::update_object_vector (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -514,7 +514,7 @@ dmz::ObjectPluginArchive::update_object_vector (
 
 
 void
-dmz::ObjectPluginArchive::update_object_scalar (
+dmz::ArchivePluginObject::update_object_scalar (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -531,7 +531,7 @@ dmz::ObjectPluginArchive::update_object_scalar (
 
 
 void
-dmz::ObjectPluginArchive::update_object_text (
+dmz::ArchivePluginObject::update_object_text (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -548,7 +548,7 @@ dmz::ObjectPluginArchive::update_object_text (
 
 
 void
-dmz::ObjectPluginArchive::update_object_data (
+dmz::ArchivePluginObject::update_object_data (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -565,7 +565,7 @@ dmz::ObjectPluginArchive::update_object_data (
 
 
 dmz::Config
-dmz::ObjectPluginArchive::_archive_object (const Handle ObjectHandle) {
+dmz::ArchivePluginObject::_archive_object (const Handle ObjectHandle) {
 
    Config result;
 
@@ -620,7 +620,7 @@ dmz::ObjectPluginArchive::_archive_object (const Handle ObjectHandle) {
 
 
 dmz::Boolean
-dmz::ObjectPluginArchive::_get_attr_config (
+dmz::ArchivePluginObject::_get_attr_config (
       const Handle AttrHandle,
       const Mask &AttrMask,
       Config &config) {
@@ -660,7 +660,7 @@ dmz::ObjectPluginArchive::_get_attr_config (
 
 
 void
-dmz::ObjectPluginArchive::_create_objects (Config &objList) {
+dmz::ArchivePluginObject::_create_objects (Config &objList) {
 
    ConfigIterator it;
 
@@ -729,7 +729,7 @@ dmz::ObjectPluginArchive::_create_objects (Config &objList) {
 
 
 void
-dmz::ObjectPluginArchive::_config_to_object (Config &objData) {
+dmz::ArchivePluginObject::_config_to_object (Config &objData) {
 
    ObjectModule *objMod (get_object_module ());
 
@@ -821,7 +821,7 @@ dmz::ObjectPluginArchive::_config_to_object (Config &objData) {
 
 
 void
-dmz::ObjectPluginArchive::_store_object_attributes (
+dmz::ArchivePluginObject::_store_object_attributes (
       const Handle ObjectHandle,
       Config &attrData,
       ObjectLinkStruct *links) {
@@ -1035,7 +1035,7 @@ dmz::ObjectPluginArchive::_store_object_attributes (
 
 
 dmz::Mask
-dmz::ObjectPluginArchive::_find_attr_filter_mask (const Handle AttrHandle) {
+dmz::ArchivePluginObject::_find_attr_filter_mask (const Handle AttrHandle) {
 
    Mask result;
 
@@ -1079,7 +1079,7 @@ dmz::ObjectPluginArchive::_find_attr_filter_mask (const Handle AttrHandle) {
 
 
 dmz::Mask
-dmz::ObjectPluginArchive::_filter_state (const Handle AttrHandle, const Mask &Value) {
+dmz::ArchivePluginObject::_filter_state (const Handle AttrHandle, const Mask &Value) {
 
    Mask result (Value);
 
@@ -1095,7 +1095,7 @@ dmz::ObjectPluginArchive::_filter_state (const Handle AttrHandle, const Mask &Va
 
 
 void
-dmz::ObjectPluginArchive::_init (Config &local) {
+dmz::ArchivePluginObject::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
 
@@ -1258,12 +1258,12 @@ dmz::ObjectPluginArchive::_init (Config &local) {
 extern "C" {
 
 DMZ_PLUGIN_FACTORY_LINK_SYMBOL dmz::Plugin *
-create_dmzObjectPluginArchive (
+create_dmzArchivePluginObject (
       const dmz::PluginInfo &Info,
       dmz::Config &local,
       dmz::Config &global) {
 
-   return new dmz::ObjectPluginArchive (Info, local);
+   return new dmz::ArchivePluginObject (Info, local);
 }
 
 };

@@ -1,7 +1,6 @@
 #ifndef DMZ_ARCHIVE_MODULE_DOT_H
 #define DMZ_ARCHIVE_MODULE_DOT_H
 
-#include <dmzRuntimeConfig.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeRTTI.h>
 #include <dmzTypesBase.h>
@@ -19,6 +18,7 @@ namespace dmz {
    //! @}
 
    class ArchiveObserver;
+   class Config;
 
    class ArchiveModule {
 

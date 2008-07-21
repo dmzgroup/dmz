@@ -124,7 +124,10 @@ dmz::ArchiveModuleBasic::create_archive (const Handle ArchiveHandle) {
 
       while (obs) {
 
-         Config local (obs->get_archive_observer_name ());
+         StringContainer sc = obs->get_archive_scope (ArchiveHandle);
+         String scopeName;
+         if (!sc.get_first (scopeName)) { scopeName = obs->get_archive_observer_name (); }
+         Config local (scopeName);
          obs->create_archive (ArchiveHandle, local, result);
          if (!local.is_empty ()) { result.add_config (local); }
          obs = as->table.get_next (it);
@@ -170,7 +173,16 @@ dmz::ArchiveModuleBasic::process_archive (const Handle ArchiveHandle, Config &ar
       while (obs) {
 
          Config local;
-         archive.lookup_all_config_merged (obs->get_archive_observer_name (), local);
+         StringContainer sc = obs->get_archive_scope (ArchiveHandle);
+         String scopeName;
+         Boolean found = sc.get_first (scopeName);
+
+         while (found && !local) {
+
+            archive.lookup_all_config_merged (scopeName, local);
+            found = sc.get_next (scopeName);
+         }
+
          obs->process_archive (ArchiveHandle, local, archive);
          obs = as->table.get_next (it);
       }

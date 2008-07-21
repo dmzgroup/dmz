@@ -4,6 +4,7 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeRTTI.h>
 #include <dmzTypesBase.h>
+#include <dmzTypesStringContainer.h>
 
 namespace dmz {
 
@@ -24,6 +25,7 @@ namespace dmz {
          String get_archive_observer_name ();
 
          // ArchiveObserver Interface
+         virtual StringContainer get_archive_scope (const Handle ArchiveHandle) = 0;
          virtual void store_archive_module (
             const String &Name,
             ArchiveModule &module) = 0;

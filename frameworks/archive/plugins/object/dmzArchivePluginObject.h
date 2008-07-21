@@ -1,5 +1,5 @@
-#ifndef DMZ_OBJECT_PLUGIN_ARCHIVE_DOT_H
-#define DMZ_OBJECT_PLUGIN_ARCHIVE_DOT_H
+#ifndef DMZ_ARCHIVE_PLUGIN_OBJECT_DOT_H
+#define DMZ_ARCHIVE_PLUGIN_OBJECT_DOT_H
 
 #include <dmzArchiveObserverUtil.h>
 #include <dmzObjectModule.h>
@@ -14,15 +14,15 @@
 
 namespace dmz {
 
-   class ObjectPluginArchive :
+   class ArchivePluginObject :
          public Plugin,
          public ArchiveObserverUtil,
          public ObjectObserverUtil {
 
       public:
          //! \cond
-         ObjectPluginArchive (const PluginInfo &Info, Config &local);
-         ~ObjectPluginArchive ();
+         ArchivePluginObject (const PluginInfo &Info, Config &local);
+         ~ArchivePluginObject ();
 
          // Plugin Interface
          virtual void update_plugin_state (
@@ -290,10 +290,10 @@ namespace dmz {
          //! \endcond
 
       private:
-         ObjectPluginArchive ();
-         ObjectPluginArchive (const ObjectPluginArchive &);
-         ObjectPluginArchive &operator= (const ObjectPluginArchive &);
+         ArchivePluginObject ();
+         ArchivePluginObject (const ArchivePluginObject &);
+         ArchivePluginObject &operator= (const ArchivePluginObject &);
    };
 };
 
-#endif // DMZ_OBJECT_PLUGIN_ARCHIVE_DOT_H
+#endif // DMZ_ARCHIVE_PLUGIN_OBJECT_DOT_H

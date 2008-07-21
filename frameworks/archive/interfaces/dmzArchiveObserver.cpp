@@ -33,6 +33,12 @@ the Plugin's name.
 \brief Gets the archive observer's name.
 \return Returns a String containing the name of the archive observer.
 
+\fn dmz::StringContainer dmz::ArchiveObserver::get_archive_scope (
+const Handle ArchiveHandle)
+\brief Returns plugin Config scope for the given handle.
+\param[in] ArchiveHandle Handle of the archive group.
+\return Returns a dmz::StringContainer with the supported Config scopes for the 
+archive observer.
 \fn void dmz::ArchiveObserver::store_archive_module (
 const String &Name,
 ArchiveModule &module)

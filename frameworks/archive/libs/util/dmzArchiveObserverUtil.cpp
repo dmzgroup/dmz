@@ -193,6 +193,17 @@ dmz::ArchiveObserverUtil::get_archive_module () { return __state.module; }
 
 
 // ArchiveObserer Interface.
+dmz::StringContainer
+dmz::ArchiveObserverUtil::get_archive_scope (const Handle ArchiveHandle) {
+
+   StringContainer result;
+
+   result.add_string (get_archive_observer_name ());
+
+   return result;
+}
+
+
 void
 dmz::ArchiveObserverUtil::store_archive_module (
       const String &Name,

@@ -2,6 +2,7 @@
 #include "dmzArchivePluginQuickSave.h"
 #include <dmzInputEventKey.h>
 #include <dmzInputEventMasks.h>
+#include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigRead.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>

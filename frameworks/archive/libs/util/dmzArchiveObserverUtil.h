@@ -23,6 +23,8 @@ namespace dmz {
          ArchiveModule *get_archive_module ();
 
          // ArchiveObserver Interface.
+         virtual StringContainer get_archive_scope (const Handle ArchiveHandle);
+
          virtual void store_archive_module (
             const String &Name,
             ArchiveModule &module);

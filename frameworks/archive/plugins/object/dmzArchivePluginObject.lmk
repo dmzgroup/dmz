@@ -1,6 +1,6 @@
-lmk.set_name "dmzObjectPluginArchive"
+lmk.set_name "dmzArchivePluginObject"
 lmk.set_type "plugin"
-lmk.add_files {"dmzObjectPluginArchive.cpp",}
+lmk.add_files {"dmzArchivePluginObject.cpp",}
 lmk.add_libs {
    "dmzObjectUtil",
    "dmzArchiveUtil",

@@ -17,6 +17,7 @@ lmk.add_files {
    "runtime/dmzRuntimeConfigToMatrix.h",
    "runtime/dmzRuntimeConfigToNamedHandle.h",
    "runtime/dmzRuntimeConfigToPathContainer.h",
+   "runtime/dmzRuntimeConfigToStringContainer.h",
    "runtime/dmzRuntimeConfigToVector.h",
    "runtime/dmzRuntimeConfigWrite.h",
    "runtime/dmzRuntimeData.h",

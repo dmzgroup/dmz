@@ -11,6 +11,7 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesStringContainer.h>
 
 namespace dmz {
 
@@ -34,6 +35,7 @@ namespace dmz {
             const Plugin *PluginPtr) {;}
 
          // ArchiveObserver Interface.
+         virtual StringContainer get_archive_scope (const Handle ArchiveHandle);
          virtual void create_archive (
             const Handle ArchiveHandle,
             Config &local,
@@ -285,6 +287,8 @@ namespace dmz {
 
          Config _currentConfig;
          HashTableHandleTemplate<Config> _attrTable;
+
+         StringContainer _scope;
 
          Log _log;
          //! \endcond

@@ -2,6 +2,7 @@
 #include "dmzArchivePluginObject.h"
 #include <dmzObjectAttributeMasks.h>
 #include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToStringContainer.h>
 #include <dmzRuntimeConfigWrite.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -137,6 +138,13 @@ dmz::ArchivePluginObject::~ArchivePluginObject () {
    _filterTable.empty ();
    _linkTable.empty ();
    _attrTable.empty ();
+}
+
+
+dmz::StringContainer
+dmz::ArchivePluginObject::get_archive_scope (const Handle ArchiveHandle) {
+
+   return _scope;
 }
 
 
@@ -1096,6 +1104,9 @@ dmz::ArchivePluginObject::_filter_state (const Handle AttrHandle, const Mask &Va
 
 void
 dmz::ArchivePluginObject::_init (Config &local) {
+
+   _scope = config_to_string_container ("scope", local);
+   if (_scope.get_count () == 0) { _scope.add_string ("objects"); }
 
    RuntimeContext *context (get_plugin_runtime_context ());
 

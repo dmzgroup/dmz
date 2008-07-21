@@ -5,6 +5,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimeConfigToPathContainer.h>
+#include <dmzRuntimeConfigToStringContainer.h>
 #include <dmzRuntimeConfigWrite.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
@@ -53,6 +54,28 @@ dmz::config_to_path_container (const String &Name, const Config &Source) {
    while (pathList.get_next_config (it, path)) {
 
       result.add_path (config_to_string ("value", path));
+   }
+
+   return result;
+}
+
+
+dmz::StringContainer
+dmz::config_to_string_container (const String &Name, const Config &Source) {
+
+   StringContainer result;
+
+   Config stringList;
+
+   if (Name) { Source.lookup_all_config (Name + ".string", stringList); }
+   else { Source.lookup_all_config ("string", stringList); }
+
+   ConfigIterator it;
+   Config string;
+
+   while (stringList.get_next_config (it, string)) {
+
+      result.add_string (config_to_string ("value", string));
    }
 
    return result;

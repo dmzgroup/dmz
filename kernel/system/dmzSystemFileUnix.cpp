@@ -165,6 +165,30 @@ dmz::is_directory (const String &Path) {
 
 /*!
 
+\brief Determines the size of a file.
+\details Defined in dmzSystemFile.h.
+\param[in] Path String containing path to the file.
+\return Returns the size of the file in bytes.
+
+*/
+dmz::UInt64
+dmz::get_file_size (const String &Path) {
+
+   UInt64 result (0);
+
+   struct stat s;
+
+   if (!stat (Path.get_buffer (), &s)) {
+
+      result = UInt64 (s.st_size > 0 ? s.st_size : 0);
+   }
+
+   return result;
+}
+
+
+/*!
+
 \brief Gets current working directory.
 \details Defined in dmzSystemFile.h.
 \return Returns String containing current working directory.

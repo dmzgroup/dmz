@@ -71,6 +71,7 @@ namespace dmz {
 
    DMZ_KERNEL_LINK_SYMBOL Boolean is_valid_path (const String &Path);
    DMZ_KERNEL_LINK_SYMBOL Boolean is_directory (const String &Path);
+   DMZ_KERNEL_LINK_SYMBOL UInt64 get_file_size (const String &Path);
    DMZ_KERNEL_LINK_SYMBOL String get_current_directory ();
    DMZ_KERNEL_LINK_SYMBOL Boolean change_directory (const String &Path);
    DMZ_KERNEL_LINK_SYMBOL Boolean create_directory (const String &Path);

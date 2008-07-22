@@ -65,8 +65,8 @@ dmz::RenderModulePortalOSG::discover_plugin (
       if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
 
          _core = 0;
-         _camera.release ();
-         _manipulator.release ();
+         _camera = 0;
+         _manipulator = 0;
       }
    }
 }

@@ -105,8 +105,8 @@ namespace dmz {
 
             ~PortalStruct () {
 
-               camera.release ();
-               cameraManipulator.release ();
+               camera = 0;
+               cameraManipulator = 0;
             }
          };
 
@@ -124,7 +124,7 @@ namespace dmz {
                transform =  new osg::MatrixTransform;
             }
 
-            ~ObjectStruct () { transform.release (); }
+            ~ObjectStruct () { transform = 0; }
          };
 
          void _init (Config &local, Config &global);

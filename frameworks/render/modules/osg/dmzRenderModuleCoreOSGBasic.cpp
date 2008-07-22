@@ -330,7 +330,7 @@ dmz::RenderModuleCoreOSGBasic::remove_camera (const String &PortalName) {
    if (ps) {
 
       result = ps->camera.get ();
-      ps->camera.release ();
+      ps->camera = 0;
    }
 
    return result;
@@ -382,7 +382,7 @@ dmz::RenderModuleCoreOSGBasic::remove_camera_manipulator (const String &PortalNa
    if (ps) {
 
       result = ps->cameraManipulator.get ();
-      ps->cameraManipulator.release ();
+      ps->cameraManipulator = 0;
    }
 
    return result;

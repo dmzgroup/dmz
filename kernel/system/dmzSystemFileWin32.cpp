@@ -111,6 +111,23 @@ dmz::is_directory (const String &Path) {
    return result;
 }
 
+dmz::UInt64
+dmz::get_file_size (const String &Path) {
+
+   UInt64 result (0);
+
+   WIN32_FILE_ATTRIBUTE_DATA data;
+   memset ((void *) &data, '\0', sizeof (WIN32_FILE_ATTRIBUTE_DATA));
+
+   if (GetFileAttributesEx (Path.get_buffer (), GetFileExInfoStandard, &data)) {
+
+      result = UInt64 ((data.nFileSizeHigh * MAXWORD) + data.nFileSizeLow);
+   }
+
+   return result;
+}
+
+
 
 dmz::String
 dmz::get_current_directory () {

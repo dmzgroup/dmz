@@ -1,12 +1,14 @@
 #ifndef DMZ_RENDER_OBJECT_DATA_OSG_DOT_H
 #define DMZ_RENDER_OBJECT_DATA_OSG_DOT_H
 
+#include <dmzRenderUtilOSGExport.h>
 #include <dmzTypesBase.h>
+
 #include <osg/Referenced>
 
 namespace dmz {
 
-   class RenderObjectDataOSG : public osg::Referenced {
+   class DMZ_RENDER_UTIL_OSG_LINK_SYMBOL RenderObjectDataOSG : public osg::Referenced {
 
       public:
          RenderObjectDataOSG (const Handle ObjectHandle);

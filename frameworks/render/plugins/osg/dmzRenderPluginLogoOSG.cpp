@@ -77,6 +77,7 @@ dmz::RenderPluginLogoOSG::discover_plugin (
       if (_core &&  (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
 
          _masterCamera.release ();
+         _camera.release ();
          _core = 0;
       }
    }

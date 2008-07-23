@@ -1,0 +1,16 @@
+lmk.set_name "dmzAudioWave"
+lmk.set_type "shared"
+lmk.add_libs {"dmzKernel"}
+
+lmk.add_files {
+   "dmzAudioWaveFile.h",
+   "dmzAudioWaveExport.h",
+}
+
+lmk.add_files {
+   "dmzAudioWaveFile.cpp",
+}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_AUDIO_WAVE_EXPORT",
+}, {win32 = true})

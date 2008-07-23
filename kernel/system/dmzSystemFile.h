@@ -48,6 +48,9 @@ namespace dmz {
          PushDirectory &operator= (const PushDirectory &);
    };
 
+   DMZ_KERNEL_LINK_SYMBOL PathContainer validate_path_container (
+      const PathContainer &Container);
+
    DMZ_KERNEL_LINK_SYMBOL Boolean find_file (
       const PathContainer &Container,
       const String &FileName,

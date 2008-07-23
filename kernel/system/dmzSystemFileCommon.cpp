@@ -12,6 +12,7 @@
 \brief Changes current working directory while instance exists.
 \details Changes the current working directory to the specified \a Path while the object
 is in scope. When the instance is deleted, the previous working directory is restored.
+Defined in dmzSystemFile.h.
 
 */
 
@@ -27,6 +28,7 @@ struct dmz::PathContainer::State {
 \class dmz::PathContainer
 \ingroup System
 \brief Container class for storing Strings containing paths.
+\details Defined in dmzSystemFile.h.
 
 */
 
@@ -129,6 +131,37 @@ dmz::PathContainer::get_next (String &path) const {
 
 //! \addtogroup System
 //! @{
+
+/*!
+
+\brief Validates all paths.
+\details Defined in dmzSystemFile.h.
+\param[in] Container dmz::PathContainer of the paths to be validated.
+\return Returns a dmz::PathContainer with the absolute path for all valid
+paths in \a Container.
+
+*/
+dmz::PathContainer
+dmz::validate_path_container (const PathContainer &Container) {
+
+   PathContainer result;
+
+   String path;
+
+   Boolean found (Container.get_first (path));
+
+   while (found) {
+
+      const String CleanPath (format_path (path));
+
+      if (get_absolute_path (CleanPath, path)) { result.add_path (path); }
+
+      found = Container.get_next (path);
+   }
+
+   return result;
+}
+
 
 /*!
 

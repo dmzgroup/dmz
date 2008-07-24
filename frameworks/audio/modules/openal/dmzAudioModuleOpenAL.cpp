@@ -149,7 +149,7 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
                    format,
                    data,
                    (ALsizei)size,
-                   bs->file.get_frequency ());
+                   (ALsizei)bs->file.get_frequency ());
 
                 ALenum error = alGetError ();
 
@@ -162,6 +162,19 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
 
                 _log.info << "Loaded audio file: " << bs->FileName << endl;
                 bs->file.clear ();
+             }
+             else {
+
+                if (!size || !data) {
+
+                   _log.error << "Unable to load wave data" << endl;
+                }
+
+                if (!format) { 
+
+                   _log.error << "Unsupported format, channels: " << Channels
+                      << " BPS: " << BPS << endl;
+                }
              }
           }
           else if (bs) {
@@ -226,8 +239,10 @@ dmz::AudioModuleOpenAL::play_sound (
 
       if (_soundTable.store (result, ss)) {
 
+         alGenSources (1, &(ss->source));
          alSourcei (ss->source, AL_BUFFER, bs->buffer);
          alSourcei (ss->source, AL_LOOPING, ss->looped ? AL_TRUE : AL_FALSE);
+         alSourcef (ss->source, AL_GAIN, 1.0f);
 
          if (!(ss->looped)) {
 
@@ -237,8 +252,14 @@ dmz::AudioModuleOpenAL::play_sound (
          ss->attr = Attributes;
 
          _update_sound (*ss);
+
+         alGetError ();
          alSourcePlay (ss->source);
-_log.warn << "Playing sound: " << bs->FileName << endl;
+         ALenum error;
+         if ((error = alGetError ()) != AL_NO_ERROR) {
+
+            _log.error << "Unable to play sound: " << alGetString (error) << endl;
+         }
       }
       else { delete ss; ss = 0; result = 0; }
 
@@ -287,8 +308,6 @@ dmz::AudioModuleOpenAL::stop_sound (const Handle InstanceHandle) {
    SoundStruct *ss (_soundTable.remove (InstanceHandle));
 
    if (ss) {
-
-_log.warn << "Stopping sound: " << ss->Handle.get_runtime_handle () << endl;
 
       _soundTimedTable.remove (InstanceHandle);
 
@@ -354,6 +373,9 @@ dmz::AudioModuleOpenAL::set_listener (
 
    if (ListenerHandle == get_plugin_handle ()) {
 
+      _listenerPos = Position;
+      _listenerOri = Orientation;
+
       Vector f (0.0, 0.0, -1.0);
       Vector up (0.0, 1.0, 1.0);
       Orientation.transform_vector (f);
@@ -371,13 +393,9 @@ dmz::AudioModuleOpenAL::set_listener (
 
       alListener3f (
          AL_POSITION,
-#if 1
-      0.0f, 0.0f, 0.0f);
-#else
          (ALfloat)Position.get_x (),
          (ALfloat)Position.get_y (),
          (ALfloat)Position.get_z ());
-#endif
 
       alListener3f (
          AL_VELOCITY,
@@ -400,6 +418,14 @@ dmz::AudioModuleOpenAL::get_listener (
 
    Boolean result (False);
 
+   if (ListenerHandle == get_plugin_handle ()) {
+
+      position = _listenerPos;
+      orientation = _listenerOri;
+
+      result = True;
+   }
+
    return result;
 }
 
@@ -407,6 +433,7 @@ dmz::AudioModuleOpenAL::get_listener (
 dmz::Boolean
 dmz::AudioModuleOpenAL::destroy_listener (const Handle ListenerHandle) {
 
+   if (ListenerHandle == get_plugin_handle ()) { _listenerName.empty (); }
 }
 
 
@@ -419,13 +446,9 @@ dmz::AudioModuleOpenAL::_update_sound (SoundStruct &ss) {
    alSource3f (
       ss.source,
       AL_POSITION,
-#if 1
-      0.0f, 0.0f, 0.0f);
-#else
       (ALfloat)vec.get_x (),
       (ALfloat)vec.get_y (),
       (ALfloat)vec.get_z ());
-#endif
 
    ss.attr.get_velocity (vec);
    alSource3f (
@@ -448,7 +471,11 @@ dmz::AudioModuleOpenAL::_init (Config &local) {
 
       _context = alcCreateContext (_device, 0);
 
-      if (_context) { alcMakeContextCurrent (_context); }
+      if (_context) {
+
+         alcMakeContextCurrent (_context);
+         alListenerf (AL_GAIN, 1.0);
+      }
       else { _log.error << "Unable to create OpenAL Context." << endl; }
    }
    else { _log.error << "Unable to create OpenAL Device." << endl; }

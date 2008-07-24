@@ -10,6 +10,8 @@
 #include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesMatrix.h>
+#include <dmzTypesVector.h>
 #include <OpenAL/al.h>
 #include <OpenAL/alc.h>
 
@@ -128,6 +130,8 @@ namespace dmz {
          ALCcontext *_context;
 
          String _listenerName;
+         Vector _listenerPos;
+         Matrix _listenerOri;
 
          HashTableStringTemplate<BufferStruct> _bufferNameTable;
          HashTableHandleTemplate<BufferStruct> _bufferHandleTable;

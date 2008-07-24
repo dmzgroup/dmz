@@ -86,6 +86,10 @@ namespace dmz {
    DMZ_KERNEL_LINK_SYMBOL Int32 read_file (
       const FILE *File,
       const Int32 Size,
+      char *buffer);
+   DMZ_KERNEL_LINK_SYMBOL Int32 read_file (
+      const FILE *File,
+      const Int32 Size,
       String &buffer);
    DMZ_KERNEL_LINK_SYMBOL Boolean close_file (const FILE *File);
 

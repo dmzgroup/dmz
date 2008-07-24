@@ -354,7 +354,7 @@ dmz::Unmarshal::get_next_fixed_string (const Int32 Size, String &value) {
 
       if ((_state.place + Size) >= _state.length) {
 
-         realSize = (_state.length - 1) - _state.place;
+         realSize = _state.length - _state.place;
       }
 
       if (realSize > 0) {

@@ -346,6 +346,31 @@ dmz::split_path_file_ext (
 Attempts to read \a Size number of bytes from \a File and store them in \a buffer.
 \param[in] File C FILE * to read from.
 \param[in] Size Size of data to attempt to read from \a File.
+\param[out] buffer char array to store read data in.
+\return Returns dmz::True if any data was read.
+
+*/
+dmz::Int32
+dmz::read_file (const FILE *File, const Int32 Size, char *buffer) {
+
+   Int32 result (0);
+
+   if ((Size > 0) && buffer) {
+
+      result = fread ((void *)buffer, sizeof (char), Size, (FILE *)File);
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Read a block of data and store it in a String.
+\details Defined in dmzSystemFile.h.
+Attempts to read \a Size number of bytes from \a File and store them in \a buffer.
+\param[in] File C FILE * to read from.
+\param[in] Size Size of data to attempt to read from \a File.
 \param[out] buffer String to store read data in.
 \return Returns dmz::True if any data was read.
 

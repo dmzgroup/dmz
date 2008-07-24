@@ -540,7 +540,8 @@ dmz::Boolean
 dmz::AudioModuleFMOD::set_listener (
       const Handle ListenerHandle,
       const Vector &Position,
-      const Matrix &Orientation) {
+      const Matrix &Orientation,
+      const Vector &Velocity) {
 
    Boolean result (False);
 
@@ -552,12 +553,12 @@ dmz::AudioModuleFMOD::set_listener (
 
          listener->orientation = Orientation;
          listener->position = Position;
+         listener->velocity = Velocity;
 
          Vector lookVector (0.0, 0.0, -1.0);
          Vector upVector (0.0, 1.0, 0.0);
          Orientation.transform_vector (lookVector);
          Orientation.transform_vector (upVector);
-
 
          FMOD_VECTOR fmodLookVector = {
             Float32 (lookVector.get_x ()),
@@ -574,7 +575,10 @@ dmz::AudioModuleFMOD::set_listener (
             Float32 (Position.get_y ()),
             Float32 (Position.get_z ())};
 
-         FMOD_VECTOR vel = {0.0f, 0.1f, 0.0f};
+         FMOD_VECTOR vel = {
+            Float32 (Position.get_x ()),
+            Float32 (Position.get_y ()),
+            Float32 (Position.get_z ())};
 
          FMOD_RESULT fmodResult = _system->set3DListenerAttributes (
             listener->index,
@@ -598,7 +602,8 @@ dmz::Boolean
 dmz::AudioModuleFMOD::get_listener (
       const Handle ListenerHandle,
       Vector &position,
-      Matrix &orientation) {
+      Matrix &orientation,
+      Vector &velocity) {
 
    Boolean result (False);
 
@@ -608,17 +613,9 @@ dmz::AudioModuleFMOD::get_listener (
 
       if (listener) {
 
-         // Get vectors and positions from stored values. We are not using the
-         // internal FMOD data because conversion from look/up vectors to an orientaton
-         // is unnecessary extra computation. Since our class is the only code to modify
-         // the orientations and positions of the FMOD channels, we can keep track of
-         // the orientations and positions externally.
-
-         // Set position
          position = listener->position;
-
-         //Set orientation
          orientation = listener->orientation;
+         velocity = listener->velocity;
 
          result = True;
       }
@@ -681,11 +678,13 @@ dmz::AudioModuleFMOD::destroy_listener (const Handle ListenerHandle) {
                // Get the position and orientation of listener to be moved
                Vector copiedPosition;
                Matrix copiedOrientation;
+               Vector copiedVelocity;
 
                if (get_listener (
                      listener->get_handle (),
                      copiedPosition,
-                     copiedOrientation)) {
+                     copiedOrientation,
+                     copiedVelocity)) {
 
                   // Change the FMOD listener index to the index of the listener to be
                   // deleted
@@ -696,7 +695,8 @@ dmz::AudioModuleFMOD::destroy_listener (const Handle ListenerHandle) {
                   if (set_listener (
                      lastListener->get_handle (),
                      copiedPosition,
-                     copiedOrientation)) {
+                     copiedOrientation,
+                     copiedVelocity)) {
 
                      // Reduce reduce listener count in FMOD to erase the old data
                      // of the now duplicated listener at the end.

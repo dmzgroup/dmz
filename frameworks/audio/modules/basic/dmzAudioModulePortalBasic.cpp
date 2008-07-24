@@ -59,12 +59,6 @@ dmz::AudioModulePortalBasic::discover_plugin (
          if (_audioModule) {
 
             _handle = _audioModule->create_listener (_name);
-
-            if (_handle) {
-
-               // Default to listener at origin
-               _audioModule->set_listener (_handle, Vector (0.0, 0.0, 0.0), Matrix ());
-            }
          }
       }
    }
@@ -91,21 +85,27 @@ dmz::AudioModulePortalBasic::is_master_portal () const {
 
 
 void
-dmz::AudioModulePortalBasic::set_view (const Vector &Pos, const Matrix &Ori) {
+dmz::AudioModulePortalBasic::set_view (
+      const Vector &Position,
+      const Matrix &Orientation,
+      const Vector &Velocity) {
 
    if (_audioModule && _handle) {
 
-      _audioModule->set_listener (_handle, Pos, Ori);
+      _audioModule->set_listener (_handle, Position, Orientation, Velocity);
    }
 }
 
 
 void
-dmz::AudioModulePortalBasic::get_view (Vector &pos, Matrix &ori) const {
+dmz::AudioModulePortalBasic::get_view (
+      Vector &position,
+      Matrix &orientation,
+      Vector &velocity) const {
 
    if (_audioModule && _handle) {
 
-      _audioModule->get_listener (_handle, pos, ori);
+      _audioModule->get_listener (_handle, position, orientation, velocity);
    }
 }
 

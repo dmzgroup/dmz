@@ -11,7 +11,6 @@
 #include <dmzTypesVector.h>
 #include <dmzTypesMatrix.h>
 
-
 dmz::RenderExtViewerOSG::RenderExtViewerOSG (
       const PluginInfo &Info,
       Config &local) :
@@ -30,6 +29,10 @@ dmz::RenderExtViewerOSG::RenderExtViewerOSG (
    _cameraManipulator = new RenderCameraManipulatorOSG;
    _eventHandler = new RenderEventHandlerOSG;
 
+   osgViewer::StatsHandler *stats = new osgViewer::StatsHandler;
+   stats->setKeyEventTogglesOnScreenStats (osgGA::GUIEventAdapter::KEY_F1);
+   stats->setKeyEventPrintsOutStats (osgGA::GUIEventAdapter::KEY_F2);
+   _viewer->addEventHandler (stats);
    _viewer->setCameraManipulator (_cameraManipulator.get ());
    _viewer->addEventHandler (_eventHandler.get ());
 
@@ -41,10 +44,8 @@ dmz::RenderExtViewerOSG::RenderExtViewerOSG (
 
 dmz::RenderExtViewerOSG::~RenderExtViewerOSG () {
 
-    osgViewer::Viewer *viewer = _viewer.release ();
-    if (viewer) { delete viewer; viewer = 0; }
-    RenderEventHandlerOSG *event = _eventHandler.release ();
-    if (event) { event->unref (); }
+    _viewer = 0;
+    _eventHandler = 0;
 }
 
 

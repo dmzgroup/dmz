@@ -75,6 +75,7 @@ dmz::EntityPluginPortalFollow::update_time_slice (const Float64 TimeDelta) {
       objMod->lookup_orientation (_handle, _defaultHandle, ori);
       objMod->lookup_velocity (_handle, _defaultHandle, vel);
 
+      const Vector Velocity (vel);
       const Vector SideX (1.0, 0.0, 0.0);
       const Vector UpY (0.0, 1.0, 0.0);
       const Vector ForwardZ (0.0, 0.0, -1.0);
@@ -163,7 +164,7 @@ dmz::EntityPluginPortalFollow::update_time_slice (const Float64 TimeDelta) {
       pos += forward;
 
       if (_renderPortal) { _renderPortal->set_view (pos, ori); }
-      if (_audioPortal) { _audioPortal->set_view (pos, ori); }
+      if (_audioPortal) { _audioPortal->set_view (pos, ori, Velocity); }
    }
 }
 

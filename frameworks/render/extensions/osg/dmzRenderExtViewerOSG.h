@@ -7,6 +7,7 @@
 
 #include <osg/Camera>
 #include <osgViewer/Viewer>
+#include <osgViewer/ViewerEventHandlers>
 
 
 namespace dmz {

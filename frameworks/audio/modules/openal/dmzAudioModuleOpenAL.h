@@ -65,12 +65,14 @@ namespace dmz {
          virtual Boolean set_listener (
             const Handle ListenerHandle,
             const Vector &Position,
-            const Matrix &Orientation);
+            const Matrix &Orientation,
+            const Vector &Velocity);
 
          virtual Boolean get_listener (
             const Handle ListenerHandle,
             Vector &position,
-            Matrix &orientation);
+            Matrix &orientation,
+            Vector &velocity);
 
          virtual Boolean destroy_listener (const Handle ListenerHandle);
 
@@ -132,6 +134,7 @@ namespace dmz {
          String _listenerName;
          Vector _listenerPos;
          Matrix _listenerOri;
+         Vector _listenerVel;
 
          HashTableStringTemplate<BufferStruct> _bufferNameTable;
          HashTableHandleTemplate<BufferStruct> _bufferHandleTable;

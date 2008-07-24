@@ -25,8 +25,15 @@ namespace dmz {
          // AudioModulePortal Interface
          virtual Boolean is_master_portal () const = 0;
 
-         virtual void set_view (const Vector &Pos, const Matrix &Ori) = 0;
-         virtual void get_view (Vector &pos, Matrix &ori) const = 0;
+         virtual void set_view (
+            const Vector &Position,
+            const Matrix &Orientation,
+            const Vector &Velocity) = 0;
+
+         virtual void get_view (
+            Vector &position,
+            Matrix &orientation,
+            Vector &velocity) const = 0;
 
          virtual void set_mute_state (const Boolean Value) = 0;
          virtual Boolean get_mute_state () const  = 0;

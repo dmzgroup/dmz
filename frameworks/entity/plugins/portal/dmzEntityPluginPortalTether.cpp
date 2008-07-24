@@ -68,11 +68,12 @@ dmz::EntityPluginPortalTether::update_time_slice (const Float64 TimeDelta) {
 
       if (objMod && _handle && _defaultHandle) {
 
-         Vector pos;
+         Vector pos, vel;
          Matrix ori; ori.set_identity ();
 
          objMod->lookup_position (_handle, _defaultHandle, pos);
          objMod->lookup_orientation (_handle, _defaultHandle, ori);
+         objMod->lookup_velocity (_handle, _defaultHandle, vel);
    
          Vector forward (_offset);
          ori.transform_vector (forward);
@@ -80,7 +81,7 @@ dmz::EntityPluginPortalTether::update_time_slice (const Float64 TimeDelta) {
          pos += forward;
 
          if (_renderPortal) { _renderPortal->set_view (pos, ori); }
-         if (_audioPortal) { _audioPortal->set_view (pos, ori); }
+         if (_audioPortal) { _audioPortal->set_view (pos, ori, vel); }
       }
    }
 }

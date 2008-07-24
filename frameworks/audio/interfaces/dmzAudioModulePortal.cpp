@@ -35,15 +35,17 @@ and not equal to the Plugin's name.
 \brief Indicates if portal is the master portal.
 \return Returns dmz::True if the portal is the master audio portal.
 
-\fn void dmz::AudioModulePortal::set_view (const dmz::Vector &Pos, const dmz::Matrix &Ori)
+\fn void dmz::AudioModulePortal::set_view (const dmz::Vector &Position, const dmz::Matrix &Orientation, const dmz::Vector &Velocity)
 \brief Sets portal view.
-\param[in] Pos Vector containing the translational transform of the portal.
-\param[in] Ori Matrix containing the rotation transform of the portal.
+\param[in] Position Vector containing the translational transform of the portal.
+\param[in] Orientation Matrix containing the rotation transform of the portal.
+\param[in] Velocity Vector containing the velocity of the portal.
 
-\fn void dmz::AudioModulePortal::get_view (dmz::Vector &pos, dmz::Matrix &ori) const
+\fn void dmz::AudioModulePortal::get_view (dmz::Vector &position, dmz::Matrix &orientation, dmz::Vector &velocity) const
 \brief Gets portal view.
-\param[out] pos Vector containing the translational transform of the portal.
-\param[out] ori Matrix containing the rotation transform of the portal.
+\param[out] position Vector to store the translational transform of the portal.
+\param[out] orientation Matrix to store the rotation transform of the portal.
+\param[out] velocity Vector to store the velocity of the portal.
 
 \fn void dmz::AudioModulePortal::set_mute_state (const dmz::Boolean Value)
 \brief Sets portal mute state.

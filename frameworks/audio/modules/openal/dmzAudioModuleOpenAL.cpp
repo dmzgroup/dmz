@@ -324,6 +324,8 @@ dmz::AudioModuleOpenAL::set_mute_all_state (const Boolean Mute) {
 
    Boolean result (False);
 
+   alListenerf (AL_GAIN, Mute ? 0.0 : 1.0);
+
    return result;
 }
 
@@ -332,6 +334,11 @@ dmz::Boolean
 dmz::AudioModuleOpenAL::get_mute_all_state (Boolean &mute) {
 
    Boolean result (False);
+
+   ALfloat value (0.0);
+   alGetListenerf (AL_GAIN, &value);
+
+   if (!is_zero64 (value)) { result = True; }
 
    return result;
 }
@@ -367,7 +374,8 @@ dmz::Boolean
 dmz::AudioModuleOpenAL::set_listener (
       const Handle ListenerHandle,
       const Vector &Position,
-      const Matrix &Orientation) {
+      const Matrix &Orientation,
+      const Vector &Velocity) {
 
    Boolean result (False);
 
@@ -375,6 +383,7 @@ dmz::AudioModuleOpenAL::set_listener (
 
       _listenerPos = Position;
       _listenerOri = Orientation;
+      _listenerVel = Velocity;
 
       Vector f (0.0, 0.0, -1.0);
       Vector up (0.0, 1.0, 1.0);
@@ -399,9 +408,9 @@ dmz::AudioModuleOpenAL::set_listener (
 
       alListener3f (
          AL_VELOCITY,
-         (ALfloat)0.0f,
-         (ALfloat)0.0f,
-         (ALfloat)0.0f);
+         (ALfloat)Velocity.get_x (),
+         (ALfloat)Velocity.get_y (),
+         (ALfloat)Velocity.get_z ());
 
       result = True;
    }
@@ -414,7 +423,8 @@ dmz::Boolean
 dmz::AudioModuleOpenAL::get_listener (
       const Handle ListenerHandle,
       Vector &position,
-      Matrix &orientation) {
+      Matrix &orientation,
+      Vector &velocity) {
 
    Boolean result (False);
 
@@ -422,6 +432,7 @@ dmz::AudioModuleOpenAL::get_listener (
 
       position = _listenerPos;
       orientation = _listenerOri;
+      velocity = _listenerVel;
 
       result = True;
    }
@@ -474,7 +485,6 @@ dmz::AudioModuleOpenAL::_init (Config &local) {
       if (_context) {
 
          alcMakeContextCurrent (_context);
-         alListenerf (AL_GAIN, 1.0);
       }
       else { _log.error << "Unable to create OpenAL Context." << endl; }
    }

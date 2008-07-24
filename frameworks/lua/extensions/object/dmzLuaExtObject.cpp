@@ -1305,6 +1305,7 @@ object_unselect_all (lua_State *L) {
 static const luaL_Reg arrayFunc[] = {
    {"create_last_nework_value_name", object_create_lnv_name},
    {"get_human_in_the_loop", object_get_hil},
+   {"hil", object_get_hil}, // short cut!
    {"is_object", object_is_object},
    {"is_link", object_is_link},
    {"get_all", object_get_all},

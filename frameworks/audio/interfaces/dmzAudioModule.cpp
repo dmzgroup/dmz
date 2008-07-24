@@ -103,21 +103,25 @@ the give name is found.
 \fn dmz::Boolean dmz::AudioModule::set_listener (
 const dmz::Handle ListenerHandle,
 const dmz::Vector &Position,
-const dmz::Matrix &Orientation)
+const dmz::Matrix &Orientation,
+const dmz::Vector &Velocity)
 \brief Sets the position and orientation of the given listener.
 \param[in] ListenerHandle Handle of the listener to update.
 \param[in] Position Vector containing the new position of the listener.
 \param[in] Orientation Matrix containing the new orientation of the listener.
+\param[in] Velocity Vector containing the new velocity of the listener.
 \return Returns dmz::True if the listener was updated.
 
 \fn dmz::Boolean dmz::AudioModule::get_listener (
 const dmz::Handle ListenerHandle,
 dmz::Vector &position,
-dmz::Matrix &orientation)
+dmz::Matrix &orientation,
+dmz::Vector &velocity)
 \brief Looks up the given listener's position and orientation.
 \param[in] ListenerHandle Handle of the listener to update.
 \param[out] position Vector to store the current listener position.
 \param[out] orientation Matrix to store the current listener orientation.
+\param[out] velocity Vector to store the current listener velocity.
 \return Returns dmz::True if the position and orientation of the given listener was
 found.
 

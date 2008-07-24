@@ -46,12 +46,14 @@ namespace dmz {
          virtual Boolean set_listener (
             const Handle ListenerHandle,
             const Vector &Position,
-            const Matrix &Orientation) = 0;
+            const Matrix &Orientation,
+            const Vector &Velocity) = 0;
 
          virtual Boolean get_listener (
             const Handle ListenerHandle,
             Vector &position,
-            Matrix &orientation) = 0;
+            Matrix &orientation,
+            Vector &velocity) = 0;
 
          virtual Boolean destroy_listener (const Handle ListenerHandle) = 0;
 

@@ -89,7 +89,7 @@ dmz::LuaExtPortal::set_view (const String &Name, const Vector &Pos, const Matrix
 
    if (!Name) {
 
-      if (_audioMaster) { _audioMaster->set_view (Pos, Ori); }
+      if (_audioMaster) { _audioMaster->set_view (Pos, Ori, Vector (0.0, 0.0, 0.0)); }
       if (_renderMaster) { _renderMaster->set_view (Pos, Ori); }
    }
 }
@@ -100,8 +100,8 @@ dmz::LuaExtPortal::get_view (const String &Name, Vector &pos, Matrix &ori) {
 
    if (!Name) {
 
+      if (_audioMaster) { Vector v; _audioMaster->get_view (pos, ori, v); }
       if (_renderMaster) { _renderMaster->get_view (pos, ori); }
-      else if (_audioMaster) { _audioMaster->get_view (pos, ori); }
    }
 }
 

@@ -469,6 +469,7 @@ dmz::AudioModuleOpenAL::_update_sound (SoundStruct &ss) {
       (ALfloat)vec.get_y (),
       (ALfloat)vec.get_z ());
 
+   alSourcef (ss.source, AL_GAIN, (ALfloat)ss.attr.get_gain_scale ());
    alSourcef (ss.source, AL_PITCH, (ALfloat)ss.attr.get_pitch_scale ());
 }
 

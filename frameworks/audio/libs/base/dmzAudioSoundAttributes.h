@@ -31,6 +31,9 @@ namespace dmz {
          void set_velocity (const Vector &Vel);
          void get_velocity (Vector &vel) const;
 
+         void set_gain_scale (const Float64 Value);
+         Float64 get_gain_scale () const;
+
          void set_pitch_scale (const Float64 Value);
          Float64 get_pitch_scale () const;
 

@@ -16,10 +16,12 @@ struct dmz::SoundAttributes::State {
 
    Vector position;
    Vector velocity;
+   Float64 gain;
    Float64 pitch;
    Boolean loop;
 
    State () :
+      gain (1.0),
       pitch (1.0),
       loop (False) {;}
 
@@ -110,6 +112,19 @@ dmz::SoundAttributes::get_velocity (Vector &vel) const {
 
    vel = _state.velocity;
 }
+
+
+//! Set gain scale. A value of 1.0 specifies the default gain.
+void
+dmz::SoundAttributes::set_gain_scale (const Float64 Value) {
+
+   _state.gain = Value;
+}
+
+
+//! Get gain scale.
+dmz::Float64
+dmz::SoundAttributes::get_gain_scale () const { return _state.gain; }
 
 
 //! Set pitch scale. A value of 1.0 specifies the default pitch.

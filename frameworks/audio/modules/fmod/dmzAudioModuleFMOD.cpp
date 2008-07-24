@@ -310,6 +310,10 @@ dmz::AudioModuleFMOD::update_sound (
 
          _error_check (errorHeader, fmodResult);
 
+         fmodResult = instance->channel->setVolume (
+               Float32 (Attributes.get_gain_scale()));
+
+         _error_check (errorHeader, fmodResult);
          // Set pitch/frequency with scale value
          fmodResult = instance->channel->setFrequency (
                Float32 (Attributes.get_pitch_scale() *

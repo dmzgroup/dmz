@@ -71,7 +71,7 @@ dmz::WaveFile::load_file (const String &FileName) {
 
    Boolean error (False);
 
-   FILE *f = open_file (FileName, "r");
+   FILE *f = open_file (FileName, "rb");
 
    if (f) {
 
@@ -196,10 +196,10 @@ dmz::WaveFile::load_file (const String &FileName) {
 
                         if (_state.size != DataSize) {
 
+                           UInt32 tmp (_state.size);
                            _state.clear ();
-
                            _state.error.flush () << "Read data size does not match "
-                              << "data size specified in the sub chunk header.";
+                              << "data size specified in the sub chunk header. " << tmp << " " << DataSize;
                            error = True;
                         }
                      }

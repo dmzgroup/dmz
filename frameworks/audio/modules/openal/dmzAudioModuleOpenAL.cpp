@@ -116,82 +116,84 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
 
          bs = new BufferStruct (absPath, get_plugin_runtime_context ());
 
-         if (bs && !_bufferNameTable.store (FileName, bs)) { delete bs; bs = 0; }
+         if (bs && !_bufferNameTable.store (absPath, bs)) { delete bs; bs = 0; }
          else { _bufferHandleTable.store (bs->Handle.get_runtime_handle (), bs); }
 
-          if (bs &&
-                bs->file.is_valid () &&
-                (bs->file.get_audio_format () == WaveFormatPCM)) {
+         if (bs &&
+               bs->file.is_valid () &&
+               (bs->file.get_audio_format () == WaveFormatPCM)) {
 
-             alGenBuffers (1, &(bs->buffer));
-             ALenum format (0);
-             const UInt32 Channels (bs->file.get_channel_count ());
-             const UInt32 BPS (bs->file.get_bits_per_sample ());
+            alGenBuffers (1, &(bs->buffer));
+            ALenum format (0);
+            const UInt32 Channels (bs->file.get_channel_count ());
+            const UInt32 BPS (bs->file.get_bits_per_sample ());
 
-             if (Channels == 1) {
+            if (Channels == 1) {
 
-                if (BPS == 8) { format = AL_FORMAT_MONO8; }
-                else if (BPS == 16) { format = AL_FORMAT_MONO16; }
-             }
-             else if (Channels == 2) {
+               if (BPS == 8) { format = AL_FORMAT_MONO8; }
+               else if (BPS == 16) { format = AL_FORMAT_MONO16; }
+            }
+            else if (Channels == 2) {
 
-                if (BPS == 8) { format = AL_FORMAT_STEREO8; }
-                else if (BPS == 16) { format = AL_FORMAT_STEREO16; }
-             }
+               if (BPS == 8) { format = AL_FORMAT_STEREO8; }
+               else if (BPS == 16) { format = AL_FORMAT_STEREO16; }
+            }
 
-             UInt32 size (0);
-             ALvoid *data = (ALvoid *)(bs->file.get_audio_buffer (size));
+            UInt32 size (0);
+            ALvoid *data = (ALvoid *)(bs->file.get_audio_buffer (size));
 
-             if (size && data && format) {
+            if (size && data && format) {
 
-                alBufferData (
-                   bs->buffer,
-                   format,
-                   data,
-                   (ALsizei)size,
-                   (ALsizei)bs->file.get_frequency ());
+               alBufferData (
+                  bs->buffer,
+                  format,
+                  data,
+                  (ALsizei)size,
+                  (ALsizei)bs->file.get_frequency ());
 
-                ALenum error = alGetError ();
+               ALenum error = alGetError ();
 
-                if (error != AL_NO_ERROR) {
+               if (error != AL_NO_ERROR) {
 
-                   _log.error << "Unable to bind file: " << FileName
-                      << " to OpenAL buffer." << endl;
-                   delete bs; bs = 0;
-                }
+                  _log.error << "Unable to bind file: " << FileName
+                     << " to OpenAL buffer." << endl;
+                  delete bs; bs = 0;
+               }
 
-                _log.info << "Loaded audio file: " << bs->FileName << endl;
-                bs->file.clear ();
-             }
-             else {
+               _log.info << "Loaded audio file: " << bs->FileName << endl;
+               bs->file.clear ();
+            }
+            else {
 
-                if (!size || !data) {
+               if (!size || !data) {
 
-                   _log.error << "Unable to load wave data" << endl;
-                }
+                  _log.error << "Unable to load wave data" << endl;
+               }
 
-                if (!format) { 
+               if (!format) {
 
-                   _log.error << "Unsupported format, channels: " << Channels
-                      << " BPS: " << BPS << endl;
-                }
-             }
-          }
-          else if (bs) {
+                  _log.error << "Unsupported format, channels: " << Channels
+                     << " BPS: " << BPS << endl;
+               }
+            }
+         }
+         else if (bs) {
 
-             if (bs->file.is_valid ()) {
+            if (bs->file.is_valid ()) {
 
-                _log.error << "Unable to load audio file: " << FileName << " because: "
-                   << " Wave audio data is not PCM." << endl;
-             }
-             else {
+               _log.error << "Unable to load audio file: " << FileName << " because: "
+                  << " Wave audio data is not PCM." << endl;
+            }
+            else {
 
-                _log.error << "Unable to load audio file: " << FileName << " because: "
-                   << bs->file.get_error () << endl;
-             }
+               _log.error << "Unable to load audio file: " << FileName << " because: "
+                  << bs->file.get_error () << endl;
+            }
 
-             delete bs; bs = 0;
-          }
+            _bufferNameTable.remove (bs->FileName);
+            _bufferHandleTable.remove (bs->Handle.get_runtime_handle ());
+            delete bs; bs = 0;
+         }
       }
 
       if (bs) {
@@ -324,7 +326,7 @@ dmz::AudioModuleOpenAL::set_mute_all_state (const Boolean Mute) {
 
    Boolean result (False);
 
-   alListenerf (AL_GAIN, Mute ? 0.0 : 1.0);
+   alListenerf (AL_GAIN, Mute ? 0.0f : 1.0f);
 
    return result;
 }
@@ -444,7 +446,11 @@ dmz::AudioModuleOpenAL::get_listener (
 dmz::Boolean
 dmz::AudioModuleOpenAL::destroy_listener (const Handle ListenerHandle) {
 
-   if (ListenerHandle == get_plugin_handle ()) { _listenerName.empty (); }
+   Boolean result (False);
+
+   if (ListenerHandle == get_plugin_handle ()) { _listenerName.empty (); result = True; }
+
+   return result;
 }
 
 

@@ -2,3 +2,4 @@ lmk.set_name ("waveinfo")
 lmk.set_type ("exe")
 lmk.add_files {"waveinfo.cpp"}
 lmk.add_libs {"dmzAudioWave", "dmzKernel",}
+lmk.add_vars { test = {"$(localBinTarget) ../../../../../../assets/sounds/game_engine.wav"} }

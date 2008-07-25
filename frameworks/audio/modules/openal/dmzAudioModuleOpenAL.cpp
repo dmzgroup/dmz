@@ -116,12 +116,30 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
 
          bs = new BufferStruct (absPath, get_plugin_runtime_context ());
 
-         if (bs && !_bufferNameTable.store (absPath, bs)) { delete bs; bs = 0; }
-         else { _bufferHandleTable.store (bs->Handle.get_runtime_handle (), bs); }
-
          if (bs &&
                bs->file.is_valid () &&
                (bs->file.get_audio_format () == WaveFormatPCM)) {
+
+            if (!_bufferNameTable.store (absPath, bs)) { delete bs; bs = 0; }
+            else { _bufferHandleTable.store (bs->Handle.get_runtime_handle (), bs); }
+         }
+         else if (bs) {
+
+            if (bs->file.is_valid ()) {
+
+               _log.error << "Unable to load audio file: " << FileName << " because: "
+                  << " Wave audio data is not PCM." << endl;
+            }
+            else {
+
+               _log.error << "Unable to load audio file: " << FileName << " because: "
+                  << bs->file.get_error () << endl;
+            }
+
+            delete bs; bs = 0;
+         }
+
+         if (bs) {
 
             alGenBuffers (1, &(bs->buffer));
             ALenum format (0);
@@ -157,11 +175,15 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
 
                   _log.error << "Unable to bind file: " << FileName
                      << " to OpenAL buffer." << endl;
-                  delete bs; bs = 0;
-               }
 
-               _log.info << "Loaded audio file: " << bs->FileName << endl;
-               bs->file.clear ();
+                  destroy_audio_handle (bs->Handle.get_runtime_handle ());
+                  bs = 0;
+               }
+               else {
+
+                  _log.info << "Loaded audio file: " << bs->FileName << endl;
+                  bs->file.clear ();
+               }
             }
             else {
 
@@ -175,24 +197,10 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
                   _log.error << "Unsupported format, channels: " << Channels
                      << " BPS: " << BPS << endl;
                }
+
+               destroy_audio_handle (bs->Handle.get_runtime_handle ());
+               bs = 0;
             }
-         }
-         else if (bs) {
-
-            if (bs->file.is_valid ()) {
-
-               _log.error << "Unable to load audio file: " << FileName << " because: "
-                  << " Wave audio data is not PCM." << endl;
-            }
-            else {
-
-               _log.error << "Unable to load audio file: " << FileName << " because: "
-                  << bs->file.get_error () << endl;
-            }
-
-            _bufferNameTable.remove (bs->FileName);
-            _bufferHandleTable.remove (bs->Handle.get_runtime_handle ());
-            delete bs; bs = 0;
          }
       }
 

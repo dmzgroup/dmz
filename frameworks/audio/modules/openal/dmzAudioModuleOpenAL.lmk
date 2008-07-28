@@ -1,5 +1,4 @@
-lmk.set_name ("dmzAudioModuleOpenAL", {macos = true})
---lmk.set_name ("dmzAudioModuleOpenAL", {DMZ_USE_OPENAL = true})
+lmk.set_name ("dmzAudioModuleOpenAL", {DMZ_USE_OPENAL = true})
 lmk.set_type "plugin"
 lmk.add_files {"dmzAudioModuleOpenAL.cpp",}
 lmk.add_libs {

@@ -10,8 +10,8 @@ lmk.add_preqs {"dmzAudioFramework",}
 lmk.add_vars ({localLibs = "-framework OpenAL",}, {macos = true})
 
 lmk.add_vars ({
-   localIncludes = "$(lmk.includePathFlag)$(DMZ_OPENAL_INCLUDE_PATH)",
-   localLibPaths = "$(lmk.libPathFlag)$(DMZ_OPENAL_LIB_PATH)",
+   --localIncludes = "$(lmk.includePathFlag)$(DMZ_OPENAL_INCLUDE_PATH)",
+   --localLibPaths = "$(lmk.libPathFlag)$(DMZ_OPENAL_LIB_PATH)",
    localLibs = "$(lmk.libPrefix)openal",
 },
 { linux = true })

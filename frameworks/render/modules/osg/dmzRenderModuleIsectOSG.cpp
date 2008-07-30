@@ -88,7 +88,7 @@ dmz::RenderModuleIsectOSG::do_isect (
          osg::LineSegment *ls = new osg::LineSegment;
          ls->set (to_osg_vector (vec1), to_osg_vector (vec2));
          visitor.addLineSegment (ls);
-         lsList.push_back (ls);//addLOS (to_osg_vector (vec1), to_osg_vector (vec2));
+         lsList.push_back (ls);
          handleArray.push_back (testHandle);
          sourceArray.push_back (vec1);
 
@@ -101,6 +101,7 @@ dmz::RenderModuleIsectOSG::do_isect (
       bool firstPoint = (param == IsectFirstPoint);
 
       if (closestPoint && !Parameters.get_calculate_distance ()) {
+
          firstPoint = true;
          closestPoint = false;
       }

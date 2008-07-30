@@ -51,7 +51,7 @@ dmz::RenderPluginLoadModelOSG::discover_plugin (
 
                if (model.valid ()) {
 
-#if 1
+#if 0
                   // Attach transform to static object tree
                   osg::Matrix mat = to_osg_matrix (
                      *_rotationTable.lookup (*currentFileName));

@@ -12,8 +12,13 @@
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
-#include <OpenAL/al.h>
-#include <OpenAL/alc.h>
+#ifdef __linux
+#   include <AL/al.h>
+#   include <AL/alc.h>
+#else
+#   include <OpenAL/al.h>
+#   include <OpenAL/alc.h>
+#endif
 
 namespace dmz {
 

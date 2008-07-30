@@ -94,7 +94,12 @@ namespace dmz {
             osg::ref_ptr<osg::Switch> model;
             StateStruct *stateMap;
 
-            DefStruct () : stateMap (0) { model = new osg::Switch; }
+            DefStruct () : stateMap (0) {
+
+               model = new osg::Switch;
+               model->setDataVariance (osg::Object::DYNAMIC);
+            }
+
             ~DefStruct () { if (stateMap) { delete stateMap; stateMap = 0; } }
          };
  

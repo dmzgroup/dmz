@@ -118,36 +118,38 @@ dmz::NetExtPacketCodecObjectBasic::decode (Unmarshal &data, Boolean &isLoopback)
             _objMod->lookup_state (handle, _defaultHandle, state);
             _attrMod->to_internal_mask (type, stateArray, state);
 
-            _objMod->store_position (handle, _defaultHandle, pos);
-            _objMod->store_position (handle, _lnvHandle, pos);
-            _objMod->store_orientation (handle, _defaultHandle, ori);
-            _objMod->store_velocity (handle, _defaultHandle, vel);
-            _objMod->store_state (handle, _defaultHandle, state);
-            _objMod->store_time_stamp (handle, _lnvHandle, _time.get_frame_time ());
-
-            const Handle ScalarCount (data.get_next_uint32 ());
-
-            if (ScalarCount) {
-
-               for (UInt32 ix = 0; ix < ScalarCount; ix++) {
-
-                  const Handle NetHandle = data.get_next_uint32 ();
-                  const Float64 Value = data.get_next_float64 ();
-
-                  ScalarStruct *ss = _scalarTable.lookup (NetHandle);
-
-                  if (ss && ss->AttrHandle) {
-
-                     _objMod->store_scalar (handle, ss->AttrHandle, Value);
-                  }
-               }
-            }
-
-            if (activateObject) { _objMod->activate_object (handle); }
-
             if (_deactivateState && state.contains (_deactivateState)) {
 
                _objMod->destroy_object (handle);
+            }
+            else {
+
+               _objMod->store_position (handle, _defaultHandle, pos);
+               _objMod->store_position (handle, _lnvHandle, pos);
+               _objMod->store_orientation (handle, _defaultHandle, ori);
+               _objMod->store_velocity (handle, _defaultHandle, vel);
+               _objMod->store_state (handle, _defaultHandle, state);
+               _objMod->store_time_stamp (handle, _lnvHandle, _time.get_frame_time ());
+
+               const Handle ScalarCount (data.get_next_uint32 ());
+
+               if (ScalarCount) {
+
+                  for (UInt32 ix = 0; ix < ScalarCount; ix++) {
+
+                     const Handle NetHandle = data.get_next_uint32 ();
+                     const Float64 Value = data.get_next_float64 ();
+
+                     ScalarStruct *ss = _scalarTable.lookup (NetHandle);
+
+                     if (ss && ss->AttrHandle) {
+
+                        _objMod->store_scalar (handle, ss->AttrHandle, Value);
+                     }
+                  }
+               }
+
+               if (activateObject) { _objMod->activate_object (handle); }
             }
 
             result = True;

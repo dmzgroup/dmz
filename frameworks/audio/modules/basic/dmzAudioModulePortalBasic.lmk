@@ -1,4 +1,4 @@
-lmk.set_name ("dmzAudioModulePortalBasic", { DMZ_USE_FMOD = true })
+lmk.set_name "dmzAudioModulePortalBasic"
 lmk.set_type "plugin"
 lmk.add_libs {"dmzKernel",}
 lmk.add_preqs {"dmzAudioFramework",}

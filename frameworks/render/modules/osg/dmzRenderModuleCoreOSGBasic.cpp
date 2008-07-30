@@ -42,6 +42,7 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
    _scene->addChild (_staticObjects.get ());
 
    _dynamicObjects = new osg::Group;
+   _dynamicObjects->setDataVariance (osg::Object::DYNAMIC);
    _scene->addChild (_dynamicObjects.get ());
 
    _init (local, global);
@@ -243,6 +244,7 @@ dmz::RenderModuleCoreOSGBasic::create_dynamic_object (const Handle ObjectHandle)
       if (os) {
 
          os->transform->setUserData (new RenderObjectDataOSG (ObjectHandle));
+         os->transform->setDataVariance (osg::Object::DYNAMIC);
 
          ObjectModule *objMod (get_object_module ());
 

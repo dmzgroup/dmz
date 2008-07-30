@@ -487,7 +487,7 @@ dmz::AudioModuleOpenAL::_update_sound (SoundStruct &ss) {
    alSourcef (ss.source, AL_GAIN, (ALfloat)ss.attr.get_gain_scale ());
 
    Float64 Pitch (ss.attr.get_pitch_scale ());
-   ALfloat AdjustedPitch (Pitch < 0.01 ? (ALfloat)0.01f : (ALfloat)Pitch);
+   ALfloat AdjustedPitch (Pitch < 0.1 ? (ALfloat)0.1f : (ALfloat)Pitch);
    alSourcef (ss.source, AL_PITCH, AdjustedPitch);
 }
 

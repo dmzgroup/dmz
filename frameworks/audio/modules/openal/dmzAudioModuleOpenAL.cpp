@@ -251,6 +251,7 @@ dmz::AudioModuleOpenAL::play_sound (
 
          alGenSources (1, &(ss->source));
          alSourcei (ss->source, AL_BUFFER, bs->buffer);
+         alSourcei (ss->source, AL_SOURCE_RELATIVE, AL_FALSE);
          alSourcei (ss->source, AL_LOOPING, ss->looped ? AL_TRUE : AL_FALSE);
          alSourcef (ss->source, AL_GAIN, 1.0f);
 
@@ -396,7 +397,7 @@ dmz::AudioModuleOpenAL::set_listener (
       _listenerVel = Velocity;
 
       Vector f (0.0, 0.0, -1.0);
-      Vector up (0.0, 1.0, 1.0);
+      Vector up (0.0, 1.0, 0.0);
       Orientation.transform_vector (f);
       Orientation.transform_vector (up);
 
@@ -484,7 +485,10 @@ dmz::AudioModuleOpenAL::_update_sound (SoundStruct &ss) {
       (ALfloat)vec.get_z ());
 
    alSourcef (ss.source, AL_GAIN, (ALfloat)ss.attr.get_gain_scale ());
-   alSourcef (ss.source, AL_PITCH, (ALfloat)ss.attr.get_pitch_scale ());
+
+   Float64 Pitch (ss.attr.get_pitch_scale ());
+   ALfloat AdjustedPitch (Pitch < 0.01 ? (ALfloat)0.01f : (ALfloat)Pitch);
+   alSourcef (ss.source, AL_PITCH, AdjustedPitch);
 }
 
 

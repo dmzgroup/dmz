@@ -216,7 +216,7 @@ dmz::AudioPluginObject::update_time_slice (const Float64 TimeDelta) {
 
             attr.set_pitch_scale (current->scale);
 
-            _audioMod->update_sound (current->handle, attr);
+            if (current->handle) { _audioMod->update_sound (current->handle, attr); }
 
             current = current->next;
          }

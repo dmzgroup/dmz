@@ -580,9 +580,9 @@ dmz::AudioModuleFMOD::set_listener (
             Float32 (Position.get_z ())};
 
          FMOD_VECTOR vel = {
-            Float32 (Position.get_x ()),
-            Float32 (Position.get_y ()),
-            Float32 (Position.get_z ())};
+            Float32 (Velocity.get_x ()),
+            Float32 (Velocity.get_y ()),
+            Float32 (Velocity.get_z ())};
 
          FMOD_RESULT fmodResult = _system->set3DListenerAttributes (
             listener->index,

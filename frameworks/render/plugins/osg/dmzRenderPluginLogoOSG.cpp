@@ -111,6 +111,7 @@ dmz::RenderPluginLogoOSG::_create_logo () {
    if (img) {
 
       _camera = new osg::Camera;
+      _camera->setDataVariance (osg::Object::DYNAMIC);
       _camera->setProjectionMatrix (osg::Matrix::ortho2D (0.0, 640.0, 0.0, 480.0));
       _camera->setReferenceFrame (osg::Transform::ABSOLUTE_RF);
       _camera->setViewMatrix (osg::Matrix::identity ());

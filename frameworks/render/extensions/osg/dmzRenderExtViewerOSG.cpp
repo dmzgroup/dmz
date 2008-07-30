@@ -26,6 +26,7 @@ dmz::RenderExtViewerOSG::RenderExtViewerOSG (
       _viewer (0) {
 
    _viewer = new osgViewer::Viewer;
+   _viewer->setThreadingModel (osgViewer::Viewer::SingleThreaded);
    _cameraManipulator = new RenderCameraManipulatorOSG;
    _eventHandler = new RenderEventHandlerOSG;
 

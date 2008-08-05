@@ -5,8 +5,10 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimeConfigToPathContainer.h>
+#include <dmzRuntimeConfigToState.h>
 #include <dmzRuntimeConfigToStringContainer.h>
 #include <dmzRuntimeConfigWrite.h>
+#include <dmzRuntimeObjectType.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
 
@@ -36,6 +38,110 @@ local_config_to_string (
 
 //! \addtogroup Runtime
 //! @{
+
+dmz::ObjectType
+dmz::config_to_object_type (
+      const String &Name,
+      const Config &Source,
+      const String &DefaultObjectTypeName,
+      RuntimeContext *context) {
+
+   ObjectType defaultObjectType;
+
+   Definitions defs (context);
+
+   defs.lookup_object_type (DefaultObjectTypeName, defaultObjectType);
+
+   return config_to_object_type (Name, Source, defaultObjectType, context);
+}
+
+
+dmz::ObjectType
+dmz::config_to_object_type (
+      const String &Name,
+      const Config &Source,
+      const ObjectType &DefaultObjectType,
+      RuntimeContext *context) {
+
+   ObjectType result;
+
+   String objectTypeName;
+
+   if (local_config_to_string (Name, Source, objectTypeName)) {
+
+      Definitions defs (context);
+
+      defs.lookup_object_type (objectTypeName, result);
+   }
+   else { result = DefaultObjectType; }
+
+   return result;
+}
+
+
+dmz::ObjectTypeSet
+dmz::config_to_object_type_set (
+      const String &Name,
+      const Config &Source,
+      RuntimeContext *context) {
+
+   ObjectTypeSet result;
+
+   Config list;
+
+   if (Source.lookup_all_config (Name, list)) {
+
+      ConfigIterator it;
+      Config type;
+
+      while (list.get_next_config (it, type)) {
+
+         result.add_object_type (config_to_object_type ("type", type, context));
+      }
+   }
+
+   return result;
+}
+
+
+dmz::Mask
+dmz::config_to_state (
+      const String &Name,
+      const Config &Source,
+      const String &DefaultStateName,
+      RuntimeContext *context) {
+
+   Mask defaultMask;
+
+   Definitions defs (context);
+
+   defs.lookup_state (DefaultStateName, defaultMask);
+
+   return config_to_state (Name, Source, defaultMask, context);
+}
+
+
+dmz::Mask
+dmz::config_to_state (
+      const String &Name,
+      const Config &Source,
+      const Mask &DefaultState,
+      RuntimeContext *context) {
+
+   Mask result;
+
+   String stateName;
+
+   if (local_config_to_string (Name, Source, stateName)) {
+
+      Definitions defs (context);
+
+      defs.lookup_state (stateName, result);
+   }
+   else { result = DefaultState; }
+
+   return result;
+}
 
 
 dmz::PathContainer

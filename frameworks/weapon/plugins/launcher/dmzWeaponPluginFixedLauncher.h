@@ -5,8 +5,12 @@
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
+#include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
+#include <dmzTypesMask.h>
+#include <dmzTypesMatrix.h>
+#include <dmzTypesVector.h>
 
 namespace dmz {
 
@@ -77,31 +81,23 @@ namespace dmz {
             const Boolean Value,
             const Boolean *PreviousValue);
 
-         virtual void update_object_position (
-            const UUID &Identity,
-            const Handle ObjectHandle,
-            const Handle AttributeHandle,
-            const Vector &Value,
-            const Vector *PreviousValue);
-
-         virtual void update_object_orientation (
-            const UUID &Identity,
-            const Handle ObjectHandle,
-            const Handle AttributeHandle,
-            const Matrix &Value,
-            const Matrix *PreviousValue);
-
-         virtual void update_object_velocity (
-            const UUID &Identity,
-            const Handle ObjectHandle,
-            const Handle AttributeHandle,
-            const Vector &Value,
-            const Vector *PreviousValue);
-
       protected:
+         void _create_munition (const Handle SourceHandle);
          void _init (Config &local);
 
          Log _log;
+
+         Vector _launcherOffset;
+
+         Mask _deadState;
+
+         Boolean _hilActive;
+         Handle _hilHandle;
+         Handle _hil;
+
+         Handle _defaultHandle;
+
+         ObjectType _ammoType;
 
       private:
          WeaponPluginFixedLauncher ();

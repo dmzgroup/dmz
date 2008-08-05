@@ -9,8 +9,9 @@
 
 namespace dmz {
 
-   class TypeContext;
+   class Config;
    class RuntimeContext;
+   class TypeContext;
 
    class DMZ_KERNEL_LINK_SYMBOL ObjectTypeIterator {
 
@@ -95,7 +96,44 @@ namespace dmz {
          struct State;
          State &_state; //!< Internal state.
    };
+
+   DMZ_KERNEL_LINK_SYMBOL ObjectType
+   config_to_object_type (
+      const String &Name,
+      const Config &Source,
+      const String &DefaultObjectTypeName,
+      RuntimeContext *context);
+
+   DMZ_KERNEL_LINK_SYMBOL ObjectType
+   config_to_object_type (
+      const String &Name,
+      const Config &Source,
+      const ObjectType &DefaultObjectType,
+      RuntimeContext *context);
+
+   ObjectType
+   config_to_object_type (
+      const String &Name,
+      const Config &Source,
+      RuntimeContext *context);
+
+   DMZ_KERNEL_LINK_SYMBOL ObjectTypeSet
+   config_to_object_type_set (
+      const String &Name,
+      const Config &Source,
+      RuntimeContext *context);
 };
+
+
+inline dmz::ObjectType
+dmz::config_to_object_type (
+      const String &Name,
+      const Config &Source,
+      RuntimeContext *context) {
+
+   const ObjectType EmptyType;
+   return config_to_object_type (Name, Source, EmptyType, context);
+}
 
 #endif // DMZ_RUNTIME_OBJECT_TYPE_DOT_H
 

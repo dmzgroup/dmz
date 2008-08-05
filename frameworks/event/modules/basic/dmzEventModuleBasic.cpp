@@ -12,22 +12,9 @@
 
 namespace {
 
-   static const dmz::Mask StartMask (0, dmz::EventAttributeStartEvent);
-   static const dmz::Mask EndMask (0, dmz::EventAttributeEndEvent);
-   static const dmz::Mask ObjectMask (0, dmz::EventAttributeObjectHandle);
-   static const dmz::Mask TypeMask (0, dmz::EventAttributeObjectType);
-   static const dmz::Mask StateMask (0, dmz::EventAttributeState);
-   static const dmz::Mask TimeStampMask (0, dmz::EventAttributeTimeStamp);
-   static const dmz::Mask PositionMask (0, dmz::EventAttributePosition);
-   static const dmz::Mask OrientationMask (0, dmz::EventAttributeOrientation);
-   static const dmz::Mask VelocityMask (0, dmz::EventAttributeVelocity);
-   static const dmz::Mask AccelerationMask (0, dmz::EventAttributeAcceleration);
-   static const dmz::Mask ScaleMask (0, dmz::EventAttributeScale);
-   static const dmz::Mask VectorMask (0, dmz::EventAttributeVector);
-   static const dmz::Mask ScalarMask (0, dmz::EventAttributeVector);
-   static const dmz::Mask TextMask (0, dmz::EventAttributeText);
-   static const dmz::Mask DataMask (0, dmz::EventAttributeData);
-   static const dmz::Mask AllMask (0, dmz::EventAttributeAll);
+static const dmz::Mask StartMask (0, dmz::EventCallbackStartEvent);
+static const dmz::Mask EndMask (0, dmz::EventCallbackEndEvent);
+
 };
 
 
@@ -71,20 +58,8 @@ dmz::EventModuleBasic::~EventModuleBasic () {
    }
 
    _subscriptionTable.empty ();
-   _startTable.clear ();
-   _endTable.clear ();
-   _objectTable.empty ();
-   _stateTable.empty ();
-   _time_stampTable.empty ();
-   _positionTable.empty ();
-   _orientationTable.empty ();
-   _velocityTable.empty ();
-   _accelerationTable.empty ();
-   _scaleTable.empty ();
-   _vectorTable.empty ();
-   _scalarTable.empty ();
-   _textTable.empty ();
-   _dataTable.empty ();
+   _startTable.empty ();
+   _endTable.empty ();
 }
 
 
@@ -151,46 +126,47 @@ dmz::EventModuleBasic::update_time_slice (const Float64 TimeDelta) {
 // EventModule Interface
 dmz::Boolean
 dmz::EventModuleBasic::register_event_observer (
-      const Handle AttributeHandle,
-      const Mask &AttributeMask,
-      EventObserver &Observer) {
+      const EventType &Type,
+      const Mask &CallbackMask,
+      EventObserver &observer) {
 
    Boolean result (False);
 
-   const Handle ObsHandle (Observer.get_event_observer_handle ());
+   const Handle ObsHandle (observer.get_event_observer_handle ());
    SubscriptionStruct *sub (_subscriptionTable.lookup (ObsHandle));
 
    if (!sub) {
 
-      sub = new SubscriptionStruct (Observer);
+      sub = new SubscriptionStruct (observer);
 
       if (!_subscriptionTable.store (ObsHandle, sub)) { delete sub; sub = 0; }
    }
 
    if (sub) {
 
-      Mask *attrMaskPtr (sub->table.lookup (AttributeHandle));
+      if (CallbackMask & StartMask) {
 
-      if (!attrMaskPtr) {
+         EventObserverStruct *eos (
+            _create_event_observers (Type.get_handle (), _startTable));
 
-         attrMaskPtr = new Mask (AttributeMask);
+         if (eos && eos->store (ObsHandle, &observer)) {
 
-         if (attrMaskPtr) {
-
-            if (!sub->table.store (AttributeHandle, attrMaskPtr)) {
-
-               delete attrMaskPtr; attrMaskPtr = 0;
-            }
+            sub->startTable.store (Type.get_handle (), eos);
          }
       }
-      else { *attrMaskPtr |= AttributeMask; }
 
-      if (attrMaskPtr) {
+      if (CallbackMask & EndMask) {
 
-         result = True;
+         EventObserverStruct *eos (
+            _create_event_observers (Type.get_handle (), _endTable));
 
-         _update_subscription (AttributeHandle, AttributeMask, True, Observer);
+         if (eos && eos->store (ObsHandle, &observer)) {
+
+            sub->endTable.store (Type.get_handle (), eos);
+         }
       }
+
+      result = True;
    }
 
    return result;
@@ -199,8 +175,8 @@ dmz::EventModuleBasic::register_event_observer (
 
 dmz::Boolean
 dmz::EventModuleBasic::release_event_observer (
-      const Handle AttributeHandle,
-      const Mask &AttributeMask,
+      const EventType &Type,
+      const Mask &CallbackMask,
       EventObserver &observer) {
 
    Boolean result (False);
@@ -210,29 +186,21 @@ dmz::EventModuleBasic::release_event_observer (
 
    if (sub) {
 
-      Mask *attrMaskPtr (sub->table.lookup (AttributeHandle));
+      if (CallbackMask & StartMask) {
 
-      if (attrMaskPtr) {
+         EventObserverStruct *eos (sub->startTable.remove (Type.get_handle ()));
 
-         result = True;
-
-         _update_subscription (AttributeHandle, AttributeMask, False, observer);
-
-         attrMaskPtr->unset (AttributeMask);
-
-         if (!attrMaskPtr->is_set ()) {
-
-            attrMaskPtr = sub->table.remove (ObsHandle);
-
-            if (attrMaskPtr) { delete attrMaskPtr; attrMaskPtr = 0; }
-
-            if (sub->table.get_count () <= 0) {
-
-               sub = _subscriptionTable.remove (ObsHandle);
-               if (sub) { delete sub; sub = 0; }
-            }
-         }
+         if (eos) { eos->remove (ObsHandle); }
       }
+
+      if (CallbackMask & EndMask) {
+
+         EventObserverStruct *eos (sub->endTable.remove (Type.get_handle ()));
+
+         if (eos) { eos->remove (ObsHandle); }
+      }
+
+      result = True;
    }
 
    return result;
@@ -251,41 +219,26 @@ dmz::EventModuleBasic::release_event_observer_all (EventObserver &observer) {
 
       HashTableHandleIterator it;
 
-      Mask *attrMaskPtr (sub->table.get_first (it));
+      EventObserverStruct *eos (sub->startTable.get_first (it));
 
-      while (attrMaskPtr) {
+      while (eos) {
 
-         _update_subscription (it.get_hash_key (), *attrMaskPtr, False, observer);
+         eos->remove (ObsHandle);
+         eos = sub->startTable.get_next (it);
+      }
 
-         attrMaskPtr = sub->table.get_next (it);
+      eos = sub->endTable.get_first (it);
+
+      while (eos) {
+
+         eos->remove (ObsHandle);
+         eos = sub->endTable.get_next (it);
       }
 
       delete sub; sub = 0;
 
       result = True;
    }
-
-   return result;
-}
-
-
-dmz::Boolean
-dmz::EventModuleBasic::dump_event_attributes (
-      const Handle EventHandle,
-      EventObserver &Observer) {
-
-   Boolean result (False);
-
-   return result;
-}
-
-
-dmz::Boolean
-dmz::EventModuleBasic::dump_all_event_attributes (
-      const Handle EventHandle,
-      EventObserver &Observer) {
-
-   Boolean result (False);
 
    return result;
 }
@@ -316,14 +269,19 @@ dmz::EventModuleBasic::start_event (
                event->type = Type;
                event->locality = Locality;
 
-               HashTableHandleIterator it;
+               EventObserverStruct *eos (_startTable.lookup (event->type.get_handle ()));
 
-               EventObserver *obs (_startTable.get_first (it));
+               if (eos) {
 
-               while (obs) {
+                  HashTableHandleIterator it;
 
-                  obs->start_event (result, Type, Locality);
-                  obs = _startTable.get_next (it);
+                  EventObserver *obs (eos->get_first (it));
+
+                  while (obs) {
+
+                     obs->start_event (result, event->type, Locality);
+                     obs = eos->get_next (it);
+                  }
                }
             }
             else {
@@ -351,14 +309,19 @@ dmz::EventModuleBasic::end_event (const Handle EventHandle) {
       event->closed = True;
       event->closeTime = _time.get_frame_time ();
 
-      HashTableHandleIterator it;
+      EventObserverStruct *eos (_endTable.lookup (event->type.get_handle ()));
 
-      EventObserver *obs (_endTable.get_first (it));
+      if (eos) {
 
-      while (obs) {
+         HashTableHandleIterator it;
 
-         obs->end_event (EventHandle, event->type, event->locality);
-         obs = _endTable.get_next (it);
+         EventObserver *obs (eos->get_first (it));
+
+         while (obs) {
+
+            obs->end_event (EventHandle, event->type);
+            obs = eos->get_next (it);
+         }
       }
 
       if (_eventTable.remove (event->handle)) {
@@ -410,21 +373,6 @@ dmz::EventModuleBasic::store_object_handle (
 
    if (event && !event->closed) {
 
-      EventObserverStruct *os (_objectTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_object_handle (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
-
       Handle *valuePtr (event->objectTable.lookup (AttributeHandle));
 
       if (valuePtr) { *valuePtr = Value; result = True; }
@@ -473,21 +421,6 @@ dmz::EventModuleBasic::store_object_type (
    EventStruct *event (_lookup_event (EventHandle));
 
    if (event && !event->closed) {
-
-      EventObserverStruct *os (_typeTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_object_type (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
 
       ObjectType *valuePtr (event->typeTable.lookup (AttributeHandle));
 
@@ -538,21 +471,6 @@ dmz::EventModuleBasic::store_state (
 
    if (event && !event->closed) {
 
-      EventObserverStruct *os (_stateTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_state (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
-
       Mask *valuePtr (event->stateTable.lookup (AttributeHandle));
 
       if (valuePtr) { *valuePtr = Value; result = True; }
@@ -602,29 +520,14 @@ dmz::EventModuleBasic::store_time_stamp (
 
    if (event && !event->closed) {
 
-      EventObserverStruct *os (_time_stampTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_time_stamp (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
-
-      Float64 *valuePtr (event->time_stampTable.lookup (AttributeHandle));
+      Float64 *valuePtr (event->timeStampTable.lookup (AttributeHandle));
 
       if (valuePtr) { *valuePtr = Value; result = True; }
       else {
 
          valuePtr = new Float64 (Value);
 
-         if (event->time_stampTable.store (AttributeHandle, valuePtr)) { result = True; }
+         if (event->timeStampTable.store (AttributeHandle, valuePtr)) { result = True; }
          else { delete valuePtr; valuePtr = 0; }
       }
    }
@@ -645,7 +548,7 @@ dmz::EventModuleBasic::lookup_time_stamp (
 
    if (event) {
 
-      Float64 *ptr (event->time_stampTable.lookup (AttributeHandle));
+      Float64 *ptr (event->timeStampTable.lookup (AttributeHandle));
 
       if (ptr) { value = *ptr; result = True; }
    }
@@ -665,21 +568,6 @@ dmz::EventModuleBasic::store_position (
    EventStruct *event (_lookup_event (EventHandle));
 
    if (event && !event->closed) {
-
-      EventObserverStruct *os (_positionTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_position (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
 
       Vector *valuePtr (event->positionTable.lookup (AttributeHandle));
 
@@ -730,21 +618,6 @@ dmz::EventModuleBasic::store_orientation (
 
    if (event && !event->closed) {
 
-      EventObserverStruct *os (_orientationTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_orientation (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
-
       Matrix *valuePtr (event->orientationTable.lookup (AttributeHandle));
 
       if (valuePtr) { *valuePtr = Value; result = True; }
@@ -794,21 +667,6 @@ dmz::EventModuleBasic::store_velocity (
 
    if (event && !event->closed) {
 
-      EventObserverStruct *os (_velocityTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_velocity (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
-
       Vector *valuePtr (event->velocityTable.lookup (AttributeHandle));
 
       if (valuePtr) { *valuePtr = Value; result = True; }
@@ -857,21 +715,6 @@ dmz::EventModuleBasic::store_acceleration (
    EventStruct *event (_lookup_event (EventHandle));
 
    if (event && !event->closed) {
-
-      EventObserverStruct *os (_accelerationTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_acceleration (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
 
       Vector *valuePtr (event->velocityTable.lookup (AttributeHandle));
 
@@ -925,21 +768,6 @@ dmz::EventModuleBasic::store_scale (
 
    if (event && !event->closed) {
 
-      EventObserverStruct *os (_scaleTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_scale (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
-
       Vector *valuePtr (event->scaleTable.lookup (AttributeHandle));
 
       if (valuePtr) { *valuePtr = Value; result = True; }
@@ -988,21 +816,6 @@ dmz::EventModuleBasic::store_vector (
    EventStruct *event (_lookup_event (EventHandle));
 
    if (event && !event->closed) {
-
-      EventObserverStruct *os (_vectorTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_vector (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
 
       Vector *valuePtr (event->vectorTable.lookup (AttributeHandle));
 
@@ -1053,21 +866,6 @@ dmz::EventModuleBasic::store_scalar (
 
    if (event && !event->closed) {
 
-      EventObserverStruct *os (_scalarTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_scalar (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
-
       Float64 *valuePtr (event->scalarTable.lookup (AttributeHandle));
 
       if (valuePtr) { *valuePtr = Value; result = True; }
@@ -1116,21 +914,6 @@ dmz::EventModuleBasic::store_text (
    EventStruct *event (_lookup_event (EventHandle));
 
    if (event && !event->closed) {
-
-      EventObserverStruct *os (_textTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_text (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
 
       String *valuePtr (event->textTable.lookup (AttributeHandle));
 
@@ -1181,21 +964,6 @@ dmz::EventModuleBasic::store_data (
 
    if (event && !event->closed) {
 
-      EventObserverStruct *os (_dataTable.lookup (AttributeHandle));
-
-      if (os) {
-
-         HashTableHandleIterator it;
-
-         EventObserver *obs (os->get_first (it));
-
-         while (obs) {
-
-            obs->update_event_data (EventHandle, AttributeHandle, Value);
-            obs = os->get_next (it);
-         }
-      }
-
       Data *valuePtr (event->dataTable.lookup (AttributeHandle));
 
       if (valuePtr) { *valuePtr = Value; result = True; }
@@ -1233,115 +1001,21 @@ dmz::EventModuleBasic::lookup_data (
 }
 
 
-static inline void
-local_update_os (
-      const dmz::Boolean AddObs,
-      const dmz::Handle ObsHandle,
-      const dmz::Handle Attribute,
-      dmz::HashTableHandleTemplate<dmz::EventObserverStruct> &table,
-      dmz::EventObserver *obs) {
+dmz::EventObserverStruct *
+dmz::EventModuleBasic::_create_event_observers (
+      const Handle TypeHandle,
+      HashTableHandleTemplate<EventObserverStruct> &table) {
 
-   dmz::EventObserverStruct *os (table.lookup (Attribute));
+   EventObserverStruct *result (table.lookup (TypeHandle));
 
-   if (!os) {
+   if (!result) {
 
-      os = new dmz::EventObserverStruct;
-      if (os) { if (!table.store (Attribute, os)) { delete os; os = 0;  } }
+      result = new EventObserverStruct;
+
+      if (result && !table.store (TypeHandle, result)) { delete result, result = 0; }
    }
 
-   if (os) {
-
-      if (AddObs) { os->store (ObsHandle, obs); }
-      else { os->remove (ObsHandle); }
-   }
-}
-
-
-void
-dmz::EventModuleBasic::_update_subscription (
-      const Handle AttributeHandle,
-      const Mask &AttributeMask,
-      const Boolean AddObs,
-      EventObserver &obs) {
-
-   const Handle ObsHandle (obs.get_event_observer_handle ());
-
-   if (StartMask & AttributeMask) {
-
-      if (AddObs) { _startTable.store (ObsHandle, &obs); }
-      else { _startTable.remove (ObsHandle); }
-   }
-
-   if (EndMask & AttributeMask) {
-
-      if (AddObs) { _endTable.store (ObsHandle, &obs); }
-      else { _endTable.remove (ObsHandle); }
-   }
-
-   if (ObjectMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _objectTable, &obs);
-   }
-
-   if (TypeMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _typeTable, &obs);
-   }
-
-   if (StateMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _stateTable, &obs);
-   }
-
-   if (TimeStampMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _time_stampTable, &obs);
-   }
-
-   if (PositionMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _positionTable, &obs);
-   }
-
-   if (OrientationMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _orientationTable, &obs);
-   }
-
-   if (VelocityMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _velocityTable, &obs);
-   }
-
-   if (AccelerationMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _accelerationTable, &obs);
-   }
-
-   if (ScaleMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _scaleTable, &obs);
-   }
-
-   if (VectorMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _vectorTable, &obs);
-   }
-
-   if (ScalarMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _scalarTable, &obs);
-   }
-
-   if (TextMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _textTable, &obs);
-   }
-
-   if (DataMask & AttributeMask) {
-
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _dataTable, &obs);
-   }
+   return result;
 }
 
 

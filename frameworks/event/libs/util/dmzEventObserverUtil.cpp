@@ -4,17 +4,18 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeConfigRead.h>
 #include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimeEventType.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 
 namespace {
 
-struct attrStruct {
+struct typeStruct {
 
-   const dmz::Handle AttrHandle;
+   const dmz::EventType Type;
    dmz::Mask mask;
 
-   attrStruct (const dmz::Handle TheHandle) : AttrHandle (TheHandle) {;}
+   typeStruct (const dmz::EventType &TheType) : Type (TheType) {;}
 };
 
 };
@@ -23,7 +24,7 @@ struct dmz::EventObserverUtil::State {
 
    const String EventModuleName;
    EventModule *module;
-   HashTableHandleTemplate<attrStruct> table;
+   HashTableHandleTemplate<typeStruct> table;
    Mask errorMask;
    Log log;
    Definitions defs;
@@ -45,22 +46,22 @@ struct dmz::EventObserverUtil::State {
 
    ~State () { table.empty (); }
 
-   void register_obs (attrStruct &as, EventObserver &obs) {
+   void register_obs (typeStruct &ts, EventObserver &obs) {
 
-      if (as.AttrHandle && module) {
+      if (ts.Type && module) {
 
-         module->register_event_observer (as.AttrHandle, as.mask, obs);
+         module->register_event_observer (ts.Type, ts.mask, obs);
       }
    }
 
-   void release_obs (const Mask &EventMask, attrStruct &as, EventObserver &obs) {
+   void release_obs (const Mask &EventMask, typeStruct &ts, EventObserver &obs) {
 
-      if (as.AttrHandle && module) {
+      if (ts.Type && module) {
 
-         module->release_event_observer (as.AttrHandle, EventMask, obs);
+         module->release_event_observer (ts.Type, EventMask, obs);
       }
 
-      as.mask.unset (EventMask);
+      ts.mask.unset (EventMask);
    }
 };
 
@@ -77,57 +78,47 @@ dmz::EventObserverUtil::EventObserverUtil (
 dmz::EventObserverUtil::~EventObserverUtil () { delete &__state; }
 
 
-dmz::Handle
-dmz::EventObserverUtil::activate_event_attribute (
-      const String &AttributeTypeName,
-      const Mask &AttributeMask) {
+dmz::EventType
+dmz::EventObserverUtil::activate_event_callback (
+      const String &EventTypeName,
+      const Mask &CallbackMask) {
 
-   Handle result (__state.defs.create_named_handle (AttributeTypeName));
-   attrStruct *as = __state.table.lookup (result);
-   if (!as) {
+   EventType result;
 
-      as = new attrStruct (result);
-      if (!__state.table.store (result, as)) { delete as; as = 0; }
+   if (__state.defs.lookup_event_type (EventTypeName, result)) {
+
+      activate_event_callback (result, CallbackMask);
    }
-
-   if (as) { __state.register_obs (*as, *this); }
 
    return result;
 }
 
 
-dmz::Handle
-dmz::EventObserverUtil::activate_default_event_attribute (const Mask &AttributeMask) {
+void
+dmz::EventObserverUtil::activate_event_callback (
+      const EventType &Type,
+      const Mask &CallbackMask) {
 
-   return activate_event_attribute (EventAttributeDefaultName, AttributeMask);
+   typeStruct *ts = __state.table.lookup (Type.get_handle ());
+
+   if (Type && !ts) {
+
+      ts = new typeStruct (Type);
+      if (!__state.table.store (Type.get_handle (), ts)) { delete ts; ts = 0; }
+   }
+
+   if (ts) { ts->mask |= CallbackMask; __state.register_obs (*ts, *this); }
 }
 
 
 void
-dmz::EventObserverUtil::deactivate_event_attribute (
-      const String &AttributeTypeName,
-      const Mask &AttributeMask) {
+dmz::EventObserverUtil::deactivate_event_callback (
+      const EventType &Type,
+      const Mask &CallbackMask) {
 
-   deactivate_event_attribute (
-      __state.defs.lookup_named_handle (AttributeTypeName),
-      AttributeMask);
-}
+   typeStruct *ts = __state.table.lookup (Type.get_handle ());
 
-
-void
-dmz::EventObserverUtil::deactivate_event_attribute (
-      const Handle AttrHandle,
-      const Mask &AttributeMask) {
-
-   attrStruct *as (__state.table.lookup (AttrHandle));
-   if (as) { __state.release_obs (AttributeMask, *as, *this); }
-}
-
-
-void
-dmz::EventObserverUtil::deactivate_default_event_attribute (const Mask &AttributeMask) {
-
-   deactivate_event_attribute (EventAttributeDefaultName, AttributeMask);
+   if (ts) { __state.release_obs (CallbackMask, *ts, *this); }
 }
 
 
@@ -164,210 +155,12 @@ dmz::EventObserverUtil::start_event (
 
 
 void
-dmz::EventObserverUtil::end_event (
-      const Handle EventHandle,
-      const EventType &Type,
-      const EventLocalityEnum Locality) {
+dmz::EventObserverUtil::end_event (const Handle EventHandle, const EventType &Type) {
 
    if (!(EventEndMask & __state.errorMask)) {
 
       __state.errorMask |= EventEndMask;
       __state.log.warn << "Base end_event called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_object_handle (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const Handle Value) {
-
-   if (!(EventObjectMask & __state.errorMask)) {
-
-      __state.errorMask |= EventObjectMask;
-      __state.log.warn << "Base update_event_object_handle called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_object_type (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const ObjectType &Value) {
-
-   if (!(EventObjectTypeMask & __state.errorMask)) {
-
-      __state.errorMask |= EventObjectTypeMask;
-      __state.log.warn << "Base update_event_object_type called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_state (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const Mask &Value) {
-
-   if (!(EventStateMask & __state.errorMask)) {
-
-      __state.errorMask |= EventStateMask;
-      __state.log.warn << "Base update_event_state called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_time_stamp (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const Float64 &Value) {
-
-   if (!(EventTimeStampMask & __state.errorMask)) {
-
-      __state.errorMask |= EventTimeStampMask;
-      __state.log.warn << "Base update_event_time_stamp called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_position (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const Vector &Value) {
-
-   if (!(EventPositionMask & __state.errorMask)) {
-
-      __state.errorMask |= EventPositionMask;
-      __state.log.warn << "Base update_event_position called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_orientation (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const Matrix &Value) {
-
-   if (!(EventOrientationMask & __state.errorMask)) {
-
-      __state.errorMask |= EventOrientationMask;
-      __state.log.warn << "Base update_event_orientation called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_velocity (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const Vector &Value) {
-
-   if (!(EventVelocityMask & __state.errorMask)) {
-
-      __state.errorMask |= EventVelocityMask;
-      __state.log.warn << "Base update_event_velocity called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_acceleration (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const Vector &Value) {
-
-   if (!(EventAccelerationMask & __state.errorMask)) {
-
-      __state.errorMask |= EventAccelerationMask;
-      __state.log.warn << "Base update_event_acceleration called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_scale (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const Vector &Value) {
-
-   if (!(EventScaleMask & __state.errorMask)) {
-
-      __state.errorMask |= EventScaleMask;
-      __state.log.warn << "Base update_event_scale called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_vector (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const Vector &Value) {
-
-   if (!(EventVectorMask & __state.errorMask)) {
-
-      __state.errorMask |= EventVectorMask;
-      __state.log.warn << "Base update_event_vector called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_scalar (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const Float64 Value) {
-
-   if (!(EventScalarMask & __state.errorMask)) {
-
-      __state.errorMask |= EventScalarMask;
-      __state.log.warn << "Base update_event_scalar called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_text (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const String &Value) {
-
-   if (!(EventTextMask & __state.errorMask)) {
-
-      __state.errorMask |= EventTextMask;
-      __state.log.warn << "Base update_event_text called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::EventObserverUtil::update_event_data (
-      const Handle EventHandle,
-      const Handle AttributeHandle,
-      const Data &Value) {
-
-   if (!(EventDataMask & __state.errorMask)) {
-
-      __state.errorMask |= EventDataMask;
-      __state.log.warn << "Base update_event_data called."
          << " Function should have been overridden?" << endl;
    }
 }

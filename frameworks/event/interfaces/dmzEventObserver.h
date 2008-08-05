@@ -12,14 +12,9 @@
 
 namespace dmz {
 
-   class Data;
-   class Mask;
    class EventModule;
    class EventType;
-   class Matrix;
-   class ObjectType;
    class RuntimeContext;
-   class Vector;
 
    class EventObserver {
 
@@ -40,75 +35,7 @@ namespace dmz {
             const EventType &Type,
             const EventLocalityEnum Locality) = 0;
 
-         virtual void end_event (
-            const Handle EventHandle,
-            const EventType &Type,
-            const EventLocalityEnum Locality) = 0;
-
-         virtual void update_event_object_handle (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const Handle Value) = 0;
-
-         virtual void update_event_object_type (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const ObjectType &Value) = 0;
-
-         virtual void update_event_state (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const Mask &Value) = 0;
-
-         virtual void update_event_time_stamp (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const Float64 &Value) = 0;
-
-         virtual void update_event_position (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const Vector &Value) = 0;
-
-         virtual void update_event_orientation (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const Matrix &Value) = 0;
-
-         virtual void update_event_velocity (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const Vector &Value) = 0;
-
-         virtual void update_event_acceleration (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const Vector &Value) = 0;
-
-         virtual void update_event_scale (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const Vector &Value) = 0;
-
-         virtual void update_event_vector (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const Vector &Value) = 0;
-
-         virtual void update_event_scalar (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const Float64 Value) = 0;
-
-         virtual void update_event_text (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const String &Value) = 0;
-
-         virtual void update_event_data (
-            const Handle EventHandle,
-            const Handle AttributeHandle,
-            const Data &Value) = 0;
+         virtual void end_event (const Handle EventHandle, const EventType &Type) = 0;
 
       protected:
          EventObserver (const PluginInfo &Info);

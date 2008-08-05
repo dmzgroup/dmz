@@ -29,24 +29,16 @@ namespace dmz {
             const String &PluginName = "");
 
          virtual Boolean register_event_observer (
-            const Handle AttributeHandle,
-            const Mask &AttributeMask,
+            const EventType &Type,
+            const Mask &CallbackMask,
             EventObserver &Observer) = 0;
 
          virtual Boolean release_event_observer (
-            const Handle AttributeHandle,
-            const Mask &AttributeMask,
+            const EventType &Type,
+            const Mask &CallbackMask,
             EventObserver &Observer) = 0;
 
          virtual Boolean release_event_observer_all (EventObserver &Observer) = 0;
-
-         virtual Boolean dump_event_attributes (
-            const Handle EventHandle,
-            EventObserver &observer) = 0;
-
-         virtual Boolean dump_all_event_attributes (
-            const Handle EventHandle,
-            EventObserver &observer) = 0;
 
          virtual Handle start_event (
             const EventType &Type,

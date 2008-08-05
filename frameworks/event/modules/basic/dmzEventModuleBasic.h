@@ -42,24 +42,16 @@ namespace dmz {
 
          // EventModule Interface
          virtual Boolean register_event_observer (
-            const Handle AttributeHandle,
-            const Mask &AttributeMask,
+            const EventType &Type,
+            const Mask &CallbackMask,
             EventObserver &observer);
 
          virtual Boolean release_event_observer (
-            const Handle AttributeHandle,
-            const Mask &AttributeMask,
+            const EventType &Type,
+            const Mask &CallbackMask,
             EventObserver &observer);
 
          virtual Boolean release_event_observer_all (EventObserver &Observer);
-
-         virtual Boolean dump_event_attributes (
-            const Handle EventHandle,
-            EventObserver &Observer);
-
-         virtual Boolean dump_all_event_attributes (
-            const Handle EventHandle,
-            EventObserver &Observer);
 
          virtual Handle start_event (
             const EventType &Type,
@@ -216,7 +208,7 @@ namespace dmz {
             HashTableHandleTemplate<Handle> objectTable;
             HashTableHandleTemplate<ObjectType> typeTable;
             HashTableHandleTemplate<Mask> stateTable;
-            HashTableHandleTemplate<Float64> time_stampTable;
+            HashTableHandleTemplate<Float64> timeStampTable;
             HashTableHandleTemplate<Vector> positionTable;
             HashTableHandleTemplate<Matrix> orientationTable;
             HashTableHandleTemplate<Vector> velocityTable;
@@ -255,7 +247,7 @@ namespace dmz {
                objectTable.empty ();
                typeTable.empty ();
                stateTable.empty ();
-               time_stampTable.empty ();
+               timeStampTable.empty ();
                positionTable.empty ();
                orientationTable.empty ();
                velocityTable.empty ();
@@ -281,23 +273,22 @@ namespace dmz {
          struct SubscriptionStruct {
 
             const Handle SubHandle;
-            HashTableHandleTemplate<Mask> table;
+            HashTableHandleTemplate<EventObserverStruct> startTable;
+            HashTableHandleTemplate<EventObserverStruct> endTable;
             EventObserver &obs;
 
             SubscriptionStruct (EventObserver &theObs) :
                   SubHandle (theObs.get_event_observer_handle ()),
                   obs (theObs) {;}
 
-            ~SubscriptionStruct () { table.empty (); }
+            ~SubscriptionStruct () { startTable.clear (); endTable.clear (); }
          };
 
          EventStruct *_lookup_event (const Handle EventHandle);
 
-         void _update_subscription (
-            const Handle AttributeHandle,
-            const Mask &AttributeMask,
-            const Boolean AddObs,
-            EventObserver &obs);
+         EventObserverStruct *_create_event_observers (
+            const Handle TypeHandle,
+            HashTableHandleTemplate<EventObserverStruct> &table);
 
          void _init (Config &local);
 
@@ -313,28 +304,13 @@ namespace dmz {
          EventStruct *_recycleList;
 
          HashTableHandleTemplate<SubscriptionStruct> _subscriptionTable;
-
-         HashTableHandleTemplate<EventObserver> _startTable;
-         HashTableHandleTemplate<EventObserver> _endTable;
-         HashTableHandleTemplate<EventObserverStruct> _objectTable;
-         HashTableHandleTemplate<EventObserverStruct> _typeTable;
-         HashTableHandleTemplate<EventObserverStruct> _stateTable;
-         HashTableHandleTemplate<EventObserverStruct> _time_stampTable;
-         HashTableHandleTemplate<EventObserverStruct> _positionTable;
-         HashTableHandleTemplate<EventObserverStruct> _orientationTable;
-         HashTableHandleTemplate<EventObserverStruct> _velocityTable;
-         HashTableHandleTemplate<EventObserverStruct> _accelerationTable;
-         HashTableHandleTemplate<EventObserverStruct> _scaleTable;
-         HashTableHandleTemplate<EventObserverStruct> _vectorTable;
-         HashTableHandleTemplate<EventObserverStruct> _scalarTable;
-         HashTableHandleTemplate<EventObserverStruct> _textTable;
-         HashTableHandleTemplate<EventObserverStruct> _dataTable;
+         HashTableHandleTemplate<EventObserverStruct> _startTable;
+         HashTableHandleTemplate<EventObserverStruct> _endTable;
 
       private:
          EventModuleBasic ();
          EventModuleBasic (const EventModuleBasic &);
          EventModuleBasic &operator= (const EventModuleBasic &);
-
    };
 };
 
@@ -349,6 +325,5 @@ dmz::EventModuleBasic::_lookup_event (const Handle EventHandle) {
 
    return _eventCache;
 }
-
 
 #endif // DMZ_EVENT_MODULE_BASIC_DOT_H

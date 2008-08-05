@@ -2,13 +2,13 @@ lmk.set_name "dmzEventUtil"
 lmk.set_type "shared"
 
 lmk.add_files {
-   "dmzEventAttributeMasks.h",
+   "dmzEventCallbackMasks.h",
    "dmzEventObserverUtil.h",
    "dmzEventUtilExport.h",
 }
 
 lmk.add_files {
-   "dmzEventAttributeMasks.cpp",
+   "dmzEventCallbackMasks.cpp",
    "dmzEventObserverUtil.cpp",
 }
 

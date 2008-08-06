@@ -2,6 +2,7 @@
 #include <dmzEventConsts.h>
 #include <dmzEventModule.h>
 #include "dmzEventPluginDump.h"
+#include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
@@ -9,7 +10,8 @@ dmz::EventPluginDump::EventPluginDump (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       EventObserverUtil (Info, local),
       _log (Info),
-      _defs (Info.get_context (), &_log) {
+      _defs (Info.get_context (), &_log),
+      _defaultHandle (0) {
 
    _init (local);
 }
@@ -59,9 +61,8 @@ dmz::EventPluginDump::discover_plugin (
 void
 dmz::EventPluginDump::end_event (
       const Handle EventHandle,
-      const EventType &Type) {
-
-_log.warn << "End event!" << endl;
+      const EventType &Type,
+      const EventLocalityEnum Locality) {
 
    EventModule *eventMod (get_event_module ());
 
@@ -83,7 +84,7 @@ dmz::EventPluginDump::start_dump_event (
    _log.out << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" << endl
       << "    Type: " << Type.get_name () << endl
       << "  Handle: " << EventHandle << endl
-      << "Locality: " << lstr << endl;
+      << "Locality: " << lstr << endl << endl;
 }
 
 
@@ -100,6 +101,7 @@ dmz::EventPluginDump::store_event_object_handle (
       const Handle AttributeHandle,
       const Handle Value) {
 
+   _log.out << _get_attr_name (AttributeHandle) << "Object: " << Value << endl;
 }
 
 
@@ -109,6 +111,8 @@ dmz::EventPluginDump::store_event_object_type (
       const Handle AttributeHandle,
       const ObjectType &Value) {
 
+   _log.out << _get_attr_name (AttributeHandle) << "Object Type: " << Value.get_name ()
+      << endl;
 }
 
 
@@ -118,6 +122,9 @@ dmz::EventPluginDump::store_event_state (
       const Handle AttributeHandle,
       const Mask &Value) {
 
+   String stateName;
+   _defs.lookup_state_name (Value, stateName);
+   _log.out << _get_attr_name (AttributeHandle) << "State: " << stateName << endl;
 }
 
 
@@ -127,6 +134,7 @@ dmz::EventPluginDump::store_event_time_stamp (
       const Handle AttributeHandle,
       const Float64 &Value) {
 
+   _log.out << _get_attr_name (AttributeHandle) << "Time Stamp: " << Value << endl;
 }
 
 
@@ -136,6 +144,7 @@ dmz::EventPluginDump::store_event_position (
       const Handle AttributeHandle,
       const Vector &Value) {
 
+   _log.out << _get_attr_name (AttributeHandle) << "Position: " << Value << endl;
 }
 
 
@@ -145,6 +154,7 @@ dmz::EventPluginDump::store_event_orientation (
       const Handle AttributeHandle,
       const Matrix &Value) {
 
+   _log.out << _get_attr_name (AttributeHandle) << "Orientation: " << Value << endl;
 }
 
 
@@ -154,6 +164,7 @@ dmz::EventPluginDump::store_event_velocity (
       const Handle AttributeHandle,
       const Vector &Value) {
 
+   _log.out << _get_attr_name (AttributeHandle) << "Velocity: " << Value << endl;
 }
 
 
@@ -163,6 +174,7 @@ dmz::EventPluginDump::store_event_acceleration (
       const Handle AttributeHandle,
       const Vector &Value) {
 
+   _log.out << _get_attr_name (AttributeHandle) << "Acceleration: " << Value << endl;
 }
 
 
@@ -172,6 +184,7 @@ dmz::EventPluginDump::store_event_scale (
       const Handle AttributeHandle,
       const Vector &Value) {
 
+   _log.out << _get_attr_name (AttributeHandle) << "Scale: " << Value << endl;
 }
 
 
@@ -181,6 +194,7 @@ dmz::EventPluginDump::store_event_vector (
       const Handle AttributeHandle,
       const Vector &Value) {
 
+   _log.out << _get_attr_name (AttributeHandle) << "Vector: " << Value << endl;
 }
 
 
@@ -190,6 +204,7 @@ dmz::EventPluginDump::store_event_scalar (
       const Handle AttributeHandle,
       const Float64 Value) {
 
+   _log.out << _get_attr_name (AttributeHandle) << "Scalar: " << Value << endl;
 }
 
 
@@ -199,6 +214,7 @@ dmz::EventPluginDump::store_event_text (
       const Handle AttributeHandle,
       const String &Value) {
 
+   _log.out << _get_attr_name (AttributeHandle) << "Text: " << Value << endl;
 }
 
 
@@ -208,12 +224,30 @@ dmz::EventPluginDump::store_event_data (
       const Handle AttributeHandle,
       const Data &Value) {
 
+   //_log.out << _get_attr_name (AttributeHandle) << "Data: " << Value << endl;
+}
+
+
+dmz::String
+dmz::EventPluginDump::_get_attr_name (const Handle AttributeHandle) {
+
+   String result;
+
+   if (AttributeHandle != _defaultHandle) {
+
+      result = _defs.lookup_named_handle_name (AttributeHandle);
+      if (!result) { result = "<Unknown Attribute>"; }
+      result << ":";
+   }
+
+   return result;
 }
 
 
 void
 dmz::EventPluginDump::_init (Config &local) {
 
+   _defaultHandle = _defs.create_named_handle (EventAttributeDefaultName);
    _launchEvent = activate_event_callback (EventLaunchName, EventEndMask);
    _detonationEvent = activate_event_callback (EventDetonationName, EventEndMask);
    _collisionEvent = activate_event_callback (EventCollisionName, EventEndMask);

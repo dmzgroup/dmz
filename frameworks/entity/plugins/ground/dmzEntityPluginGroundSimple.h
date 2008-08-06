@@ -40,6 +40,13 @@ namespace dmz {
          virtual void update_time_slice (const Float64 TimeDelta);
 
          // Object Observer Interface
+         virtual void update_object_state (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Mask &Value,
+            const Mask *PreviousValue);
+
          virtual void update_object_flag (
             const UUID &Identity,
             const Handle ObjectHandle,
@@ -163,7 +170,7 @@ namespace dmz {
          void _init (Config &local);
 
          RenderModuleIsect *_isect;
-         Handle _handle;
+         Handle _hil;
          Handle _defaultHandle;
          Handle _hilHandle;
          Handle _throttleHandle;
@@ -172,6 +179,9 @@ namespace dmz {
 
          IsectTestContainer _isectTestContainer;
          IsectParameters _isectParameters;
+
+         Mask _deadState;
+         Boolean _isDead;
 
          Int32 _active;
 

@@ -20,7 +20,8 @@ dmz::AudioPluginEvent::~AudioPluginEvent () {
 void
 dmz::AudioPluginEvent::end_event (
       const Handle EventHandle,
-      const EventType &Type) {
+      const EventType &Type,
+      const EventLocalityEnum Locality) {
 
 }
 

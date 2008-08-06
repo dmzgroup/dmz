@@ -18,11 +18,12 @@ dmz::EntityPluginGroundSimple::EntityPluginGroundSimple (
       TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       InputObserverUtil (Info, local),
-      _handle (0),
+      _hil (0),
       _defaultHandle (0),
       _hilHandle (0),
       _throttleHandle (0),
       _isect (0),
+      _isDead (False),
       _active (0),
       _time (Info),
       _log (Info) {
@@ -59,14 +60,14 @@ dmz::EntityPluginGroundSimple::update_time_slice (const Float64 TimeDelta) {
 
    ObjectModule *objMod (get_object_module ());
 
-   if ((_active > 0) && objMod && _handle && _defaultHandle) {
+   if ((_active > 0) && objMod && _hil && _defaultHandle) {
 
       Vector pos, vel;
       Matrix ori;
 
-      objMod->lookup_position (_handle, _defaultHandle, pos);
-      objMod->lookup_velocity (_handle, _defaultHandle, vel);
-      objMod->lookup_orientation (_handle, _defaultHandle, ori);
+      objMod->lookup_position (_hil, _defaultHandle, pos);
+      objMod->lookup_velocity (_hil, _defaultHandle, vel);
+      objMod->lookup_orientation (_hil, _defaultHandle, ori);
 
       const Vector OldPos (pos);
       const Matrix OldOri (ori);
@@ -107,9 +108,9 @@ dmz::EntityPluginGroundSimple::update_time_slice (const Float64 TimeDelta) {
          }
       }
 
-      objMod->store_position (_handle, _defaultHandle, pos);
-      objMod->store_velocity (_handle, _defaultHandle, vel);
-      objMod->store_orientation (_handle, _defaultHandle, ori);
+      objMod->store_position (_hil, _defaultHandle, pos);
+      objMod->store_velocity (_hil, _defaultHandle, vel);
+      objMod->store_orientation (_hil, _defaultHandle, ori);
 
       Float64 target (_move.throttle + 0.3);
 
@@ -119,7 +120,7 @@ dmz::EntityPluginGroundSimple::update_time_slice (const Float64 TimeDelta) {
 
       Float64 current (1.0);
 
-      objMod->lookup_scalar (_handle, _throttleHandle, current);
+      objMod->lookup_scalar (_hil, _throttleHandle, current);
 
       if (current > target) {
 
@@ -134,7 +135,9 @@ dmz::EntityPluginGroundSimple::update_time_slice (const Float64 TimeDelta) {
          if (current > target) { current = target; }
       }
 
-      objMod->store_scalar (_handle, _throttleHandle, current);
+      if (_isDead) { current = 0.0; }
+
+      objMod->store_scalar (_hil, _throttleHandle, current);
 
       const Float64 Time (_time.get_frame_time ());
 
@@ -150,6 +153,26 @@ dmz::EntityPluginGroundSimple::update_time_slice (const Float64 TimeDelta) {
 
 // Object Observer Interface
 void
+dmz::EntityPluginGroundSimple::update_object_state (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Mask &Value,
+      const Mask *PreviousValue) {
+
+   if (_deadState && (AttributeHandle == _defaultHandle) && (ObjectHandle == _hil)) {
+
+      const Boolean IsDead (Value.contains (_deadState));
+      const Boolean WasDead (
+         PreviousValue ? PreviousValue->contains (_deadState) : False);
+
+      if (IsDead && !WasDead) { _isDead = True; }
+      else if (!IsDead && WasDead) { _isDead = False; }
+   }
+}
+
+
+void
 dmz::EntityPluginGroundSimple::update_object_flag (
       const UUID &Identity,
       const Handle ObjectHandle,
@@ -157,7 +180,7 @@ dmz::EntityPluginGroundSimple::update_object_flag (
       const Boolean Value,
       const Boolean *PreviousValue) {
 
-   if ((AttributeHandle == _hilHandle) && Value) { _handle = ObjectHandle; }
+   if ((AttributeHandle == _hilHandle) && Value) { _hil = ObjectHandle; }
 }
 
 
@@ -180,11 +203,11 @@ dmz::EntityPluginGroundSimple::update_channel_state (
 
    if (_active == 0) {
 
-      if (_handle && _throttleHandle) {
+      if (_hil && _throttleHandle) {
 
          ObjectModule *objMod (get_object_module ());
 
-         if (objMod) { objMod->store_scalar (_handle, _throttleHandle, 0.0); } 
+         if (objMod) { objMod->store_scalar (_hil, _throttleHandle, 0.0); } 
       }
    }
 }
@@ -243,8 +266,8 @@ dmz::EntityPluginGroundSimple::receive_button_event (
          Vector pos;
          Matrix ori;
 
-         objMod->lookup_position (_handle, _defaultHandle, pos);
-         objMod->lookup_orientation (_handle, _defaultHandle, ori);
+         objMod->lookup_position (_hil, _defaultHandle, pos);
+         objMod->lookup_orientation (_hil, _defaultHandle, ori);
 
          _log.out << "\n<position x=\"" << pos.get_x ()
             << "\" y=\"" << pos.get_y ()
@@ -306,7 +329,7 @@ dmz::EntityPluginGroundSimple::_find_point (
 
    if (_isect) {
 
-      _isect->disable_isect (_handle);
+      _isect->disable_isect (_hil);
 
       const Vector Up (0.0, 1.0, 0.0);
       const Vector Down (0.0, -1.0, 0.0);
@@ -374,7 +397,7 @@ dmz::EntityPluginGroundSimple::_find_point (
          }
       }
 
-      _isect->enable_isect (_handle);
+      _isect->enable_isect (_hil);
    }
 
    return result;
@@ -488,6 +511,7 @@ dmz::EntityPluginGroundSimple::_move_entity (
 
       pos += vel * TimeDelta;
    }
+   else if (_isDead) { pos += vel * TimeDelta; }
    else {
 
       const Float64 ForwardFactor ((vforward.get_angle (vel) > HalfPi64) ? -1.0 : 1.0);
@@ -562,7 +586,7 @@ dmz::EntityPluginGroundSimple::_validate_move (
 
    if (!Airborn && _isect && !(StartPos - pos).is_zero ()) {
 
-      _isect->disable_isect (_handle);
+      _isect->disable_isect (_hil);
 
       Vector right (1.0, 0.0, 0.0);
       Vector left (-1.0, 0.0, 0.0);
@@ -693,7 +717,7 @@ dmz::EntityPluginGroundSimple::_validate_move (
          }
       }
 
-      _isect->enable_isect (_handle);
+      _isect->enable_isect (_hil);
    }
 }
 
@@ -741,7 +765,9 @@ dmz::EntityPluginGroundSimple::_init (Config &local) {
 
    Definitions defs (get_plugin_runtime_context (), &_log);
 
-   _defaultHandle = defs.create_named_handle (ObjectAttributeDefaultName);
+   defs.lookup_state (DefaultStateNameDead, _deadState);
+
+   _defaultHandle = activate_default_object_attribute (ObjectStateMask);
 
    _hilHandle = activate_object_attribute (
       ObjectAttributeHumanInTheLoopName,

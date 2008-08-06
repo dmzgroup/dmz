@@ -90,6 +90,7 @@ dmz::WeaponPluginLaserBullet::update_time_slice (const Float64 TimeDelta) {
       HashTableHandleIterator it;
 
       IsectParameters params;
+      params.set_test_result_type (IsectClosestPoint);
 
       Float64 *speedPtr (_objectTable.get_first (it));
 
@@ -111,10 +112,18 @@ dmz::WeaponPluginLaserBullet::update_time_slice (const Float64 TimeDelta) {
          test.set_test (1, IsectSegmentTest, pos, NewPos);
 
          _isectMod->disable_isect (obj);
+
          if (_isectMod->do_isect (params, test, isectResults)) {
 
-_log.error << "BOOM!" << endl;
-            if (_eventMod) { _eventMod->create_detonation_event (obj); }
+            if (_eventMod) {
+
+               IsectResult value;
+               isectResults.get_first (value);
+               Handle target (0);
+               value.get_object_handle (target);
+               _eventMod->create_detonation_event (obj, target);
+            }
+
             objMod->destroy_object (obj);
          }
          else {
@@ -122,6 +131,7 @@ _log.error << "BOOM!" << endl;
             objMod->store_position (obj, _defaultHandle, NewPos);
             objMod->store_velocity (obj, _defaultHandle, vel);
          }
+
          _isectMod->enable_isect (obj);
          
          speedPtr = _objectTable.get_next (it);
@@ -141,6 +151,7 @@ dmz::WeaponPluginLaserBullet::create_object (
    if ((Locality == ObjectLocal) && _typeSet.contains_type (Type)) {
 
       _store_speed (ObjectHandle, Type);
+      if (_eventMod) { _eventMod->create_launch_event (ObjectHandle, 0); }
    }
 }
 

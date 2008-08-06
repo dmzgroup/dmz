@@ -45,6 +45,7 @@ lmk.add_files {
    "runtime/dmzRuntimeTimeSlice.h",
    "runtime/dmzRuntimeTime.h",
    "runtime/dmzRuntimeUndo.h",
+   "runtime/dmzRuntimeUUID.h",
    "system/dmzSystemDynamicLibrary.h",
    "system/dmzSystemFile.h",
    "system/dmzSystemMutex.h",

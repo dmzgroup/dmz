@@ -8,6 +8,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeObjectType.h>
+#include <dmzRuntimeUUID.h>
 #include <dmzSystemMarshal.h>
 #include <dmzSystemUnmarshal.h>
 #include <dmzTypesMask.h>
@@ -20,6 +21,7 @@ dmz::NetExtPacketCodecObjectBasic::NetExtPacketCodecObjectBasic (
       Config &local) :
       Plugin (Info),
       NetExtPacketCodecObject (Info),
+      _SysID (get_runtime_uuid (Info)),
       _log (Info),
       _time (Info.get_context ()),
       _defaultHandle (0),
@@ -73,11 +75,13 @@ dmz::NetExtPacketCodecObjectBasic::decode (Unmarshal &data, Boolean &isLoopback)
       UUID uuid;
       data.get_next_uuid (uuid);
 
-      if (_objMod->lookup_locality (uuid) == ObjectLocal) {
+      if (_SysID == uuid) {
 
          isLoopback = True;
       }
       else {
+
+         data.get_next_uuid (uuid);
 
          Vector pos;
          Matrix ori;
@@ -200,6 +204,7 @@ dmz::NetExtPacketCodecObjectBasic::encode_object (
 
             _attrMod->to_net_mask (type, state, stateArray);
 
+            data.set_next_uuid (_SysID);
             data.set_next_uuid (uuid);
             data.set_next_vector (pos);
             data.set_next_matrix (ori);

@@ -1,6 +1,9 @@
+#include <dmzEventCallbackMasks.h>
+#include <dmzEventModule.h>
 #include "dmzNetPluginPacket.h"
 #include <dmzObjectAttributeMasks.h>
 #include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeEventType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesUUID.h>
@@ -12,6 +15,7 @@ dmz::NetPluginPacket::NetPluginPacket (
       Plugin (Info),
       TimeSlice (Info),
       NetPacketObserver (Info),
+      EventObserverUtil (Info, local),
       ObjectObserverUtil (Info, local),
       _log (Info),
       _drMod (0),
@@ -173,6 +177,28 @@ dmz::NetPluginPacket::read_packet (const Int32 Size, char *buffer) {
 }
 
 
+// EventObserverUtil Interface
+void
+dmz::NetPluginPacket::end_event (
+      const Handle EventHandle,
+      const EventType &Type,
+      const EventLocalityEnum Locality) {
+
+   if (Locality == EventLocal) {
+
+      if (_codecMod && _ioMod) {
+
+         _outData.reset ();
+
+         if (_codecMod->encode_event (Type, EventHandle, _outData)) {
+
+            _ioMod->write_packet (_outData.get_length (), _outData.get_buffer ());
+         }
+      }
+   }
+}
+
+
 // ObjectObserverUtil Interface
 void
 dmz::NetPluginPacket::create_object (
@@ -260,6 +286,9 @@ dmz::NetPluginPacket::update_object_type (
 void
 dmz::NetPluginPacket::_init (Config &local) {
 
+   activate_event_callback (EventLaunchName, EventEndMask);
+   activate_event_callback (EventDetonationName, EventEndMask);
+   activate_event_callback (EventCollisionName, EventEndMask);
 }
 
 

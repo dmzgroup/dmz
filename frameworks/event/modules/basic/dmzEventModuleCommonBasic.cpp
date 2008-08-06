@@ -6,6 +6,7 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzTypesVector.h>
 
 dmz::EventModuleCommonBasic::EventModuleCommonBasic (
       const PluginInfo &Info,
@@ -72,12 +73,35 @@ dmz::EventModuleCommonBasic::discover_plugin (
 
 // EventModuleCommon Interface
 dmz::Handle
-dmz::EventModuleCommonBasic::create_launch_event (const Handle ObjectHandle) {
+dmz::EventModuleCommonBasic::create_launch_event (
+      const Handle SourceHandle,
+      const Handle TargetHandle) {
 
    Handle result (0);
 
-   if (_eventMod && _objMod) {
+   if (_launchType && _eventMod && _objMod) {
 
+      result = _eventMod->start_event (_launchType, EventLocal);
+
+      if (result) {
+
+         _eventMod->store_object_handle (result, _munitionsHandle, SourceHandle);
+         _eventMod->store_object_handle (result, _targetHandle, TargetHandle);
+
+         Vector pos;
+         if (_objMod->lookup_position (SourceHandle, _defaultObjectHandle, pos)) {
+
+            _eventMod->store_position (result, _defaultEventHandle, pos);
+         }
+
+         Vector vel;
+         if (_objMod->lookup_velocity (SourceHandle, _defaultObjectHandle, vel)) {
+
+            _eventMod->store_velocity (result, _defaultEventHandle, vel);
+         }
+
+         _eventMod->end_event (result);
+      }
    }
 
    return result;
@@ -85,7 +109,9 @@ dmz::EventModuleCommonBasic::create_launch_event (const Handle ObjectHandle) {
 
 
 dmz::Handle
-dmz::EventModuleCommonBasic::create_detonation_event (const Handle ObjectHandle) {
+dmz::EventModuleCommonBasic::create_detonation_event (
+      const Handle SourceHandle,
+      const Handle TargetHandle) {
 
    Handle result (0);
 
@@ -95,7 +121,20 @@ dmz::EventModuleCommonBasic::create_detonation_event (const Handle ObjectHandle)
 
       if (result) {
 
-         _eventMod->store_object_handle (result, _munitionsHandle, ObjectHandle);
+         _eventMod->store_object_handle (result, _munitionsHandle, SourceHandle);
+         _eventMod->store_object_handle (result, _targetHandle, TargetHandle);
+
+         Vector pos;
+         if (_objMod->lookup_position (SourceHandle, _defaultObjectHandle, pos)) {
+
+            _eventMod->store_position (result, _defaultEventHandle, pos);
+         }
+
+         Vector vel;
+         if (_objMod->lookup_velocity (SourceHandle, _defaultObjectHandle, vel)) {
+
+            _eventMod->store_velocity (result, _defaultEventHandle, vel);
+         }
 
          _eventMod->end_event (result);
       }
@@ -107,8 +146,8 @@ dmz::EventModuleCommonBasic::create_detonation_event (const Handle ObjectHandle)
 
 dmz::Handle
 dmz::EventModuleCommonBasic::create_collision_event (
-            const Handle SourceHandle,
-            const Handle TargetHandle) {
+      const Handle SourceHandle,
+      const Handle TargetHandle) {
 
    Handle result (0);
 

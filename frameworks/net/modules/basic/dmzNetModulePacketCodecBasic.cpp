@@ -379,11 +379,11 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
                   const String TypeName (config_to_string ("type", event));
 
-                  if (!ps->objects.add_object_type (
+                  if (!ps->events.add_event_type (
                         TypeName,
                         get_plugin_runtime_context ())) {
 
-                     _log.error << "Unknown object type: " << TypeName
+                     _log.error << "Unknown event type: " << TypeName
                         << ". Unable to bind to codec: " << Name
                         << " with handle: " << PacketHandle << endl;
                   }

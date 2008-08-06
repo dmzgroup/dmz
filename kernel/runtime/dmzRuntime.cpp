@@ -1,4 +1,6 @@
 #include <dmzRuntime.h>
+#include <dmzRuntimePluginInfo.h>
+#include <dmzRuntimeUUID.h>
 #include "dmzRuntimeContext.h"
 
 /*!
@@ -93,4 +95,23 @@ void
 dmz::Runtime::update_time_slice () {
 
    if (_state.context) { _state.context->update_time_slice (); }
+}
+
+
+dmz::UUID
+dmz::get_runtime_uuid (RuntimeContext *context) {
+
+   UUID result;
+   if (context) { result = context->uuid; }
+   return result;
+}
+
+
+dmz::UUID
+dmz::get_runtime_uuid (const PluginInfo &Info) {
+
+   UUID result;
+   RuntimeContext *context (Info.get_context ());
+   if (context) { result = context->uuid; }
+   return result;
 }

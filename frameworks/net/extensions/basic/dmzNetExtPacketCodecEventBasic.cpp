@@ -1,18 +1,20 @@
-#include "dmzNetExtPacketCodecEventBasic.h"
-#include <dmzNetModuleAttributeMap.h>
-#include <dmzNetModuleIdentityMap.h>
 #include <dmzEventConsts.h>
 #include <dmzEventModule.h>
+#include "dmzNetExtPacketCodecEventBasic.h"
+#include <dmzNetModuleAttributeMap.h>
+#include <dmzObjectModule.h>
 #include <dmzRuntimeConfigRead.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeEventType.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzRuntimeUUID.h>
 #include <dmzSystemMarshal.h>
 #include <dmzSystemUnmarshal.h>
 #include <dmzTypesMask.h>
 #include <dmzTypesMatrix.h>
+#include <dmzTypesUUID.h>
 #include <dmzTypesVector.h>
 
 dmz::NetExtPacketCodecEventBasic::NetExtPacketCodecEventBasic (
@@ -20,18 +22,19 @@ dmz::NetExtPacketCodecEventBasic::NetExtPacketCodecEventBasic (
       Config &local) :
       Plugin (Info),
       NetExtPacketCodecEvent (Info),
+      _SysID (get_runtime_uuid (Info)),
       _log (Info),
       _time (Info.get_context ()),
       _defaultHandle (0),
       _sourceHandle (0),
       _targetHandle (0),
-      _munitionHandle (0),
-      _fireHandle (1),
+      _munitionsHandle (0),
+      _launchHandle (1),
       _detonateHandle (2),
       _collisionHandle (3),
       _eventMod (0),
       _attrMod (0),
-      _idMod (0) {
+      _objMod (0) {
 
    _init (local);
 }
@@ -56,16 +59,12 @@ dmz::NetExtPacketCodecEventBasic::discover_plugin (
       }
 
       if (!_attrMod) { _attrMod = NetModuleAttributeMap::cast (PluginPtr); }
-      if (!_idMod) { _idMod = NetModuleIdentityMap::cast (PluginPtr); }
+      if (!_objMod) { _objMod = ObjectModule::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
       if (_eventMod && (_eventMod = EventModule::cast (PluginPtr))) {
 
-         _defaultHandle = 0;
-         _sourceHandle = 0;
-         _targetHandle = 0;
-         _munitionHandle = 0;
          _eventMod = 0;
       }
 
@@ -74,7 +73,7 @@ dmz::NetExtPacketCodecEventBasic::discover_plugin (
          _attrMod = 0;
       }
 
-      if (_idMod && (_idMod == NetModuleIdentityMap::cast (PluginPtr))) { _idMod = 0; }
+      if (_objMod && (_objMod == ObjectModule::cast (PluginPtr))) { _objMod = 0; }
    }
 }
 
@@ -85,58 +84,42 @@ dmz::NetExtPacketCodecEventBasic::decode (Unmarshal &data, Boolean &isLoopback) 
 
    Boolean result (False);
 
-   if (_idMod && _attrMod && _eventMod) {
+   if (_objMod && _attrMod && _eventMod) {
 
-      const UInt32 TypeEnum (data.get_next_uint32 ());
-      const UInt32 SourceSite (data.get_next_uint32 ());
-      const UInt32 SourceHost (data.get_next_uint32 ());
-      const UInt32 SourceEntity (data.get_next_uint32 ());
+      UUID sysID;
+      data.get_next_uuid (sysID);
 
-      if ((_idMod->get_site_handle () == SourceSite) &&
-            (_idMod->get_host_handle () == SourceHost)) {
+      if (_SysID == sysID) {
 
          isLoopback = True;
       }
       else {
 
-         Handle sourceHandle (0);
-         Handle targetHandle (0);
-         Handle munitionHandle (0);
+         const UInt32 TypeEnum (data.get_next_uint32 ());
 
-         _idMod->lookup_handle_from_site_host_entity (
-            SourceSite,
-            SourceHost,
-            SourceEntity,
-            sourceHandle);
+         UUID sourceID;
+         data.get_next_uuid (sourceID);
 
          EventType type;
          ObjectType munitionType;
+         Handle sourceHandle (0), targetHandle (0), munitionsHandle (0);
 
-         if (TypeEnum == _fireHandle) { type = _fireType; }
+         sourceHandle = _objMod->lookup_handle_from_uuid (sourceID);
+
+         if (TypeEnum == _launchHandle) { type = _launchType; }
          else if (TypeEnum == _detonateHandle) { type = _detonateType; }
          else if (TypeEnum == _collisionHandle) { type = _collisionType; }
 
-         const UInt32 TargetSite (data.get_next_uint32 ());
-         const UInt32 TargetHost (data.get_next_uint32 ());
-         const UInt32 TargetEntity (data.get_next_uint32 ());
+         UUID targetID;
+         data.get_next_uuid (targetID);
+         targetHandle = _objMod->lookup_handle_from_uuid (targetID);
 
-         _idMod->lookup_handle_from_site_host_entity (
-            TargetSite,
-            TargetHost,
-            TargetEntity,
-            targetHandle);
+         if ((TypeEnum == _launchHandle) || (TypeEnum == _detonateHandle)) {
 
-         if ((TypeEnum == _fireHandle) || (TypeEnum == _detonateHandle)) {
+            UUID munitionsID;
+            data.get_next_uuid (munitionsID);
 
-            const UInt32 MunitionSite (data.get_next_uint32 ());
-            const UInt32 MunitionHost (data.get_next_uint32 ());
-            const UInt32 MunitionEntity (data.get_next_uint32 ());
-
-            _idMod->lookup_handle_from_site_host_entity (
-               MunitionSite,
-               MunitionHost,
-               MunitionEntity,
-               munitionHandle);
+            munitionsHandle = _objMod->lookup_handle_from_uuid (munitionsID);
 
             ArrayUInt32 typeArray;
 
@@ -160,14 +143,17 @@ dmz::NetExtPacketCodecEventBasic::decode (Unmarshal &data, Boolean &isLoopback) 
             _eventMod->store_object_handle (EventHandle, _sourceHandle, sourceHandle);
             _eventMod->store_object_handle (EventHandle, _targetHandle, targetHandle);
 
-            if ((TypeEnum == _fireHandle) || (TypeEnum == _detonateHandle)) {
+            if ((TypeEnum == _launchHandle) || (TypeEnum == _detonateHandle)) {
 
                _eventMod->store_object_handle (
                   EventHandle,
-                  _munitionHandle,
-                  munitionHandle);
+                  _munitionsHandle,
+                  munitionsHandle);
 
-               _eventMod->store_object_type (EventHandle, _munitionHandle, munitionType);
+               _eventMod->store_object_type (
+                  EventHandle,
+                  _munitionsHandle,
+                  munitionType);
             }
 
             _eventMod->store_position (EventHandle, _defaultHandle, pos);
@@ -189,84 +175,61 @@ dmz::NetExtPacketCodecEventBasic::encode_event (
 
    Boolean result (False);
 
-   if (_idMod && _attrMod && _eventMod) {
+   if (_objMod && _attrMod && _eventMod) {
+
+      data.set_next_uuid (_SysID);
 
       UInt32 typeEnum (0);
       EventType type;
       _eventMod->lookup_event_type (EventHandle, type);
 
       if (type.is_of_type (_detonateType)) { typeEnum = _detonateHandle; }
-      else if (type.is_of_type (_fireType)) { typeEnum = _fireHandle; }
+      else if (type.is_of_type (_launchType)) { typeEnum = _launchHandle; }
       else if (type.is_of_type (_collisionType)) { typeEnum = _collisionHandle; }
 
-       data.set_next_uint32 (typeEnum);
+      data.set_next_uint32 (typeEnum);
 
       Handle sourceHandle (0);
 
-      UInt32 sourceSite (0);
-      UInt32 sourceHost (0);
-      UInt32 sourceEntity (0);
+      UUID sourceID, targetID, munitionsID;
 
       if (_eventMod->lookup_object_handle (EventHandle, _sourceHandle, sourceHandle)) {
 
-         _idMod->lookup_site_host_entity (
-            sourceHandle,
-            sourceSite,
-            sourceHost,
-            sourceEntity);
+         _objMod->lookup_uuid (sourceHandle, sourceID);
       }
 
-      data.set_next_uint32 (sourceSite);
-      data.set_next_uint32 (sourceHost);
-      data.set_next_uint32 (sourceEntity);
+      data.set_next_uuid (sourceID);
 
       Handle targetHandle (0);
 
-      UInt32 targetSite (0);
-      UInt32 targetHost (0);
-      UInt32 targetEntity (0);
-
       if (_eventMod->lookup_object_handle (EventHandle, _targetHandle, targetHandle)) {
 
-         _idMod->lookup_site_host_entity (
-            targetHandle,
-            targetSite,
-            targetHost,
-            targetEntity);
+         _objMod->lookup_uuid (targetHandle, targetID);
       }
 
-      data.set_next_uint32 (targetSite);
-      data.set_next_uint32 (targetHost);
-      data.set_next_uint32 (targetEntity);
+      data.set_next_uuid (targetID);
 
-      if ((typeEnum == _detonateHandle) || (typeEnum == _fireHandle)) {
+      if ((typeEnum == _detonateHandle) || (typeEnum == _launchHandle)) {
 
-         Handle munitionHandle (0);
-
-         UInt32 munitionSite (0);
-         UInt32 munitionHost (0);
-         UInt32 munitionEntity (0);
+         Handle munitionsHandle (0);
 
          if (_eventMod->lookup_object_handle (
                EventHandle,
-               _munitionHandle,
-               munitionHandle)) {
+               _munitionsHandle,
+               munitionsHandle)) {
 
-            _idMod->lookup_site_host_entity (
-               munitionHandle,
-               munitionSite,
-               munitionHost,
-               munitionEntity);
+            _objMod->lookup_uuid (munitionsHandle, munitionsID);
          }
 
-         data.set_next_uint32 (munitionSite);
-         data.set_next_uint32 (munitionHost);
-         data.set_next_uint32 (munitionEntity);
+         data.set_next_uuid (munitionsID);
 
          ObjectType munitionType;
          ArrayUInt32 array;
 
-         if (_eventMod->lookup_object_type (EventHandle, _munitionHandle, munitionType)) {
+         if (_eventMod->lookup_object_type (
+               EventHandle,
+               _munitionsHandle,
+               munitionType)) {
 
             _attrMod->to_net_type (munitionType, array);
          }
@@ -305,18 +268,18 @@ dmz::NetExtPacketCodecEventBasic::_init (Config &local) {
    _defaultHandle = defs.create_named_handle (EventAttributeDefaultName);
    _sourceHandle = defs.create_named_handle (EventAttributeSourceName);
    _targetHandle = defs.create_named_handle (EventAttributeTargetName);
-   _munitionHandle = defs.create_named_handle (EventAttributeMunitionsName);
+   _munitionsHandle = defs.create_named_handle (EventAttributeMunitionsName);
 
-   _fireType.set_type (
-      config_to_string ("events.fire.name", local, "Fire_Event"),
+   _launchType.set_type (
+      config_to_string ("events.launch.name", local, EventLaunchName),
       context);
 
    _detonateType.set_type (
-      config_to_string ("events.detonate.name", local, "Detonation_Event"),
+      config_to_string ("events.detonate.name", local, EventDetonationName),
       context);
 
    _collisionType.set_type (
-      config_to_string ("events.collision.name", local, "Collision_Event"),
+      config_to_string ("events.collision.name", local, EventCollisionName),
       context);
 }
 

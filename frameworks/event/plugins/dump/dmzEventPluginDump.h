@@ -31,7 +31,8 @@ namespace dmz {
          // Event Observer Interface
          virtual void end_event (
             const Handle EventHandle,
-            const EventType &Type);
+            const EventType &Type,
+            const EventLocalityEnum Locality);
 
          // Event Dump Interface
          virtual void start_dump_event (
@@ -107,11 +108,14 @@ namespace dmz {
             const Data &Value);
 
       protected:
+         String _get_attr_name (const Handle AttributeHandle);
          void _init (Config &local);
 
          Log _log;
 
          Definitions _defs;
+
+         Handle _defaultHandle;
 
          EventType _launchEvent;
          EventType _detonationEvent;

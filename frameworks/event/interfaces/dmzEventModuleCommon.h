@@ -21,8 +21,14 @@ namespace dmz {
          Handle get_event_module_common_handle () const;
 
          // EventModuleCommon Interface
-         virtual Handle create_launch_event (const Handle ObjectHandle) = 0;
-         virtual Handle create_detonation_event (const Handle ObjectHandle) = 0;
+         virtual Handle create_launch_event (
+            const Handle SourceHandle,
+            const Handle TargetHandle) = 0;
+
+         virtual Handle create_detonation_event (
+            const Handle SourceHandle,
+            const Handle TargetHandle) = 0;
+
          virtual Handle create_collision_event (
             const Handle SourceHandle,
             const Handle TargetHandle) = 0;

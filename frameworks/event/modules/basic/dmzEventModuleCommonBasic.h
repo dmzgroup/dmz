@@ -29,8 +29,14 @@ namespace dmz {
             const Plugin *PluginPtr);
 
          // EventModuleCommon Interface
-         virtual Handle create_launch_event (const Handle ObjectHandle);
-         virtual Handle create_detonation_event (const Handle ObjectHandle);
+         virtual Handle create_launch_event (
+            const Handle SourceHandle,
+            const Handle TargetHandle);
+
+         virtual Handle create_detonation_event (
+            const Handle SourceHandle,
+            const Handle TargetHandle);
+
          virtual Handle create_collision_event (
             const Handle SourceHandle,
             const Handle TargetHandle);

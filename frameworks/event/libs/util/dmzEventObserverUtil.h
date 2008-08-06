@@ -34,7 +34,8 @@ namespace dmz {
 
          virtual void end_event (
             const Handle EventHandle,
-            const EventType &Type);
+            const EventType &Type,
+            const EventLocalityEnum Locality);
 
       protected:
          EventObserverUtil (const PluginInfo &Info, const Config &Data);

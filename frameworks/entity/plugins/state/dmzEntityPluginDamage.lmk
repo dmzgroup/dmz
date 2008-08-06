@@ -1,0 +1,9 @@
+lmk.set_name "dmzEntityPluginDamage"
+lmk.set_type "plugin"
+lmk.add_files {"dmzEntityPluginDamage.cpp",}
+lmk.add_libs {
+   "dmzEventUtil",
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzObjectFramework", "dmzEventFramework",}

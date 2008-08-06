@@ -27,7 +27,8 @@ namespace dmz {
          // Event Observer Interface
          virtual void end_event (
             const Handle EventHandle,
-            const EventType &Type);
+            const EventType &Type,
+            const EventLocalityEnum Locality);
 
      protected:
          void _init (Config &local);

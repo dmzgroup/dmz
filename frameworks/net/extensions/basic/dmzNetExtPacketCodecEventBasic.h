@@ -6,12 +6,14 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTime.h>
+#include <dmzTypesUUID.h>
 
 namespace dmz {
 
    class EventModule;
    class NetModuleAttributeMap;
    class NetModuleIdentityMap;
+   class ObjectModule;
 
    class NetExtPacketCodecEventBasic :
          public Plugin,
@@ -37,6 +39,8 @@ namespace dmz {
       protected:
          void _init (Config &local);
 
+         const UUID _SysID;
+
          Log _log;
 
          Time _time;
@@ -44,19 +48,19 @@ namespace dmz {
          Handle _defaultHandle;
          Handle _sourceHandle;
          Handle _targetHandle;
-         Handle _munitionHandle;
+         Handle _munitionsHandle;
 
-         Handle _fireHandle;
+         Handle _launchHandle;
          Handle _detonateHandle;
          Handle _collisionHandle;
 
-         EventType _fireType;
+         EventType _launchType;
          EventType _detonateType;
          EventType _collisionType;
 
          EventModule *_eventMod;
          NetModuleAttributeMap *_attrMod;
-         NetModuleIdentityMap *_idMod;
+         ObjectModule *_objMod;
 
       private:
          NetExtPacketCodecEventBasic ();

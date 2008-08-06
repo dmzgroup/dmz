@@ -188,7 +188,11 @@ dmz::WeaponPluginFixedLauncher::_create_munition (const Handle SourceHandle) {
 
    ObjectModule *objMod (get_object_module ());
 
-   if (_ammoType && SourceHandle && objMod) {
+   Boolean active (True);
+
+   if ((SourceHandle == _hil) && !_hilActive) { active = False; }
+
+   if (active && _ammoType && SourceHandle && objMod) {
 
       const Handle AmmoHandle = objMod->create_object (_ammoType, ObjectLocal);
 

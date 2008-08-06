@@ -63,6 +63,26 @@ dmz::EventModuleBasic::~EventModuleBasic () {
    _endTable.empty ();
 }
 
+// Plugin Interface
+void
+dmz::EventModuleBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
+
+   if (Mode == PluginDiscoverAdd) {
+
+      EventObserver *obs (EventObserver::cast (PluginPtr));
+
+      if (obs) { obs->store_event_module (_PluginInfoData.get_name (), *this); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      EventObserver *obs (EventObserver::cast (PluginPtr));
+
+      if (obs) { obs->remove_event_module (_PluginInfoData.get_name (), *this); }
+   }
+}
+
 
 // TimeSlice Interface
 void
@@ -341,7 +361,7 @@ dmz::EventModuleBasic::dump_event (const Handle EventHandle, EventDump &dump) {
       }
 
       {
-         Vector *ptr = event->vectorTable.get_first (it);
+         Vector *ptr = event->scaleTable.get_first (it);
 
          while (ptr) {
 
@@ -434,7 +454,7 @@ dmz::EventModuleBasic::start_event (
 
                      while (obs) {
 
-                        obs->start_event (result, event->type, Locality);
+                        obs->start_event (result, event->type, event->locality);
                         obs = eos->get_next (it);
                      }
                   }
@@ -481,7 +501,7 @@ dmz::EventModuleBasic::end_event (const Handle EventHandle) {
 
             while (obs) {
 
-               obs->end_event (result, event->type);
+               obs->end_event (event->handle, event->type, event->locality);
                obs = eos->get_next (it);
             }
          }
@@ -489,6 +509,7 @@ dmz::EventModuleBasic::end_event (const Handle EventHandle) {
          current.become_parent ();
       }
 
+      // Move to end of the table.
       if (_eventTable.remove (event->handle)) {
 
          if (_eventTable.store (event->handle, event)) { result = True; }

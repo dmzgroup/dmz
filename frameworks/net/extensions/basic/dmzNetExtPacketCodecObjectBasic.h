@@ -7,6 +7,7 @@
 #include <dmzRuntimeTime.h>
 #include <dmzTypesMask.h>
 #include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesUUID.h>
 
 namespace dmz {
 
@@ -55,6 +56,7 @@ namespace dmz {
 
          void _init (Config &local);
 
+         const UUID _SysID;
          Log _log;
 
          Time _time;

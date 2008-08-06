@@ -21,7 +21,7 @@ namespace dmz {
       public:
          static EventObserver *cast (
             const Plugin *PluginPtr,
-            const String &PluginName);
+            const String &PluginName = "");
 
          static Boolean is_valid (const Handle ObserverHandle, RuntimeContext *context);
 
@@ -35,7 +35,10 @@ namespace dmz {
             const EventType &Type,
             const EventLocalityEnum Locality) = 0;
 
-         virtual void end_event (const Handle EventHandle, const EventType &Type) = 0;
+         virtual void end_event (
+            const Handle EventHandle,
+            const EventType &Type,
+            const EventLocalityEnum Locality) = 0;
 
       protected:
          EventObserver (const PluginInfo &Info);

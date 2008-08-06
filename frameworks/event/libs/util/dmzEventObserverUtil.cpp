@@ -131,7 +131,20 @@ dmz::EventObserverUtil::store_event_module (const String &Name, EventModule &mod
 
    if (!__state.EventModuleName || (Name == __state.EventModuleName)) {
 
-      if (!__state.module) { __state.module = &module; }
+      if (!__state.module) {
+
+         __state.module = &module;
+
+         HashTableHandleIterator it;
+
+         typeStruct *ts (__state.table.get_first (it));
+
+         while (ts) {
+
+            __state.register_obs (*ts, *this);
+            ts = __state.table.get_next (it);
+         }
+      }
    }
 }
 
@@ -139,7 +152,20 @@ dmz::EventObserverUtil::store_event_module (const String &Name, EventModule &mod
 void
 dmz::EventObserverUtil::remove_event_module (const String &Name, EventModule &module) {
 
-   if (__state.module == &module) { __state.module = 0; }
+   if (__state.module == &module) {
+
+      HashTableHandleIterator it;
+
+      typeStruct *ts (__state.table.get_first (it));
+
+      while (ts) {
+
+         __state.release_obs (EventAllMask, *ts, *this);
+         ts = __state.table.get_next (it);
+      }
+
+      __state.module = 0;
+   }
 }
 
 
@@ -159,7 +185,10 @@ dmz::EventObserverUtil::start_event (
 
 
 void
-dmz::EventObserverUtil::end_event (const Handle EventHandle, const EventType &Type) {
+dmz::EventObserverUtil::end_event (
+      const Handle EventHandle,
+      const EventType &Type,
+      const EventLocalityEnum Locality) {
 
    if (!(EventEndMask & __state.errorMask)) {
 

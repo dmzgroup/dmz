@@ -2,4 +2,4 @@ lmk.set_name "dmzNetExtPacketCodecEventBasic"
 lmk.set_type "plugin"
 lmk.add_files {"dmzNetExtPacketCodecEventBasic.cpp",}
 lmk.add_libs {"dmzKernel",}
-lmk.add_preqs {"dmzEventFramework", "dmzNetFramework",}
+lmk.add_preqs {"dmzObjectFramework", "dmzEventFramework", "dmzNetFramework",}

@@ -8,6 +8,7 @@
 #include "dmzRuntimeContextUndo.h"
 #include <dmzRuntimeHandleAllocator.h>
 #include <dmzRuntimeMessaging.h>
+#include <dmzSystem.h>
 
 #ifdef _WIN32
 // This disables the warning regarding using the 'this' pointer as an
@@ -29,6 +30,7 @@ dmz::RuntimeContext::RuntimeContext () :
       _undoContext (0),
       _logContext (0) {
 
+   create_uuid (uuid);
 }
 
 

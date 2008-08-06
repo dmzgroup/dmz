@@ -4,6 +4,7 @@
 #include <dmzRuntimeConfig.h>
 #include <dmzSystemSpinLock.h>
 #include <dmzSystemRefCount.h>
+#include <dmzTypesUUID.h>
 
 namespace dmz {
 
@@ -21,6 +22,7 @@ namespace dmz {
 
       public:
          RuntimeContext ();
+         UUID uuid;
 
          void update_time_slice ();
 

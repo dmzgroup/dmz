@@ -1,6 +1,7 @@
 #ifndef DMZ_NET_PLUGIN_PACKET_DOT_H
 #define DMZ_NET_PLUGIN_PACKET_DOT_H
 
+#include <dmzEventObserverUtil.h>
 #include <dmzNetModuleLocalDR.h>
 #include <dmzNetModulePacketCodec.h>
 #include <dmzNetModulePacketIO.h>
@@ -20,6 +21,7 @@ namespace dmz {
          public Plugin,
          public TimeSlice,
          public NetPacketObserver,
+         public EventObserverUtil,
          public ObjectObserverUtil {
 
       public:
@@ -44,6 +46,12 @@ namespace dmz {
 
          // NetPacketObserver Interface
          virtual void read_packet (const Int32 Size, char *buffer);
+
+         // EventObserverUtil Interface
+         virtual void end_event (
+            const Handle EventHandle,
+            const EventType &Type,
+            const EventLocalityEnum Locality);
 
          // ObjectObserverUtil Interface
          virtual void create_object (

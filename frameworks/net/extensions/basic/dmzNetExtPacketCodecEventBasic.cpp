@@ -284,7 +284,7 @@ dmz::NetExtPacketCodecEventBasic::encode_event (
 
       Vector offset;
 
-      _eventMod->lookup_vector (EventHandle, _targetHandle, pos);
+      _eventMod->lookup_vector (EventHandle, _targetHandle, offset);
 
       data.set_next_vector (offset);
 
@@ -305,7 +305,7 @@ dmz::NetExtPacketCodecEventBasic::_init (Config &local) {
    _defaultHandle = defs.create_named_handle (EventAttributeDefaultName);
    _sourceHandle = defs.create_named_handle (EventAttributeSourceName);
    _targetHandle = defs.create_named_handle (EventAttributeTargetName);
-   _munitionHandle = defs.create_named_handle (EventAttributeMunitionName);
+   _munitionHandle = defs.create_named_handle (EventAttributeMunitionsName);
 
    _fireType.set_type (
       config_to_string ("events.fire.name", local, "Fire_Event"),

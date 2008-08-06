@@ -1,0 +1,9 @@
+lmk.set_name "dmzWeaponPluginTrackingMissile"
+lmk.set_type "plugin"
+lmk.add_files {"dmzWeaponPluginTrackingMissile.cpp",}
+lmk.add_libs {
+   "dmzRenderIsect",
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzRenderFramework", "dmzObjectFramework",}

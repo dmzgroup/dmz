@@ -1,3 +1,4 @@
+#include <dmzEventDump.h>
 #include "dmzEventModuleBasic.h"
 #include <dmzRuntimeConfigRead.h>
 #include <dmzRuntimeData.h>
@@ -85,6 +86,8 @@ dmz::EventModuleBasic::update_time_slice (const Float64 TimeDelta) {
 
             if (event) {
 
+               if (event == _eventCache) { _eventCache = 0; }
+
                count++;
                event->next = _recycleList; _recycleList = event;
 
@@ -110,6 +113,8 @@ dmz::EventModuleBasic::update_time_slice (const Float64 TimeDelta) {
             if (event->closeTime < FrameTime) {
 
                event = _eventTable.remove (event->handle);
+
+               if (event == _eventCache) { _eventCache = 0; }
 
                if (event) { event->next = _recycleList; _recycleList = event; }
 
@@ -244,6 +249,152 @@ dmz::EventModuleBasic::release_event_observer_all (EventObserver &observer) {
 }
 
 
+void
+dmz::EventModuleBasic::dump_event (const Handle EventHandle, EventDump &dump) {
+
+   EventStruct *event (_lookup_event (EventHandle));
+
+   if (event) {
+
+      dump.start_dump_event (event->handle, event->type, event->locality);
+
+      HashTableHandleIterator it;
+
+      {
+         Handle *ptr = event->objectTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_object_handle (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->objectTable.get_next (it);
+         }
+      }
+
+      {
+         ObjectType *ptr = event->typeTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_object_type (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->typeTable.get_next (it);
+         }
+      }
+
+      {
+         Mask *ptr = event->stateTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_state (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->stateTable.get_next (it);
+         }
+      }
+
+      {
+         Float64 *ptr = event->timeStampTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_time_stamp (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->timeStampTable.get_next (it);
+         }
+      }
+
+      {
+         Vector *ptr = event->positionTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_position (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->positionTable.get_next (it);
+         }
+      }
+
+      {
+         Matrix *ptr = event->orientationTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_orientation (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->orientationTable.get_next (it);
+         }
+      }
+
+      {
+         Vector *ptr = event->velocityTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_velocity (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->velocityTable.get_next (it);
+         }
+      }
+
+      {
+         Vector *ptr = event->accelerationTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_acceleration (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->accelerationTable.get_next (it);
+         }
+      }
+
+      {
+         Vector *ptr = event->vectorTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_scale (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->scaleTable.get_next (it);
+         }
+      }
+
+      {
+         Vector *ptr = event->vectorTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_vector (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->vectorTable.get_next (it);
+         }
+      }
+
+      {
+         Float64 *ptr = event->scalarTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_scalar (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->scalarTable.get_next (it);
+         }
+      }
+
+      {
+         String *ptr = event->textTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_text (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->textTable.get_next (it);
+         }
+      }
+
+      {
+         Data *ptr = event->dataTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_data (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->dataTable.get_next (it);
+         }
+      }
+
+      dump.end_dump_event (event->handle);
+   }
+}
+
+
 dmz::Handle
 dmz::EventModuleBasic::start_event (
       const EventType &Type,
@@ -269,19 +420,26 @@ dmz::EventModuleBasic::start_event (
                event->type = Type;
                event->locality = Locality;
 
-               EventObserverStruct *eos (_startTable.lookup (event->type.get_handle ()));
+               EventType current (Type);
 
-               if (eos) {
+               while (current) {
 
-                  HashTableHandleIterator it;
+                  EventObserverStruct *eos (_startTable.lookup (current.get_handle ()));
 
-                  EventObserver *obs (eos->get_first (it));
+                  if (eos) {
 
-                  while (obs) {
+                     HashTableHandleIterator it;
 
-                     obs->start_event (result, event->type, Locality);
-                     obs = eos->get_next (it);
+                     EventObserver *obs (eos->get_first (it));
+
+                     while (obs) {
+
+                        obs->start_event (result, event->type, Locality);
+                        obs = eos->get_next (it);
+                     }
                   }
+
+                  current.become_parent ();
                }
             }
             else {
@@ -309,19 +467,26 @@ dmz::EventModuleBasic::end_event (const Handle EventHandle) {
       event->closed = True;
       event->closeTime = _time.get_frame_time ();
 
-      EventObserverStruct *eos (_endTable.lookup (event->type.get_handle ()));
+      EventType current (event->type);
 
-      if (eos) {
+      while (current) {
 
-         HashTableHandleIterator it;
+         EventObserverStruct *eos (_endTable.lookup (current.get_handle ()));
 
-         EventObserver *obs (eos->get_first (it));
+         if (eos) {
 
-         while (obs) {
+            HashTableHandleIterator it;
 
-            obs->end_event (EventHandle, event->type);
-            obs = eos->get_next (it);
+            EventObserver *obs (eos->get_first (it));
+
+            while (obs) {
+
+               obs->end_event (result, event->type);
+               obs = eos->get_next (it);
+            }
          }
+
+         current.become_parent ();
       }
 
       if (_eventTable.remove (event->handle)) {

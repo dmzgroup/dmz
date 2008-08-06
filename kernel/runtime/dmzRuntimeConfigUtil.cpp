@@ -8,6 +8,7 @@
 #include <dmzRuntimeConfigToState.h>
 #include <dmzRuntimeConfigToStringContainer.h>
 #include <dmzRuntimeConfigWrite.h>
+#include <dmzRuntimeEventType.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
@@ -38,6 +39,71 @@ local_config_to_string (
 
 //! \addtogroup Runtime
 //! @{
+
+dmz::EventType
+dmz::config_to_event_type (
+      const String &Name,
+      const Config &Source,
+      const String &DefaultEventTypeName,
+      RuntimeContext *context) {
+
+   EventType defaultEventType;
+
+   Definitions defs (context);
+
+   defs.lookup_event_type (DefaultEventTypeName, defaultEventType);
+
+   return config_to_event_type (Name, Source, defaultEventType, context);
+}
+
+
+dmz::EventType
+dmz::config_to_event_type (
+      const String &Name,
+      const Config &Source,
+      const EventType &DefaultEventType,
+      RuntimeContext *context) {
+
+   EventType result;
+
+   String eventTypeName;
+
+   if (local_config_to_string (Name, Source, eventTypeName)) {
+
+      Definitions defs (context);
+
+      defs.lookup_event_type (eventTypeName, result);
+   }
+   else { result = DefaultEventType; }
+
+   return result;
+}
+
+
+dmz::EventTypeSet
+dmz::config_to_event_type_set (
+      const String &Name,
+      const Config &Source,
+      RuntimeContext *context) {
+
+   EventTypeSet result;
+
+   Config list;
+
+   if (Source.lookup_all_config (Name, list)) {
+
+      ConfigIterator it;
+      Config type;
+
+      while (list.get_next_config (it, type)) {
+
+         result.add_event_type (config_to_event_type ("type", type, context));
+      }
+   }
+
+   return result;
+}
+
 
 dmz::ObjectType
 dmz::config_to_object_type (

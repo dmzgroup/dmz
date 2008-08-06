@@ -11,10 +11,14 @@ namespace dmz {
    const UInt32 EventCallbackEndEvent      = 0x00000002;
    const UInt32 EventCallbackAll           = 0xFFFFFFFF;
 
-   const char EventAttributeDefaultName[]   = "default";
-   const char EventAttributeSourceName[]    = "Source";
-   const char EventAttributeTargetName[]    = "Target";
-   const char EventAttributeMunitionName[]  = "Munition";
+   const char EventAttributeDefaultName[]   = "Event_Default_Attribute";
+   const char EventAttributeSourceName[]    = "Event_Source_Attribute";
+   const char EventAttributeTargetName[]    = "Event_Target_Attribute";
+   const char EventAttributeMunitionsName[] = "Event_Munitions_Attribute";
+
+   const char EventLaunchName[]     = "Event_Launch";
+   const char EventDetonationName[] = "Event_Detonation";
+   const char EventCollisionName[]  = "Event_Collision";
 };
 
 #endif // DMZ_EVENT_CONSTS_DOT_H

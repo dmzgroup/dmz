@@ -41,15 +41,15 @@ namespace dmz {
    const char ObjectDestroyMessageName[] = "Object_Destroy_Message";
 
    //! Default object attribute handle name.
-   const char ObjectAttributeDefaultName[] = "Default_Object_Attribute";
+   const char ObjectAttributeDefaultName[] = "Object_Default_Attribute";
    //! Last network value attribute handle name.
-   const char ObjectAttributeLastNetworkValueName[] = "Last_Network_Value";
+   const char ObjectAttributeLastNetworkValueName[] = "Object_Last_Network_Value";
    //! Human in the loop attribute handle name.
-   const char ObjectAttributeHumanInTheLoopName[] = "Human_In_The_Loop";
+   const char ObjectAttributeHumanInTheLoopName[] = "Object_Human_In_The_Loop";
    //! Throttle attribute handle name.
    const char ObjectAttributeScalarThrottleName[] = "throttle";
    //! Selected object attribute handle name.
-   const char ObjectAttributeSelectName[] = "Select_Object_Attribute";
+   const char ObjectAttributeSelectName[] = "Object_Select_Attribute";
 
    String create_last_network_value_name (const String &Value);
 };

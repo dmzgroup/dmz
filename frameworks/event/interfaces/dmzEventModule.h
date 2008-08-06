@@ -13,6 +13,7 @@
 namespace dmz {
 
    class Data;
+   class EventDump;
    class Mask;
    class EventObserver;
    class EventType;
@@ -39,6 +40,8 @@ namespace dmz {
             EventObserver &Observer) = 0;
 
          virtual Boolean release_event_observer_all (EventObserver &Observer) = 0;
+
+         virtual void dump_event (const Handle EventHandle, EventDump &dump) = 0;
 
          virtual Handle start_event (
             const EventType &Type,

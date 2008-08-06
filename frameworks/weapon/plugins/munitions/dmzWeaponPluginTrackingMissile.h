@@ -1,5 +1,5 @@
-#ifndef DMZ_WEAPON_PLUGIN_LASER_BULLET_DOT_H
-#define DMZ_WEAPON_PLUGIN_LASER_BULLET_DOT_H
+#ifndef DMZ_WEAPON_PLUGIN_TRACKING_MISSILE_DOT_H
+#define DMZ_WEAPON_PLUGIN_TRACKING_MISSILE_DOT_H
 
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
@@ -11,17 +11,16 @@
 
 namespace dmz {
  
-   class EventModuleCommon;
    class RenderModuleIsect;
 
-   class WeaponPluginLaserBullet :
+   class WeaponPluginTrackingMissile :
          public Plugin,
          public TimeSlice,
          public ObjectObserverUtil {
 
       public:
-         WeaponPluginLaserBullet (const PluginInfo &Info, Config &local);
-         ~WeaponPluginLaserBullet ();
+         WeaponPluginTrackingMissile (const PluginInfo &Info, Config &local);
+         ~WeaponPluginTrackingMissile ();
 
          // Plugin Interface
          virtual void update_plugin_state (
@@ -52,17 +51,16 @@ namespace dmz {
          Float64 _defaultSpeed;
          Handle _defaultHandle;
          ObjectTypeSet _typeSet;
-         EventModuleCommon *_eventMod;
          RenderModuleIsect *_isectMod;
          HashTableHandleTemplate<Float64> _objectTable;
          HashTableHandleTemplate<Float64> _speedTable;
 
       private:
-         WeaponPluginLaserBullet ();
-         WeaponPluginLaserBullet (const WeaponPluginLaserBullet &);
-         WeaponPluginLaserBullet &operator= (const WeaponPluginLaserBullet &);
+         WeaponPluginTrackingMissile ();
+         WeaponPluginTrackingMissile (const WeaponPluginTrackingMissile &);
+         WeaponPluginTrackingMissile &operator= (const WeaponPluginTrackingMissile &);
 
    };
 };
 
-#endif // DMZ_WEAPON_PLUGIN_LASER_BULLET_DOT_H
+#endif // DMZ_WEAPON_PLUGIN_TRACKING_MISSILE_DOT_H

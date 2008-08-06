@@ -98,7 +98,44 @@ namespace dmz {
          struct State;
          State &_state; //!< Internal state.
    };
+
+   DMZ_KERNEL_LINK_SYMBOL EventType
+   config_to_event_type (
+      const String &Name,
+      const Config &Source,
+      const String &DefaultEventTypeName,
+      RuntimeContext *context);
+
+   DMZ_KERNEL_LINK_SYMBOL EventType
+   config_to_event_type (
+      const String &Name,
+      const Config &Source,
+      const EventType &DefaultEventType,
+      RuntimeContext *context);
+
+   EventType
+   config_to_event_type (
+      const String &Name,
+      const Config &Source,
+      RuntimeContext *context);
+
+   DMZ_KERNEL_LINK_SYMBOL EventTypeSet
+   config_to_event_type_set (
+      const String &Name,
+      const Config &Source,
+      RuntimeContext *context);
 };
+
+
+inline dmz::EventType
+dmz::config_to_event_type (
+      const String &Name,
+      const Config &Source,
+      RuntimeContext *context) {
+
+   const EventType EmptyType;
+   return config_to_event_type (Name, Source, EmptyType, context);
+}
 
 #endif // DMZ_RUNTIME_EVENT_TYPE_DOT_H
 

@@ -122,6 +122,10 @@ dmz::EventObserverUtil::deactivate_event_callback (
 }
 
 
+dmz::EventModule *
+dmz::EventObserverUtil::get_event_module () { return __state.module; }
+
+
 void
 dmz::EventObserverUtil::store_event_module (const String &Name, EventModule &module) {
 

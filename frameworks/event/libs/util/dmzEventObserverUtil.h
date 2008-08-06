@@ -22,6 +22,8 @@ namespace dmz {
             const EventType &Type,
             const Mask &CallbackMask);
 
+         EventModule *get_event_module ();
+
          virtual void store_event_module (const String &Name, EventModule &module);
          virtual void remove_event_module (const String &Name, EventModule &module);
 

@@ -1,2 +1,8 @@
 lmk.set_name "dmzEventFramework"
-lmk.add_files {"dmzEventConsts.h", "dmzEventModule.h", "dmzEventObserver.h"}
+lmk.add_files {
+   "dmzEventConsts.h",
+   "dmzEventDump.h",
+   "dmzEventModule.h",
+   "dmzEventModuleCommon.h",
+   "dmzEventObserver.h",
+}

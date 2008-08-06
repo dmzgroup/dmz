@@ -1,0 +1,8 @@
+lmk.set_name "dmzEventPluginDump"
+lmk.set_type "plugin"
+lmk.add_files {"dmzEventPluginDump.cpp",}
+lmk.add_libs {
+   "dmzEventUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzEventFramework",}

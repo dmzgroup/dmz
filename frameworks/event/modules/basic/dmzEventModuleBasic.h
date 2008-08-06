@@ -53,6 +53,8 @@ namespace dmz {
 
          virtual Boolean release_event_observer_all (EventObserver &Observer);
 
+         virtual void dump_event (const Handle EventHandle, EventDump &dump);
+
          virtual Handle start_event (
             const EventType &Type,
             const EventLocalityEnum Locality);
@@ -204,7 +206,6 @@ namespace dmz {
             EventType type;
             EventLocalityEnum locality;
 
-            HashTableHandle attrTable;
             HashTableHandleTemplate<Handle> objectTable;
             HashTableHandleTemplate<ObjectType> typeTable;
             HashTableHandleTemplate<Mask> stateTable;
@@ -243,7 +244,6 @@ namespace dmz {
                closed = False;
                closeTime = 0.0;
                locality = EventLocalityUnknown;
-               attrTable.clear ();
                objectTable.empty ();
                typeTable.empty ();
                stateTable.empty ();

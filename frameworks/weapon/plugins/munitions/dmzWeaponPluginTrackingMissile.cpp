@@ -1,4 +1,3 @@
-#include <dmzEventModuleCommon.h>
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectModule.h>
 #include <dmzRenderIsect.h>
@@ -8,9 +7,9 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
-#include "dmzWeaponPluginLaserBullet.h"
+#include "dmzWeaponPluginTrackingMissile.h"
 
-dmz::WeaponPluginLaserBullet::WeaponPluginLaserBullet (
+dmz::WeaponPluginTrackingMissile::WeaponPluginTrackingMissile (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
@@ -19,14 +18,13 @@ dmz::WeaponPluginLaserBullet::WeaponPluginLaserBullet (
       _log (Info),
       _defaultSpeed (40.0),
       _defaultHandle (0),
-      _eventMod (0),
       _isectMod (0) {
 
    _init (local);
 }
 
 
-dmz::WeaponPluginLaserBullet::~WeaponPluginLaserBullet () {
+dmz::WeaponPluginTrackingMissile::~WeaponPluginTrackingMissile () {
 
    _objectTable.clear ();
    _speedTable.empty ();
@@ -35,7 +33,7 @@ dmz::WeaponPluginLaserBullet::~WeaponPluginLaserBullet () {
 
 // Plugin Interface
 void
-dmz::WeaponPluginLaserBullet::update_plugin_state (
+dmz::WeaponPluginTrackingMissile::update_plugin_state (
       const PluginStateEnum State,
       const UInt32 Level) {
 
@@ -55,13 +53,12 @@ dmz::WeaponPluginLaserBullet::update_plugin_state (
 
 
 void
-dmz::WeaponPluginLaserBullet::discover_plugin (
+dmz::WeaponPluginTrackingMissile::discover_plugin (
       const PluginDiscoverEnum Mode,
       const Plugin *PluginPtr) {
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_eventMod) { _eventMod = EventModuleCommon::cast (PluginPtr); }
       if (!_isectMod) { _isectMod = RenderModuleIsect::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
@@ -70,18 +67,13 @@ dmz::WeaponPluginLaserBullet::discover_plugin (
 
          _isectMod = 0;
       }
-
-      if (_eventMod && (_eventMod == EventModuleCommon::cast (PluginPtr))) {
-
-         _eventMod = 0;
-      }
    }
 }
 
 
 // TimeSlice Interface
 void
-dmz::WeaponPluginLaserBullet::update_time_slice (const Float64 TimeDelta) {
+dmz::WeaponPluginTrackingMissile::update_time_slice (const Float64 TimeDelta) {
 
    ObjectModule *objMod (get_object_module ());
 
@@ -114,7 +106,6 @@ dmz::WeaponPluginLaserBullet::update_time_slice (const Float64 TimeDelta) {
          if (_isectMod->do_isect (params, test, isectResults)) {
 
 _log.error << "BOOM!" << endl;
-            if (_eventMod) { _eventMod->create_detonation_event (obj); }
             objMod->destroy_object (obj);
          }
          else {
@@ -132,7 +123,7 @@ _log.error << "BOOM!" << endl;
 
 // Object Observer Interface
 void
-dmz::WeaponPluginLaserBullet::create_object (
+dmz::WeaponPluginTrackingMissile::create_object (
       const UUID &Identity,
       const Handle ObjectHandle,
       const ObjectType &Type,
@@ -146,7 +137,7 @@ dmz::WeaponPluginLaserBullet::create_object (
 
 
 void
-dmz::WeaponPluginLaserBullet::destroy_object (
+dmz::WeaponPluginTrackingMissile::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
@@ -155,7 +146,7 @@ dmz::WeaponPluginLaserBullet::destroy_object (
 
 
 void
-dmz::WeaponPluginLaserBullet::_store_speed (
+dmz::WeaponPluginTrackingMissile::_store_speed (
       const Handle ObjectHandle,
       const ObjectType &Type) {
 
@@ -176,7 +167,7 @@ dmz::WeaponPluginLaserBullet::_store_speed (
 
 
 void
-dmz::WeaponPluginLaserBullet::_init (Config &local) {
+dmz::WeaponPluginTrackingMissile::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
 
@@ -192,12 +183,12 @@ dmz::WeaponPluginLaserBullet::_init (Config &local) {
 extern "C" {
 
 DMZ_PLUGIN_FACTORY_LINK_SYMBOL dmz::Plugin *
-create_dmzWeaponPluginLaserBullet (
+create_dmzWeaponPluginTrackingMissile (
       const dmz::PluginInfo &Info,
       dmz::Config &local,
       dmz::Config &global) {
 
-   return new dmz::WeaponPluginLaserBullet (Info, local);
+   return new dmz::WeaponPluginTrackingMissile (Info, local);
 }
 
 };

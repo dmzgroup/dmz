@@ -1,4 +1,4 @@
-#include <dmzEventAttributeMasks.h>
+#include <dmzEventCallbackMasks.h>
 #include <dmzEventModule.h>
 #include <dmzEventObserverUtil.h>
 #include <dmzRuntimeLog.h>

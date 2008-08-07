@@ -480,6 +480,22 @@ dmz::ObjectTypeSet::add_object_type (const Handle TypeHandle, RuntimeContext *co
 }
 
 
+void
+dmz::ObjectTypeSet::add_object_set (const ObjectTypeSet &Set) {
+
+   HashTableHandleIterator it;
+
+   ObjectType *ptr (Set._state.table.get_first (it));
+
+   while (ptr) {
+
+      add_object_type (*ptr);
+
+      ptr = Set._state.table.get_next (it);
+   }
+}
+
+
 /*!
 
 \brief Removes object type from set.

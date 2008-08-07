@@ -11,9 +11,11 @@ namespace dmz {
 
    class Data;
    class EventType;
+   class EventTypeSet;
    class Marshal;
    class Message;
    class ObjectType;
+   class ObjectTypeSet;
    class Unmarshal;
 
    class NetModulePacketCodec {
@@ -22,6 +24,9 @@ namespace dmz {
          static NetModulePacketCodec *cast (
             const Plugin *PluginPtr,
             const String &PluginName = "");
+
+         virtual void get_supported_objects (ObjectTypeSet &objects) = 0;
+         virtual void get_supported_events (EventTypeSet &events) = 0;
 
          virtual Boolean decode (Unmarshal &data, Boolean &isLoopback) = 0;
 

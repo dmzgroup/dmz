@@ -97,7 +97,25 @@ dmz::NetPluginPacket::discover_plugin (
    if (Mode == PluginDiscoverAdd) {
 
       if (!_drMod) { _drMod = NetModuleLocalDR::cast (PluginPtr); }
-      if (!_codecMod) { _codecMod = NetModulePacketCodec::cast (PluginPtr); }
+
+      if (!_codecMod) {
+
+         _codecMod = NetModulePacketCodec::cast (PluginPtr);
+
+         if (_codecMod) {
+
+            EventTypeSet events;
+            _codecMod->get_supported_events (events);
+
+            EventTypeIterator it;
+            EventType type;
+
+            while (events.get_next (it, type)) {
+
+               activate_event_callback (type, EventEndMask);
+            }
+         }
+      }
 
       if (!_ioMod) {
 
@@ -124,6 +142,17 @@ dmz::NetPluginPacket::discover_plugin (
          }
 
          _objTable.clear ();
+
+         EventTypeSet events;
+         _codecMod->get_supported_events (events);
+
+         EventTypeIterator eventIt;
+         EventType type;
+
+         while (events.get_next (eventIt, type)) {
+
+            deactivate_event_callback (type, EventEndMask);
+         }
 
          _codecMod = 0;
       }
@@ -286,9 +315,9 @@ dmz::NetPluginPacket::update_object_type (
 void
 dmz::NetPluginPacket::_init (Config &local) {
 
-   activate_event_callback (EventLaunchName, EventEndMask);
-   activate_event_callback (EventDetonationName, EventEndMask);
-   activate_event_callback (EventCollisionName, EventEndMask);
+//   activate_event_callback (EventLaunchName, EventEndMask);
+//   activate_event_callback (EventDetonationName, EventEndMask);
+//   activate_event_callback (EventCollisionName, EventEndMask);
 }
 
 

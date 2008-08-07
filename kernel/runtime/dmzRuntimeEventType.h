@@ -84,6 +84,8 @@ namespace dmz {
          Boolean add_event_type (const String &Name, RuntimeContext *context);
          Boolean add_event_type (const Handle TypeHandle, RuntimeContext *context);
 
+         void add_event_set (const EventTypeSet &Set);
+
          Boolean remove_event_type (const EventType &Type);
          Boolean remove_event_type (const String &Name, RuntimeContext *context);
          Boolean remove_event_type (const Handle TypeHandle, RuntimeContext *context);

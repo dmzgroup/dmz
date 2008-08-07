@@ -42,6 +42,7 @@ namespace dmz {
             const PluginInfo &Info,
             Config &local,
             Config &global);
+
          ~NetModulePacketCodecBasic ();
 
          // Plugin Interface
@@ -54,6 +55,9 @@ namespace dmz {
             const Plugin *PluginPtr);
 
          // NetModulePacketCodec Interface
+         virtual void get_supported_objects (ObjectTypeSet &objects);
+         virtual void get_supported_events (EventTypeSet &events);
+
          virtual Boolean decode (Unmarshal &inData, Boolean &isLoopback);
 
          virtual Boolean register_object (

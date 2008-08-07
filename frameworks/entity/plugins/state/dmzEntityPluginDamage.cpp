@@ -80,7 +80,6 @@ dmz::EntityPluginDamage::end_event (
                   state |= _deadState;
 
                   objMod->store_state (_hil, _defaultObjectHandle, state);
-
                }
             }
          }

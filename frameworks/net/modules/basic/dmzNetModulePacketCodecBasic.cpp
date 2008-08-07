@@ -107,6 +107,35 @@ dmz::NetModulePacketCodecBasic::discover_plugin (
 
 
 // NetModulePacketCodec Interface
+
+void
+dmz::NetModulePacketCodecBasic::get_supported_objects (ObjectTypeSet &objects) {
+
+   HashTableStringIterator it;
+   PacketStruct *ps (_packetTable.get_first (it));
+
+   while (ps) {
+
+      objects.add_object_set (ps->objects);
+      ps = _packetTable.get_next (it);
+   }
+}
+
+
+void
+dmz::NetModulePacketCodecBasic::get_supported_events (EventTypeSet &events) {
+
+   HashTableStringIterator it;
+   PacketStruct *ps (_packetTable.get_first (it));
+
+   while (ps) {
+
+      events.add_event_set (ps->events);
+      ps = _packetTable.get_next (it);
+   }
+}
+
+
 dmz::Boolean
 dmz::NetModulePacketCodecBasic::decode (Unmarshal &inData, Boolean &isLoopback) {
 

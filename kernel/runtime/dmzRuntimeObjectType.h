@@ -82,6 +82,8 @@ namespace dmz {
          Boolean add_object_type (const String &Name, RuntimeContext *context);
          Boolean add_object_type (const Handle TypeHandle, RuntimeContext *context);
 
+         void add_object_set (const ObjectTypeSet &Set);
+
          Boolean remove_object_type (const ObjectType &Type);
          Boolean remove_object_type (const String &Name, RuntimeContext *context);
          Boolean remove_object_type (const Handle TypeHandle, RuntimeContext *context);

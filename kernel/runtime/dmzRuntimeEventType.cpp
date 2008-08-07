@@ -485,6 +485,22 @@ dmz::EventTypeSet::add_event_type (const Handle TypeHandle, RuntimeContext *cont
 }
 
 
+void
+dmz::EventTypeSet::add_event_set (const EventTypeSet &Set) {
+
+   HashTableHandleIterator it;
+
+   EventType *ptr (Set._state.table.get_first (it));
+
+   while (ptr) {
+
+      add_event_type (*ptr);
+
+      ptr = Set._state.table.get_next (it);
+   }
+}
+
+
 /*!
 
 \brief Removes event type from set.

@@ -19,6 +19,8 @@ namespace dmz {
    int lua_event_locality_to_int (lua_State *L, const EventLocalityEnum Locality);
    //! \endcond
 
+   class EventModuleCommon;
+
    class LuaExtEvent :
          public Plugin,
          public LuaExt {
@@ -28,6 +30,7 @@ namespace dmz {
          struct EventStruct {
 
             EventModule *eventMod;
+            EventModuleCommon *commonEventMod;
             LuaExtEvent *ext;
             Handle defaultHandle;
 
@@ -36,6 +39,7 @@ namespace dmz {
 
             EventStruct () :
                eventMod (0),
+               commonEventMod (0),
                ext (0),
                defaultHandle (0),
                localityLocal (0),

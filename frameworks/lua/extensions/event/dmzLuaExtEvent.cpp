@@ -4,6 +4,7 @@
 #include <dmzEventCallbackMasks.h>
 #include <dmzEventConsts.h>
 #include <dmzEventModule.h>
+#include <dmzEventModuleCommon.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeMessaging.h>
@@ -28,6 +29,19 @@ typedef LuaExtEvent::EventStruct estruct;
 
 static const char EventKey = 'e';
 static const char EventNamespace[] = "event";
+
+
+static inline EventModuleCommon *
+get_common_event_module (lua_State *L) {
+
+  EventModuleCommon *result (0);
+  lua_pushlightuserdata (L, (void *)&EventKey);
+  lua_rawget (L, LUA_REGISTRYINDEX);
+  estruct **es = (estruct **)lua_touserdata (L, -1);
+  if (es && *es) { result = (*es)->commonEventMod; }
+  lua_pop (L, 1); // pop estruct
+  return result;
+}
 
 
 static inline EventModule *
@@ -76,6 +90,69 @@ get_event_params (lua_State *L, Handle &eventHandle, Handle &attrHandle) {
    }
 
    return es ? es->eventMod : 0;
+}
+
+
+static int
+event_launch (lua_State *L) {
+
+   int result (0);
+
+   EventModuleCommon *eventMod (get_common_event_module (L));
+
+   const Handle *Source = lua_check_handle (L, 1);
+   const Handle *Target = lua_check_handle (L, 2);
+
+   if (eventMod) {
+
+      const Handle EventHandle = eventMod->create_launch_event (
+         (Source ? *Source : 0),
+         (Target ? *Target : 0)); 
+
+      if (EventHandle) { lua_create_handle (L, EventHandle); result = 1; }
+   }
+}
+
+
+static int
+event_detonation (lua_State *L) {
+
+   int result (0);
+
+   EventModuleCommon *eventMod (get_common_event_module (L));
+
+   const Handle *Source = lua_check_handle (L, 1);
+   const Handle *Target = lua_check_handle (L, 2);
+
+   if (eventMod) {
+
+      const Handle EventHandle = eventMod->create_detonation_event (
+         (Source ? *Source : 0),
+         (Target ? *Target : 0)); 
+
+      if (EventHandle) { lua_create_handle (L, EventHandle); result = 1; }
+   }
+}
+
+
+static int
+event_collision (lua_State *L) {
+
+   int result (0);
+
+   EventModuleCommon *eventMod (get_common_event_module (L));
+
+   const Handle *Source = lua_check_handle (L, 1);
+   const Handle *Target = lua_check_handle (L, 2);
+
+   if (eventMod) {
+
+      const Handle EventHandle = eventMod->create_collision_event (
+         (Source ? *Source : 0),
+         (Target ? *Target : 0)); 
+
+      if (EventHandle) { lua_create_handle (L, EventHandle); result = 1; }
+   }
 }
 
 
@@ -681,6 +758,9 @@ event_data (lua_State *L) {
 
 
 static const luaL_Reg arrayFunc[] = {
+   {"launch", event_launch},
+   {"detonation", event_detonation},
+   {"collision", event_collision},
    {"start", event_start},
    {"end", event_end},
    {"type", event_type},
@@ -795,6 +875,11 @@ dmz::LuaExtEvent::discover_plugin (
       const Plugin *PluginPtr) {
 
    if (Mode == PluginDiscoverAdd) {
+
+      if (!_event.commonEventMod) {
+
+         _event.commonEventMod = EventModuleCommon::cast (PluginPtr);
+      }
 
       if (!_event.eventMod) {
 

@@ -64,7 +64,7 @@ dmz::EventObserver::cast (const Plugin *PluginPtr, const String &PluginName) {
 }
 
 
-dmz::Boolean
+inline dmz::Boolean
 dmz::EventObserver::is_valid (const Handle ObserverHandle, RuntimeContext *context) {
 
    return lookup_rtti_interface (

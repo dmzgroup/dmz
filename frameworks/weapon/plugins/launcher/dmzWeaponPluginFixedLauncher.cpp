@@ -3,6 +3,7 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectConsts.h>
 #include <dmzObjectModule.h>
+#include <dmzRuntimeConfigToBase.h>
 #include <dmzRuntimeConfigToState.h>
 #include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimeDefinitions.h>
@@ -19,6 +20,8 @@ dmz::WeaponPluginFixedLauncher::WeaponPluginFixedLauncher (
       InputObserverUtil (Info, local),
       ObjectObserverUtil (Info, local),
       _log (Info),
+      _time (Info),
+      _delay (0.5),
       _hilActive (True),
       _hilHandle (0),
       _hil (0),
@@ -30,6 +33,7 @@ dmz::WeaponPluginFixedLauncher::WeaponPluginFixedLauncher (
 
 dmz::WeaponPluginFixedLauncher::~WeaponPluginFixedLauncher () {
 
+   _launchTable.empty ();
 }
 
 
@@ -72,7 +76,22 @@ dmz::WeaponPluginFixedLauncher::discover_plugin (
 void
 dmz::WeaponPluginFixedLauncher::update_time_slice (const Float64 TimeDelta) {
 
+   const Float64 CTime (_time.get_frame_time ());
 
+   HashTableHandleIterator it;
+
+   LaunchStruct *ls (_launchTable.get_first (it));
+
+   while (ls) {
+
+      if ((ls->activeCount > 0) && ((ls->lastLaunchTime + _delay) < CTime)) {
+
+         _create_munition (ls->Source);
+         ls->lastLaunchTime = CTime;
+      }
+
+      ls = _launchTable.get_next (it);
+   }
 }
 
 
@@ -102,9 +121,29 @@ dmz::WeaponPluginFixedLauncher::receive_button_event (
       const Handle Channel,
       const InputEventButton &Value) {
 
-   if (Value.get_button_id () == 2) {
+   if (_hil) {
 
-      if (Value.get_button_value ()) { _create_munition (_hil); }
+      if (Value.get_button_id () == 2) {
+
+         LaunchStruct *ls (_get_struct (_hil));
+
+         if (ls) {
+
+            if (Value.get_button_value ()) {
+
+               const Float64 CTime (_time.get_frame_time ());
+
+               ls->activeCount++;
+
+               if (CTime > (ls->lastLaunchTime + _delay)) {
+
+                  _create_munition (ls->Source);
+                  ls->lastLaunchTime = CTime;
+               }
+            }
+            else { ls->activeCount--; }
+         }
+      }
    }
 }
 
@@ -140,6 +179,10 @@ dmz::WeaponPluginFixedLauncher::destroy_object (
       const Handle ObjectHandle) {
 
    if (ObjectHandle == _hil) { _hil = 0; }
+
+   LaunchStruct *ls (_launchTable.remove (ObjectHandle));
+
+   if (ls) { delete ls; ls = 0; }
 }
 
 
@@ -180,6 +223,21 @@ dmz::WeaponPluginFixedLauncher::update_object_flag (
          else { _hilActive = True; }
       }
    }
+}
+
+
+dmz::WeaponPluginFixedLauncher::LaunchStruct *
+dmz::WeaponPluginFixedLauncher::_get_struct (const Handle Source) {
+
+   LaunchStruct *result (_launchTable.lookup (Source));
+
+   if (!result) {
+
+      result = new LaunchStruct (Source);
+      if (result && !_launchTable.store (Source, result)) { delete result; result = 0; }
+   }
+
+   return result;
 }
 
 
@@ -248,6 +306,7 @@ dmz::WeaponPluginFixedLauncher::_init (Config &local) {
       _log.error << "No munitions type defined. Will be unable to fire weapon." << endl;
    }
 
+   _delay = config_to_float64 ("delay.value", local, _delay);
    _launcherOffset = config_to_vector ("offset", local);
 
    init_input_channels (

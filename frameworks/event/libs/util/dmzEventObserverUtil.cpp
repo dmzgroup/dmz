@@ -75,7 +75,11 @@ dmz::EventObserverUtil::EventObserverUtil (
 }
 
 
-dmz::EventObserverUtil::~EventObserverUtil () { delete &__state; }
+dmz::EventObserverUtil::~EventObserverUtil () {
+
+   if (__state.module) { remove_event_module ("", *(__state.module)); }
+   delete &__state;
+}
 
 
 dmz::EventType

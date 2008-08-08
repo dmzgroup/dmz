@@ -160,8 +160,29 @@ dmz::EventModuleCommonBasic::create_collision_event (
 
    Handle result (0);
 
-   if (_eventMod && _objMod) {
+   if (_collisionType && _eventMod && _objMod) {
 
+      result = _eventMod->start_event (_collisionType, EventLocal);
+
+      if (result) {
+
+         _eventMod->store_object_handle (result, _sourceHandle, SourceHandle);
+         _eventMod->store_object_handle (result, _targetHandle, TargetHandle);
+
+         Vector pos;
+         if (_objMod->lookup_position (SourceHandle, _defaultObjectHandle, pos)) {
+
+            _eventMod->store_position (result, _defaultEventHandle, pos);
+         }
+
+         Vector vel;
+         if (_objMod->lookup_velocity (SourceHandle, _defaultObjectHandle, vel)) {
+
+            _eventMod->store_velocity (result, _defaultEventHandle, vel);
+         }
+
+         _eventMod->end_event (result);
+      }
    }
 
    return result;

@@ -1,4 +1,5 @@
 #include "dmzEntityPluginGroundSimple.h"
+#include <dmzEventModuleCommon.h>
 #include <dmzInputEventController.h>
 #include <dmzInputEventMasks.h>
 #include <dmzObjectAttributeMasks.h>
@@ -23,6 +24,8 @@ dmz::EntityPluginGroundSimple::EntityPluginGroundSimple (
       _hilHandle (0),
       _throttleHandle (0),
       _isect (0),
+      _eventMod (0),
+      _wasAirborn (False),
       _isDead (False),
       _active (0),
       _time (Info),
@@ -46,10 +49,16 @@ dmz::EntityPluginGroundSimple::discover_plugin (
    if (Mode == PluginDiscoverAdd) {
 
       if (!_isect) { _isect = RenderModuleIsect::cast (PluginPtr); }
+      if (!_eventMod) { _eventMod = EventModuleCommon::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
       if (_isect && (_isect == RenderModuleIsect::cast (PluginPtr))) { _isect = 0; }
+
+      if (_eventMod && (_eventMod == EventModuleCommon::cast (PluginPtr))) {
+
+         _eventMod = 0;
+      }
    }
 }
 
@@ -86,6 +95,13 @@ dmz::EntityPluginGroundSimple::update_time_slice (const Float64 TimeDelta) {
 
          if (Diff > Drop) { airborn = True; }
       }
+
+      if (_eventMod && _wasAirborn && !airborn) {
+
+         _eventMod->create_collision_event (_hil, 0);
+      }
+
+      _wasAirborn = airborn;
 
       Float64 heading (0.0);
 
@@ -202,6 +218,8 @@ dmz::EntityPluginGroundSimple::update_channel_state (
    _active += (State ? 1 : -1);
 
    if (_active == 0) {
+
+      _wasAirborn = False;
 
       if (_hil && _throttleHandle) {
 

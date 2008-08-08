@@ -1,3 +1,4 @@
+#include <dmzEventConsts.h>
 #include <dmzInputEventMasks.h>
 #include <dmzInputEventController.h>
 #include <dmzObjectAttributeMasks.h>
@@ -25,7 +26,8 @@ dmz::WeaponPluginFixedLauncher::WeaponPluginFixedLauncher (
       _hilActive (True),
       _hilHandle (0),
       _hil (0),
-      _defaultHandle (0) {
+      _defaultHandle (0),
+      _sourceEventHandle (0) {
 
    _init (local);
 }
@@ -270,8 +272,7 @@ dmz::WeaponPluginFixedLauncher::_create_munition (const Handle SourceHandle) {
          objMod->store_position (AmmoHandle, _defaultHandle, pos);
          objMod->store_velocity (AmmoHandle, _defaultHandle, vel);
 
-         // Need to link to source here.
-         // Need to calculate target here.
+         objMod->link_objects (_sourceEventHandle, SourceHandle, AmmoHandle);
 
          objMod->activate_object (AmmoHandle);
       }
@@ -285,6 +286,8 @@ dmz::WeaponPluginFixedLauncher::_init (Config &local) {
    RuntimeContext *context (get_plugin_runtime_context ());
 
    Definitions defs (context, &_log);
+
+   _sourceEventHandle = defs.create_named_handle (EventAttributeSourceName);
 
    _defaultHandle = activate_default_object_attribute (
       ObjectStateMask);

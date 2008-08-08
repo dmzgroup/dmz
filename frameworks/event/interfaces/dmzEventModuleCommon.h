@@ -22,11 +22,11 @@ namespace dmz {
 
          // EventModuleCommon Interface
          virtual Handle create_launch_event (
-            const Handle SourceHandle,
+            const Handle MunitionsHandle,
             const Handle TargetHandle) = 0;
 
          virtual Handle create_detonation_event (
-            const Handle SourceHandle,
+            const Handle MunitionsHandle,
             const Handle TargetHandle) = 0;
 
          virtual Handle create_collision_event (

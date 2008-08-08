@@ -124,6 +124,14 @@ namespace dmz {
 
          virtual Boolean unlink_objects (const Handle LinkHandle);
 
+         virtual Boolean unlink_super_links (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle);
+
+         virtual Boolean unlink_sub_links (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle);
+
          virtual Boolean store_link_attribute_object (
             const Handle LinkHandle,
             const Handle AttributeObjectHandle);
@@ -585,6 +593,8 @@ namespace dmz {
          };
 
          ObjectStruct *_lookup_object (const Handle ObjectHandle);
+
+         void _unlink_table (const LinkTable &Table);
 
          void _unlink_object (const ObjectStruct &Obj);
 

@@ -1022,6 +1022,51 @@ dmz::ObjectModuleBasic::unlink_objects (const Handle LinkHandle) {
 
 
 dmz::Boolean
+dmz::ObjectModuleBasic::unlink_super_links (
+      const Handle ObjectHandle,
+      const Handle AttributeHandle) {
+
+   Boolean result (False);
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj) {
+
+      LinkTable *lt (obj->superTable.lookup (AttributeHandle));
+
+      if (lt) { _unlink_table (*lt); }
+
+      result = True;
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::ObjectModuleBasic::unlink_sub_links (
+      const Handle ObjectHandle,
+      const Handle AttributeHandle) {
+
+   Boolean result (False);
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj) {
+
+      LinkTable *lt (obj->subTable.lookup (AttributeHandle));
+
+      if (lt) { _unlink_table (*lt); }
+
+      result = True;
+   }
+
+   return result;
+}
+
+
+
+dmz::Boolean
 dmz::ObjectModuleBasic::store_link_attribute_object (
       const Handle LinkHandle,
       const Handle AttributeObjectHandle) {
@@ -3604,6 +3649,21 @@ dmz::ObjectModuleBasic::update_object_data (
 
 
 void
+dmz::ObjectModuleBasic::_unlink_table (const LinkTable &Table) {
+
+   HashTableHandleIterator linkIt;
+
+   LinkStruct *ls (Table.get_first (linkIt));
+
+   while (ls) {
+
+      unlink_objects (ls->LinkHandle);
+      ls = Table.get_next (linkIt);
+   }
+}
+
+
+void
 dmz::ObjectModuleBasic::_unlink_object (const ObjectStruct &Obj) {
 
    HandleContainer container;
@@ -3614,16 +3674,7 @@ dmz::ObjectModuleBasic::_unlink_object (const ObjectStruct &Obj) {
 
    while (lt) {
 
-      HashTableHandleIterator linkIt;
-
-      LinkStruct *ls (lt->get_first (linkIt));
-
-      while (ls) {
-
-         unlink_objects (ls->LinkHandle);
-         ls = lt->get_next (linkIt);
-      }
-
+      _unlink_table (*lt);
       lt = Obj.subTable.get_next (it);
    }
 
@@ -3631,17 +3682,7 @@ dmz::ObjectModuleBasic::_unlink_object (const ObjectStruct &Obj) {
 
    while (lt) {
 
-      HashTableHandleIterator linkIt;
-
-      LinkStruct *ls (lt->get_first (linkIt));
-
-      while (ls) {
-
-         unlink_objects (ls->LinkHandle);
-         ls = lt->get_next (linkIt);
-      }
-
-
+      _unlink_table (*lt);
       lt = Obj.superTable.get_next (it);
    }
 }

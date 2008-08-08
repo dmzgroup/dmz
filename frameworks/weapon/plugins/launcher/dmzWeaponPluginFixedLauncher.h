@@ -116,6 +116,7 @@ namespace dmz {
          Handle _hil;
 
          Handle _defaultHandle;
+         Handle _sourceEventHandle;
 
          ObjectType _ammoType;
 

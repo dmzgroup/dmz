@@ -30,11 +30,11 @@ namespace dmz {
 
          // EventModuleCommon Interface
          virtual Handle create_launch_event (
-            const Handle SourceHandle,
+            const Handle MunitionsHandle,
             const Handle TargetHandle);
 
          virtual Handle create_detonation_event (
-            const Handle SourceHandle,
+            const Handle MunitionsHandle,
             const Handle TargetHandle);
 
          virtual Handle create_collision_event (
@@ -42,6 +42,7 @@ namespace dmz {
             const Handle TargetHandle);
 
       protected:
+         Handle _get_source (const Handle ObjectHandle);
          void _init (Config &local);
 
          Log _log;

@@ -96,6 +96,14 @@ namespace dmz {
 
          virtual Boolean unlink_objects (const Handle LinkHandle) = 0;
 
+         virtual Boolean unlink_super_links (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle) = 0;
+
+         virtual Boolean unlink_sub_links (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle) = 0;
+
          virtual Boolean store_link_attribute_object (
             const Handle LinkHandle,
             const Handle AttributeObjectHandle) = 0;

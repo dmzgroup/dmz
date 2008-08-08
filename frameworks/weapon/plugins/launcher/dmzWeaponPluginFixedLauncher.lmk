@@ -7,4 +7,4 @@ lmk.add_libs {
    "dmzInputUtil",
    "dmzKernel",
 }
-lmk.add_preqs {"dmzObjectFramework", "dmzInputFramework",}
+lmk.add_preqs {"dmzEventFramework", "dmzObjectFramework", "dmzInputFramework",}

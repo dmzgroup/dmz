@@ -108,6 +108,7 @@ namespace dmz {
          Float64 _delay;
 
          Vector _launcherOffset;
+         Matrix _launcherRotation;
 
          Mask _deadState;
 

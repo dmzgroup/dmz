@@ -16,6 +16,10 @@ namespace dmz {
 
       public:
          Matrix ();
+         Matrix (
+            const Float64 V0, const Float64 V1, const Float64 V2,
+            const Float64 V3, const Float64 V4, const Float64 V5,
+            const Float64 V6, const Float64 V7, const Float64 V8);
          Matrix (const Float64 Array[9]);
          Matrix (const Float32 Array[9]);
          Matrix (const Float64 RadiansX, const Float64 RadiansY, const Float64 RadiansZ);
@@ -108,6 +112,24 @@ dmz::Matrix::Matrix () {
    _data[1] = _data[2] = _data[3] = 0.0;
    _data[5] = _data[6] = _data[7] = 0.0;
    _data[0] = _data[4] = _data[8] = 1.0;
+}
+
+
+inline
+dmz::Matrix::Matrix (
+      const Float64 V0, const Float64 V1, const Float64 V2,
+      const Float64 V3, const Float64 V4, const Float64 V5,
+      const Float64 V6, const Float64 V7, const Float64 V8) {
+
+   _data[0] = V0;
+   _data[1] = V1;
+   _data[2] = V2;
+   _data[3] = V3;
+   _data[4] = V4;
+   _data[5] = V5;
+   _data[6] = V6;
+   _data[7] = V7;
+   _data[8] = V8;
 }
 
 
@@ -490,18 +512,18 @@ dmz::Matrix::yaw_in_place (const Float64 Angle) {
    const Float64 AngleCos (cos (Angle));
    const Float64 AngleSin (sin (Angle));
 
-	Float64 tmp1 = (AngleCos * _data[0]) - (AngleSin * _data[6]);
-	Float64 tmp2 = (AngleSin * _data[0]) + (AngleCos * _data[6]);
+	Float64 tmp1 = (AngleCos * _data[0]) + (AngleSin * _data[6]);
+	Float64 tmp2 = (AngleCos * _data[6]) - (AngleSin * _data[0]);
 
 	_data[0] = tmp1; _data[6] = tmp2;
 
-	tmp1 = (AngleCos * _data[1]) - (AngleSin * _data[7]);
-	tmp2 = (AngleSin * _data[1]) + (AngleCos * _data[7]);
+	tmp1 = (AngleCos * _data[1]) + (AngleSin * _data[7]);
+	tmp2 = (AngleCos * _data[7]) - (AngleSin * _data[1]);
 
 	_data[1] = tmp1; _data[7] = tmp2;
 
-	tmp1 = (AngleCos * _data[2]) - (AngleSin * _data[8]);
-	tmp2 = (AngleSin * _data[2]) + (AngleCos * _data[8]);
+	tmp1 = (AngleCos * _data[2]) + (AngleSin * _data[8]);
+	tmp2 = (AngleCos * _data[8]) - (AngleSin * _data[2]);
 
 	_data[2] = tmp1; _data[8] = tmp2;
 
@@ -570,9 +592,9 @@ dmz::Matrix::transform_vector (Vector &vec) const {
    vec.get_xyz (vx, vy, vz);
 
    vec.set_xyz (
-      (_data[0] * vx) + (_data[3] * vy) + (_data[6] * vz),
-      (_data[1] * vx) + (_data[4] * vy) + (_data[7] * vz),
-      (_data[2] * vx) + (_data[5] * vy) + (_data[8] * vz));
+      (_data[0] * vx) + (_data[1] * vy) + (_data[2] * vz),
+      (_data[3] * vx) + (_data[4] * vy) + (_data[5] * vz),
+      (_data[6] * vx) + (_data[7] * vy) + (_data[8] * vz));
 }
 
 
@@ -867,7 +889,7 @@ dmz::Matrix::to_axis_and_angle_radians (Vector &axis, Float64 &angleRadians) con
 inline void
 dmz::Matrix::from_two_vectors (const Vector &FromValue, const Vector &ToValue) {
 
-   const Vector Cross (ToValue.cross (FromValue).normalize ());
+   const Vector Cross (FromValue.cross (ToValue).normalize ());
    const Float64 Angle (ToValue.get_angle (FromValue));
 
    from_axis_and_angle_radians (Cross, Angle);

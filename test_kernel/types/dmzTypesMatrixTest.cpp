@@ -94,38 +94,51 @@ main (int argc, char *argv[]) {
    RotXZHalfPi.transform_vector (v);
    (RotYHalfPi * (RotXHalfPi * RotZHalfPi)).transform_vector (v2);
 
-test.log.error << v << endl << v2 << endl;
    test.validate (
       "Matrix created from pitch of half pi and roll of half pi",
       (Backward - v).is_zero ());
 
-   Matrix x, y, z;
-   x.pitch_in_place (HalfPi64);
-   y.yaw_in_place (HalfPi64);
-   z.roll_in_place (HalfPi64);
+   Matrix pitchInPlace, yawInPlace, rollInPlace;
+   pitchInPlace.pitch_in_place (HalfPi64);
+   yawInPlace.yaw_in_place (HalfPi64);
+   rollInPlace.roll_in_place (HalfPi64);
 
    v = Forward;
-   x.transform_vector (v);
+   pitchInPlace.transform_vector (v);
 
    test.validate (
-      "Matrix created from pitch of half pi and roll of half pi",
+      "Pitch in place by half pi.",
       (Up - v).is_zero ());
 
    v = Forward;
-   y.transform_vector (v);
+   yawInPlace.transform_vector (v);
 
    test.validate (
-      "Matrix created from pitch of half pi and roll of half pi",
+      "Yaw in place by half pi.",
       (Left - v).is_zero ());
 
    v = Right;
-   z.transform_vector (v);
+   rollInPlace.transform_vector (v);
 
    test.validate (
-      "Matrix created from pitch of half pi and roll of half pi",
+      "Roll in place by half pi.",
       (Up - v).is_zero ());
 
+   Matrix ToInvert (HalfPi64, Pi64, HalfPi64 / 2);
 
+   Matrix theInvert (ToInvert);
+   theInvert.invert_in_place ();
+
+   test.validate (
+      "Matrix times its inverse is the identity matrix.",
+      (ToInvert * theInvert).is_identity ());
+
+   const Matrix FromTwoVec (Forward, Up);
+   v = Down;
+   FromTwoVec.transform_vector (v);
+   test.validate (
+      "Matrix from two vectors Forward to Up",
+       (v - Forward).is_zero ());
 
    return test.result ();
 }

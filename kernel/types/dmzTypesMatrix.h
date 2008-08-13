@@ -16,6 +16,10 @@ namespace dmz {
 
       public:
          Matrix ();
+         Matrix (
+            const Float64 V0, const Float64 V1, const Float64 V2,
+            const Float64 V3, const Float64 V4, const Float64 V5,
+            const Float64 V6, const Float64 V7, const Float64 V8);
          Matrix (const Float64 Array[9]);
          Matrix (const Float32 Array[9]);
          Matrix (const Float64 RadiansX, const Float64 RadiansY, const Float64 RadiansZ);
@@ -108,6 +112,24 @@ dmz::Matrix::Matrix () {
    _data[1] = _data[2] = _data[3] = 0.0;
    _data[5] = _data[6] = _data[7] = 0.0;
    _data[0] = _data[4] = _data[8] = 1.0;
+}
+
+
+inline
+dmz::Matrix::Matrix (
+      const Float64 V0, const Float64 V1, const Float64 V2,
+      const Float64 V3, const Float64 V4, const Float64 V5,
+      const Float64 V6, const Float64 V7, const Float64 V8) {
+
+   _data[0] = V0;
+   _data[3] = V1;
+   _data[6] = V2;
+   _data[1] = V3;
+   _data[4] = V4;
+   _data[7] = V5;
+   _data[2] = V6;
+   _data[5] = V7;
+   _data[8] = V8;
 }
 
 
@@ -463,13 +485,13 @@ dmz::Matrix::invert (Matrix &value) const {
 
       Float64 inverseData[9];
       inverseData[0] =  ((_data[4] * _data[8]) - (_data[7] * _data[5])) / determinant;
-      inverseData[3] = -((_data[3] * _data[8]) - (_data[5] * _data[6])) / determinant;
-      inverseData[6] =  ((_data[3] * _data[7]) - (_data[4] * _data[6])) / determinant;
-      inverseData[1] = -((_data[1] * _data[8]) - (_data[7] * _data[2])) / determinant;
+      inverseData[1] = -((_data[3] * _data[8]) - (_data[5] * _data[6])) / determinant;
+      inverseData[2] =  ((_data[3] * _data[7]) - (_data[4] * _data[6])) / determinant;
+      inverseData[3] = -((_data[1] * _data[8]) - (_data[7] * _data[2])) / determinant;
       inverseData[4] =  ((_data[0] * _data[8]) - (_data[2] * _data[6])) / determinant;
-      inverseData[7] = -((_data[0] * _data[7]) - (_data[1] * _data[6])) / determinant;
-      inverseData[2] =  ((_data[1] * _data[5]) - (_data[2] * _data[4])) / determinant;
-      inverseData[5] = -((_data[0] * _data[5]) - (_data[2] * _data[3])) / determinant;
+      inverseData[5] = -((_data[0] * _data[7]) - (_data[1] * _data[6])) / determinant;
+      inverseData[6] =  ((_data[1] * _data[5]) - (_data[2] * _data[4])) / determinant;
+      inverseData[7] = -((_data[0] * _data[5]) - (_data[2] * _data[3])) / determinant;
       inverseData[8] =  ((_data[0] * _data[4]) - (_data[3] * _data[1])) / determinant;
       value.from_array (inverseData);
    }
@@ -629,10 +651,15 @@ dmz::Matrix::get_element (const Int32 Row, const Int32 Col, Float64 &data) const
 inline void
 dmz::Matrix::from_array (const Float64 Array[9]) {
 
-   for (Int32 count = 0; count < 9; count++) {
-
-      _data[count] = Array[count];
-   }
+   _data[0] = Array[0];
+   _data[3] = Array[1];
+   _data[6] = Array[2];
+   _data[1] = Array[3];
+   _data[4] = Array[4];
+   _data[7] = Array[5];
+   _data[2] = Array[6];
+   _data[5] = Array[7];
+   _data[8] = Array[8];
 }
 
 
@@ -645,10 +672,15 @@ dmz::Matrix::from_array (const Float64 Array[9]) {
 inline void
 dmz::Matrix::to_array (Float64 array[9]) const {
 
-   for (Int32 count = 0; count < 9; count++) {
-
-      array[count] = _data[count];
-   }
+   array[0] = _data[0];
+   array[1] = _data[3];
+   array[2] = _data[6];
+   array[3] = _data[1];
+   array[4] = _data[4];
+   array[5] = _data[7];
+   array[6] = _data[2];
+   array[7] = _data[5];
+   array[8] = _data[8];
 }
 
 
@@ -661,10 +693,15 @@ dmz::Matrix::to_array (Float64 array[9]) const {
 inline void
 dmz::Matrix::from_array32 (const Float32 Array[9]) {
 
-   for (Int32 count = 0; count < 9; count++) {
-
-      _data[count] = Float64 (Array[count]);
-   }
+   _data[0] = Array[0];
+   _data[3] = Array[1];
+   _data[6] = Array[2];
+   _data[1] = Array[3];
+   _data[4] = Array[4];
+   _data[7] = Array[5];
+   _data[2] = Array[6];
+   _data[5] = Array[7];
+   _data[8] = Array[8];
 }
 
 
@@ -677,10 +714,15 @@ dmz::Matrix::from_array32 (const Float32 Array[9]) {
 inline void
 dmz::Matrix::to_array32 (Float32 array[9]) const {
 
-   for (Int32 count = 0; count < 9; count++) {
-
-      array[count] =  Float32 (_data[count]);
-   }
+   array[0] = (Float32)_data[0];
+   array[1] = (Float32)_data[3];
+   array[2] = (Float32)_data[6];
+   array[3] = (Float32)_data[1];
+   array[4] = (Float32)_data[4];
+   array[5] = (Float32)_data[7];
+   array[6] = (Float32)_data[2];
+   array[7] = (Float32)_data[5];
+   array[8] = (Float32)_data[8];
 }
 
 
@@ -721,17 +763,17 @@ dmz::Matrix::from_euler_angles_radians (
    const Float64 Cz  = cos (Rz);
    const Float64 Sz  = sin (Rz);
 
-   _data[0] = (Cy * Cz) + (Sx * Sy * Sz);
-   _data[1] = Cx * Sz;
+   _data[0] =  (Cy * Cz) + (Sx * Sy * Sz);
+   _data[3] =  (Cz * Sx * Sy) - (Cy * Sz);
+   _data[6] =   Cx * Sy;
+
+   _data[1] =   Cx * Sz;
+   _data[4] =   Cx * Cz;
+   _data[7] =  -Sx;
+
    _data[2] = -(Cx * Sy) + (Cy * Sx * Sz);
-
-   _data[3] = (Cz * Sx * Sy) - (Cy * Sz);
-   _data[4] = Cx * Cz;
-   _data[5] = (Cy * Cz * Sx) + (Sy * Sz);
-
-   _data[6] = Cx * Sy;
-   _data[7] = -Sx;
-   _data[8] = Cx * Cy;
+   _data[5] =  (Cy * Cz * Sx) + (Sy * Sz);
+   _data[8] =   Cx * Cy;
 }
 
 
@@ -885,7 +927,7 @@ dmz::Matrix::to_axis_and_angle_radians (Vector &axis, Float64 &angleRadians) con
 inline void
 dmz::Matrix::from_two_vectors (const Vector &FromValue, const Vector &ToValue) {
 
-   const Vector Cross (ToValue.cross (FromValue).normalize ());
+   const Vector Cross (FromValue.cross (ToValue).normalize ());
    const Float64 Angle (ToValue.get_angle (FromValue));
 
    from_axis_and_angle_radians (Cross, Angle);

@@ -98,18 +98,21 @@ dmz::EntityPluginPortalFollow::update_time_slice (const Float64 TimeDelta) {
 
       const Float64 MaxTurn ((HalfPi64 - 0.1) * TimeDelta);
 
+      Float64 pitch (0.0);
+
       if (!pitchVec.is_zero ()) {
 
          pitchVec.normalize_in_place ();
 
-         Float64 pitch (ForwardZ.get_angle (_lastPitchVec));
-         if (ForwardZ.cross (_lastPitchVec).get_x () > 0.0) { pitch = TwoPi64 - pitch; }
+         pitch = ForwardZ.get_angle (_lastPitchVec);
+         //if (ForwardZ.cross (_lastPitchVec).get_x () < 0.0) { pitch = -pitch; }
+         if (_lastPitchVec.get_y () < 0.0) { pitch = -pitch; }
 
          Float64 pitchDiff (_lastPitchVec.get_angle (pitchVec));
 
          if (pitchDiff > MaxTurn) { pitchDiff = MaxTurn; }
 
-         if (_lastPitchVec.cross (pitchVec).get_x () > 0.0) { pitch -= pitchDiff; }
+         if (_lastPitchVec.cross (pitchVec).get_x () < 0.0) { pitch -= pitchDiff; }
          else { pitch += pitchDiff; }
 
          Matrix pitchMat (SideX, pitch);
@@ -141,13 +144,13 @@ dmz::EntityPluginPortalFollow::update_time_slice (const Float64 TimeDelta) {
       headVec.normalize_in_place ();
 
       Float64 head (ForwardZ.get_angle (_lastHeadVec));
-      if (ForwardZ.cross (_lastHeadVec).get_y () > 0.0) { head = TwoPi64 - head; }
+      if (ForwardZ.cross (_lastHeadVec).get_y () < 0.0) { head = TwoPi64 - head; }
 
       Float64 headDiff (_lastHeadVec.get_angle (headVec));
 
       if (headDiff > MaxTurn) { headDiff = MaxTurn; }
 
-      if (_lastHeadVec.cross (headVec).get_y () > 0.0) { head -= headDiff; }
+      if (_lastHeadVec.cross (headVec).get_y () < 0.0) { head -= headDiff; }
       else { head += headDiff; }
 
       Matrix headMat (UpY, head);

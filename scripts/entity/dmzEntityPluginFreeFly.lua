@@ -27,10 +27,10 @@ function update_time_slice (self, time)
          local hcross = Forward:cross (headingVec)
          hcross = hcross:normalize ()
          
-         if hcross:get_y () > 0.0 then
-            heading = heading - self.turn * time
+         if hcross:get_y () < 0.0 then
+            heading = heading + (self.turn * time)
             heading = dmz.math.TwoPi - heading
-         else heading = heading + self.turn * time
+         else heading = heading - (self.turn * time)
          end
          
          if heading > dmz.math.Pi then heading = heading - dmz.math.TwoPi

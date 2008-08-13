@@ -30,9 +30,12 @@ namespace dmz {
       Float64 data[9];
       Source.to_array (data);
       osg::Matrixd result (
-         data[0], data[1], data[2], 0.0,
-         data[3], data[4], data[5], 0.0,
-         data[6], data[7], data[8], 0.0,
+         //data[0], data[1], data[2], 0.0,
+         //data[3], data[4], data[5], 0.0,
+         //data[6], data[7], data[8], 0.0,
+         data[0], data[3], data[6], 0.0,
+         data[1], data[4], data[7], 0.0,
+         data[2], data[5], data[8], 0.0,
          0.0,     0.0,     0.0,     1.0);
 
       return result;
@@ -44,9 +47,12 @@ namespace dmz {
       Float64 data[9];
       Source.to_array (data);
       osg::Matrixd result (
-         data[0], data[1], data[2], 0.0,
-         data[3], data[4], data[5], 0.0,
-         data[6], data[7], data[8], 0.0,
+         //data[0], data[1], data[2], 0.0,
+         //data[3], data[4], data[5], 0.0,
+         //data[6], data[7], data[8], 0.0,
+         data[0], data[3], data[6], 0.0,
+         data[1], data[4], data[7], 0.0,
+         data[2], data[5], data[8], 0.0,
          Trans.get_x (), Trans.get_y (), Trans.get_z (), 1.0);
 
       return result;
@@ -59,9 +65,12 @@ namespace dmz {
       Float64 data[9];
       Source.to_array (data);
       const osg::Matrixd result (
-         data[0], data[3], data[6], 0.0,
-         data[1], data[4], data[7], 0.0,
-         data[2], data[5], data[8], 0.0,
+         //data[0], data[3], data[6], 0.0,
+         //data[1], data[4], data[7], 0.0,
+         //data[2], data[5], data[8], 0.0,
+         data[0], data[1], data[2], 0.0,
+         data[3], data[4], data[5], 0.0,
+         data[6], data[7], data[8], 0.0,
          0.0,     0.0,     0.0,     1.0);
 
       return result;

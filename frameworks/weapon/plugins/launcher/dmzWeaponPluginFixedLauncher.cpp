@@ -265,6 +265,7 @@ dmz::WeaponPluginFixedLauncher::_create_munition (const Handle SourceHandle) {
          objMod->lookup_velocity (SourceHandle, _defaultHandle, vel);
 
          Vector offset (_launcherOffset);
+         ori = ori * _launcherRotation;
          ori.transform_vector (offset);
          pos += offset;
 
@@ -311,6 +312,11 @@ dmz::WeaponPluginFixedLauncher::_init (Config &local) {
 
    _delay = config_to_float64 ("delay.value", local, _delay);
    _launcherOffset = config_to_vector ("offset", local);
+   const Vector HPR = config_to_vector ("rotation", local);
+
+   _launcherRotation.roll_in_place (HPR.get_z ());
+   _launcherRotation.pitch_in_place (HPR.get_x ());
+   _launcherRotation.yaw_in_place (HPR.get_y ());
 
    init_input_channels (
       local,

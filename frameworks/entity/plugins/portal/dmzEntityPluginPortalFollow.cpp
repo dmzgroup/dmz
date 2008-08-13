@@ -159,7 +159,7 @@ dmz::EntityPluginPortalFollow::update_time_slice (const Float64 TimeDelta) {
 
       headMat.transform_vector (_lastHeadVec);
 
-      ori = ori * headMat;
+      ori = headMat * ori;
 
       Vector forward (_offset);
       ori.transform_vector (forward);

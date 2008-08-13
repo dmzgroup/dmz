@@ -157,7 +157,7 @@ event_collision (lua_State *L) {
 
 
 static int
-event_start (lua_State *L) {
+event_create (lua_State *L) {
 
    int result (0);
 
@@ -176,7 +176,7 @@ event_start (lua_State *L) {
       else if (localityLua == es->localityRemote) { locality = EventRemote; }
       else { lua_enum_error (L, 2, localityLua); }
 
-      Handle value = es->eventMod->start_event (*typePtr, locality);
+      Handle value = es->eventMod->create_event (*typePtr, locality);
 
       if (lua_create_handle (L, value)) { result = 1; }
    }
@@ -186,7 +186,7 @@ event_start (lua_State *L) {
 
 
 static int
-event_end (lua_State *L) {
+event_close (lua_State *L) {
 
    int result (0);
 
@@ -195,7 +195,7 @@ event_end (lua_State *L) {
 
    if (eventMod && ptr) {
 
-      lua_pushboolean (L, eventMod->end_event (*ptr) ? 1 : 0);
+      lua_pushboolean (L, eventMod->close_event (*ptr) ? 1 : 0);
       result = 1;
    }
 
@@ -761,8 +761,8 @@ static const luaL_Reg arrayFunc[] = {
    {"launch", event_launch},
    {"detonation", event_detonation},
    {"collision", event_collision},
-   {"start", event_start},
-   {"end", event_end},
+   {"create", event_create},
+   {"close", event_close},
    {"type", event_type},
    {"locality", event_locality},
    {"object_handle", event_object_handle},

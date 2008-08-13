@@ -43,11 +43,11 @@ namespace dmz {
 
          virtual void dump_event (const Handle EventHandle, EventDump &dump) = 0;
 
-         virtual Handle start_event (
+         virtual Handle create_event (
             const EventType &Type,
             const EventLocalityEnum Locality) = 0;
 
-         virtual Boolean end_event (const Handle EventHandle) = 0;
+         virtual Boolean close_event (const Handle EventHandle) = 0;
 
          virtual Boolean lookup_event_type (
             const Handle EventHandle,

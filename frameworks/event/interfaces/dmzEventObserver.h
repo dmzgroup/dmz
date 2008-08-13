@@ -30,12 +30,12 @@ namespace dmz {
          virtual void store_event_module (const String &Name, EventModule &module) = 0;
          virtual void remove_event_module (const String &Name, EventModule &module) = 0;
 
-         virtual void start_event (
+         virtual void create_event (
             const Handle EventHandle,
             const EventType &Type,
             const EventLocalityEnum Locality) = 0;
 
-         virtual void end_event (
+         virtual void close_event (
             const Handle EventHandle,
             const EventType &Type,
             const EventLocalityEnum Locality) = 0;

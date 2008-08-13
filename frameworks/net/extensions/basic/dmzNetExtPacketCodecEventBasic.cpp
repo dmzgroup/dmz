@@ -136,7 +136,7 @@ dmz::NetExtPacketCodecEventBasic::decode (Unmarshal &data, Boolean &isLoopback) 
          data.get_next_vector (vel);
          data.get_next_vector (offset);
 
-         const Handle EventHandle (_eventMod->start_event (type, EventRemote));
+         const Handle EventHandle (_eventMod->create_event (type, EventRemote));
 
          if (EventHandle) {
 
@@ -160,7 +160,7 @@ dmz::NetExtPacketCodecEventBasic::decode (Unmarshal &data, Boolean &isLoopback) 
             _eventMod->store_velocity (EventHandle, _defaultHandle, vel);
             _eventMod->store_vector (EventHandle, _targetHandle, offset);
 
-            result = _eventMod->end_event (EventHandle);
+            result = _eventMod->close_event (EventHandle);
          }
       }
    }

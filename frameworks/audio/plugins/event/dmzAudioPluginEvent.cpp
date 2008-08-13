@@ -18,7 +18,7 @@ dmz::AudioPluginEvent::~AudioPluginEvent () {
 
 // Event Observer Interface
 void
-dmz::AudioPluginEvent::end_event (
+dmz::AudioPluginEvent::close_event (
       const Handle EventHandle,
       const EventType &Type,
       const EventLocalityEnum Locality) {

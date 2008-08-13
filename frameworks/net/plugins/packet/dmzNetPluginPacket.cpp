@@ -208,7 +208,7 @@ dmz::NetPluginPacket::read_packet (const Int32 Size, char *buffer) {
 
 // EventObserverUtil Interface
 void
-dmz::NetPluginPacket::end_event (
+dmz::NetPluginPacket::close_event (
       const Handle EventHandle,
       const EventType &Type,
       const EventLocalityEnum Locality) {

@@ -174,7 +174,7 @@ dmz::EventObserverUtil::remove_event_module (const String &Name, EventModule &mo
 
 
 void
-dmz::EventObserverUtil::start_event (
+dmz::EventObserverUtil::create_event (
       const Handle EventHandle,
       const EventType &Type,
       const EventLocalityEnum Locality) {
@@ -182,14 +182,14 @@ dmz::EventObserverUtil::start_event (
    if (!(EventStartMask & __state.errorMask)) {
 
       __state.errorMask |= EventStartMask;
-      __state.log.warn << "Base start_event called."
+      __state.log.warn << "Base create_event called."
          << " Function should have been overridden?" << endl;
    }
 }
 
 
 void
-dmz::EventObserverUtil::end_event (
+dmz::EventObserverUtil::close_event (
       const Handle EventHandle,
       const EventType &Type,
       const EventLocalityEnum Locality) {
@@ -197,7 +197,7 @@ dmz::EventObserverUtil::end_event (
    if (!(EventEndMask & __state.errorMask)) {
 
       __state.errorMask |= EventEndMask;
-      __state.log.warn << "Base end_event called."
+      __state.log.warn << "Base close_event called."
          << " Function should have been overridden?" << endl;
    }
 }

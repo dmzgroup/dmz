@@ -26,8 +26,8 @@ typedef LuaExtEventObserver * optr;
 
 static const char EventObserverName[] = "dmz.event.observer";
 
-static const char EventStartFunc[] = "start_event";
-static const char EventEndFunc[]   = "end_event";
+static const char EventStartFunc[] = "create_event";
+static const char EventEndFunc[]   = "close_event";
 
 static inline optr
 obs_check (lua_State *L, int index) {
@@ -314,7 +314,7 @@ dmz::LuaExtEventObserver::~LuaExtEventObserver () {;}
 
 
 void
-dmz::LuaExtEventObserver::start_event (
+dmz::LuaExtEventObserver::create_event (
       const Handle EventHandle,
       const EventType &Type,
       const EventLocalityEnum Locality) {
@@ -334,7 +334,7 @@ dmz::LuaExtEventObserver::start_event (
 
 
 void
-dmz::LuaExtEventObserver::end_event (
+dmz::LuaExtEventObserver::close_event (
       const Handle EventHandle,
       const EventType &Type,
       const EventLocalityEnum Locality) {

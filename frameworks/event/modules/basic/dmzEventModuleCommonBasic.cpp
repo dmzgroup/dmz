@@ -80,7 +80,7 @@ dmz::EventModuleCommonBasic::create_launch_event (
 
    if (_launchType && _eventMod && _objMod) {
 
-      result = _eventMod->start_event (_launchType, EventLocal);
+      result = _eventMod->create_event (_launchType, EventLocal);
 
       if (result) {
 
@@ -104,7 +104,7 @@ dmz::EventModuleCommonBasic::create_launch_event (
             _eventMod->store_velocity (result, _defaultEventHandle, vel);
          }
 
-         _eventMod->end_event (result);
+         _eventMod->close_event (result);
       }
    }
 
@@ -121,7 +121,7 @@ dmz::EventModuleCommonBasic::create_detonation_event (
 
    if (_detonationType && _eventMod && _objMod) {
 
-      result = _eventMod->start_event (_detonationType, EventLocal);
+      result = _eventMod->create_event (_detonationType, EventLocal);
 
       if (result) {
 
@@ -145,7 +145,7 @@ dmz::EventModuleCommonBasic::create_detonation_event (
             _eventMod->store_velocity (result, _defaultEventHandle, vel);
          }
 
-         _eventMod->end_event (result);
+         _eventMod->close_event (result);
       }
    }
 
@@ -162,7 +162,7 @@ dmz::EventModuleCommonBasic::create_collision_event (
 
    if (_collisionType && _eventMod && _objMod) {
 
-      result = _eventMod->start_event (_collisionType, EventLocal);
+      result = _eventMod->create_event (_collisionType, EventLocal);
 
       if (result) {
 
@@ -181,7 +181,7 @@ dmz::EventModuleCommonBasic::create_collision_event (
             _eventMod->store_velocity (result, _defaultEventHandle, vel);
          }
 
-         _eventMod->end_event (result);
+         _eventMod->close_event (result);
       }
    }
 

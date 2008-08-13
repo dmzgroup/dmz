@@ -94,7 +94,7 @@ dmz::AudioPluginEventSimple::discover_plugin (
 
 // Event Observer Interface
 void
-dmz::AudioPluginEventSimple::end_event (
+dmz::AudioPluginEventSimple::close_event (
       const Handle EventHandle,
       const EventType &Type,
       const EventLocalityEnum Locality) {

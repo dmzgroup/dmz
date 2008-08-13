@@ -55,11 +55,11 @@ namespace dmz {
 
          virtual void dump_event (const Handle EventHandle, EventDump &dump);
 
-         virtual Handle start_event (
+         virtual Handle create_event (
             const EventType &Type,
             const EventLocalityEnum Locality);
 
-         virtual Boolean end_event (const Handle EventHandle);
+         virtual Boolean close_event (const Handle EventHandle);
 
          virtual Boolean lookup_event_type (const Handle EventHandle, EventType &value);
 
@@ -273,15 +273,15 @@ namespace dmz {
          struct SubscriptionStruct {
 
             const Handle SubHandle;
-            HashTableHandleTemplate<EventObserverStruct> startTable;
-            HashTableHandleTemplate<EventObserverStruct> endTable;
+            HashTableHandleTemplate<EventObserverStruct> createTable;
+            HashTableHandleTemplate<EventObserverStruct> closeTable;
             EventObserver &obs;
 
             SubscriptionStruct (EventObserver &theObs) :
                   SubHandle (theObs.get_event_observer_handle ()),
                   obs (theObs) {;}
 
-            ~SubscriptionStruct () { startTable.clear (); endTable.clear (); }
+            ~SubscriptionStruct () { createTable.clear (); closeTable.clear (); }
          };
 
          EventStruct *_lookup_event (const Handle EventHandle);
@@ -304,8 +304,8 @@ namespace dmz {
          EventStruct *_recycleList;
 
          HashTableHandleTemplate<SubscriptionStruct> _subscriptionTable;
-         HashTableHandleTemplate<EventObserverStruct> _startTable;
-         HashTableHandleTemplate<EventObserverStruct> _endTable;
+         HashTableHandleTemplate<EventObserverStruct> _createTable;
+         HashTableHandleTemplate<EventObserverStruct> _closeTable;
 
       private:
          EventModuleBasic ();

@@ -59,8 +59,8 @@ dmz::EventModuleBasic::~EventModuleBasic () {
    }
 
    _subscriptionTable.empty ();
-   _startTable.empty ();
-   _endTable.empty ();
+   _createTable.empty ();
+   _closeTable.empty ();
 }
 
 // Plugin Interface
@@ -172,22 +172,22 @@ dmz::EventModuleBasic::register_event_observer (
       if (CallbackMask & StartMask) {
 
          EventObserverStruct *eos (
-            _create_event_observers (Type.get_handle (), _startTable));
+            _create_event_observers (Type.get_handle (), _createTable));
 
          if (eos && eos->store (ObsHandle, &observer)) {
 
-            sub->startTable.store (Type.get_handle (), eos);
+            sub->createTable.store (Type.get_handle (), eos);
          }
       }
 
       if (CallbackMask & EndMask) {
 
          EventObserverStruct *eos (
-            _create_event_observers (Type.get_handle (), _endTable));
+            _create_event_observers (Type.get_handle (), _closeTable));
 
          if (eos && eos->store (ObsHandle, &observer)) {
 
-            sub->endTable.store (Type.get_handle (), eos);
+            sub->closeTable.store (Type.get_handle (), eos);
          }
       }
 
@@ -213,14 +213,14 @@ dmz::EventModuleBasic::release_event_observer (
 
       if (CallbackMask & StartMask) {
 
-         EventObserverStruct *eos (sub->startTable.remove (Type.get_handle ()));
+         EventObserverStruct *eos (sub->createTable.remove (Type.get_handle ()));
 
          if (eos) { eos->remove (ObsHandle); }
       }
 
       if (CallbackMask & EndMask) {
 
-         EventObserverStruct *eos (sub->endTable.remove (Type.get_handle ()));
+         EventObserverStruct *eos (sub->closeTable.remove (Type.get_handle ()));
 
          if (eos) { eos->remove (ObsHandle); }
       }
@@ -244,20 +244,20 @@ dmz::EventModuleBasic::release_event_observer_all (EventObserver &observer) {
 
       HashTableHandleIterator it;
 
-      EventObserverStruct *eos (sub->startTable.get_first (it));
+      EventObserverStruct *eos (sub->createTable.get_first (it));
 
       while (eos) {
 
          eos->remove (ObsHandle);
-         eos = sub->startTable.get_next (it);
+         eos = sub->createTable.get_next (it);
       }
 
-      eos = sub->endTable.get_first (it);
+      eos = sub->closeTable.get_first (it);
 
       while (eos) {
 
          eos->remove (ObsHandle);
-         eos = sub->endTable.get_next (it);
+         eos = sub->closeTable.get_next (it);
       }
 
       delete sub; sub = 0;
@@ -416,7 +416,7 @@ dmz::EventModuleBasic::dump_event (const Handle EventHandle, EventDump &dump) {
 
 
 dmz::Handle
-dmz::EventModuleBasic::start_event (
+dmz::EventModuleBasic::create_event (
       const EventType &Type,
       const EventLocalityEnum Locality) {
 
@@ -439,28 +439,6 @@ dmz::EventModuleBasic::start_event (
 
                event->type = Type;
                event->locality = Locality;
-
-               EventType current (Type);
-
-               while (current) {
-
-                  EventObserverStruct *eos (_startTable.lookup (current.get_handle ()));
-
-                  if (eos) {
-
-                     HashTableHandleIterator it;
-
-                     EventObserver *obs (eos->get_first (it));
-
-                     while (obs) {
-
-                        obs->start_event (result, event->type, event->locality);
-                        obs = eos->get_next (it);
-                     }
-                  }
-
-                  current.become_parent ();
-               }
             }
             else {
 
@@ -476,7 +454,7 @@ dmz::EventModuleBasic::start_event (
 
 
 dmz::Boolean
-dmz::EventModuleBasic::end_event (const Handle EventHandle) {
+dmz::EventModuleBasic::close_event (const Handle EventHandle) {
 
    Boolean result (False);
 
@@ -484,14 +462,11 @@ dmz::EventModuleBasic::end_event (const Handle EventHandle) {
 
    if (event && !event->closed) {
 
-      event->closed = True;
-      event->closeTime = _time.get_frame_time ();
-
       EventType current (event->type);
 
       while (current) {
 
-         EventObserverStruct *eos (_endTable.lookup (current.get_handle ()));
+         EventObserverStruct *eos (_createTable.lookup (current.get_handle ()));
 
          if (eos) {
 
@@ -501,7 +476,32 @@ dmz::EventModuleBasic::end_event (const Handle EventHandle) {
 
             while (obs) {
 
-               obs->end_event (event->handle, event->type, event->locality);
+               obs->create_event (result, event->type, event->locality);
+               obs = eos->get_next (it);
+            }
+         }
+
+         current.become_parent ();
+      }
+
+      event->closed = True;
+      event->closeTime = _time.get_frame_time ();
+
+      current = event->type;
+
+      while (current) {
+
+         EventObserverStruct *eos (_closeTable.lookup (current.get_handle ()));
+
+         if (eos) {
+
+            HashTableHandleIterator it;
+
+            EventObserver *obs (eos->get_first (it));
+
+            while (obs) {
+
+               obs->close_event (event->handle, event->type, event->locality);
                obs = eos->get_next (it);
             }
          }

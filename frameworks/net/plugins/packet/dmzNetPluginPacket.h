@@ -48,7 +48,7 @@ namespace dmz {
          virtual void read_packet (const Int32 Size, char *buffer);
 
          // EventObserverUtil Interface
-         virtual void end_event (
+         virtual void close_event (
             const Handle EventHandle,
             const EventType &Type,
             const EventLocalityEnum Locality);

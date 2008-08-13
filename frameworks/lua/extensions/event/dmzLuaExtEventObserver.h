@@ -31,12 +31,12 @@ namespace dmz {
 
          int get_index () const;
 
-         virtual void start_event (
+         virtual void create_event (
             const Handle EventHandle,
             const EventType &Type,
             const EventLocalityEnum Locality);
 
-         virtual void end_event (
+         virtual void close_event (
             const Handle EventHandle,
             const EventType &Type,
             const EventLocalityEnum Locality);

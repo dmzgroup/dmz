@@ -52,7 +52,7 @@ dmz::EntityPluginDamage::update_object_flag (
 
 // Event Observer Interface
 void
-dmz::EntityPluginDamage::end_event (
+dmz::EntityPluginDamage::close_event (
       const Handle EventHandle,
       const EventType &Type,
       const EventLocalityEnum Locality) {

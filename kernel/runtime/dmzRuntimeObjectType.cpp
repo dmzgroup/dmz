@@ -480,6 +480,12 @@ dmz::ObjectTypeSet::add_object_type (const Handle TypeHandle, RuntimeContext *co
 }
 
 
+/*!
+
+\brief Adds a set of ObjectTypes to the set.
+\param[in] Set ObjectTypeSet of ObjectTypes to be added to the set.
+
+*/
 void
 dmz::ObjectTypeSet::add_object_set (const ObjectTypeSet &Set) {
 

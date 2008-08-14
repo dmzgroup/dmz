@@ -16,6 +16,7 @@ namespace dmz {
          public EventObserverUtil {
 
       public:
+         //! \cond
          AudioPluginEventSimple (const PluginInfo &Info, Config &local);
          ~AudioPluginEventSimple ();
 
@@ -50,6 +51,7 @@ namespace dmz {
          Handle _defaultEventHandle;
 
          HashTableHandleTemplate<EventStruct> _eventTable;
+         //! \endcond
 
       private:
          AudioPluginEventSimple ();

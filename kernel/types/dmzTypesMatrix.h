@@ -115,6 +115,12 @@ dmz::Matrix::Matrix () {
 }
 
 
+/*!
+
+\brief Element Constructor.
+\details Assumes row major order.
+
+*/
 inline
 dmz::Matrix::Matrix (
       const Float64 V0, const Float64 V1, const Float64 V2,

@@ -420,7 +420,7 @@ dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
       }
    }
 
-   _searchPath = config_to_path_container ("search", local);
+   _searchPath = config_to_path_container ("search.path", local);
 
    _defaultHandle = activate_default_object_attribute (
       ObjectDestroyMask | ObjectPositionMask | ObjectOrientationMask);

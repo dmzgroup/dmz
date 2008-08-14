@@ -57,6 +57,7 @@ named create_dmzNetExtLineObjects.
 </dmz>
 \endcode
 
+\param[in] context Pointer to the runtime context.
 \param[in] pluginList Contains list of Plugins to load.
 \param[in] pluginInit Contains initialization data for Plugins to load.
 \param[in] global Contains the global configuration data.

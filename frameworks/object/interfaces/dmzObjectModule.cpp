@@ -256,6 +256,25 @@ dmz::Handle &subHandle)
 \param[in] LinkHandle Link handle as returned by dmz::ObjectModule::link_objects()..
 \return Returns dmz::True if the objects are unlinked.
 
+\fn dmz::Boolean dmz::ObjectModule::unlink_super_links (
+const Handle ObjectHandle,
+const Handle AttributeHandle)
+\brief Unlinks all super linked objects with the given attribute handle.
+\details All super links to the object of the given link attribute are unlinked.
+\param[in] ObjectHandle Handle of object to unlink.
+\param[in] AttributeHandle The link's attribute handle.
+\return Returns dmz::True if the super links were unlinked.
+
+\fn dmz::Boolean dmz::ObjectModule::unlink_sub_links (
+const Handle ObjectHandle,
+const Handle AttributeHandle) 
+\brief Unlinks all sub linked objects with the given attribute handle.
+\details All sub links to the object of the given link attribute are unlinked.
+\param[in] ObjectHandle Handle of object to unlink.
+\param[in] AttributeHandle The link's attribute handle.
+\return Returns dmz::True if the sub links were unlinked.
+
+
 \fn dmz::Boolean dmz::ObjectModule::store_link_attribute_object (
 const dmz::Handle LinkHandle,
 const dmz::Handle AttributeObjectHandle)

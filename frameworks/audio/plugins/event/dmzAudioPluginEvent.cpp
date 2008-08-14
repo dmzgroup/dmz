@@ -2,6 +2,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::AudioPluginEvent
+\ingroup Audio
+\brief Work in Progress.
+
+*/
+
+//! \cond
 dmz::AudioPluginEvent::AudioPluginEvent (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       EventObserverUtil (Info, local),
@@ -30,6 +39,7 @@ void
 dmz::AudioPluginEvent::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

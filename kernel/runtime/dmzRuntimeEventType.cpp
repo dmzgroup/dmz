@@ -485,6 +485,12 @@ dmz::EventTypeSet::add_event_type (const Handle TypeHandle, RuntimeContext *cont
 }
 
 
+/*!
+
+\brief Adds a set of EventTypes to the set.
+\param[in] Set EventTypeSet of EventTypes to be added to the set.
+
+*/
 void
 dmz::EventTypeSet::add_event_set (const EventTypeSet &Set) {
 

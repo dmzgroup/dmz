@@ -4,7 +4,16 @@
 #include <dmzSystemFile.h>
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
+/*!
 
+\class dmz::AudioModuleOpenAL
+\ingroup Audio
+\brief OpenAL implementation of the audio module.
+
+*/
+ 
+
+//! \cond
 dmz::AudioModuleOpenAL::AudioModuleOpenAL (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (Info),
@@ -509,6 +518,7 @@ dmz::AudioModuleOpenAL::_init (Config &local) {
    }
    else { _log.error << "Unable to create OpenAL Device." << endl; }
 }
+//! \endcond
 
 
 extern "C" {

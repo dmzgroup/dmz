@@ -7,6 +7,8 @@
 
 namespace dmz {
 
+   //! \brief Specifies the wave format is PCM.
+   //! \ingroup Audio
    const UInt32 WaveFormatPCM = 1;
 
    class DMZ_AUDIO_WAVE_LINK_SYMBOL WaveFile {

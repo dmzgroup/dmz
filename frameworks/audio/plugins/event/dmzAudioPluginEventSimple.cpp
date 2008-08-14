@@ -10,6 +10,15 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::AudioPluginEventSimple
+\ingroup Audio
+\brief Plays an audio file mapped to various EventTypes.
+
+*/
+
+//! \cond
 dmz::AudioPluginEventSimple::AudioPluginEventSimple (
       const PluginInfo &Info,
       Config &local) :
@@ -194,6 +203,7 @@ dmz::AudioPluginEventSimple::_init (Config &local) {
       }
    }
 }
+//! \endcond
 
 
 extern "C" {

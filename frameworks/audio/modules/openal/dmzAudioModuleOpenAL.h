@@ -28,6 +28,7 @@ namespace dmz {
          public AudioModule {
 
       public:
+         //! \cond
          AudioModuleOpenAL (const PluginInfo &Info, Config &local);
          ~AudioModuleOpenAL ();
 
@@ -145,6 +146,7 @@ namespace dmz {
          HashTableHandleTemplate<BufferStruct> _bufferHandleTable;
          HashTableHandleTemplate<SoundStruct> _soundTable;
          HashTableHandleTemplate<SoundStruct> _soundTimedTable;
+         //! \endcond
 
       private:
          AudioModuleOpenAL ();

@@ -91,8 +91,8 @@ INPUT                  = ../kernel \
                          ../foundation \
                          ../frameworks/archive \
                          ../frameworks/audio \
+                         ../frameworks/event \
                          ../frameworks/input \
-                         ../frameworks/lua \
                          ../frameworks/object \
                          ../frameworks/render
 INPUT_ENCODING         = UTF-8

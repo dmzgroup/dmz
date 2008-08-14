@@ -12,6 +12,7 @@ namespace dmz {
          public EventObserverUtil {
 
       public:
+         //! \cond
          AudioPluginEvent (const PluginInfo &Info, Config &local);
          ~AudioPluginEvent ();
 
@@ -34,6 +35,7 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         //! \endcond
 
       private:
          AudioPluginEvent ();

@@ -2,6 +2,14 @@
 #include <dmzSystemFile.h>
 #include <dmzSystemUnmarshal.h>
 
+/*!
+
+\class dmz::WaveFile
+\ingroup Audio
+\brief Loads and parses standard WAV files.
+
+*/
+
 struct dmz::WaveFile::State {
 
    String fileName;
@@ -37,26 +45,54 @@ struct dmz::WaveFile::State {
 };
 
 
+//! Default Constructor.
 dmz::WaveFile::WaveFile () : _state (*(new State)) {;}
 
 
+/*!
+
+\brief File Constructor.
+\param[in] FileName String containing the name of the wave file to load.
+
+*/
 dmz::WaveFile::WaveFile (const String &FileName) : _state (*(new State)) {
 
    load_file (FileName);
 }
 
 
+//! Destructor
 dmz::WaveFile::~WaveFile () { delete &_state; }
 
 
+/*!
+
+\brief Gets loaded WAV file name.
+\return Returns a string containing the name of the loaded WAV file. Returns
+and empty string if no file was loaded.
+
+*/
 dmz::String 
 dmz::WaveFile::get_file_name () const { return _state.fileName; }
 
 
+/*!
+
+\brief Determines if the WAV file is valid.
+\return Returns dmz::True if the WAV file was successfully loaded.
+
+*/
 dmz::Boolean
 dmz::WaveFile::is_valid () const { return _state.buffer != 0; }
 
 
+/*!
+
+\brief Clears the class.
+\details All memory used to store the loaded WAV file is freed and the class instance
+is reset.
+
+*/
 void
 dmz::WaveFile::clear () { _state.clear (); } 
 
@@ -64,6 +100,13 @@ dmz::WaveFile::clear () { _state.clear (); }
 static const dmz::Int32 LocalHeaderSize = 12;
 static const dmz::Int32 LocalFormatSize = 24;
 
+/*!
+
+\brief Loads WAV file.
+\param[in] FileName String containing the name of the WAV file to load.
+\return Returns dmz::True if the WAV file was successfully loaded.
+
+*/
 dmz::Boolean
 dmz::WaveFile::load_file (const String &FileName) {
 
@@ -199,7 +242,8 @@ dmz::WaveFile::load_file (const String &FileName) {
                            UInt32 tmp (_state.size);
                            _state.clear ();
                            _state.error.flush () << "Read data size does not match "
-                              << "data size specified in the sub chunk header. " << tmp << " " << DataSize;
+                              << "data size specified in the sub chunk header. " << tmp
+                              << " " << DataSize;
                            error = True;
                         }
                      }
@@ -256,22 +300,34 @@ dmz::WaveFile::load_file (const String &FileName) {
 }
 
 
+//! Returns the audio format enumeration as specified in the WAV standard.
 dmz::UInt32
 dmz::WaveFile::get_audio_format () const { return _state.format; }
 
 
+//! Returns the number audio channels contained in the loaded WAV file.
 dmz::UInt32
 dmz::WaveFile::get_channel_count () const { return _state.channels; }
 
 
+//! Returns the frequency of the loaded WAV file.
 dmz::UInt32
 dmz::WaveFile::get_frequency () const { return _state.frequency; }
 
 
+//! Returns the number of bits per sample of the loaded WAV file.
 dmz::UInt32
 dmz::WaveFile::get_bits_per_sample () const { return _state.bps; }
 
 
+/*!
+
+\brief Gets the buffer containing the loaded WAV file.
+\param[out] size Used to return the size of the buffer.
+\return Returns a buffer containing the loaded wave file. Return NULL if the
+WAV file was not loaded.
+
+*/
 char *
 dmz::WaveFile::get_audio_buffer (UInt32 &size) {
 
@@ -280,6 +336,7 @@ dmz::WaveFile::get_audio_buffer (UInt32 &size) {
 }
 
 
+//! Returns any error that was encountered while loading and parsing the WAV file
 dmz::String
 dmz::WaveFile::get_error () const { return _state.error; }
 

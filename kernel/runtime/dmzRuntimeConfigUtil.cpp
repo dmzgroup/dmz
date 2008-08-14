@@ -40,6 +40,39 @@ local_config_to_string (
 //! \addtogroup Runtime
 //! @{
 
+/*!
+
+\fn dmz::EventType  dmz::config_to_event_type (const String &Name, const Config &Source, RuntimeContext *context)
+\brief Converts Config to EventType.
+\details Defined in dmzRuntimeEventType.h.
+\code
+RuntimeContext *context (get_plugin_runtime_context ());
+dmz::EventType value = dmz::config_to_event_type ("dmz.event.type", local, context);
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] context Pointer to the runtime context.
+\return Returns dmz::EventType containing value.
+
+*/
+
+/*!
+
+\brief Converts Config to EventType.
+\details Defined in dmzRuntimeEventType.h.
+\code
+RuntimeContext *context (get_plugin_runtime_context ());
+const dmz::String DefaultEventTypeName ("Some_Event");
+dmz::EventType value = dmz::config_to_event_type ("dmz.event.type", local, DefaultEventTypeName, context);
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] DefaultEventTypeName String containing default EventType name to use
+if the config context is not found.
+\param[in] context Pointer to the runtime context.
+\return Returns dmz::EventType containing value.
+
+*/
 dmz::EventType
 dmz::config_to_event_type (
       const String &Name,
@@ -57,6 +90,23 @@ dmz::config_to_event_type (
 }
 
 
+/*!
+
+\brief Converts Config to EventType.
+\details Defined in dmzRuntimeEventType.h.
+\code
+RuntimeContext *context (get_plugin_runtime_context ());
+const dmz::EventType DefaultEventType ("Some_Event", context);
+dmz::EventType value = dmz::config_to_event_type ("dmz.event.type", local, DefaultEventType, context);
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] DefaultEventType EventType containing default EventType to use
+if the config context is not found.
+\param[in] context Pointer to the runtime context.
+\return Returns dmz::EventType containing value.
+
+*/
 dmz::EventType
 dmz::config_to_event_type (
       const String &Name,
@@ -80,6 +130,28 @@ dmz::config_to_event_type (
 }
 
 
+/*!
+
+\brief Converts Config to EventTypeSet.
+\details Defined in dmzRuntimeEventType.h.
+\code
+RuntimeContext *context (get_plugin_runtime_context ());
+dmz::EventTypeSet value = dmz::config_to_event_type_set ("dmz.event", global, context);
+\endcode
+The Config for the above example would be formated as follows:
+\code
+<dmz>
+   <event type="Some Event"/>
+   <event type="Another Event"/>
+   <event type="Yet Another Event"/>
+</dmz>
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] context Pointer to the runtime context.
+\return Returns dmz::EventTypeSet containing value.
+
+*/
 dmz::EventTypeSet
 dmz::config_to_event_type_set (
       const String &Name,
@@ -105,6 +177,42 @@ dmz::config_to_event_type_set (
 }
 
 
+/*!
+
+\fn dmz::ObjectType dmz::config_to_object_type (
+const String &Name,
+const Config &Source,
+RuntimeContext *context)
+\brief Converts Config to ObjectType.
+\details Defined in dmzRuntimeObjectType.h.
+\code
+RuntimeContext *context (get_plugin_runtime_context ());
+dmz::ObjectType value = dmz::config_to_object_type ("dmz.object.type", local, context);
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] context Pointer to the runtime context.
+\return Returns dmz::ObjectType containing value.
+
+*/
+
+/*!
+
+\brief Converts Config to ObjectType.
+\details Defined in dmzRuntimeObjectType.h.
+\code
+RuntimeContext *context (get_plugin_runtime_context ());
+const dmz::String DefaultObjectTypeName ("Some_Object");
+dmz::ObjectType value = dmz::config_to_object_type ("dmz.object.type", local, DefaultObjectTypeName, context);
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] DefaultObjectTypeName String containing default ObjectType name to use
+if the config context is not found.
+\param[in] context Pointer to the runtime context.
+\return Returns dmz::ObjectType containing value.
+
+*/
 dmz::ObjectType
 dmz::config_to_object_type (
       const String &Name,
@@ -121,6 +229,24 @@ dmz::config_to_object_type (
    return config_to_object_type (Name, Source, defaultObjectType, context);
 }
 
+
+/*!
+
+\brief Converts Config to ObjectType.
+\details Defined in dmzRuntimeObjectType.h.
+\code
+RuntimeContext *context (get_plugin_runtime_context ());
+const dmz::ObjectType DefaultObjectType ("Some_Object", context);
+dmz::ObjectType value = dmz::config_to_object_type ("dmz.object.type", local, DefaultObjectType, context);
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] DefaultObjectType ObjectType containing default ObjectType to use
+if the config context is not found.
+\param[in] context Pointer to the runtime context.
+\return Returns dmz::ObjectType containing value.
+
+*/
 
 dmz::ObjectType
 dmz::config_to_object_type (
@@ -145,6 +271,28 @@ dmz::config_to_object_type (
 }
 
 
+/*!
+
+\brief Converts Config to ObjectTypeSet.
+\details Defined in dmzRuntimeObjectType.h.
+\code
+RuntimeContext *context (get_plugin_runtime_context ());
+dmz::ObjectTypeSet value = dmz::config_to_object_type_set ("dmz.object", global, context);
+\endcode
+The Config for the above example would be formated as follows:
+\code
+<dmz>
+   <object type="Some Object"/>
+   <object type="Another Object"/>
+   <object type="Yet Another Object"/>
+</dmz>
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] context Pointer to the runtime context.
+\return Returns dmz::ObjectTypeSet containing value.
+
+*/
 dmz::ObjectTypeSet
 dmz::config_to_object_type_set (
       const String &Name,
@@ -170,6 +318,42 @@ dmz::config_to_object_type_set (
 }
 
 
+/*!
+
+\fn dmz::Mask dmz::config_to_state (
+const String &Name,
+const Config &Source,
+RuntimeContext *context)
+\brief Converts Config to a Mask containing state values.
+\details Defined in dmzRuntimeConfigToState.h.
+\code
+RuntimeContext *context (get_plugin_runtime_context ());
+dmz::Mask value = dmz::config_to_state ("dmz.state.value", local, context);
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] context Pointer to the runtime context.
+\return Returns dmz::Mask containing the state values.
+
+*/
+
+/*!
+
+\brief Converts Config to a Mask containing state values.
+\details Defined in dmzRuntimeConfigToState.h.
+\code
+RuntimeContext *context (get_plugin_runtime_context ());
+const dmz::String DefaultStateName ("Some_State|Another_State");
+dmz::Mask value = dmz::config_to_state ("dmz.state.value", local, DefaultStateName, context);
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] DefaultStateName String containing default state name to use
+if the config context is not found.
+\param[in] context Pointer to the runtime context.
+\return Returns dmz::Mask containing the state values.
+
+*/
 dmz::Mask
 dmz::config_to_state (
       const String &Name,
@@ -187,6 +371,23 @@ dmz::config_to_state (
 }
 
 
+/*!
+
+\brief Converts Config to a Mask containing state values.
+\details Defined in dmzRuntimeConfigToState.h.
+\code
+RuntimeContext *context (get_plugin_runtime_context ());
+const dmz::Mask DefaultState;
+dmz::Mask value = dmz::config_to_state ("dmz.state.value", local, DefaultState, context);
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] DefaultState Mask containing default state to use
+if the config context is not found.
+\param[in] context Pointer to the runtime context.
+\return Returns dmz::Mask containing the state values.
+
+*/
 dmz::Mask
 dmz::config_to_state (
       const String &Name,
@@ -210,6 +411,43 @@ dmz::config_to_state (
 }
 
 
+/*!
+
+\fn dmz::PathContainer dmz::config_to_path_container (const dmz::Config &Source)
+\brief Converts Config to a PathContainer.
+\details Defined in dmzRuntimeConfigToPathContainer.h.
+\code
+dmz::PathContainer value = dmz::config_to_path_container (global);
+\endcode
+The Config for the above example would be formatted as follows:
+\code
+<path value="/a/path/of/some/sort"/>
+<path value="/a/path/of/another/sort"/>
+\endcode
+\param[in] Source Config containing config context to convert.
+\return Returns dmz::PathContainer of the path values.
+
+*/
+
+/*!
+
+\brief Converts Config to a PathContainer.
+\details Defined in dmzRuntimeConfigToPathContainer.h.
+\code
+dmz::PathContainer value = dmz::config_to_path_container ("dmz.path", global);
+\endcode
+The Config for the above example would be formatted as follows:
+\code
+<dmz>
+   <path value="/a/path/of/some/sort"/>
+   <path value="/a/path/of/another/sort"/>
+</dmz>
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\return Returns dmz::PathContainer of the path values.
+
+*/
 dmz::PathContainer
 dmz::config_to_path_container (const String &Name, const Config &Source) {
 
@@ -217,7 +455,7 @@ dmz::config_to_path_container (const String &Name, const Config &Source) {
 
    Config pathList;
 
-   if (Name) { Source.lookup_all_config (Name + ".path", pathList); }
+   if (Name) { Source.lookup_all_config (Name, pathList); }
    else { Source.lookup_all_config ("path", pathList); }
 
    ConfigIterator it;
@@ -232,6 +470,43 @@ dmz::config_to_path_container (const String &Name, const Config &Source) {
 }
 
 
+/*!
+
+\fn dmz::StringContainer dmz::config_to_string_container (const dmz::Config &Source)
+\brief Converts Config to a StringContainer.
+\details Defined in dmzRuntimeConfigToStringContainer.h.
+\code
+dmz::StringContainer value = dmz::config_to_string_container (global);
+\endcode
+The Config for the above example would be formatted as follows:
+\code
+<string value="The string"/>
+<string value="Another string"/>
+\endcode
+\param[in] Source Config containing config context to convert.
+\return Returns dmz::StringContainer of the String values.
+
+*/
+
+/*!
+
+\brief Converts Config to a StringContainer.
+\details Defined in dmzRuntimeConfigToStringContainer.h.
+\code
+dmz::StringContainer value = dmz::config_to_string_container ("dmz.string", global);
+\endcode
+The Config for the above example would be formatted as follows:
+\code
+<dmz>
+   <string value="The string"/>
+   <string value="Another string"/>
+</dmz>
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\return Returns dmz::StringContainer of the String values.
+
+*/
 dmz::StringContainer
 dmz::config_to_string_container (const String &Name, const Config &Source) {
 
@@ -239,7 +514,7 @@ dmz::config_to_string_container (const String &Name, const Config &Source) {
 
    Config stringList;
 
-   if (Name) { Source.lookup_all_config (Name + ".string", stringList); }
+   if (Name) { Source.lookup_all_config (Name, stringList); }
    else { Source.lookup_all_config ("string", stringList); }
 
    ConfigIterator it;

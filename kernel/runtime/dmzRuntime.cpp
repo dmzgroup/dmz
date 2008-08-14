@@ -98,6 +98,16 @@ dmz::Runtime::update_time_slice () {
 }
 
 
+/*!
+
+\brief Gets the unique runtime UUID.
+\ingroup Runtime
+\param[in] context Pointer to the runtime context.
+\details A new UUID is allocated every time a runtime context is created. This UUID
+may be used to identify the application while it is running.
+\return Returns the unique UUID associated with the RuntimeContext.
+
+*/
 dmz::UUID
 dmz::get_runtime_uuid (RuntimeContext *context) {
 
@@ -107,6 +117,16 @@ dmz::get_runtime_uuid (RuntimeContext *context) {
 }
 
 
+/*!
+
+\brief Gets the unique runtime UUID.
+\ingroup Runtime
+\param[in] Info Reference to the PluginInfo.
+\details A new UUID is allocated every time a runtime context is created. This UUID
+may be used to identify the application while it is running.
+\return Returns the unique UUID associated with the RuntimeContext.
+
+*/
 dmz::UUID
 dmz::get_runtime_uuid (const PluginInfo &Info) {
 

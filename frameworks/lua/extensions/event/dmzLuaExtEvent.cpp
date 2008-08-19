@@ -101,7 +101,8 @@ event_launch (lua_State *L) {
    EventModuleCommon *eventMod (get_common_event_module (L));
 
    const Handle *Source = lua_check_handle (L, 1);
-   const Handle *Target = lua_check_handle (L, 2);
+   const Handle *Target (0);
+   if (!lua_isnoneornil (L, 2)) { Target = lua_check_handle (L, 2); }
 
    if (eventMod) {
 
@@ -122,7 +123,8 @@ event_detonation (lua_State *L) {
    EventModuleCommon *eventMod (get_common_event_module (L));
 
    const Handle *Source = lua_check_handle (L, 1);
-   const Handle *Target = lua_check_handle (L, 2);
+   const Handle *Target (0);
+   if (!lua_isnoneornil (L, 2)) { Target = lua_check_handle (L, 2); }
 
    if (eventMod) {
 
@@ -143,7 +145,8 @@ event_collision (lua_State *L) {
    EventModuleCommon *eventMod (get_common_event_module (L));
 
    const Handle *Source = lua_check_handle (L, 1);
-   const Handle *Target = lua_check_handle (L, 2);
+   const Handle *Target (0);
+   if (!lua_isnoneornil (L, 2)) { Target = lua_check_handle (L, 2); }
 
    if (eventMod) {
 

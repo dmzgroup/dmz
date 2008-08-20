@@ -20,7 +20,7 @@
 \details The archive XML format:
 \code
 <dmz>
-<dmzArchivePluginObject>
+<objects>
    <!-- If name is not specified, the UUID is used in its place -->
    <object type="Type Name" uuid="UUID String" name="unique name">
       <!-- If name is not specified, the default attribute handle is used. -->
@@ -58,7 +58,7 @@
       </attributes>
       <!-- more object attributes -->
    </object>
-</dmzArchivePluginObject>
+</objects>
 </dmz>
 \endcode
 The filter XML format:
@@ -1105,7 +1105,7 @@ dmz::ArchivePluginObject::_filter_state (const Handle AttrHandle, const Mask &Va
 void
 dmz::ArchivePluginObject::_init (Config &local) {
 
-   _scope = config_to_string_container ("scope", local);
+   _scope = config_to_string_container ("scope.string", local);
    if (_scope.get_count () == 0) { _scope.add_string ("objects"); }
 
    RuntimeContext *context (get_plugin_runtime_context ());

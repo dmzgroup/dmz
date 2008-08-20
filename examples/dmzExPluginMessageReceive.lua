@@ -15,7 +15,7 @@ function new (config, name)
    local self = {
 
       log = dmz.log.new ("lua." .. name),
-      message = config:lookup_message ("message.name"),
+      message = config:to_message ("message.name"),
       obs = dmz.message_observer.new (name),
    }
 

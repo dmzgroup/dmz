@@ -15,10 +15,10 @@ function new (config, name)
 
       log = dmz.log.new ("lua." .. name),
       timeSlice = dmz.time_slice.new (),
-      message = config:lookup_message ("message.name"),
+      message = config:to_message ("message.name"),
       target = dmz.handle.new ("dmzExPluginMessageReceive"),
       data = dmz.data.new (),
-      value = config:lookup_string ("message.value", "Default message."),
+      value = config:to_string ("message.value", "Default message."),
    }
 
    self.log:info ("Creating plugin: " .. name)

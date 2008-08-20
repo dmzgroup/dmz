@@ -112,6 +112,8 @@ event_launch (lua_State *L) {
 
       if (EventHandle) { lua_create_handle (L, EventHandle); result = 1; }
    }
+
+   return result;
 }
 
 
@@ -134,6 +136,8 @@ event_detonation (lua_State *L) {
 
       if (EventHandle) { lua_create_handle (L, EventHandle); result = 1; }
    }
+
+   return result;
 }
 
 
@@ -156,6 +160,8 @@ event_collision (lua_State *L) {
 
       if (EventHandle) { lua_create_handle (L, EventHandle); result = 1; }
    }
+
+   return result;
 }
 
 

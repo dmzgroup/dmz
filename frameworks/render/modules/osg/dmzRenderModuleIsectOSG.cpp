@@ -60,7 +60,7 @@ dmz::RenderModuleIsectOSG::do_isect (
 
    if (_core) {
 
-      osg::ref_ptr<osg::Group> scene = _core->get_scene ();
+      osg::ref_ptr<osg::Group> scene = _core->get_isect ();
 //      osg::ref_ptr<osg::Group> scene = _core->get_static_objects ();
 
       osg::BoundingSphere bs = scene->getBound();

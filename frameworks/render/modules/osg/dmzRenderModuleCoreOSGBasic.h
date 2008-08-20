@@ -73,6 +73,8 @@ namespace dmz {
          // RenderModuloeCoreOSG Interface
          virtual String find_file (const String &FileName);
          virtual osg::Group *get_scene ();
+         virtual osg::Group *get_overlay ();
+         virtual osg::Group *get_isect ();
          virtual osg::Group *get_static_objects ();
          virtual osg::Group *get_dynamic_objects ();
 
@@ -134,6 +136,8 @@ namespace dmz {
          Handle _defaultHandle;
          PluginContainer _extensions;
          osg::ref_ptr<osg::Group> _scene;
+         osg::ref_ptr<osg::Group> _overlay;
+         osg::ref_ptr<osg::Group> _isect;
          osg::ref_ptr<osg::Group> _staticObjects;
          osg::ref_ptr<osg::Group> _dynamicObjects;
          HashTableStringTemplate<PortalStruct> _portalTable;

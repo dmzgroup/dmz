@@ -15,7 +15,8 @@ function add_libs (list)
    if sys == "win32" then
       lmk.add_vars {localDefines = "$(lmk.defineFlag)WIN32"}
    end
-   if sys == "macos" then
+--   if sys == "macos" then
+   if sys == "" then
       local paths = "-Xlinker -executable_path -Xlinker " ..
          "$(DMZ_OSG_LIB_PATH) -F$(DMZ_OSG_LIB_PATH)"
       for ix, element in ipairs (list) do

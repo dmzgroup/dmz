@@ -91,7 +91,7 @@ dmz::ArrayTemplate<T>::operator= (const ArrayTemplate<T> &Value) {
 
    if (Value._array) {
 
-      _array = new T[Value._size];
+      if (!_array) { _array = new T[Value._size]; }
 
       if (_array) {
 

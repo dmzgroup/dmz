@@ -33,11 +33,23 @@ namespace dmz {
             const Handle MunitionsHandle,
             const Handle TargetHandle);
 
+         virtual Handle create_open_launch_event (
+            const Handle MunitionsHandle,
+            const Handle TargetHandle);
+
          virtual Handle create_detonation_event (
             const Handle MunitionsHandle,
             const Handle TargetHandle);
 
+         virtual Handle create_open_detonation_event (
+            const Handle MunitionsHandle,
+            const Handle TargetHandle);
+
          virtual Handle create_collision_event (
+            const Handle SourceHandle,
+            const Handle TargetHandle);
+
+         virtual Handle create_open_collision_event (
             const Handle SourceHandle,
             const Handle TargetHandle);
 

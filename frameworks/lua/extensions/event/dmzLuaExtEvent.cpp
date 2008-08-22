@@ -166,6 +166,78 @@ event_collision (lua_State *L) {
 
 
 static int
+event_open_launch (lua_State *L) {
+
+   int result (0);
+
+   EventModuleCommon *eventMod (get_common_event_module (L));
+
+   const Handle *Source = lua_check_handle (L, 1);
+   const Handle *Target (0);
+   if (!lua_isnoneornil (L, 2)) { Target = lua_check_handle (L, 2); }
+
+   if (eventMod) {
+
+      const Handle EventHandle = eventMod->create_open_launch_event (
+         (Source ? *Source : 0),
+         (Target ? *Target : 0)); 
+
+      if (EventHandle) { lua_create_handle (L, EventHandle); result = 1; }
+   }
+
+   return result;
+}
+
+
+static int
+event_open_detonation (lua_State *L) {
+
+   int result (0);
+
+   EventModuleCommon *eventMod (get_common_event_module (L));
+
+   const Handle *Source = lua_check_handle (L, 1);
+   const Handle *Target (0);
+   if (!lua_isnoneornil (L, 2)) { Target = lua_check_handle (L, 2); }
+
+   if (eventMod) {
+
+      const Handle EventHandle = eventMod->create_open_detonation_event (
+         (Source ? *Source : 0),
+         (Target ? *Target : 0)); 
+
+      if (EventHandle) { lua_create_handle (L, EventHandle); result = 1; }
+   }
+
+   return result;
+}
+
+
+static int
+event_open_collision (lua_State *L) {
+
+   int result (0);
+
+   EventModuleCommon *eventMod (get_common_event_module (L));
+
+   const Handle *Source = lua_check_handle (L, 1);
+   const Handle *Target (0);
+   if (!lua_isnoneornil (L, 2)) { Target = lua_check_handle (L, 2); }
+
+   if (eventMod) {
+
+      const Handle EventHandle = eventMod->create_open_collision_event (
+         (Source ? *Source : 0),
+         (Target ? *Target : 0)); 
+
+      if (EventHandle) { lua_create_handle (L, EventHandle); result = 1; }
+   }
+
+   return result;
+}
+
+
+static int
 event_create (lua_State *L) {
 
    int result (0);
@@ -770,6 +842,9 @@ static const luaL_Reg arrayFunc[] = {
    {"launch", event_launch},
    {"detonation", event_detonation},
    {"collision", event_collision},
+   {"open_launch", event_open_launch},
+   {"open_detonation", event_open_detonation},
+   {"open_collision", event_open_collision},
    {"create", event_create},
    {"close", event_close},
    {"type", event_type},

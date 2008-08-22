@@ -76,6 +76,19 @@ dmz::EventModuleCommonBasic::create_launch_event (
       const Handle MunitionsHandle,
       const Handle TargetHandle) {
 
+   Handle result (create_open_launch_event (MunitionsHandle, TargetHandle));
+
+   if (_eventMod && result) { _eventMod->close_event (result); }
+
+   return result;
+}
+
+
+dmz::Handle
+dmz::EventModuleCommonBasic::create_open_launch_event (
+      const Handle MunitionsHandle,
+      const Handle TargetHandle) {
+
    Handle result (0);
 
    if (_launchType && _eventMod && _objMod) {
@@ -103,8 +116,6 @@ dmz::EventModuleCommonBasic::create_launch_event (
 
             _eventMod->store_velocity (result, _defaultEventHandle, vel);
          }
-
-         _eventMod->close_event (result);
       }
    }
 
@@ -114,6 +125,19 @@ dmz::EventModuleCommonBasic::create_launch_event (
 
 dmz::Handle
 dmz::EventModuleCommonBasic::create_detonation_event (
+      const Handle MunitionsHandle,
+      const Handle TargetHandle) {
+
+   Handle result (create_open_detonation_event (MunitionsHandle, TargetHandle));
+
+   if (_eventMod && result) { _eventMod->close_event (result); }
+
+   return result;
+}
+
+
+dmz::Handle
+dmz::EventModuleCommonBasic::create_open_detonation_event (
       const Handle MunitionsHandle,
       const Handle TargetHandle) {
 
@@ -144,8 +168,6 @@ dmz::EventModuleCommonBasic::create_detonation_event (
 
             _eventMod->store_velocity (result, _defaultEventHandle, vel);
          }
-
-         _eventMod->close_event (result);
       }
    }
 
@@ -155,6 +177,19 @@ dmz::EventModuleCommonBasic::create_detonation_event (
 
 dmz::Handle
 dmz::EventModuleCommonBasic::create_collision_event (
+      const Handle SourceHandle,
+      const Handle TargetHandle) {
+
+   Handle result (create_open_collision_event (SourceHandle, TargetHandle));
+
+   if (_eventMod && result) { _eventMod->close_event (result); }
+
+   return result;
+}
+
+
+dmz::Handle
+dmz::EventModuleCommonBasic::create_open_collision_event (
       const Handle SourceHandle,
       const Handle TargetHandle) {
 
@@ -180,8 +215,6 @@ dmz::EventModuleCommonBasic::create_collision_event (
 
             _eventMod->store_velocity (result, _defaultEventHandle, vel);
          }
-
-         _eventMod->close_event (result);
       }
    }
 

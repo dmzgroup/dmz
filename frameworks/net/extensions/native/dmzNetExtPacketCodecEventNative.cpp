@@ -133,6 +133,8 @@ dmz::NetExtPacketCodecEventNative::decode (Unmarshal &data, Boolean &isLoopback)
             current->decode (eventHandle, data, *_eventMod);
             current = current->next;
          }
+
+         _eventMod->close_event (eventHandle);
       }
    }
 

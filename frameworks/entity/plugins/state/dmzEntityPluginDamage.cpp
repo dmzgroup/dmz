@@ -103,7 +103,7 @@ dmz::EntityPluginDamage::_init (Config &local) {
       ObjectAttributeHumanInTheLoopName,
       ObjectFlagMask);
 
-   _detonationType = activate_event_callback (EventDetonationName, EventEndMask);
+   _detonationType = activate_event_callback (EventDetonationName, EventCloseMask);
 }
 
 

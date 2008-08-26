@@ -26,8 +26,8 @@ typedef LuaExtEventObserver * optr;
 
 static const char EventObserverName[] = "dmz.event.observer";
 
-static const char EventStartFunc[] = "create_event";
-static const char EventEndFunc[]   = "close_event";
+static const char EventCreateFunc[] = "create_event";
+static const char EventCloseFunc[]   = "close_event";
 
 static inline optr
 obs_check (lua_State *L, int index) {
@@ -172,8 +172,8 @@ obs_register (lua_State *L) {
 
       Mask cb;
 
-      cb |= obs_has_func (L, 3, EventStartFunc, EventStartMask);
-      cb |= obs_has_func (L, 3, EventEndFunc, EventEndMask);
+      cb |= obs_has_func (L, 3, EventCreateFunc, EventCreateMask);
+      cb |= obs_has_func (L, 3, EventCloseFunc, EventCloseMask);
 
       Mask unreg (EventAllMask);
 
@@ -321,13 +321,13 @@ dmz::LuaExtEventObserver::create_event (
 
    LUA_START_VALIDATE (L);
 
-   const int Handler (obs_setup_cb (L, *this, Type, EventStartFunc));
+   const int Handler (obs_setup_cb (L, *this, Type, EventCreateFunc));
 
    lua_create_handle (L, EventHandle);
    lua_create_event_type (L, &Type);
    lua_pushinteger (L, lua_event_locality_to_int (L, Locality));
 
-   obs_do_cb (L, *this, 3, Handler, Type, EventStartMask);
+   obs_do_cb (L, *this, 3, Handler, Type, EventCreateMask);
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -341,13 +341,13 @@ dmz::LuaExtEventObserver::close_event (
 
    LUA_START_VALIDATE (L);
 
-   const int Handler (obs_setup_cb (L, *this, Type, EventEndFunc));
+   const int Handler (obs_setup_cb (L, *this, Type, EventCloseFunc));
 
    lua_create_handle (L, EventHandle);
    lua_create_event_type (L, &Type);
    lua_pushinteger (L, lua_event_locality_to_int (L, Locality));
 
-   obs_do_cb (L, *this, 3, Handler, Type, EventEndMask);
+   obs_do_cb (L, *this, 3, Handler, Type, EventCloseMask);
 
    LUA_END_VALIDATE (L, 0);
 }

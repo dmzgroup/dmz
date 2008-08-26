@@ -112,7 +112,7 @@ dmz::NetPluginPacket::discover_plugin (
 
             while (events.get_next (it, type)) {
 
-               activate_event_callback (type, EventEndMask);
+               activate_event_callback (type, EventCloseMask);
             }
          }
       }
@@ -151,7 +151,7 @@ dmz::NetPluginPacket::discover_plugin (
 
          while (events.get_next (eventIt, type)) {
 
-            deactivate_event_callback (type, EventEndMask);
+            deactivate_event_callback (type, EventCloseMask);
          }
 
          _codecMod = 0;
@@ -315,9 +315,6 @@ dmz::NetPluginPacket::update_object_type (
 void
 dmz::NetPluginPacket::_init (Config &local) {
 
-//   activate_event_callback (EventLaunchName, EventEndMask);
-//   activate_event_callback (EventDetonationName, EventEndMask);
-//   activate_event_callback (EventCollisionName, EventEndMask);
 }
 
 

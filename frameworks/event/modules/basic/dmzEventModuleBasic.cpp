@@ -13,8 +13,8 @@
 
 namespace {
 
-static const dmz::Mask StartMask (0, dmz::EventCallbackStartEvent);
-static const dmz::Mask EndMask (0, dmz::EventCallbackEndEvent);
+static const dmz::Mask CreateMask (0, dmz::EventCallbackCreateEvent);
+static const dmz::Mask CloseMask (0, dmz::EventCallbackCloseEvent);
 
 };
 
@@ -169,7 +169,7 @@ dmz::EventModuleBasic::register_event_observer (
 
    if (sub) {
 
-      if (CallbackMask & StartMask) {
+      if (CallbackMask & CreateMask) {
 
          EventObserverStruct *eos (
             _create_event_observers (Type.get_handle (), _createTable));
@@ -180,7 +180,7 @@ dmz::EventModuleBasic::register_event_observer (
          }
       }
 
-      if (CallbackMask & EndMask) {
+      if (CallbackMask & CloseMask) {
 
          EventObserverStruct *eos (
             _create_event_observers (Type.get_handle (), _closeTable));
@@ -211,14 +211,14 @@ dmz::EventModuleBasic::release_event_observer (
 
    if (sub) {
 
-      if (CallbackMask & StartMask) {
+      if (CallbackMask & CreateMask) {
 
          EventObserverStruct *eos (sub->createTable.remove (Type.get_handle ()));
 
          if (eos) { eos->remove (ObsHandle); }
       }
 
-      if (CallbackMask & EndMask) {
+      if (CallbackMask & CloseMask) {
 
          EventObserverStruct *eos (sub->closeTable.remove (Type.get_handle ()));
 

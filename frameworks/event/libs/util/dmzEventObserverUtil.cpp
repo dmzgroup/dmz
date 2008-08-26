@@ -179,9 +179,9 @@ dmz::EventObserverUtil::create_event (
       const EventType &Type,
       const EventLocalityEnum Locality) {
 
-   if (!(EventStartMask & __state.errorMask)) {
+   if (!(EventCreateMask & __state.errorMask)) {
 
-      __state.errorMask |= EventStartMask;
+      __state.errorMask |= EventCreateMask;
       __state.log.warn << "Base create_event called."
          << " Function should have been overridden?" << endl;
    }
@@ -194,9 +194,9 @@ dmz::EventObserverUtil::close_event (
       const EventType &Type,
       const EventLocalityEnum Locality) {
 
-   if (!(EventEndMask & __state.errorMask)) {
+   if (!(EventCloseMask & __state.errorMask)) {
 
-      __state.errorMask |= EventEndMask;
+      __state.errorMask |= EventCloseMask;
       __state.log.warn << "Base close_event called."
          << " Function should have been overridden?" << endl;
    }

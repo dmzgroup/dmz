@@ -59,7 +59,7 @@ dmz::EventPluginDump::discover_plugin (
 
 // Event Observer Interface
 void
-dmz::EventPluginDump::end_event (
+dmz::EventPluginDump::close_event (
       const Handle EventHandle,
       const EventType &Type,
       const EventLocalityEnum Locality) {
@@ -249,7 +249,7 @@ dmz::EventPluginDump::_init (Config &local) {
 
    _defaultHandle = _defs.create_named_handle (EventAttributeDefaultName);
    _rootEventType = _defs.get_root_event_type ();
-   activate_event_callback (_rootEventType, EventEndMask);
+   activate_event_callback (_rootEventType, EventCloseMask);
 }
 
 

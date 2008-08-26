@@ -1044,11 +1044,11 @@ dmz::LuaExtEvent::open_lua_extension (lua_State *LuaState) {
    lua_pushinteger (L, _event.localityRemote);
    lua_setfield (L, -2, "Remote");
 
-   lua_create_mask (L, &EventStartMask);
-   lua_setfield (L, Table, "StartMask");
+   lua_create_mask (L, &EventCreateMask);
+   lua_setfield (L, Table, "CreateMask");
 
-   lua_create_mask (L, &EventEndMask);
-   lua_setfield (L, Table, "EndMask");
+   lua_create_mask (L, &EventCloseMask);
+   lua_setfield (L, Table, "CloseMask");
 
    lua_create_handle (L, defs.create_named_handle (EventAttributeSourceName));
    lua_setfield (L, Table, "SourceHandle");

@@ -82,7 +82,7 @@ dmz::AudioPluginEventSimple::discover_plugin (
 
                if (!es->sound) {
 
-                  deactivate_event_callback (es->event, EventEndMask);
+                  deactivate_event_callback (es->event, EventCloseMask);
                }
 
                es = _eventTable.get_next (it);
@@ -163,7 +163,7 @@ dmz::AudioPluginEventSimple::_init (Config &local) {
 
             if (es) {
 
-               es->event = activate_event_callback (EventName, EventEndMask);
+               es->event = activate_event_callback (EventName, EventCloseMask);
 
                if (es->event) {
 

@@ -99,7 +99,7 @@ dmz::NetExtPacketCodecObjectBasic::decode (Unmarshal &data, Boolean &isLoopback)
 
          ObjectType type;
 
-         _attrMod->to_internal_type (typeArray, type);
+         _attrMod->to_internal_object_type (typeArray, type);
 
          Handle handle (_objMod->lookup_handle_from_uuid (uuid));
 
@@ -120,7 +120,7 @@ dmz::NetExtPacketCodecObjectBasic::decode (Unmarshal &data, Boolean &isLoopback)
 
             Mask state;
             _objMod->lookup_state (handle, _defaultHandle, state);
-            _attrMod->to_internal_mask (type, stateArray, state);
+            _attrMod->to_internal_object_mask (type, stateArray, state);
 
             if (_deactivateState && state.contains (_deactivateState)) {
 
@@ -184,7 +184,7 @@ dmz::NetExtPacketCodecObjectBasic::encode_object (
 
          _objMod->lookup_object_type (ObjectHandle, _defaultHandle, type);
 
-         if (_attrMod->to_net_type (type, typeArray)) {
+         if (_attrMod->to_net_object_type (type, typeArray)) {
 
             Vector pos;
             Matrix ori;
@@ -202,7 +202,7 @@ dmz::NetExtPacketCodecObjectBasic::encode_object (
                state |= _deactivateState;
             }
 
-            _attrMod->to_net_mask (type, state, stateArray);
+            _attrMod->to_net_object_mask (type, state, stateArray);
 
             data.set_next_uuid (_SysID);
             data.set_next_uuid (uuid);

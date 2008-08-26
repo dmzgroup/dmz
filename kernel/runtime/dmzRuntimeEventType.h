@@ -53,17 +53,17 @@ namespace dmz {
          String get_name () const;
          Handle get_handle () const;
 
-         EventType get_parent ();
+         EventType get_parent () const;
          Boolean become_parent ();
 
-         Boolean get_first_child (EventTypeIterator &it, EventType &type);
-         Boolean get_next_child (EventTypeIterator &it, EventType &type);
+         Boolean get_first_child (EventTypeIterator &it, EventType &type) const;
+         Boolean get_next_child (EventTypeIterator &it, EventType &type) const;
 
          Config get_config () const;
 
          // for internal use
          void set_type_context (TypeContext *context);
-         TypeContext *get_type_context ();
+         TypeContext *get_type_context () const;
 
       protected:
          TypeContext *_context; //!< Internal state.

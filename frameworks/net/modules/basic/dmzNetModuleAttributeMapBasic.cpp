@@ -2,7 +2,6 @@
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigRead.h>
 #include <dmzRuntimeInit.h>
-#include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesStringTokenizer.h>
@@ -36,103 +35,56 @@ dmz::NetModuleAttributeMapBasic::NetModuleAttributeMapBasic (
 
 dmz::NetModuleAttributeMapBasic::~NetModuleAttributeMapBasic () {
 
-   _netTypeTable.empty ();
-   _internalTypeTable.empty ();
-   _maskTable.empty ();
-   _whichTable.empty ();
+   _netObjectTypeTable.empty ();
+   _internalObjectTypeTable.empty ();
+   _netEventTypeTable.empty ();
+   _internalEventTypeTable.empty ();
+   _objectMaskTable.empty ();
+   _eventMaskTable.empty ();
 }
 
 
 // NetModuleAttributeMap Interface
-dmz::UInt32
-dmz::NetModuleAttributeMapBasic::lookup_which_handle (const String &Name) {
-
-   UInt32 handle (0);
-
-   return handle;
-}
-
-
 dmz::Boolean
-dmz::NetModuleAttributeMapBasic::to_net_mask (
-      const Int32 Which,
-      const Mask &InValue,
-      ArrayUInt32 &outValue) {
-
-   Boolean result (False);
-
-   MaskStruct *ms (_maskTable.lookup (Which));
-
-   if (ms) {
-
-      _to_net_mask (InValue, outValue, ms);
-      result = True;
-   }
-
-   return result;
-}
-
-
-dmz::Boolean
-dmz::NetModuleAttributeMapBasic::to_internal_mask (
-      const Int32 Which,
-      const ArrayUInt32 &InValue,
-      Mask &outValue) {
-
-   Boolean result (False);
-
-   MaskStruct *ms (_maskTable.lookup (Which));
-
-   if (ms) {
-
-      _to_internal_mask (InValue, outValue, ms);
-      result = True;
-   }
-
-   return result;
-}
-
-
-dmz::Boolean
-dmz::NetModuleAttributeMapBasic::to_net_mask (
+dmz::NetModuleAttributeMapBasic::to_net_object_mask (
       const ObjectType &Type,
       const Mask &InValue,
       ArrayUInt32 &outValue) {
 
    Boolean result (False);
 
-   MaskStruct *ms (_find_mask_struct_from_type (Type));
+   ObjectMaskStruct *ms (_find_mask_struct_from_object_type (Type));
 
-   if (ms) { _to_net_mask (InValue, outValue, ms); result = True; }
+   if (ms) { _to_net_object_mask (InValue, outValue, ms); result = True; }
 
    return result;
 }
 
 
 dmz::Boolean
-dmz::NetModuleAttributeMapBasic::to_internal_mask (
+dmz::NetModuleAttributeMapBasic::to_internal_object_mask (
       const ObjectType &Type,
       const ArrayUInt32 &InValue,
       Mask &outValue) {
 
    Boolean result (False);
 
-   MaskStruct *ms (_find_mask_struct_from_type (Type));
+   ObjectMaskStruct *ms (_find_mask_struct_from_object_type (Type));
 
-   if (ms) { _to_internal_mask (InValue, outValue, ms); result = True; }
+   if (ms) { _to_internal_object_mask (InValue, outValue, ms); result = True; }
 
    return result;
 }
 
 
 dmz::Boolean
-dmz::NetModuleAttributeMapBasic::to_net_type (
+dmz::NetModuleAttributeMapBasic::to_net_object_type (
       const ObjectType &Type,
       ArrayUInt32 &array) {
 
    Boolean result (False);
 
-   InternalStruct *is (_internalTypeTable.lookup (Type.get_handle ()));
+   InternalObjectStruct *is (_internalObjectTypeTable.lookup (Type.get_handle ()));
 
    if (is) { array = is->NetType; result = True; }
 
@@ -141,7 +93,7 @@ dmz::NetModuleAttributeMapBasic::to_net_type (
 
 
 dmz::Boolean
-dmz::NetModuleAttributeMapBasic::to_internal_type (
+dmz::NetModuleAttributeMapBasic::to_internal_object_type (
       const ArrayUInt32 &Array,
       ObjectType &type) {
 
@@ -151,7 +103,7 @@ dmz::NetModuleAttributeMapBasic::to_internal_type (
 
    Int32 count (0);
 
-   NetStruct *current (_netTypeTable.lookup (Array.get (count)));
+   NetObjectStruct *current (_netObjectTypeTable.lookup (Array.get (count)));
 
    if (current) {
 
@@ -163,7 +115,8 @@ dmz::NetModuleAttributeMapBasic::to_internal_type (
 
          if (count >= Size) { done = True; }
          else {
-            NetStruct *next (current->table.lookup (Array.get(count)));
+
+            NetObjectStruct *next (current->table.lookup (Array.get(count)));
 
             if (!next) { done = True; }
             else { current = next; count++; }
@@ -177,10 +130,97 @@ dmz::NetModuleAttributeMapBasic::to_internal_type (
 }
 
 
-dmz::NetModuleAttributeMapBasic::MaskStruct *
-dmz::NetModuleAttributeMapBasic::_find_mask_struct_from_type (const ObjectType &Type) {
+dmz::Boolean
+dmz::NetModuleAttributeMapBasic::to_net_event_mask (
+      const EventType &Type,
+      const Mask &InValue,
+      ArrayUInt32 &outValue) {
 
-   MaskStruct *ms (_maskTable.lookup (Type.get_handle ()));
+   Boolean result (False);
+
+   EventMaskStruct *ms (_find_mask_struct_from_event_type (Type));
+
+   if (ms) { _to_net_event_mask (InValue, outValue, ms); result = True; }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::NetModuleAttributeMapBasic::to_internal_event_mask (
+      const EventType &Type,
+      const ArrayUInt32 &InValue,
+      Mask &outValue) {
+
+   Boolean result (False);
+
+   EventMaskStruct *ms (_find_mask_struct_from_event_type (Type));
+
+   if (ms) { _to_internal_event_mask (InValue, outValue, ms); result = True; }
+
+   return result;
+}
+
+
+
+dmz::Boolean
+dmz::NetModuleAttributeMapBasic::to_net_event_type (
+      const EventType &Type,
+      ArrayUInt32 &array) {
+
+   Boolean result (False);
+
+   InternalEventStruct *is (_internalEventTypeTable.lookup (Type.get_handle ()));
+
+   if (is) { array = is->NetType; result = True; }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::NetModuleAttributeMapBasic::to_internal_event_type (
+      const ArrayUInt32 &Array,
+      EventType &type) {
+
+   Boolean result (False);
+
+   const Int32 Size (Array.get_size ());
+
+   Int32 count (0);
+
+   NetEventStruct *current (_netEventTypeTable.lookup (Array.get (count)));
+
+   if (current) {
+
+      count++;
+
+      Boolean done (False);
+
+      while (!done) {
+
+         if (count >= Size) { done = True; }
+         else {
+
+            NetEventStruct *next (current->table.lookup (Array.get(count)));
+
+            if (!next) { done = True; }
+            else { current = next; count++; }
+         }
+      }
+
+      if (current) { type = current->type; result = True; }
+   }
+
+   return result;
+}
+
+
+dmz::NetModuleAttributeMapBasic::ObjectMaskStruct *
+dmz::NetModuleAttributeMapBasic::_find_mask_struct_from_object_type (
+      const ObjectType &Type) {
+
+   ObjectMaskStruct *ms (_objectMaskTable.lookup (Type.get_handle ()));
 
    if (!ms) {
 
@@ -188,7 +228,7 @@ dmz::NetModuleAttributeMapBasic::_find_mask_struct_from_type (const ObjectType &
 
       while (current && !ms) {
 
-         ms = _maskTable.lookup (current.get_handle ());
+         ms = _objectMaskTable.lookup (current.get_handle ());
          current.become_parent ();
       }
    }
@@ -198,10 +238,10 @@ dmz::NetModuleAttributeMapBasic::_find_mask_struct_from_type (const ObjectType &
 
 
 void
-dmz::NetModuleAttributeMapBasic::_to_net_mask (
+dmz::NetModuleAttributeMapBasic::_to_net_object_mask (
       const Mask &InData,
       ArrayUInt32 &outData,
-      MaskStruct *ms) {
+      ObjectMaskStruct *ms) {
 
    while (ms) {
 
@@ -218,10 +258,77 @@ dmz::NetModuleAttributeMapBasic::_to_net_mask (
 
 
 void
-dmz::NetModuleAttributeMapBasic::_to_internal_mask (
+dmz::NetModuleAttributeMapBasic::_to_internal_object_mask (
       const ArrayUInt32 &InData,
       Mask &outData,
-      MaskStruct *ms) {
+      ObjectMaskStruct *ms) {
+
+   Mask masterMask;
+   Mask result;
+
+   while (ms) {
+
+      masterMask |= ms->Value;
+
+      if ((InData.get (ms->Offset) & ms->NetValue) == ms->NetValue) {
+
+         result |= ms->Value;
+      }
+
+      ms = ms->next;
+   }
+
+   outData.unset (masterMask);
+   outData |= result;
+}
+
+
+dmz::NetModuleAttributeMapBasic::EventMaskStruct *
+dmz::NetModuleAttributeMapBasic::_find_mask_struct_from_event_type (
+      const EventType &Type) {
+
+   EventMaskStruct *ms (_eventMaskTable.lookup (Type.get_handle ()));
+
+   if (!ms) {
+
+      EventType current (Type); current.become_parent ();
+
+      while (current && !ms) {
+
+         ms = _eventMaskTable.lookup (current.get_handle ());
+         current.become_parent ();
+      }
+   }
+
+   return ms;
+}
+
+
+void
+dmz::NetModuleAttributeMapBasic::_to_net_event_mask (
+      const Mask &InData,
+      ArrayUInt32 &outData,
+      EventMaskStruct *ms) {
+
+   while (ms) {
+
+      if (InData.contains (ms->Value)) {
+
+         UInt32 value (outData.get (ms->Offset));
+         value |= ms->NetValue;
+         outData.set (ms->Offset, value);
+      }
+
+      ms = ms->next;
+   }
+}
+
+
+void
+dmz::NetModuleAttributeMapBasic::_to_internal_event_mask (
+      const ArrayUInt32 &InData,
+      Mask &outData,
+      EventMaskStruct *ms) {
 
    Mask masterMask;
    Mask result;
@@ -246,45 +353,49 @@ dmz::NetModuleAttributeMapBasic::_to_internal_mask (
 void
 dmz::NetModuleAttributeMapBasic::_init (Config &local) {
 
-   ObjectType type (_defs.get_root_object_type ());
+   const ObjectType RootObjectType (_defs.get_root_object_type ());
 
-   if (type) { _process_type (type); }
+   if (RootObjectType) { _process_object_type (RootObjectType); }
+
+   const EventType RootEventType (_defs.get_root_event_type ());
+
+   if (RootEventType) { _process_event_type (RootEventType); }
 }
 
 
 void
-dmz::NetModuleAttributeMapBasic::_process_type (ObjectType &type) {
+dmz::NetModuleAttributeMapBasic::_process_object_type (const ObjectType &Type) {
 
-   _process_net_mask (type);
-   _process_net_type (type);
+   _process_net_object_mask (Type);
+   _process_net_object_type (Type);
 
    ObjectTypeIterator it;
    ObjectType next;
 
-   Boolean found (type.get_first_child (it, next));
+   Boolean found (Type.get_first_child (it, next));
 
    while (found) {
 
-      _process_type (next);
-      found = type.get_next_child (it, next);
+      _process_object_type (next);
+      found = Type.get_next_child (it, next);
    }
 }
 
 
 void
-dmz::NetModuleAttributeMapBasic::_process_net_mask (ObjectType &type) {
+dmz::NetModuleAttributeMapBasic::_process_net_object_mask (const ObjectType &Type) {
 
    Config stateList;
 
-   if (type.get_config ().lookup_all_config ("net.state", stateList)) {
+   if (Type.get_config ().lookup_all_config ("net.state", stateList)) {
 
       ConfigIterator it;
       Config config;
 
       Boolean found (stateList.get_first_config (it, config));
 
-      MaskStruct *head (0);
-      MaskStruct *current (0);
+      ObjectMaskStruct *head (0);
+      ObjectMaskStruct *current (0);
 
       while (found) {
 
@@ -297,20 +408,20 @@ dmz::NetModuleAttributeMapBasic::_process_net_mask (ObjectType &type) {
 
             const UInt32 Offset (config_to_int32 ("offset", config));
 
-            MaskStruct *next (new MaskStruct (BitMask, Offset, state));
+            ObjectMaskStruct *next (new ObjectMaskStruct (BitMask, Offset, state));
             if (current) { current->next = next; current = next; }
             else { head = current = next; }
          }
          else if (!BitMask) {
 
             _log.error << "Net bit mask not defined in object type: "
-               << type.get_name () << " for state: "
+               << Type.get_name () << " for state: "
                << (StateName ? StateName : "<NULL>") << endl;
          }
          else if (!state) {
 
             _log.error << "State not defined in object type: "
-               << type.get_name () << " for state: "
+               << Type.get_name () << " for state: "
                << (StateName ? StateName : "<NULL>") << endl;
          }
 
@@ -319,12 +430,12 @@ dmz::NetModuleAttributeMapBasic::_process_net_mask (ObjectType &type) {
 
       if (head) {
 
-         if (!_maskTable.store (type.get_handle (), head)) {
+         if (!_objectMaskTable.store (Type.get_handle (), head)) {
 
             delete head; head = 0;
 
             _log.error << "Unable to store state map for object type: "
-               << type.get_name () << endl;
+               << Type.get_name () << endl;
          }
       }
    }
@@ -332,11 +443,11 @@ dmz::NetModuleAttributeMapBasic::_process_net_mask (ObjectType &type) {
 
 
 void
-dmz::NetModuleAttributeMapBasic::_process_net_type (ObjectType &type) {
+dmz::NetModuleAttributeMapBasic::_process_net_object_type (const ObjectType &Type) {
 
    Config typeMap;
 
-   if (type.get_config ().lookup_config ("net.type", typeMap)) {
+   if (Type.get_config ().lookup_config ("net.type", typeMap)) {
 
       const String NetEnum (config_to_string ("enum", typeMap));
       const Int32 Depth (config_to_int32 ("depth", typeMap));
@@ -349,7 +460,7 @@ dmz::NetModuleAttributeMapBasic::_process_net_type (ObjectType &type) {
 
          String valueStr (st.get_next ());
 
-         NetStruct *current (0);
+         NetObjectStruct *current (0);
 
          while (valueStr) {
 
@@ -357,24 +468,27 @@ dmz::NetModuleAttributeMapBasic::_process_net_type (ObjectType &type) {
 
             array.set (count, Value);
 
-            NetStruct *next (0);
+            NetObjectStruct *next (0);
 
-            if (!current) { next = _netTypeTable.lookup (Value); }
+            if (!current) { next = _netObjectTypeTable.lookup (Value); }
             else { next = current->table.lookup (Value); }
 
             if (!next) {
 
                const ObjectType EmptyType;
 
-               next = new NetStruct (
+               next = new NetObjectStruct (
                   Value,
-                  (((Depth > 0) && (count >= Depth)) ? type : EmptyType));
+                  (((Depth > 0) && (count >= Depth)) ? Type : EmptyType));
 
                if (next) {
 
                   if (!current) {
 
-                     if (!_netTypeTable.store (Value, next)) { delete next; next = 0; }
+                     if (!_netObjectTypeTable.store (Value, next)) {
+
+                        delete next; next = 0;
+                     }
                   }
                   else if (!current->table.store (Value, next)) { delete next; next = 0; }
 
@@ -382,7 +496,7 @@ dmz::NetModuleAttributeMapBasic::_process_net_type (ObjectType &type) {
 
                      _log.error << "Unable to map value: " << Value << " at depth: "
                         << count << " in net enum: " << local_array_to_enum (array)
-                        << " for type: " << type.get_name () << endl;
+                        << " for type: " << Type.get_name () << endl;
                   }
                }
             }
@@ -391,10 +505,10 @@ dmz::NetModuleAttributeMapBasic::_process_net_type (ObjectType &type) {
 
                if (Depth && (count > Depth)) {
 
-                  if (!next->type) { next->type = type; }
-                  else if (next->type != type) {
+                  if (!next->type) { next->type = Type; }
+                  else if (next->type != Type) {
 
-                     _log.error << "Unable to map type: " << type.get_name ()
+                     _log.error << "Unable to map type: " << Type.get_name ()
                         << " to net type enum: " << local_array_to_enum (array)
                         << " because it is already mapped to type: "
                         << next->type.get_name () << endl;
@@ -418,19 +532,19 @@ dmz::NetModuleAttributeMapBasic::_process_net_type (ObjectType &type) {
             // to the correct type
             if (!Depth) {
 
-               if (!current->type) { current->type = type; }
-               else if (current->type != type) {
+               if (!current->type) { current->type = Type; }
+               else if (current->type != Type) {
 
-                  _log.error << "Unable to map type: " << type.get_name ()
+                  _log.error << "Unable to map type: " << Type.get_name ()
                      << " to net type enum: " << NetEnum
                      << " because it is already mapped to type: "
                      << current->type.get_name () << endl;
                }
             }
 
-            InternalStruct *ls (new InternalStruct (array, type));
+            InternalObjectStruct *ls (new InternalObjectStruct (array, Type));
 
-            if (ls && !_internalTypeTable.store (type.get_handle (), ls)) {
+            if (ls && !_internalObjectTypeTable.store (Type.get_handle (), ls)) {
 
                delete ls; ls = 0;
             }
@@ -439,6 +553,196 @@ dmz::NetModuleAttributeMapBasic::_process_net_type (ObjectType &type) {
    }
 }
 
+
+void
+dmz::NetModuleAttributeMapBasic::_process_event_type (const EventType &Type) {
+
+   _process_net_event_mask (Type);
+   _process_net_event_type (Type);
+
+   EventTypeIterator it;
+   EventType next;
+
+   Boolean found (Type.get_first_child (it, next));
+
+   while (found) {
+
+      _process_event_type (next);
+      found = Type.get_next_child (it, next);
+   }
+}
+
+
+void
+dmz::NetModuleAttributeMapBasic::_process_net_event_mask (const EventType &Type) {
+
+   Config stateList;
+
+   if (Type.get_config ().lookup_all_config ("net.state", stateList)) {
+
+      ConfigIterator it;
+      Config config;
+
+      Boolean found (stateList.get_first_config (it, config));
+
+      EventMaskStruct *head (0);
+      EventMaskStruct *current (0);
+
+      while (found) {
+
+         Mask state;
+
+         const UInt32 BitMask (config_to_uint32 ("mask", config));
+         const String StateName (config_to_string ("name", config));
+
+         if (BitMask && _defs.lookup_state (StateName, state)) {
+
+            const UInt32 Offset (config_to_int32 ("offset", config));
+
+            EventMaskStruct *next (new EventMaskStruct (BitMask, Offset, state));
+            if (current) { current->next = next; current = next; }
+            else { head = current = next; }
+         }
+         else if (!BitMask) {
+
+            _log.error << "Net bit mask not defined in event type: "
+               << Type.get_name () << " for state: "
+               << (StateName ? StateName : "<NULL>") << endl;
+         }
+         else if (!state) {
+
+            _log.error << "State not defined in event type: "
+               << Type.get_name () << " for state: "
+               << (StateName ? StateName : "<NULL>") << endl;
+         }
+
+         found = stateList.get_next_config (it, config);
+      }
+
+      if (head) {
+
+         if (!_eventMaskTable.store (Type.get_handle (), head)) {
+
+            delete head; head = 0;
+
+            _log.error << "Unable to store state map for event type: "
+               << Type.get_name () << endl;
+         }
+      }
+   }
+}
+
+
+void
+dmz::NetModuleAttributeMapBasic::_process_net_event_type (const EventType &Type) {
+
+   Config typeMap;
+
+   if (Type.get_config ().lookup_config ("net.type", typeMap)) {
+
+      const String NetEnum (config_to_string ("enum", typeMap));
+      const Int32 Depth (config_to_int32 ("depth", typeMap));
+
+      if (NetEnum) {
+
+         Int32 count = 0;
+         ArrayUInt32 array;
+         StringTokenizer st (NetEnum, '.');
+
+         String valueStr (st.get_next ());
+
+         NetEventStruct *current (0);
+
+         while (valueStr) {
+
+            const UInt32 Value (string_to_uint32 (valueStr));
+
+            array.set (count, Value);
+
+            NetEventStruct *next (0);
+
+            if (!current) { next = _netEventTypeTable.lookup (Value); }
+            else { next = current->table.lookup (Value); }
+
+            if (!next) {
+
+               const EventType EmptyType;
+
+               next = new NetEventStruct (
+                  Value,
+                  (((Depth > 0) && (count >= Depth)) ? Type : EmptyType));
+
+               if (next) {
+
+                  if (!current) {
+
+                     if (!_netEventTypeTable.store (Value, next)) {
+
+                        delete next; next = 0;
+                     }
+                  }
+                  else if (!current->table.store (Value, next)) { delete next; next = 0; }
+
+                  if (!next) {
+
+                     _log.error << "Unable to map value: " << Value << " at depth: "
+                        << count << " in net enum: " << local_array_to_enum (array)
+                        << " for type: " << Type.get_name () << endl;
+                  }
+               }
+            }
+
+            if (next) {
+
+               if (Depth && (count > Depth)) {
+
+                  if (!next->type) { next->type = Type; }
+                  else if (next->type != Type) {
+
+                     _log.error << "Unable to map type: " << Type.get_name ()
+                        << " to net type enum: " << local_array_to_enum (array)
+                        << " because it is already mapped to type: "
+                        << next->type.get_name () << endl;
+                  }
+               }
+
+               current = next;
+               count++;
+               valueStr = st.get_next ();
+            }
+            else {
+
+               valueStr.empty (); //Stop the while loop
+               current = 0;
+            }
+         }
+
+         if (current) {
+
+            // If there is no depth then the last instance in the chain needs to be set
+            // to the correct type
+            if (!Depth) {
+
+               if (!current->type) { current->type = Type; }
+               else if (current->type != Type) {
+
+                  _log.error << "Unable to map type: " << Type.get_name ()
+                     << " to net type enum: " << NetEnum
+                     << " because it is already mapped to type: "
+                     << current->type.get_name () << endl;
+               }
+            }
+
+            InternalEventStruct *ls (new InternalEventStruct (array, Type));
+
+            if (ls && !_internalEventTypeTable.store (Type.get_handle (), ls)) {
+
+               delete ls; ls = 0;
+            }
+         }
+      }
+   }
+}
 
 extern "C" {
 

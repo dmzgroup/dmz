@@ -127,7 +127,7 @@ dmz::NetExtPacketCodecEventBasic::decode (Unmarshal &data, Boolean &isLoopback) 
             typeArray.set (1, data.get_next_uint32 ());
             typeArray.set (2, data.get_next_uint32 ());
 
-            _attrMod->to_internal_type (typeArray, munitionType);
+            _attrMod->to_internal_object_type (typeArray, munitionType);
          }
 
          Vector pos, vel, offset;
@@ -232,7 +232,7 @@ dmz::NetExtPacketCodecEventBasic::encode_event (
                _munitionsHandle,
                munitionType)) {
 
-            _attrMod->to_net_type (munitionType, array);
+            _attrMod->to_net_object_type (munitionType, array);
          }
 
          data.set_next_uint32 (array.get (0));

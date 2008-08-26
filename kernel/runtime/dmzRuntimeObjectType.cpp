@@ -229,7 +229,7 @@ type has no parent.
 
 */
 dmz::ObjectType
-dmz::ObjectType::get_parent () {
+dmz::ObjectType::get_parent () const {
 
    ObjectType result;
 
@@ -280,7 +280,7 @@ the object type has no children.
 
 */
 dmz::Boolean
-dmz::ObjectType::get_first_child (ObjectTypeIterator &it, ObjectType &type) {
+dmz::ObjectType::get_first_child (ObjectTypeIterator &it, ObjectType &type) const {
 
    Boolean result (False);
 
@@ -307,7 +307,7 @@ the object type has no more children to return.
 
 */
 dmz::Boolean
-dmz::ObjectType::get_next_child (ObjectTypeIterator &it, ObjectType &type) {
+dmz::ObjectType::get_next_child (ObjectTypeIterator &it, ObjectType &type) const {
 
    Boolean result (False);
 
@@ -353,7 +353,7 @@ dmz::ObjectType::set_type_context (TypeContext *context) {
 
 //! For internal use.
 dmz::TypeContext *
-dmz::ObjectType::get_type_context () { return _context; }
+dmz::ObjectType::get_type_context () const { return _context; }
 
 
 

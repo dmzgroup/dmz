@@ -12,6 +12,7 @@ namespace dmz {
 
    class Mask;
    class ObjectType;
+   class EventType;
 
    class NetModuleAttributeMap {
 
@@ -20,35 +21,41 @@ namespace dmz {
             const Plugin *PluginPtr,
             const String &PluginName = "");
 
-         virtual UInt32 lookup_which_handle (const String &Name) = 0;
-
-         virtual Boolean to_net_mask (
-            const Int32 Which,
-            const Mask &InValue,
-            ArrayUInt32 &outValue) = 0;
-
-         virtual Boolean to_internal_mask (
-            const Int32 Which,
-            const ArrayUInt32 &InValue,
-            Mask &outValue) = 0;
-
-         virtual Boolean to_net_mask (
+         virtual Boolean to_net_object_mask (
             const ObjectType &Type,
             const Mask &InValue,
             ArrayUInt32 &outValue) = 0;
 
-         virtual Boolean to_internal_mask (
+         virtual Boolean to_internal_object_mask (
             const ObjectType &Type,
             const ArrayUInt32 &InValue,
             Mask &outValue) = 0;
 
-         virtual Boolean to_net_type (
+         virtual Boolean to_net_object_type (
             const ObjectType &Type,
             ArrayUInt32 &array) = 0;
 
-         virtual Boolean to_internal_type (
+         virtual Boolean to_internal_object_type (
             const ArrayUInt32 &Array,
             ObjectType &type) = 0;
+
+         virtual Boolean to_net_event_mask (
+            const EventType &Type,
+            const Mask &InValue,
+            ArrayUInt32 &outValue) = 0;
+
+         virtual Boolean to_internal_event_mask (
+            const EventType &Type,
+            const ArrayUInt32 &InValue,
+            Mask &outValue) = 0;
+
+         virtual Boolean to_net_event_type (
+            const EventType &Type,
+            ArrayUInt32 &array) = 0;
+
+         virtual Boolean to_internal_event_type (
+            const ArrayUInt32 &Array,
+            EventType &type) = 0;
 
       protected:
          NetModuleAttributeMap (const PluginInfo &Info);

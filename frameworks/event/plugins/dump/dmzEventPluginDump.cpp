@@ -248,9 +248,8 @@ void
 dmz::EventPluginDump::_init (Config &local) {
 
    _defaultHandle = _defs.create_named_handle (EventAttributeDefaultName);
-   _launchEvent = activate_event_callback (EventLaunchName, EventEndMask);
-   _detonationEvent = activate_event_callback (EventDetonationName, EventEndMask);
-   _collisionEvent = activate_event_callback (EventCollisionName, EventEndMask);
+   _rootEventType = _defs.get_root_event_type ();
+   activate_event_callback (_rootEventType, EventEndMask);
 }
 
 

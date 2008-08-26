@@ -117,9 +117,7 @@ namespace dmz {
 
          Handle _defaultHandle;
 
-         EventType _launchEvent;
-         EventType _detonationEvent;
-         EventType _collisionEvent;
+         EventType _rootEventType;
 
       private:
          EventPluginDump ();

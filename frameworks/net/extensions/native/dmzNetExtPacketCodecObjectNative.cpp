@@ -17,6 +17,258 @@
 #include <dmzTypesUUID.h>
 #include <dmzTypesVector.h>
 
+dmz::NetExtPacketCodecObjectNative::NetExtPacketCodecObjectNative (
+      const PluginInfo &Info,
+      Config &local) :
+      Plugin (Info),
+      NetExtPacketCodecObject (Info),
+      _SysID (get_runtime_uuid (Info)),
+      _log (Info),
+      _time (Info),
+      _defaultHandle (0),
+      _lnvHandle (0),
+      _objMod (0),
+      _attrMod (0),
+      _adapterList (0) {
+
+   _init (local);
+}
+
+
+dmz::NetExtPacketCodecObjectNative::~NetExtPacketCodecObjectNative () {
+
+   if (_adapterList) { delete _adapterList; _adapterList = 0; }
+}
+
+
+// Plugin Interface
+void
+dmz::NetExtPacketCodecObjectNative::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
+
+   if (State == PluginStateInit) {
+
+   }
+   else if (State == PluginStateStart) {
+
+   }
+   else if (State == PluginStateStop) {
+
+   }
+   else if (State == PluginStateShutdown) {
+
+   }
+}
+
+
+void
+dmz::NetExtPacketCodecObjectNative::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
+
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_objMod) { _objMod = ObjectModule::cast (PluginPtr); }
+      if (!_attrMod) { _attrMod = NetModuleAttributeMap::cast (PluginPtr); }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_objMod && (_objMod == ObjectModule::cast (PluginPtr))) { _objMod = 0; }
+
+      if (_attrMod && (_attrMod == NetModuleAttributeMap::cast (PluginPtr))) {
+
+         _attrMod = 0;
+      }
+   }
+
+   ObjectAttributeAdapter *current (_adapterList);
+
+   while (current) {
+
+      current->discover_plugin (Mode, PluginPtr);
+      current = current->next;
+   }
+}
+
+
+// NetExtPacketCodecObject Interface
+dmz::Boolean
+dmz::NetExtPacketCodecObjectNative::decode (Unmarshal &data, Boolean &isLoopback) {
+
+   Boolean result (False);
+
+   UUID uuid;
+   data.get_next_uuid (uuid);
+
+   isLoopback = (uuid == _SysID);
+
+   if (!isLoopback && _objMod) {
+
+      UUID objectID;
+      data.get_next_uuid (objectID);
+      const Int32 TypeSize (Int32 (data.get_next_int8 ()));
+
+      Handle objectHandle (_objMod->lookup_handle_from_uuid (objectID));
+
+      if (!TypeSize) {
+
+         if (objectHandle) { _objMod->destroy_object (objectHandle); }
+      }
+      else {
+
+         ArrayUInt32 typeArray (TypeSize);
+
+         for (Int32 ix = 0; ix < TypeSize; ix++) {
+
+            typeArray.set (ix, UInt32 (data.get_next_uint8 ()));
+         }
+
+         Boolean activateObject (False);
+
+         if (!objectHandle) {
+
+            ObjectType type;
+            _attrMod->to_internal_object_type (typeArray, type);
+
+            objectHandle = _objMod->create_object (type, ObjectRemote);
+
+            if (objectHandle) {
+
+               _objMod->store_uuid (objectHandle, objectID);
+               activateObject = True;
+            }
+         }
+
+         if (objectHandle) {
+
+            result = True;
+
+            ObjectAttributeAdapter *current (_adapterList);
+
+            while (current) {
+
+               current->decode (objectHandle, data, *_objMod);
+               current = current->next;
+            }
+
+            if (activateObject) { _objMod->activate_object (objectHandle); }
+
+            _objMod->store_time_stamp (objectHandle, _lnvHandle, _time.get_frame_time ());
+         }
+      }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::NetExtPacketCodecObjectNative::encode_object (
+      const Handle ObjectHandle,
+      const NetObjectEncodeEnum EncodeMode,
+      Marshal &data) {
+
+   Boolean result (False);
+
+   if (_attrMod && _objMod) {
+
+      UUID objectID;
+
+      if (_objMod->lookup_uuid (ObjectHandle, objectID)) {
+
+         data.set_next_uuid (_SysID);
+         data.set_next_uuid (objectID);
+
+         if (EncodeMode == NetObjectDeactivate) {
+
+            data.set_next_int8 (0);
+            result = True;
+         }
+         else {
+
+            ObjectType type;
+            ArrayUInt32 typeArray;
+            _objMod->lookup_object_type (ObjectHandle, _defaultHandle, type);
+
+            if (_attrMod->to_net_object_type (type, typeArray)) {
+
+               const Int32 TypeSize (typeArray.get_size ());
+               data.set_next_int8 (Int8 (TypeSize));
+
+               for (Int32 ix = 0; ix < TypeSize; ix++) {
+
+                  data.set_next_uint8 (UInt8 (typeArray.get (ix)));
+               }
+
+               ObjectAttributeAdapter *current (_adapterList);
+
+               while (current) {
+
+                  current->encode (ObjectHandle, *_objMod, data);
+                  current = current->next;
+               }
+
+               result = True;
+            }
+
+            _objMod->store_time_stamp (
+               ObjectHandle,
+               _lnvHandle,
+               _time.get_last_frame_time ());
+         }
+      }
+   }
+
+   return result;
+}
+
+
+void
+dmz::NetExtPacketCodecObjectNative::_init (Config &local) {
+
+   RuntimeContext *context (get_plugin_runtime_context ());
+   Definitions defs (context, &_log);
+
+   _defaultHandle = defs.create_named_handle (ObjectAttributeDefaultName);
+   _lnvHandle = defs.create_named_handle (ObjectAttributeLastNetworkValueName);
+
+   Config adapters;
+   ObjectAttributeAdapter *current (0);
+
+   if (local.lookup_all_config ("adapter", adapters)) {
+
+      ConfigIterator it;
+      Config data;
+
+      while (adapters.get_next_config (it, data)) {
+
+         ObjectAttributeAdapter *next (create_object_adapter (data, context, _log));
+
+         if (next) {
+
+            if (current) { current->next = next; current = next; }
+            else { _adapterList = current = next; }
+         }
+      }
+   }
+}
+
+
+extern "C" {
+
+DMZ_PLUGIN_FACTORY_LINK_SYMBOL dmz::Plugin *
+create_dmzNetExtPacketCodecObjectNative (
+      const dmz::PluginInfo &Info,
+      dmz::Config &local,
+      dmz::Config &global) {
+
+   return new dmz::NetExtPacketCodecObjectNative (Info, local);
+}
+
+};
+
+
 namespace {
 
 typedef dmz::NetExtPacketCodecObjectNative::ObjectAttributeAdapter Adapter;
@@ -54,8 +306,7 @@ local_create_lnv_handle (dmz::Config &local, dmz::RuntimeContext *context) {
    }
    else {
 
-      result = defs.create_named_handle (
-         config_to_string ("lnvattribute", local, dmz::ObjectAttributeDefaultName));
+      result = defs.create_named_handle (config_to_string ("lnvattribute", local));
    }
 
    return result;
@@ -199,7 +450,7 @@ State::decode (
       dmz::ObjectType type;
       objMod.lookup_object_type (ObjectHandle, _DefaultHandle, type);
       dmz::Mask value;
-      _attrMod->to_internal_mask (type, stateArray, value);
+      _attrMod->to_internal_object_mask (type, stateArray, value);
 
       objMod.store_state (ObjectHandle, _AttributeHandle, value);
 
@@ -223,7 +474,7 @@ State::encode (
       dmz::Mask value;
       objMod.lookup_state (ObjectHandle, _AttributeHandle, value);
 
-      _attrMod->to_net_mask (type, value, stateArray);
+      _attrMod->to_net_object_mask (type, value, stateArray);
 
       if (_LNVHandle) { objMod.store_state (ObjectHandle, _LNVHandle, value); }
    }
@@ -743,249 +994,3 @@ dmz::NetExtPacketCodecObjectNative::create_object_adapter (
    return result;
 }
 
-
-dmz::NetExtPacketCodecObjectNative::NetExtPacketCodecObjectNative (
-      const PluginInfo &Info,
-      Config &local) :
-      Plugin (Info),
-      NetExtPacketCodecObject (Info),
-      _SysID (get_runtime_uuid (Info)),
-      _log (Info),
-      _time (Info),
-      _defaultHandle (0),
-      _lnvHandle (0),
-      _objMod (0),
-      _attrMod (0),
-      _adapterList (0) {
-
-   _init (local);
-}
-
-
-dmz::NetExtPacketCodecObjectNative::~NetExtPacketCodecObjectNative () {
-
-   if (_adapterList) { delete _adapterList; _adapterList = 0; }
-}
-
-
-// Plugin Interface
-void
-dmz::NetExtPacketCodecObjectNative::update_plugin_state (
-      const PluginStateEnum State,
-      const UInt32 Level) {
-
-   if (State == PluginStateInit) {
-
-   }
-   else if (State == PluginStateStart) {
-
-   }
-   else if (State == PluginStateStop) {
-
-   }
-   else if (State == PluginStateShutdown) {
-
-   }
-}
-
-
-void
-dmz::NetExtPacketCodecObjectNative::discover_plugin (
-      const PluginDiscoverEnum Mode,
-      const Plugin *PluginPtr) {
-
-   if (Mode == PluginDiscoverAdd) {
-
-      if (!_objMod) { _objMod = ObjectModule::cast (PluginPtr); }
-      if (!_attrMod) { _attrMod = NetModuleAttributeMap::cast (PluginPtr); }
-   }
-   else if (Mode == PluginDiscoverRemove) {
-
-      if (_objMod && (_objMod == ObjectModule::cast (PluginPtr))) { _objMod = 0; }
-
-      if (_attrMod && (_attrMod == NetModuleAttributeMap::cast (PluginPtr))) {
-
-         _attrMod = 0;
-      }
-   }
-
-   ObjectAttributeAdapter *current (_adapterList);
-
-   while (current) {
-
-      current->discover_plugin (Mode, PluginPtr);
-      current = current->next;
-   }
-}
-
-
-// NetExtPacketCodecObject Interface
-dmz::Boolean
-dmz::NetExtPacketCodecObjectNative::decode (Unmarshal &data, Boolean &isLoopback) {
-
-   Boolean result (False);
-
-   UUID uuid;
-   data.get_next_uuid (uuid);
-
-   isLoopback = (uuid == _SysID);
-
-   if (!isLoopback && _objMod) {
-
-      UUID objectID;
-      data.get_next_uuid (objectID);
-      const Int32 TypeSize (Int32 (data.get_next_int8 ()));
-
-      Handle objectHandle (_objMod->lookup_handle_from_uuid (objectID));
-
-      if (!TypeSize) {
-
-         if (objectHandle) { _objMod->destroy_object (objectHandle); }
-      }
-      else {
-
-         ArrayUInt32 typeArray (TypeSize);
-
-         for (Int32 ix = 0; ix < TypeSize; ix++) {
-
-            typeArray.set (ix, UInt32 (data.get_next_uint8 ()));
-         }
-
-         Boolean activateObject (False);
-
-         if (!objectHandle) {
-
-            ObjectType type;
-            _attrMod->to_internal_type (typeArray, type);
-
-            objectHandle = _objMod->create_object (type, ObjectRemote);
-
-            if (objectHandle) {
-
-               _objMod->store_uuid (objectHandle, objectID);
-               activateObject = True;
-            }
-         }
-
-         if (objectHandle) {
-
-            result = True;
-
-            ObjectAttributeAdapter *current (_adapterList);
-
-            while (current) {
-
-               current->decode (objectHandle, data, *_objMod);
-               current = current->next;
-            }
-
-            if (activateObject) { _objMod->activate_object (objectHandle); }
-
-            _objMod->store_time_stamp (objectHandle, _lnvHandle, _time.get_frame_time ());
-         }
-      }
-   }
-
-   return result;
-}
-
-
-dmz::Boolean
-dmz::NetExtPacketCodecObjectNative::encode_object (
-      const Handle ObjectHandle,
-      const NetObjectEncodeEnum EncodeMode,
-      Marshal &data) {
-
-   Boolean result (False);
-
-   if (_attrMod && _objMod) {
-
-      UUID objectID;
-
-      if (_objMod->lookup_uuid (ObjectHandle, objectID)) {
-
-         data.set_next_uuid (_SysID);
-         data.set_next_uuid (objectID);
-
-         if (EncodeMode == NetObjectDeactivate) {
-
-            data.set_next_int8 (0);
-            result = True;
-         }
-         else {
-
-            ObjectType type;
-            ArrayUInt32 typeArray;
-            _objMod->lookup_object_type (ObjectHandle, _defaultHandle, type);
-
-            if (_attrMod->to_net_type (type, typeArray)) {
-
-               const Int32 TypeSize (typeArray.get_size ());
-               data.set_next_int8 (Int8 (TypeSize));
-
-               for (Int32 ix = 0; ix < TypeSize; ix++) {
-
-                  data.set_next_uint8 (UInt8 (typeArray.get (ix)));
-               }
-
-               ObjectAttributeAdapter *current (_adapterList);
-
-               while (current) {
-
-                  current->encode (ObjectHandle, *_objMod, data);
-                  current = current->next;
-               }
-
-               result = True;
-            }
-         }
-      }
-   }
-
-   return result;
-}
-
-
-void
-dmz::NetExtPacketCodecObjectNative::_init (Config &local) {
-
-   RuntimeContext *context (get_plugin_runtime_context ());
-   Definitions defs (context, &_log);
-
-   _defaultHandle = defs.create_named_handle (ObjectAttributeDefaultName);
-   _lnvHandle = defs.create_named_handle (ObjectAttributeLastNetworkValueName);
-
-   Config adapters;
-   ObjectAttributeAdapter *current (0);
-
-   if (local.lookup_all_config ("adapter", adapters)) {
-
-      ConfigIterator it;
-      Config data;
-
-      while (adapters.get_next_config (it, data)) {
-
-         ObjectAttributeAdapter *next (create_object_adapter (data, context, _log));
-
-         if (next) {
-
-            if (current) { current->next = next; current = next; }
-            else { _adapterList = current = next; }
-         }
-      }
-   }
-}
-
-
-extern "C" {
-
-DMZ_PLUGIN_FACTORY_LINK_SYMBOL dmz::Plugin *
-create_dmzNetExtPacketCodecObjectNative (
-      const dmz::PluginInfo &Info,
-      dmz::Config &local,
-      dmz::Config &global) {
-
-   return new dmz::NetExtPacketCodecObjectNative (Info, local);
-}
-
-};

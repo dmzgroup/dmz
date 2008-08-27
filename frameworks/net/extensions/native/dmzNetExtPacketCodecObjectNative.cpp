@@ -313,10 +313,10 @@ local_create_lnv_handle (dmz::Config &local, dmz::RuntimeContext *context) {
 }
 
 
-class Link : public Adapter {
+class SubLink : public Adapter {
 
    public:
-      Link (dmz::Config &local, dmz::RuntimeContext *context) :
+      SubLink (dmz::Config &local, dmz::RuntimeContext *context) :
             Adapter (local, context) {;}
 
       virtual void decode (
@@ -332,12 +332,15 @@ class Link : public Adapter {
 
 
 void
-Link::decode (
+SubLink::decode (
       const dmz::Handle ObjectHandle,
       dmz::Unmarshal &data,
       dmz::ObjectModule &objMod) {
 
    const dmz::Int32 Size (data.get_next_int8 ());
+
+   dmz::HandleContainer handles;
+   objMod.lookup_sub_links (ObjectHandle, _AttributeHandle, handles);
 
    for (dmz::Int32 ix = 0; ix < Size; ix++) {
 
@@ -345,13 +348,119 @@ Link::decode (
       data.get_next_uuid (objectID);
       const dmz::Handle SubHandle (objMod.lookup_handle_from_uuid (objectID));
 
-      if (SubHandle) { objMod.link_objects (_AttributeHandle, ObjectHandle, SubHandle); }
+      if (SubHandle) {
+
+         if (!handles.contains (SubHandle)) {
+
+            objMod.link_objects (_AttributeHandle, ObjectHandle, SubHandle);
+         }
+         else { handles.remove_handle (SubHandle); }
+      }
+
+      dmz::Handle removedObj (handles.get_first ());
+
+      while (removedObj) {
+
+         const dmz::Handle LinkHandle (
+            objMod.lookup_link_handle (_AttributeHandle, ObjectHandle, removedObj));
+
+         if (LinkHandle) { objMod.unlink_objects (LinkHandle); }
+
+         removedObj = handles.get_next ();
+      }
    }
 }
 
 
 void
-Link::encode (
+SubLink::encode (
+      const dmz::Handle ObjectHandle,
+      dmz::ObjectModule &objMod,
+      dmz::Marshal &data) {
+
+   dmz::HandleContainer handles;
+   objMod.lookup_sub_links (ObjectHandle, _AttributeHandle, handles);
+
+   dmz::Int32 Size (handles.get_count ());
+
+   data.set_next_int8 (dmz::Int8 (Size));
+
+   dmz::Handle subHandle (handles.get_first ());
+
+   dmz::Int32 count (0);
+
+   while (subHandle && (count < Size)) {
+
+      dmz::UUID objectID;
+      objMod.lookup_uuid (subHandle, objectID);
+      data.set_next_uuid (objectID);
+      subHandle = handles.get_next ();
+      count++;
+   }
+}
+
+
+class SuperLink : public Adapter {
+
+   public:
+      SuperLink (dmz::Config &local, dmz::RuntimeContext *context) :
+            Adapter (local, context) {;}
+
+      virtual void decode (
+         const dmz::Handle ObjectHandle,
+         dmz::Unmarshal &data,
+         dmz::ObjectModule &objMod);
+
+      virtual void encode (
+         const dmz::Handle ObjectHandle,
+         dmz::ObjectModule &objMod,
+         dmz::Marshal &data);
+};
+
+
+void
+SuperLink::decode (
+      const dmz::Handle ObjectHandle,
+      dmz::Unmarshal &data,
+      dmz::ObjectModule &objMod) {
+
+   const dmz::Int32 Size (data.get_next_int8 ());
+
+   dmz::HandleContainer handles;
+   objMod.lookup_super_links (ObjectHandle, _AttributeHandle, handles);
+
+   for (dmz::Int32 ix = 0; ix < Size; ix++) {
+
+      dmz::UUID objectID;
+      data.get_next_uuid (objectID);
+      const dmz::Handle SuperHandle (objMod.lookup_handle_from_uuid (objectID));
+
+      if (SuperHandle) {
+
+         if (!handles.contains (SuperHandle)) {
+
+            objMod.link_objects (_AttributeHandle, SuperHandle, ObjectHandle);
+         }
+         else { handles.remove_handle (SuperHandle); }
+      }
+
+      dmz::Handle removedObj (handles.get_first ());
+
+      while (removedObj) {
+
+         const dmz::Handle LinkHandle (
+            objMod.lookup_link_handle (_AttributeHandle, removedObj, ObjectHandle));
+
+         if (LinkHandle) { objMod.unlink_objects (LinkHandle); }
+
+         removedObj = handles.get_next ();
+      }
+   }
+}
+
+
+void
+SuperLink::encode (
       const dmz::Handle ObjectHandle,
       dmz::ObjectModule &objMod,
       dmz::Marshal &data) {
@@ -974,7 +1083,8 @@ dmz::NetExtPacketCodecObjectNative::create_object_adapter (
 
    const String Type = config_to_string ("type", local).to_lower ();
 
-   if (Type == "link") { result = new Link (local, context); }
+   if (Type == "link") { result = new SubLink (local, context); }
+   else if (Type == "superlink") { result = new SuperLink (local, context); }
    else if (Type == "state") { result = new State (local, context); }
    else if (Type == "flag") { result = new Flag (local, context); }
    else if (Type == "position") { result = new Position (local, context); }

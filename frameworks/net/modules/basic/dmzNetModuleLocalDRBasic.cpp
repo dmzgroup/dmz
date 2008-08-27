@@ -758,7 +758,7 @@ dmz::NetModuleLocalDRBasic::_create_test_from_type (const ObjectType &Type) {
          Config listData;
 
          if (current.get_config ().lookup_all_config (
-               "net.local.rule",
+               "net.rule",
                listData)) {
 
             _log.info << "Creating network transmission rules for: " << Type.get_name ()

@@ -2797,7 +2797,7 @@ dmz::ObjectModuleBasic::unlink_objects (
       if (superTable) { superTable->remove (SuperHandle); }
    }
 
-   ObjectObserverStruct *os (_linkObsTable.lookup (AttributeHandle));
+   ObjectObserverStruct *os (_unlinkObsTable.lookup (AttributeHandle));
 
    if (os) {
 

@@ -223,6 +223,7 @@ dmz::LuaModuleBasic::release_lua_observer (
 dmz::Boolean
 dmz::LuaModuleBasic::reset_lua () {
 
+   _log.info << "Reseting Lua Runtime." << endl;
    _close_lua ();
    _open_lua ();
    _start_lua_plugins ();
@@ -418,6 +419,7 @@ dmz::LuaModuleBasic::lua_hook_function (lua_State *L, lua_Debug *ar) {
 void
 dmz::LuaModuleBasic::_open_lua () {
 
+   _log.info << "Opening Lua Runtime Scripts and Extensions." << endl;
    if (!_luaState) {
 
       _luaState = lua_open ();
@@ -465,6 +467,7 @@ dmz::LuaModuleBasic::_open_lua () {
 void
 dmz::LuaModuleBasic::_start_lua_plugins () {
 
+   _log.info << "Starting Lua Plugins." << endl;
    HashTableStringIterator it;
 
    ScriptStruct *ss = _scriptTable.get_first (it);
@@ -489,6 +492,7 @@ dmz::LuaModuleBasic::_start_lua_plugins () {
 void
 dmz::LuaModuleBasic::_close_lua () {
 
+   _log.info << "Closing Lua Runtime Scripts and Extensions." << endl;
    if (_luaState) {
 
       HashTableStringIterator scriptIt;

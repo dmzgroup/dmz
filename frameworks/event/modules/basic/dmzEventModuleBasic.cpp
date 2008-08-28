@@ -25,9 +25,12 @@ dmz::EventModuleBasic::EventModuleBasic (const PluginInfo &Info, Config &local) 
       EventModule (Info),
       _log (Info),
       _time (Info.get_context ()),
+      _inCloseEvent (False),
       _maxEvents (0),
       _eventTTL (1.0),
       _eventCache (0),
+      _delayedListHead (0),
+      _delayedListTail (0),
       _recycleList (0) {
 
    _init (local);
@@ -462,58 +465,32 @@ dmz::EventModuleBasic::close_event (const Handle EventHandle) {
 
    if (event && !event->closed) {
 
-      EventType current (event->type);
+      result = True;
 
-      while (current) {
+      if (!_inCloseEvent) {
 
-         EventObserverStruct *eos (_createTable.lookup (current.get_handle ()));
+         _inCloseEvent = True;
+         _close_event (*event);
+         _inCloseEvent = False;
 
-         if (eos) {
+         while (_delayedListHead) {
 
-            HashTableHandleIterator it;
-
-            EventObserver *obs (eos->get_first (it));
-
-            while (obs) {
-
-               obs->create_event (result, event->type, event->locality);
-               obs = eos->get_next (it);
-            }
+            EventStruct *current (_delayedListHead);
+            _delayedListHead = _delayedListHead->next;
+            current->next = 0;
+            _close_event (*current);
          }
 
-         current.become_parent ();
+         _delayedListTail = 0;
       }
+      else {
 
-      event->closed = True;
-      event->closeTime = _time.get_frame_time ();
+         if (_delayedListTail) {
 
-      current = event->type;
-
-      while (current) {
-
-         EventObserverStruct *eos (_closeTable.lookup (current.get_handle ()));
-
-         if (eos) {
-
-            HashTableHandleIterator it;
-
-            EventObserver *obs (eos->get_first (it));
-
-            while (obs) {
-
-               obs->close_event (event->handle, event->type, event->locality);
-               obs = eos->get_next (it);
-            }
+            _delayedListTail->next = event;
+            _delayedListTail = event;
          }
-
-         current.become_parent ();
-      }
-
-      // Move to end of the table.
-      if (_eventTable.remove (event->handle)) {
-
-         if (_eventTable.store (event->handle, event)) { result = True; }
-         else { _eventCache = 0; delete event; event = 0; }
+         else { _delayedListHead = _delayedListTail = event; }
       }
    }
 
@@ -1202,6 +1179,69 @@ dmz::EventModuleBasic::_create_event_observers (
    }
 
    return result;
+}
+
+
+void
+dmz::EventModuleBasic::_close_event (EventStruct &event) {
+
+   EventType current (event.type);
+
+   while (current) {
+
+      EventObserverStruct *eos (_createTable.lookup (current.get_handle ()));
+
+      if (eos) {
+
+         HashTableHandleIterator it;
+
+         EventObserver *obs (eos->get_first (it));
+
+         while (obs) {
+
+            obs->create_event (event.handle, event.type, event.locality);
+            obs = eos->get_next (it);
+         }
+      }
+
+      current.become_parent ();
+   }
+
+   event.closed = True;
+   event.closeTime = _time.get_frame_time ();
+
+   current = event.type;
+
+   while (current) {
+
+      EventObserverStruct *eos (_closeTable.lookup (current.get_handle ()));
+
+      if (eos) {
+
+         HashTableHandleIterator it;
+
+         EventObserver *obs (eos->get_first (it));
+
+         while (obs) {
+
+            obs->close_event (event.handle, event.type, event.locality);
+            obs = eos->get_next (it);
+         }
+      }
+
+      current.become_parent ();
+   }
+
+   // Move to end of the table.
+   if (_eventTable.remove (event.handle)) {
+
+      if (!_eventTable.store (event.handle, &event)) {
+
+         _log.error << "Internal error: Failed to save event: " << event.handle
+            << " of type: " << event.type.get_name () << endl;
+         _eventCache = 0; delete &event;
+      }
+   }
 }
 
 

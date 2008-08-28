@@ -21,6 +21,9 @@ namespace dmz {
             const Plugin *PluginPtr,
             const String &PluginName = "");
 
+         Handle get_lua_extension_handle ();
+         String get_lua_extension_name ();
+
          // LuaExt Interface
          virtual void store_lua_module (LuaModule &module) = 0;
          virtual void open_lua_extension (lua_State *L) = 0;
@@ -49,6 +52,14 @@ dmz::LuaExt::cast (const Plugin *PluginPtr, const String &PluginName) {
       PluginName,
       PluginPtr);
 }
+
+
+inline dmz::Handle
+dmz::LuaExt::get_lua_extension_handle () { return __Info.get_handle (); }
+
+
+inline dmz::String
+dmz::LuaExt::get_lua_extension_name () { return __Info.get_name (); }
 
 
 inline

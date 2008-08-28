@@ -290,17 +290,22 @@ namespace dmz {
             const Handle TypeHandle,
             HashTableHandleTemplate<EventObserverStruct> &table);
 
+         void _close_event (EventStruct &es);
+
          void _init (Config &local);
 
          Log _log;
          Time _time;
 
+         Boolean _inCloseEvent;
          Int32 _maxEvents;
          Float64 _eventTTL;
 
          HashTableHandleTemplate<EventStruct> _eventTable;
 
          EventStruct *_eventCache;
+         EventStruct *_delayedListHead;
+         EventStruct *_delayedListTail;
          EventStruct *_recycleList;
 
          HashTableHandleTemplate<SubscriptionStruct> _subscriptionTable;

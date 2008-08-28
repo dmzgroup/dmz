@@ -236,7 +236,6 @@ obs_register (lua_State *L) {
       lua_rawseti (L, Table, 2); // store data table
       lua_rawset (L, CBTable); // store table of callback and data tables
       lua_pop (L, 1); // pop observer index table.
-
       lua_pushboolean (L, obs->activate_object_attribute (*handle, cb) != 0 ? 1 : 0);
       result = 1;
    }

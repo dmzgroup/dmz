@@ -537,9 +537,47 @@ object_unlink (lua_State *L) {
 
    if (objMod && ptr) {
 
-      lua_pushboolean (
-         L,
-         objMod->unlink_objects (*ptr) ? 1 : 0);
+      lua_pushboolean (L, objMod->unlink_objects (*ptr) ? 1 : 0);
+
+      result = 1;
+   }
+
+   return result;
+}
+
+
+static int
+object_unlink_super_links (lua_State *L) {
+
+   int result (0);
+
+   ObjectModule *objMod (get_object_module (L));
+   Handle *objPtr = lua_check_handle (L, 1);
+   Handle *attrPtr = lua_check_handle (L, 2);
+
+   if (objMod && attrPtr && objPtr) {
+
+      lua_pushboolean (L, objMod->unlink_super_links (*objPtr, *attrPtr) ? 1 : 0);
+
+      result = 1;
+   }
+
+   return result;
+}
+
+
+static int
+object_unlink_sub_links (lua_State *L) {
+
+   int result (0);
+
+   ObjectModule *objMod (get_object_module (L));
+   Handle *objPtr = lua_check_handle (L, 1);
+   Handle *attrPtr = lua_check_handle (L, 2);
+
+   if (objMod && attrPtr && objPtr) {
+
+      lua_pushboolean (L, objMod->unlink_sub_links (*objPtr, *attrPtr) ? 1 : 0);
 
       result = 1;
    }
@@ -1322,6 +1360,8 @@ static const luaL_Reg arrayFunc[] = {
    {"lookup_link_handle", object_lookup_link_handle},
    {"lookup_linked_objects", object_lookup_linked_objects},
    {"unlink", object_unlink},
+   {"unlink_super_links", object_unlink_super_links},
+   {"unlink_sub_links", object_unlink_sub_links},
    {"link_attribute_object", object_link_attribute_object},
    {"super_links", object_super_links},
    {"sub_links", object_sub_links},

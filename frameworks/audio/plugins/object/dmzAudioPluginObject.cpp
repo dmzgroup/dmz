@@ -318,7 +318,7 @@ dmz::AudioPluginObject::update_object_state (
 
          if (IsSet && !WasSet) {
 
-            if (_audioMod && current->Data.activateHandle) {
+            if (PreviousValue && _audioMod && current->Data.activateHandle) {
 
                attr.set_loop (False);
                _audioMod->play_sound (current->Data.activateHandle, attr);

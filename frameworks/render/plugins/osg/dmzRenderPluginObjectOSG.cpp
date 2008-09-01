@@ -18,12 +18,14 @@ dmz::RenderPluginObjectOSG::RenderPluginObjectOSG (
       _defs (Info, &_log),
       _core (0) {
 
+   _noModel.model = new osg::Group;
    _init (local);
 }
 
 
 dmz::RenderPluginObjectOSG::~RenderPluginObjectOSG () {
 
+   _noModel.model = 0;
    _modelTable.empty ();
    _typeTable.clear ();
    _defTable.empty ();
@@ -225,6 +227,7 @@ dmz::RenderPluginObjectOSG::_create_def_struct (const ObjectType &Type) {
             while (modelList.get_next_config (it, model)) {
 
                const String FileName (config_to_string ("file", model));
+               const Boolean NoModel (config_to_boolean ("none", model));
                Mask state;
                String stateName;
                const Boolean StateNameFound (model.lookup_attribute ("state", stateName));
@@ -233,7 +236,7 @@ dmz::RenderPluginObjectOSG::_create_def_struct (const ObjectType &Type) {
 
                if (!StateNameFound || state) {
 
-                  ModelStruct *ms = _load_model (FileName);
+                  ModelStruct *ms = (NoModel ? &_noModel : _load_model (FileName));
 
                   if (ms) {
 

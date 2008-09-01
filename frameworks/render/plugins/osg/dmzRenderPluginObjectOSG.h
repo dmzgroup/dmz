@@ -131,6 +131,7 @@ namespace dmz {
          HashTableHandleTemplate<ObjectStruct> _objectTable;
 
          Definitions _defs;
+         ModelStruct _noModel;
          RenderModuleCoreOSG *_core;
 
       private:

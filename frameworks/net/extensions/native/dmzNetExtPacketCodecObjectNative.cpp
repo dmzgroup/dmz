@@ -356,18 +356,18 @@ SubLink::decode (
          }
          else { handles.remove_handle (SubHandle); }
       }
+   }
 
-      dmz::Handle removedObj (handles.get_first ());
+   dmz::Handle removedObj (handles.get_first ());
 
-      while (removedObj) {
+   while (removedObj) {
 
-         const dmz::Handle LinkHandle (
-            objMod.lookup_link_handle (_AttributeHandle, ObjectHandle, removedObj));
+      const dmz::Handle LinkHandle (
+         objMod.lookup_link_handle (_AttributeHandle, ObjectHandle, removedObj));
 
-         if (LinkHandle) { objMod.unlink_objects (LinkHandle); }
+      if (LinkHandle) { objMod.unlink_objects (LinkHandle); }
 
-         removedObj = handles.get_next ();
-      }
+      removedObj = handles.get_next ();
    }
 }
 
@@ -443,18 +443,18 @@ SuperLink::decode (
          }
          else { handles.remove_handle (SuperHandle); }
       }
+   }
 
-      dmz::Handle removedObj (handles.get_first ());
+   dmz::Handle removedObj (handles.get_first ());
 
-      while (removedObj) {
+   while (removedObj) {
 
-         const dmz::Handle LinkHandle (
-            objMod.lookup_link_handle (_AttributeHandle, removedObj, ObjectHandle));
+      const dmz::Handle LinkHandle (
+         objMod.lookup_link_handle (_AttributeHandle, removedObj, ObjectHandle));
 
-         if (LinkHandle) { objMod.unlink_objects (LinkHandle); }
+      if (LinkHandle) { objMod.unlink_objects (LinkHandle); }
 
-         removedObj = handles.get_next ();
-      }
+      removedObj = handles.get_next ();
    }
 }
 

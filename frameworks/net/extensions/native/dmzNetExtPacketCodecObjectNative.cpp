@@ -187,11 +187,10 @@ dmz::NetExtPacketCodecObjectNative::encode_object (
          }
          else {
 
-            ObjectType type;
+            const ObjectType Type (_objMod->lookup_object_type (ObjectHandle));
             ArrayUInt32 typeArray;
-            _objMod->lookup_object_type (ObjectHandle, _defaultHandle, type);
 
-            if (_attrMod->to_net_object_type (type, typeArray)) {
+            if (_attrMod->to_net_object_type (Type, typeArray)) {
 
                const Int32 TypeSize (typeArray.get_size ());
                data.set_next_int8 (Int8 (TypeSize));
@@ -556,10 +555,9 @@ State::decode (
 
    if (_attrMod) {
 
-      dmz::ObjectType type;
-      objMod.lookup_object_type (ObjectHandle, _DefaultHandle, type);
+      const dmz::ObjectType Type (objMod.lookup_object_type (ObjectHandle));
       dmz::Mask value;
-      _attrMod->to_internal_object_mask (type, stateArray, value);
+      _attrMod->to_internal_object_mask (Type, stateArray, value);
 
       objMod.store_state (ObjectHandle, _AttributeHandle, value);
 
@@ -578,12 +576,11 @@ State::encode (
 
    if (_attrMod) {
 
-      dmz::ObjectType type;
-      objMod.lookup_object_type (ObjectHandle, _DefaultHandle, type);
+      const dmz::ObjectType Type (objMod.lookup_object_type (ObjectHandle));
       dmz::Mask value;
       objMod.lookup_state (ObjectHandle, _AttributeHandle, value);
 
-      _attrMod->to_net_object_mask (type, value, stateArray);
+      _attrMod->to_net_object_mask (Type, value, stateArray);
 
       if (_LNVHandle) { objMod.store_state (ObjectHandle, _LNVHandle, value); }
    }

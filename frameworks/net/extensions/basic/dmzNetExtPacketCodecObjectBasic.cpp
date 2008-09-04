@@ -179,12 +179,10 @@ dmz::NetExtPacketCodecObjectBasic::encode_object (
 
       if (_objMod->lookup_uuid (ObjectHandle, uuid)) {
 
+         const ObjectType Type (_objMod->lookup_object_type (ObjectHandle));
          ArrayUInt32 typeArray;
-         ObjectType type;
 
-         _objMod->lookup_object_type (ObjectHandle, _defaultHandle, type);
-
-         if (_attrMod->to_net_object_type (type, typeArray)) {
+         if (_attrMod->to_net_object_type (Type, typeArray)) {
 
             Vector pos;
             Matrix ori;
@@ -202,7 +200,7 @@ dmz::NetExtPacketCodecObjectBasic::encode_object (
                state |= _deactivateState;
             }
 
-            _attrMod->to_net_object_mask (type, state, stateArray);
+            _attrMod->to_net_object_mask (Type, state, stateArray);
 
             data.set_next_uuid (_SysID);
             data.set_next_uuid (uuid);

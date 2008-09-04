@@ -515,13 +515,13 @@ dmz::NetModuleLocalDRBasic::update_object (const Handle ObjectHandle) {
 
    if (_objMod) {
 
-      ObjectType type;
+      const ObjectType Type (_objMod->lookup_object_type (ObjectHandle));
 
-      if (_objMod->lookup_object_type (ObjectHandle, _defaultHandle, type)) {
+      if (Type) {
 
-         ObjectUpdate *test (_typeTable.lookup (type.get_handle ()));
+         ObjectUpdate *test (_typeTable.lookup (Type.get_handle ()));
 
-         if (!test) { test = _create_test_from_type (type); }
+         if (!test) { test = _create_test_from_type (Type); }
 
          Boolean limitRate (False);
 

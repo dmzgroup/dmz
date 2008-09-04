@@ -486,7 +486,13 @@ dmz::ObjectModuleBasic::create_object (
 
                _objectCache = obj;
                obj->type = Type;
+               obj->attrTable.store (_defaultHandle, (void *)this);
                store_locality (result, Locality);
+            }
+            else {
+
+               result = 0;
+               obj->next = _recycleList; _recycleList = obj;
             }
          }
          else {
@@ -1435,7 +1441,7 @@ dmz::ObjectModuleBasic::add_to_counter (
 
                if (Value > Diff) {
 
-                  if (ptr->rollover) { newCounter = Min + (Value - Diff); }
+                  if (ptr->rollover) { newCounter = Min + (Value - Diff) - 1; }
                   else { newCounter = Max; }
                }
                else { newCounter += Value; }
@@ -1450,7 +1456,7 @@ dmz::ObjectModuleBasic::add_to_counter (
 
                if (Value < Diff) {
 
-                  if (ptr->rollover) { newCounter = Max + (Value - Diff); }
+                  if (ptr->rollover) { newCounter = Max + (Value - Diff) + 1; }
                   else { newCounter = Min; }
                }
                else { newCounter += Value; }
@@ -4526,12 +4532,7 @@ dmz::ObjectModuleBasic::_dump_object_attributes_to_observer (
 
    if ((CreateMask & AttributeMask) && (AttributeHandle == _defaultHandle)) {
 
-      ObjectType *ptr (Obj.altTypeTable.lookup (_defaultHandle));
-
-      if (ptr) {
-
-         obs.create_object (Obj.uuid, Obj.handle, *ptr, Obj.locality);
-      }
+      obs.create_object (Obj.uuid, Obj.handle, Obj.type, Obj.locality);
    }
 
    if ((UUIDMask & AttributeMask) && (AttributeHandle == _defaultHandle)) {

@@ -727,6 +727,33 @@ object_locality (lua_State *L) {
 }
 
 
+static int
+object_type (lua_State *L) {
+
+   int result (0);
+
+   Handle objHandle (0);
+
+   ostruct *os (get_object_struct (L));
+
+   Handle *objPtr = check_obj_handle (L, 1, os);
+
+   if (objPtr) { objHandle = *objPtr; }
+ 
+   if (os && os->objMod && objHandle) {
+
+      const ObjectType Type (os->objMod->lookup_object_type (objHandle));
+
+      if (Type) {
+
+         if (lua_create_object_type (L, &Type)) { result = 1; }
+      }
+   }
+
+   return result;
+}
+
+
 ObjectModule *
 get_obj_params (lua_State *L, Handle &objHandle, Handle &attrHandle) {
 
@@ -751,7 +778,144 @@ get_obj_params (lua_State *L, Handle &objHandle, Handle &attrHandle) {
 
 
 static int
-object_type (lua_State *L) {
+object_counter (lua_State *L) {
+
+   int result (0);
+
+   Handle objHandle (0);
+   Handle attrHandle (0);
+   ObjectModule *objMod (get_obj_params (L, objHandle, attrHandle));
+
+   if (objMod && objHandle && attrHandle) {
+
+      if (!lua_isnone (L, 3)) {
+
+         const Int64 Value = (Int64)luaL_checknumber (L, 3);
+
+         if (objMod->store_counter (objHandle, attrHandle, Value)) {
+
+            lua_pushvalue (L, 3);
+            result = 1;
+         }
+      }
+      else {
+
+         Int64 value (0);
+         if (objMod->lookup_counter (objHandle, attrHandle, value)) {
+
+            lua_pushnumber (L, (lua_Number (value)));
+            result = 1;
+         }
+      }
+   }
+
+   return result;
+}
+
+
+static int
+object_add_to_counter (lua_State *L) {
+
+   int result (0);
+
+   Handle objHandle (0);
+   Handle attrHandle (0);
+   ObjectModule *objMod (get_obj_params (L, objHandle, attrHandle));
+
+   if (objMod && objHandle && attrHandle) {
+
+      const Int64 Value = (Int64)luaL_checknumber (L, 3);
+
+      if (objMod->add_to_counter (objHandle, attrHandle, Value)) {
+
+         Int64 newValue (0);
+
+         if (objMod->lookup_counter (objHandle, attrHandle, newValue)) {
+
+            lua_pushnumber (L, lua_Number (newValue));
+            result = 1;
+         }
+      }
+   }
+
+   return result;
+}
+
+
+static int
+object_counter_minimum (lua_State *L) {
+
+   int result (0);
+
+   Handle objHandle (0);
+   Handle attrHandle (0);
+   ObjectModule *objMod (get_obj_params (L, objHandle, attrHandle));
+
+   if (objMod && objHandle && attrHandle) {
+
+      if (!lua_isnone (L, 3)) {
+
+         const Int64 Value = (Int64)luaL_checknumber (L, 3);
+
+         if (objMod->store_counter_minimum (objHandle, attrHandle, Value)) {
+
+            lua_pushvalue (L, 3);
+            result = 1;
+         }
+      }
+      else {
+
+         Int64 value (0);
+         if (objMod->lookup_counter_minimum (objHandle, attrHandle, value)) {
+
+            lua_pushnumber (L, (lua_Number (value)));
+            result = 1;
+         }
+      }
+   }
+
+   return result;
+}
+
+
+static int
+object_counter_maximum (lua_State *L) {
+
+   int result (0);
+
+   Handle objHandle (0);
+   Handle attrHandle (0);
+   ObjectModule *objMod (get_obj_params (L, objHandle, attrHandle));
+
+   if (objMod && objHandle && attrHandle) {
+
+      if (!lua_isnone (L, 3)) {
+
+         const Int64 Value = (Int64)luaL_checknumber (L, 3);
+
+         if (objMod->store_counter_maximum (objHandle, attrHandle, Value)) {
+
+            lua_pushvalue (L, 3);
+            result = 1;
+         }
+      }
+      else {
+
+         Int64 value (0);
+         if (objMod->lookup_counter_maximum (objHandle, attrHandle, value)) {
+
+            lua_pushnumber (L, (lua_Number (value)));
+            result = 1;
+         }
+      }
+   }
+
+   return result;
+}
+
+
+static int
+object_alternate_type (lua_State *L) {
 
    int result (0);
 
@@ -766,7 +930,7 @@ object_type (lua_State *L) {
 
       if (typePtr) {
 
-         if (objMod->store_object_type (objHandle, attrHandle, *typePtr)) {
+         if (objMod->store_alternate_object_type (objHandle, attrHandle, *typePtr)) {
 
             lua_pushvalue (L, 3);
             result = 1;
@@ -776,7 +940,7 @@ object_type (lua_State *L) {
 
          ObjectType type;
 
-         if (objMod->lookup_object_type (objHandle, attrHandle, type)) {
+         if (objMod->lookup_alternate_object_type (objHandle, attrHandle, type)) {
 
             if (lua_create_object_type (L, &type)) { result = 1; }
          }
@@ -1367,6 +1531,10 @@ static const luaL_Reg arrayFunc[] = {
    {"sub_links", object_sub_links},
    {"locality", object_locality},
    {"type", object_type},
+   {"counter", object_counter},
+   {"counter_minimum", object_counter_minimum},
+   {"counter_maximum", object_counter_maximum},
+   {"alternate_type", object_alternate_type},
    {"state", object_state},
    {"flag", object_flag},
    {"time_stamp", object_time_stamp},
@@ -1570,6 +1738,9 @@ dmz::LuaExtObject::open_lua_extension (lua_State *LuaState) {
    lua_create_mask (L, &ObjectDestroyMask);
    lua_setfield (L, Table, "DestroyMask");
 
+   lua_create_mask (L, &ObjectLocalityMask);
+   lua_setfield (L, Table, "LocalityMask");
+
    lua_create_mask (L, &ObjectUUIDMask);
    lua_setfield (L, Table, "UUIDMask");
 
@@ -1585,11 +1756,17 @@ dmz::LuaExtObject::open_lua_extension (lua_State *LuaState) {
    lua_create_mask (L, &ObjectLinkAttributeMask);
    lua_setfield (L, Table, "LinkAttributeObjectMask");
 
-   lua_create_mask (L, &ObjectLocalityMask);
-   lua_setfield (L, Table, "LocalityMask");
+   lua_create_mask (L, &ObjectCounterMask);
+   lua_setfield (L, Table, "CounterMask");
 
-   lua_create_mask (L, &ObjectTypeMask);
-   lua_setfield (L, Table, "TypeMask");
+   lua_create_mask (L, &ObjectMinCounterMask);
+   lua_setfield (L, Table, "MinCounterMask");
+
+   lua_create_mask (L, &ObjectMaxCounterMask);
+   lua_setfield (L, Table, "MaxCounterMask");
+
+   lua_create_mask (L, &ObjectAltTypeMask);
+   lua_setfield (L, Table, "AltTypeMask");
 
    lua_create_mask (L, &ObjectStateMask);
    lua_setfield (L, Table, "StateMask");

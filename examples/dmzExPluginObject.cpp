@@ -52,12 +52,12 @@ dmz::ExPluginObject::destroy_object (
 
 
 void
-dmz::ExPluginObject::store_object_uuid (
+dmz::ExPluginObject::update_object_uuid (
       const Handle ObjectHandle,
       const UUID &Identity,
       const UUID &PrevIdentity) {
 
-   _log.out << "[store_object_uuid] handle: " << ObjectHandle
+   _log.out << "[update_object_uuid] handle: " << ObjectHandle
             << " uuid: " << Identity.to_string () << endl;
 }
 
@@ -103,23 +103,7 @@ dmz::ExPluginObject::unlink_objects (
 
 
 void
-dmz::ExPluginObject::store_object_type (
-      const UUID &Identity,
-      const Handle ObjectHandle,
-      const Handle AttributeHandle,
-      const ObjectType &Value,
-      const ObjectType *PreviousValue) {
-
-   if (AttributeHandle == _defaultAttributeHandle) {
-
-      _log.out << "[store_object_type] handle: " << ObjectHandle
-               << " type: " << Value.get_name () << endl;
-   }
-}
-
-
-void
-dmz::ExPluginObject::store_object_flag (
+dmz::ExPluginObject::update_object_flag (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -130,7 +114,7 @@ dmz::ExPluginObject::store_object_flag (
 
    if (AttributeHandle == _flagAttributeHandle) {
 
-      _log.out << "[store_object_flag] handle: " << ObjectHandle
+      _log.out << "[update_object_flag] handle: " << ObjectHandle
                << " flag: " << (Value ? "True" : "False")
                << " for attribute '" << attributeName << "'" << endl;
    }
@@ -138,7 +122,7 @@ dmz::ExPluginObject::store_object_flag (
 
 
 void
-dmz::ExPluginObject::store_object_position (
+dmz::ExPluginObject::update_object_position (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -147,7 +131,7 @@ dmz::ExPluginObject::store_object_position (
 
    if (AttributeHandle == _defaultAttributeHandle) {
 
-      _log.out << "[store_object_position] handle: " << ObjectHandle
+      _log.out << "[update_object_position] handle: " << ObjectHandle
                << " pos: " << Value << endl;
    }
 }
@@ -160,7 +144,6 @@ dmz::ExPluginObject::_init (Config &local) {
       ObjectCreateMask |
       ObjectDestroyMask |
       ObjectUUIDMask |
-      ObjectTypeMask |
       ObjectPositionMask);
 
    _link1AttributeHandle = activate_object_attribute (

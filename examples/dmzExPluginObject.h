@@ -34,7 +34,7 @@ namespace dmz {
 
          virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
 
-         virtual void store_object_uuid (
+         virtual void update_object_uuid (
             const Handle ObjectHandle,
             const UUID &Identity,
             const UUID &PrevIdentity);
@@ -55,21 +55,14 @@ namespace dmz {
             const UUID &SubIdentity,
             const Handle SubHandle);
 
-         virtual void store_object_type (
-            const UUID &Identity,
-            const Handle ObjectHandle,
-            const Handle AttributeHandle,
-            const ObjectType &Value,
-            const ObjectType *PreviousValue);
-
-         virtual void store_object_flag (
+         virtual void update_object_flag (
             const UUID &Identity,
             const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Boolean Value,
             const Boolean *PreviousValue);
 
-         virtual void store_object_position (
+         virtual void update_object_position (
             const UUID &Identity,
             const Handle ObjectHandle,
             const Handle AttributeHandle,

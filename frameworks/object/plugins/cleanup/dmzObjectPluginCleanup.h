@@ -52,13 +52,6 @@ namespace dmz {
             const ObjectLocalityEnum Locality,
             const ObjectLocalityEnum PrevLocality);
 
-         virtual void update_object_type (
-            const UUID &Identity,
-            const Handle ObjectHandle,
-            const Handle AttributeHandle,
-            const ObjectType &Value,
-            const ObjectType *PreviousValue);
-
       protected:
          void _get_type_set (const String &Name, Config &config, ObjectTypeSet &set);
          void _init (Config &local);

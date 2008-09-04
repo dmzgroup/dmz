@@ -76,7 +76,6 @@ dmz::AudioPluginObject::AudioPluginObject (
    _defaultHandle = activate_default_object_attribute (
       ObjectCreateMask |
          ObjectDestroyMask |
-         ObjectTypeMask |
          ObjectStateMask |
          ObjectPositionMask |
          ObjectVelocityMask);
@@ -266,17 +265,6 @@ dmz::AudioPluginObject::destroy_object (const UUID &Identity, const Handle Objec
 
       delete os; os = 0;
    }
-}
-
-
-void
-dmz::AudioPluginObject::update_object_type (
-      const UUID &Identity,
-      const Handle ObjectHandle,
-      const Handle AttributeHandle,
-      const ObjectType &Value,
-      const ObjectType *PreviousValue) {
-
 }
 
 

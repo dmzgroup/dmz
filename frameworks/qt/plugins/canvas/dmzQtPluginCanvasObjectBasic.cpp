@@ -304,28 +304,6 @@ dmz::QtPluginCanvasObjectBasic::destroy_object (
 
 
 void
-dmz::QtPluginCanvasObjectBasic::update_object_type (
-      const UUID &Identity,
-      const Handle ObjectHandle,
-      const Handle AttributeHandle,
-      const ObjectType &Value,
-      const ObjectType *PreviousValue) {
-
-   if (AttributeHandle == _defaultAttributeHandle) {
-
-      ObjectStruct *os (_objectTable.lookup (ObjectHandle));
-      if (os && (os->objType != Value)) {
-
-         _destroy_object (ObjectHandle);
-
-         ModelStruct *ms (_get_model_struct (Value));
-         if (ms) { _create_object (ObjectHandle, Value, *ms); }
-      }
-   }
-}
-
-
-void
 dmz::QtPluginCanvasObjectBasic::update_object_state (
       const UUID &Identity,
       const Handle ObjectHandle,
@@ -1054,7 +1032,7 @@ dmz::QtPluginCanvasObjectBasic::_lookup_object_type (
 
    if (objectModule) {
 
-      objectModule->lookup_object_type (ObjectHandle, _defaultAttributeHandle, objType);
+      objType = objectModule->lookup_object_type (ObjectHandle);
    }
 }
 
@@ -1168,7 +1146,6 @@ dmz::QtPluginCanvasObjectBasic::_init (Config &local) {
    _defaultAttributeHandle = activate_default_object_attribute (
       ObjectCreateMask |
       ObjectDestroyMask |
-      ObjectTypeMask |
       ObjectStateMask);
 
    _zValue = config_to_int32 ("defaults.zValue", local, _zValue);

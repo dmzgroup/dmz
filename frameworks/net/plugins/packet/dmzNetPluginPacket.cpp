@@ -27,7 +27,7 @@ dmz::NetPluginPacket::NetPluginPacket (
    _init (local);
 
    activate_default_object_attribute (
-      ObjectCreateMask | ObjectDestroyMask | ObjectLocalityMask | ObjectTypeMask);
+      ObjectCreateMask | ObjectDestroyMask | ObjectLocalityMask);
 }
 
 
@@ -296,17 +296,6 @@ dmz::NetPluginPacket::update_object_locality (
       const Handle ObjectHandle,
       const ObjectLocalityEnum Locality,
       const ObjectLocalityEnum PrevLocality) {
-
-}
-
-
-void
-dmz::NetPluginPacket::update_object_type (
-      const UUID &Identity,
-      const Handle ObjectHandle,
-      const Handle AttributeHandle,
-      const ObjectType &Value,
-      const ObjectType *PreviousValue) {
 
 }
 

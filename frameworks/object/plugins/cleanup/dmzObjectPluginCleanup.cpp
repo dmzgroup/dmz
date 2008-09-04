@@ -118,22 +118,6 @@ dmz::ObjectPluginCleanup::update_object_locality (
 
 
 void
-dmz::ObjectPluginCleanup::update_object_type (
-      const UUID &Identity,
-      const Handle ObjectHandle,
-      const Handle AttributeHandle,
-      const ObjectType &Value,
-      const ObjectType *PreviousValue) {
-
-   if (!_ignoreSet.contains_type (Value) && _cleanupSet.contains_type (Value)) {
-
-      _cleanupTable.add_handle (ObjectHandle);
-   }
-   else { _cleanupTable.remove_handle (ObjectHandle); }
-}
-
-
-void
 dmz::ObjectPluginCleanup::_get_type_set (
       const String &Name,
       Config &config,
@@ -159,8 +143,7 @@ dmz::ObjectPluginCleanup::_get_type_set (
 void
 dmz::ObjectPluginCleanup::_init (Config &local) {
 
-   activate_default_object_attribute (
-      ObjectCreateMask | ObjectDestroyMask | ObjectTypeMask);
+   activate_default_object_attribute (ObjectCreateMask | ObjectDestroyMask);
 
    RuntimeContext *context (get_plugin_runtime_context ());
 

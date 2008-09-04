@@ -105,11 +105,9 @@ dmz::QtPluginMenuToMessage::receive_message (
          if (InData->lookup_handle (_objectAttrHandle, 0, obj) &&
              InData->lookup_vector (_positionAttrHandle, 0, pos)) {
 
-            ObjectType type;
+            const ObjectType Type (_objectModule->lookup_object_type (obj));
 
-            _objectModule->lookup_object_type (obj, _defaultAttrHandle, type);
-
-            if (_objectSet.contains_exact_type (type)) {
+            if (_objectSet.contains_exact_type (Type)) {
 
                _object = obj;
 

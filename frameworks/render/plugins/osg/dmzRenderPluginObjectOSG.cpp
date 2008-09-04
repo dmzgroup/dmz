@@ -113,29 +113,6 @@ dmz::RenderPluginObjectOSG::destroy_object (
 
 
 void
-dmz::RenderPluginObjectOSG::update_object_type (
-      const UUID &Identity,
-      const Handle ObjectHandle,
-      const Handle AttributeHandle,
-      const ObjectType &Value,
-      const ObjectType *PreviousValue) {
-
-   ObjectStruct *os (_objectTable.lookup (ObjectHandle));
-
-   if (os && _core) {
-
-      DefStruct *ds (_lookup_def_struct (Value));
-
-      if (ds != &(os->Def)) {
-
-         destroy_object (Identity, ObjectHandle);
-         create_object (Identity, ObjectHandle, Value, ObjectLocalityUnknown);
-      }
-   }
-}
-
-
-void
 dmz::RenderPluginObjectOSG::update_object_state (
       const UUID &Identity,
       const Handle ObjectHandle,
@@ -316,7 +293,6 @@ dmz::RenderPluginObjectOSG::_init (Config &local) {
    activate_default_object_attribute (
       ObjectCreateMask |
       ObjectDestroyMask |
-      ObjectTypeMask |
       ObjectStateMask);
 }
 

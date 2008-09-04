@@ -90,8 +90,7 @@ dmz::QtPluginCanvasLayerModel::QtPluginCanvasLayerModel (
 
    _defaultAttrHandle = activate_default_object_attribute (
       ObjectCreateMask |
-      ObjectDestroyMask |
-      ObjectTypeMask);
+      ObjectDestroyMask);
 
    _linkAttrHandle = _defs.lookup_named_handle (ObjectAttributeLayerLinkName);
 
@@ -204,9 +203,10 @@ dmz::QtPluginCanvasLayerModel::create_layer (
 
          if (layerHandle) {
 
-            _objectModule->activate_object (layerHandle);
+            if (_objectModule->activate_object (layerHandle)) {
 
-            _log.debug << "Root Layer Created: " << layerHandle << endl;
+               _log.debug << "Root Layer Created: " << layerHandle << endl;
+            }
          }
       }
 
@@ -698,27 +698,6 @@ dmz::QtPluginCanvasLayerModel::unlink_objects (
          // beginRemoveRows (QModelIndex (), 0, _get_layer_count () - 1);
          // endRemoveRows ();
       }
-   }
-}
-
-
-void
-dmz::QtPluginCanvasLayerModel::update_object_type (
-      const UUID &Identity,
-      const Handle ObjectHandle,
-      const Handle AttributeHandle,
-      const ObjectType &Value,
-      const ObjectType *PreviousValue) {
-
-   if (_layerItemTable.lookup (ObjectHandle)) {
-
-      // if (AttributeHandle == _defaultAttrHandle) {
-      //
-      //    Mask objState;
-      //    _lookup_object_state (ObjectHandle, objState);
-      //
-      //    _update_object (ObjectHandle, Value, objState);
-      // }
    }
 }
 

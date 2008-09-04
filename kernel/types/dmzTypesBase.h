@@ -69,6 +69,19 @@ namespace dmz {
    typedef float Float32; //!< 32 Bit floating point.
    typedef double Float64; //!< 64 Bit floating point.
 
+   DMZ_KERNEL_LINK_SYMBOL extern const Int8 MinInt8;
+   DMZ_KERNEL_LINK_SYMBOL extern const Int8 MaxInt8;
+   DMZ_KERNEL_LINK_SYMBOL extern const UInt8 MaxUInt8;
+   DMZ_KERNEL_LINK_SYMBOL extern const Int16 MinInt16;
+   DMZ_KERNEL_LINK_SYMBOL extern const Int16 MaxInt16;
+   DMZ_KERNEL_LINK_SYMBOL extern const UInt16 MaxUInt16;
+   DMZ_KERNEL_LINK_SYMBOL extern const Int32 MinInt32;
+   DMZ_KERNEL_LINK_SYMBOL extern const Int32 MaxInt32;
+   DMZ_KERNEL_LINK_SYMBOL extern const UInt32 MaxUInt32;
+   DMZ_KERNEL_LINK_SYMBOL extern const Int64 MinInt64;
+   DMZ_KERNEL_LINK_SYMBOL extern const Int64 MaxInt64;
+   DMZ_KERNEL_LINK_SYMBOL extern const UInt64 MaxUInt64;
+
    typedef bool Boolean; //!< Boolean type values. Compatible with built in type bool.
    DMZ_KERNEL_LINK_SYMBOL extern const Boolean False;
    DMZ_KERNEL_LINK_SYMBOL extern const Boolean True;

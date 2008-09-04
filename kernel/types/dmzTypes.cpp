@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #include <dmzTypesArrays.h>
 
@@ -30,7 +31,7 @@ Used to define the native type of an attribute. @see Data
 
 */
 
-#if  defined (__APPLE__) || defined (MACOSX)
+#if defined (__APPLE__) || defined (MACOSX)
 // Note: This is a work around for an issue with gcc and debug information.
 // It seems that when an inline class is used, the debug info is associated
 // with the dylib that is loaded first and when it is unloaded the debug symbols are
@@ -46,6 +47,19 @@ static const dmz::ArrayInt64 LocalWorkArroundArrayInt64;
 static const dmz::ArrayFloat32 LocalWorkArroundArrayFloat32;
 static const dmz::ArrayFloat64 LocalWorkArroundArrayFloat64;
 #endif
+
+const dmz::Int8 dmz::MinInt8 = SCHAR_MIN;
+const dmz::Int8 dmz::MaxInt8 = SCHAR_MAX;
+const dmz::UInt8 dmz::MaxUInt8 = UCHAR_MAX;
+const dmz::Int16 dmz::MinInt16 = SHRT_MIN;
+const dmz::Int16 dmz::MaxInt16 = SHRT_MAX;
+const dmz::UInt16 dmz::MaxUInt16 = USHRT_MAX;
+const dmz::Int32 dmz::MinInt32 = LONG_MIN;
+const dmz::Int32 dmz::MaxInt32 = LONG_MAX;
+const dmz::UInt32 dmz::MaxUInt32 = ULONG_MAX;
+const dmz::Int64 dmz::MinInt64 = LLONG_MIN;
+const dmz::Int64 dmz::MaxInt64 = LLONG_MAX;
+const dmz::UInt64 dmz::MaxUInt64 = ULLONG_MAX;
 
 //! Constant true value.
 const dmz::Boolean dmz::False = false;

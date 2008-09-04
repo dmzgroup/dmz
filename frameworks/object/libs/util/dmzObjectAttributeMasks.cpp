@@ -6,13 +6,16 @@
 //! \cond
 const dmz::Mask dmz::ObjectCreateMask (0, dmz::ObjectAttributeCreateObject);
 const dmz::Mask dmz::ObjectDestroyMask (0, dmz::ObjectAttributeDestroyObject);
+const dmz::Mask dmz::ObjectLocalityMask (0, dmz::ObjectAttributeLocality);
 const dmz::Mask dmz::ObjectUUIDMask (0, dmz::ObjectAttributeUUID);
 const dmz::Mask dmz::ObjectRemoveAttributeMask (0, dmz::ObjectAttributeRemove);
 const dmz::Mask dmz::ObjectLinkMask (0, dmz::ObjectAttributeLink);
 const dmz::Mask dmz::ObjectUnlinkMask (0, dmz::ObjectAttributeUnlink);
 const dmz::Mask dmz::ObjectLinkAttributeMask (0, dmz::ObjectAttributeLinkObject);
-const dmz::Mask dmz::ObjectLocalityMask (0, dmz::ObjectAttributeLocality);
-const dmz::Mask dmz::ObjectTypeMask (0, dmz::ObjectAttributeObjectType);
+const dmz::Mask dmz::ObjectCounterMask (0, dmz::ObjectAttributeCounter);
+const dmz::Mask dmz::ObjectMinCounterMask (0, dmz::ObjectAttributeCounterMin);
+const dmz::Mask dmz::ObjectMaxCounterMask (0, dmz::ObjectAttributeCounterMax);
+const dmz::Mask dmz::ObjectAltTypeMask (0, dmz::ObjectAttributeAltObjectType);
 const dmz::Mask dmz::ObjectStateMask (0, dmz::ObjectAttributeState);
 const dmz::Mask dmz::ObjectFlagMask (0, dmz::ObjectAttributeFlag);
 const dmz::Mask dmz::ObjectTimeStampMask (0, dmz::ObjectAttributeTimeStamp);
@@ -52,7 +55,10 @@ dmz::string_to_object_attribute_mask (const String &Value, Log *log) {
 
       if (token == "all") { result |= ObjectAllMask; }
       else if (token == "link") { result |= ObjectLinkMask; }
-      else if (token == "type") { result |= ObjectTypeMask; }
+      else if (token == "counter") { result |= ObjectCounterMask; }
+      else if (token == "mincounter") { result |= ObjectMinCounterMask; }
+      else if (token == "maxcounter") { result |= ObjectMaxCounterMask; }
+      else if (token == "alttype") { result |= ObjectAltTypeMask; }
       else if (token == "state") { result |= ObjectStateMask; }
       else if (token == "flag") { result |= ObjectFlagMask; }
       else if (token == "timestamp") { result |= ObjectTimeStampMask; }
@@ -113,10 +119,28 @@ dmz::object_attribute_mask_to_string (const Mask &Value) {
       result << "link";
    }
 
-   if (Value.contains (ObjectTypeMask)) {
+   if (Value.contains (ObjectCounterMask)) {
 
       local_add_or (result);
-      result << "type";
+      result << "counter";
+   }
+
+   if (Value.contains (ObjectMinCounterMask)) {
+
+      local_add_or (result);
+      result << "mincounter";
+   }
+
+   if (Value.contains (ObjectMaxCounterMask)) {
+
+      local_add_or (result);
+      result << "maxcounter";
+   }
+
+   if (Value.contains (ObjectAltTypeMask)) {
+
+      local_add_or (result);
+      result << "alttype";
    }
 
    if (Value.contains (ObjectStateMask)) {

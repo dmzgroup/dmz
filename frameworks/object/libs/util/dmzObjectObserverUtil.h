@@ -49,6 +49,12 @@ namespace dmz {
 
          virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
 
+         virtual void update_object_locality (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const ObjectLocalityEnum Locality,
+            const ObjectLocalityEnum PrevLocality);
+
          virtual void update_object_uuid (
             const Handle ObjectHandle,
             const UUID &Identity,
@@ -59,12 +65,6 @@ namespace dmz {
             const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Mask &AttrMask);
-
-         virtual void update_object_locality (
-            const UUID &Identity,
-            const Handle ObjectHandle,
-            const ObjectLocalityEnum Locality,
-            const ObjectLocalityEnum PrevLocality);
 
          virtual void link_objects (
             const Handle LinkHandle,
@@ -94,7 +94,28 @@ namespace dmz {
             const UUID &PrevAttributeIdentity,
             const Handle PrevAttributeObjectHandle);
 
-         virtual void update_object_type (
+         virtual void update_object_counter (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 Value,
+            const Int64 *PreviousValue);
+
+         virtual void update_object_counter_minimum (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 Value,
+            const Int64 *PreviousValue);
+
+         virtual void update_object_counter_maximum (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 Value,
+            const Int64 *PreviousValue);
+
+         virtual void update_object_alternate_type (
             const UUID &Identity,
             const Handle ObjectHandle,
             const Handle AttributeHandle,

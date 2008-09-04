@@ -26,13 +26,16 @@ namespace {
 
    static const dmz::Mask CreateMask (0, dmz::ObjectAttributeCreateObject);
    static const dmz::Mask DestroyMask (0, dmz::ObjectAttributeDestroyObject);
+   static const dmz::Mask LocalityMask (0, dmz::ObjectAttributeLocality);
    static const dmz::Mask UUIDMask (0, dmz::ObjectAttributeUUID);
    static const dmz::Mask RemoveMask (0, dmz::ObjectAttributeRemove);
    static const dmz::Mask LinkMask (0, dmz::ObjectAttributeLink);
    static const dmz::Mask UnlinkMask (0, dmz::ObjectAttributeUnlink);
    static const dmz::Mask LinkAttributeMask (0, dmz::ObjectAttributeLinkObject);
-   static const dmz::Mask LocalityMask (0, dmz::ObjectAttributeLocality);
-   static const dmz::Mask ObjectTypeMask (0, dmz::ObjectAttributeObjectType);
+   static const dmz::Mask CounterMask (0, dmz::ObjectAttributeCounter);
+   static const dmz::Mask MinCounterMask (0, dmz::ObjectAttributeCounterMin);
+   static const dmz::Mask MaxCounterMask (0, dmz::ObjectAttributeCounterMax);
+   static const dmz::Mask AltObjectTypeMask (0, dmz::ObjectAttributeAltObjectType);
    static const dmz::Mask StateMask (0, dmz::ObjectAttributeState);
    static const dmz::Mask FlagMask (0, dmz::ObjectAttributeFlag);
    static const dmz::Mask TimeStampMask (0, dmz::ObjectAttributeTimeStamp);
@@ -106,7 +109,10 @@ dmz::ObjectModuleBasic::~ObjectModuleBasic () {
    _linkObsTable.empty ();
    _unlinkObsTable.empty ();
    _linkAttrTable.empty ();
-   _objectTypeTable.empty ();
+   _counterTable.empty ();
+   _minCounterTable.empty ();
+   _maxCounterTable.empty ();
+   _altTypeTable.empty ();
    _stateTable.empty ();
    _flagTable.empty ();
    _timeStampTable.empty ();
@@ -479,8 +485,8 @@ dmz::ObjectModuleBasic::create_object (
             if (_objectTable.store (result, obj)) {
 
                _objectCache = obj;
+               obj->type = Type;
                store_locality (result, Locality);
-               store_object_type (result, _defaultHandle, Type);
             }
          }
          else {
@@ -625,9 +631,9 @@ dmz::ObjectModuleBasic::clone_object (
 
       if (clone) {
 
-         ObjectType *type (clone->typeTable.lookup (0));
-
-         result = clone->get_handle (type->get_name (), _PluginInfoData.get_context ());
+         result = clone->get_handle (
+            clone->type.get_name (),
+            _PluginInfoData.get_context ());
 
          if (result) {
 
@@ -708,6 +714,19 @@ dmz::ObjectModuleBasic::clone_object (
 }
 
 
+dmz::ObjectType
+dmz::ObjectModuleBasic::lookup_object_type (const Handle ObjectHandle) {
+
+   ObjectType result;
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj) { result = obj->type; }
+
+   return result;
+}
+
+
 dmz::Boolean
 dmz::ObjectModuleBasic::remove_attribute (
       const Handle ObjectHandle,
@@ -722,9 +741,17 @@ dmz::ObjectModuleBasic::remove_attribute (
 
       Mask foundMask;
 
-      if ((AttributeHandle != _defaultHandle) && (ObjectTypeMask & AttributeMask)) {
+      if (CounterMask & AttributeMask) {
 
-         if (obj->typeTable.lookup (AttributeHandle)) { foundMask |= ObjectTypeMask; }
+         if (obj->counterTable.lookup (AttributeHandle)) { foundMask |= CounterMask; }
+      }
+
+      if (AltObjectTypeMask & AttributeMask) {
+
+         if (obj->altTypeTable.lookup (AttributeHandle)) {
+
+            foundMask |= AltObjectTypeMask;
+         }
       }
 
       if (StateMask & AttributeMask) {
@@ -1279,9 +1306,401 @@ dmz::ObjectModuleBasic::lookup_locality (const UUID &Identity) {
    return result;
 }
 
+dmz::Boolean
+dmz::ObjectModuleBasic::store_counter (
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value) {
+
+   Boolean result (False);
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj && AttributeHandle) {
+
+      obj->attrTable.store (AttributeHandle, (void *)this);
+
+      Int64 prevValue (0);
+      Boolean prevValueExists (True);
+      Boolean updateObservers (True);
+
+      result = True;
+
+      CounterStruct *cs (obj->counterTable.lookup (AttributeHandle));
+
+      if (cs) {
+
+         Int64 realValue (Value);
+
+         if (cs->min && (Value < *(cs->min))) { realValue = *(cs->min); }
+         if (cs->max && (Value > *(cs->max))) { realValue = *(cs->max); }
+
+         if (realValue != cs->counter) {
+
+            prevValue = cs->counter; 
+            cs->counter = realValue;
+         }
+         else { updateObservers = False; }
+      }
+      else {
+
+         prevValueExists = False;
+
+         cs = new CounterStruct;
+
+         if (!obj->counterTable.store (AttributeHandle, cs)) {
+
+            result = False;
+            delete cs; cs = 0;
+         }
+         else { cs->counter = Value; }
+      }
+
+      if (updateObservers && obj->active && cs) {
+
+         if (!_inObsUpdate) {
+
+            update_object_counter (
+               obj->uuid,
+               ObjectHandle,
+               AttributeHandle,
+               Value,
+               prevValueExists ? &prevValue : 0);
+         }
+         else {
+
+            _add_observer_update (new UpdateCounterStruct (
+               CounterValue,
+               obj->uuid,
+               ObjectHandle,
+               AttributeHandle,
+               Value,
+               prevValueExists ? &prevValue : 0));
+         }
+      }
+   }
+
+   return result;
+}
+
 
 dmz::Boolean
-dmz::ObjectModuleBasic::store_object_type (
+dmz::ObjectModuleBasic::lookup_counter (
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      Int64 &value) {
+
+   Boolean result (False);
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj) {
+
+      CounterStruct *ptr (obj->counterTable.lookup (AttributeHandle));
+
+      if (ptr) { value = ptr->counter; result = True; }
+   }
+
+   return result;
+}
+
+
+
+dmz::Int64
+dmz::ObjectModuleBasic::add_to_counter (
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value) {
+
+   Int64 result (0);
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj && AttributeHandle) {
+
+      CounterStruct *ptr (obj->counterTable.lookup (AttributeHandle));
+
+      if (ptr) {
+
+         Int64 newCounter (ptr->counter);
+
+         const Int64 Min (ptr->min ? *(ptr->min) : MinInt64);
+         const Int64 Max (ptr->max ? *(ptr->max) : MaxInt64);
+
+         if (Value > 0) {
+
+            if (ptr->counter > 0) {
+
+               const Int64 Diff (Max - ptr->counter);
+
+               if (Value > Diff) {
+
+                  if (ptr->rollover) { newCounter = Min + (Value - Diff); }
+                  else { newCounter = Max; }
+               }
+               else { newCounter += Value; }
+            }
+            else { newCounter += Value; }
+         }
+         else {
+
+            if (ptr->counter < 0) {
+
+               const Int64 Diff (Min - ptr->counter);
+
+               if (Value < Diff) {
+
+                  if (ptr->rollover) { newCounter = Max + (Value - Diff); }
+                  else { newCounter = Min; }
+               }
+               else { newCounter += Value; }
+            }
+            else { newCounter += Value; }
+         }
+
+         result = store_counter (ObjectHandle, AttributeHandle, newCounter);
+      }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::ObjectModuleBasic::store_counter_minimum (
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value) {
+
+   Boolean result (False);
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj && AttributeHandle) {
+
+      obj->attrTable.store (AttributeHandle, (void *)this);
+
+      result = True;
+
+      Int64 prevValue;
+      CounterStruct *ptr (obj->counterTable.lookup (AttributeHandle));
+
+      Boolean prevValueExists (True);
+      Boolean updateObservers (True);
+
+      if (ptr) {
+
+         if (!(ptr->min)) { ptr->min = new Int64 (Value); prevValueExists = False; }
+         else if (Value != *(ptr->min)) { prevValue = *(ptr->min); *(ptr->min) = Value; }
+         else { updateObservers = False; }
+      }
+      else if (!ptr) {
+
+         prevValueExists = False;
+
+         ptr = new CounterStruct;
+
+         if (obj->counterTable.store (AttributeHandle, ptr)) {
+
+            ptr->min = new Int64 (Value);
+         }
+         else {
+
+            result = False;
+            delete ptr; ptr = 0;
+         }
+      }
+
+      if (updateObservers && obj->active && ptr) {
+
+         if (!_inObsUpdate) {
+
+            update_object_counter_minimum (
+               obj->uuid,
+               ObjectHandle,
+               AttributeHandle,
+               Value,
+               prevValueExists ? &prevValue : 0);
+         }
+         else {
+
+            _add_observer_update (new UpdateCounterStruct (
+               CounterMin,
+               obj->uuid,
+               ObjectHandle,
+               AttributeHandle,
+               Value,
+               prevValueExists ? &prevValue : 0));
+         }
+      }
+
+      if (ptr->counter < Value) { store_counter (ObjectHandle, AttributeHandle, Value); }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::ObjectModuleBasic::lookup_counter_minimum (
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      Int64 &value) {
+
+   Boolean result (False);
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj) {
+
+      CounterStruct *ptr (obj->counterTable.lookup (AttributeHandle));
+
+      if (ptr && ptr->min) { value = *(ptr->min); result = True; }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::ObjectModuleBasic::store_counter_maximum (
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value) {
+
+   Boolean result (False);
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj && AttributeHandle) {
+
+      obj->attrTable.store (AttributeHandle, (void *)this);
+
+      result = True;
+
+      Int64 prevValue;
+      CounterStruct *ptr (obj->counterTable.lookup (AttributeHandle));
+
+      Boolean prevValueExists (True);
+      Boolean updateObservers (True);
+
+      if (ptr) {
+
+         if (!(ptr->max)) { ptr->max = new Int64 (Value); prevValueExists = False; }
+         else if (Value != *(ptr->max)) { prevValue = *(ptr->max); *(ptr->max) = Value; }
+         else { updateObservers = False; }
+      }
+      else if (!ptr) {
+
+         prevValueExists = False;
+
+         ptr = new CounterStruct;
+
+         if (obj->counterTable.store (AttributeHandle, ptr)) {
+
+            ptr->max = new Int64 (Value);
+         }
+         else {
+
+            result = False;
+            delete ptr; ptr = 0;
+         }
+      }
+
+      if (updateObservers && obj->active && ptr) {
+
+         if (!_inObsUpdate) {
+
+            update_object_counter_maximum (
+               obj->uuid,
+               ObjectHandle,
+               AttributeHandle,
+               Value,
+               prevValueExists ? &prevValue : 0);
+         }
+         else {
+
+            _add_observer_update (new UpdateCounterStruct (
+               CounterMax,
+               obj->uuid,
+               ObjectHandle,
+               AttributeHandle,
+               Value,
+               prevValueExists ? &prevValue : 0));
+         }
+      }
+
+      if (ptr->counter > Value) { store_counter (ObjectHandle, AttributeHandle, Value); }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::ObjectModuleBasic::lookup_counter_maximum (
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      Int64 &value) {
+
+   Boolean result (False);
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj) {
+
+      CounterStruct *ptr (obj->counterTable.lookup (AttributeHandle));
+
+      if (ptr && ptr->max) { value = *(ptr->max); result = True; }
+   }
+
+   return result;
+}
+
+dmz::Boolean
+dmz::ObjectModuleBasic::store_counter_rollover (
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Boolean Value) {
+
+   Boolean result (False);
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj) {
+
+      CounterStruct *ptr (obj->counterTable.lookup (AttributeHandle));
+
+      if (ptr) { ptr->rollover = Value; result = True; }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::ObjectModuleBasic::lookup_counter_rollover (
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      Boolean &value) {
+
+   Boolean result (False);
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj) {
+
+      CounterStruct *ptr (obj->counterTable.lookup (AttributeHandle));
+
+      if (ptr) { value = ptr->rollover; result = True; }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::ObjectModuleBasic::store_alternate_object_type (
       const Handle ObjectHandle,
       const Handle AttributeHandle,
       const ObjectType &Value) {
@@ -1290,8 +1709,6 @@ dmz::ObjectModuleBasic::store_object_type (
 
    ObjectStruct *obj (_lookup_object (ObjectHandle));
 
-   if (!Value && (AttributeHandle == _defaultHandle)) { obj = 0; }
-
    if (obj && AttributeHandle) {
 
       obj->attrTable.store (AttributeHandle, (void *)this);
@@ -1299,7 +1716,7 @@ dmz::ObjectModuleBasic::store_object_type (
       result = True;
 
       ObjectType prevValue;
-      ObjectType *ptr (obj->typeTable.lookup (AttributeHandle));
+      ObjectType *ptr (obj->altTypeTable.lookup (AttributeHandle));
 
       Boolean prevValueExists (True);
       Boolean updateObservers (True);
@@ -1315,7 +1732,7 @@ dmz::ObjectModuleBasic::store_object_type (
 
          ptr = new ObjectType (Value);
 
-         if (!obj->typeTable.store (AttributeHandle, ptr)) {
+         if (!obj->altTypeTable.store (AttributeHandle, ptr)) {
 
             result = False;
             delete ptr; ptr = 0;
@@ -1326,7 +1743,7 @@ dmz::ObjectModuleBasic::store_object_type (
 
          if (!_inObsUpdate) {
 
-            update_object_type (
+            update_object_alternate_type (
                obj->uuid,
                ObjectHandle,
                AttributeHandle,
@@ -1335,7 +1752,7 @@ dmz::ObjectModuleBasic::store_object_type (
          }
          else {
 
-            _add_observer_update (new ObjectTypeStruct (
+            _add_observer_update (new AltObjectTypeStruct (
                obj->uuid,
                ObjectHandle,
                AttributeHandle,
@@ -1350,7 +1767,7 @@ dmz::ObjectModuleBasic::store_object_type (
 
 
 dmz::Boolean
-dmz::ObjectModuleBasic::lookup_object_type (
+dmz::ObjectModuleBasic::lookup_alternate_object_type (
       const Handle ObjectHandle,
       const Handle AttributeHandle,
       ObjectType &value) {
@@ -1361,7 +1778,7 @@ dmz::ObjectModuleBasic::lookup_object_type (
 
    if (obj) {
 
-      ObjectType *ptr (obj->typeTable.lookup (AttributeHandle));
+      ObjectType *ptr (obj->altTypeTable.lookup (AttributeHandle));
 
       if (ptr) { value = *ptr; result = True; }
    }
@@ -2589,9 +3006,15 @@ dmz::ObjectModuleBasic::remove_object_attribute (
 
    if (obj) {
 
-      if (ObjectTypeMask & AttrMask) {
+      if (CounterMask & AttrMask) {
 
-         ObjectType *ptr (obj->typeTable.remove (AttributeHandle));
+         CounterStruct *ptr (obj->counterTable.remove (AttributeHandle));
+         if (ptr) { delete ptr; ptr = 0; }
+      }
+
+      if (AltObjectTypeMask & AttrMask) {
+
+         ObjectType *ptr (obj->altTypeTable.remove (AttributeHandle));
          if (ptr) { delete ptr; ptr = 0; }
       }
 
@@ -2921,16 +3344,16 @@ dmz::ObjectModuleBasic::update_link_attribute_object (
 
 
 void
-dmz::ObjectModuleBasic::update_object_type (
+dmz::ObjectModuleBasic::update_object_counter (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const ObjectType &Value,
-      const ObjectType *PreviousValue) {
+      const Int64 &Value,
+      const Int64 *PreviousValue) {
 
    _inObsUpdate = True;
 
-   ObjectObserverStruct *os (_objectTypeTable.lookup (AttributeHandle));
+   ObjectObserverStruct *os (_counterTable.lookup (AttributeHandle));
 
    if (os) {
 
@@ -2940,7 +3363,7 @@ dmz::ObjectModuleBasic::update_object_type (
 
       while (obs) {
 
-         obs->update_object_type (
+         obs->update_object_counter (
             Identity,
             ObjectHandle,
             AttributeHandle,
@@ -2959,7 +3382,175 @@ dmz::ObjectModuleBasic::update_object_type (
 
       while (obs) {
 
-         obs->update_object_type (
+         obs->update_object_counter (
+            Identity,
+            ObjectHandle,
+            AttributeHandle,
+            Value,
+            PreviousValue);
+
+         obs = _globalTable.get_next (it);
+      }
+   }
+
+   _inObsUpdate = False;
+
+   _update_observers ();
+}
+
+
+void
+dmz::ObjectModuleBasic::update_object_counter_minimum (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 &Value,
+      const Int64 *PreviousValue) {
+
+   _inObsUpdate = True;
+
+   ObjectObserverStruct *os (_minCounterTable.lookup (AttributeHandle));
+
+   if (os) {
+
+      HashTableHandleIterator it;
+
+      ObjectObserver *obs (os->get_first (it));
+
+      while (obs) {
+
+         obs->update_object_counter_minimum (
+            Identity,
+            ObjectHandle,
+            AttributeHandle,
+            Value,
+            PreviousValue);
+
+         obs = os->get_next (it);
+      }
+   }
+
+   if (_globalCount > 0) {
+
+      HashTableHandleIterator it;
+
+      ObjectObserver *obs (_globalTable.get_first (it));
+
+      while (obs) {
+
+         obs->update_object_counter_minimum (
+            Identity,
+            ObjectHandle,
+            AttributeHandle,
+            Value,
+            PreviousValue);
+
+         obs = _globalTable.get_next (it);
+      }
+   }
+
+   _inObsUpdate = False;
+
+   _update_observers ();
+}
+
+
+void
+dmz::ObjectModuleBasic::update_object_counter_maximum (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 &Value,
+      const Int64 *PreviousValue) {
+
+   _inObsUpdate = True;
+
+   ObjectObserverStruct *os (_maxCounterTable.lookup (AttributeHandle));
+
+   if (os) {
+
+      HashTableHandleIterator it;
+
+      ObjectObserver *obs (os->get_first (it));
+
+      while (obs) {
+
+         obs->update_object_counter_maximum (
+            Identity,
+            ObjectHandle,
+            AttributeHandle,
+            Value,
+            PreviousValue);
+
+         obs = os->get_next (it);
+      }
+   }
+
+   if (_globalCount > 0) {
+
+      HashTableHandleIterator it;
+
+      ObjectObserver *obs (_globalTable.get_first (it));
+
+      while (obs) {
+
+         obs->update_object_counter_maximum (
+            Identity,
+            ObjectHandle,
+            AttributeHandle,
+            Value,
+            PreviousValue);
+
+         obs = _globalTable.get_next (it);
+      }
+   }
+
+   _inObsUpdate = False;
+
+   _update_observers ();
+}
+
+
+void
+dmz::ObjectModuleBasic::update_object_alternate_type (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const ObjectType &Value,
+      const ObjectType *PreviousValue) {
+
+   _inObsUpdate = True;
+
+   ObjectObserverStruct *os (_altTypeTable.lookup (AttributeHandle));
+
+   if (os) {
+
+      HashTableHandleIterator it;
+
+      ObjectObserver *obs (os->get_first (it));
+
+      while (obs) {
+
+         obs->update_object_alternate_type (
+            Identity,
+            ObjectHandle,
+            AttributeHandle,
+            Value,
+            PreviousValue);
+
+         obs = os->get_next (it);
+      }
+   }
+
+   if (_globalCount > 0) {
+
+      HashTableHandleIterator it;
+
+      ObjectObserver *obs (_globalTable.get_first (it));
+
+      while (obs) {
+
+         obs->update_object_alternate_type (
             Identity,
             ObjectHandle,
             AttributeHandle,
@@ -3765,9 +4356,24 @@ dmz::ObjectModuleBasic::_update_subscription (
       local_update_os (AddObs, ObsHandle, AttributeHandle, _linkAttrTable, &obs);
    }
 
-   if (ObjectTypeMask & AttributeMask) {
+   if (CounterMask & AttributeMask) {
 
-      local_update_os (AddObs, ObsHandle, AttributeHandle, _objectTypeTable, &obs);
+      local_update_os (AddObs, ObsHandle, AttributeHandle, _counterTable, &obs);
+   }
+
+   if (MinCounterMask & AttributeMask) {
+
+      local_update_os (AddObs, ObsHandle, AttributeHandle, _minCounterTable, &obs);
+   }
+
+   if (MaxCounterMask & AttributeMask) {
+
+      local_update_os (AddObs, ObsHandle, AttributeHandle, _maxCounterTable, &obs);
+   }
+
+   if (AltObjectTypeMask & AttributeMask) {
+
+      local_update_os (AddObs, ObsHandle, AttributeHandle, _altTypeTable, &obs);
    }
 
    if (StateMask & AttributeMask) {
@@ -3920,7 +4526,7 @@ dmz::ObjectModuleBasic::_dump_object_attributes_to_observer (
 
    if ((CreateMask & AttributeMask) && (AttributeHandle == _defaultHandle)) {
 
-      ObjectType *ptr (Obj.typeTable.lookup (_defaultHandle));
+      ObjectType *ptr (Obj.altTypeTable.lookup (_defaultHandle));
 
       if (ptr) {
 
@@ -3938,13 +4544,18 @@ dmz::ObjectModuleBasic::_dump_object_attributes_to_observer (
       }
    }
 
-   if (ObjectTypeMask & AttributeMask) {
+   if (AltObjectTypeMask & AttributeMask) {
 
-      ObjectType *ptr (Obj.typeTable.lookup (AttributeHandle));
+      ObjectType *ptr (Obj.altTypeTable.lookup (AttributeHandle));
 
       if (ptr) {
 
-         obs.update_object_type (Obj.uuid, Obj.handle, AttributeHandle, *ptr, 0);
+         obs.update_object_alternate_type (
+            Obj.uuid,
+            Obj.handle,
+            AttributeHandle,
+            *ptr,
+            0);
       }
    }
 
@@ -4044,6 +4655,51 @@ dmz::ObjectModuleBasic::_dump_object_attributes_to_observer (
 
             ptr = lt->get_next (it);
          }
+      }
+   }
+
+   if (CounterMask & AttributeMask) {
+
+      CounterStruct *ptr (Obj.counterTable.lookup (AttributeHandle));
+
+      if (ptr) {
+
+         obs.update_object_counter (
+            Obj.uuid,
+            Obj.handle,
+            AttributeHandle,
+            ptr->counter,
+            0);
+      }
+   }
+
+   if (MinCounterMask & AttributeMask) {
+
+      CounterStruct *ptr (Obj.counterTable.lookup (AttributeHandle));
+
+      if (ptr && ptr->min) {
+
+         obs.update_object_counter_minimum (
+            Obj.uuid,
+            Obj.handle,
+            AttributeHandle,
+            *(ptr->min),
+            0);
+      }
+   }
+
+   if (MaxCounterMask & AttributeMask) {
+
+      CounterStruct *ptr (Obj.counterTable.lookup (AttributeHandle));
+
+      if (ptr && ptr->max) {
+
+         obs.update_object_counter_maximum (
+            Obj.uuid,
+            Obj.handle,
+            AttributeHandle,
+            *(ptr->max),
+            0);
       }
    }
 

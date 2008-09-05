@@ -154,14 +154,66 @@ dmz::ObjectPluginDump::update_link_attribute_object (
 
 
 void
-dmz::ObjectPluginDump::update_object_type (
+dmz::ObjectPluginDump::update_object_counter (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value,
+      const Int64 *PreviousValue) {
+
+   String pstr ("<NULL>");
+   if (PreviousValue) { pstr.flush () << *PreviousValue; }
+
+   _log.debug << "Counter[" << ObjectHandle << "]:"
+      << _attr_name (AttributeHandle)
+      << ":" << Value << " previous: " << pstr << endl;
+}
+
+
+void
+dmz::ObjectPluginDump::update_object_counter_minimum (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value,
+      const Int64 *PreviousValue) {
+
+   String pstr ("<NULL>");
+   if (PreviousValue) { pstr.flush () << *PreviousValue; }
+
+   _log.debug << "Counter Minimum[" << ObjectHandle << "]:"
+      << _attr_name (AttributeHandle)
+      << ":" << Value << " previous: " << pstr << endl;
+}
+
+
+void
+dmz::ObjectPluginDump::update_object_counter_maximum (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value,
+      const Int64 *PreviousValue) {
+
+   String pstr ("<NULL>");
+   if (PreviousValue) { pstr.flush () << *PreviousValue; }
+
+   _log.debug << "Counter Maximum[" << ObjectHandle << "]:"
+      << _attr_name (AttributeHandle)
+      << ":" << Value << " previous: " << pstr << endl;
+}
+
+
+void
+dmz::ObjectPluginDump::update_object_alternate_type (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
       const ObjectType &Value,
       const ObjectType *PreviousValue) {
 
-   _log.debug << "ObjectType[" << ObjectHandle << "]:" << _attr_name (AttributeHandle)
+   _log.debug << "Alternate ObjectType[" << ObjectHandle << "]:"
+      << _attr_name (AttributeHandle)
       << ":" << Value.get_name () << " previous: "
       << (PreviousValue ? PreviousValue->get_name () : "<NULL>") << endl;
 }

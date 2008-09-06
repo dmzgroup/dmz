@@ -1,6 +1,7 @@
 #include "dmzAudioPluginObject.h"
 #include <dmzAudioModule.h>
 #include <dmzAudioSoundAttributes.h>
+#include <dmzAudioSoundInit.h>
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectModule.h>
 #include <dmzRuntimeConfig.h>
@@ -130,14 +131,20 @@ dmz::AudioPluginObject::discover_plugin (
 
                SoundStruct *current (os->list);
 
-               SoundAttributes attr (os->pos, os->vel, 1.0, True);
+               SoundInit init;
+               init.set (SoundLooped, True);
+
+               SoundAttributes attr;
+               attr.set_position (os->pos);
+               attr.set_velocity (os->vel);
 
                while (current) {
 
+                  init.set (SoundRelative, current->Data.relative);
                   attr.set_pitch_scale (current->scale);
 
                   current->handle =
-                     _audioMod->play_sound (current->Data.loopHandle, attr);
+                     _audioMod->play_sound (current->Data.loopHandle, init, attr);
 
                   current = current->next;
                }
@@ -205,15 +212,20 @@ dmz::AudioPluginObject::update_time_slice (const Float64 TimeDelta) {
 
       while (os) {
 
-         SoundAttributes attr (os->pos, os->vel, 1.0, True);
-
          HashTableHandleIterator instanceIt;
 
          SoundStruct *current (os->list);
 
          while (current) {
 
+            SoundAttributes attr;
             attr.set_pitch_scale (current->scale);
+
+            if (!current->Data.relative) {
+
+               attr.set_position (os->pos);
+               attr.set_velocity (os->vel);
+            }
 
             if (current->handle) { _audioMod->update_sound (current->handle, attr); }
 
@@ -282,9 +294,17 @@ dmz::AudioPluginObject::update_object_state (
 
       SoundStruct *current = os->list;
 
-      SoundAttributes attr (os->pos, os->vel, 1.0, False);
-
       while (current) {
+
+         SoundInit init;
+         SoundAttributes attr;
+
+         if (!current->Data.relative) {
+
+            attr.set_position (os->pos);
+            attr.set_velocity (os->vel);
+         }
+         else { init.set (SoundRelative, True); }
 
          const Boolean IsSet (Value.contains (current->Data.State));
 
@@ -308,14 +328,15 @@ dmz::AudioPluginObject::update_object_state (
 
             if (PreviousValue && _audioMod && current->Data.activateHandle) {
 
-               attr.set_loop (False);
-               _audioMod->play_sound (current->Data.activateHandle, attr);
+               init.set (SoundLooped, False);
+               _audioMod->play_sound (current->Data.activateHandle, init, attr);
             }
 
             if (_audioMod && current->Data.loopHandle) {
 
-               attr.set_loop (True);
-               current->handle = _audioMod->play_sound (current->Data.loopHandle, attr);
+               init.set (SoundLooped, True);
+               current->handle =
+                  _audioMod->play_sound (current->Data.loopHandle, init, attr);
             }
          }
 
@@ -323,8 +344,8 @@ dmz::AudioPluginObject::update_object_state (
 
             if (_audioMod && current->Data.deactivateHandle) {
 
-               attr.set_loop (False);
-               _audioMod->play_sound (current->Data.deactivateHandle, attr);
+               init.set (SoundLooped, False);
+               _audioMod->play_sound (current->Data.deactivateHandle, init, attr);
             }
 
             if (_audioMod && current->Data.loopHandle) {
@@ -513,6 +534,7 @@ dmz::AudioPluginObject::_init_sound_struct (Config &data, SoundDefStruct &ss) {
 
    ss.offset = config_to_float64 ("offset", data, ss.offset);
    ss.scale = config_to_float64 ("scale", data, ss.scale);
+   ss.relative = config_to_boolean ("relative", data, ss.relative);
 }
 
 

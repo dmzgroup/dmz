@@ -12,6 +12,7 @@ namespace dmz {
    class Vector;
    class Matrix;
    class SoundAttributes;
+   class SoundInit;
 
    class AudioModule {
 
@@ -25,6 +26,7 @@ namespace dmz {
 
          virtual Handle play_sound (
             const Handle AudioHandle,
+            const SoundInit &Init,
             const SoundAttributes &Attributes) = 0;
 
          virtual Boolean update_sound (
@@ -33,6 +35,7 @@ namespace dmz {
 
          virtual Boolean lookup_sound (
             const Handle InstanceHandle,
+            SoundInit &init,
             SoundAttributes &attributes) = 0;
 
          virtual Boolean stop_sound (const Handle InstanceHandle) = 0;

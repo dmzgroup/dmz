@@ -486,6 +486,100 @@ SuperLink::encode (
 }
 
 
+class Counter : public Adapter {
+
+   public:
+      Counter (dmz::Config &local, dmz::RuntimeContext *context);
+
+      virtual void decode (
+         const dmz::Handle ObjectHandle,
+         dmz::Unmarshal &data,
+         dmz::ObjectModule &objMod);
+
+      virtual void encode (
+         const dmz::Handle ObjectHandle,
+         dmz::ObjectModule &objMod,
+         dmz::Marshal &data);
+
+   protected:
+      dmz::Boolean _includeCounter;
+      dmz::Boolean _includeMin;
+      dmz::Boolean _includeMax;
+      dmz::Boolean _includeRollover;
+};
+
+
+Counter::Counter (dmz::Config &local, dmz::RuntimeContext *context) :
+      Adapter (local, context),
+      _includeCounter (dmz::config_to_boolean ("counter", local, dmz::True)),
+      _includeMin (dmz::config_to_boolean ("minimum", local, dmz::False)),
+      _includeMax (dmz::config_to_boolean ("maximum", local, dmz::False)),
+      _includeRollover (dmz::config_to_boolean ("counter", local, dmz::False)) {;}
+
+void
+Counter::decode (
+      const dmz::Handle ObjectHandle,
+      dmz::Unmarshal &data,
+      dmz::ObjectModule &objMod) {
+
+   if (_includeMin) {
+
+      const dmz::Int64 Value (data.get_next_int64 ());
+      objMod.store_counter_minimum (ObjectHandle, _AttributeHandle, Value);
+      if (_LNVHandle) { objMod.store_counter_minimum (ObjectHandle, _LNVHandle, Value); }
+   }
+
+   if (_includeMax) {
+
+      const dmz::Int64 Value (data.get_next_int64 ());
+      objMod.store_counter_maximum (ObjectHandle, _AttributeHandle, Value);
+      if (_LNVHandle) { objMod.store_counter_maximum (ObjectHandle, _LNVHandle, Value); }
+   }
+
+   if (_includeCounter) {
+
+      const dmz::Int64 Value (data.get_next_int64 ());
+      objMod.store_counter (ObjectHandle, _AttributeHandle, Value);
+      if (_LNVHandle) { objMod.store_counter (ObjectHandle, _LNVHandle, Value); }
+   }
+}
+
+
+void
+Counter::encode (
+      const dmz::Handle ObjectHandle,
+      dmz::ObjectModule &objMod,
+      dmz::Marshal &data) {
+
+   dmz::Int64 value (0);
+
+   if (objMod.lookup_counter_minimum (ObjectHandle, _AttributeHandle, value)) {
+
+      if (_LNVHandle) { objMod.store_counter_minimum (ObjectHandle, _LNVHandle, value); }
+   }
+
+   if (_includeMin) { data.set_next_int64 (value); }
+
+   value = 0;
+
+   if (objMod.lookup_counter_maximum (ObjectHandle, _AttributeHandle, value)) {
+
+      if (_LNVHandle) { objMod.store_counter_maximum (ObjectHandle, _LNVHandle, value); }
+   }
+
+   if (_includeMax) { data.set_next_int64 (value); }
+
+   value = 0;
+
+   if (objMod.lookup_counter (ObjectHandle, _AttributeHandle, value)) {
+
+      if (_LNVHandle) { objMod.store_counter (ObjectHandle, _LNVHandle, value); }
+   }
+
+   if (_includeCounter) { data.set_next_int64 (value); }
+}
+
+
 class State : public Adapter {
 
    public:
@@ -1082,6 +1176,7 @@ dmz::NetExtPacketCodecObjectNative::create_object_adapter (
 
    if (Type == "link") { result = new SubLink (local, context); }
    else if (Type == "superlink") { result = new SuperLink (local, context); }
+   else if (Type == "counter") { result = new Counter (local, context); }
    else if (Type == "state") { result = new State (local, context); }
    else if (Type == "flag") { result = new Flag (local, context); }
    else if (Type == "position") { result = new Position (local, context); }

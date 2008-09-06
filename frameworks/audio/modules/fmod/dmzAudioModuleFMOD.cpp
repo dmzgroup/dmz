@@ -1,5 +1,6 @@
 #include "dmzAudioModuleFMOD.h"
 #include <dmzAudioSoundAttributes.h>
+#include <dmzAudioSoundInit.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -197,6 +198,7 @@ dmz::AudioModuleFMOD::destroy_audio_handle (const Handle AudioHandle) {
 dmz::Handle
 dmz::AudioModuleFMOD::play_sound (
       const Handle AudioHandle,
+      const SoundInit &Init,
       const SoundAttributes &Attributes) {
 
    Handle result (0);
@@ -235,6 +237,29 @@ dmz::AudioModuleFMOD::play_sound (
                   fmodResult = instance->channel->getFrequency (&(defaultFrequency));
 
                   instance->defaultFrequency = defaultFrequency;
+
+                  _error_check (errorHeader, fmodResult);
+
+                  // Set loop mode
+                  if (Init.get (SoundLooped)) {
+
+                     fmodResult = instance->channel->setMode (FMOD_LOOP_NORMAL);
+                  }
+                  else {
+
+                     fmodResult = instance->channel->setMode (FMOD_LOOP_OFF);
+                  }
+
+                  _error_check (errorHeader, fmodResult);
+
+                  if (Init.get (SoundRelative)) {
+
+                     fmodResult = instance->channel->setMode (FMOD_3D_HEADRELATIVE);
+                  }
+                  else {
+
+                     fmodResult = instance->channel->setMode (FMOD_3D_WORLDRELATIVE);
+                  }
 
                   _error_check (errorHeader, fmodResult);
 
@@ -298,17 +323,6 @@ dmz::AudioModuleFMOD::update_sound (
 
          FMOD_RESULT fmodResult (FMOD_OK);
 
-         // Set loop mode
-         if (Attributes.get_loop ()) {
-
-            fmodResult = instance->channel->setMode (FMOD_LOOP_NORMAL);
-         }
-         else {
-
-            fmodResult = instance->channel->setMode (FMOD_LOOP_OFF);
-         }
-
-         _error_check (errorHeader, fmodResult);
 
          fmodResult = instance->channel->setVolume (
                Float32 (Attributes.get_gain_scale()));
@@ -352,6 +366,7 @@ dmz::AudioModuleFMOD::update_sound (
 dmz::Boolean
 dmz::AudioModuleFMOD::lookup_sound (
       const Handle InstanceHandle,
+      SoundInit &init,
       SoundAttributes &attributes) {
 
    Boolean result (False);

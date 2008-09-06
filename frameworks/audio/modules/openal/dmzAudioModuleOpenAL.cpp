@@ -244,6 +244,7 @@ dmz::AudioModuleOpenAL::destroy_audio_handle (const Handle AudioHandle) {
 dmz::Handle
 dmz::AudioModuleOpenAL::play_sound (
       const Handle AudioHandle,
+      const SoundInit &Init,
       const SoundAttributes &Attributes) {
 
    Handle result (0);
@@ -254,22 +255,27 @@ dmz::AudioModuleOpenAL::play_sound (
    if (bs && ss) {
 
       result = ss->Handle.get_runtime_handle ();
-      ss->looped = Attributes.get_loop ();
 
       if (_soundTable.store (result, ss)) {
 
          alGenSources (1, &(ss->source));
          alSourcei (ss->source, AL_BUFFER, bs->buffer);
-         alSourcei (ss->source, AL_SOURCE_RELATIVE, AL_FALSE);
-         alSourcei (ss->source, AL_LOOPING, ss->looped ? AL_TRUE : AL_FALSE);
+
+         alSourcei (
+            ss->source,
+            AL_SOURCE_RELATIVE,
+            Init.get (SoundRelative) ? AL_TRUE : AL_FALSE);
+
+         alSourcei (ss->source, AL_LOOPING, Init.get (SoundLooped) ? AL_TRUE : AL_FALSE);
          alSourcef (ss->source, AL_GAIN, 1.0f);
 
-         if (!(ss->looped)) {
+         if (!Init.get (SoundLooped)) {
 
             _soundTimedTable.store (result, ss);
          }
 
          ss->attr = Attributes;
+         ss->init = Init;
 
          _update_sound (*ss);
 
@@ -308,13 +314,14 @@ dmz::AudioModuleOpenAL::update_sound (
 dmz::Boolean
 dmz::AudioModuleOpenAL::lookup_sound (
       const Handle InstanceHandle,
+      SoundInit &init,
       SoundAttributes &attributes) {
 
    Boolean result (False);
 
    SoundStruct *ss (_soundTable.lookup (InstanceHandle));
 
-   if (ss) { attributes = ss->attr; attributes.set_loop (ss->looped); result = True; }
+   if (ss) { attributes = ss->attr; init = ss->init; result = True; }
 
    return result;
 }

@@ -1,6 +1,7 @@
 #include "dmzAudioPluginEventSimple.h"
 #include <dmzAudioModule.h>
 #include <dmzAudioSoundAttributes.h>
+#include <dmzAudioSoundInit.h>
 #include <dmzEventCallbackMasks.h>
 #include <dmzEventConsts.h>
 #include <dmzEventModule.h>
@@ -128,10 +129,10 @@ dmz::AudioPluginEventSimple::close_event (
 
          if (eventMod->lookup_position (EventHandle, _defaultEventHandle, pos)) {
 
-            SoundAttributes sa;
-            sa.set_position (pos);
-            sa.set_loop (False);
-            _audioMod->play_sound (es->sound, sa);
+            SoundInit init;
+            SoundAttributes attributes;
+            attributes.set_position (pos);
+            _audioMod->play_sound (es->sound, init, attributes);
          }
       }
    }

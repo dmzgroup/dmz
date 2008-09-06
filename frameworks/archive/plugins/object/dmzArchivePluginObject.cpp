@@ -32,7 +32,12 @@
             <!-- more objects -->
             <object name="Last Sub Object Name" attribute="Attribute Object Name"/>
          </links>
-         <counter value="Counter Value" minimum="Min Value" maximum="Max Value"/>
+         <counter
+            value="Counter Value"
+            minimum="Min Value"
+            maximum="Max Value"
+            rollover="true/false"
+         />
          <alttype value="Type Name"/>
          <state value="State Names"/>
          <flag value="Boolean Value"/>
@@ -358,6 +363,17 @@ dmz::ArchivePluginObject::update_object_counter (
 
       String valueStr; valueStr << Value;
       config.store_attribute ("value", valueStr);
+
+      ObjectModule *objMod (get_object_module ());
+
+      if (objMod) {
+
+         Boolean rollover (False);
+
+         objMod->lookup_counter_rollover (ObjectHandle, AttributeHandle, rollover);
+
+         config.store_attribute ("rollover", (rollover ? "true" : "false"));
+      }
    }
 }
 
@@ -977,13 +993,59 @@ dmz::ArchivePluginObject::_store_object_attributes (
                   << AttributeName << endl;
             }
          }
+         else if (DataName == "counter") {
+
+            if (!FilterMask.contains (ObjectMinCounterMask)) {
+ 
+               String valueStr;
+
+               if (data.lookup_attribute ("minimum", valueStr)) {
+
+                  objMod->store_counter_minimum (
+                     ObjectHandle,
+                     AttrHandle,
+                     string_to_int64 (valueStr));
+               }
+            }
+
+            if (!FilterMask.contains (ObjectMaxCounterMask)) {
+ 
+               String valueStr;
+
+               if (data.lookup_attribute ("maximum", valueStr)) {
+
+                  objMod->store_counter_maximum (
+                     ObjectHandle,
+                     AttrHandle,
+                     string_to_int64 (valueStr));
+               }
+            }
+
+            if (!FilterMask.contains (ObjectCounterMask)) {
+ 
+               String valueStr;
+
+               if (data.lookup_attribute ("value", valueStr)) {
+
+                  objMod->store_counter (
+                     ObjectHandle,
+                     AttrHandle,
+                     string_to_int64 (valueStr));
+
+                  objMod->store_counter_rollover (
+                     ObjectHandle,
+                     AttrHandle,
+                     config_to_boolean ("rollover", data, False));
+               }
+            }
+         }
          else if (DataName == "alttype") {
 
-            const ObjectType Type (
-               config_to_string ("value", data),
-               get_plugin_runtime_context ());
+            if (!FilterMask.contains (ObjectAltTypeMask)) {
 
-            if (!FilterMask.contains (ObjectAltTypeMask) && Type) {
+               const ObjectType Type (
+                  config_to_string ("value", data),
+                  get_plugin_runtime_context ());
 
                objMod->store_alternate_object_type (ObjectHandle, AttrHandle, Type);
             }

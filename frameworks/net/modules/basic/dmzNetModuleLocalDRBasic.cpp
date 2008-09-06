@@ -44,6 +44,19 @@ namespace {
             dmz::Boolean &limitRate);
    };
 
+   class counterTest : public valueTest {
+
+      public:
+         counterTest (
+            const dmz::Handle AttributeHandle,
+            const dmz::Handle LNVHandle);
+
+         dmz::Boolean update_object (
+            const dmz::Handle ObjectHandle,
+            dmz::ObjectModule &module,
+            dmz::Boolean &limitRate);
+   };
+
    class stateTest : public valueTest {
 
       public:
@@ -211,6 +224,32 @@ zeroVelocityTest::update_object (
       else if (!dmz::is_zero64 (PMag) && dmz::is_zero64 (CMag)) { result = dmz::True; }
    }
    else if (FoundCurrent && !FoundPrevious) { result = dmz::True; }
+
+   return result;
+}
+
+
+counterTest::counterTest (
+      const dmz::Handle AttributeHandle,
+      const dmz::Handle LNVHandle) :
+      valueTest (AttributeHandle, LNVHandle, 0.0) {;}
+
+
+dmz::Boolean
+counterTest::update_object (
+      const dmz::Handle ObjectHandle,
+      dmz::ObjectModule &module,
+      dmz::Boolean &limitRate) {
+
+   dmz::Boolean result (dmz::False);
+
+   dmz::Int64 previous (0), current (0);
+
+   if (module.lookup_counter (ObjectHandle, _LNVHandle, previous) &&
+         module.lookup_counter (ObjectHandle, _AttributeHandle, current)) {
+
+      if (previous != current) { result = dmz::True; }
+   }
 
    return result;
 }
@@ -688,6 +727,10 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
             AttributeHandle,
             LNVHandle,
             config_to_float64 ("value", cd, 0.25));
+      }
+      else if (Type == "counter") {
+
+         next = new counterTest (AttributeHandle, LNVHandle);
       }
       else if (Type == "state") {
 

@@ -95,6 +95,7 @@ namespace dmz {
 
             Float64 offset;
             Float64 scale;
+            Boolean relative;
 
             SoundDefStruct *next;
 
@@ -106,6 +107,7 @@ namespace dmz {
                scalarAttributeHandle (0),
                offset (0.0),
                scale (1.0),
+               relative (False),
                next (0) {;}
 
             ~SoundDefStruct () { if (next) { delete next; next = 0; } }

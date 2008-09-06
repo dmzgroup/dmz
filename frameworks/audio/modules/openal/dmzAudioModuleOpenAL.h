@@ -3,6 +3,7 @@
 
 #include <dmzAudioModule.h>
 #include <dmzAudioSoundAttributes.h>
+#include <dmzAudioSoundInit.h>
 #include <dmzAudioWaveFile.h>
 #include <dmzRuntimeHandle.h>
 #include <dmzRuntimeLog.h>
@@ -50,6 +51,7 @@ namespace dmz {
 
          virtual Handle play_sound (
             const Handle AudioHandle,
+            const SoundInit &Init,
             const SoundAttributes &Attributes);
 
          virtual Boolean update_sound (
@@ -58,6 +60,7 @@ namespace dmz {
 
          virtual Boolean lookup_sound (
             const Handle InstanceHandle,
+            SoundInit &init,
             SoundAttributes &attributes);
 
          virtual Boolean stop_sound (const Handle InstanceHandle);
@@ -107,12 +110,11 @@ namespace dmz {
             const RuntimeHandle Handle;
             ALuint source;
             SoundAttributes attr;
-            Boolean looped;
+            SoundInit init;
 
             SoundStruct (RuntimeContext *context) :
                   Handle ("Sound Instance", context),
-                  source (0),
-                  looped (False) {;}
+                  source (0) {;}
 
             ~SoundStruct () {
 

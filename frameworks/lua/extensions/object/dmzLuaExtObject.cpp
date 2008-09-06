@@ -814,6 +814,42 @@ object_counter (lua_State *L) {
 
 
 static int
+object_counter_rollover (lua_State *L) {
+
+   int result (0);
+
+   Handle objHandle (0);
+   Handle attrHandle (0);
+   ObjectModule *objMod (get_obj_params (L, objHandle, attrHandle));
+
+   if (objMod && objHandle && attrHandle) {
+
+      if (!lua_isnone (L, 3)) {
+
+         const Boolean Value = (lua_toboolean (L, 3) != 0);
+
+         if (objMod->store_counter_rollover (objHandle, attrHandle, Value)) {
+
+            lua_pushvalue (L, 3);
+            result = 1;
+         }
+      }
+      else {
+
+         Boolean value (False);
+         if (objMod->lookup_counter_rollover (objHandle, attrHandle, value)) {
+
+            lua_pushboolean (L, (value ? 1 : 0));
+            result = 1;
+         }
+      }
+   }
+
+   return result;
+}
+
+
+static int
 object_add_to_counter (lua_State *L) {
 
    int result (0);
@@ -824,9 +860,11 @@ object_add_to_counter (lua_State *L) {
 
    if (objMod && objHandle && attrHandle) {
 
-      const Int64 Value = (Int64)luaL_checknumber (L, 3);
+      Int64 value (1);
 
-      if (objMod->add_to_counter (objHandle, attrHandle, Value)) {
+      if (!lua_isnoneornil (L, 3)) { value = (Int64)luaL_checknumber (L, 3); }
+
+      if (objMod->add_to_counter (objHandle, attrHandle, value)) {
 
          Int64 newValue (0);
 
@@ -1532,6 +1570,8 @@ static const luaL_Reg arrayFunc[] = {
    {"locality", object_locality},
    {"type", object_type},
    {"counter", object_counter},
+   {"add_to_counter", object_add_to_counter},
+   {"counter_rollover", object_counter_rollover},
    {"counter_minimum", object_counter_minimum},
    {"counter_maximum", object_counter_maximum},
    {"alternate_type", object_alternate_type},

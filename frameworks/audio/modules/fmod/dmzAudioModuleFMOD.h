@@ -46,6 +46,7 @@ namespace dmz {
 
          virtual Handle play_sound (
             const Handle AudioHandle,
+            const SoundInit &Init,
             const SoundAttributes &Attributes);
 
          virtual Boolean update_sound (
@@ -54,6 +55,7 @@ namespace dmz {
 
          virtual Boolean lookup_sound (
             const Handle InstanceHandle,
+            SoundInit &init,
             SoundAttributes &attributes);
 
          virtual Boolean stop_sound (const Handle InstanceHandle);

@@ -4,11 +4,13 @@ lmk.add_libs {"dmzKernel"}
 
 lmk.add_files {
    "dmzAudioSoundAttributes.h",
+   "dmzAudioSoundInit.h",
    "dmzAudioBaseExport.h",
 }
 
 lmk.add_files {
    "dmzAudioSoundAttributes.cpp",
+   "dmzAudioSoundInit.cpp",
 }
 
 lmk.add_vars ({

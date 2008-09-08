@@ -88,6 +88,7 @@ dmz::LuaModuleBasic::LuaModuleBasic (
 
 dmz::LuaModuleBasic::~LuaModuleBasic () {
 
+   _stop_lua_plugins ();
    _close_lua ();
 
    HashTableHandleIterator it;
@@ -224,6 +225,7 @@ dmz::Boolean
 dmz::LuaModuleBasic::reset_lua () {
 
    _log.info << "Reseting Lua Runtime." << endl;
+   _stop_lua_plugins ();
    _close_lua ();
    _open_lua ();
    _start_lua_plugins ();
@@ -488,6 +490,54 @@ dmz::LuaModuleBasic::_start_lua_plugins () {
    }
 }
 
+
+void
+dmz::LuaModuleBasic::_stop_lua_plugins () {
+
+   _log.info << "Stopping Lua Plugins." << endl;
+   HashTableStringIterator it;
+
+   lua_push_instance_table (_luaState);
+
+   InstanceStruct *is = _instanceTable.get_first (it);
+
+   while (is) {
+
+      LUA_START_VALIDATE (_luaState);
+
+      lua_getfield (_luaState, -1, is->Name.get_buffer ());
+
+      if (lua_istable (_luaState, -1)) {
+
+         const int Instance (lua_gettop (_luaState));
+
+         lua_pushcfunction (_luaState, lua_error_handler);
+         const int Handler (lua_gettop (_luaState));
+
+         lua_pushstring (_luaState, "stop_plugin");
+         lua_rawget (_luaState, Instance);
+
+         if (lua_isfunction (_luaState, -1)) {
+
+            lua_pushvalue (_luaState, Instance);
+
+            if (lua_pcall (_luaState, 1, 0, Handler)) {
+
+               lua_pop (_luaState, 1); // pop error message
+            }
+         }
+         else { lua_pop (_luaState, 1); } // pop the item from getfield
+
+         lua_pop (_luaState, 1); // pop lua_error_handler and Instance
+      }
+
+      lua_pop (_luaState, 1); // Pop the instance table
+
+      LUA_END_VALIDATE (_luaState, 0);
+
+      is = _instanceTable.get_next (it);
+   }
+}
 
 void
 dmz::LuaModuleBasic::_close_lua () {

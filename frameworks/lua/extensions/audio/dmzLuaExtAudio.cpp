@@ -37,23 +37,26 @@ table_to_sound_init (lua_State *L, int index) {
 
    if (index < 0) { index = lua_gettop (L) + index + 1; }
 
-   lua_getfield (L, index, "looped");
+   if (!lua_isnoneornil (L, index)) {
 
-   if (!lua_isnil (L, -1)) {
+      lua_getfield (L, index, "looped");
 
-      result.set (SoundLooped, lua_toboolean (L, -1) != 0);
+      if (!lua_isnil (L, -1)) {
+
+         result.set (SoundLooped, lua_toboolean (L, -1) != 0);
+      }
+
+      lua_pop (L, 1); // pop looped
+
+      lua_getfield (L, index, "relative");
+
+      if (!lua_isnil (L, -1)) {
+
+         result.set (SoundRelative, lua_toboolean (L, -1) != 0);
+      }
+
+      lua_pop (L, 1); // pop relative
    }
-
-   lua_pop (L, 1); // pop looped
-
-   lua_getfield (L, index, "relative");
-
-   if (!lua_isnil (L, -1)) {
-
-      result.set (SoundRelative, lua_toboolean (L, -1) != 0);
-   }
-
-   lua_pop (L, 1); // pop relative
 
    return result;
 }
@@ -66,45 +69,48 @@ table_to_sound_attr (lua_State *L, int index) {
 
    if (index < 0) { index = lua_gettop (L) + index + 1; }
 
-   lua_getfield (L, index, "position");
+   if (!lua_isnoneornil (L, index)) {
 
-   if (!lua_isnil (L, -1)) {
+      lua_getfield (L, index, "position");
 
-      Vector *ptr = lua_check_vector (L, -1);
+      if (!lua_isnil (L, -1)) {
 
-      if (ptr) { result.set_position (*ptr); }
+         Vector *ptr = lua_check_vector (L, -1);
+
+         if (ptr) { result.set_position (*ptr); }
+      }
+
+      lua_pop (L, 1); // pop position
+
+      lua_getfield (L, index, "velocity");
+
+      if (!lua_isnil (L, -1)) {
+
+         Vector *ptr = lua_check_vector (L, -1);
+
+         if (ptr) { result.set_velocity (*ptr); }
+      }
+
+      lua_pop (L, 1); // pop velocity
+
+      lua_getfield (L, index, "gain");
+
+      if (!lua_isnil (L, -1)) {
+
+         result.set_gain_scale (luaL_checknumber (L, -1));
+      }
+
+      lua_pop (L, 1); // pop gain
+
+      lua_getfield (L, index, "pitch");
+
+      if (!lua_isnil (L, -1)) {
+
+         result.set_pitch_scale (luaL_checknumber (L, -1));
+      }
+
+      lua_pop (L, 1); // pop gain
    }
-
-   lua_pop (L, 1); // pop position
-
-   lua_getfield (L, index, "velocity");
-
-   if (!lua_isnil (L, -1)) {
-
-      Vector *ptr = lua_check_vector (L, -1);
-
-      if (ptr) { result.set_velocity (*ptr); }
-   }
-
-   lua_pop (L, 1); // pop velocity
-
-   lua_getfield (L, index, "gain");
-
-   if (!lua_isnil (L, -1)) {
-
-      result.set_gain_scale (luaL_checknumber (L, -1));
-   }
-
-   lua_pop (L, 1); // pop gain
-
-   lua_getfield (L, index, "pitch");
-
-   if (!lua_isnil (L, -1)) {
-
-      result.set_pitch_scale (luaL_checknumber (L, -1));
-   }
-
-   lua_pop (L, 1); // pop gain
 
    return result;
 }
@@ -122,7 +128,8 @@ audio_create_handle (lua_State *L) {
 
    if (audio) {
 
-      if (lua_create_handle (L, audio->create_audio_handle (FileName))) { result = 1; }
+      lua_create_handle (L, audio->create_audio_handle (FileName));
+      result = 1;
    }
 
    LUA_END_VALIDATE (L, result);
@@ -224,11 +231,11 @@ audio_stop_sound (lua_State *L) {
 }
 
 static const luaL_Reg arrayFunc[] = {
-   {"create_handle", audio_create_handle},
-   {"destroy_handle", audio_destroy_handle},
-   {"play_sound", audio_play_sound},
-   {"update_sound", audio_update_sound},
-   {"stop_sound", audio_stop_sound},
+   {"create", audio_create_handle},
+   {"destroy", audio_destroy_handle},
+   {"play", audio_play_sound},
+   {"update", audio_update_sound},
+   {"stop", audio_stop_sound},
    {NULL, NULL},
 };
 

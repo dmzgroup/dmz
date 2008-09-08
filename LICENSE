@@ -1,6 +1,7 @@
 This license applies to all parts of DMZ that are not externally
-maintained libraries. The externally maintained library sources included
-with DMZ are:
+maintained libraries.
+
+The externally maintained library sources included with DMZ are:
 
   - expat, located under foundation/3rdparty/expat. This code is copyright
     by the Expat maintainers and is released under an MIT license.
@@ -18,10 +19,7 @@ with DMZ are:
     by Phil Frisbie, Jr. and is released under the LGPL.
     see: http://www.gnu.org/copyleft/lgpl.html
 
-These libraries have their own licenses; we recommend you read them,
-as their terms may differ from the terms below.
-
-Libraries used by frameworks in DMZ but not include with the source are:
+External libraries used by frameworks in DMZ but not include with the source are:
 
   - Qt, This code is released under a GLP/Commercial License.
     see: http://trolltech.com
@@ -36,6 +34,9 @@ Libraries used by frameworks in DMZ but not include with the source are:
   - FMOD, This library is released under several licenses include a Free non-commercial
     licences.
     see: http://www.fmod.org/
+
+These libraries have their own licenses; we recommend you read them,
+as their terms may differ from the terms below.
 
 Copyright (c) 2007-2008 Randall E. Barker and the DMZ maintainers.
 

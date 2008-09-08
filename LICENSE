@@ -1,6 +1,6 @@
 This license applies to all parts of DMZ that are not externally
-maintained libraries.  The externally maintained libraries used by DMZ
-are:
+maintained libraries. The externally maintained library sources included
+with DMZ are:
 
   - expat, located under foundation/3rdparty/expat. This code is copyright
     by the Expat maintainers and is released under an MIT license.
@@ -21,7 +21,23 @@ are:
 These libraries have their own licenses; we recommend you read them,
 as their terms may differ from the terms below.
 
-Copyright (c) 2007-2008 Randall E. Barker
+Libraries used by frameworks in DMZ but not include with the source are:
+
+  - Qt, This code is released under a GLP/Commercial License.
+    see: http://trolltech.com
+
+  - OpenSceneGraph, This code is released under the OpenSceneGraph Public License
+    (OSGPL) and is based on the Lesser Gnu Public License (LGPL).
+    see: http://openscenegraph.org
+
+  - Ogre3D, This code is released under the GNU Lesser Public License (LGPL).
+    see: http://ogre3d.org
+
+  - FMOD, This library is released under several licenses include a Free non-commercial
+    licences.
+    see: http://www.fmod.org/
+
+Copyright (c) 2007-2008 Randall E. Barker and the DMZ maintainers.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

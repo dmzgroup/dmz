@@ -30,15 +30,15 @@ namespace dmz {
             const SoundAttributes &Attributes) = 0;
 
          virtual Boolean update_sound (
-            const Handle InstanceHandle,
+            const Handle AudioHandle,
             const SoundAttributes &Attributes) = 0;
 
          virtual Boolean lookup_sound (
-            const Handle InstanceHandle,
+            const Handle AudioHandle,
             SoundInit &init,
             SoundAttributes &attributes) = 0;
 
-         virtual Boolean stop_sound (const Handle InstanceHandle) = 0;
+         virtual Boolean stop_sound (const Handle AudioHandle) = 0;
 
          virtual Boolean set_mute_all_state (const Boolean Mute) = 0;
          virtual Boolean get_mute_all_state (Boolean &mute) = 0;

@@ -1,0 +1,42 @@
+This license applies to all parts of DMZ that are not externally
+maintained libraries.  The externally maintained libraries used by DMZ
+are:
+
+  - expat, located under foundation/3rdparty/expat. This code is copyright
+    by the Expat maintainers and is released under an MIT license.
+
+  - sqlite, located under foundation/3rdparty/sqlite. This code is public domain.
+
+  - Lua, located under frameworks/lua/3rdparty/lua/base. This code is copyright
+    by Lua.org and PUC-Rio and is released under an MIT license.
+
+  - LuaJIT, located under frameworks/lua/3rdparty/lua/jit. This code is
+    is a derived work from Lua and is copyright by Mike Pall.
+    It is released under an MIT license.
+
+  - HawkNL, located under frameworks/net/3rdparty/hawknl. This code is copyright
+    by Phil Frisbie, Jr. and is released under the LGPL.
+    see: http://www.gnu.org/copyleft/lgpl.html
+
+These libraries have their own licenses; we recommend you read them,
+as their terms may differ from the terms below.
+
+Copyright (c) 2007-2008 Randall E. Barker
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.

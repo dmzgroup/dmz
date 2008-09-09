@@ -195,7 +195,7 @@ audio_update_sound (lua_State *L) {
 
    AudioModule *audio (get_audio (L));
    const Handle *AudioHandle (lua_check_handle (L, 1));
-   const SoundAttributes Attr = table_to_sound_attr (L, 3);
+   const SoundAttributes Attr = table_to_sound_attr (L, 2);
 
    if (audio && *AudioHandle) {
 

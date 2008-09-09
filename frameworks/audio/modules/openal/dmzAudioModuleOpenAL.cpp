@@ -31,7 +31,16 @@ dmz::AudioModuleOpenAL::~AudioModuleOpenAL () {
    _soundTimedTable.clear ();
    _soundTable.empty ();
    _bufferHandleTable.clear ();
-   _bufferNameTable.empty ();
+
+   HashTableStringIterator it;
+
+   BufferStruct *bs (_bufferNameTable.get_first (it));
+
+   while (bs) {
+
+      while (bs->unref () > 0) {;} // do nothing
+      bs = _bufferNameTable.get_next (it);
+   }
 
    if (_context) {
 
@@ -123,13 +132,17 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
 
       if (!bs) {
 
-         bs = new BufferStruct (absPath, get_plugin_runtime_context ());
+         bs = new BufferStruct (
+            absPath,
+            get_plugin_runtime_context (),
+            _bufferNameTable,
+            _bufferHandleTable);
 
          if (bs &&
                bs->file.is_valid () &&
                (bs->file.get_audio_format () == WaveFormatPCM)) {
 
-            if (!_bufferNameTable.store (absPath, bs)) { delete bs; bs = 0; }
+            if (!_bufferNameTable.store (absPath, bs)) { bs->unref (); bs = 0; }
             else { _bufferHandleTable.store (bs->Handle.get_runtime_handle (), bs); }
          }
          else if (bs) {
@@ -145,7 +158,7 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
                   << bs->file.get_error () << endl;
             }
 
-            delete bs; bs = 0;
+            bs->unref (); bs = 0;
          }
 
          if (bs) {
@@ -212,6 +225,7 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
             }
          }
       }
+      else { bs->ref (); }
 
       if (bs) {
 
@@ -228,14 +242,9 @@ dmz::AudioModuleOpenAL::destroy_audio_handle (const Handle AudioHandle) {
 
    Boolean result (False);
 
-   BufferStruct *bs (_bufferHandleTable.remove (AudioHandle));
+   BufferStruct *bs (_bufferHandleTable.lookup (AudioHandle));
 
-   if (bs) {
-
-      bs = _bufferNameTable.remove (bs->FileName);
-
-      if (bs) { delete bs; bs = 0; result = True; }
-   }
+   if (bs) { bs->unref (); result = True; }
 
    return result;
 }
@@ -250,7 +259,10 @@ dmz::AudioModuleOpenAL::play_sound (
    Handle result (0);
 
    BufferStruct *bs (_bufferHandleTable.lookup (AudioHandle));
-   SoundStruct *ss (new SoundStruct (get_plugin_runtime_context ()));
+
+   SoundStruct *ss (0);
+
+   if (bs) { ss = new SoundStruct (*bs, get_plugin_runtime_context ()); }
 
    if (bs && ss) {
 

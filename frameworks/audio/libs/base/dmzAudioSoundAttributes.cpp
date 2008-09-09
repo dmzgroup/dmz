@@ -28,6 +28,7 @@ struct dmz::SoundAttributes::State {
       position = Value.position;
       velocity = Value.velocity;
       pitch = Value.pitch;
+      gain = Value.gain;
 
       return *this;
    }

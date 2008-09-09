@@ -25,7 +25,7 @@ dmz::Int32
 dmz::RefCount::unref () {
 
    const LONG ReturnCount (InterlockedDecrement (&(_state.value)));
-   if (ReturnCount == 0) { ref_count_is_zero (); }
+   if (ReturnCount == 0) { _ref_count_is_zero (); }
 
    return Int32 (ReturnCount);
 }

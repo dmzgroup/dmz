@@ -33,7 +33,7 @@ namespace dmz {
          UInt32 get_next () { return UInt32 (ref ()); }
 
       protected:
-         virtual void ref_count_is_zero () {;}
+         virtual void _ref_count_is_zero () {;}
    };
 
    class ConfigAttributeContext {

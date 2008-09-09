@@ -9,6 +9,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
+#include <dmzSystemRefCount.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesMatrix.h>
@@ -86,35 +87,54 @@ namespace dmz {
          virtual Boolean destroy_listener (const Handle ListenerHandle);
 
       protected:
-         struct BufferStruct {
+         struct BufferStruct : RefCount {
 
             const RuntimeHandle Handle;
             const String FileName;
             WaveFile file;
             ALuint buffer;
+            HashTableStringTemplate<BufferStruct> &nameTable;
+            HashTableHandleTemplate<BufferStruct> &handleTable;
 
-            BufferStruct (const String &TheFileName, RuntimeContext *context) :
+            BufferStruct (
+                  const String &TheFileName,
+                  RuntimeContext *context,
+                  HashTableStringTemplate<BufferStruct> &theNameTable,
+                  HashTableHandleTemplate<BufferStruct> &theHandleTable) :
                   Handle (TheFileName + ".AudioBuffer", context),
                   FileName (TheFileName),
                   file (TheFileName),
-                  buffer (0) {;}
+                  buffer (0),
+                  nameTable (theNameTable),
+                  handleTable (theHandleTable) {;}
 
-            ~BufferStruct () {
+            protected:
+               ~BufferStruct () {
 
-               if (alIsBuffer (buffer)) { alDeleteBuffers (1, &buffer); }
-            }
+                  if (alIsBuffer (buffer)) { alDeleteBuffers (1, &buffer); }
+               }
+
+               virtual void _ref_count_is_zero () {
+
+                  nameTable.remove (FileName);
+                  handleTable.remove (Handle.get_runtime_handle ());
+
+                  delete this;
+               }
          };
 
          struct SoundStruct {
 
             const RuntimeHandle Handle;
+            BufferStruct &buffer;
             ALuint source;
             SoundAttributes attr;
             SoundInit init;
 
-            SoundStruct (RuntimeContext *context) :
+            SoundStruct (BufferStruct &theBuffer, RuntimeContext *context) :
                   Handle ("Sound Instance", context),
-                  source (0) {;}
+                  buffer (theBuffer),
+                  source (0) { buffer.ref (); }
 
             ~SoundStruct () {
 
@@ -125,12 +145,14 @@ namespace dmz {
 
                   if (value == AL_PLAYING) { alSourceStop (source); }
 
-                  alDeleteSources (1, &source); }
+                  alDeleteSources (1, &source);
                }
+
+               buffer.unref ();
+            }
          };
 
          void _update_sound (SoundStruct &ss);
-
 
          void _init (Config &local);
 

@@ -81,25 +81,38 @@ namespace dmz {
          virtual Boolean destroy_listener (const Handle ListenerHandle);
 
       protected:
-         struct SoundStruct : public RefCountDeleteOnZero {
+         struct SoundStruct : public RefCount {
 
-            const String Filename;
+            const String FileName;
             const RuntimeHandle RTHandle;
             FMOD::Sound *sound;
+            HashTableHandleTemplate<SoundStruct> &handleTable;
+            HashTableStringTemplate<SoundStruct> &nameTable;
 
             Handle get_handle () const { return RTHandle.get_runtime_handle (); }
 
             SoundStruct (
                   const String &AbsFilePath,
                   FMOD::Sound *soundData,
+                  HashTableHandleTemplate<SoundStruct> &theHandleTable,
+                  HashTableStringTemplate<SoundStruct> &theNameTable,
                   RuntimeContext *context) :
-                  RefCountDeleteOnZero (),
-                  Filename (AbsFilePath),
-                  RTHandle (Filename + ".SoundDataFMOD", context),
-                  sound (soundData) {;}
+                  FileName (AbsFilePath),
+                  RTHandle (FileName + ".SoundDataFMOD", context),
+                  sound (soundData),
+                  handleTable (theHandleTable),
+                  nameTable (theNameTable) {;}
 
             protected:
                ~SoundStruct () { if (sound) { sound->release (); } }
+
+               virtual void _ref_count_is_zero () {
+
+                  handleTable.remove (RTHandle.get_runtime_handle ());
+                  nameTable.remove (FileName);
+
+                  delete this;
+               }
          };
 
          struct InstanceStruct {
@@ -118,8 +131,7 @@ namespace dmz {
             void reset () {
 
                defaultFrequency = 1.0;
-               if (data) { data->unref (); }
-               data = 0;
+               if (data) { data->unref (); data = 0; }
                channel = 0;
                next = 0;
             }

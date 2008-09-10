@@ -331,6 +331,7 @@ dmz::RenderModuleCoreOSGBasic::remove_camera (const String &PortalName) {
    osg::Camera *result = 0;
 
    PortalStruct *ps = _portalTable.lookup (PortalName);
+
    if (ps) {
 
       result = ps->camera.get ();
@@ -349,6 +350,7 @@ dmz::RenderModuleCoreOSGBasic::add_camera_manipulator (
    Boolean result(False);
 
    PortalStruct *ps = _get_portal_struct (PortalName);
+
    if (ps && manipulator) {
 
       if (!(ps->cameraManipulator.valid ())) {
@@ -368,6 +370,7 @@ dmz::RenderModuleCoreOSGBasic::lookup_camera_manipulator (const String &PortalNa
    RenderCameraManipulatorOSG *result = 0;
 
    PortalStruct *ps = _portalTable.lookup (PortalName);
+
    if (ps) {
 
       result = ps->cameraManipulator.get ();
@@ -383,6 +386,7 @@ dmz::RenderModuleCoreOSGBasic::remove_camera_manipulator (const String &PortalNa
    RenderCameraManipulatorOSG *result = 0;
 
    PortalStruct *ps = _portalTable.lookup (PortalName);
+
    if (ps) {
 
       result = ps->cameraManipulator.get ();
@@ -397,6 +401,7 @@ dmz::RenderModuleCoreOSGBasic::PortalStruct *
 dmz::RenderModuleCoreOSGBasic::_get_portal_struct (const String &PortalName) {
 
    PortalStruct *ps = _portalTable.lookup (PortalName);
+
    if (!ps) {
 
       ps = new PortalStruct (PortalName);
@@ -419,6 +424,7 @@ dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
       if (dmz::load_plugins (context, pluginList, local, global, _extensions, &_log)) {
 
          _extensions.discover_plugins ();
+         _extensions.discover_external_plugin (this);
       }
    }
 

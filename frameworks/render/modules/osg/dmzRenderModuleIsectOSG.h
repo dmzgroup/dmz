@@ -9,12 +9,6 @@
 
 namespace dmz {
 
-/*   class IsectParameters;
-   class IsectResult;
-   class IsectTestContainer;
-   class Isect;
-   class Vector;*/
-
    class RenderModuleIsectOSG : public Plugin, private RenderModuleIsect {
 
       public:

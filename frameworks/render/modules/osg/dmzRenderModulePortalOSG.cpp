@@ -84,14 +84,14 @@ dmz::RenderModulePortalOSG::is_master_portal () {
 void
 dmz::RenderModulePortalOSG::set_view (const Vector &Pos, const Matrix &Ori) {
 
-   _manipulator->setByVectorAndMatrix (Pos, Ori);
+   if (_manipulator.valid ()) { _manipulator->setByVectorAndMatrix (Pos, Ori);}
 }
 
 
 void
 dmz::RenderModulePortalOSG::get_view (Vector &pos, Matrix &ori) const {
 
-   _manipulator->getVectorAndMatrix (pos, ori);
+   if (_manipulator.valid ()) { _manipulator->getVectorAndMatrix (pos, ori); }
 }
 
 

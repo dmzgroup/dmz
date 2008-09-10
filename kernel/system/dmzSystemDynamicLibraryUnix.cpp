@@ -61,7 +61,7 @@ dmz::DynamicLibrary::DynamicLibrary (
       const String &LibName,
       const DynamicLibraryModeEnum LibMode) : _state (*(new State (LibMode))) {
 
-   const int Mode (RTLD_LOCAL | RTLD_LAZY);
+   const int Mode (RTLD_GLOBAL | RTLD_LAZY);
 
    _state.handle = dlopen (LibName.get_buffer (), Mode);
    _state.name = LibName;

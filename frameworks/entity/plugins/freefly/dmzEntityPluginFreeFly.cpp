@@ -79,26 +79,26 @@ dmz::EntityPluginFreeFly::update_time_slice (const Float64 TimeDelta) {
       Float64 heading (Forward.get_angle (headingVec));
       const Float64 HCross (Forward.cross (headingVec).normalize_in_place ().get_y ());
 
-      if (HCross > 0.0) {
+      if (HCross < 0.0) {
 
-         heading -= _move.turnAxis * TimeDelta;
+         heading += _move.turnAxis * TimeDelta;
          heading = TwoPi64 - heading;
       }
-      else { heading += _move.turnAxis * TimeDelta; }
+      else { heading -= _move.turnAxis * TimeDelta; }
 
       if (heading > Pi64) { heading -= TwoPi64; }
       else if (heading < -Pi64) { heading += TwoPi64; }
 
       Float64 pitch (dir.get_angle (headingVec));
 
-      if (dir.get_y () > 0.0) {
+      if (dir.get_y () < 0.0) {
 
-         pitch -= _move.pitchAxis * TimeDelta;
+         pitch += _move.pitchAxis * TimeDelta;
          pitch = TwoPi64 - pitch;
       }
       else {
 
-         pitch += _move.pitchAxis * TimeDelta;
+         pitch -= _move.pitchAxis * TimeDelta;
       }
 
       if ((pitch > HalfPi64) && (pitch <= (Pi64))) { pitch = HalfPi64 - 0.001; }
@@ -110,7 +110,7 @@ dmz::EntityPluginFreeFly::update_time_slice (const Float64 TimeDelta) {
       Matrix pm (Right, pitch);
       Matrix hm (Up, heading);
 
-      ori = pm * hm;
+      ori = hm * pm;
 
       dir = Forward;
       Vector slide (Right);

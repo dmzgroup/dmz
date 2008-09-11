@@ -102,6 +102,21 @@ matrix_new (lua_State *L) {
          }
          else { luaL_error (L, "Unsupported parameter."); }
       }
+      else if (2 == stackCount) {
+
+         Vector *vec1 (lua_check_vector (L, 1));
+         Vector *vec2 (lua_to_vector (L, 2));
+
+         if (vec1 && vec2) {
+
+            ptr->from_two_vectors (*vec1, *vec2);
+         }
+         else if (vec1) {
+
+            lua_Number angle = luaL_checknumber (L, 2);
+            ptr->from_axis_and_angle_radians (*vec1, angle);
+         }
+      }
       else if (9 == stackCount) {
 
          Float64 array[9];

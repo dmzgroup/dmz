@@ -27,10 +27,10 @@ function update_time_slice (self, time)
          local hcross = Forward:cross (headingVec)
          hcross = hcross:normalize ()
          
-         if hcross:get_y () > 0.0 then
-            heading = heading - self.turn * time
+         if hcross:get_y () < 0.0 then
+            heading = heading + (self.turn * time)
             heading = dmz.math.TwoPi - heading
-         else heading = heading + self.turn * time
+         else heading = heading - (self.turn * time)
          end
          
          if heading > dmz.math.Pi then heading = heading - dmz.math.TwoPi
@@ -39,10 +39,10 @@ function update_time_slice (self, time)
          
          local pitch = dir:get_angle (headingVec)
          
-         if dir:get_y () > 0.0 then
-            pitch = pitch - self.pitch * time
+         if dir:get_y () < 0.0 then
+            pitch = pitch + self.pitch * time
             pitch = dmz.math.TwoPi - pitch
-         else pitch = pitch + self.pitch * time
+         else pitch = pitch - self.pitch * time
          end
          
          if pitch > dmz.math.HalfPi and pitch <= dmz.math.Pi then
@@ -55,7 +55,7 @@ function update_time_slice (self, time)
          
          local hm = dmz.matrix.new ():from_axis_and_angle (Up, heading)
          
-         ori = pm * hm
+         ori = hm * pm
          
          dir = ori:transform (Forward)
          local slide = ori:transform (Right)
@@ -129,8 +129,8 @@ function new (config, name)
       timeSlice = dmz.time_slice.new (),
       obs = dmz.input_observer.new (),
       active = 0,
-      moveSpeed = config:lookup_number ("movement.speed", 1.0),
-      turnRate = config:lookup_number ("movement.turnRate", 1.0),
+      moveSpeed = config:to_number ("movement.speed", 1.0),
+      turnRate = config:to_number ("movement.turnRate", 1.0),
       speed = 0.0,
       strafe = 0.0,
       turn = 0.0,

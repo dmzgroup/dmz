@@ -33,7 +33,10 @@ static const char ObjectLinkFunc[]            = "link_objects";
 static const char ObjectUnlinkFunc[]          = "unlink_objects";
 static const char ObjectLinkAttributeFunc[]   = "update_link_object";
 static const char ObjectLocalityFunc[]        = "update_object_locality";
-static const char ObjectTypeFunc[]            = "update_object_type";
+static const char ObjectCounterFunc[]         = "update_object_counter";
+static const char ObjectCounterMinFunc[]      = "update_object_counter_minimum";
+static const char ObjectCounterMaxFunc[]      = "update_object_counter_maximum";
+static const char ObjectAltTypeFunc[]         = "update_object_alternate_type";
 static const char ObjectStateFunc[]           = "update_object_state";
 static const char ObjectFlagFunc[]            = "update_object_flag";
 static const char ObjectTimeStampFunc[]       = "update_object_time_stamp";
@@ -206,7 +209,10 @@ obs_register (lua_State *L) {
       cb |= obs_has_func (L, 3, ObjectUnlinkFunc, ObjectUnlinkMask);
       cb |= obs_has_func (L, 3, ObjectLinkAttributeFunc, ObjectLinkAttributeMask);
       cb |= obs_has_func (L, 3, ObjectLocalityFunc, ObjectLocalityMask);
-      cb |= obs_has_func (L, 3, ObjectTypeFunc, ObjectTypeMask);
+      cb |= obs_has_func (L, 3, ObjectCounterFunc, ObjectCounterMask);
+      cb |= obs_has_func (L, 3, ObjectCounterMinFunc, ObjectMinCounterMask);
+      cb |= obs_has_func (L, 3, ObjectCounterMaxFunc, ObjectMaxCounterMask);
+      cb |= obs_has_func (L, 3, ObjectAltTypeFunc, ObjectAltTypeMask);
       cb |= obs_has_func (L, 3, ObjectStateFunc, ObjectStateMask);
       cb |= obs_has_func (L, 3, ObjectFlagFunc, ObjectFlagMask);
       cb |= obs_has_func (L, 3, ObjectTimeStampFunc, ObjectTimeStampMask);
@@ -236,7 +242,6 @@ obs_register (lua_State *L) {
       lua_rawseti (L, Table, 2); // store data table
       lua_rawset (L, CBTable); // store table of callback and data tables
       lua_pop (L, 1); // pop observer index table.
-
       lua_pushboolean (L, obs->activate_object_attribute (*handle, cb) != 0 ? 1 : 0);
       result = 1;
    }
@@ -547,7 +552,79 @@ dmz::LuaExtObjectObserver::update_link_attribute_object (
 
 
 void
-dmz::LuaExtObjectObserver::update_object_type (
+dmz::LuaExtObjectObserver::update_object_counter (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value,
+      const Int64 *PreviousValue) {
+
+   LUA_START_VALIDATE (L);
+
+   const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectCounterFunc));
+
+   lua_create_handle (L, ObjectHandle);
+   lua_create_handle (L, AttributeHandle);
+   lua_pushnumber (L, (lua_Number)Value);
+   if (PreviousValue) { lua_pushnumber (L, (lua_Number)(*PreviousValue)); }
+   else { lua_pushnil (L); }
+
+   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectCounterMask);
+
+   LUA_END_VALIDATE (L, 0);
+}
+
+
+void
+dmz::LuaExtObjectObserver::update_object_counter_minimum (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value,
+      const Int64 *PreviousValue) {
+
+   LUA_START_VALIDATE (L);
+
+   const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectCounterMinFunc));
+
+   lua_create_handle (L, ObjectHandle);
+   lua_create_handle (L, AttributeHandle);
+   lua_pushnumber (L, (lua_Number)Value);
+   if (PreviousValue) { lua_pushnumber (L, (lua_Number)(*PreviousValue)); }
+   else { lua_pushnil (L); }
+
+   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectMinCounterMask);
+
+   LUA_END_VALIDATE (L, 0);
+}
+
+
+void
+dmz::LuaExtObjectObserver::update_object_counter_maximum (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value,
+      const Int64 *PreviousValue) {
+
+   LUA_START_VALIDATE (L);
+
+   const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectCounterMaxFunc));
+
+   lua_create_handle (L, ObjectHandle);
+   lua_create_handle (L, AttributeHandle);
+   lua_pushnumber (L, (lua_Number)Value);
+   if (PreviousValue) { lua_pushnumber (L, (lua_Number)(*PreviousValue)); }
+   else { lua_pushnil (L); }
+
+   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectMaxCounterMask);
+
+   LUA_END_VALIDATE (L, 0);
+}
+
+
+void
+dmz::LuaExtObjectObserver::update_object_alternate_type (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -556,7 +633,7 @@ dmz::LuaExtObjectObserver::update_object_type (
 
    LUA_START_VALIDATE (L);
 
-   const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectTypeFunc));
+   const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectAltTypeFunc));
 
    lua_create_handle (L, ObjectHandle);
    lua_create_handle (L, AttributeHandle);
@@ -564,7 +641,7 @@ dmz::LuaExtObjectObserver::update_object_type (
    if (PreviousValue) { lua_create_object_type (L, PreviousValue); }
    else { lua_pushnil (L); }
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectTypeMask);
+   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectAltTypeMask);
 
    LUA_END_VALIDATE (L, 0);
 }

@@ -383,6 +383,22 @@ dmz::ObjectObserverUtil::destroy_object (
 
 
 void
+dmz::ObjectObserverUtil::update_object_locality (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const ObjectLocalityEnum Locality,
+      const ObjectLocalityEnum PrevLocality) {
+
+   if (!(ObjectLocalityMask & __state.errorMask)) {
+
+      __state.errorMask |= ObjectLocalityMask;
+      __state.log.warn << "Base update_object_locality called."
+         << " Function should have been overridden?" << endl;
+   }
+}
+
+
+void
 dmz::ObjectObserverUtil::update_object_uuid (
       const Handle ObjectHandle,
       const UUID &Identity,
@@ -408,22 +424,6 @@ dmz::ObjectObserverUtil::remove_object_attribute (
 
       __state.errorMask |= ObjectRemoveAttributeMask;
       __state.log.warn << "Base remove_objectattribute called."
-         << " Function should have been overridden?" << endl;
-   }
-}
-
-
-void
-dmz::ObjectObserverUtil::update_object_locality (
-      const UUID &Identity,
-      const Handle ObjectHandle,
-      const ObjectLocalityEnum Locality,
-      const ObjectLocalityEnum PrevLocality) {
-
-   if (!(ObjectLocalityMask & __state.errorMask)) {
-
-      __state.errorMask |= ObjectLocalityMask;
-      __state.log.warn << "Base update_object_locality called."
          << " Function should have been overridden?" << endl;
    }
 }
@@ -488,17 +488,68 @@ dmz::ObjectObserverUtil::update_link_attribute_object (
 
 
 void
-dmz::ObjectObserverUtil::update_object_type (
+dmz::ObjectObserverUtil::update_object_counter (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value,
+      const Int64 *PreviousValue) {
+
+   if (!(ObjectCounterMask & __state.errorMask)) {
+
+      __state.errorMask |= ObjectCounterMask;
+      __state.log.warn << "Base update_object_counter called."
+         << " Function should have been overridden?" << endl;
+   }
+}
+
+
+void
+dmz::ObjectObserverUtil::update_object_counter_minimum (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value,
+      const Int64 *PreviousValue) {
+
+   if (!(ObjectMinCounterMask & __state.errorMask)) {
+
+      __state.errorMask |= ObjectMinCounterMask;
+      __state.log.warn << "Base update_object_counter_minimum called."
+         << " Function should have been overridden?" << endl;
+   }
+}
+
+
+void
+dmz::ObjectObserverUtil::update_object_counter_maximum (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value,
+      const Int64 *PreviousValue) {
+
+   if (!(ObjectMaxCounterMask & __state.errorMask)) {
+
+      __state.errorMask |= ObjectMinCounterMask;
+      __state.log.warn << "Base update_object_counter_maximum called."
+         << " Function should have been overridden?" << endl;
+   }
+}
+
+
+void
+dmz::ObjectObserverUtil::update_object_alternate_type (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
       const ObjectType &Value,
       const ObjectType *PreviousValue) {
 
-   if (!(ObjectTypeMask & __state.errorMask)) {
+   if (!(ObjectAltTypeMask & __state.errorMask)) {
 
-      __state.errorMask |= ObjectTypeMask;
-      __state.log.warn << "Base update_object_type called."
+      __state.errorMask |= ObjectAltTypeMask;
+      __state.log.warn << "Base update_object_alternate_type called."
          << " Function should have been overridden?" << endl;
    }
 }

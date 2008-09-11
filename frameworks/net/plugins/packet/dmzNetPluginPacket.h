@@ -48,7 +48,7 @@ namespace dmz {
          virtual void read_packet (const Int32 Size, char *buffer);
 
          // EventObserverUtil Interface
-         virtual void end_event (
+         virtual void close_event (
             const Handle EventHandle,
             const EventType &Type,
             const EventLocalityEnum Locality);
@@ -67,13 +67,6 @@ namespace dmz {
             const Handle ObjectHandle,
             const ObjectLocalityEnum Locality,
             const ObjectLocalityEnum PrevLocality);
-
-         virtual void update_object_type (
-            const UUID &Identity,
-            const Handle ObjectHandle,
-            const Handle AttributeHandle,
-            const ObjectType &Value,
-            const ObjectType *PreviousValue);
 
       protected:
          struct ObjStruct {

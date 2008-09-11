@@ -13,6 +13,7 @@
 #include <dmzRuntimeLoadPlugins.h>
 #include <dmzRuntimeSession.h>
 #include <dmzRuntimeTime.h>
+#include <dmzSystem.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamFile.h>
 #include <dmzTypesBase.h>
@@ -349,7 +350,7 @@ dmz::Application::start () {
 
    if (!_state.error) {
 
-      _state.startTime = _state.time.get_frame_time ();
+      _state.startTime = get_time ();
       _state.frameCount = 0.0;
       _state.container.start_plugins ();
       _state.rt.update_time_slice ();
@@ -379,7 +380,7 @@ dmz::Application::update_time_slice () {
 
       result = !_state.exitObs.is_exit_requested ();
 
-      _state.frameCount++;
+      _state.frameCount += 1.0;
 
       if (result) { _state.rt.update_time_slice (); }
       else {
@@ -405,7 +406,7 @@ dmz::Application::stop () {
    _state.rt.update_time_slice ();
    _state.container.stop_plugins ();
 
-   const Float64 StopTime (_state.time.get_frame_time ());
+   const Float64 StopTime (get_time ());
 
    const Float64 TimeDelta (StopTime - _state.startTime);
 

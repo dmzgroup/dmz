@@ -1107,6 +1107,8 @@ dmz::Definitions::lookup_state_name (const Mask &State, String &name) const {
 
    if (_state.defs) {
 
+      name.flush ();
+
       HashTableStringIterator it;
 
       Mask *ptr = _state.defs->maskTable.get_first (it);

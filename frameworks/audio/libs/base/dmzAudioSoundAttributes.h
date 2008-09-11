@@ -13,12 +13,6 @@ namespace dmz {
       public:
          SoundAttributes ();
 
-         SoundAttributes (
-            const Vector &Position,
-            const Vector &Velocity,
-            const Float64 Pitch,
-            const Boolean Loop);
-
          SoundAttributes (const SoundAttributes &Value);
 
          ~SoundAttributes ();
@@ -36,9 +30,6 @@ namespace dmz {
 
          void set_pitch_scale (const Float64 Value);
          Float64 get_pitch_scale () const;
-
-         void set_loop (const Boolean Value);
-         Boolean get_loop () const;
 
       protected:
          struct State;

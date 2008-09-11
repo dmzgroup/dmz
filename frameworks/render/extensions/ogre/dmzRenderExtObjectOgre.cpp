@@ -85,7 +85,7 @@ dmz::RenderExtObjectOgre::RenderExtObjectOgre (
    _init (local);
 
    activate_default_object_attribute (
-      ObjectCreateMask | ObjectDestroyMask | ObjectTypeMask | ObjectStateMask);
+      ObjectCreateMask | ObjectDestroyMask | ObjectStateMask);
 }
 
 
@@ -231,21 +231,6 @@ dmz::RenderExtObjectOgre::destroy_object (
 
 
 void
-dmz::RenderExtObjectOgre::update_object_type (
-      const UUID &Identity,
-      const Handle ObjectHandle,
-      const Handle AttributeHandle,
-      const ObjectType &Value,
-      const ObjectType *PreviousValue) {
-
-   Mask objState;
-   _lookup_object_state (ObjectHandle, objState);
-
-   _update_object (ObjectHandle, Value, objState);
-}
-
-
-void
 dmz::RenderExtObjectOgre::update_object_state (
       const UUID &Identity,
       const Handle ObjectHandle,
@@ -376,7 +361,7 @@ dmz::RenderExtObjectOgre::_lookup_object_type (
 
    if (objectModule) {
 
-      objectModule->lookup_object_type (ObjectHandle, _defaultAttribute, objType);
+      objType = objectModule->lookup_object_type (ObjectHandle);
    }
 }
 

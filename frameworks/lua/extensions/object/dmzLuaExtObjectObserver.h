@@ -86,7 +86,28 @@ namespace dmz {
             const UUID &PrevAttributeIdentity,
             const Handle PrevAttributeObjectHandle);
 
-         virtual void update_object_type (
+         virtual void update_object_counter (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 Value,
+            const Int64 *PreviousValue);
+
+         virtual void update_object_counter_minimum (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 Value,
+            const Int64 *PreviousValue);
+
+         virtual void update_object_counter_maximum (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 Value,
+            const Int64 *PreviousValue);
+
+         virtual void update_object_alternate_type (
             const UUID &Identity,
             const Handle ObjectHandle,
             const Handle AttributeHandle,

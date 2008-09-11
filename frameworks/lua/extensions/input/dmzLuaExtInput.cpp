@@ -261,6 +261,8 @@ mouse_event_is_button_pressed (lua_State *L) {
    LUA_START_VALIDATE (L);
 
    LUA_END_VALIDATE (L, 1);
+   
+   return 0;
 }
 
 

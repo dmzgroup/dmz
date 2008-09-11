@@ -6,8 +6,8 @@
 
 namespace dmz {
 
-   DMZ_EVENT_UTIL_LINK_SYMBOL extern const Mask EventStartMask;
-   DMZ_EVENT_UTIL_LINK_SYMBOL extern const Mask EventEndMask;
+   DMZ_EVENT_UTIL_LINK_SYMBOL extern const Mask EventCreateMask;
+   DMZ_EVENT_UTIL_LINK_SYMBOL extern const Mask EventCloseMask;
    DMZ_EVENT_UTIL_LINK_SYMBOL extern const Mask EventAllMask;
 };
 

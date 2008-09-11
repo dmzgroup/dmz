@@ -170,7 +170,7 @@ dmz::RenderPluginLogoOSG::_create_logo () {
 
       if (_core) {
 
-         osg::Group *s = _core->get_scene ();
+         osg::Group *s = _core->get_overlay ();
 
          if (s) { s->addChild (_camera.get ()); }
       }

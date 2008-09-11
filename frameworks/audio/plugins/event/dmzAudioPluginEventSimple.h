@@ -5,6 +5,7 @@
 #include <dmzRuntimeEventType.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzTypesHashTableHandleTemplate.h>
 
 namespace dmz {
 
@@ -15,6 +16,7 @@ namespace dmz {
          public EventObserverUtil {
 
       public:
+         //! \cond
          AudioPluginEventSimple (const PluginInfo &Info, Config &local);
          ~AudioPluginEventSimple ();
 
@@ -28,20 +30,28 @@ namespace dmz {
             const Plugin *PluginPtr);
 
          // Event Observer Interface
-         virtual void end_event (
+         virtual void close_event (
             const Handle EventHandle,
             const EventType &Type,
             const EventLocalityEnum Locality);
 
       protected:
+         struct EventStruct {
+
+            const String File;
+            Handle sound;
+            EventType event;
+            EventStruct (const String &TheFile) : File (TheFile), sound (0) {;}
+         };
+
          void _init (Config &local);
 
          Log _log;
-         String _launchFile;
          AudioModule *_audioMod;
-         EventType _launchType;
          Handle _defaultEventHandle;
-         Handle _launchHandle;
+
+         HashTableHandleTemplate<EventStruct> _eventTable;
+         //! \endcond
 
       private:
          AudioPluginEventSimple ();

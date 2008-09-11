@@ -26,7 +26,7 @@ get_pick (lua_State *L) {
   lua_rawget (L, LUA_REGISTRYINDEX);
   RenderModulePick **pick = (RenderModulePick **)lua_touserdata (L, -1);
   if (pick) { result = *pick; }
-  lua_pop (L, 1); // pop isect module
+  lua_pop (L, 1); // pop pick module
 
   return result;
 }
@@ -207,7 +207,7 @@ dmz::LuaExtPick::discover_plugin (
 
          _pick = RenderModulePick::cast (PluginPtr);
 
-         if (_pick && !(*_pickPtr)) { *_pickPtr = _pick; }
+         if (_pick && _pickPtr && !(*_pickPtr)) { *_pickPtr = _pick; }
       }
    }
    else if (Mode == PluginDiscoverRemove) {
@@ -215,6 +215,7 @@ dmz::LuaExtPick::discover_plugin (
       if (_pick && (_pick == RenderModulePick::cast (PluginPtr))) {
 
          _pick = 0;
+         if (_pickPtr) { *_pickPtr = 0; }
       }
    }
 }
@@ -246,7 +247,7 @@ dmz::LuaExtPick::open_lua_extension (lua_State *L) {
    luaL_register (L, NULL, arrayFunc);
 
    lua_make_readonly (L, -1);
-   lua_pop (L, 1); // pop dmz.isect table
+   lua_pop (L, 1); // pop dmz.pick table
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -255,7 +256,7 @@ dmz::LuaExtPick::open_lua_extension (lua_State *L) {
 void
 dmz::LuaExtPick::close_lua_extension (lua_State *L) {
 
-   if (_pickPtr) { *_pickPtr = 0; }
+   if (_pickPtr) { *_pickPtr = 0; _pickPtr = 0; }
    lua_pushlightuserdata (L, (void *)&PickKey);
    lua_pushnil (L);
    lua_rawset (L, LUA_REGISTRYINDEX);

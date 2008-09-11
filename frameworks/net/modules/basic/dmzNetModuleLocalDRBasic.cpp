@@ -21,13 +21,13 @@ namespace {
 
       public:
          valueTest (
-            const dmz::Handle PreviousHandle,
-            const dmz::Handle CurrentHandle,
+            const dmz::Handle AttributeHandle,
+            const dmz::Handle LNVHandle,
             const dmz::Float64 Diff);
 
       protected:
-         const dmz::Handle _PreviousHandle;
-         const dmz::Handle _CurrentHandle;
+         const dmz::Handle _AttributeHandle;
+         const dmz::Handle _LNVHandle;
          const dmz::Float64 _Diff;
    };
 
@@ -35,8 +35,21 @@ namespace {
 
       public:
          zeroVelocityTest (
-            const dmz::Handle PreviousHandle,
-            const dmz::Handle CurrentHandle);
+            const dmz::Handle AttributeHandle,
+            const dmz::Handle LNVHandle);
+
+         dmz::Boolean update_object (
+            const dmz::Handle ObjectHandle,
+            dmz::ObjectModule &module,
+            dmz::Boolean &limitRate);
+   };
+
+   class counterTest : public valueTest {
+
+      public:
+         counterTest (
+            const dmz::Handle AttributeHandle,
+            const dmz::Handle LNVHandle);
 
          dmz::Boolean update_object (
             const dmz::Handle ObjectHandle,
@@ -48,8 +61,8 @@ namespace {
 
       public:
          stateTest (
-            const dmz::Handle PreviousHandle,
-            const dmz::Handle CurrentHandle,
+            const dmz::Handle AttributeHandle,
+            const dmz::Handle LNVHandle,
             const dmz::Mask &TheState);
 
          dmz::Boolean update_object (
@@ -65,8 +78,8 @@ namespace {
 
       public:
          posSkewTest (
-            const dmz::Handle PreviousHandle,
-            const dmz::Handle CurrentHandle,
+            const dmz::Handle AttributeHandle,
+            const dmz::Handle LNVHandle,
             const dmz::Time &TheTime,
             const dmz::Float64 Diff);
 
@@ -84,8 +97,8 @@ namespace {
       public:
          vectorTest (
             const TestTypeEnum Type,
-            const dmz::Handle PreviousHandle,
-            const dmz::Handle CurrentHandle,
+            const dmz::Handle AttributeHandle,
+            const dmz::Handle LNVHandle,
             const dmz::Float64 Diff);
 
          dmz::Boolean update_object (
@@ -101,8 +114,8 @@ namespace {
 
       public:
          oriTest (
-            const dmz::Handle PreviousHandle,
-            const dmz::Handle CurrentHandle,
+            const dmz::Handle AttributeHandle,
+            const dmz::Handle LNVHandle,
             const dmz::Float64 Diff);
 
          dmz::Boolean update_object (
@@ -115,8 +128,8 @@ namespace {
 
       public:
          scalarTest (
-            const dmz::Handle PreviousHandle,
-            const dmz::Handle CurrentHandle,
+            const dmz::Handle AttributeHandle,
+            const dmz::Handle LNVHandle,
             const dmz::Float64 Diff);
 
          dmz::Boolean update_object (
@@ -129,12 +142,12 @@ namespace {
 
       public:
          timeTest (
-            const dmz::Handle PreviousHandle,
+            const dmz::Handle LNVHandle,
             const dmz::Time &TheTime,
             const dmz::Float64 Diff);
 
       protected:
-         const dmz::Handle _PreviousHandle;
+         const dmz::Handle _LNVHandle;
          const dmz::Time &_Time;
          const dmz::Float64 _Diff;
          dmz::Boolean _init;
@@ -144,7 +157,7 @@ namespace {
 
       public:
          heartbeatTest (
-            const dmz::Handle PreviousHandle,
+            const dmz::Handle LNVHandle,
             const dmz::Time &TheTime,
             const dmz::Float64 Diff);
 
@@ -158,7 +171,7 @@ namespace {
 
       public:
          limitRateTest (
-            const dmz::Handle PreviousHandle,
+            const dmz::Handle LNVHandle,
             const dmz::Time &TheTime,
             const dmz::Float64 Diff);
 
@@ -171,19 +184,19 @@ namespace {
 
 
 valueTest::valueTest (
-      const dmz::Handle PreviousHandle,
-      const dmz::Handle CurrentHandle,
+      const dmz::Handle AttributeHandle,
+      const dmz::Handle LNVHandle,
       const dmz::Float64 Diff) :
-      _PreviousHandle (PreviousHandle),
-      _CurrentHandle (CurrentHandle),
+      _AttributeHandle (AttributeHandle),
+      _LNVHandle (LNVHandle),
       _Diff (Diff) {;}
 
 
 
 zeroVelocityTest::zeroVelocityTest (
-      const dmz::Handle PreviousHandle,
-      const dmz::Handle CurrentHandle) :
-      valueTest (PreviousHandle, CurrentHandle, 0.0) {;}
+      const dmz::Handle AttributeHandle,
+      const dmz::Handle LNVHandle) :
+      valueTest (AttributeHandle, LNVHandle, 0.0) {;}
 
 
 dmz::Boolean
@@ -197,10 +210,10 @@ zeroVelocityTest::update_object (
    dmz::Vector previous, current;
 
    const dmz::Boolean FoundPrevious (
-      module.lookup_velocity (ObjectHandle, _PreviousHandle, previous));
+      module.lookup_velocity (ObjectHandle, _LNVHandle, previous));
 
    const dmz::Boolean FoundCurrent (
-      module.lookup_velocity (ObjectHandle, _CurrentHandle, current));
+      module.lookup_velocity (ObjectHandle, _AttributeHandle, current));
 
    if (FoundPrevious && FoundCurrent) {
 
@@ -216,11 +229,37 @@ zeroVelocityTest::update_object (
 }
 
 
+counterTest::counterTest (
+      const dmz::Handle AttributeHandle,
+      const dmz::Handle LNVHandle) :
+      valueTest (AttributeHandle, LNVHandle, 0.0) {;}
+
+
+dmz::Boolean
+counterTest::update_object (
+      const dmz::Handle ObjectHandle,
+      dmz::ObjectModule &module,
+      dmz::Boolean &limitRate) {
+
+   dmz::Boolean result (dmz::False);
+
+   dmz::Int64 previous (0), current (0);
+
+   if (module.lookup_counter (ObjectHandle, _LNVHandle, previous) &&
+         module.lookup_counter (ObjectHandle, _AttributeHandle, current)) {
+
+      if (previous != current) { result = dmz::True; }
+   }
+
+   return result;
+}
+
+
 stateTest::stateTest (
-      const dmz::Handle PreviousHandle,
-      const dmz::Handle CurrentHandle,
+      const dmz::Handle AttributeHandle,
+      const dmz::Handle LNVHandle,
       const dmz::Mask &TheState) :
-      valueTest (PreviousHandle, CurrentHandle, 0.0), _StateMask (TheState) {;}
+      valueTest (AttributeHandle, LNVHandle, 0.0), _StateMask (TheState) {;}
 
 
 dmz::Boolean
@@ -233,8 +272,8 @@ stateTest::update_object (
 
    dmz::Mask previous, current;
 
-   if (module.lookup_state (ObjectHandle, _PreviousHandle, previous) &&
-         module.lookup_state (ObjectHandle, _CurrentHandle, current)) {
+   if (module.lookup_state (ObjectHandle, _LNVHandle, previous) &&
+         module.lookup_state (ObjectHandle, _AttributeHandle, current)) {
 
       if (_StateMask) {
 
@@ -250,11 +289,11 @@ stateTest::update_object (
 
 
 posSkewTest::posSkewTest (
-      const dmz::Handle PreviousHandle,
-      const dmz::Handle CurrentHandle,
+      const dmz::Handle AttributeHandle,
+      const dmz::Handle LNVHandle,
       const dmz::Time &TheTime,
       const dmz::Float64 Diff) :
-      valueTest (PreviousHandle, CurrentHandle, Diff), _Time (TheTime) {;}
+      valueTest (AttributeHandle, LNVHandle, Diff), _Time (TheTime) {;}
 
 
 dmz::Boolean
@@ -267,9 +306,9 @@ posSkewTest::update_object (
 
    dmz::Vector pos, lnvPos, lnvVel;
 
-   if (module.lookup_position (ObjectHandle, _CurrentHandle, pos) &&
-         module.lookup_position (ObjectHandle, _PreviousHandle, lnvPos) &&
-         module.lookup_velocity (ObjectHandle, _PreviousHandle, lnvVel)) {
+   if (module.lookup_position (ObjectHandle, _AttributeHandle, pos) &&
+         module.lookup_position (ObjectHandle, _LNVHandle, lnvPos) &&
+         module.lookup_velocity (ObjectHandle, _LNVHandle, lnvVel)) {
 
       const dmz::Float64 FrameTime (_Time.get_frame_time ());
 
@@ -286,10 +325,10 @@ posSkewTest::update_object (
 
 vectorTest::vectorTest (
       const TestTypeEnum Type,
-      const dmz::Handle PreviousHandle,
-      const dmz::Handle CurrentHandle,
+      const dmz::Handle AttributeHandle,
+      const dmz::Handle LNVHandle,
       const dmz::Float64 Diff) :
-      valueTest (PreviousHandle, CurrentHandle, Diff),
+      valueTest (AttributeHandle, LNVHandle, Diff),
       _Type (Type) {;}
 
 
@@ -306,23 +345,23 @@ vectorTest::update_object (
 
    if (_Type == TestPosition) {
 
-      found = module.lookup_position (ObjectHandle, _CurrentHandle, current) &&
-         module.lookup_position (ObjectHandle, _PreviousHandle, previous);
+      found = module.lookup_position (ObjectHandle, _AttributeHandle, current) &&
+         module.lookup_position (ObjectHandle, _LNVHandle, previous);
    }
    else if (_Type == TestVelocity) {
 
-      found = module.lookup_velocity (ObjectHandle, _CurrentHandle, current) &&
-         module.lookup_velocity (ObjectHandle, _PreviousHandle, previous);
+      found = module.lookup_velocity (ObjectHandle, _AttributeHandle, current) &&
+         module.lookup_velocity (ObjectHandle, _LNVHandle, previous);
    }
    else if (_Type == TestAcceleration) {
 
-      found = module.lookup_acceleration (ObjectHandle, _CurrentHandle, current) &&
-         module.lookup_acceleration (ObjectHandle, _PreviousHandle, previous);
+      found = module.lookup_acceleration (ObjectHandle, _AttributeHandle, current) &&
+         module.lookup_acceleration (ObjectHandle, _LNVHandle, previous);
    }
    else if (_Type == TestVector) {
 
-      found = module.lookup_vector (ObjectHandle, _CurrentHandle, current) &&
-         module.lookup_vector (ObjectHandle, _PreviousHandle, previous);
+      found = module.lookup_vector (ObjectHandle, _AttributeHandle, current) &&
+         module.lookup_vector (ObjectHandle, _LNVHandle, previous);
    }
 
    if (found) {
@@ -335,9 +374,9 @@ vectorTest::update_object (
 
 
 oriTest::oriTest (
-      const dmz::Handle PreviousHandle,
-      const dmz::Handle CurrentHandle,
-      const dmz::Float64 Diff) : valueTest (PreviousHandle, CurrentHandle, Diff) {;}
+      const dmz::Handle AttributeHandle,
+      const dmz::Handle LNVHandle,
+      const dmz::Float64 Diff) : valueTest (AttributeHandle, LNVHandle, Diff) {;}
 
 
 dmz::Boolean
@@ -350,8 +389,8 @@ oriTest::update_object (
 
    dmz::Matrix ori, lnvOri;
 
-   if (module.lookup_orientation (ObjectHandle, _PreviousHandle, lnvOri) &&
-         module.lookup_orientation (ObjectHandle, _CurrentHandle, ori)) {
+   if (module.lookup_orientation (ObjectHandle, _LNVHandle, lnvOri) &&
+         module.lookup_orientation (ObjectHandle, _AttributeHandle, ori)) {
 
       dmz::Vector vec1 (0.0, 0.0, -1.0);
       dmz::Vector vec2 (0.0, 0.0, -1.0);
@@ -377,9 +416,9 @@ oriTest::update_object (
 
 
 scalarTest::scalarTest (
-      const dmz::Handle PreviousHandle,
-      const dmz::Handle CurrentHandle,
-      const dmz::Float64 Diff) : valueTest (PreviousHandle, CurrentHandle, Diff) {;}
+      const dmz::Handle AttributeHandle,
+      const dmz::Handle LNVHandle,
+      const dmz::Float64 Diff) : valueTest (AttributeHandle, LNVHandle, Diff) {;}
 
 
 dmz::Boolean
@@ -392,8 +431,8 @@ scalarTest::update_object (
 
    dmz::Float64 value (0.0), lnv (0.0);
 
-   if (module.lookup_scalar (ObjectHandle, _PreviousHandle, lnv) &&
-         module.lookup_scalar (ObjectHandle, _CurrentHandle, value)) {
+   if (module.lookup_scalar (ObjectHandle, _LNVHandle, lnv) &&
+         module.lookup_scalar (ObjectHandle, _AttributeHandle, value)) {
 
       if (fabs (value - lnv)  > _Diff) { result = dmz::True; }
       else {
@@ -411,19 +450,19 @@ scalarTest::update_object (
 
 
 timeTest::timeTest (
-      const dmz::Handle PreviousHandle,
+      const dmz::Handle LNVHandle,
       const dmz::Time &TheTime,
       const dmz::Float64 Diff) :
-      _PreviousHandle (PreviousHandle),
+      _LNVHandle (LNVHandle),
       _Time (TheTime),
       _Diff (Diff),
       _init (dmz::False) {;}
 
 
 heartbeatTest::heartbeatTest (
-      const dmz::Handle PreviousHandle,
+      const dmz::Handle LNVHandle,
       const dmz::Time &TheTime,
-      const dmz::Float64 Diff) : timeTest (PreviousHandle, TheTime, Diff) {;}
+      const dmz::Float64 Diff) : timeTest (LNVHandle, TheTime, Diff) {;}
 
 
 dmz::Boolean
@@ -436,7 +475,7 @@ heartbeatTest::update_object (
 
       dmz::Float64 lnvStamp (0.0);
 
-      if (module.lookup_time_stamp (ObjectHandle, _PreviousHandle, lnvStamp)) {
+      if (module.lookup_time_stamp (ObjectHandle, _LNVHandle, lnvStamp)) {
 
          if (_Time.get_frame_time () >= (lnvStamp + _Diff)) { result = dmz::True; }
       }
@@ -446,9 +485,9 @@ heartbeatTest::update_object (
 
 
 limitRateTest::limitRateTest (
-      const dmz::Handle PreviousHandle,
+      const dmz::Handle LNVHandle,
       const dmz::Time &TheTime,
-      const dmz::Float64 Diff) : timeTest (PreviousHandle, TheTime, Diff) {;}
+      const dmz::Float64 Diff) : timeTest (LNVHandle, TheTime, Diff) {;}
 
 
 dmz::Boolean
@@ -459,7 +498,7 @@ limitRateTest::update_object (
 
    dmz::Float64 lnvStamp (0.0);
 
-   if (module.lookup_time_stamp (ObjectHandle, _PreviousHandle, lnvStamp)) {
+   if (module.lookup_time_stamp (ObjectHandle, _LNVHandle, lnvStamp)) {
 
       if (_Time.get_frame_time () < (lnvStamp + _Diff)) { limitRate = dmz::True; }
    }
@@ -474,7 +513,7 @@ dmz::NetModuleLocalDRBasic::NetModuleLocalDRBasic (
       Plugin (Info),
       NetModuleLocalDR (Info),
       _log (Info),
-      _time (Info.get_context ()),
+      _time (Info),
       _objMod (0),
       _defaultHandle (0) {
 
@@ -515,13 +554,13 @@ dmz::NetModuleLocalDRBasic::update_object (const Handle ObjectHandle) {
 
    if (_objMod) {
 
-      ObjectType type;
+      const ObjectType Type (_objMod->lookup_object_type (ObjectHandle));
 
-      if (_objMod->lookup_object_type (ObjectHandle, _defaultHandle, type)) {
+      if (Type) {
 
-         ObjectUpdate *test (_typeTable.lookup (type.get_handle ()));
+         ObjectUpdate *test (_typeTable.lookup (Type.get_handle ()));
 
-         if (!test) { test = _create_test_from_type (type); }
+         if (!test) { test = _create_test_from_type (Type); }
 
          Boolean limitRate (False);
 
@@ -546,22 +585,24 @@ dmz::NetModuleLocalDRBasic::_init (Config &local) {
 
    Config defaultList;
 
+   _log.info << "Creating default network transmission rules." << endl;
+
    if (local.lookup_all_config_merged ("default", defaultList)) {
 
       _defaultTest = _create_update_list (defaultList);
    }
    else {
 
-      _log.info << "Using default tests" << endl;
+      _log.info << "Using default rules set." << endl;
 
-      const Handle PreviousHandle (defs.create_named_handle (
+      const Handle LNVHandle (defs.create_named_handle (
             ObjectAttributeLastNetworkValueName));
 
-      const Handle CurrentHandle (defs.create_named_handle (
+      const Handle AttributeHandle (defs.create_named_handle (
             ObjectAttributeDefaultName));
 
       ObjectUpdate *current = _defaultTest = new heartbeatTest (
-         PreviousHandle,
+         LNVHandle,
          _time,
          5.0);
 
@@ -570,36 +611,36 @@ dmz::NetModuleLocalDRBasic::_init (Config &local) {
          const Mask EmptyState;
 
          current->next = new stateTest (
-            PreviousHandle,
-            CurrentHandle,
+            LNVHandle,
+            AttributeHandle,
             EmptyState);
 
          if (current->next) { current = current->next; }
 
          current->next = new zeroVelocityTest (
-            PreviousHandle,
-            CurrentHandle);
+            LNVHandle,
+            AttributeHandle);
 
          if (current->next) { current = current->next; }
 
          current->next = new limitRateTest (
-            PreviousHandle,
+            LNVHandle,
             _time,
             0.066666666667); // 1/15 of a second max update rate
 
          if (current->next) { current = current->next; }
 
          current->next = new posSkewTest (
-            PreviousHandle,
-            CurrentHandle,
+            LNVHandle,
+            AttributeHandle,
             _time,
             0.25);
 
          if (current->next) { current = current->next; }
 
          current->next = new oriTest (
-            PreviousHandle,
-            CurrentHandle,
+            LNVHandle,
+            AttributeHandle,
             Pi64 / 60.0); // 0.05235987756 == 3 degrees
 
          if (current->next) { current = current->next; }
@@ -621,80 +662,77 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
 
    ObjectUpdate *head (0), *current (0);
 
+   ConfigIterator it;
    Config cd;
 
-   ConfigIterator it;
-
-   Boolean found (listData.get_first_config (it, cd));
-
-   while (found) {
+   while (listData.get_next_config (it, cd)) {
 
       ObjectUpdate *next (0);
 
-      const Handle CurrentHandle (defs.create_named_handle (
-         config_to_string ("current", cd, ObjectAttributeDefaultName)));
+      const String Type (config_to_string ("type", cd).to_lower ());
 
-      const String PreviousName (
-         config_to_string ("previous", cd, ObjectAttributeLastNetworkValueName));
+      const String AttributeName (
+         config_to_string ("attribute", cd, ObjectAttributeDefaultName));
 
-      const Handle PreviousHandle (defs.create_named_handle (PreviousName));
+      const Handle AttributeHandle (defs.create_named_handle (AttributeName));
 
-      const String Name (cd.get_name ().to_lower ());
+      const Handle LNVHandle (defs.create_named_handle (
+         config_to_string (
+            "lnvattribute",
+            cd,
+            create_last_network_value_name (AttributeName))));
 
-      if (Name == "position") {
+      if (Type == "position") {
 
          next = new vectorTest (
             TestPosition,
-            PreviousHandle,
-            CurrentHandle,
+            AttributeHandle,
+            LNVHandle,
             config_to_float64 ("value", cd, 0.25));
       }
-      else if (Name == "velocity") {
+      else if (Type == "velocity") {
 
          next = new vectorTest (
             TestVelocity,
-            PreviousHandle,
-            CurrentHandle,
+            AttributeHandle,
+            LNVHandle,
             config_to_float64 ("value", cd, 0.25));
       }
-      else if (Name == "acceleration") {
+      else if (Type == "acceleration") {
 
          next = new vectorTest (
             TestAcceleration,
-            PreviousHandle,
-            CurrentHandle,
+            AttributeHandle,
+            LNVHandle,
             config_to_float64 ("value", cd, 0.25));
       }
-      else if (Name == "vector") {
+      else if (Type == "vector") {
 
          next = new vectorTest (
-            TestAcceleration,
-            PreviousHandle,
-            CurrentHandle,
+            TestVector,
+            AttributeHandle,
+            LNVHandle,
             config_to_float64 ("value", cd, 0.25));
       }
-      else if (Name == "orientation") {
+      else if (Type == "orientation") {
 
          next = new oriTest (
-            PreviousHandle,
-            CurrentHandle,
+            AttributeHandle,
+            LNVHandle,
             config_to_float64 ("value", cd, 0.25));
       }
-      else if (Name == "scalar") {
-
-         String lnvName (PreviousName);
-
-         if (lnvName == ObjectAttributeLastNetworkValueName) {
-
-            lnvName = create_last_network_value_name (lnvName);
-         }
+      else if (Type == "scalar") {
 
          next = new scalarTest (
-            defs.create_named_handle (lnvName),
-            CurrentHandle,
+            AttributeHandle,
+            LNVHandle,
             config_to_float64 ("value", cd, 0.25));
       }
-      else if (Name == "state") {
+      else if (Type == "counter") {
+
+         next = new counterTest (AttributeHandle, LNVHandle);
+      }
+      else if (Type == "state") {
 
          Definitions defs (get_plugin_runtime_context (), &_log);
 
@@ -702,38 +740,38 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
 
          defs.lookup_state (config_to_string ("value", cd), state);
 
-         next = new stateTest (PreviousHandle, CurrentHandle, state);
+         next = new stateTest (AttributeHandle, LNVHandle, state);
       }
-      else if (Name == "skew") {
+      else if (Type == "skew") {
 
          next = new posSkewTest (
-            PreviousHandle,
-            CurrentHandle,
+            AttributeHandle,
+            LNVHandle,
             _time,
             config_to_float64 ("value", cd, 0.25));
       }
-      else if (Name == "heartbeat") {
+      else if (Type == "heartbeat") {
 
          next = new heartbeatTest (
-            PreviousHandle,
+            LNVHandle,
             _time,
             config_to_float64 ("value", cd, 5.0));
       }
-      else if (Name == "ratelimit") {
+      else if (Type == "ratelimit") {
 
          next = new limitRateTest (
-            PreviousHandle,
+            LNVHandle,
             _time,
-            config_to_float64 ("diff", cd, Pi64 / 60.0));
+            // 1/15 of a second max update rate is the default.
+            config_to_float64 ("diff", cd, 0.066666666667));
       }
 
       if (next) {
 
+         _log.info << "Adding rule: " << Type << endl;
          if (current) { current->next = next; current = next; }
          else { head = current = next; }
       }
-
-      found = listData.get_next_config (it, cd);
    }
 
    return head;
@@ -762,9 +800,12 @@ dmz::NetModuleLocalDRBasic::_create_test_from_type (const ObjectType &Type) {
 
          Config listData;
 
-         if (current.get_config ().lookup_all_config_merged (
-               "net.local.rules",
+         if (current.get_config ().lookup_all_config (
+               "net.rule",
                listData)) {
+
+            _log.info << "Creating network transmission rules for: " << Type.get_name ()
+               << endl;
 
             result = _create_update_list (listData);
 

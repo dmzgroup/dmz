@@ -107,6 +107,7 @@ namespace dmz {
 
          void _open_lua ();
          void _start_lua_plugins ();
+         void _stop_lua_plugins ();
          void _close_lua ();
          void _update_hook_function ();
          ScriptStruct *_request_script (Config &script);

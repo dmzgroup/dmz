@@ -178,7 +178,7 @@ dmz::ObjectPluginUndo::receive_message (
          InData->lookup_string (_valueHandle, 0, typeName);
          ObjectType type;
          _defs.lookup_object_type (typeName, type);
-         objMod->store_object_type (ObjectHandle, AttrHandle, type);
+         objMod->store_alternate_object_type (ObjectHandle, AttrHandle, type);
       }
       else if (Msg == _storeState) {
 
@@ -344,9 +344,7 @@ dmz::ObjectPluginUndo::destroy_object (
       _undo.store_action (_activateObject, get_plugin_handle (), &data);
       objMod->dump_all_object_attributes (ObjectHandle, *this);
 
-      ObjectType type;
-      objMod->lookup_object_type (ObjectHandle, _defaultAttrHandle, type);
-      const String TypeName (type.get_name ());
+      const String TypeName (objMod->lookup_object_type (ObjectHandle).get_name ());
       data.store_string (_stringHandle, 0, TypeName);
 
       _undo.store_action (_createObject, get_plugin_handle (), &data);
@@ -385,13 +383,18 @@ dmz::ObjectPluginUndo::remove_object_attribute (
 
       _inDump = True;
 
-      if (AttrMask & ObjectTypeMask) {
+      if (AttrMask & ObjectAltTypeMask) {
 
          ObjectType type;
 
-         if (objMod->lookup_object_type (ObjectHandle, AttributeHandle, type)) {
+         if (objMod->lookup_alternate_object_type (ObjectHandle, AttributeHandle, type)) {
 
-            update_object_type (Identity, ObjectHandle, AttributeHandle, type, 0);
+            update_object_alternate_type (
+               Identity,
+               ObjectHandle,
+               AttributeHandle,
+               type,
+               0);
          }
       }
 
@@ -646,7 +649,40 @@ dmz::ObjectPluginUndo::update_link_attribute_object (
 
 
 void
-dmz::ObjectPluginUndo::update_object_type (
+dmz::ObjectPluginUndo::update_object_counter (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 &Value,
+      const Int64 *PreviousValue) {
+
+}
+
+
+void
+dmz::ObjectPluginUndo::update_object_counter_minimum (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 &Value,
+      const Int64 *PreviousValue) {
+
+}
+
+
+void
+dmz::ObjectPluginUndo::update_object_counter_maximum (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 &Value,
+      const Int64 *PreviousValue) {
+
+}
+
+
+void
+dmz::ObjectPluginUndo::update_object_alternate_type (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -657,7 +693,7 @@ dmz::ObjectPluginUndo::update_object_type (
 
       if (!_inDump && !PreviousValue) {
 
-         _remove_attribute (Identity, AttributeHandle, ObjectTypeMask);
+         _remove_attribute (Identity, AttributeHandle, ObjectAltTypeMask);
       }
       else {
 

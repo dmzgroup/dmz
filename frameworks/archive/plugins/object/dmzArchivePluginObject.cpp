@@ -20,7 +20,7 @@
 \details The archive XML format:
 \code
 <dmz>
-<dmzArchivePluginObject>
+<objects>
    <!-- If name is not specified, the UUID is used in its place -->
    <object type="Type Name" uuid="UUID String" name="unique name">
       <!-- If name is not specified, the default attribute handle is used. -->
@@ -32,7 +32,13 @@
             <!-- more objects -->
             <object name="Last Sub Object Name" attribute="Attribute Object Name"/>
          </links>
-         <type value="Type Name"/>
+         <counter
+            value="Counter Value"
+            minimum="Min Value"
+            maximum="Max Value"
+            rollover="true/false"
+         />
+         <alttype value="Type Name"/>
          <state value="State Names"/>
          <flag value="Boolean Value"/>
          <timestamp value="0.0"/>
@@ -58,7 +64,7 @@
       </attributes>
       <!-- more object attributes -->
    </object>
-</dmzArchivePluginObject>
+</objects>
 </dmz>
 \endcode
 The filter XML format:
@@ -336,7 +342,95 @@ dmz::ArchivePluginObject::update_link_attribute_object (
 
 
 void
-dmz::ArchivePluginObject::update_object_type (
+dmz::ArchivePluginObject::update_object_counter (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value,
+      const Int64 *PreviousValue) {
+
+   Config config;
+
+   if (_get_attr_config (AttributeHandle, ObjectCounterMask, config)) {
+
+      Config counter;
+
+      if (!config.lookup_config ("counter", counter)) {
+
+         counter = Config ("counter");
+         config.add_config (counter);
+      }
+
+      String valueStr; valueStr << Value;
+      config.store_attribute ("value", valueStr);
+
+      ObjectModule *objMod (get_object_module ());
+
+      if (objMod) {
+
+         Boolean rollover (False);
+
+         objMod->lookup_counter_rollover (ObjectHandle, AttributeHandle, rollover);
+
+         config.store_attribute ("rollover", (rollover ? "true" : "false"));
+      }
+   }
+}
+
+
+void
+dmz::ArchivePluginObject::update_object_counter_minimum (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value,
+      const Int64 *PreviousValue) {
+
+   Config config;
+
+   if (_get_attr_config (AttributeHandle, ObjectCounterMask, config)) {
+
+      Config counter;
+
+      if (!config.lookup_config ("counter", counter)) {
+
+         counter = Config ("counter");
+         config.add_config (counter);
+      }
+
+      String valueStr; valueStr << Value;
+      config.store_attribute ("minimum", valueStr);
+   }
+}
+
+
+void
+dmz::ArchivePluginObject::update_object_counter_maximum (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Int64 Value,
+      const Int64 *PreviousValue) {
+
+   Config config;
+
+   if (_get_attr_config (AttributeHandle, ObjectCounterMask, config)) {
+
+      Config counter;
+
+      if (!config.lookup_config ("counter", counter)) {
+
+         counter = Config ("counter");
+         config.add_config (counter);
+      }
+
+      String valueStr; valueStr << Value;
+      config.store_attribute ("maximum", valueStr);
+   }
+}
+
+void
+dmz::ArchivePluginObject::update_object_alternate_type (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -345,10 +439,9 @@ dmz::ArchivePluginObject::update_object_type (
 
    Config config;
 
-   if ((AttributeHandle != _defaultHandle) &&
-         _get_attr_config (AttributeHandle, ObjectTypeMask, config)) {
+   if (_get_attr_config (AttributeHandle, ObjectAltTypeMask, config)) {
 
-      Config type ("type");
+      Config type ("alttype");
       type.store_attribute ("value", Value.get_name ());
       config.add_config (type);
    }
@@ -583,19 +676,19 @@ dmz::ArchivePluginObject::_archive_object (const Handle ObjectHandle) {
 
       Config tmp ("object");
 
-      ObjectType type;
-
       Boolean archiveObject (True);
 
-      if (objMod->lookup_object_type (ObjectHandle, _defaultHandle, type)) {
+      const ObjectType Type (objMod->lookup_object_type (ObjectHandle));
+
+      if (Type) {
 
          if (_currentFilter) {
 
             if (_currentFilter->exTypes.get_count () &&
-                  _currentFilter->exTypes.contains_type (type)) { archiveObject = False; }
+                  _currentFilter->exTypes.contains_type (Type)) { archiveObject = False; }
 
             if (archiveObject && _currentFilter->inTypes.get_count () &&
-                  !_currentFilter->inTypes.contains_type (type)) {
+                  !_currentFilter->inTypes.contains_type (Type)) {
 
                archiveObject = False;
             }
@@ -605,7 +698,7 @@ dmz::ArchivePluginObject::_archive_object (const Handle ObjectHandle) {
 
       if (archiveObject) {
 
-         tmp.store_attribute ("type", type.get_name ());
+         tmp.store_attribute ("type", Type.get_name ());
 
          UUID uuid;
 
@@ -770,11 +863,7 @@ dmz::ArchivePluginObject::_config_to_object (Config &objData) {
 
          if (ObjUUID) { objectHandle = objMod->lookup_handle_from_uuid (ObjUUID); }
 
-         if (objectHandle) {
-
-            objMod->store_object_type (objectHandle,_defaultHandle, Type);
-         }
-         else { objectHandle = objMod->create_object (Type, ObjectLocal); }
+         if (!objectHandle) { objectHandle = objMod->create_object (Type, ObjectLocal); }
 
          if (objectHandle) {
 
@@ -904,15 +993,61 @@ dmz::ArchivePluginObject::_store_object_attributes (
                   << AttributeName << endl;
             }
          }
-         else if (DataName == "type") {
+         else if (DataName == "counter") {
 
-            const ObjectType Type (
-               config_to_string ("value", data),
-               get_plugin_runtime_context ());
+            if (!FilterMask.contains (ObjectMinCounterMask)) {
+ 
+               String valueStr;
 
-            if (!FilterMask.contains (ObjectTypeMask) && Type) {
+               if (data.lookup_attribute ("minimum", valueStr)) {
 
-               objMod->store_object_type (ObjectHandle, AttrHandle, Type);
+                  objMod->store_counter_minimum (
+                     ObjectHandle,
+                     AttrHandle,
+                     string_to_int64 (valueStr));
+               }
+            }
+
+            if (!FilterMask.contains (ObjectMaxCounterMask)) {
+ 
+               String valueStr;
+
+               if (data.lookup_attribute ("maximum", valueStr)) {
+
+                  objMod->store_counter_maximum (
+                     ObjectHandle,
+                     AttrHandle,
+                     string_to_int64 (valueStr));
+               }
+            }
+
+            if (!FilterMask.contains (ObjectCounterMask)) {
+ 
+               String valueStr;
+
+               if (data.lookup_attribute ("value", valueStr)) {
+
+                  objMod->store_counter (
+                     ObjectHandle,
+                     AttrHandle,
+                     string_to_int64 (valueStr));
+
+                  objMod->store_counter_rollover (
+                     ObjectHandle,
+                     AttrHandle,
+                     config_to_boolean ("rollover", data, False));
+               }
+            }
+         }
+         else if (DataName == "alttype") {
+
+            if (!FilterMask.contains (ObjectAltTypeMask)) {
+
+               const ObjectType Type (
+                  config_to_string ("value", data),
+                  get_plugin_runtime_context ());
+
+               objMod->store_alternate_object_type (ObjectHandle, AttrHandle, Type);
             }
          }
          else if (DataName == "state") {
@@ -1105,7 +1240,7 @@ dmz::ArchivePluginObject::_filter_state (const Handle AttrHandle, const Mask &Va
 void
 dmz::ArchivePluginObject::_init (Config &local) {
 
-   _scope = config_to_string_container ("scope", local);
+   _scope = config_to_string_container ("scope.string", local);
    if (_scope.get_count () == 0) { _scope.add_string ("objects"); }
 
    RuntimeContext *context (get_plugin_runtime_context ());

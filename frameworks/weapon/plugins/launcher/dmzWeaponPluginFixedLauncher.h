@@ -8,6 +8,8 @@
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
+#include <dmzRuntimeTime.h>
+#include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesMask.h>
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
@@ -82,12 +84,31 @@ namespace dmz {
             const Boolean *PreviousValue);
 
       protected:
+         struct LaunchStruct {
+
+            const Handle Source;
+            Int32 activeCount;
+            Float64 lastLaunchTime;
+
+            LaunchStruct (const Handle TheSource) :
+               Source (TheSource),
+               activeCount (0),
+               lastLaunchTime (0.0) {;}
+         };
+
+         LaunchStruct *_get_struct (const Handle Source);
          void _create_munition (const Handle SourceHandle);
          void _init (Config &local);
 
          Log _log;
+         Time _time;
+
+         HashTableHandleTemplate<LaunchStruct> _launchTable;
+
+         Float64 _delay;
 
          Vector _launcherOffset;
+         Matrix _launcherRotation;
 
          Mask _deadState;
 
@@ -96,6 +117,7 @@ namespace dmz {
          Handle _hil;
 
          Handle _defaultHandle;
+         Handle _sourceEventHandle;
 
          ObjectType _ammoType;
 

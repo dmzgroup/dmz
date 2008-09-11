@@ -18,7 +18,7 @@ namespace dmz {
 
          RefCount ();
          virtual ~RefCount ();
-         virtual void ref_count_is_zero () = 0;
+         virtual void _ref_count_is_zero () = 0;
    };
 
    class RefCountDeleteOnZero : public RefCount {
@@ -26,7 +26,7 @@ namespace dmz {
       protected:
          RefCountDeleteOnZero () {;}
          virtual ~RefCountDeleteOnZero () {;}
-         virtual void ref_count_is_zero () { delete this; }
+         virtual void _ref_count_is_zero () { delete this; }
    };
 };
 

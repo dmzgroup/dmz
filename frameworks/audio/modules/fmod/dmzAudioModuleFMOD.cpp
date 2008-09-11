@@ -1,5 +1,6 @@
 #include "dmzAudioModuleFMOD.h"
 #include <dmzAudioSoundAttributes.h>
+#include <dmzAudioSoundInit.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -82,7 +83,7 @@ dmz::AudioModuleFMOD::~AudioModuleFMOD () {
 
       // This will automatically cause a delete, which will also release the sound
       // within FMOD
-      data->unref ();
+      while (data->unref () > 0) {;} // do nothing
    }
 
    // Clear references to all the sound data structs (this will not delete them - they
@@ -110,7 +111,7 @@ dmz::AudioModuleFMOD::update_time_slice (const Float64 TimeDelta) {
 
 // AudioModule Interface
 dmz::Handle
-dmz::AudioModuleFMOD::create_audio_handle (const String &Filename) {
+dmz::AudioModuleFMOD::create_audio_handle (const String &FileName) {
 
    Handle result (0);
    String absPath;
@@ -118,7 +119,7 @@ dmz::AudioModuleFMOD::create_audio_handle (const String &Filename) {
    if (_system) {
 
       // Convert to absolute file path
-      Boolean validPath = get_absolute_path (Filename, absPath);
+      Boolean validPath = get_absolute_path (FileName, absPath);
 
       if (validPath) {
 
@@ -146,6 +147,8 @@ dmz::AudioModuleFMOD::create_audio_handle (const String &Filename) {
                SoundStruct *newSoundData = new SoundStruct (
                   absPath,
                   newSound,
+                  _soundHandleTable,
+                  _soundNameTable,
                   get_plugin_runtime_context ());
 
                if (newSoundData && _soundNameTable.store (absPath, newSoundData)) {
@@ -179,13 +182,7 @@ dmz::AudioModuleFMOD::destroy_audio_handle (const Handle AudioHandle) {
 
       if (data) {
 
-         _soundHandleTable.remove (AudioHandle);
-         _soundNameTable.remove (data->Filename);
-
          data->unref ();
-         // Now when any leftover sound instances are done with this piece
-         // of sound data, then it will be automatically deleted
-
          result = True;
       }
    }
@@ -197,6 +194,7 @@ dmz::AudioModuleFMOD::destroy_audio_handle (const Handle AudioHandle) {
 dmz::Handle
 dmz::AudioModuleFMOD::play_sound (
       const Handle AudioHandle,
+      const SoundInit &Init,
       const SoundAttributes &Attributes) {
 
    Handle result (0);
@@ -219,7 +217,7 @@ dmz::AudioModuleFMOD::play_sound (
                   _instanceTable.store (instanceHandle, instance)) {
 
                String errorHeader ("Playing Sound '");
-               errorHeader << data->Filename << "'";
+               errorHeader << data->FileName << "'";
 
                // Bind sound to channel
                FMOD_RESULT fmodResult = _system->playSound (
@@ -235,6 +233,29 @@ dmz::AudioModuleFMOD::play_sound (
                   fmodResult = instance->channel->getFrequency (&(defaultFrequency));
 
                   instance->defaultFrequency = defaultFrequency;
+
+                  _error_check (errorHeader, fmodResult);
+
+                  // Set loop mode
+                  if (Init.get (SoundLooped)) {
+
+                     fmodResult = instance->channel->setMode (FMOD_LOOP_NORMAL);
+                  }
+                  else {
+
+                     fmodResult = instance->channel->setMode (FMOD_LOOP_OFF);
+                  }
+
+                  _error_check (errorHeader, fmodResult);
+
+                  if (Init.get (SoundRelative)) {
+
+                     fmodResult = instance->channel->setMode (FMOD_3D_HEADRELATIVE);
+                  }
+                  else {
+
+                     fmodResult = instance->channel->setMode (FMOD_3D_WORLDRELATIVE);
+                  }
 
                   _error_check (errorHeader, fmodResult);
 
@@ -298,18 +319,6 @@ dmz::AudioModuleFMOD::update_sound (
 
          FMOD_RESULT fmodResult (FMOD_OK);
 
-         // Set loop mode
-         if (Attributes.get_loop ()) {
-
-            fmodResult = instance->channel->setMode (FMOD_LOOP_NORMAL);
-         }
-         else {
-
-            fmodResult = instance->channel->setMode (FMOD_LOOP_OFF);
-         }
-
-         _error_check (errorHeader, fmodResult);
-
          fmodResult = instance->channel->setVolume (
                Float32 (Attributes.get_gain_scale()));
 
@@ -352,6 +361,7 @@ dmz::AudioModuleFMOD::update_sound (
 dmz::Boolean
 dmz::AudioModuleFMOD::lookup_sound (
       const Handle InstanceHandle,
+      SoundInit &init,
       SoundAttributes &attributes) {
 
    Boolean result (False);
@@ -395,7 +405,7 @@ dmz::AudioModuleFMOD::stop_sound (const Handle InstanceHandle) {
    if (instance) {
 
       String infoString ("Stopping Sound '");
-      if (instance->data) { infoString << instance->data->Filename << "'"; }
+      if (instance->data) { infoString << instance->data->FileName << "'"; }
       else { infoString << "UNKNOWN'"; }
 
       // Stop channel, which will automatically cause a callback to the
@@ -821,7 +831,7 @@ dmz::AudioModuleFMOD::_get_new_instance (SoundStruct *soundData) {
       else { //Create new instance
 
          result = new InstanceStruct (
-            soundData->Filename,
+            soundData->FileName,
             (*this),
             soundData,
             get_plugin_runtime_context ());

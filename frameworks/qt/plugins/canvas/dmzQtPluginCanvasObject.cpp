@@ -263,7 +263,7 @@ dmz::QtPluginCanvasObject::create_object (
 
       _objectTable.store (os->ObjHandle, os);
 
-      _canvasModule->add_item (os->ObjHandle, os->item);
+      if (_canvasModule) { _canvasModule->add_item (os->ObjHandle, os->item); }
    }
 }
 

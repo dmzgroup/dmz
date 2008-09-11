@@ -29,6 +29,28 @@
 			name = dmzFoundation;
 			productName = dmzFoundation;
 		};
+		7A202FF30E5CAF25007F800D /* dmzArchiveFramework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 7A2030160E5CAF7C007F800D /* Build configuration list for PBXAggregateTarget "dmzArchiveFramework" */;
+			buildPhases = (
+				7A202FF20E5CAF25007F800D /* CopyFiles */,
+			);
+			dependencies = (
+			);
+			name = dmzArchiveFramework;
+			productName = dmzArchiveFramework;
+		};
+		7A20BF610E522FD600D169ED /* dmzInputFramework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 7A20BF650E52300D00D169ED /* Build configuration list for PBXAggregateTarget "dmzInputFramework" */;
+			buildPhases = (
+				7A20BF600E522FD600D169ED /* CopyFiles */,
+			);
+			dependencies = (
+			);
+			name = dmzInputFramework;
+			productName = dmzInputFramework;
+		};
 		7A560BDF0E12D99C0049409D /* dmzLuaFramework */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 7A560BE30E12D9A70049409D /* Build configuration list for PBXAggregateTarget "dmzLuaFramework" */;
@@ -60,11 +82,42 @@
 				7A8535F30E12EC4F008CEAEB /* PBXTargetDependency */,
 				7A8535F50E12EC51008CEAEB /* PBXTargetDependency */,
 				7A8535F70E12EC53008CEAEB /* PBXTargetDependency */,
-				2280F5F90E19A6B0003A2238 /* PBXTargetDependency */,
+				7A6F1BE80E5CA55C004FB18E /* PBXTargetDependency */,
+				7A6F1BC30E5CA2DB004FB18E /* PBXTargetDependency */,
+				7A6F1BF40E5CA5DA004FB18E /* PBXTargetDependency */,
 				7A8535F90E12EC55008CEAEB /* PBXTargetDependency */,
+				2280F5F90E19A6B0003A2238 /* PBXTargetDependency */,
+				7A20BFC70E52309A00D169ED /* PBXTargetDependency */,
+				7A35FBE50E5CCD400002DA61 /* PBXTargetDependency */,
+				7A20BFC90E52309D00D169ED /* PBXTargetDependency */,
+				7A20C01F0E52314A00D169ED /* PBXTargetDependency */,
+				7A20C0680E52358800D169ED /* PBXTargetDependency */,
+				7A8C27B60E5247EB00343AC9 /* PBXTargetDependency */,
+				D249EF130E5B8B8600A57803 /* PBXTargetDependency */,
+				7A202F8E0E5CADB4007F800D /* PBXTargetDependency */,
+				7A202F900E5CADB7007F800D /* PBXTargetDependency */,
+				7A202FA10E5CADF6007F800D /* PBXTargetDependency */,
+				7A202FC40E5CAE74007F800D /* PBXTargetDependency */,
+				7A20307B0E5CCB70007F800D /* PBXTargetDependency */,
+				7A20307D0E5CCB72007F800D /* PBXTargetDependency */,
+				7A20307F0E5CCB75007F800D /* PBXTargetDependency */,
+				7A2030810E5CCB77007F800D /* PBXTargetDependency */,
+				7A2030830E5CCB79007F800D /* PBXTargetDependency */,
+				7A2030850E5CCB7B007F800D /* PBXTargetDependency */,
 			);
 			name = build_all;
 			productName = build_all;
+		};
+		D249EF160E5B8BAD00A57803 /* dmzRenderFramework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D249EF250E5B8BBA00A57803 /* Build configuration list for PBXAggregateTarget "dmzRenderFramework" */;
+			buildPhases = (
+				D249EF150E5B8BAD00A57803 /* CopyFiles */,
+			);
+			dependencies = (
+			);
+			name = dmzRenderFramework;
+			productName = dmzRenderFramework;
 		};
 /* End PBXAggregateTarget section */
 
@@ -243,6 +296,55 @@
 		7A09B1720E11A6AD003C5B32 /* dmzFileCacheLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A09AFC40E118D16003C5B32 /* dmzFileCacheLocal.cpp */; };
 		7A09B1750E11A6EA003C5B32 /* dmzFileCacheLocal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A09AFC50E118D16003C5B32 /* dmzFileCacheLocal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A09B1760E11A6EA003C5B32 /* dmzFileCacheLocalExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A09AFC70E118D16003C5B32 /* dmzFileCacheLocalExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A202F450E5CAC57007F800D /* dmzRenderModuleIsect.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202EE70E5CAC49007F800D /* dmzRenderModuleIsect.h */; };
+		7A202F460E5CAC57007F800D /* dmzRenderModulePick.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202EE90E5CAC49007F800D /* dmzRenderModulePick.h */; };
+		7A202F470E5CAC57007F800D /* dmzRenderModulePortal.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202EEB0E5CAC49007F800D /* dmzRenderModulePortal.h */; };
+		7A202F480E5CAC57007F800D /* dmzRenderPick2d.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202EEC0E5CAC49007F800D /* dmzRenderPick2d.h */; };
+		7A202F880E5CAD97007F800D /* dmzRenderIsect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202EEF0E5CAC49007F800D /* dmzRenderIsect.cpp */; };
+		7A202F890E5CAD97007F800D /* dmzRenderIsect.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202EF00E5CAC49007F800D /* dmzRenderIsect.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A202F8A0E5CAD97007F800D /* dmzRenderIsectExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202EF20E5CAC49007F800D /* dmzRenderIsectExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A202F8B0E5CAD97007F800D /* dmzRenderIsectUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202EF30E5CAC49007F800D /* dmzRenderIsectUtil.cpp */; };
+		7A202F8C0E5CAD97007F800D /* dmzRenderIsectUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202EF40E5CAC49007F800D /* dmzRenderIsectUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A202FA20E5CAE06007F800D /* dmzRenderPick2dUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202F050E5CAC49007F800D /* dmzRenderPick2dUtil.cpp */; };
+		7A202FA30E5CAE06007F800D /* dmzRenderPick2dUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202F060E5CAC49007F800D /* dmzRenderPick2dUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A202FA40E5CAE06007F800D /* dmzRenderUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202F080E5CAC49007F800D /* dmzRenderUtilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A202FC20E5CAE6A007F800D /* dmzRenderModulePickBasic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202F300E5CAC49007F800D /* dmzRenderModulePickBasic.cpp */; };
+		7A202FF70E5CAF32007F800D /* dmzArchiveModule.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202FCC0E5CAF0A007F800D /* dmzArchiveModule.h */; };
+		7A202FF80E5CAF32007F800D /* dmzArchiveObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202FCE0E5CAF0A007F800D /* dmzArchiveObserver.h */; };
+		7A2030190E5CC841007F800D /* dmzArchiveObserverUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202FD10E5CAF0A007F800D /* dmzArchiveObserverUtil.cpp */; };
+		7A20301A0E5CC841007F800D /* dmzArchiveObserverUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202FD20E5CAF0A007F800D /* dmzArchiveObserverUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A20301B0E5CC841007F800D /* dmzArchiveUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202FD40E5CAF0A007F800D /* dmzArchiveUtilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A20302D0E5CC889007F800D /* dmzArchiveModuleBasic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202FD70E5CAF0A007F800D /* dmzArchiveModuleBasic.cpp */; };
+		7A20303E0E5CC9E0007F800D /* dmzArchivePluginAutoLoad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202FE00E5CAF0A007F800D /* dmzArchivePluginAutoLoad.cpp */; };
+		7A2030620E5CCA6D007F800D /* dmzArchivePluginObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202FE40E5CAF0A007F800D /* dmzArchivePluginObject.cpp */; };
+		7A2030770E5CCACB007F800D /* dmzArchivePluginAutoSave.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202FE80E5CAF0A007F800D /* dmzArchivePluginAutoSave.cpp */; };
+		7A20BFB50E52305E00D169ED /* dmzInputConsts.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A20BF680E52302E00D169ED /* dmzInputConsts.h */; };
+		7A20BFB60E52305E00D169ED /* dmzInputMaskConsts.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A20BF6A0E52302E00D169ED /* dmzInputMaskConsts.h */; };
+		7A20BFB70E52305E00D169ED /* dmzInputModule.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A20BF6C0E52302E00D169ED /* dmzInputModule.h */; };
+		7A20BFB80E52305E00D169ED /* dmzInputObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A20BF6E0E52302E00D169ED /* dmzInputObserver.h */; };
+		7A20C0140E52313100D169ED /* dmzInputEventController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A20BF710E52302E00D169ED /* dmzInputEventController.cpp */; };
+		7A20C0150E52313100D169ED /* dmzInputEventController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A20BF720E52302E00D169ED /* dmzInputEventController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A20C0160E52313100D169ED /* dmzInputEventKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A20BF730E52302E00D169ED /* dmzInputEventKey.cpp */; };
+		7A20C0170E52313100D169ED /* dmzInputEventKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A20BF740E52302E00D169ED /* dmzInputEventKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A20C0180E52313100D169ED /* dmzInputEventMouse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A20BF750E52302E00D169ED /* dmzInputEventMouse.cpp */; };
+		7A20C0190E52313100D169ED /* dmzInputEventMouse.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A20BF760E52302E00D169ED /* dmzInputEventMouse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A20C01A0E52313100D169ED /* dmzInputEventsExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A20BF780E52302E00D169ED /* dmzInputEventsExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A20C04E0E52351A00D169ED /* dmzInputEventMasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A20BF7A0E52302E00D169ED /* dmzInputEventMasks.cpp */; };
+		7A20C04F0E52351A00D169ED /* dmzInputEventMasks.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A20BF7B0E52302E00D169ED /* dmzInputEventMasks.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A20C0500E52351A00D169ED /* dmzInputObserverUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A20BF7C0E52302E00D169ED /* dmzInputObserverUtil.cpp */; };
+		7A20C0510E52351A00D169ED /* dmzInputObserverUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A20BF7D0E52302E00D169ED /* dmzInputObserverUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A20C0520E52351A00D169ED /* dmzInputUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A20BF7F0E52302E00D169ED /* dmzInputUtilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A35FBE30E5CCD280002DA61 /* dmzObjectPluginCleanup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2280F5B70E19A535003A2238 /* dmzObjectPluginCleanup.cpp */; };
+		7A39BB280E4B8C360035E12A /* dmzRuntimeConfigToBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB210E4B8C360035E12A /* dmzRuntimeConfigToBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A39BB290E4B8C360035E12A /* dmzRuntimeConfigToMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB220E4B8C360035E12A /* dmzRuntimeConfigToMatrix.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A39BB2A0E4B8C360035E12A /* dmzRuntimeConfigToNamedHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB230E4B8C360035E12A /* dmzRuntimeConfigToNamedHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A39BB2B0E4B8C360035E12A /* dmzRuntimeConfigToPathContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB240E4B8C360035E12A /* dmzRuntimeConfigToPathContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A39BB2C0E4B8C360035E12A /* dmzRuntimeConfigToState.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB250E4B8C360035E12A /* dmzRuntimeConfigToState.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A39BB2D0E4B8C360035E12A /* dmzRuntimeConfigToStringContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB260E4B8C360035E12A /* dmzRuntimeConfigToStringContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A39BB2E0E4B8C360035E12A /* dmzRuntimeConfigToVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB270E4B8C360035E12A /* dmzRuntimeConfigToVector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A39BB3A0E4B8CA50035E12A /* dmzRuntimeUUID.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB390E4B8CA50035E12A /* dmzRuntimeUUID.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A39BB420E4B8CD60035E12A /* dmzTypesStringContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A39BB400E4B8CD60035E12A /* dmzTypesStringContainer.cpp */; };
+		7A39BB430E4B8CD60035E12A /* dmzTypesStringContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB410E4B8CD60035E12A /* dmzTypesStringContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A560B710E12D4D90049409D /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A560A940E12D27A0049409D /* lapi.c */; };
 		7A560B720E12D4D90049409D /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A560A960E12D27A0049409D /* lauxlib.c */; };
 		7A560B730E12D4D90049409D /* lbaselib.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A560A980E12D27A0049409D /* lbaselib.c */; };
@@ -309,6 +411,21 @@
 		7A560BE50E12DA000049409D /* dmzLuaModule.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A560B390E12D27A0049409D /* dmzLuaModule.h */; };
 		7A560BE60E12DA000049409D /* dmzLuaObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A560B3B0E12D27A0049409D /* dmzLuaObserver.h */; };
 		7A560BE90E12DA470049409D /* dmzLuaModuleBasic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A560B5B0E12D27A0049409D /* dmzLuaModuleBasic.cpp */; };
+		7A64E6630E241E2F008FFC86 /* dmzObjectAttributeMasks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2280F59F0E19A535003A2238 /* dmzObjectAttributeMasks.cpp */; };
+		7A64E6640E241E2F008FFC86 /* dmzObjectAttributeMasks.h in Headers */ = {isa = PBXBuildFile; fileRef = 2280F5A00E19A535003A2238 /* dmzObjectAttributeMasks.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A64E6650E241E2F008FFC86 /* dmzObjectCalc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2280F5A10E19A535003A2238 /* dmzObjectCalc.cpp */; };
+		7A64E6660E241E2F008FFC86 /* dmzObjectCalc.h in Headers */ = {isa = PBXBuildFile; fileRef = 2280F5A20E19A535003A2238 /* dmzObjectCalc.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A64E6670E241E2F008FFC86 /* dmzObjectObserverUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2280F5A40E19A535003A2238 /* dmzObjectObserverUtil.cpp */; };
+		7A64E6680E241E2F008FFC86 /* dmzObjectObserverUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 2280F5A50E19A535003A2238 /* dmzObjectObserverUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A64E6690E241E2F008FFC86 /* dmzObjectUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 2280F5A70E19A535003A2238 /* dmzObjectUtilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A6F1BC00E5CA2D1004FB18E /* dmzLuaExtObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A560B230E12D27A0049409D /* dmzLuaExtObject.cpp */; };
+		7A6F1BC10E5CA2D1004FB18E /* dmzLuaExtObjectObserver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A560B260E12D27A0049409D /* dmzLuaExtObjectObserver.cpp */; };
+		7A6F1BE60E5CA54A004FB18E /* dmzLuaExtInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A560B1B0E12D27A0049409D /* dmzLuaExtInput.cpp */; };
+		7A6F1C020E5CA616004FB18E /* dmzLuaExtPick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A560B290E12D27A0049409D /* dmzLuaExtPick.cpp */; };
+		7A8C27B30E5247E100343AC9 /* dmzInputModuleBasic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A20BF820E52302E00D169ED /* dmzInputModuleBasic.cpp */; };
+		7A8C27B40E5247E100343AC9 /* dmzInputModuleBasic.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A20BF830E52302E00D169ED /* dmzInputModuleBasic.h */; };
+		D249EF110E5B8B7A00A57803 /* dmzInputPluginMouseEventToMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A20BFA40E52302E00D169ED /* dmzInputPluginMouseEventToMessage.cpp */; };
+		D2F823740E5B8F2A00B9528C /* dmzInputPluginMouseEventToMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A20BFA50E52302E00D169ED /* dmzInputPluginMouseEventToMessage.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -389,6 +506,293 @@
 			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
 			remoteInfo = dmzKernel;
 		};
+		7A202F580E5CAD5A007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A202F5A0E5CAD63007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D249EF160E5B8BAD00A57803;
+			remoteInfo = dmzRenderFramework;
+		};
+		7A202F8D0E5CADB4007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D249EF160E5B8BAD00A57803;
+			remoteInfo = dmzRenderFramework;
+		};
+		7A202F8F0E5CADB7007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A202F510E5CAD4A007F800D;
+			remoteInfo = dmzRenderIsect;
+		};
+		7A202F9C0E5CADE6007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A202F9E0E5CADEA007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D249EF160E5B8BAD00A57803;
+			remoteInfo = dmzRenderFramework;
+		};
+		7A202FA00E5CADF6007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A202F950E5CADDE007F800D;
+			remoteInfo = dmzRenderUtil;
+		};
+		7A202FBE0E5CAE59007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A202FC00E5CAE5F007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D249EF160E5B8BAD00A57803;
+			remoteInfo = dmzRenderFramework;
+		};
+		7A202FC30E5CAE74007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A202FB70E5CAE4D007F800D;
+			remoteInfo = dmzRenderModulePickBasic;
+		};
+		7A2030030E5CAF70007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A2030050E5CAF77007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A202FF30E5CAF25007F800D;
+			remoteInfo = dmzArchiveFramework;
+		};
+		7A2030270E5CC873007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A2030290E5CC879007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A09B0670E1193B4003C5B32;
+			remoteInfo = dmzFoundation;
+		};
+		7A20302B0E5CC87D007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A202FF30E5CAF25007F800D;
+			remoteInfo = dmzArchiveFramework;
+		};
+		7A20303A0E5CC9D1007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A560BA60E12D6B90049409D;
+			remoteInfo = dmzLuaKernel;
+		};
+		7A20303C0E5CC9D5007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A202FF30E5CAF25007F800D;
+			remoteInfo = dmzArchiveFramework;
+		};
+		7A20305C0E5CCA53007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A20305E0E5CCA5A007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A202FF30E5CAF25007F800D;
+			remoteInfo = dmzArchiveFramework;
+		};
+		7A2030600E5CCA5F007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2280F5C80E19A55C003A2238;
+			remoteInfo = dmzObjectFramework;
+		};
+		7A20306F0E5CCAB0007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A2030710E5CCAB4007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A09B0150E118F86003C5B32;
+			remoteInfo = dmzXML;
+		};
+		7A2030730E5CCABA007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A09B0670E1193B4003C5B32;
+			remoteInfo = dmzFoundation;
+		};
+		7A2030750E5CCAC1007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A202FF30E5CAF25007F800D;
+			remoteInfo = dmzArchiveFramework;
+		};
+		7A20307A0E5CCB70007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A202FF30E5CAF25007F800D;
+			remoteInfo = dmzArchiveFramework;
+		};
+		7A20307C0E5CCB72007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A202FFC0E5CAF66007F800D;
+			remoteInfo = dmzArchiveUtil;
+		};
+		7A20307E0E5CCB75007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A2030200E5CC86D007F800D;
+			remoteInfo = dmzArchiveModuleBasic;
+		};
+		7A2030800E5CCB77007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A2030330E5CC9CB007F800D;
+			remoteInfo = dmzArchivePluginAutoLoad;
+		};
+		7A2030820E5CCB79007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A2030550E5CCA4D007F800D;
+			remoteInfo = dmzArchivePluginObject;
+		};
+		7A2030840E5CCB7B007F800D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A2030680E5CCAAC007F800D;
+			remoteInfo = dmzArchivePluginAutoSave;
+		};
+		7A20BFC60E52309A00D169ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A64E65B0E241E0A008FFC86;
+			remoteInfo = dmzObjectUtil;
+		};
+		7A20BFC80E52309D00D169ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A20BF610E522FD600D169ED;
+			remoteInfo = dmzInputFramework;
+		};
+		7A20C01E0E52314A00D169ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A20C0100E52311500D169ED;
+			remoteInfo = dmzInputEvents;
+		};
+		7A20C02E0E52316F00D169ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A20C0670E52358800D169ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A20C04A0E52350200D169ED;
+			remoteInfo = dmzInputUtil;
+		};
+		7A20C06D0E52447C00D169ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A20C06F0E52448100D169ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A20BF610E522FD600D169ED;
+			remoteInfo = dmzInputFramework;
+		};
+		7A35FBDC0E5CCD010002DA61 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A35FBDE0E5CCD0D0002DA61 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A64E65B0E241E0A008FFC86;
+			remoteInfo = dmzObjectUtil;
+		};
+		7A35FBE00E5CCD180002DA61 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2280F5C80E19A55C003A2238;
+			remoteInfo = dmzObjectFramework;
+		};
+		7A35FBE40E5CCD400002DA61 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A35FBD50E5CCCF90002DA61;
+			remoteInfo = dmzObjectPluginCleanup;
+		};
 		7A560BAB0E12D6CE0049409D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -437,6 +841,167 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7A560BDF0E12D99C0049409D;
 			remoteInfo = dmzLuaFramework;
+		};
+		7A64E6710E241ED7008FFC86 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A64E6730E241EE7008FFC86 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2280F5C80E19A55C003A2238;
+			remoteInfo = dmzObjectFramework;
+		};
+		7A6F1BB40E5CA2A6004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A6F1BB60E5CA2AA004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A560B6A0E12D2F60049409D;
+			remoteInfo = lua;
+		};
+		7A6F1BB80E5CA2AE004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A560BA60E12D6B90049409D;
+			remoteInfo = dmzLuaKernel;
+		};
+		7A6F1BBA0E5CA2B2004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A560BDF0E12D99C0049409D;
+			remoteInfo = dmzLuaFramework;
+		};
+		7A6F1BBC0E5CA2B7004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2280F5C80E19A55C003A2238;
+			remoteInfo = dmzObjectFramework;
+		};
+		7A6F1BBE0E5CA2BC004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A64E65B0E241E0A008FFC86;
+			remoteInfo = dmzObjectUtil;
+		};
+		7A6F1BC20E5CA2DB004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A6F1BAD0E5CA27B004FB18E;
+			remoteInfo = dmzLuaExtObject;
+		};
+		7A6F1BD50E5CA51D004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A560B6A0E12D2F60049409D;
+			remoteInfo = lua;
+		};
+		7A6F1BD70E5CA520004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A6F1BD90E5CA525004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A560BA60E12D6B90049409D;
+			remoteInfo = dmzLuaKernel;
+		};
+		7A6F1BDE0E5CA52B004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A20C0100E52311500D169ED;
+			remoteInfo = dmzInputEvents;
+		};
+		7A6F1BE00E5CA52F004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A20C04A0E52350200D169ED;
+			remoteInfo = dmzInputUtil;
+		};
+		7A6F1BE20E5CA536004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A560BDF0E12D99C0049409D;
+			remoteInfo = dmzLuaFramework;
+		};
+		7A6F1BE40E5CA53C004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A20BF610E522FD600D169ED;
+			remoteInfo = dmzInputFramework;
+		};
+		7A6F1BE70E5CA55C004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A6F1BD10E5CA509004FB18E;
+			remoteInfo = dmzLuaExtInput;
+		};
+		7A6F1BF30E5CA5DA004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A6F1BEF0E5CA5CB004FB18E;
+			remoteInfo = dmzLuaExtPick;
+		};
+		7A6F1BF80E5CA5F9004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A560B6A0E12D2F60049409D;
+			remoteInfo = lua;
+		};
+		7A6F1BFA0E5CA5FE004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A6F1BFC0E5CA602004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A560BA60E12D6B90049409D;
+			remoteInfo = dmzLuaKernel;
+		};
+		7A6F1BFE0E5CA606004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A560BDF0E12D99C0049409D;
+			remoteInfo = dmzLuaFramework;
+		};
+		7A6F1C000E5CA60B004FB18E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D249EF160E5B8BAD00A57803;
+			remoteInfo = dmzRenderFramework;
 		};
 		7A8535DD0E12EC37008CEAEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -536,6 +1101,76 @@
 			remoteGlobalIDString = 7A560BD00E12D9490049409D;
 			remoteInfo = dmzLuaModuleBasic;
 		};
+		7A8C27AC0E5247C100343AC9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		7A8C27AE0E5247C700343AC9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A20BF610E522FD600D169ED;
+			remoteInfo = dmzInputFramework;
+		};
+		7A8C27B00E5247CA00343AC9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A20C0100E52311500D169ED;
+			remoteInfo = dmzInputEvents;
+		};
+		7A8C27B50E5247EB00343AC9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A8C279F0E5247B700343AC9;
+			remoteInfo = dmzInputModuleBasic;
+		};
+		D249EF050E5B8B4100A57803 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0E0D5C0E117CC100E55011;
+			remoteInfo = dmzKernel;
+		};
+		D249EF0A0E5B8B4800A57803 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A20C0100E52311500D169ED;
+			remoteInfo = dmzInputEvents;
+		};
+		D249EF0C0E5B8B4B00A57803 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A20C04A0E52350200D169ED;
+			remoteInfo = dmzInputUtil;
+		};
+		D249EF0E0E5B8B5300A57803 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A20BF610E522FD600D169ED;
+			remoteInfo = dmzInputFramework;
+		};
+		D249EF120E5B8B8600A57803 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D249EF000E5B8B2900A57803;
+			remoteInfo = dmzInputPluginMouseEventToMessage;
+		};
+		D249EF9A0E5B8C3700A57803 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D249EF160E5B8BAD00A57803;
+			remoteInfo = dmzRenderFramework;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -564,6 +1199,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7A202FF20E5CAF25007F800D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = ../../include/dmz;
+			dstSubfolderSpec = 16;
+			files = (
+				7A202FF70E5CAF32007F800D /* dmzArchiveModule.h in CopyFiles */,
+				7A202FF80E5CAF32007F800D /* dmzArchiveObserver.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A20BF600E522FD600D169ED /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = ../../include/dmz;
+			dstSubfolderSpec = 16;
+			files = (
+				7A20BFB50E52305E00D169ED /* dmzInputConsts.h in CopyFiles */,
+				7A20BFB60E52305E00D169ED /* dmzInputMaskConsts.h in CopyFiles */,
+				7A20BFB70E52305E00D169ED /* dmzInputModule.h in CopyFiles */,
+				7A20BFB80E52305E00D169ED /* dmzInputObserver.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7A560BDE0E12D99C0049409D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -573,6 +1232,19 @@
 				7A560BE40E12DA000049409D /* dmzLuaExt.h in CopyFiles */,
 				7A560BE50E12DA000049409D /* dmzLuaModule.h in CopyFiles */,
 				7A560BE60E12DA000049409D /* dmzLuaObserver.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D249EF150E5B8BAD00A57803 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = ../../include/dmz;
+			dstSubfolderSpec = 16;
+			files = (
+				7A202F450E5CAC57007F800D /* dmzRenderModuleIsect.h in CopyFiles */,
+				7A202F460E5CAC57007F800D /* dmzRenderModulePick.h in CopyFiles */,
+				7A202F470E5CAC57007F800D /* dmzRenderModulePortal.h in CopyFiles */,
+				7A202F480E5CAC57007F800D /* dmzRenderPick2d.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,9 +1276,6 @@
 		2280F5AE0E19A535003A2238 /* dmzObjectModuleSelectBasic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzObjectModuleSelectBasic.cpp; sourceTree = "<group>"; };
 		2280F5AF0E19A535003A2238 /* dmzObjectModuleSelectBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzObjectModuleSelectBasic.h; sourceTree = "<group>"; };
 		2280F5B00E19A535003A2238 /* dmzObjectModuleSelectBasic.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzObjectModuleSelectBasic.lmk; sourceTree = "<group>"; };
-		2280F5B30E19A535003A2238 /* dmzObjectPluginArchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzObjectPluginArchive.cpp; sourceTree = "<group>"; };
-		2280F5B40E19A535003A2238 /* dmzObjectPluginArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzObjectPluginArchive.h; sourceTree = "<group>"; };
-		2280F5B50E19A535003A2238 /* dmzObjectPluginArchive.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzObjectPluginArchive.lmk; sourceTree = "<group>"; };
 		2280F5B70E19A535003A2238 /* dmzObjectPluginCleanup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzObjectPluginCleanup.cpp; sourceTree = "<group>"; };
 		2280F5B80E19A535003A2238 /* dmzObjectPluginCleanup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzObjectPluginCleanup.h; sourceTree = "<group>"; };
 		2280F5B90E19A535003A2238 /* dmzObjectPluginCleanup.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzObjectPluginCleanup.lmk; sourceTree = "<group>"; };
@@ -892,6 +1561,140 @@
 		7A09B1660E11A688003C5B32 /* libdmzFileCacheLocal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzFileCacheLocal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A0E0D5D0E117CC100E55011 /* libdmzKernel.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzKernel.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A0E0D610E117CD800E55011 /* dmz.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dmz.xcconfig; path = ../dmz.xcconfig; sourceTree = "<group>"; };
+		7A202EE50E5CAC49007F800D /* dmzRenderFramework.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzRenderFramework.lmk; sourceTree = "<group>"; };
+		7A202EE60E5CAC49007F800D /* dmzRenderModuleIsect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderModuleIsect.cpp; sourceTree = "<group>"; };
+		7A202EE70E5CAC49007F800D /* dmzRenderModuleIsect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderModuleIsect.h; sourceTree = "<group>"; };
+		7A202EE80E5CAC49007F800D /* dmzRenderModulePick.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderModulePick.cpp; sourceTree = "<group>"; };
+		7A202EE90E5CAC49007F800D /* dmzRenderModulePick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderModulePick.h; sourceTree = "<group>"; };
+		7A202EEA0E5CAC49007F800D /* dmzRenderModulePortal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderModulePortal.cpp; sourceTree = "<group>"; };
+		7A202EEB0E5CAC49007F800D /* dmzRenderModulePortal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderModulePortal.h; sourceTree = "<group>"; };
+		7A202EEC0E5CAC49007F800D /* dmzRenderPick2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderPick2d.h; sourceTree = "<group>"; };
+		7A202EEF0E5CAC49007F800D /* dmzRenderIsect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderIsect.cpp; sourceTree = "<group>"; };
+		7A202EF00E5CAC49007F800D /* dmzRenderIsect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderIsect.h; sourceTree = "<group>"; };
+		7A202EF10E5CAC49007F800D /* dmzRenderIsect.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzRenderIsect.lmk; sourceTree = "<group>"; };
+		7A202EF20E5CAC49007F800D /* dmzRenderIsectExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderIsectExport.h; sourceTree = "<group>"; };
+		7A202EF30E5CAC49007F800D /* dmzRenderIsectUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderIsectUtil.cpp; sourceTree = "<group>"; };
+		7A202EF40E5CAC49007F800D /* dmzRenderIsectUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderIsectUtil.h; sourceTree = "<group>"; };
+		7A202F050E5CAC49007F800D /* dmzRenderPick2dUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderPick2dUtil.cpp; sourceTree = "<group>"; };
+		7A202F060E5CAC49007F800D /* dmzRenderPick2dUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderPick2dUtil.h; sourceTree = "<group>"; };
+		7A202F070E5CAC49007F800D /* dmzRenderUtil.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzRenderUtil.lmk; sourceTree = "<group>"; };
+		7A202F080E5CAC49007F800D /* dmzRenderUtilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderUtilExport.h; sourceTree = "<group>"; };
+		7A202F300E5CAC49007F800D /* dmzRenderModulePickBasic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderModulePickBasic.cpp; sourceTree = "<group>"; };
+		7A202F310E5CAC49007F800D /* dmzRenderModulePickBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderModulePickBasic.h; sourceTree = "<group>"; };
+		7A202F320E5CAC49007F800D /* dmzRenderModulePickBasic.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzRenderModulePickBasic.lmk; sourceTree = "<group>"; };
+		7A202F520E5CAD4A007F800D /* libdmzRenderIsect.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzRenderIsect.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A202F960E5CADDE007F800D /* libdmzRenderUtil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzRenderUtil.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A202FB80E5CAE4D007F800D /* libdmzRenderModulePickBasic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzRenderModulePickBasic.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A202FCA0E5CAF0A007F800D /* dmzArchiveFramework.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzArchiveFramework.lmk; sourceTree = "<group>"; };
+		7A202FCB0E5CAF0A007F800D /* dmzArchiveModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchiveModule.cpp; sourceTree = "<group>"; };
+		7A202FCC0E5CAF0A007F800D /* dmzArchiveModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchiveModule.h; sourceTree = "<group>"; };
+		7A202FCD0E5CAF0A007F800D /* dmzArchiveObserver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchiveObserver.cpp; sourceTree = "<group>"; };
+		7A202FCE0E5CAF0A007F800D /* dmzArchiveObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchiveObserver.h; sourceTree = "<group>"; };
+		7A202FD10E5CAF0A007F800D /* dmzArchiveObserverUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchiveObserverUtil.cpp; sourceTree = "<group>"; };
+		7A202FD20E5CAF0A007F800D /* dmzArchiveObserverUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchiveObserverUtil.h; sourceTree = "<group>"; };
+		7A202FD30E5CAF0A007F800D /* dmzArchiveUtil.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzArchiveUtil.lmk; sourceTree = "<group>"; };
+		7A202FD40E5CAF0A007F800D /* dmzArchiveUtilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchiveUtilExport.h; sourceTree = "<group>"; };
+		7A202FD70E5CAF0A007F800D /* dmzArchiveModuleBasic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchiveModuleBasic.cpp; sourceTree = "<group>"; };
+		7A202FD80E5CAF0A007F800D /* dmzArchiveModuleBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchiveModuleBasic.h; sourceTree = "<group>"; };
+		7A202FD90E5CAF0A007F800D /* dmzArchiveModuleBasic.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzArchiveModuleBasic.lmk; sourceTree = "<group>"; };
+		7A202FDC0E5CAF0A007F800D /* dmzArchivePluginInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchivePluginInput.cpp; sourceTree = "<group>"; };
+		7A202FDD0E5CAF0A007F800D /* dmzArchivePluginInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchivePluginInput.h; sourceTree = "<group>"; };
+		7A202FDE0E5CAF0A007F800D /* dmzArchivePluginInput.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzArchivePluginInput.lmk; sourceTree = "<group>"; };
+		7A202FE00E5CAF0A007F800D /* dmzArchivePluginAutoLoad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchivePluginAutoLoad.cpp; sourceTree = "<group>"; };
+		7A202FE10E5CAF0A007F800D /* dmzArchivePluginAutoLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchivePluginAutoLoad.h; sourceTree = "<group>"; };
+		7A202FE20E5CAF0A007F800D /* dmzArchivePluginAutoLoad.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzArchivePluginAutoLoad.lmk; sourceTree = "<group>"; };
+		7A202FE40E5CAF0A007F800D /* dmzArchivePluginObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchivePluginObject.cpp; sourceTree = "<group>"; };
+		7A202FE50E5CAF0A007F800D /* dmzArchivePluginObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchivePluginObject.h; sourceTree = "<group>"; };
+		7A202FE60E5CAF0A007F800D /* dmzArchivePluginObject.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzArchivePluginObject.lmk; sourceTree = "<group>"; };
+		7A202FE80E5CAF0A007F800D /* dmzArchivePluginAutoSave.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchivePluginAutoSave.cpp; sourceTree = "<group>"; };
+		7A202FE90E5CAF0A007F800D /* dmzArchivePluginAutoSave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchivePluginAutoSave.h; sourceTree = "<group>"; };
+		7A202FEA0E5CAF0A007F800D /* dmzArchivePluginAutoSave.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzArchivePluginAutoSave.lmk; sourceTree = "<group>"; };
+		7A202FEB0E5CAF0A007F800D /* dmzArchivePluginQuickSave.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchivePluginQuickSave.cpp; sourceTree = "<group>"; };
+		7A202FEC0E5CAF0A007F800D /* dmzArchivePluginQuickSave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchivePluginQuickSave.h; sourceTree = "<group>"; };
+		7A202FED0E5CAF0A007F800D /* dmzArchivePluginQuickSave.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzArchivePluginQuickSave.lmk; sourceTree = "<group>"; };
+		7A202FEF0E5CAF0A007F800D /* dmzArchivePluginUndo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzArchivePluginUndo.cpp; sourceTree = "<group>"; };
+		7A202FF00E5CAF0A007F800D /* dmzArchivePluginUndo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzArchivePluginUndo.h; sourceTree = "<group>"; };
+		7A202FF10E5CAF0A007F800D /* dmzArchivePluginUndo.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzArchivePluginUndo.lmk; sourceTree = "<group>"; };
+		7A202FFD0E5CAF66007F800D /* libdmzArchiveUtil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchiveUtil.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A2030210E5CC86D007F800D /* libdmzArchiveModuleBasic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchiveModuleBasic.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A2030340E5CC9CB007F800D /* libdmzArchivePluginAutoLoad.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchivePluginAutoLoad.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A2030560E5CCA4D007F800D /* libdmzArchivePluginObject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchivePluginObject.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A2030690E5CCAAC007F800D /* libdmzArchivePluginAutoSave.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzArchivePluginAutoSave.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A20BF680E52302E00D169ED /* dmzInputConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputConsts.h; sourceTree = "<group>"; };
+		7A20BF690E52302E00D169ED /* dmzInputFramework.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputFramework.lmk; sourceTree = "<group>"; };
+		7A20BF6A0E52302E00D169ED /* dmzInputMaskConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputMaskConsts.h; sourceTree = "<group>"; };
+		7A20BF6B0E52302E00D169ED /* dmzInputModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputModule.cpp; sourceTree = "<group>"; };
+		7A20BF6C0E52302E00D169ED /* dmzInputModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputModule.h; sourceTree = "<group>"; };
+		7A20BF6D0E52302E00D169ED /* dmzInputObserver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputObserver.cpp; sourceTree = "<group>"; };
+		7A20BF6E0E52302E00D169ED /* dmzInputObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputObserver.h; sourceTree = "<group>"; };
+		7A20BF710E52302E00D169ED /* dmzInputEventController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputEventController.cpp; sourceTree = "<group>"; tabWidth = 3; };
+		7A20BF720E52302E00D169ED /* dmzInputEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputEventController.h; sourceTree = "<group>"; tabWidth = 3; };
+		7A20BF730E52302E00D169ED /* dmzInputEventKey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputEventKey.cpp; sourceTree = "<group>"; tabWidth = 3; };
+		7A20BF740E52302E00D169ED /* dmzInputEventKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputEventKey.h; sourceTree = "<group>"; tabWidth = 3; };
+		7A20BF750E52302E00D169ED /* dmzInputEventMouse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputEventMouse.cpp; sourceTree = "<group>"; tabWidth = 3; };
+		7A20BF760E52302E00D169ED /* dmzInputEventMouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputEventMouse.h; sourceTree = "<group>"; tabWidth = 3; };
+		7A20BF770E52302E00D169ED /* dmzInputEvents.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputEvents.lmk; sourceTree = "<group>"; };
+		7A20BF780E52302E00D169ED /* dmzInputEventsExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputEventsExport.h; sourceTree = "<group>"; tabWidth = 3; };
+		7A20BF7A0E52302E00D169ED /* dmzInputEventMasks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputEventMasks.cpp; sourceTree = "<group>"; tabWidth = 3; };
+		7A20BF7B0E52302E00D169ED /* dmzInputEventMasks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputEventMasks.h; sourceTree = "<group>"; tabWidth = 3; };
+		7A20BF7C0E52302E00D169ED /* dmzInputObserverUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputObserverUtil.cpp; sourceTree = "<group>"; tabWidth = 3; };
+		7A20BF7D0E52302E00D169ED /* dmzInputObserverUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputObserverUtil.h; sourceTree = "<group>"; tabWidth = 3; };
+		7A20BF7E0E52302E00D169ED /* dmzInputUtil.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputUtil.lmk; sourceTree = "<group>"; };
+		7A20BF7F0E52302E00D169ED /* dmzInputUtilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputUtilExport.h; sourceTree = "<group>"; tabWidth = 3; };
+		7A20BF820E52302E00D169ED /* dmzInputModuleBasic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputModuleBasic.cpp; sourceTree = "<group>"; };
+		7A20BF830E52302E00D169ED /* dmzInputModuleBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputModuleBasic.h; sourceTree = "<group>"; };
+		7A20BF840E52302E00D169ED /* dmzInputModuleBasic.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputModuleBasic.lmk; sourceTree = "<group>"; };
+		7A20BF870E52302E00D169ED /* dmzInputPluginControllerKey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginControllerKey.cpp; sourceTree = "<group>"; };
+		7A20BF880E52302E00D169ED /* dmzInputPluginControllerKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginControllerKey.h; sourceTree = "<group>"; };
+		7A20BF890E52302E00D169ED /* dmzInputPluginControllerKey.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginControllerKey.lmk; sourceTree = "<group>"; };
+		7A20BF8A0E52302E00D169ED /* dmzInputPluginControllerMacOS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginControllerMacOS.cpp; sourceTree = "<group>"; };
+		7A20BF8B0E52302E00D169ED /* dmzInputPluginControllerMacOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginControllerMacOS.h; sourceTree = "<group>"; };
+		7A20BF8C0E52302E00D169ED /* dmzInputPluginControllerMacOS.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginControllerMacOS.lmk; sourceTree = "<group>"; };
+		7A20BF8D0E52302E00D169ED /* dmzInputPluginControllerWin32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginControllerWin32.cpp; sourceTree = "<group>"; };
+		7A20BF8E0E52302E00D169ED /* dmzInputPluginControllerWin32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginControllerWin32.h; sourceTree = "<group>"; };
+		7A20BF8F0E52302E00D169ED /* dmzInputPluginControllerWin32.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginControllerWin32.lmk; sourceTree = "<group>"; };
+		7A20BF910E52302E00D169ED /* HID Utilities Read Me.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "HID Utilities Read Me.rtf"; sourceTree = "<group>"; };
+		7A20BF920E52302E00D169ED /* HID_Config_Utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Config_Utilities.c; sourceTree = "<group>"; };
+		7A20BF930E52302E00D169ED /* HID_Config_Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Config_Utilities.h; sourceTree = "<group>"; };
+		7A20BF940E52302E00D169ED /* HID_Error_Handler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Error_Handler.c; sourceTree = "<group>"; };
+		7A20BF950E52302E00D169ED /* HID_Error_Handler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Error_Handler.h; sourceTree = "<group>"; };
+		7A20BF960E52302E00D169ED /* HID_Name_Lookup.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Name_Lookup.c; sourceTree = "<group>"; };
+		7A20BF970E52302E00D169ED /* HID_Name_Lookup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Name_Lookup.h; sourceTree = "<group>"; };
+		7A20BF980E52302E00D169ED /* HID_Queue_Utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Queue_Utilities.c; sourceTree = "<group>"; };
+		7A20BF990E52302E00D169ED /* HID_Queue_Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Queue_Utilities.h; sourceTree = "<group>"; };
+		7A20BF9A0E52302E00D169ED /* HID_Transaction_Utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Transaction_Utilities.c; sourceTree = "<group>"; };
+		7A20BF9B0E52302E00D169ED /* HID_Transaction_Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Transaction_Utilities.h; sourceTree = "<group>"; };
+		7A20BF9C0E52302E00D169ED /* HID_Utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HID_Utilities.c; sourceTree = "<group>"; };
+		7A20BF9D0E52302E00D169ED /* HID_Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Utilities.h; sourceTree = "<group>"; };
+		7A20BF9E0E52302E00D169ED /* HID_Utilities_External.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Utilities_External.h; sourceTree = "<group>"; };
+		7A20BF9F0E52302E00D169ED /* HID_Utilities_Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HID_Utilities_Internal.h; sourceTree = "<group>"; };
+		7A20BFA10E52302E00D169ED /* dmzInputPluginKeyEventToMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginKeyEventToMessage.cpp; sourceTree = "<group>"; };
+		7A20BFA20E52302E00D169ED /* dmzInputPluginKeyEventToMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginKeyEventToMessage.h; sourceTree = "<group>"; };
+		7A20BFA30E52302E00D169ED /* dmzInputPluginKeyEventToMessage.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginKeyEventToMessage.lmk; sourceTree = "<group>"; };
+		7A20BFA40E52302E00D169ED /* dmzInputPluginMouseEventToMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginMouseEventToMessage.cpp; sourceTree = "<group>"; };
+		7A20BFA50E52302E00D169ED /* dmzInputPluginMouseEventToMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginMouseEventToMessage.h; sourceTree = "<group>"; };
+		7A20BFA60E52302E00D169ED /* dmzInputPluginMouseEventToMessage.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginMouseEventToMessage.lmk; sourceTree = "<group>"; };
+		7A20BFA70E52302E00D169ED /* sample.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sample.xml; sourceTree = "<group>"; };
+		7A20BFA90E52302E00D169ED /* dmzInputPluginExit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginExit.cpp; sourceTree = "<group>"; };
+		7A20BFAA0E52302E00D169ED /* dmzInputPluginExit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginExit.h; sourceTree = "<group>"; };
+		7A20BFAB0E52302E00D169ED /* dmzInputPluginExit.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginExit.lmk; sourceTree = "<group>"; };
+		7A20BFAD0E52302E00D169ED /* dmzInputPluginChannelRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginChannelRules.h; sourceTree = "<group>"; };
+		7A20BFAF0E52302E00D169ED /* dmzInputPluginChannelSwitch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzInputPluginChannelSwitch.cpp; sourceTree = "<group>"; };
+		7A20BFB00E52302E00D169ED /* dmzInputPluginChannelSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzInputPluginChannelSwitch.h; sourceTree = "<group>"; };
+		7A20BFB10E52302E00D169ED /* dmzInputPluginChannelSwitch.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzInputPluginChannelSwitch.lmk; sourceTree = "<group>"; };
+		7A20C0110E52311500D169ED /* libdmzInputEvents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzInputEvents.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A20C04B0E52350200D169ED /* libdmzInputUtil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzInputUtil.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A35FBD60E5CCCF90002DA61 /* libdmzObjectPluginCleanup.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzObjectPluginCleanup.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A39BB210E4B8C360035E12A /* dmzRuntimeConfigToBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigToBase.h; sourceTree = "<group>"; };
+		7A39BB220E4B8C360035E12A /* dmzRuntimeConfigToMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigToMatrix.h; sourceTree = "<group>"; };
+		7A39BB230E4B8C360035E12A /* dmzRuntimeConfigToNamedHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigToNamedHandle.h; sourceTree = "<group>"; };
+		7A39BB240E4B8C360035E12A /* dmzRuntimeConfigToPathContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigToPathContainer.h; sourceTree = "<group>"; };
+		7A39BB250E4B8C360035E12A /* dmzRuntimeConfigToState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigToState.h; sourceTree = "<group>"; };
+		7A39BB260E4B8C360035E12A /* dmzRuntimeConfigToStringContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigToStringContainer.h; sourceTree = "<group>"; };
+		7A39BB270E4B8C360035E12A /* dmzRuntimeConfigToVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigToVector.h; sourceTree = "<group>"; };
+		7A39BB390E4B8CA50035E12A /* dmzRuntimeUUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeUUID.h; sourceTree = "<group>"; };
+		7A39BB400E4B8CD60035E12A /* dmzTypesStringContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzTypesStringContainer.cpp; sourceTree = "<group>"; };
+		7A39BB410E4B8CD60035E12A /* dmzTypesStringContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesStringContainer.h; sourceTree = "<group>"; };
 		7A560A930E12D27A0049409D /* COPYRIGHT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYRIGHT; sourceTree = "<group>"; };
 		7A560A940E12D27A0049409D /* lapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lapi.c; sourceTree = "<group>"; };
 		7A560A950E12D27A0049409D /* lapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lapi.h; sourceTree = "<group>"; };
@@ -1091,6 +1894,12 @@
 		7A560B6B0E12D2F60049409D /* liblua.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblua.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A560BA70E12D6B90049409D /* libdmzLuaKernel.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzLuaKernel.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A560BD10E12D9490049409D /* libdmzLuaModuleBasic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzLuaModuleBasic.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A64E65C0E241E0A008FFC86 /* libdmzObjectUtil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzObjectUtil.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A6F1BAE0E5CA27B004FB18E /* libdmzLuaExtObject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzLuaExtObject.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A6F1BD20E5CA509004FB18E /* libdmzLuaExtInput.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzLuaExtInput.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A6F1BF00E5CA5CB004FB18E /* libdmzLuaExtPick.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzLuaExtPick.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A8C27A00E5247B700343AC9 /* libdmzInputModuleBasic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzInputModuleBasic.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D249EF010E5B8B2900A57803 /* libdmzInputPluginMouseEventToMessage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzInputPluginMouseEventToMessage.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1164,6 +1973,83 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7A202F500E5CAD4A007F800D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A202F940E5CADDE007F800D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A202FB60E5CAE4D007F800D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A202FFB0E5CAF66007F800D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A20301F0E5CC86D007F800D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A2030320E5CC9CB007F800D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A2030540E5CCA4D007F800D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A2030670E5CCAAC007F800D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A20C00F0E52311500D169ED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A20C0490E52350200D169ED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A35FBD40E5CCCF90002DA61 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7A560B690E12D2F60049409D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1179,6 +2065,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		7A560BCF0E12D9490049409D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A64E65A0E241E0A008FFC86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A6F1BAC0E5CA27B004FB18E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A6F1BD00E5CA509004FB18E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A6F1BEE0E5CA5CB004FB18E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A8C279E0E5247B700343AC9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D249EEFF0E5B8B2900A57803 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1204,6 +2132,23 @@
 				7A560BA70E12D6B90049409D /* libdmzLuaKernel.a */,
 				7A560BD10E12D9490049409D /* libdmzLuaModuleBasic.a */,
 				2280F5E50E19A623003A2238 /* libdmzObjectModuleBasic.a */,
+				7A64E65C0E241E0A008FFC86 /* libdmzObjectUtil.a */,
+				7A20C0110E52311500D169ED /* libdmzInputEvents.a */,
+				7A20C04B0E52350200D169ED /* libdmzInputUtil.a */,
+				7A8C27A00E5247B700343AC9 /* libdmzInputModuleBasic.a */,
+				D249EF010E5B8B2900A57803 /* libdmzInputPluginMouseEventToMessage.a */,
+				7A6F1BAE0E5CA27B004FB18E /* libdmzLuaExtObject.a */,
+				7A6F1BD20E5CA509004FB18E /* libdmzLuaExtInput.a */,
+				7A6F1BF00E5CA5CB004FB18E /* libdmzLuaExtPick.a */,
+				7A202F520E5CAD4A007F800D /* libdmzRenderIsect.a */,
+				7A202F960E5CADDE007F800D /* libdmzRenderUtil.a */,
+				7A202FB80E5CAE4D007F800D /* libdmzRenderModulePickBasic.a */,
+				7A202FFD0E5CAF66007F800D /* libdmzArchiveUtil.a */,
+				7A2030210E5CC86D007F800D /* libdmzArchiveModuleBasic.a */,
+				7A2030340E5CC9CB007F800D /* libdmzArchivePluginAutoLoad.a */,
+				7A2030560E5CCA4D007F800D /* libdmzArchivePluginObject.a */,
+				7A2030690E5CCAAC007F800D /* libdmzArchivePluginAutoSave.a */,
+				7A35FBD60E5CCCF90002DA61 /* libdmzObjectPluginCleanup.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1285,23 +2230,12 @@
 		2280F5B10E19A535003A2238 /* plugins */ = {
 			isa = PBXGroup;
 			children = (
-				2280F5B20E19A535003A2238 /* archive */,
 				2280F5B60E19A535003A2238 /* cleanup */,
 				2280F5BA0E19A535003A2238 /* dump */,
 				2280F5BE0E19A535003A2238 /* select */,
 				2280F5C20E19A535003A2238 /* undo */,
 			);
 			path = plugins;
-			sourceTree = "<group>";
-		};
-		2280F5B20E19A535003A2238 /* archive */ = {
-			isa = PBXGroup;
-			children = (
-				2280F5B30E19A535003A2238 /* dmzObjectPluginArchive.cpp */,
-				2280F5B40E19A535003A2238 /* dmzObjectPluginArchive.h */,
-				2280F5B50E19A535003A2238 /* dmzObjectPluginArchive.lmk */,
-			);
-			path = archive;
 			sourceTree = "<group>";
 		};
 		2280F5B60E19A535003A2238 /* cleanup */ = {
@@ -1396,6 +2330,13 @@
 				7A0147240E118421001813A7 /* dmzRuntimeConfigContext.h */,
 				7A0147250E118421001813A7 /* dmzRuntimeConfigRead.cpp */,
 				7A0147260E118421001813A7 /* dmzRuntimeConfigRead.h */,
+				7A39BB210E4B8C360035E12A /* dmzRuntimeConfigToBase.h */,
+				7A39BB220E4B8C360035E12A /* dmzRuntimeConfigToMatrix.h */,
+				7A39BB230E4B8C360035E12A /* dmzRuntimeConfigToNamedHandle.h */,
+				7A39BB240E4B8C360035E12A /* dmzRuntimeConfigToPathContainer.h */,
+				7A39BB250E4B8C360035E12A /* dmzRuntimeConfigToState.h */,
+				7A39BB260E4B8C360035E12A /* dmzRuntimeConfigToStringContainer.h */,
+				7A39BB270E4B8C360035E12A /* dmzRuntimeConfigToVector.h */,
 				7A0147270E118421001813A7 /* dmzRuntimeConfigUtil.cpp */,
 				7A0147280E118421001813A7 /* dmzRuntimeConfigWrite.cpp */,
 				7A0147290E118421001813A7 /* dmzRuntimeConfigWrite.h */,
@@ -1461,6 +2402,7 @@
 				7A0147650E118421001813A7 /* dmzRuntimeTypeContext.h */,
 				7A0147660E118421001813A7 /* dmzRuntimeUndo.cpp */,
 				7A0147670E118421001813A7 /* dmzRuntimeUndo.h */,
+				7A39BB390E4B8CA50035E12A /* dmzRuntimeUUID.h */,
 			);
 			path = runtime;
 			sourceTree = "<group>";
@@ -1554,6 +2496,8 @@
 				7A0147B60E118421001813A7 /* dmzTypesQuaternion.h */,
 				7A0147B70E118421001813A7 /* dmzTypesString.cpp */,
 				7A0147B80E118421001813A7 /* dmzTypesString.h */,
+				7A39BB400E4B8CD60035E12A /* dmzTypesStringContainer.cpp */,
+				7A39BB410E4B8CD60035E12A /* dmzTypesStringContainer.h */,
 				7A0147B90E118421001813A7 /* dmzTypesStringTokenizer.h */,
 				7A0147BA0E118421001813A7 /* dmzTypesStringUtil.cpp */,
 				7A0147BB0E118421001813A7 /* dmzTypesStringUtil.h */,
@@ -1811,11 +2755,391 @@
 			path = ../../examples;
 			sourceTree = SOURCE_ROOT;
 		};
+		7A202ED70E5CAC49007F800D /* render */ = {
+			isa = PBXGroup;
+			children = (
+				7A202EE40E5CAC49007F800D /* interfaces */,
+				7A202EED0E5CAC49007F800D /* libs */,
+				7A202F0C0E5CAC49007F800D /* modules */,
+			);
+			name = render;
+			path = ../../frameworks/render;
+			sourceTree = SOURCE_ROOT;
+		};
+		7A202EE40E5CAC49007F800D /* interfaces */ = {
+			isa = PBXGroup;
+			children = (
+				7A202EE50E5CAC49007F800D /* dmzRenderFramework.lmk */,
+				7A202EE60E5CAC49007F800D /* dmzRenderModuleIsect.cpp */,
+				7A202EE70E5CAC49007F800D /* dmzRenderModuleIsect.h */,
+				7A202EE80E5CAC49007F800D /* dmzRenderModulePick.cpp */,
+				7A202EE90E5CAC49007F800D /* dmzRenderModulePick.h */,
+				7A202EEA0E5CAC49007F800D /* dmzRenderModulePortal.cpp */,
+				7A202EEB0E5CAC49007F800D /* dmzRenderModulePortal.h */,
+				7A202EEC0E5CAC49007F800D /* dmzRenderPick2d.h */,
+			);
+			path = interfaces;
+			sourceTree = "<group>";
+		};
+		7A202EED0E5CAC49007F800D /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				7A202EEE0E5CAC49007F800D /* isect */,
+				7A202F040E5CAC49007F800D /* util */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		7A202EEE0E5CAC49007F800D /* isect */ = {
+			isa = PBXGroup;
+			children = (
+				7A202EEF0E5CAC49007F800D /* dmzRenderIsect.cpp */,
+				7A202EF00E5CAC49007F800D /* dmzRenderIsect.h */,
+				7A202EF10E5CAC49007F800D /* dmzRenderIsect.lmk */,
+				7A202EF20E5CAC49007F800D /* dmzRenderIsectExport.h */,
+				7A202EF30E5CAC49007F800D /* dmzRenderIsectUtil.cpp */,
+				7A202EF40E5CAC49007F800D /* dmzRenderIsectUtil.h */,
+			);
+			path = isect;
+			sourceTree = "<group>";
+		};
+		7A202F040E5CAC49007F800D /* util */ = {
+			isa = PBXGroup;
+			children = (
+				7A202F050E5CAC49007F800D /* dmzRenderPick2dUtil.cpp */,
+				7A202F060E5CAC49007F800D /* dmzRenderPick2dUtil.h */,
+				7A202F070E5CAC49007F800D /* dmzRenderUtil.lmk */,
+				7A202F080E5CAC49007F800D /* dmzRenderUtilExport.h */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		7A202F0C0E5CAC49007F800D /* modules */ = {
+			isa = PBXGroup;
+			children = (
+				7A202F2F0E5CAC49007F800D /* pick */,
+			);
+			path = modules;
+			sourceTree = "<group>";
+		};
+		7A202F2F0E5CAC49007F800D /* pick */ = {
+			isa = PBXGroup;
+			children = (
+				7A202F300E5CAC49007F800D /* dmzRenderModulePickBasic.cpp */,
+				7A202F310E5CAC49007F800D /* dmzRenderModulePickBasic.h */,
+				7A202F320E5CAC49007F800D /* dmzRenderModulePickBasic.lmk */,
+			);
+			path = pick;
+			sourceTree = "<group>";
+		};
+		7A202FC80E5CAF0A007F800D /* archive */ = {
+			isa = PBXGroup;
+			children = (
+				7A202FC90E5CAF0A007F800D /* interfaces */,
+				7A202FCF0E5CAF0A007F800D /* libs */,
+				7A202FD50E5CAF0A007F800D /* modules */,
+				7A202FDA0E5CAF0A007F800D /* plugins */,
+			);
+			name = archive;
+			path = ../../frameworks/archive;
+			sourceTree = SOURCE_ROOT;
+		};
+		7A202FC90E5CAF0A007F800D /* interfaces */ = {
+			isa = PBXGroup;
+			children = (
+				7A202FCA0E5CAF0A007F800D /* dmzArchiveFramework.lmk */,
+				7A202FCB0E5CAF0A007F800D /* dmzArchiveModule.cpp */,
+				7A202FCC0E5CAF0A007F800D /* dmzArchiveModule.h */,
+				7A202FCD0E5CAF0A007F800D /* dmzArchiveObserver.cpp */,
+				7A202FCE0E5CAF0A007F800D /* dmzArchiveObserver.h */,
+			);
+			path = interfaces;
+			sourceTree = "<group>";
+		};
+		7A202FCF0E5CAF0A007F800D /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				7A202FD00E5CAF0A007F800D /* util */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		7A202FD00E5CAF0A007F800D /* util */ = {
+			isa = PBXGroup;
+			children = (
+				7A202FD10E5CAF0A007F800D /* dmzArchiveObserverUtil.cpp */,
+				7A202FD20E5CAF0A007F800D /* dmzArchiveObserverUtil.h */,
+				7A202FD30E5CAF0A007F800D /* dmzArchiveUtil.lmk */,
+				7A202FD40E5CAF0A007F800D /* dmzArchiveUtilExport.h */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		7A202FD50E5CAF0A007F800D /* modules */ = {
+			isa = PBXGroup;
+			children = (
+				7A202FD60E5CAF0A007F800D /* basic */,
+			);
+			path = modules;
+			sourceTree = "<group>";
+		};
+		7A202FD60E5CAF0A007F800D /* basic */ = {
+			isa = PBXGroup;
+			children = (
+				7A202FD70E5CAF0A007F800D /* dmzArchiveModuleBasic.cpp */,
+				7A202FD80E5CAF0A007F800D /* dmzArchiveModuleBasic.h */,
+				7A202FD90E5CAF0A007F800D /* dmzArchiveModuleBasic.lmk */,
+			);
+			path = basic;
+			sourceTree = "<group>";
+		};
+		7A202FDA0E5CAF0A007F800D /* plugins */ = {
+			isa = PBXGroup;
+			children = (
+				7A202FDB0E5CAF0A007F800D /* input */,
+				7A202FDF0E5CAF0A007F800D /* load */,
+				7A202FE30E5CAF0A007F800D /* object */,
+				7A202FE70E5CAF0A007F800D /* save */,
+				7A202FEE0E5CAF0A007F800D /* undo */,
+			);
+			path = plugins;
+			sourceTree = "<group>";
+		};
+		7A202FDB0E5CAF0A007F800D /* input */ = {
+			isa = PBXGroup;
+			children = (
+				7A202FDC0E5CAF0A007F800D /* dmzArchivePluginInput.cpp */,
+				7A202FDD0E5CAF0A007F800D /* dmzArchivePluginInput.h */,
+				7A202FDE0E5CAF0A007F800D /* dmzArchivePluginInput.lmk */,
+			);
+			path = input;
+			sourceTree = "<group>";
+		};
+		7A202FDF0E5CAF0A007F800D /* load */ = {
+			isa = PBXGroup;
+			children = (
+				7A202FE00E5CAF0A007F800D /* dmzArchivePluginAutoLoad.cpp */,
+				7A202FE10E5CAF0A007F800D /* dmzArchivePluginAutoLoad.h */,
+				7A202FE20E5CAF0A007F800D /* dmzArchivePluginAutoLoad.lmk */,
+			);
+			path = load;
+			sourceTree = "<group>";
+		};
+		7A202FE30E5CAF0A007F800D /* object */ = {
+			isa = PBXGroup;
+			children = (
+				7A202FE40E5CAF0A007F800D /* dmzArchivePluginObject.cpp */,
+				7A202FE50E5CAF0A007F800D /* dmzArchivePluginObject.h */,
+				7A202FE60E5CAF0A007F800D /* dmzArchivePluginObject.lmk */,
+			);
+			path = object;
+			sourceTree = "<group>";
+		};
+		7A202FE70E5CAF0A007F800D /* save */ = {
+			isa = PBXGroup;
+			children = (
+				7A202FE80E5CAF0A007F800D /* dmzArchivePluginAutoSave.cpp */,
+				7A202FE90E5CAF0A007F800D /* dmzArchivePluginAutoSave.h */,
+				7A202FEA0E5CAF0A007F800D /* dmzArchivePluginAutoSave.lmk */,
+				7A202FEB0E5CAF0A007F800D /* dmzArchivePluginQuickSave.cpp */,
+				7A202FEC0E5CAF0A007F800D /* dmzArchivePluginQuickSave.h */,
+				7A202FED0E5CAF0A007F800D /* dmzArchivePluginQuickSave.lmk */,
+			);
+			path = save;
+			sourceTree = "<group>";
+		};
+		7A202FEE0E5CAF0A007F800D /* undo */ = {
+			isa = PBXGroup;
+			children = (
+				7A202FEF0E5CAF0A007F800D /* dmzArchivePluginUndo.cpp */,
+				7A202FF00E5CAF0A007F800D /* dmzArchivePluginUndo.h */,
+				7A202FF10E5CAF0A007F800D /* dmzArchivePluginUndo.lmk */,
+			);
+			path = undo;
+			sourceTree = "<group>";
+		};
+		7A20BF660E52302E00D169ED /* input */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BF670E52302E00D169ED /* interfaces */,
+				7A20BF6F0E52302E00D169ED /* libs */,
+				7A20BF800E52302E00D169ED /* modules */,
+				7A20BF850E52302E00D169ED /* plugins */,
+			);
+			name = input;
+			path = ../../frameworks/input;
+			sourceTree = SOURCE_ROOT;
+		};
+		7A20BF670E52302E00D169ED /* interfaces */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BF680E52302E00D169ED /* dmzInputConsts.h */,
+				7A20BF690E52302E00D169ED /* dmzInputFramework.lmk */,
+				7A20BF6A0E52302E00D169ED /* dmzInputMaskConsts.h */,
+				7A20BF6B0E52302E00D169ED /* dmzInputModule.cpp */,
+				7A20BF6C0E52302E00D169ED /* dmzInputModule.h */,
+				7A20BF6D0E52302E00D169ED /* dmzInputObserver.cpp */,
+				7A20BF6E0E52302E00D169ED /* dmzInputObserver.h */,
+			);
+			path = interfaces;
+			sourceTree = "<group>";
+		};
+		7A20BF6F0E52302E00D169ED /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BF700E52302E00D169ED /* events */,
+				7A20BF790E52302E00D169ED /* util */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		7A20BF700E52302E00D169ED /* events */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BF710E52302E00D169ED /* dmzInputEventController.cpp */,
+				7A20BF720E52302E00D169ED /* dmzInputEventController.h */,
+				7A20BF730E52302E00D169ED /* dmzInputEventKey.cpp */,
+				7A20BF740E52302E00D169ED /* dmzInputEventKey.h */,
+				7A20BF750E52302E00D169ED /* dmzInputEventMouse.cpp */,
+				7A20BF760E52302E00D169ED /* dmzInputEventMouse.h */,
+				7A20BF770E52302E00D169ED /* dmzInputEvents.lmk */,
+				7A20BF780E52302E00D169ED /* dmzInputEventsExport.h */,
+			);
+			path = events;
+			sourceTree = "<group>";
+		};
+		7A20BF790E52302E00D169ED /* util */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BF7A0E52302E00D169ED /* dmzInputEventMasks.cpp */,
+				7A20BF7B0E52302E00D169ED /* dmzInputEventMasks.h */,
+				7A20BF7C0E52302E00D169ED /* dmzInputObserverUtil.cpp */,
+				7A20BF7D0E52302E00D169ED /* dmzInputObserverUtil.h */,
+				7A20BF7E0E52302E00D169ED /* dmzInputUtil.lmk */,
+				7A20BF7F0E52302E00D169ED /* dmzInputUtilExport.h */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		7A20BF800E52302E00D169ED /* modules */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BF810E52302E00D169ED /* basic */,
+			);
+			path = modules;
+			sourceTree = "<group>";
+		};
+		7A20BF810E52302E00D169ED /* basic */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BF820E52302E00D169ED /* dmzInputModuleBasic.cpp */,
+				7A20BF830E52302E00D169ED /* dmzInputModuleBasic.h */,
+				7A20BF840E52302E00D169ED /* dmzInputModuleBasic.lmk */,
+			);
+			path = basic;
+			sourceTree = "<group>";
+		};
+		7A20BF850E52302E00D169ED /* plugins */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BF860E52302E00D169ED /* controllers */,
+				7A20BFA00E52302E00D169ED /* converters */,
+				7A20BFA80E52302E00D169ED /* exit */,
+				7A20BFAC0E52302E00D169ED /* rules */,
+				7A20BFAE0E52302E00D169ED /* switch */,
+			);
+			path = plugins;
+			sourceTree = "<group>";
+		};
+		7A20BF860E52302E00D169ED /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BF870E52302E00D169ED /* dmzInputPluginControllerKey.cpp */,
+				7A20BF880E52302E00D169ED /* dmzInputPluginControllerKey.h */,
+				7A20BF890E52302E00D169ED /* dmzInputPluginControllerKey.lmk */,
+				7A20BF8A0E52302E00D169ED /* dmzInputPluginControllerMacOS.cpp */,
+				7A20BF8B0E52302E00D169ED /* dmzInputPluginControllerMacOS.h */,
+				7A20BF8C0E52302E00D169ED /* dmzInputPluginControllerMacOS.lmk */,
+				7A20BF8D0E52302E00D169ED /* dmzInputPluginControllerWin32.cpp */,
+				7A20BF8E0E52302E00D169ED /* dmzInputPluginControllerWin32.h */,
+				7A20BF8F0E52302E00D169ED /* dmzInputPluginControllerWin32.lmk */,
+				7A20BF900E52302E00D169ED /* macos */,
+			);
+			path = controllers;
+			sourceTree = "<group>";
+		};
+		7A20BF900E52302E00D169ED /* macos */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BF910E52302E00D169ED /* HID Utilities Read Me.rtf */,
+				7A20BF920E52302E00D169ED /* HID_Config_Utilities.c */,
+				7A20BF930E52302E00D169ED /* HID_Config_Utilities.h */,
+				7A20BF940E52302E00D169ED /* HID_Error_Handler.c */,
+				7A20BF950E52302E00D169ED /* HID_Error_Handler.h */,
+				7A20BF960E52302E00D169ED /* HID_Name_Lookup.c */,
+				7A20BF970E52302E00D169ED /* HID_Name_Lookup.h */,
+				7A20BF980E52302E00D169ED /* HID_Queue_Utilities.c */,
+				7A20BF990E52302E00D169ED /* HID_Queue_Utilities.h */,
+				7A20BF9A0E52302E00D169ED /* HID_Transaction_Utilities.c */,
+				7A20BF9B0E52302E00D169ED /* HID_Transaction_Utilities.h */,
+				7A20BF9C0E52302E00D169ED /* HID_Utilities.c */,
+				7A20BF9D0E52302E00D169ED /* HID_Utilities.h */,
+				7A20BF9E0E52302E00D169ED /* HID_Utilities_External.h */,
+				7A20BF9F0E52302E00D169ED /* HID_Utilities_Internal.h */,
+			);
+			path = macos;
+			sourceTree = "<group>";
+		};
+		7A20BFA00E52302E00D169ED /* converters */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BFA10E52302E00D169ED /* dmzInputPluginKeyEventToMessage.cpp */,
+				7A20BFA20E52302E00D169ED /* dmzInputPluginKeyEventToMessage.h */,
+				7A20BFA30E52302E00D169ED /* dmzInputPluginKeyEventToMessage.lmk */,
+				7A20BFA40E52302E00D169ED /* dmzInputPluginMouseEventToMessage.cpp */,
+				7A20BFA50E52302E00D169ED /* dmzInputPluginMouseEventToMessage.h */,
+				7A20BFA60E52302E00D169ED /* dmzInputPluginMouseEventToMessage.lmk */,
+				7A20BFA70E52302E00D169ED /* sample.xml */,
+			);
+			path = converters;
+			sourceTree = "<group>";
+		};
+		7A20BFA80E52302E00D169ED /* exit */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BFA90E52302E00D169ED /* dmzInputPluginExit.cpp */,
+				7A20BFAA0E52302E00D169ED /* dmzInputPluginExit.h */,
+				7A20BFAB0E52302E00D169ED /* dmzInputPluginExit.lmk */,
+			);
+			path = exit;
+			sourceTree = "<group>";
+		};
+		7A20BFAC0E52302E00D169ED /* rules */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BFAD0E52302E00D169ED /* dmzInputPluginChannelRules.h */,
+			);
+			path = rules;
+			sourceTree = "<group>";
+		};
+		7A20BFAE0E52302E00D169ED /* switch */ = {
+			isa = PBXGroup;
+			children = (
+				7A20BFAF0E52302E00D169ED /* dmzInputPluginChannelSwitch.cpp */,
+				7A20BFB00E52302E00D169ED /* dmzInputPluginChannelSwitch.h */,
+				7A20BFB10E52302E00D169ED /* dmzInputPluginChannelSwitch.lmk */,
+			);
+			path = switch;
+			sourceTree = "<group>";
+		};
 		7A560A8D0E12D1DE0049409D /* frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2280F5910E19A535003A2238 /* object */,
+				7A202FC80E5CAF0A007F800D /* archive */,
+				7A20BF660E52302E00D169ED /* input */,
 				7A560A8F0E12D27A0049409D /* lua */,
+				2280F5910E19A535003A2238 /* object */,
+				7A202ED70E5CAC49007F800D /* render */,
 			);
 			name = frameworks;
 			sourceTree = "<group>";
@@ -2329,6 +3653,106 @@
 				7A0148590E118421001813A7 /* dmzTypesUUID.h in Headers */,
 				7A01485A0E118421001813A7 /* dmzTypesVector.h in Headers */,
 				7A09AF860E118C41003C5B32 /* dmzRuntimeLoadPlugins.h in Headers */,
+				7A39BB280E4B8C360035E12A /* dmzRuntimeConfigToBase.h in Headers */,
+				7A39BB290E4B8C360035E12A /* dmzRuntimeConfigToMatrix.h in Headers */,
+				7A39BB2A0E4B8C360035E12A /* dmzRuntimeConfigToNamedHandle.h in Headers */,
+				7A39BB2B0E4B8C360035E12A /* dmzRuntimeConfigToPathContainer.h in Headers */,
+				7A39BB2C0E4B8C360035E12A /* dmzRuntimeConfigToState.h in Headers */,
+				7A39BB2D0E4B8C360035E12A /* dmzRuntimeConfigToStringContainer.h in Headers */,
+				7A39BB2E0E4B8C360035E12A /* dmzRuntimeConfigToVector.h in Headers */,
+				7A39BB3A0E4B8CA50035E12A /* dmzRuntimeUUID.h in Headers */,
+				7A39BB430E4B8CD60035E12A /* dmzTypesStringContainer.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A202F4E0E5CAD4A007F800D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A202F890E5CAD97007F800D /* dmzRenderIsect.h in Headers */,
+				7A202F8A0E5CAD97007F800D /* dmzRenderIsectExport.h in Headers */,
+				7A202F8C0E5CAD97007F800D /* dmzRenderIsectUtil.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A202F920E5CADDE007F800D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A202FA30E5CAE06007F800D /* dmzRenderPick2dUtil.h in Headers */,
+				7A202FA40E5CAE06007F800D /* dmzRenderUtilExport.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A202FB40E5CAE4D007F800D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A202FF90E5CAF66007F800D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A20301A0E5CC841007F800D /* dmzArchiveObserverUtil.h in Headers */,
+				7A20301B0E5CC841007F800D /* dmzArchiveUtilExport.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A20301D0E5CC86D007F800D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A2030300E5CC9CB007F800D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A2030520E5CCA4D007F800D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A2030650E5CCAAC007F800D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A20C00D0E52311500D169ED /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A20C0150E52313100D169ED /* dmzInputEventController.h in Headers */,
+				7A20C0170E52313100D169ED /* dmzInputEventKey.h in Headers */,
+				7A20C0190E52313100D169ED /* dmzInputEventMouse.h in Headers */,
+				7A20C01A0E52313100D169ED /* dmzInputEventsExport.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A20C0470E52350200D169ED /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A20C04F0E52351A00D169ED /* dmzInputEventMasks.h in Headers */,
+				7A20C0510E52351A00D169ED /* dmzInputObserverUtil.h in Headers */,
+				7A20C0520E52351A00D169ED /* dmzInputUtilExport.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A35FBD20E5CCCF90002DA61 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2361,6 +3785,54 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A64E6580E241E0A008FFC86 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A64E6640E241E2F008FFC86 /* dmzObjectAttributeMasks.h in Headers */,
+				7A64E6660E241E2F008FFC86 /* dmzObjectCalc.h in Headers */,
+				7A64E6680E241E2F008FFC86 /* dmzObjectObserverUtil.h in Headers */,
+				7A64E6690E241E2F008FFC86 /* dmzObjectUtilExport.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A6F1BAA0E5CA27B004FB18E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A6F1BCE0E5CA509004FB18E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A6F1BEC0E5CA5CB004FB18E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A8C279C0E5247B700343AC9 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A8C27B40E5247E100343AC9 /* dmzInputModuleBasic.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D249EEFD0E5B8B2900A57803 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2F823740E5B8F2A00B9528C /* dmzInputPluginMouseEventToMessage.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2546,6 +4018,219 @@
 			productReference = 7A0E0D5D0E117CC100E55011 /* libdmzKernel.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		7A202F510E5CAD4A007F800D /* dmzRenderIsect */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A202F600E5CAD68007F800D /* Build configuration list for PBXNativeTarget "dmzRenderIsect" */;
+			buildPhases = (
+				7A202F4E0E5CAD4A007F800D /* Headers */,
+				7A202F4F0E5CAD4A007F800D /* Sources */,
+				7A202F500E5CAD4A007F800D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A202F590E5CAD5A007F800D /* PBXTargetDependency */,
+				7A202F5B0E5CAD63007F800D /* PBXTargetDependency */,
+			);
+			name = dmzRenderIsect;
+			productName = dmzRenderIsect;
+			productReference = 7A202F520E5CAD4A007F800D /* libdmzRenderIsect.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A202F950E5CADDE007F800D /* dmzRenderUtil */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A202FAF0E5CAE1E007F800D /* Build configuration list for PBXNativeTarget "dmzRenderUtil" */;
+			buildPhases = (
+				7A202F920E5CADDE007F800D /* Headers */,
+				7A202F930E5CADDE007F800D /* Sources */,
+				7A202F940E5CADDE007F800D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A202F9D0E5CADE6007F800D /* PBXTargetDependency */,
+				7A202F9F0E5CADEA007F800D /* PBXTargetDependency */,
+			);
+			name = dmzRenderUtil;
+			productName = dmzRenderUtil;
+			productReference = 7A202F960E5CADDE007F800D /* libdmzRenderUtil.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A202FB70E5CAE4D007F800D /* dmzRenderModulePickBasic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A202FC60E5CAE93007F800D /* Build configuration list for PBXNativeTarget "dmzRenderModulePickBasic" */;
+			buildPhases = (
+				7A202FB40E5CAE4D007F800D /* Headers */,
+				7A202FB50E5CAE4D007F800D /* Sources */,
+				7A202FB60E5CAE4D007F800D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A202FBF0E5CAE59007F800D /* PBXTargetDependency */,
+				7A202FC10E5CAE5F007F800D /* PBXTargetDependency */,
+			);
+			name = dmzRenderModulePickBasic;
+			productName = dmzRenderModulePickBasic;
+			productReference = 7A202FB80E5CAE4D007F800D /* libdmzRenderModulePickBasic.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A202FFC0E5CAF66007F800D /* dmzArchiveUtil */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A2030170E5CAF7C007F800D /* Build configuration list for PBXNativeTarget "dmzArchiveUtil" */;
+			buildPhases = (
+				7A202FF90E5CAF66007F800D /* Headers */,
+				7A202FFA0E5CAF66007F800D /* Sources */,
+				7A202FFB0E5CAF66007F800D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A2030040E5CAF70007F800D /* PBXTargetDependency */,
+				7A2030060E5CAF77007F800D /* PBXTargetDependency */,
+			);
+			name = dmzArchiveUtil;
+			productName = dmzArchiveUtil;
+			productReference = 7A202FFD0E5CAF66007F800D /* libdmzArchiveUtil.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A2030200E5CC86D007F800D /* dmzArchiveModuleBasic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A20302F0E5CC8A7007F800D /* Build configuration list for PBXNativeTarget "dmzArchiveModuleBasic" */;
+			buildPhases = (
+				7A20301D0E5CC86D007F800D /* Headers */,
+				7A20301E0E5CC86D007F800D /* Sources */,
+				7A20301F0E5CC86D007F800D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A2030280E5CC873007F800D /* PBXTargetDependency */,
+				7A20302A0E5CC879007F800D /* PBXTargetDependency */,
+				7A20302C0E5CC87D007F800D /* PBXTargetDependency */,
+			);
+			name = dmzArchiveModuleBasic;
+			productName = dmzArchiveModuleBasic;
+			productReference = 7A2030210E5CC86D007F800D /* libdmzArchiveModuleBasic.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A2030330E5CC9CB007F800D /* dmzArchivePluginAutoLoad */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A20304F0E5CC9F0007F800D /* Build configuration list for PBXNativeTarget "dmzArchivePluginAutoLoad" */;
+			buildPhases = (
+				7A2030300E5CC9CB007F800D /* Headers */,
+				7A2030310E5CC9CB007F800D /* Sources */,
+				7A2030320E5CC9CB007F800D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A20303B0E5CC9D1007F800D /* PBXTargetDependency */,
+				7A20303D0E5CC9D5007F800D /* PBXTargetDependency */,
+			);
+			name = dmzArchivePluginAutoLoad;
+			productName = dmzArchivePluginAutoLoad;
+			productReference = 7A2030340E5CC9CB007F800D /* libdmzArchivePluginAutoLoad.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A2030550E5CCA4D007F800D /* dmzArchivePluginObject */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A2030640E5CCA8B007F800D /* Build configuration list for PBXNativeTarget "dmzArchivePluginObject" */;
+			buildPhases = (
+				7A2030520E5CCA4D007F800D /* Headers */,
+				7A2030530E5CCA4D007F800D /* Sources */,
+				7A2030540E5CCA4D007F800D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A20305D0E5CCA53007F800D /* PBXTargetDependency */,
+				7A20305F0E5CCA5A007F800D /* PBXTargetDependency */,
+				7A2030610E5CCA5F007F800D /* PBXTargetDependency */,
+			);
+			name = dmzArchivePluginObject;
+			productName = dmzArchivePluginObject;
+			productReference = 7A2030560E5CCA4D007F800D /* libdmzArchivePluginObject.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A2030680E5CCAAC007F800D /* dmzArchivePluginAutoSave */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A2030790E5CCAE9007F800D /* Build configuration list for PBXNativeTarget "dmzArchivePluginAutoSave" */;
+			buildPhases = (
+				7A2030650E5CCAAC007F800D /* Headers */,
+				7A2030660E5CCAAC007F800D /* Sources */,
+				7A2030670E5CCAAC007F800D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A2030700E5CCAB0007F800D /* PBXTargetDependency */,
+				7A2030720E5CCAB4007F800D /* PBXTargetDependency */,
+				7A2030740E5CCABA007F800D /* PBXTargetDependency */,
+				7A2030760E5CCAC1007F800D /* PBXTargetDependency */,
+			);
+			name = dmzArchivePluginAutoSave;
+			productName = dmzArchivePluginAutoSave;
+			productReference = 7A2030690E5CCAAC007F800D /* libdmzArchivePluginAutoSave.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A20C0100E52311500D169ED /* dmzInputEvents */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A20C02D0E52315800D169ED /* Build configuration list for PBXNativeTarget "dmzInputEvents" */;
+			buildPhases = (
+				7A20C00D0E52311500D169ED /* Headers */,
+				7A20C00E0E52311500D169ED /* Sources */,
+				7A20C00F0E52311500D169ED /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A20C02F0E52316F00D169ED /* PBXTargetDependency */,
+			);
+			name = dmzInputEvents;
+			productName = dmzInputEvents;
+			productReference = 7A20C0110E52311500D169ED /* libdmzInputEvents.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A20C04A0E52350200D169ED /* dmzInputUtil */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A20C05B0E52351E00D169ED /* Build configuration list for PBXNativeTarget "dmzInputUtil" */;
+			buildPhases = (
+				7A20C0470E52350200D169ED /* Headers */,
+				7A20C0480E52350200D169ED /* Sources */,
+				7A20C0490E52350200D169ED /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A20C06E0E52447C00D169ED /* PBXTargetDependency */,
+				7A20C0700E52448100D169ED /* PBXTargetDependency */,
+			);
+			name = dmzInputUtil;
+			productName = dmzInputUtil;
+			productReference = 7A20C04B0E52350200D169ED /* libdmzInputUtil.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A35FBD50E5CCCF90002DA61 /* dmzObjectPluginCleanup */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A35FBE60E5CCD6B0002DA61 /* Build configuration list for PBXNativeTarget "dmzObjectPluginCleanup" */;
+			buildPhases = (
+				7A35FBD20E5CCCF90002DA61 /* Headers */,
+				7A35FBD30E5CCCF90002DA61 /* Sources */,
+				7A35FBD40E5CCCF90002DA61 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A35FBDD0E5CCD010002DA61 /* PBXTargetDependency */,
+				7A35FBDF0E5CCD0D0002DA61 /* PBXTargetDependency */,
+				7A35FBE10E5CCD180002DA61 /* PBXTargetDependency */,
+			);
+			name = dmzObjectPluginCleanup;
+			productName = dmzObjectPluginCleanup;
+			productReference = 7A35FBD60E5CCCF90002DA61 /* libdmzObjectPluginCleanup.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		7A560B6A0E12D2F60049409D /* lua */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7A560B6E0E12D3040049409D /* Build configuration list for PBXNativeTarget "lua" */;
@@ -2604,6 +4289,136 @@
 			productReference = 7A560BD10E12D9490049409D /* libdmzLuaModuleBasic.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		7A64E65B0E241E0A008FFC86 /* dmzObjectUtil */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A64E6620E241E28008FFC86 /* Build configuration list for PBXNativeTarget "dmzObjectUtil" */;
+			buildPhases = (
+				7A64E6580E241E0A008FFC86 /* Headers */,
+				7A64E6590E241E0A008FFC86 /* Sources */,
+				7A64E65A0E241E0A008FFC86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A64E6720E241ED7008FFC86 /* PBXTargetDependency */,
+				7A64E6740E241EE7008FFC86 /* PBXTargetDependency */,
+			);
+			name = dmzObjectUtil;
+			productName = dmzObjectUtil;
+			productReference = 7A64E65C0E241E0A008FFC86 /* libdmzObjectUtil.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A6F1BAD0E5CA27B004FB18E /* dmzLuaExtObject */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A6F1BC50E5CA300004FB18E /* Build configuration list for PBXNativeTarget "dmzLuaExtObject" */;
+			buildPhases = (
+				7A6F1BAA0E5CA27B004FB18E /* Headers */,
+				7A6F1BAB0E5CA27B004FB18E /* Sources */,
+				7A6F1BAC0E5CA27B004FB18E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A6F1BB50E5CA2A6004FB18E /* PBXTargetDependency */,
+				7A6F1BB70E5CA2AA004FB18E /* PBXTargetDependency */,
+				7A6F1BB90E5CA2AE004FB18E /* PBXTargetDependency */,
+				7A6F1BBB0E5CA2B2004FB18E /* PBXTargetDependency */,
+				7A6F1BBD0E5CA2B7004FB18E /* PBXTargetDependency */,
+				7A6F1BBF0E5CA2BC004FB18E /* PBXTargetDependency */,
+			);
+			name = dmzLuaExtObject;
+			productName = dmzLuaExtObject;
+			productReference = 7A6F1BAE0E5CA27B004FB18E /* libdmzLuaExtObject.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A6F1BD10E5CA509004FB18E /* dmzLuaExtInput */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A6F1BEA0E5CA57F004FB18E /* Build configuration list for PBXNativeTarget "dmzLuaExtInput" */;
+			buildPhases = (
+				7A6F1BCE0E5CA509004FB18E /* Headers */,
+				7A6F1BCF0E5CA509004FB18E /* Sources */,
+				7A6F1BD00E5CA509004FB18E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A6F1BD60E5CA51D004FB18E /* PBXTargetDependency */,
+				7A6F1BD80E5CA520004FB18E /* PBXTargetDependency */,
+				7A6F1BDA0E5CA525004FB18E /* PBXTargetDependency */,
+				7A6F1BDF0E5CA52B004FB18E /* PBXTargetDependency */,
+				7A6F1BE10E5CA52F004FB18E /* PBXTargetDependency */,
+				7A6F1BE30E5CA536004FB18E /* PBXTargetDependency */,
+				7A6F1BE50E5CA53C004FB18E /* PBXTargetDependency */,
+			);
+			name = dmzLuaExtInput;
+			productName = dmzLuaExtInput;
+			productReference = 7A6F1BD20E5CA509004FB18E /* libdmzLuaExtInput.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A6F1BEF0E5CA5CB004FB18E /* dmzLuaExtPick */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A6F1C1D0E5CA62C004FB18E /* Build configuration list for PBXNativeTarget "dmzLuaExtPick" */;
+			buildPhases = (
+				7A6F1BEC0E5CA5CB004FB18E /* Headers */,
+				7A6F1BED0E5CA5CB004FB18E /* Sources */,
+				7A6F1BEE0E5CA5CB004FB18E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A6F1BF90E5CA5F9004FB18E /* PBXTargetDependency */,
+				7A6F1BFB0E5CA5FE004FB18E /* PBXTargetDependency */,
+				7A6F1BFD0E5CA602004FB18E /* PBXTargetDependency */,
+				7A6F1BFF0E5CA606004FB18E /* PBXTargetDependency */,
+				7A6F1C010E5CA60B004FB18E /* PBXTargetDependency */,
+			);
+			name = dmzLuaExtPick;
+			productName = dmzLuaExtPick;
+			productReference = 7A6F1BF00E5CA5CB004FB18E /* libdmzLuaExtPick.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A8C279F0E5247B700343AC9 /* dmzInputModuleBasic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A8C27AB0E5247BA00343AC9 /* Build configuration list for PBXNativeTarget "dmzInputModuleBasic" */;
+			buildPhases = (
+				7A8C279C0E5247B700343AC9 /* Headers */,
+				7A8C279D0E5247B700343AC9 /* Sources */,
+				7A8C279E0E5247B700343AC9 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A8C27AD0E5247C100343AC9 /* PBXTargetDependency */,
+				7A8C27AF0E5247C700343AC9 /* PBXTargetDependency */,
+				7A8C27B10E5247CA00343AC9 /* PBXTargetDependency */,
+			);
+			name = dmzInputModuleBasic;
+			productName = dmzInputModuleBasic;
+			productReference = 7A8C27A00E5247B700343AC9 /* libdmzInputModuleBasic.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D249EF000E5B8B2900A57803 /* dmzInputPluginMouseEventToMessage */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D249EF100E5B8B7100A57803 /* Build configuration list for PBXNativeTarget "dmzInputPluginMouseEventToMessage" */;
+			buildPhases = (
+				D249EEFD0E5B8B2900A57803 /* Headers */,
+				D249EEFE0E5B8B2900A57803 /* Sources */,
+				D249EEFF0E5B8B2900A57803 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D249EF060E5B8B4100A57803 /* PBXTargetDependency */,
+				D249EF0B0E5B8B4800A57803 /* PBXTargetDependency */,
+				D249EF0D0E5B8B4B00A57803 /* PBXTargetDependency */,
+				D249EF0F0E5B8B5300A57803 /* PBXTargetDependency */,
+				D249EF9B0E5B8C3700A57803 /* PBXTargetDependency */,
+			);
+			name = dmzInputPluginMouseEventToMessage;
+			productName = dmzInputPluginMouseEventToMessage;
+			productReference = D249EF010E5B8B2900A57803 /* libdmzInputPluginMouseEventToMessage.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -2630,9 +4445,29 @@
 				7A560BDF0E12D99C0049409D /* dmzLuaFramework */,
 				7A560B6A0E12D2F60049409D /* lua */,
 				7A560BA60E12D6B90049409D /* dmzLuaKernel */,
+				7A6F1BD10E5CA509004FB18E /* dmzLuaExtInput */,
+				7A6F1BAD0E5CA27B004FB18E /* dmzLuaExtObject */,
+				7A6F1BEF0E5CA5CB004FB18E /* dmzLuaExtPick */,
 				7A560BD00E12D9490049409D /* dmzLuaModuleBasic */,
 				2280F5C80E19A55C003A2238 /* dmzObjectFramework */,
 				2280F5E40E19A623003A2238 /* dmzObjectModuleBasic */,
+				7A64E65B0E241E0A008FFC86 /* dmzObjectUtil */,
+				7A35FBD50E5CCCF90002DA61 /* dmzObjectPluginCleanup */,
+				7A20BF610E522FD600D169ED /* dmzInputFramework */,
+				7A20C0100E52311500D169ED /* dmzInputEvents */,
+				7A20C04A0E52350200D169ED /* dmzInputUtil */,
+				7A8C279F0E5247B700343AC9 /* dmzInputModuleBasic */,
+				D249EF000E5B8B2900A57803 /* dmzInputPluginMouseEventToMessage */,
+				D249EF160E5B8BAD00A57803 /* dmzRenderFramework */,
+				7A202F510E5CAD4A007F800D /* dmzRenderIsect */,
+				7A202F950E5CADDE007F800D /* dmzRenderUtil */,
+				7A202FB70E5CAE4D007F800D /* dmzRenderModulePickBasic */,
+				7A202FF30E5CAF25007F800D /* dmzArchiveFramework */,
+				7A202FFC0E5CAF66007F800D /* dmzArchiveUtil */,
+				7A2030200E5CC86D007F800D /* dmzArchiveModuleBasic */,
+				7A2030330E5CC9CB007F800D /* dmzArchivePluginAutoLoad */,
+				7A2030550E5CCA4D007F800D /* dmzArchivePluginObject */,
+				7A2030680E5CCAAC007F800D /* dmzArchivePluginAutoSave */,
 			);
 		};
 /* End PBXProject section */
@@ -2781,6 +4616,99 @@
 				7A0148540E118421001813A7 /* dmzTypesString.cpp in Sources */,
 				7A0148570E118421001813A7 /* dmzTypesStringUtil.cpp in Sources */,
 				7A09AF850E118C41003C5B32 /* dmzRuntimeLoadPlugins.cpp in Sources */,
+				7A39BB420E4B8CD60035E12A /* dmzTypesStringContainer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A202F4F0E5CAD4A007F800D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A202F880E5CAD97007F800D /* dmzRenderIsect.cpp in Sources */,
+				7A202F8B0E5CAD97007F800D /* dmzRenderIsectUtil.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A202F930E5CADDE007F800D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A202FA20E5CAE06007F800D /* dmzRenderPick2dUtil.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A202FB50E5CAE4D007F800D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A202FC20E5CAE6A007F800D /* dmzRenderModulePickBasic.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A202FFA0E5CAF66007F800D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A2030190E5CC841007F800D /* dmzArchiveObserverUtil.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A20301E0E5CC86D007F800D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A20302D0E5CC889007F800D /* dmzArchiveModuleBasic.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A2030310E5CC9CB007F800D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A20303E0E5CC9E0007F800D /* dmzArchivePluginAutoLoad.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A2030530E5CCA4D007F800D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A2030620E5CCA6D007F800D /* dmzArchivePluginObject.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A2030660E5CCAAC007F800D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A2030770E5CCACB007F800D /* dmzArchivePluginAutoSave.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A20C00E0E52311500D169ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A20C0140E52313100D169ED /* dmzInputEventController.cpp in Sources */,
+				7A20C0160E52313100D169ED /* dmzInputEventKey.cpp in Sources */,
+				7A20C0180E52313100D169ED /* dmzInputEventMouse.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A20C0480E52350200D169ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A20C04E0E52351A00D169ED /* dmzInputEventMasks.cpp in Sources */,
+				7A20C0500E52351A00D169ED /* dmzInputObserverUtil.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A35FBD30E5CCCF90002DA61 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A35FBE30E5CCD280002DA61 /* dmzObjectPluginCleanup.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2857,6 +4785,57 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7A64E6590E241E0A008FFC86 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A64E6630E241E2F008FFC86 /* dmzObjectAttributeMasks.cpp in Sources */,
+				7A64E6650E241E2F008FFC86 /* dmzObjectCalc.cpp in Sources */,
+				7A64E6670E241E2F008FFC86 /* dmzObjectObserverUtil.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A6F1BAB0E5CA27B004FB18E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A6F1BC00E5CA2D1004FB18E /* dmzLuaExtObject.cpp in Sources */,
+				7A6F1BC10E5CA2D1004FB18E /* dmzLuaExtObjectObserver.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A6F1BCF0E5CA509004FB18E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A6F1BE60E5CA54A004FB18E /* dmzLuaExtInput.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A6F1BED0E5CA5CB004FB18E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A6F1C020E5CA616004FB18E /* dmzLuaExtPick.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A8C279D0E5247B700343AC9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A8C27B30E5247E100343AC9 /* dmzInputModuleBasic.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D249EEFE0E5B8B2900A57803 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D249EF110E5B8B7A00A57803 /* dmzInputPluginMouseEventToMessage.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -2915,6 +4894,211 @@
 			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
 			targetProxy = 7A09B0E10E119B65003C5B32 /* PBXContainerItemProxy */;
 		};
+		7A202F590E5CAD5A007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A202F580E5CAD5A007F800D /* PBXContainerItemProxy */;
+		};
+		7A202F5B0E5CAD63007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D249EF160E5B8BAD00A57803 /* dmzRenderFramework */;
+			targetProxy = 7A202F5A0E5CAD63007F800D /* PBXContainerItemProxy */;
+		};
+		7A202F8E0E5CADB4007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D249EF160E5B8BAD00A57803 /* dmzRenderFramework */;
+			targetProxy = 7A202F8D0E5CADB4007F800D /* PBXContainerItemProxy */;
+		};
+		7A202F900E5CADB7007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A202F510E5CAD4A007F800D /* dmzRenderIsect */;
+			targetProxy = 7A202F8F0E5CADB7007F800D /* PBXContainerItemProxy */;
+		};
+		7A202F9D0E5CADE6007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A202F9C0E5CADE6007F800D /* PBXContainerItemProxy */;
+		};
+		7A202F9F0E5CADEA007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D249EF160E5B8BAD00A57803 /* dmzRenderFramework */;
+			targetProxy = 7A202F9E0E5CADEA007F800D /* PBXContainerItemProxy */;
+		};
+		7A202FA10E5CADF6007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A202F950E5CADDE007F800D /* dmzRenderUtil */;
+			targetProxy = 7A202FA00E5CADF6007F800D /* PBXContainerItemProxy */;
+		};
+		7A202FBF0E5CAE59007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A202FBE0E5CAE59007F800D /* PBXContainerItemProxy */;
+		};
+		7A202FC10E5CAE5F007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D249EF160E5B8BAD00A57803 /* dmzRenderFramework */;
+			targetProxy = 7A202FC00E5CAE5F007F800D /* PBXContainerItemProxy */;
+		};
+		7A202FC40E5CAE74007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A202FB70E5CAE4D007F800D /* dmzRenderModulePickBasic */;
+			targetProxy = 7A202FC30E5CAE74007F800D /* PBXContainerItemProxy */;
+		};
+		7A2030040E5CAF70007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A2030030E5CAF70007F800D /* PBXContainerItemProxy */;
+		};
+		7A2030060E5CAF77007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A202FF30E5CAF25007F800D /* dmzArchiveFramework */;
+			targetProxy = 7A2030050E5CAF77007F800D /* PBXContainerItemProxy */;
+		};
+		7A2030280E5CC873007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A2030270E5CC873007F800D /* PBXContainerItemProxy */;
+		};
+		7A20302A0E5CC879007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A09B0670E1193B4003C5B32 /* dmzFoundation */;
+			targetProxy = 7A2030290E5CC879007F800D /* PBXContainerItemProxy */;
+		};
+		7A20302C0E5CC87D007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A202FF30E5CAF25007F800D /* dmzArchiveFramework */;
+			targetProxy = 7A20302B0E5CC87D007F800D /* PBXContainerItemProxy */;
+		};
+		7A20303B0E5CC9D1007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A560BA60E12D6B90049409D /* dmzLuaKernel */;
+			targetProxy = 7A20303A0E5CC9D1007F800D /* PBXContainerItemProxy */;
+		};
+		7A20303D0E5CC9D5007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A202FF30E5CAF25007F800D /* dmzArchiveFramework */;
+			targetProxy = 7A20303C0E5CC9D5007F800D /* PBXContainerItemProxy */;
+		};
+		7A20305D0E5CCA53007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A20305C0E5CCA53007F800D /* PBXContainerItemProxy */;
+		};
+		7A20305F0E5CCA5A007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A202FF30E5CAF25007F800D /* dmzArchiveFramework */;
+			targetProxy = 7A20305E0E5CCA5A007F800D /* PBXContainerItemProxy */;
+		};
+		7A2030610E5CCA5F007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2280F5C80E19A55C003A2238 /* dmzObjectFramework */;
+			targetProxy = 7A2030600E5CCA5F007F800D /* PBXContainerItemProxy */;
+		};
+		7A2030700E5CCAB0007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A20306F0E5CCAB0007F800D /* PBXContainerItemProxy */;
+		};
+		7A2030720E5CCAB4007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A09B0150E118F86003C5B32 /* dmzXML */;
+			targetProxy = 7A2030710E5CCAB4007F800D /* PBXContainerItemProxy */;
+		};
+		7A2030740E5CCABA007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A09B0670E1193B4003C5B32 /* dmzFoundation */;
+			targetProxy = 7A2030730E5CCABA007F800D /* PBXContainerItemProxy */;
+		};
+		7A2030760E5CCAC1007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A202FF30E5CAF25007F800D /* dmzArchiveFramework */;
+			targetProxy = 7A2030750E5CCAC1007F800D /* PBXContainerItemProxy */;
+		};
+		7A20307B0E5CCB70007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A202FF30E5CAF25007F800D /* dmzArchiveFramework */;
+			targetProxy = 7A20307A0E5CCB70007F800D /* PBXContainerItemProxy */;
+		};
+		7A20307D0E5CCB72007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A202FFC0E5CAF66007F800D /* dmzArchiveUtil */;
+			targetProxy = 7A20307C0E5CCB72007F800D /* PBXContainerItemProxy */;
+		};
+		7A20307F0E5CCB75007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A2030200E5CC86D007F800D /* dmzArchiveModuleBasic */;
+			targetProxy = 7A20307E0E5CCB75007F800D /* PBXContainerItemProxy */;
+		};
+		7A2030810E5CCB77007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A2030330E5CC9CB007F800D /* dmzArchivePluginAutoLoad */;
+			targetProxy = 7A2030800E5CCB77007F800D /* PBXContainerItemProxy */;
+		};
+		7A2030830E5CCB79007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A2030550E5CCA4D007F800D /* dmzArchivePluginObject */;
+			targetProxy = 7A2030820E5CCB79007F800D /* PBXContainerItemProxy */;
+		};
+		7A2030850E5CCB7B007F800D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A2030680E5CCAAC007F800D /* dmzArchivePluginAutoSave */;
+			targetProxy = 7A2030840E5CCB7B007F800D /* PBXContainerItemProxy */;
+		};
+		7A20BFC70E52309A00D169ED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A64E65B0E241E0A008FFC86 /* dmzObjectUtil */;
+			targetProxy = 7A20BFC60E52309A00D169ED /* PBXContainerItemProxy */;
+		};
+		7A20BFC90E52309D00D169ED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A20BF610E522FD600D169ED /* dmzInputFramework */;
+			targetProxy = 7A20BFC80E52309D00D169ED /* PBXContainerItemProxy */;
+		};
+		7A20C01F0E52314A00D169ED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A20C0100E52311500D169ED /* dmzInputEvents */;
+			targetProxy = 7A20C01E0E52314A00D169ED /* PBXContainerItemProxy */;
+		};
+		7A20C02F0E52316F00D169ED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A20C02E0E52316F00D169ED /* PBXContainerItemProxy */;
+		};
+		7A20C0680E52358800D169ED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A20C04A0E52350200D169ED /* dmzInputUtil */;
+			targetProxy = 7A20C0670E52358800D169ED /* PBXContainerItemProxy */;
+		};
+		7A20C06E0E52447C00D169ED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A20C06D0E52447C00D169ED /* PBXContainerItemProxy */;
+		};
+		7A20C0700E52448100D169ED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A20BF610E522FD600D169ED /* dmzInputFramework */;
+			targetProxy = 7A20C06F0E52448100D169ED /* PBXContainerItemProxy */;
+		};
+		7A35FBDD0E5CCD010002DA61 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A35FBDC0E5CCD010002DA61 /* PBXContainerItemProxy */;
+		};
+		7A35FBDF0E5CCD0D0002DA61 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A64E65B0E241E0A008FFC86 /* dmzObjectUtil */;
+			targetProxy = 7A35FBDE0E5CCD0D0002DA61 /* PBXContainerItemProxy */;
+		};
+		7A35FBE10E5CCD180002DA61 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2280F5C80E19A55C003A2238 /* dmzObjectFramework */;
+			targetProxy = 7A35FBE00E5CCD180002DA61 /* PBXContainerItemProxy */;
+		};
+		7A35FBE50E5CCD400002DA61 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A35FBD50E5CCCF90002DA61 /* dmzObjectPluginCleanup */;
+			targetProxy = 7A35FBE40E5CCD400002DA61 /* PBXContainerItemProxy */;
+		};
 		7A560BAC0E12D6CE0049409D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
@@ -2949,6 +5133,121 @@
 			isa = PBXTargetDependency;
 			target = 7A560BDF0E12D99C0049409D /* dmzLuaFramework */;
 			targetProxy = 7A560BE70E12DA350049409D /* PBXContainerItemProxy */;
+		};
+		7A64E6720E241ED7008FFC86 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A64E6710E241ED7008FFC86 /* PBXContainerItemProxy */;
+		};
+		7A64E6740E241EE7008FFC86 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2280F5C80E19A55C003A2238 /* dmzObjectFramework */;
+			targetProxy = 7A64E6730E241EE7008FFC86 /* PBXContainerItemProxy */;
+		};
+		7A6F1BB50E5CA2A6004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A6F1BB40E5CA2A6004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BB70E5CA2AA004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A560B6A0E12D2F60049409D /* lua */;
+			targetProxy = 7A6F1BB60E5CA2AA004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BB90E5CA2AE004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A560BA60E12D6B90049409D /* dmzLuaKernel */;
+			targetProxy = 7A6F1BB80E5CA2AE004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BBB0E5CA2B2004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A560BDF0E12D99C0049409D /* dmzLuaFramework */;
+			targetProxy = 7A6F1BBA0E5CA2B2004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BBD0E5CA2B7004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2280F5C80E19A55C003A2238 /* dmzObjectFramework */;
+			targetProxy = 7A6F1BBC0E5CA2B7004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BBF0E5CA2BC004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A64E65B0E241E0A008FFC86 /* dmzObjectUtil */;
+			targetProxy = 7A6F1BBE0E5CA2BC004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BC30E5CA2DB004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A6F1BAD0E5CA27B004FB18E /* dmzLuaExtObject */;
+			targetProxy = 7A6F1BC20E5CA2DB004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BD60E5CA51D004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A560B6A0E12D2F60049409D /* lua */;
+			targetProxy = 7A6F1BD50E5CA51D004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BD80E5CA520004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A6F1BD70E5CA520004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BDA0E5CA525004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A560BA60E12D6B90049409D /* dmzLuaKernel */;
+			targetProxy = 7A6F1BD90E5CA525004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BDF0E5CA52B004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A20C0100E52311500D169ED /* dmzInputEvents */;
+			targetProxy = 7A6F1BDE0E5CA52B004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BE10E5CA52F004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A20C04A0E52350200D169ED /* dmzInputUtil */;
+			targetProxy = 7A6F1BE00E5CA52F004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BE30E5CA536004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A560BDF0E12D99C0049409D /* dmzLuaFramework */;
+			targetProxy = 7A6F1BE20E5CA536004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BE50E5CA53C004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A20BF610E522FD600D169ED /* dmzInputFramework */;
+			targetProxy = 7A6F1BE40E5CA53C004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BE80E5CA55C004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A6F1BD10E5CA509004FB18E /* dmzLuaExtInput */;
+			targetProxy = 7A6F1BE70E5CA55C004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BF40E5CA5DA004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A6F1BEF0E5CA5CB004FB18E /* dmzLuaExtPick */;
+			targetProxy = 7A6F1BF30E5CA5DA004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BF90E5CA5F9004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A560B6A0E12D2F60049409D /* lua */;
+			targetProxy = 7A6F1BF80E5CA5F9004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BFB0E5CA5FE004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A6F1BFA0E5CA5FE004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BFD0E5CA602004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A560BA60E12D6B90049409D /* dmzLuaKernel */;
+			targetProxy = 7A6F1BFC0E5CA602004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1BFF0E5CA606004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A560BDF0E12D99C0049409D /* dmzLuaFramework */;
+			targetProxy = 7A6F1BFE0E5CA606004FB18E /* PBXContainerItemProxy */;
+		};
+		7A6F1C010E5CA60B004FB18E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D249EF160E5B8BAD00A57803 /* dmzRenderFramework */;
+			targetProxy = 7A6F1C000E5CA60B004FB18E /* PBXContainerItemProxy */;
 		};
 		7A8535DE0E12EC37008CEAEB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3019,6 +5318,56 @@
 			isa = PBXTargetDependency;
 			target = 7A560BD00E12D9490049409D /* dmzLuaModuleBasic */;
 			targetProxy = 7A8535F80E12EC55008CEAEB /* PBXContainerItemProxy */;
+		};
+		7A8C27AD0E5247C100343AC9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = 7A8C27AC0E5247C100343AC9 /* PBXContainerItemProxy */;
+		};
+		7A8C27AF0E5247C700343AC9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A20BF610E522FD600D169ED /* dmzInputFramework */;
+			targetProxy = 7A8C27AE0E5247C700343AC9 /* PBXContainerItemProxy */;
+		};
+		7A8C27B10E5247CA00343AC9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A20C0100E52311500D169ED /* dmzInputEvents */;
+			targetProxy = 7A8C27B00E5247CA00343AC9 /* PBXContainerItemProxy */;
+		};
+		7A8C27B60E5247EB00343AC9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A8C279F0E5247B700343AC9 /* dmzInputModuleBasic */;
+			targetProxy = 7A8C27B50E5247EB00343AC9 /* PBXContainerItemProxy */;
+		};
+		D249EF060E5B8B4100A57803 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0E0D5C0E117CC100E55011 /* dmzKernel */;
+			targetProxy = D249EF050E5B8B4100A57803 /* PBXContainerItemProxy */;
+		};
+		D249EF0B0E5B8B4800A57803 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A20C0100E52311500D169ED /* dmzInputEvents */;
+			targetProxy = D249EF0A0E5B8B4800A57803 /* PBXContainerItemProxy */;
+		};
+		D249EF0D0E5B8B4B00A57803 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A20C04A0E52350200D169ED /* dmzInputUtil */;
+			targetProxy = D249EF0C0E5B8B4B00A57803 /* PBXContainerItemProxy */;
+		};
+		D249EF0F0E5B8B5300A57803 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A20BF610E522FD600D169ED /* dmzInputFramework */;
+			targetProxy = D249EF0E0E5B8B5300A57803 /* PBXContainerItemProxy */;
+		};
+		D249EF130E5B8B8600A57803 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D249EF000E5B8B2900A57803 /* dmzInputPluginMouseEventToMessage */;
+			targetProxy = D249EF120E5B8B8600A57803 /* PBXContainerItemProxy */;
+		};
+		D249EF9B0E5B8C3700A57803 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D249EF160E5B8BAD00A57803 /* dmzRenderFramework */;
+			targetProxy = D249EF9A0E5B8C3700A57803 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3240,6 +5589,232 @@
 			};
 			name = opt;
 		};
+		7A202F530E5CAD4B007F800D /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzRenderIsect;
+			};
+			name = debug;
+		};
+		7A202F540E5CAD4B007F800D /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzRenderIsect;
+			};
+			name = opt;
+		};
+		7A202F9A0E5CADDE007F800D /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzRenderUtil;
+			};
+			name = debug;
+		};
+		7A202F9B0E5CADDE007F800D /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzRenderUtil;
+			};
+			name = opt;
+		};
+		7A202FBC0E5CAE4E007F800D /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzRenderModulePickBasic;
+			};
+			name = debug;
+		};
+		7A202FBD0E5CAE4E007F800D /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzRenderModulePickBasic;
+			};
+			name = opt;
+		};
+		7A202FF40E5CAF25007F800D /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = dmzArchiveFramework;
+			};
+			name = debug;
+		};
+		7A202FF50E5CAF25007F800D /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = dmzArchiveFramework;
+			};
+			name = opt;
+		};
+		7A2030010E5CAF67007F800D /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzArchiveUtil;
+			};
+			name = debug;
+		};
+		7A2030020E5CAF67007F800D /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzArchiveUtil;
+			};
+			name = opt;
+		};
+		7A2030220E5CC86D007F800D /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzArchiveModuleBasic;
+			};
+			name = debug;
+		};
+		7A2030230E5CC86D007F800D /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzArchiveModuleBasic;
+			};
+			name = opt;
+		};
+		7A2030380E5CC9CB007F800D /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzArchivePluginAutoLoad;
+			};
+			name = debug;
+		};
+		7A2030390E5CC9CB007F800D /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzArchivePluginAutoLoad;
+			};
+			name = opt;
+		};
+		7A20305A0E5CCA4D007F800D /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzArchivePluginObject;
+			};
+			name = debug;
+		};
+		7A20305B0E5CCA4D007F800D /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzArchivePluginObject;
+			};
+			name = opt;
+		};
+		7A20306D0E5CCAAC007F800D /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzArchivePluginAutoSave;
+			};
+			name = debug;
+		};
+		7A20306E0E5CCAAC007F800D /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzArchivePluginAutoSave;
+			};
+			name = opt;
+		};
+		7A20BF620E522FD700D169ED /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = dmzInputFramework;
+			};
+			name = debug;
+		};
+		7A20BF630E522FD700D169ED /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = dmzInputFramework;
+			};
+			name = opt;
+		};
+		7A20C0120E52311500D169ED /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputEvents;
+			};
+			name = debug;
+		};
+		7A20C0130E52311500D169ED /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputEvents;
+			};
+			name = opt;
+		};
+		7A20C04C0E52350300D169ED /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputUtil;
+			};
+			name = debug;
+		};
+		7A20C04D0E52350300D169ED /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputUtil;
+			};
+			name = opt;
+		};
+		7A35FBD70E5CCCFA0002DA61 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzObjectPluginCleanup;
+			};
+			name = debug;
+		};
+		7A35FBD80E5CCCFA0002DA61 /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzObjectPluginCleanup;
+			};
+			name = opt;
+		};
 		7A560B6C0E12D2F70049409D /* debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3309,6 +5884,78 @@
 			};
 			name = opt;
 		};
+		7A64E65D0E241E0A008FFC86 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzObjectUtil;
+			};
+			name = debug;
+		};
+		7A64E65E0E241E0A008FFC86 /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzObjectUtil;
+			};
+			name = opt;
+		};
+		7A6F1BAF0E5CA27B004FB18E /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzLuaExtObject;
+			};
+			name = debug;
+		};
+		7A6F1BB00E5CA27B004FB18E /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzLuaExtObject;
+			};
+			name = opt;
+		};
+		7A6F1BD30E5CA509004FB18E /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzLuaExtInput;
+			};
+			name = debug;
+		};
+		7A6F1BD40E5CA509004FB18E /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzLuaExtInput;
+			};
+			name = opt;
+		};
+		7A6F1BF10E5CA5CB004FB18E /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzLuaExtPick;
+			};
+			name = debug;
+		};
+		7A6F1BF20E5CA5CB004FB18E /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzLuaExtPick;
+			};
+			name = opt;
+		};
 		7A8535DB0E12EC30008CEAEB /* debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3323,6 +5970,24 @@
 			};
 			name = opt;
 		};
+		7A8C27A10E5247B700343AC9 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputModuleBasic;
+			};
+			name = debug;
+		};
+		7A8C27A20E5247B700343AC9 /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputModuleBasic;
+			};
+			name = opt;
+		};
 		C01FCF4F08A954540054247B /* debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7A0E0D610E117CD800E55011 /* dmz.xcconfig */;
@@ -3334,7 +5999,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = iphoneos2.0;
+				SDKROOT = iphonesimulator2.0;
 			};
 			name = debug;
 		};
@@ -3348,7 +6013,39 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = iphoneos2.0;
+				SDKROOT = iphonesimulator2.0;
+			};
+			name = opt;
+		};
+		D249EF020E5B8B2A00A57803 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputPluginMouseEventToMessage;
+			};
+			name = debug;
+		};
+		D249EF030E5B8B2A00A57803 /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = dmzInputPluginMouseEventToMessage;
+			};
+			name = opt;
+		};
+		D249EF170E5B8BAD00A57803 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = dmzRenderFramework;
+			};
+			name = debug;
+		};
+		D249EF180E5B8BAD00A57803 /* opt */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = dmzRenderFramework;
 			};
 			name = opt;
 		};
@@ -3463,6 +6160,123 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = opt;
 		};
+		7A202F600E5CAD68007F800D /* Build configuration list for PBXNativeTarget "dmzRenderIsect" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A202F530E5CAD4B007F800D /* debug */,
+				7A202F540E5CAD4B007F800D /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A202FAF0E5CAE1E007F800D /* Build configuration list for PBXNativeTarget "dmzRenderUtil" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A202F9A0E5CADDE007F800D /* debug */,
+				7A202F9B0E5CADDE007F800D /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A202FC60E5CAE93007F800D /* Build configuration list for PBXNativeTarget "dmzRenderModulePickBasic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A202FBC0E5CAE4E007F800D /* debug */,
+				7A202FBD0E5CAE4E007F800D /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A2030160E5CAF7C007F800D /* Build configuration list for PBXAggregateTarget "dmzArchiveFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A202FF40E5CAF25007F800D /* debug */,
+				7A202FF50E5CAF25007F800D /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A2030170E5CAF7C007F800D /* Build configuration list for PBXNativeTarget "dmzArchiveUtil" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A2030010E5CAF67007F800D /* debug */,
+				7A2030020E5CAF67007F800D /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A20302F0E5CC8A7007F800D /* Build configuration list for PBXNativeTarget "dmzArchiveModuleBasic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A2030220E5CC86D007F800D /* debug */,
+				7A2030230E5CC86D007F800D /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A20304F0E5CC9F0007F800D /* Build configuration list for PBXNativeTarget "dmzArchivePluginAutoLoad" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A2030380E5CC9CB007F800D /* debug */,
+				7A2030390E5CC9CB007F800D /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A2030640E5CCA8B007F800D /* Build configuration list for PBXNativeTarget "dmzArchivePluginObject" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A20305A0E5CCA4D007F800D /* debug */,
+				7A20305B0E5CCA4D007F800D /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A2030790E5CCAE9007F800D /* Build configuration list for PBXNativeTarget "dmzArchivePluginAutoSave" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A20306D0E5CCAAC007F800D /* debug */,
+				7A20306E0E5CCAAC007F800D /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A20BF650E52300D00D169ED /* Build configuration list for PBXAggregateTarget "dmzInputFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A20BF620E522FD700D169ED /* debug */,
+				7A20BF630E522FD700D169ED /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A20C02D0E52315800D169ED /* Build configuration list for PBXNativeTarget "dmzInputEvents" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A20C0120E52311500D169ED /* debug */,
+				7A20C0130E52311500D169ED /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A20C05B0E52351E00D169ED /* Build configuration list for PBXNativeTarget "dmzInputUtil" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A20C04C0E52350300D169ED /* debug */,
+				7A20C04D0E52350300D169ED /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A35FBE60E5CCD6B0002DA61 /* Build configuration list for PBXNativeTarget "dmzObjectPluginCleanup" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A35FBD70E5CCCFA0002DA61 /* debug */,
+				7A35FBD80E5CCCFA0002DA61 /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
 		7A560B6E0E12D3040049409D /* Build configuration list for PBXNativeTarget "lua" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -3499,6 +6313,42 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = opt;
 		};
+		7A64E6620E241E28008FFC86 /* Build configuration list for PBXNativeTarget "dmzObjectUtil" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A64E65D0E241E0A008FFC86 /* debug */,
+				7A64E65E0E241E0A008FFC86 /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A6F1BC50E5CA300004FB18E /* Build configuration list for PBXNativeTarget "dmzLuaExtObject" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A6F1BAF0E5CA27B004FB18E /* debug */,
+				7A6F1BB00E5CA27B004FB18E /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A6F1BEA0E5CA57F004FB18E /* Build configuration list for PBXNativeTarget "dmzLuaExtInput" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A6F1BD30E5CA509004FB18E /* debug */,
+				7A6F1BD40E5CA509004FB18E /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		7A6F1C1D0E5CA62C004FB18E /* Build configuration list for PBXNativeTarget "dmzLuaExtPick" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A6F1BF10E5CA5CB004FB18E /* debug */,
+				7A6F1BF20E5CA5CB004FB18E /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
 		7A8535FD0E12EC78008CEAEB /* Build configuration list for PBXAggregateTarget "build_all" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -3508,11 +6358,38 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = opt;
 		};
+		7A8C27AB0E5247BA00343AC9 /* Build configuration list for PBXNativeTarget "dmzInputModuleBasic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A8C27A10E5247B700343AC9 /* debug */,
+				7A8C27A20E5247B700343AC9 /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
 		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "dmzXcode" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* debug */,
 				C01FCF5008A954540054247B /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		D249EF100E5B8B7100A57803 /* Build configuration list for PBXNativeTarget "dmzInputPluginMouseEventToMessage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D249EF020E5B8B2A00A57803 /* debug */,
+				D249EF030E5B8B2A00A57803 /* opt */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = opt;
+		};
+		D249EF250E5B8BBA00A57803 /* Build configuration list for PBXAggregateTarget "dmzRenderFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D249EF170E5B8BAD00A57803 /* debug */,
+				D249EF180E5B8BAD00A57803 /* opt */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = opt;

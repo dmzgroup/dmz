@@ -193,7 +193,7 @@ config_lookup_attribute (lua_State *L) {
 
 
 static int
-config_lookup_boolean (lua_State *L) {
+config_to_boolean (lua_State *L) {
 
    int result (0);
 
@@ -218,7 +218,7 @@ config_lookup_boolean (lua_State *L) {
 
 
 static int
-config_lookup_string (lua_State *L) {
+config_to_string (lua_State *L) {
 
    int result (0);
 
@@ -243,7 +243,7 @@ config_lookup_string (lua_State *L) {
 
 
 static int
-config_lookup_number (lua_State *L) {
+config_to_number (lua_State *L) {
 
    int result (0);
 
@@ -268,7 +268,7 @@ config_lookup_number (lua_State *L) {
 
 
 static int
-config_lookup_handle (lua_State *L) {
+config_to_handle (lua_State *L) {
 
    int result (0);
 
@@ -302,7 +302,7 @@ config_lookup_handle (lua_State *L) {
 
 
 static int
-config_lookup_matrix (lua_State *L) {
+config_to_matrix (lua_State *L) {
 
    int result (0);
 
@@ -335,7 +335,7 @@ config_lookup_matrix (lua_State *L) {
 
 
 static int
-config_lookup_event_type (lua_State *L) {
+config_to_event_type (lua_State *L) {
 
    int result (0);
 
@@ -371,7 +371,7 @@ config_lookup_event_type (lua_State *L) {
 
 
 static int
-config_lookup_message (lua_State *L) {
+config_to_message (lua_State *L) {
 
    int result (0);
 
@@ -406,7 +406,7 @@ config_lookup_message (lua_State *L) {
 
 
 static int
-config_lookup_object_type (lua_State *L) {
+config_to_object_type (lua_State *L) {
 
    int result (0);
 
@@ -442,7 +442,7 @@ config_lookup_object_type (lua_State *L) {
 
 
 static int
-config_lookup_state (lua_State *L) {
+config_to_state (lua_State *L) {
 
    int result (0);
 
@@ -499,7 +499,7 @@ config_lookup_state (lua_State *L) {
 
 
 static int
-config_lookup_uuid (lua_State *L) {
+config_to_uuid (lua_State *L) {
 
    int result (0);
 
@@ -531,7 +531,7 @@ config_lookup_uuid (lua_State *L) {
 
 
 static int
-config_lookup_vector (lua_State *L) {
+config_to_vector (lua_State *L) {
 
    int result (0);
 
@@ -799,7 +799,7 @@ config_lookup_all_config_merged (lua_State *L) {
 
 
 static int
-config_to_string (lua_State *L) {
+config_tostring (lua_State *L) {
 
    int result (0);
 
@@ -851,17 +851,17 @@ static const luaL_Reg arrayMembers [] = {
    {"get_attributes", config_get_attributes},
    {"store_attribute", config_store_attribute},
    {"lookup_attribute", config_lookup_attribute},
-   {"lookup_boolean", config_lookup_boolean},
-   {"lookup_string", config_lookup_string},
-   {"lookup_number", config_lookup_number},
-   {"lookup_handle", config_lookup_handle},
-   {"lookup_matrix", config_lookup_matrix},
-   {"lookup_event_type", config_lookup_event_type},
-   {"lookup_message", config_lookup_message},
-   {"lookup_object_type", config_lookup_object_type},
-   {"lookup_state", config_lookup_state},
-   {"lookup_uuid", config_lookup_uuid},
-   {"lookup_vector", config_lookup_vector},
+   {"to_boolean", config_to_boolean},
+   {"to_string", config_to_string},
+   {"to_number", config_to_number},
+   {"to_handle", config_to_handle},
+   {"to_matrix", config_to_matrix},
+   {"to_event_type", config_to_event_type},
+   {"to_message", config_to_message},
+   {"to_object_type", config_to_object_type},
+   {"to_state", config_to_state},
+   {"to_uuid", config_to_uuid},
+   {"to_vector", config_to_vector},
    {"set_value", config_set_value},
    {"append_value", config_append_value},
    {"get_value", config_get_value},
@@ -870,7 +870,7 @@ static const luaL_Reg arrayMembers [] = {
    {"lookup_config", config_lookup_config},
    {"lookup_all_config", config_lookup_all_config},
    {"lookup_all_config_merged", config_lookup_all_config_merged},
-   {"__tostring", config_to_string},
+   {"__tostring", config_tostring},
    {"__eq", config_equal},
    {"__gc", config_delete},
    {NULL, NULL},

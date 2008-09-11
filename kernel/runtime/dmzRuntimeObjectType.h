@@ -52,16 +52,16 @@ namespace dmz {
          String get_name () const;
          Handle get_handle () const;
 
-         ObjectType get_parent ();
+         ObjectType get_parent () const;
          Boolean become_parent ();
 
-         Boolean get_first_child (ObjectTypeIterator &it, ObjectType &type);
-         Boolean get_next_child (ObjectTypeIterator &it, ObjectType &type);
+         Boolean get_first_child (ObjectTypeIterator &it, ObjectType &type) const;
+         Boolean get_next_child (ObjectTypeIterator &it, ObjectType &type) const;
 
          Config get_config () const;
 
          void set_type_context (TypeContext *context);
-         TypeContext *get_type_context ();
+         TypeContext *get_type_context () const;
 
       protected:
          TypeContext *_context; //!< Internal state.

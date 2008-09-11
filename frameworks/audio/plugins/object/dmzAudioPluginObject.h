@@ -50,13 +50,6 @@ namespace dmz {
 
          virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
 
-         virtual void update_object_type (
-            const UUID &Identity,
-            const Handle ObjectHandle,
-            const Handle AttributeHandle,
-            const ObjectType &Value,
-            const ObjectType *PreviousValue);
-
          virtual void update_object_state (
             const UUID &Identity,
             const Handle ObjectHandle,
@@ -102,6 +95,7 @@ namespace dmz {
 
             Float64 offset;
             Float64 scale;
+            Boolean relative;
 
             SoundDefStruct *next;
 
@@ -113,6 +107,7 @@ namespace dmz {
                scalarAttributeHandle (0),
                offset (0.0),
                scale (1.0),
+               relative (False),
                next (0) {;}
 
             ~SoundDefStruct () { if (next) { delete next; next = 0; } }

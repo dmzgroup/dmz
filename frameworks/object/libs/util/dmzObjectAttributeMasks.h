@@ -24,6 +24,8 @@ namespace dmz {
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectCreateMask;
    //! Destroy object ObjectObserverUtil subscription mask.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectDestroyMask;
+   //! Object locality ObjectObserverUtil subscription mask.
+   DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectLocalityMask;
    //! Object UUID ObjectObserverUtil subscription mask.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectUUIDMask;
    //! Remove object attribute ObjectObserverUtil subscription mask.
@@ -34,10 +36,14 @@ namespace dmz {
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectUnlinkMask;
    //! Object link attribute object ObjectObserverUtil subscription mask.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectLinkAttributeMask;
-   //! Object locality ObjectObserverUtil subscription mask.
-   DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectLocalityMask;
+   //! Object counter ObjectObserverUtil subscription mask.
+   DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectCounterMask;
+   //! Object minimum counter ObjectObserverUtil subscription mask.
+   DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectMinCounterMask;
+   //! Object maximum counter ObjectObserverUtil subscription mask.
+   DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectMaxCounterMask;
    //! Object type ObjectObserverUtil subscription mask.
-   DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectTypeMask;
+   DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectAltTypeMask;
    //! Object state ObjectObserverUtil subscription mask.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectStateMask;
    //! Object flag ObjectObserverUtil subscription mask.

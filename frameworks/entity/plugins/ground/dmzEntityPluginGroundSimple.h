@@ -15,6 +15,7 @@
 
 namespace dmz {
 
+   class EventModuleCommon;
    class Vector;
 
    class EntityPluginGroundSimple :
@@ -170,6 +171,8 @@ namespace dmz {
          void _init (Config &local);
 
          RenderModuleIsect *_isect;
+         EventModuleCommon *_eventMod;
+         Boolean _wasAirborn;
          Handle _hil;
          Handle _defaultHandle;
          Handle _hilHandle;

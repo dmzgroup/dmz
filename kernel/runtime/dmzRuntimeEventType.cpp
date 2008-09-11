@@ -228,7 +228,7 @@ has no parent.
 
 */
 dmz::EventType
-dmz::EventType::get_parent () {
+dmz::EventType::get_parent () const {
 
    EventType result;
 
@@ -279,7 +279,7 @@ the event type has no children.
 
 */
 dmz::Boolean
-dmz::EventType::get_first_child (EventTypeIterator &it, EventType &type) {
+dmz::EventType::get_first_child (EventTypeIterator &it, EventType &type) const {
 
    Boolean result (False);
 
@@ -306,7 +306,7 @@ the event type has no more children to return.
 
 */
 dmz::Boolean
-dmz::EventType::get_next_child (EventTypeIterator &it, EventType &type) {
+dmz::EventType::get_next_child (EventTypeIterator &it, EventType &type) const {
 
    Boolean result (False);
 
@@ -352,7 +352,7 @@ dmz::EventType::set_type_context (TypeContext *context) {
 
 //! For internal use.
 dmz::TypeContext *
-dmz::EventType::get_type_context () { return _context; }
+dmz::EventType::get_type_context () const { return _context; }
 
 
 struct dmz::EventTypeSet::State {
@@ -485,6 +485,12 @@ dmz::EventTypeSet::add_event_type (const Handle TypeHandle, RuntimeContext *cont
 }
 
 
+/*!
+
+\brief Adds a set of EventTypes to the set.
+\param[in] Set EventTypeSet of EventTypes to be added to the set.
+
+*/
 void
 dmz::EventTypeSet::add_event_set (const EventTypeSet &Set) {
 

@@ -1,9 +1,17 @@
 // !$*UTF8*$!
 {
+	2280F5C80E19A55C003A2238 /* dmzObjectFramework */ = {
+		activeExec = 0;
+	};
+	2280F5E40E19A623003A2238 /* dmzObjectModuleBasic */ = {
+		activeExec = 0;
+	};
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
 		activeBuildConfigurationName = debug;
 		activeSDKPreference = iphonesimulator2.0;
 		activeTarget = 7A8535DA0E12EC30008CEAEB /* build_all */;
+		addToTargets = (
+		);
 		codeSenseManager = D27300840E14385A003D640F /* Code sense */;
 		perUserDictionary = {
 			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
@@ -11,9 +19,9 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					425,
+					440,
 					20,
-					48.16259765625,
+					48,
 					43,
 					43,
 					20,
@@ -33,7 +41,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					385,
+					210,
 					60,
 					20,
 					48,
@@ -50,12 +58,25 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 236288024;
-			PBXWorkspaceStateSaveDate = 236288024;
+			PBXPerProjectTemplateStateSaveDate = 241479014;
+			PBXWorkspaceStateSaveDate = 241479014;
 		};
 		perUserProjectItems = {
-			D273030D0E15683C003D640F /* PBXTextBookmark */ = D273030D0E15683C003D640F /* PBXTextBookmark */;
-			D278EBC00E1586F100EE05F2 /* PBXTextBookmark */ = D278EBC00E1586F100EE05F2 /* PBXTextBookmark */;
+			D249EF1B0E5B8BBA00A57803 /* PBXTextBookmark */ = D249EF1B0E5B8BBA00A57803 /* PBXTextBookmark */;
+			D249EF1E0E5B8BBA00A57803 /* PBXTextBookmark */ = D249EF1E0E5B8BBA00A57803 /* PBXTextBookmark */;
+			D249EF1F0E5B8BBA00A57803 /* PBXTextBookmark */ = D249EF1F0E5B8BBA00A57803 /* PBXTextBookmark */;
+			D249EF9E0E5B8C4E00A57803 /* PBXTextBookmark */ = D249EF9E0E5B8C4E00A57803 /* PBXTextBookmark */;
+			D249EF9F0E5B8C4E00A57803 /* PBXTextBookmark */ = D249EF9F0E5B8C4E00A57803 /* PBXTextBookmark */;
+			D249EFA10E5B8C4E00A57803 /* PBXTextBookmark */ = D249EFA10E5B8C4E00A57803 /* PBXTextBookmark */;
+			D249EFA20E5B8C4E00A57803 /* PBXTextBookmark */ = D249EFA20E5B8C4E00A57803 /* PBXTextBookmark */;
+			D249EFA30E5B8C4E00A57803 /* PBXTextBookmark */ = D249EFA30E5B8C4E00A57803 /* PBXTextBookmark */;
+			D2B4B1010E64AD7100F28AB1 /* PBXTextBookmark */ = D2B4B1010E64AD7100F28AB1 /* PBXTextBookmark */;
+			D2F8237D0E5B8F3100B9528C /* PBXTextBookmark */ = D2F8237D0E5B8F3100B9528C /* PBXTextBookmark */;
+			D2F8237E0E5B8F3100B9528C /* PBXTextBookmark */ = D2F8237E0E5B8F3100B9528C /* PBXTextBookmark */;
+			D2F8237F0E5B8F3100B9528C /* PBXTextBookmark */ = D2F8237F0E5B8F3100B9528C /* PBXTextBookmark */;
+			D2F823810E5B8F3100B9528C /* PBXTextBookmark */ = D2F823810E5B8F3100B9528C /* PBXTextBookmark */;
+			D2F823820E5B8F3100B9528C /* PBXTextBookmark */ = D2F823820E5B8F3100B9528C /* PBXTextBookmark */;
+			D2F823F10E5B939D00B9528C /* PBXTextBookmark */ = D2F823F10E5B939D00B9528C /* PBXTextBookmark */;
 		};
 		sourceControlManager = D27300830E14385A003D640F /* Source Control */;
 		userBuildSettings = {
@@ -63,9 +84,9 @@
 	};
 	7A09AFE80E118D16003C5B32 /* dmzPluginUndoDump.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {603, 1386}}";
+			sepNavIntBoundsRect = "{{0, 0}, {428, 1372}}";
 			sepNavSelRange = "{1763, 0}";
-			sepNavVisRange = "{0, 0}";
+			sepNavVisRange = "{31, 330}";
 			sepNavWindowFrame = "{{65, 363}, {713, 660}}";
 		};
 	};
@@ -106,6 +127,68 @@
 	7A0E0D5C0E117CC100E55011 /* dmzKernel */ = {
 		activeExec = 0;
 	};
+	7A202F510E5CAD4A007F800D /* dmzRenderIsect */ = {
+		activeExec = 0;
+	};
+	7A202F950E5CADDE007F800D /* dmzRenderUtil */ = {
+		activeExec = 0;
+	};
+	7A202FB70E5CAE4D007F800D /* dmzRenderModulePickBasic */ = {
+		activeExec = 0;
+	};
+	7A202FF30E5CAF25007F800D /* dmzArchiveFramework */ = {
+		activeExec = 0;
+	};
+	7A202FFC0E5CAF66007F800D /* dmzArchiveUtil */ = {
+		activeExec = 0;
+	};
+	7A2030200E5CC86D007F800D /* dmzArchiveModuleBasic */ = {
+		activeExec = 0;
+	};
+	7A2030330E5CC9CB007F800D /* dmzArchivePluginAutoLoad */ = {
+		activeExec = 0;
+	};
+	7A2030550E5CCA4D007F800D /* dmzArchivePluginObject */ = {
+		activeExec = 0;
+	};
+	7A2030680E5CCAAC007F800D /* dmzArchivePluginAutoSave */ = {
+		activeExec = 0;
+	};
+	7A20BF610E522FD600D169ED /* dmzInputFramework */ = {
+		activeExec = 0;
+	};
+	7A20BFA40E52302E00D169ED /* dmzInputPluginMouseEventToMessage.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {552, 11130}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{19622, 1095}";
+			sepNavWindowFrame = "{{61, 198}, {981, 825}}";
+		};
+	};
+	7A20BFA50E52302E00D169ED /* dmzInputPluginMouseEventToMessage.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {618, 1414}}";
+			sepNavSelRange = "{143, 33}";
+			sepNavVisRange = "{0, 1674}";
+		};
+	};
+	7A20BFA60E52302E00D169ED /* dmzInputPluginMouseEventToMessage.lmk */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {428, 765}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 259}";
+			sepNavWindowFrame = "{{1125, 99}, {981, 825}}";
+		};
+	};
+	7A20C0100E52311500D169ED /* dmzInputEvents */ = {
+		activeExec = 0;
+	};
+	7A20C04A0E52350200D169ED /* dmzInputUtil */ = {
+		activeExec = 0;
+	};
+	7A35FBD50E5CCCF90002DA61 /* dmzObjectPluginCleanup */ = {
+		activeExec = 0;
+	};
 	7A560B6A0E12D2F60049409D /* lua */ = {
 		activeExec = 0;
 	};
@@ -118,8 +201,105 @@
 	7A560BDF0E12D99C0049409D /* dmzLuaFramework */ = {
 		activeExec = 0;
 	};
+	7A64E65B0E241E0A008FFC86 /* dmzObjectUtil */ = {
+		activeExec = 0;
+	};
+	7A6F1BAD0E5CA27B004FB18E /* dmzLuaExtObject */ = {
+		activeExec = 0;
+	};
+	7A6F1BD10E5CA509004FB18E /* dmzLuaExtInput */ = {
+		activeExec = 0;
+	};
+	7A6F1BEF0E5CA5CB004FB18E /* dmzLuaExtPick */ = {
+		activeExec = 0;
+	};
 	7A8535DA0E12EC30008CEAEB /* build_all */ = {
 		activeExec = 0;
+	};
+	7A8C279F0E5247B700343AC9 /* dmzInputModuleBasic */ = {
+		activeExec = 0;
+	};
+	D249EF000E5B8B2900A57803 /* dmzInputPluginMouseEventToMessage */ = {
+		activeExec = 0;
+	};
+	D249EF160E5B8BAD00A57803 /* dmzRenderFramework */ = {
+		activeExec = 0;
+	};
+	D249EF1B0E5B8BBA00A57803 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A09AFE80E118D16003C5B32 /* dmzPluginUndoDump.cpp */;
+		name = "dmzPluginUndoDump.cpp: 79";
+		rLen = 0;
+		rLoc = 1763;
+		rType = 0;
+		vrLen = 330;
+		vrLoc = 31;
+	};
+	D249EF1E0E5B8BBA00A57803 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A09AFE80E118D16003C5B32 /* dmzPluginUndoDump.cpp */;
+		name = "dmzPluginUndoDump.cpp: 79";
+		rLen = 0;
+		rLoc = 1763;
+		rType = 0;
+		vrLen = 330;
+		vrLoc = 31;
+	};
+	D249EF1F0E5B8BBA00A57803 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A20BFA40E52302E00D169ED /* dmzInputPluginMouseEventToMessage.cpp */;
+		name = "dmzInputPluginMouseEventToMessage.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 357;
+		vrLoc = 0;
+	};
+	D249EF9E0E5B8C4E00A57803 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		name = "dmzRenderPick2d.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 341;
+		vrLoc = 0;
+	};
+	D249EF9F0E5B8C4E00A57803 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		name = "dmzRenderFramework.lmk: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 165;
+		vrLoc = 0;
+	};
+	D249EFA10E5B8C4E00A57803 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A20BFA50E52302E00D169ED /* dmzInputPluginMouseEventToMessage.h */;
+		name = "dmzInputPluginMouseEventToMessage.h: 5";
+		rLen = 33;
+		rLoc = 143;
+		rType = 0;
+		vrLen = 418;
+		vrLoc = 0;
+	};
+	D249EFA20E5B8C4E00A57803 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		name = "dmzRenderFramework.lmk: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 165;
+		vrLoc = 0;
+	};
+	D249EFA30E5B8C4E00A57803 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		name = "dmzRenderPick2d.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 341;
+		vrLoc = 0;
 	};
 	D27300830E14385A003D640F /* Source Control */ = {
 		isa = PBXSourceControlManager;
@@ -132,24 +312,72 @@
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
 	};
-	D273030D0E15683C003D640F /* PBXTextBookmark */ = {
+	D2B4B1010E64AD7100F28AB1 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = 7A09AFE80E118D16003C5B32 /* dmzPluginUndoDump.cpp */;
-		name = "dmzPluginUndoDump.cpp: 80";
-		rLen = 0;
-		rLoc = 1763;
+		fRef = 7A20BFA50E52302E00D169ED /* dmzInputPluginMouseEventToMessage.h */;
+		name = "dmzInputPluginMouseEventToMessage.h: 5";
+		rLen = 33;
+		rLoc = 143;
 		rType = 0;
-		vrLen = 0;
+		vrLen = 1674;
 		vrLoc = 0;
 	};
-	D278EBC00E1586F100EE05F2 /* PBXTextBookmark */ = {
+	D2F8237D0E5B8F3100B9528C /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = 7A09AFE80E118D16003C5B32 /* dmzPluginUndoDump.cpp */;
-		name = "dmzPluginUndoDump.cpp: 80";
+		name = "dmzRenderModuleIsect.h: 1";
 		rLen = 0;
-		rLoc = 1763;
+		rLoc = 0;
 		rType = 0;
-		vrLen = 0;
+		vrLen = 1341;
+		vrLoc = 332;
+	};
+	D2F8237E0E5B8F3100B9528C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A20BFA60E52302E00D169ED /* dmzInputPluginMouseEventToMessage.lmk */;
+		name = "dmzInputPluginMouseEventToMessage.lmk: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 259;
+		vrLoc = 0;
+	};
+	D2F8237F0E5B8F3100B9528C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A20BFA40E52302E00D169ED /* dmzInputPluginMouseEventToMessage.cpp */;
+		name = "dmzInputPluginMouseEventToMessage.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1095;
+		vrLoc = 19622;
+	};
+	D2F823810E5B8F3100B9528C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		name = "dmzRenderModuleIsect.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1341;
+		vrLoc = 332;
+	};
+	D2F823820E5B8F3100B9528C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A20BFA60E52302E00D169ED /* dmzInputPluginMouseEventToMessage.lmk */;
+		name = "dmzInputPluginMouseEventToMessage.lmk: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 259;
+		vrLoc = 0;
+	};
+	D2F823F10E5B939D00B9528C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A20BFA50E52302E00D169ED /* dmzInputPluginMouseEventToMessage.h */;
+		name = "dmzInputPluginMouseEventToMessage.h: 5";
+		rLen = 33;
+		rLoc = 143;
+		rType = 0;
+		vrLen = 1644;
 		vrLoc = 0;
 	};
 }

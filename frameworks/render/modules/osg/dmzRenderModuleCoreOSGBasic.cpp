@@ -26,6 +26,10 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
       _dirtyObjects (0) {
 
    _scene = new osg::Group;
+   _overlay = new osg::Group;
+   _scene->addChild (_overlay.get ());
+   _isect = new osg::Group;
+   _scene->addChild (_isect.get ());
 
    osg::LightSource *ls = new osg::LightSource;
    osg::Light *light = new osg::Light;
@@ -39,11 +43,11 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
    _scene->addChild (ls);
 
    _staticObjects = new osg::Group;
-   _scene->addChild (_staticObjects.get ());
+   _isect->addChild (_staticObjects.get ());
 
    _dynamicObjects = new osg::Group;
    _dynamicObjects->setDataVariance (osg::Object::DYNAMIC);
-   _scene->addChild (_dynamicObjects.get ());
+   _isect->addChild (_dynamicObjects.get ());
 
    _init (local, global);
 }
@@ -208,24 +212,22 @@ dmz::RenderModuleCoreOSGBasic::find_file (const String &FileName) {
 
 
 osg::Group *
-dmz::RenderModuleCoreOSGBasic::get_scene () {
-
-   return _scene.get ();
-}
+dmz::RenderModuleCoreOSGBasic::get_scene () { return _scene.get (); }
 
 
 osg::Group *
-dmz::RenderModuleCoreOSGBasic::get_static_objects () {
-
-   return _staticObjects.get ();
-}
+dmz::RenderModuleCoreOSGBasic::get_overlay () { return _overlay.get (); }
 
 
 osg::Group *
-dmz::RenderModuleCoreOSGBasic::get_dynamic_objects () {
+dmz::RenderModuleCoreOSGBasic::get_isect () { return _isect.get (); }
 
-   return _dynamicObjects.get ();
-}
+osg::Group *
+dmz::RenderModuleCoreOSGBasic::get_static_objects () { return _staticObjects.get (); }
+
+
+osg::Group *
+dmz::RenderModuleCoreOSGBasic::get_dynamic_objects () { return _dynamicObjects.get (); }
 
 
 osg::Group *
@@ -329,6 +331,7 @@ dmz::RenderModuleCoreOSGBasic::remove_camera (const String &PortalName) {
    osg::Camera *result = 0;
 
    PortalStruct *ps = _portalTable.lookup (PortalName);
+
    if (ps) {
 
       result = ps->camera.get ();
@@ -347,6 +350,7 @@ dmz::RenderModuleCoreOSGBasic::add_camera_manipulator (
    Boolean result(False);
 
    PortalStruct *ps = _get_portal_struct (PortalName);
+
    if (ps && manipulator) {
 
       if (!(ps->cameraManipulator.valid ())) {
@@ -366,6 +370,7 @@ dmz::RenderModuleCoreOSGBasic::lookup_camera_manipulator (const String &PortalNa
    RenderCameraManipulatorOSG *result = 0;
 
    PortalStruct *ps = _portalTable.lookup (PortalName);
+
    if (ps) {
 
       result = ps->cameraManipulator.get ();
@@ -381,6 +386,7 @@ dmz::RenderModuleCoreOSGBasic::remove_camera_manipulator (const String &PortalNa
    RenderCameraManipulatorOSG *result = 0;
 
    PortalStruct *ps = _portalTable.lookup (PortalName);
+
    if (ps) {
 
       result = ps->cameraManipulator.get ();
@@ -395,6 +401,7 @@ dmz::RenderModuleCoreOSGBasic::PortalStruct *
 dmz::RenderModuleCoreOSGBasic::_get_portal_struct (const String &PortalName) {
 
    PortalStruct *ps = _portalTable.lookup (PortalName);
+
    if (!ps) {
 
       ps = new PortalStruct (PortalName);
@@ -417,10 +424,11 @@ dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
       if (dmz::load_plugins (context, pluginList, local, global, _extensions, &_log)) {
 
          _extensions.discover_plugins ();
+         _extensions.discover_external_plugin (this);
       }
    }
 
-   _searchPath = config_to_path_container ("search", local);
+   _searchPath = config_to_path_container ("search.path", local);
 
    _defaultHandle = activate_default_object_attribute (
       ObjectDestroyMask | ObjectPositionMask | ObjectOrientationMask);

@@ -68,7 +68,11 @@ dmz::create_last_network_value_name (const String &Value) {
 
    String result (Value);
 
-   result << "_" << ObjectAttributeLastNetworkValueName;
+   if (Value == ObjectAttributeDefaultName) {
+
+      result = ObjectAttributeLastNetworkValueName;
+   }
+   else { result << "_" << ObjectAttributeLastNetworkValueName; }
 
    return result;
 }

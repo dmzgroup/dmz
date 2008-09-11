@@ -1,0 +1,6 @@
+lmk.set_name "dmziPhoneFramework"
+
+lmk.add_files {
+   "dmziPhoneModuleCanvas.h",
+   "dmziPhoneCanvasConsts.h",
+}

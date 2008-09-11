@@ -4,6 +4,7 @@
 #include <dmzNetModuleAttributeMap.h>
 #include <dmzRuntimeHandle.h>
 #include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimeEventType.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
@@ -30,46 +31,52 @@ namespace dmz {
             const Plugin *PluginPtr) {;}
 
          // NetModuleAttributeMap Interface
-         virtual UInt32 lookup_which_handle (const String &Name);
-
-         virtual Boolean to_net_mask (
-            const Int32 Which,
-            const Mask &InValue,
-            ArrayUInt32 &outValue);
-
-         virtual Boolean to_internal_mask (
-            const Int32 Which,
-            const ArrayUInt32 &InValue,
-            Mask &outValue);
-
-         virtual Boolean to_net_mask (
+         virtual Boolean to_net_object_mask (
             const ObjectType &Type,
             const Mask &InValue,
             ArrayUInt32 &outValue);
 
-         virtual Boolean to_internal_mask (
+         virtual Boolean to_internal_object_mask (
             const ObjectType &Type,
             const ArrayUInt32 &InValue,
             Mask &outValue);
 
-         virtual Boolean to_net_type (
+         virtual Boolean to_net_object_type (
             const ObjectType &Type,
             ArrayUInt32 &array);
 
-         virtual Boolean to_internal_type (
+         virtual Boolean to_internal_object_type (
             const ArrayUInt32 &Array,
             ObjectType &type);
 
+         virtual Boolean to_internal_event_mask (
+            const EventType &Type,
+            const ArrayUInt32 &InValue,
+            Mask &outValue);
+
+         virtual Boolean to_net_event_mask (
+            const EventType &Type,
+            const Mask &InValue,
+            ArrayUInt32 &outValue);
+
+         virtual Boolean to_net_event_type (
+            const EventType &Type,
+            ArrayUInt32 &array);
+
+         virtual Boolean to_internal_event_type (
+            const ArrayUInt32 &Array,
+            EventType &type);
+
       protected:
-         struct MaskStruct {
+         struct ObjectMaskStruct {
 
             const UInt32 NetValue;
             const Int32 Offset;
             const Mask Value;
 
-            MaskStruct *next;
+            ObjectMaskStruct *next;
 
-            MaskStruct (
+            ObjectMaskStruct (
                   const UInt32 TheNetValue,
                   const Int32 TheOffset,
                   const Mask &TheValue) :
@@ -78,58 +85,126 @@ namespace dmz {
                   Value (TheValue),
                   next (0) {;}
 
-            ~MaskStruct () { if (next) { delete next; next = 0; } }
+            ~ObjectMaskStruct () { if (next) { delete next; next = 0; } }
          };
 
-         struct NetStruct {
+         struct NetObjectStruct {
 
             const UInt32 NetValue;
             ObjectType type;
 
-            HashTableUInt32Template<NetStruct> table;
+            HashTableUInt32Template<NetObjectStruct> table;
 
-            NetStruct (
+            NetObjectStruct (
                   const UInt32 TheValue,
                   const ObjectType &TheType) :
                   NetValue (TheValue),
                   type (TheType) {;}
 
-            ~NetStruct () { table.empty (); }
+            ~NetObjectStruct () { table.empty (); }
          };
 
-         struct InternalStruct {
+         struct InternalObjectStruct {
 
             const ArrayUInt32 NetType;
             const ObjectType Type;
 
-            InternalStruct (
+            InternalObjectStruct (
                   const ArrayUInt32 &TheNetType,
                   const ObjectType &TheType) :
                   NetType (TheNetType),
                   Type (TheType) {;}
          };
 
-         MaskStruct *_find_mask_struct_from_type (const ObjectType &Type);
+         struct EventMaskStruct {
 
-         void _to_net_mask (const Mask &InData, ArrayUInt32 &outData, MaskStruct *ms);
+            const UInt32 NetValue;
+            const Int32 Offset;
+            const Mask Value;
 
-         void _to_internal_mask (
+            EventMaskStruct *next;
+
+            EventMaskStruct (
+                  const UInt32 TheNetValue,
+                  const Int32 TheOffset,
+                  const Mask &TheValue) :
+                  NetValue (TheNetValue),
+                  Offset (TheOffset),
+                  Value (TheValue),
+                  next (0) {;}
+
+            ~EventMaskStruct () { if (next) { delete next; next = 0; } }
+         };
+
+         struct NetEventStruct {
+
+            const UInt32 NetValue;
+            EventType type;
+
+            HashTableUInt32Template<NetEventStruct> table;
+
+            NetEventStruct (
+                  const UInt32 TheValue,
+                  const EventType &TheType) :
+                  NetValue (TheValue),
+                  type (TheType) {;}
+
+            ~NetEventStruct () { table.empty (); }
+         };
+
+         struct InternalEventStruct {
+
+            const ArrayUInt32 NetType;
+            const EventType Type;
+
+            InternalEventStruct (
+                  const ArrayUInt32 &TheNetType,
+                  const EventType &TheType) :
+                  NetType (TheNetType),
+                  Type (TheType) {;}
+         };
+
+         ObjectMaskStruct *_find_mask_struct_from_object_type (const ObjectType &Type);
+
+         void _to_net_object_mask (
+            const Mask &InData,
+            ArrayUInt32 &outData,
+            ObjectMaskStruct *ms);
+
+         void _to_internal_object_mask (
             const ArrayUInt32 &InData,
             Mask &outData,
-            MaskStruct *ms);
+            ObjectMaskStruct *ms);
+
+         EventMaskStruct *_find_mask_struct_from_event_type (const EventType &Type);
+
+         void _to_net_event_mask (
+            const Mask &InData,
+            ArrayUInt32 &outData,
+            EventMaskStruct *ms);
+
+         void _to_internal_event_mask (
+            const ArrayUInt32 &InData,
+            Mask &outData,
+            EventMaskStruct *ms);
 
          void _init (Config &local);
-         void _process_type (ObjectType &type);
-         void _process_net_mask (ObjectType &type);
-         void _process_net_type (ObjectType &type);
+         void _process_object_type (const ObjectType &Type);
+         void _process_net_object_type (const ObjectType &Type);
+         void _process_net_object_mask (const ObjectType &Type);
+         void _process_event_type (const EventType &Type);
+         void _process_net_event_type (const EventType &Type);
+         void _process_net_event_mask (const EventType &Type);
 
          Log _log;
          Definitions _defs;
 
-         HashTableUInt32Template<NetStruct> _netTypeTable;
-         HashTableUInt32Template<InternalStruct> _internalTypeTable;
-         HashTableUInt32Template<MaskStruct> _maskTable;
-         HashTableUInt32Template<RuntimeHandle> _whichTable;
+         HashTableUInt32Template<NetObjectStruct> _netObjectTypeTable;
+         HashTableUInt32Template<InternalObjectStruct> _internalObjectTypeTable;
+         HashTableUInt32Template<ObjectMaskStruct> _objectMaskTable;
+         HashTableUInt32Template<NetEventStruct> _netEventTypeTable;
+         HashTableUInt32Template<InternalEventStruct> _internalEventTypeTable;
+         HashTableUInt32Template<EventMaskStruct> _eventMaskTable;
 
       private:
          NetModuleAttributeMapBasic ();

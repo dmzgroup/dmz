@@ -233,7 +233,73 @@ namespace {
       }
    };
 
-   struct ObjectTypeStruct : public ostruct {
+   enum CounterStructEnum {
+      CounterValue,
+      CounterMin,
+      CounterMax,
+   };
+
+   struct UpdateCounterStruct : public ostruct {
+
+      const CounterStructEnum Type;
+      const UUID Identity;
+      const Handle ObjectHandle;
+      const Handle AttributeHandle;
+      const Int64 Value;
+      const Int64 *PrevValue;
+
+      UpdateCounterStruct (
+            const CounterStructEnum TheType,
+            const UUID &TheIdentity,
+            const Handle TheObjectHandle,
+            const Handle TheAttributeHandle,
+            const Int64 &TheValue,
+            const Int64 *ThePrevValue) :
+            Type (TheType),
+            Identity (TheIdentity),
+            ObjectHandle (TheObjectHandle),
+            AttributeHandle (TheAttributeHandle),
+            Value (TheValue),
+            PrevValue (ThePrevValue ? new Int64 (*ThePrevValue) : 0) {;}
+
+      virtual ~UpdateCounterStruct () {
+
+         if (PrevValue) { delete PrevValue; PrevValue = 0; }
+      }
+
+      virtual void update (ObjectModuleBasic &module) {
+
+         if (Type == CounterValue) {
+
+            module.update_object_counter (
+               Identity,
+               ObjectHandle,
+               AttributeHandle,
+               Value,
+               PrevValue);
+         }
+         else if (Type == CounterMin) {
+
+            module.update_object_counter_minimum (
+               Identity,
+               ObjectHandle,
+               AttributeHandle,
+               Value,
+               PrevValue);
+         }
+         else if (Type == CounterMax) {
+
+            module.update_object_counter_maximum (
+               Identity,
+               ObjectHandle,
+               AttributeHandle,
+               Value,
+               PrevValue);
+         }
+      }
+   };
+
+   struct AltObjectTypeStruct : public ostruct {
 
       const UUID Identity;
       const Handle ObjectHandle;
@@ -241,7 +307,7 @@ namespace {
       const ObjectType Value;
       const ObjectType *PrevValue;
 
-      ObjectTypeStruct (
+      AltObjectTypeStruct (
             const UUID &TheIdentity,
             const Handle TheObjectHandle,
             const Handle TheAttributeHandle,
@@ -253,11 +319,14 @@ namespace {
             Value (TheValue),
             PrevValue (ThePrevValue ? new ObjectType (*ThePrevValue) : 0) {;}
 
-      virtual ~ObjectTypeStruct () { if (PrevValue) { delete PrevValue; PrevValue = 0; } }
+      virtual ~AltObjectTypeStruct () {
+
+         if (PrevValue) { delete PrevValue; PrevValue = 0; }
+      }
 
       virtual void update (ObjectModuleBasic &module) {
 
-         module.update_object_type (
+         module.update_object_alternate_type (
             Identity,
             ObjectHandle,
             AttributeHandle,

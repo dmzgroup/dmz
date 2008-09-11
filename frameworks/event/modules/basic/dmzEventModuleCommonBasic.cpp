@@ -52,7 +52,6 @@ dmz::EventModuleCommonBasic::update_plugin_state (
 }
 
 
-
 void
 dmz::EventModuleCommonBasic::discover_plugin (
       const PluginDiscoverEnum Mode,
@@ -74,33 +73,49 @@ dmz::EventModuleCommonBasic::discover_plugin (
 // EventModuleCommon Interface
 dmz::Handle
 dmz::EventModuleCommonBasic::create_launch_event (
-      const Handle SourceHandle,
+      const Handle MunitionsHandle,
+      const Handle TargetHandle) {
+
+   Handle result (create_open_launch_event (MunitionsHandle, TargetHandle));
+
+   if (_eventMod && result) { _eventMod->close_event (result); }
+
+   return result;
+}
+
+
+dmz::Handle
+dmz::EventModuleCommonBasic::create_open_launch_event (
+      const Handle MunitionsHandle,
       const Handle TargetHandle) {
 
    Handle result (0);
 
    if (_launchType && _eventMod && _objMod) {
 
-      result = _eventMod->start_event (_launchType, EventLocal);
+      result = _eventMod->create_event (_launchType, EventLocal);
 
       if (result) {
 
-         _eventMod->store_object_handle (result, _munitionsHandle, SourceHandle);
+         _eventMod->store_object_handle (
+            result,
+            _sourceHandle,
+            _get_source (MunitionsHandle));
+
+         _eventMod->store_object_handle (result, _munitionsHandle, MunitionsHandle);
          _eventMod->store_object_handle (result, _targetHandle, TargetHandle);
 
          Vector pos;
-         if (_objMod->lookup_position (SourceHandle, _defaultObjectHandle, pos)) {
+         if (_objMod->lookup_position (MunitionsHandle, _defaultObjectHandle, pos)) {
 
             _eventMod->store_position (result, _defaultEventHandle, pos);
          }
 
          Vector vel;
-         if (_objMod->lookup_velocity (SourceHandle, _defaultObjectHandle, vel)) {
+         if (_objMod->lookup_velocity (MunitionsHandle, _defaultObjectHandle, vel)) {
 
             _eventMod->store_velocity (result, _defaultEventHandle, vel);
          }
-
-         _eventMod->end_event (result);
       }
    }
 
@@ -110,33 +125,49 @@ dmz::EventModuleCommonBasic::create_launch_event (
 
 dmz::Handle
 dmz::EventModuleCommonBasic::create_detonation_event (
-      const Handle SourceHandle,
+      const Handle MunitionsHandle,
+      const Handle TargetHandle) {
+
+   Handle result (create_open_detonation_event (MunitionsHandle, TargetHandle));
+
+   if (_eventMod && result) { _eventMod->close_event (result); }
+
+   return result;
+}
+
+
+dmz::Handle
+dmz::EventModuleCommonBasic::create_open_detonation_event (
+      const Handle MunitionsHandle,
       const Handle TargetHandle) {
 
    Handle result (0);
 
    if (_detonationType && _eventMod && _objMod) {
 
-      result = _eventMod->start_event (_detonationType, EventLocal);
+      result = _eventMod->create_event (_detonationType, EventLocal);
 
       if (result) {
 
-         _eventMod->store_object_handle (result, _munitionsHandle, SourceHandle);
+         _eventMod->store_object_handle (
+            result,
+            _sourceHandle,
+            _get_source (MunitionsHandle));
+
+         _eventMod->store_object_handle (result, _munitionsHandle, MunitionsHandle);
          _eventMod->store_object_handle (result, _targetHandle, TargetHandle);
 
          Vector pos;
-         if (_objMod->lookup_position (SourceHandle, _defaultObjectHandle, pos)) {
+         if (_objMod->lookup_position (MunitionsHandle, _defaultObjectHandle, pos)) {
 
             _eventMod->store_position (result, _defaultEventHandle, pos);
          }
 
          Vector vel;
-         if (_objMod->lookup_velocity (SourceHandle, _defaultObjectHandle, vel)) {
+         if (_objMod->lookup_velocity (MunitionsHandle, _defaultObjectHandle, vel)) {
 
             _eventMod->store_velocity (result, _defaultEventHandle, vel);
          }
-
-         _eventMod->end_event (result);
       }
    }
 
@@ -149,10 +180,61 @@ dmz::EventModuleCommonBasic::create_collision_event (
       const Handle SourceHandle,
       const Handle TargetHandle) {
 
+   Handle result (create_open_collision_event (SourceHandle, TargetHandle));
+
+   if (_eventMod && result) { _eventMod->close_event (result); }
+
+   return result;
+}
+
+
+dmz::Handle
+dmz::EventModuleCommonBasic::create_open_collision_event (
+      const Handle SourceHandle,
+      const Handle TargetHandle) {
+
    Handle result (0);
 
-   if (_eventMod && _objMod) {
+   if (_collisionType && _eventMod && _objMod) {
 
+      result = _eventMod->create_event (_collisionType, EventLocal);
+
+      if (result) {
+
+         _eventMod->store_object_handle (result, _sourceHandle, SourceHandle);
+         _eventMod->store_object_handle (result, _targetHandle, TargetHandle);
+
+         Vector pos;
+         if (_objMod->lookup_position (SourceHandle, _defaultObjectHandle, pos)) {
+
+            _eventMod->store_position (result, _defaultEventHandle, pos);
+         }
+
+         Vector vel;
+         if (_objMod->lookup_velocity (SourceHandle, _defaultObjectHandle, vel)) {
+
+            _eventMod->store_velocity (result, _defaultEventHandle, vel);
+         }
+      }
+   }
+
+   return result;
+}
+
+
+dmz::Handle
+dmz::EventModuleCommonBasic::_get_source (const Handle ObjectHandle) {
+
+   Handle result (0);
+
+   if (_objMod) {
+
+      HandleContainer links;
+
+      if (_objMod->lookup_super_links (ObjectHandle, _sourceHandle, links)) {
+
+         result = links.get_first ();
+      }
    }
 
    return result;

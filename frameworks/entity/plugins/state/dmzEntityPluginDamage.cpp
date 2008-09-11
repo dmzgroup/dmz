@@ -52,7 +52,7 @@ dmz::EntityPluginDamage::update_object_flag (
 
 // Event Observer Interface
 void
-dmz::EntityPluginDamage::end_event (
+dmz::EntityPluginDamage::close_event (
       const Handle EventHandle,
       const EventType &Type,
       const EventLocalityEnum Locality) {
@@ -103,7 +103,7 @@ dmz::EntityPluginDamage::_init (Config &local) {
       ObjectAttributeHumanInTheLoopName,
       ObjectFlagMask);
 
-   _detonationType = activate_event_callback (EventDetonationName, EventEndMask);
+   _detonationType = activate_event_callback (EventDetonationName, EventCloseMask);
 }
 
 

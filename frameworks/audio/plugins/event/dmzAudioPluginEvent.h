@@ -12,6 +12,7 @@ namespace dmz {
          public EventObserverUtil {
 
       public:
+         //! \cond
          AudioPluginEvent (const PluginInfo &Info, Config &local);
          ~AudioPluginEvent ();
 
@@ -25,7 +26,7 @@ namespace dmz {
             const Plugin *PluginPtr) {;}
 
          // Event Observer Interface
-         virtual void end_event (
+         virtual void close_event (
             const Handle EventHandle,
             const EventType &Type,
             const EventLocalityEnum Locality);
@@ -34,6 +35,7 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         //! \endcond
 
       private:
          AudioPluginEvent ();

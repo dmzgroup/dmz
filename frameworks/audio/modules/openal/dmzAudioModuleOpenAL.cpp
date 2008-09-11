@@ -4,7 +4,16 @@
 #include <dmzSystemFile.h>
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
+/*!
 
+\class dmz::AudioModuleOpenAL
+\ingroup Audio
+\brief OpenAL implementation of the audio module.
+
+*/
+ 
+
+//! \cond
 dmz::AudioModuleOpenAL::AudioModuleOpenAL (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (Info),
@@ -22,7 +31,16 @@ dmz::AudioModuleOpenAL::~AudioModuleOpenAL () {
    _soundTimedTable.clear ();
    _soundTable.empty ();
    _bufferHandleTable.clear ();
-   _bufferNameTable.empty ();
+
+   HashTableStringIterator it;
+
+   BufferStruct *bs (_bufferNameTable.get_first (it));
+
+   while (bs) {
+
+      while (bs->unref () > 0) {;} // do nothing
+      bs = _bufferNameTable.get_next (it);
+   }
 
    if (_context) {
 
@@ -114,13 +132,17 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
 
       if (!bs) {
 
-         bs = new BufferStruct (absPath, get_plugin_runtime_context ());
+         bs = new BufferStruct (
+            absPath,
+            get_plugin_runtime_context (),
+            _bufferNameTable,
+            _bufferHandleTable);
 
          if (bs &&
                bs->file.is_valid () &&
                (bs->file.get_audio_format () == WaveFormatPCM)) {
 
-            if (!_bufferNameTable.store (absPath, bs)) { delete bs; bs = 0; }
+            if (!_bufferNameTable.store (absPath, bs)) { bs->unref (); bs = 0; }
             else { _bufferHandleTable.store (bs->Handle.get_runtime_handle (), bs); }
          }
          else if (bs) {
@@ -136,7 +158,7 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
                   << bs->file.get_error () << endl;
             }
 
-            delete bs; bs = 0;
+            bs->unref (); bs = 0;
          }
 
          if (bs) {
@@ -203,6 +225,7 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
             }
          }
       }
+      else { bs->ref (); }
 
       if (bs) {
 
@@ -219,14 +242,9 @@ dmz::AudioModuleOpenAL::destroy_audio_handle (const Handle AudioHandle) {
 
    Boolean result (False);
 
-   BufferStruct *bs (_bufferHandleTable.remove (AudioHandle));
+   BufferStruct *bs (_bufferHandleTable.lookup (AudioHandle));
 
-   if (bs) {
-
-      bs = _bufferNameTable.remove (bs->FileName);
-
-      if (bs) { delete bs; bs = 0; result = True; }
-   }
+   if (bs) { bs->unref (); result = True; }
 
    return result;
 }
@@ -235,32 +253,41 @@ dmz::AudioModuleOpenAL::destroy_audio_handle (const Handle AudioHandle) {
 dmz::Handle
 dmz::AudioModuleOpenAL::play_sound (
       const Handle AudioHandle,
+      const SoundInit &Init,
       const SoundAttributes &Attributes) {
 
    Handle result (0);
 
    BufferStruct *bs (_bufferHandleTable.lookup (AudioHandle));
-   SoundStruct *ss (new SoundStruct (get_plugin_runtime_context ()));
+
+   SoundStruct *ss (0);
+
+   if (bs) { ss = new SoundStruct (*bs, get_plugin_runtime_context ()); }
 
    if (bs && ss) {
 
       result = ss->Handle.get_runtime_handle ();
-      ss->looped = Attributes.get_loop ();
 
       if (_soundTable.store (result, ss)) {
 
          alGenSources (1, &(ss->source));
          alSourcei (ss->source, AL_BUFFER, bs->buffer);
-         alSourcei (ss->source, AL_SOURCE_RELATIVE, AL_FALSE);
-         alSourcei (ss->source, AL_LOOPING, ss->looped ? AL_TRUE : AL_FALSE);
+
+         alSourcei (
+            ss->source,
+            AL_SOURCE_RELATIVE,
+            Init.get (SoundRelative) ? AL_TRUE : AL_FALSE);
+
+         alSourcei (ss->source, AL_LOOPING, Init.get (SoundLooped) ? AL_TRUE : AL_FALSE);
          alSourcef (ss->source, AL_GAIN, 1.0f);
 
-         if (!(ss->looped)) {
+         if (!Init.get (SoundLooped)) {
 
             _soundTimedTable.store (result, ss);
          }
 
          ss->attr = Attributes;
+         ss->init = Init;
 
          _update_sound (*ss);
 
@@ -299,13 +326,14 @@ dmz::AudioModuleOpenAL::update_sound (
 dmz::Boolean
 dmz::AudioModuleOpenAL::lookup_sound (
       const Handle InstanceHandle,
+      SoundInit &init,
       SoundAttributes &attributes) {
 
    Boolean result (False);
 
    SoundStruct *ss (_soundTable.lookup (InstanceHandle));
 
-   if (ss) { attributes = ss->attr; attributes.set_loop (ss->looped); result = True; }
+   if (ss) { attributes = ss->attr; init = ss->init; result = True; }
 
    return result;
 }
@@ -509,6 +537,7 @@ dmz::AudioModuleOpenAL::_init (Config &local) {
    }
    else { _log.error << "Unable to create OpenAL Device." << endl; }
 }
+//! \endcond
 
 
 extern "C" {

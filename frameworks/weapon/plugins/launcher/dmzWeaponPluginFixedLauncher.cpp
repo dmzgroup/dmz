@@ -1,8 +1,10 @@
+#include <dmzEventConsts.h>
 #include <dmzInputEventMasks.h>
 #include <dmzInputEventController.h>
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectConsts.h>
 #include <dmzObjectModule.h>
+#include <dmzRuntimeConfigToBase.h>
 #include <dmzRuntimeConfigToState.h>
 #include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimeDefinitions.h>
@@ -19,10 +21,13 @@ dmz::WeaponPluginFixedLauncher::WeaponPluginFixedLauncher (
       InputObserverUtil (Info, local),
       ObjectObserverUtil (Info, local),
       _log (Info),
+      _time (Info),
+      _delay (0.5),
       _hilActive (True),
       _hilHandle (0),
       _hil (0),
-      _defaultHandle (0) {
+      _defaultHandle (0),
+      _sourceEventHandle (0) {
 
    _init (local);
 }
@@ -30,6 +35,7 @@ dmz::WeaponPluginFixedLauncher::WeaponPluginFixedLauncher (
 
 dmz::WeaponPluginFixedLauncher::~WeaponPluginFixedLauncher () {
 
+   _launchTable.empty ();
 }
 
 
@@ -72,7 +78,22 @@ dmz::WeaponPluginFixedLauncher::discover_plugin (
 void
 dmz::WeaponPluginFixedLauncher::update_time_slice (const Float64 TimeDelta) {
 
+   const Float64 CTime (_time.get_frame_time ());
 
+   HashTableHandleIterator it;
+
+   LaunchStruct *ls (_launchTable.get_first (it));
+
+   while (ls) {
+
+      if ((ls->activeCount > 0) && ((ls->lastLaunchTime + _delay) < CTime)) {
+
+         _create_munition (ls->Source);
+         ls->lastLaunchTime = CTime;
+      }
+
+      ls = _launchTable.get_next (it);
+   }
 }
 
 
@@ -102,9 +123,29 @@ dmz::WeaponPluginFixedLauncher::receive_button_event (
       const Handle Channel,
       const InputEventButton &Value) {
 
-   if (Value.get_button_id () == 2) {
+   if (_hil) {
 
-      if (Value.get_button_value ()) { _create_munition (_hil); }
+      if (Value.get_button_id () == 2) {
+
+         LaunchStruct *ls (_get_struct (_hil));
+
+         if (ls) {
+
+            if (Value.get_button_value ()) {
+
+               const Float64 CTime (_time.get_frame_time ());
+
+               ls->activeCount++;
+
+               if (CTime > (ls->lastLaunchTime + _delay)) {
+
+                  _create_munition (ls->Source);
+                  ls->lastLaunchTime = CTime;
+               }
+            }
+            else { ls->activeCount--; }
+         }
+      }
    }
 }
 
@@ -140,6 +181,10 @@ dmz::WeaponPluginFixedLauncher::destroy_object (
       const Handle ObjectHandle) {
 
    if (ObjectHandle == _hil) { _hil = 0; }
+
+   LaunchStruct *ls (_launchTable.remove (ObjectHandle));
+
+   if (ls) { delete ls; ls = 0; }
 }
 
 
@@ -183,6 +228,21 @@ dmz::WeaponPluginFixedLauncher::update_object_flag (
 }
 
 
+dmz::WeaponPluginFixedLauncher::LaunchStruct *
+dmz::WeaponPluginFixedLauncher::_get_struct (const Handle Source) {
+
+   LaunchStruct *result (_launchTable.lookup (Source));
+
+   if (!result) {
+
+      result = new LaunchStruct (Source);
+      if (result && !_launchTable.store (Source, result)) { delete result; result = 0; }
+   }
+
+   return result;
+}
+
+
 void
 dmz::WeaponPluginFixedLauncher::_create_munition (const Handle SourceHandle) {
 
@@ -205,6 +265,7 @@ dmz::WeaponPluginFixedLauncher::_create_munition (const Handle SourceHandle) {
          objMod->lookup_velocity (SourceHandle, _defaultHandle, vel);
 
          Vector offset (_launcherOffset);
+         ori = ori * _launcherRotation;
          ori.transform_vector (offset);
          pos += offset;
 
@@ -212,8 +273,7 @@ dmz::WeaponPluginFixedLauncher::_create_munition (const Handle SourceHandle) {
          objMod->store_position (AmmoHandle, _defaultHandle, pos);
          objMod->store_velocity (AmmoHandle, _defaultHandle, vel);
 
-         // Need to link to source here.
-         // Need to calculate target here.
+         objMod->link_objects (_sourceEventHandle, SourceHandle, AmmoHandle);
 
          objMod->activate_object (AmmoHandle);
       }
@@ -227,6 +287,8 @@ dmz::WeaponPluginFixedLauncher::_init (Config &local) {
    RuntimeContext *context (get_plugin_runtime_context ());
 
    Definitions defs (context, &_log);
+
+   _sourceEventHandle = defs.create_named_handle (EventAttributeSourceName);
 
    _defaultHandle = activate_default_object_attribute (
       ObjectStateMask);
@@ -248,7 +310,13 @@ dmz::WeaponPluginFixedLauncher::_init (Config &local) {
       _log.error << "No munitions type defined. Will be unable to fire weapon." << endl;
    }
 
+   _delay = config_to_float64 ("delay.value", local, _delay);
    _launcherOffset = config_to_vector ("offset", local);
+   const Vector HPR = config_to_vector ("rotation", local);
+
+   _launcherRotation.roll_in_place (HPR.get_z ());
+   _launcherRotation.pitch_in_place (HPR.get_x ());
+   _launcherRotation.yaw_in_place (HPR.get_y ());
 
    init_input_channels (
       local,

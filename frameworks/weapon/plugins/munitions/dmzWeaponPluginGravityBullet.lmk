@@ -1,0 +1,13 @@
+lmk.set_name "dmzWeaponPluginGravityBullet"
+lmk.set_type "plugin"
+lmk.add_files {"dmzWeaponPluginGravityBullet.cpp",}
+lmk.add_libs {
+   "dmzRenderIsect",
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {
+   "dmzEventFramework",
+   "dmzRenderFramework",
+   "dmzObjectFramework",
+}

@@ -25,7 +25,7 @@ dmz::Int32
 dmz::RefCount::unref () {
 
    const Int32 ReturnCount (AO_fetch_and_sub1 (&(_state.value)));
-   if (ReturnCount == 0) { ref_count_is_zero (); }
+   if (ReturnCount == 0) { _ref_count_is_zero (); }
 
    return ReturnCount;
 }

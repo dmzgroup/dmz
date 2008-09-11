@@ -116,9 +116,63 @@ vector_is_a (lua_State *L) {
 }
 
 
+static int
+vector_right (lua_State *L) {
+
+   const Vector Value (1.0, 0.0, 0.0);
+   return lua_create_vector (L, &Value) ? 1 : 0;
+}
+
+
+static int
+vector_left (lua_State *L) {
+
+   const Vector Value (-1.0, 0.0, 0.0);
+   return lua_create_vector (L, &Value) ? 1 : 0;
+}
+
+
+static int
+vector_up (lua_State *L) {
+
+   const Vector Value (0.0, 1.0, 0.0);
+   return lua_create_vector (L, &Value) ? 1 : 0;
+}
+
+
+static int
+vector_down (lua_State *L) {
+
+   const Vector Value (0.0, -1.0, 0.0);
+   return lua_create_vector (L, &Value) ? 1 : 0;
+}
+
+
+static int
+vector_backward (lua_State *L) {
+
+   const Vector Value (0.0, 0.0, 1.0);
+   return lua_create_vector (L, &Value) ? 1 : 0;
+}
+
+
+static int
+vector_forward (lua_State *L) {
+
+   const Vector Value (0.0, 0.0, -1.0);
+   return lua_create_vector (L, &Value) ? 1 : 0;
+}
+
+
 static const luaL_Reg arrayFunc [] = {
    {"new", vector_new},
    {"is_a", vector_is_a},
+   {"right", vector_right},
+   {"left", vector_left},
+   {"up", vector_up},
+   {"down", vector_down},
+   {"backward", vector_backward},
+   {"forward", vector_forward},
    {NULL, NULL},
 };
 

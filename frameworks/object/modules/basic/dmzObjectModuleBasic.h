@@ -9,6 +9,7 @@
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzRuntimeObjectType.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
@@ -97,6 +98,15 @@ namespace dmz {
             const Handle ObjectHandle,
             const ObjectLinkRetentionEnum LinkRetention);
 
+         virtual ObjectType lookup_object_type (const Handle ObjectHandle);
+
+         virtual Boolean store_locality (
+            const Handle ObjectHandle,
+            const ObjectLocalityEnum Locality);
+
+         virtual ObjectLocalityEnum lookup_locality (const Handle ObjectHandle);
+         virtual ObjectLocalityEnum lookup_locality (const UUID &Identity);
+
          virtual Boolean store_uuid (const Handle ObjectHandle, const UUID &Value);
          virtual Boolean lookup_uuid (const Handle ObjectHandle, UUID &value);
          virtual Handle lookup_handle_from_uuid (const UUID &Value);
@@ -124,6 +134,14 @@ namespace dmz {
 
          virtual Boolean unlink_objects (const Handle LinkHandle);
 
+         virtual Boolean unlink_super_links (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle);
+
+         virtual Boolean unlink_sub_links (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle);
+
          virtual Boolean store_link_attribute_object (
             const Handle LinkHandle,
             const Handle AttributeObjectHandle);
@@ -140,19 +158,57 @@ namespace dmz {
             const Handle AttributeHandle,
             HandleContainer &container);
 
-         virtual Boolean store_locality (
+         virtual Boolean store_counter (
             const Handle ObjectHandle,
-            const ObjectLocalityEnum Locality);
+            const Handle AttributeHandle,
+            const Int64 Value);
 
-         virtual ObjectLocalityEnum lookup_locality (const Handle ObjectHandle);
-         virtual ObjectLocalityEnum lookup_locality (const UUID &Identity);
+         virtual Boolean lookup_counter (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            Int64 &value);
 
-         virtual Boolean store_object_type (
+         virtual Int64 add_to_counter (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 Value);
+
+         virtual Boolean store_counter_minimum (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 Value);
+
+         virtual Boolean lookup_counter_minimum (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            Int64 &value);
+
+         virtual Boolean store_counter_maximum (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 Value);
+
+         virtual Boolean lookup_counter_maximum (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            Int64 &value);
+
+         virtual Boolean store_counter_rollover (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Boolean Value);
+
+         virtual Boolean lookup_counter_rollover (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            Boolean &value);
+
+         virtual Boolean store_alternate_object_type (
             const Handle ObjectHandle,
             const Handle AttributeHandle,
             const ObjectType &Value);
 
-         virtual Boolean lookup_object_type (
+         virtual Boolean lookup_alternate_object_type (
             const Handle ObjectHandle,
             const Handle AttributeHandle,
             ObjectType &value);
@@ -326,7 +382,28 @@ namespace dmz {
             const UUID &PrevAttributeIdentity,
             const Handle PrevAttributeObjectHandle);
 
-         void update_object_type (
+         void update_object_counter (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 &Value,
+            const Int64 *PreviousValue);
+
+         void update_object_counter_minimum (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 &Value,
+            const Int64 *PreviousValue);
+
+         void update_object_counter_maximum (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 &Value,
+            const Int64 *PreviousValue);
+
+         void update_object_alternate_type (
             const UUID &Identity,
             const Handle ObjectHandle,
             const Handle AttributeHandle,
@@ -442,6 +519,31 @@ namespace dmz {
 
          typedef HashTableHandleTemplate<LinkStruct> LinkTable;
 
+         struct CounterStruct {
+            Int64 counter;
+            Int64 *min;
+            Int64 *max;
+            Boolean rollover;
+
+            CounterStruct () :
+                  counter (0),
+                  min (0),
+                  max (0),
+                  rollover (False) {;}
+
+            CounterStruct (const CounterStruct &Value) :
+                  counter (Value.counter),
+                  min (Value.min ? new Int64 (*(Value.min)) : 0),
+                  max (Value.max ? new Int64 (*(Value.max)) : 0),
+                  rollover (Value.rollover) {;}
+
+            ~CounterStruct () {
+
+               if (min) { delete min; min = 0; }
+               if (max) { delete max; max = 0; }
+            }
+         };
+
          struct ObjectStruct {
 
             ObjectStruct *next;
@@ -449,6 +551,8 @@ namespace dmz {
             Handle handle;
 
             UUID uuid;
+
+            ObjectType type;
 
             RuntimeHandle *handlePtr;
 
@@ -463,7 +567,8 @@ namespace dmz {
             HashTableHandleTemplate<LinkTable> superTable;
             HashTableHandleTemplate<LinkTable> subTable;
 
-            HashTableHandleTemplate<ObjectType> typeTable;
+            HashTableHandleTemplate<CounterStruct> counterTable;
+            HashTableHandleTemplate<ObjectType> altTypeTable;
             HashTableHandleTemplate<Mask> stateTable;
             HashTableHandleTemplate<Boolean> flagTable;
             HashTableHandleTemplate<Float64> timeStampTable;
@@ -498,6 +603,7 @@ namespace dmz {
 
                next = 0;
                handle = 0;
+               type.set_type_context (0);
                uuid.clear ();
                active = False;
                locality = ObjectLocalityUnknown;
@@ -505,7 +611,8 @@ namespace dmz {
                linkTable.clear ();
                superTable.clear ();
                subTable.clear ();
-               typeTable.empty ();
+               counterTable.empty ();
+               altTypeTable.empty ();
                stateTable.empty ();
                flagTable.empty ();
                timeStampTable.empty ();
@@ -530,6 +637,7 @@ namespace dmz {
                if (result) {
 
                   result->active = False;
+                  result->type = type;
                   result->locality = locality;
 
                   HashTableHandleIterator it;
@@ -543,7 +651,8 @@ namespace dmz {
 
                   // Link cloning must happen externally
 
-                  result->typeTable.copy (typeTable);
+                  result->counterTable.copy (counterTable);
+                  result->altTypeTable.copy (altTypeTable);
                   result->stateTable.copy (stateTable);
                   result->flagTable.copy (flagTable);
                   result->timeStampTable.copy (timeStampTable);
@@ -585,6 +694,8 @@ namespace dmz {
          };
 
          ObjectStruct *_lookup_object (const Handle ObjectHandle);
+
+         void _unlink_table (const LinkTable &Table);
 
          void _unlink_object (const ObjectStruct &Obj);
 
@@ -637,7 +748,10 @@ namespace dmz {
          HashTableHandleTemplate<ObjectObserverStruct> _linkObsTable;
          HashTableHandleTemplate<ObjectObserverStruct> _unlinkObsTable;
          HashTableHandleTemplate<ObjectObserverStruct> _linkAttrTable;
-         HashTableHandleTemplate<ObjectObserverStruct> _objectTypeTable;
+         HashTableHandleTemplate<ObjectObserverStruct> _counterTable;
+         HashTableHandleTemplate<ObjectObserverStruct> _minCounterTable;
+         HashTableHandleTemplate<ObjectObserverStruct> _maxCounterTable;
+         HashTableHandleTemplate<ObjectObserverStruct> _altTypeTable;
          HashTableHandleTemplate<ObjectObserverStruct> _stateTable;
          HashTableHandleTemplate<ObjectObserverStruct> _flagTable;
          HashTableHandleTemplate<ObjectObserverStruct> _timeStampTable;

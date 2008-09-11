@@ -7,8 +7,8 @@ namespace dmz {
 
    enum EventLocalityEnum { EventLocalityUnknown, EventLocal, EventRemote };
 
-   const UInt32 EventCallbackStartEvent    = 0x00000001;
-   const UInt32 EventCallbackEndEvent      = 0x00000002;
+   const UInt32 EventCallbackCreateEvent    = 0x00000001;
+   const UInt32 EventCallbackCloseEvent      = 0x00000002;
    const UInt32 EventCallbackAll           = 0xFFFFFFFF;
 
    const char EventAttributeDefaultName[]   = "Event_Default_Attribute";

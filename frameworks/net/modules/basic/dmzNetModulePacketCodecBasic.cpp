@@ -438,7 +438,10 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
       RuntimeContext *context (get_plugin_runtime_context ());
 
-      if (dmz::load_plugins (context, pluginList, local, global, _extensions, &_log)) {
+      Config init;
+      global.lookup_all_config_merged ("dmz", init);
+
+      if (dmz::load_plugins (context, pluginList, init, global, _extensions, &_log)) {
 
          _extensions.discover_plugins ();
 

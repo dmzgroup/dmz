@@ -31,6 +31,14 @@ event_type_check (lua_State *L, int index) {
 
             ptr->set_type (name, lua_get_runtime_context (L));
 
+            if (!(*ptr)) {
+
+               String error ("Invalid event type name: ");
+               error << name;
+               lua_pushstring (L, error.get_buffer ());
+               lua_error (L);
+            }
+
             lua_replace (L, index);
 
             result = event_type_check (L, index);

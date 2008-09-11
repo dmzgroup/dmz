@@ -29,7 +29,7 @@ namespace dmz {
             const Plugin *PluginPtr);
 
          // Event Observer Interface
-         virtual void end_event (
+         virtual void close_event (
             const Handle EventHandle,
             const EventType &Type,
             const EventLocalityEnum Locality);
@@ -117,9 +117,7 @@ namespace dmz {
 
          Handle _defaultHandle;
 
-         EventType _launchEvent;
-         EventType _detonationEvent;
-         EventType _collisionEvent;
+         EventType _rootEventType;
 
       private:
          EventPluginDump ();

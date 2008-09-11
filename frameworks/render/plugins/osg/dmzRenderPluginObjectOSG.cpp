@@ -18,12 +18,14 @@ dmz::RenderPluginObjectOSG::RenderPluginObjectOSG (
       _defs (Info, &_log),
       _core (0) {
 
+   _noModel.model = new osg::Group;
    _init (local);
 }
 
 
 dmz::RenderPluginObjectOSG::~RenderPluginObjectOSG () {
 
+   _noModel.model = 0;
    _modelTable.empty ();
    _typeTable.clear ();
    _defTable.empty ();
@@ -107,29 +109,6 @@ dmz::RenderPluginObjectOSG::destroy_object (
    ObjectStruct *os (_objectTable.remove (ObjectHandle));
 
    if (os) { delete os; os = 0; }
-}
-
-
-void
-dmz::RenderPluginObjectOSG::update_object_type (
-      const UUID &Identity,
-      const Handle ObjectHandle,
-      const Handle AttributeHandle,
-      const ObjectType &Value,
-      const ObjectType *PreviousValue) {
-
-   ObjectStruct *os (_objectTable.lookup (ObjectHandle));
-
-   if (os && _core) {
-
-      DefStruct *ds (_lookup_def_struct (Value));
-
-      if (ds != &(os->Def)) {
-
-         destroy_object (Identity, ObjectHandle);
-         create_object (Identity, ObjectHandle, Value, ObjectLocalityUnknown);
-      }
-   }
 }
 
 
@@ -225,6 +204,7 @@ dmz::RenderPluginObjectOSG::_create_def_struct (const ObjectType &Type) {
             while (modelList.get_next_config (it, model)) {
 
                const String FileName (config_to_string ("file", model));
+               const Boolean NoModel (config_to_boolean ("none", model));
                Mask state;
                String stateName;
                const Boolean StateNameFound (model.lookup_attribute ("state", stateName));
@@ -233,7 +213,7 @@ dmz::RenderPluginObjectOSG::_create_def_struct (const ObjectType &Type) {
 
                if (!StateNameFound || state) {
 
-                  ModelStruct *ms = _load_model (FileName);
+                  ModelStruct *ms = (NoModel ? &_noModel : _load_model (FileName));
 
                   if (ms) {
 
@@ -313,7 +293,6 @@ dmz::RenderPluginObjectOSG::_init (Config &local) {
    activate_default_object_attribute (
       ObjectCreateMask |
       ObjectDestroyMask |
-      ObjectTypeMask |
       ObjectStateMask);
 }
 

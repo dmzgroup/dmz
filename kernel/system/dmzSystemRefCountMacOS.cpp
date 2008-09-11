@@ -12,7 +12,7 @@
 \ingroup System
 \brief Self deleting thread safe reference counter.
 
-\fn dmz::RefCountDeleteOnZero::ref_count_is_zero ()
+\fn dmz::RefCountDeleteOnZero::_ref_count_is_zero ()
 \brief Deletes class when reference count reaches zero.
 \details Implements the pure virtual function found in dmz::RefCount base class.
 Function is invoked by base class when reference count reaches zero.
@@ -52,7 +52,7 @@ dmz::RefCount::ref () {
 
 \brief Decrements reference count by one.
 \details This call is thread safe. If the reference count reaches zero. The pure
-virtual function dmz::RefCount::ref_count_is_zero is invoked.
+virtual function dmz::RefCount::_ref_count_is_zero is invoked.
 \return Returns current reference count.
 
 */
@@ -60,14 +60,14 @@ dmz::Int32
 dmz::RefCount::unref () {
 
    const int32_t ReturnCount (OSAtomicDecrement32Barrier (&(_state.value)));
-   if (ReturnCount == 0) { ref_count_is_zero (); }
+   if (ReturnCount == 0) { _ref_count_is_zero (); }
 
    return ReturnCount;
 }
 
 /*!
 
-\fn dmz::RefCount::ref_count_is_zero ()
+\fn dmz::RefCount::_ref_count_is_zero ()
 \brief Pure virtual function for derived classes to implement. When the reference count
 reaches zero, the function is invoked.
 

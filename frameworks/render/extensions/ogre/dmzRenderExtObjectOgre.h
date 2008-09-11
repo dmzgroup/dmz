@@ -43,13 +43,6 @@ namespace dmz {
 
          virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
 
-         virtual void update_object_type (
-            const UUID &Identity,
-            const Handle ObjectHandle,
-            const Handle AttributeHandle,
-            const ObjectType &Value,
-            const ObjectType *PreviousValue);
-
          virtual void update_object_state (
             const UUID &Identity,
             const Handle ObjectHandle,

@@ -69,6 +69,15 @@ namespace dmz {
             const Handle ObjectHandle,
             const ObjectLinkRetentionEnum LinkRetention) = 0;
 
+         virtual ObjectType lookup_object_type (const Handle ObjectHandle) = 0;
+ 
+         virtual Boolean store_locality (
+            const Handle ObjectHandle,
+            const ObjectLocalityEnum Locality) = 0;
+
+         virtual ObjectLocalityEnum lookup_locality (const Handle ObjectHandle) = 0;
+         virtual ObjectLocalityEnum lookup_locality (const UUID &Identity) = 0;
+
          virtual Boolean store_uuid (const Handle ObjectHandle, const UUID &Value) = 0;
          virtual Boolean lookup_uuid (const Handle ObjectHandle, UUID &value) = 0;
          virtual Handle lookup_handle_from_uuid (const UUID &Value) = 0;
@@ -96,6 +105,14 @@ namespace dmz {
 
          virtual Boolean unlink_objects (const Handle LinkHandle) = 0;
 
+         virtual Boolean unlink_super_links (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle) = 0;
+
+         virtual Boolean unlink_sub_links (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle) = 0;
+
          virtual Boolean store_link_attribute_object (
             const Handle LinkHandle,
             const Handle AttributeObjectHandle) = 0;
@@ -112,19 +129,57 @@ namespace dmz {
             const Handle AttributeHandle,
             HandleContainer &container) = 0;
 
-         virtual Boolean store_locality (
+         virtual Boolean store_counter (
             const Handle ObjectHandle,
-            const ObjectLocalityEnum Locality) = 0;
+            const Handle AttributeHandle,
+            const Int64 Value) = 0;
 
-         virtual ObjectLocalityEnum lookup_locality (const Handle ObjectHandle) = 0;
-         virtual ObjectLocalityEnum lookup_locality (const UUID &Identity) = 0;
+         virtual Boolean lookup_counter (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            Int64 &value) = 0;
 
-         virtual Boolean store_object_type (
+         virtual Int64 add_to_counter (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 Value = 1) = 0;
+
+         virtual Boolean store_counter_minimum (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 Value) = 0;
+
+         virtual Boolean lookup_counter_minimum (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            Int64 &value) = 0;
+
+         virtual Boolean store_counter_maximum (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Int64 Value) = 0;
+
+         virtual Boolean lookup_counter_maximum (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            Int64 &value) = 0;
+
+         virtual Boolean store_counter_rollover (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Boolean Value) = 0;
+
+         virtual Boolean lookup_counter_rollover (
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            Boolean &value) = 0;
+
+         virtual Boolean store_alternate_object_type (
             const Handle ObjectHandle,
             const Handle AttributeHandle,
             const ObjectType &Value) = 0;
 
-         virtual Boolean lookup_object_type (
+         virtual Boolean lookup_alternate_object_type (
             const Handle ObjectHandle,
             const Handle AttributeHandle,
             ObjectType &value) = 0;

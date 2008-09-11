@@ -27,7 +27,7 @@ dmz::NetPluginPacket::NetPluginPacket (
    _init (local);
 
    activate_default_object_attribute (
-      ObjectCreateMask | ObjectDestroyMask | ObjectLocalityMask | ObjectTypeMask);
+      ObjectCreateMask | ObjectDestroyMask | ObjectLocalityMask);
 }
 
 
@@ -112,7 +112,7 @@ dmz::NetPluginPacket::discover_plugin (
 
             while (events.get_next (it, type)) {
 
-               activate_event_callback (type, EventEndMask);
+               activate_event_callback (type, EventCloseMask);
             }
          }
       }
@@ -151,7 +151,7 @@ dmz::NetPluginPacket::discover_plugin (
 
          while (events.get_next (eventIt, type)) {
 
-            deactivate_event_callback (type, EventEndMask);
+            deactivate_event_callback (type, EventCloseMask);
          }
 
          _codecMod = 0;
@@ -208,7 +208,7 @@ dmz::NetPluginPacket::read_packet (const Int32 Size, char *buffer) {
 
 // EventObserverUtil Interface
 void
-dmz::NetPluginPacket::end_event (
+dmz::NetPluginPacket::close_event (
       const Handle EventHandle,
       const EventType &Type,
       const EventLocalityEnum Locality) {
@@ -300,24 +300,10 @@ dmz::NetPluginPacket::update_object_locality (
 }
 
 
-void
-dmz::NetPluginPacket::update_object_type (
-      const UUID &Identity,
-      const Handle ObjectHandle,
-      const Handle AttributeHandle,
-      const ObjectType &Value,
-      const ObjectType *PreviousValue) {
-
-}
-
-
 // Internal Interface
 void
 dmz::NetPluginPacket::_init (Config &local) {
 
-//   activate_event_callback (EventLaunchName, EventEndMask);
-//   activate_event_callback (EventDetonationName, EventEndMask);
-//   activate_event_callback (EventCollisionName, EventEndMask);
 }
 
 

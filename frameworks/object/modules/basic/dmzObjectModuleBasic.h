@@ -608,9 +608,9 @@ namespace dmz {
                active = False;
                locality = ObjectLocalityUnknown;
                attrTable.clear ();
+               superTable.empty ();
+               subTable.empty ();
                linkTable.clear ();
-               superTable.clear ();
-               subTable.clear ();
                counterTable.empty ();
                altTypeTable.empty ();
                stateTable.empty ();

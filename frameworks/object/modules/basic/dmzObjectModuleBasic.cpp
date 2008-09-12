@@ -106,6 +106,8 @@ dmz::ObjectModuleBasic::~ObjectModuleBasic () {
    _uuidObjTable.clear ();
    _objectTable.empty ();
 
+   _linkTable.empty ();
+
    _linkObsTable.empty ();
    _unlinkObsTable.empty ();
    _linkAttrTable.empty ();

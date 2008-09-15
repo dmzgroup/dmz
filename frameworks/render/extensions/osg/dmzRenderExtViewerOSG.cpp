@@ -36,6 +36,7 @@ dmz::RenderExtViewerOSG::RenderExtViewerOSG (
    _viewer->addEventHandler (stats);
    _viewer->setCameraManipulator (_cameraManipulator.get ());
    _viewer->addEventHandler (_eventHandler.get ());
+   _viewer->setKeyEventSetsDone (0);
 
    _init (local);
 
@@ -211,6 +212,7 @@ dmz::RenderExtViewerOSG::__init_viewer_fullscreen (UInt32 screen) {
    if (_viewer.valid ()) {
 
       _viewer->setUpViewOnSingleScreen (screen);
+      if (_viewer->done ()) { _log.error << "The viewer thinks it is done?" << endl; }
    }
 }
 

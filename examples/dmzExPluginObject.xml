@@ -9,11 +9,11 @@
 </plugins>
 <runtime>
    <types>
-      <object name="vehicle"/>
-      <object name="wheels"/>
+      <object-type name="vehicle"/>
+      <object-type name="wheels"/>
    </types>
 </runtime>
-<dmzArchivePluginObject>
+<archive>
    <object name="front_wheels" type="wheels">
       <attributes>
          <position x="0.0" y="0.0" z="-10.0"/>
@@ -42,5 +42,5 @@
          <flag value="true"/>
       </attributes>
    </object>
-</dmzArchivePluginObject>
+</archive>
 </dmz>

@@ -9,9 +9,7 @@
    <time>
       <frequency value="30.0"/>
    </time>
-   <types>
-      <message name="topSecretMessageType"/>
-   </types>
+   <message name="topSecretMessageType"/>
 </runtime>
 <dmzExPluginMessageSend>
    <message name="topSecretMessageType" value="Shhhh"/>

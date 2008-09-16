@@ -370,7 +370,7 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
                Config objectList;
 
-               packet.lookup_all_config ("object", objectList);
+               packet.lookup_all_config ("object-type", objectList);
 
                ConfigIterator objectIt;
 
@@ -380,7 +380,7 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
                while (objectFound) {
 
-                  const String TypeName (config_to_string ("type", object));
+                  const String TypeName (config_to_string ("name", object));
 
                   if (!ps->objects.add_object_type (
                         TypeName,
@@ -396,7 +396,7 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
                Config eventList;
 
-               packet.lookup_all_config ("event", eventList);
+               packet.lookup_all_config ("event-type", eventList);
 
                ConfigIterator eventIt;
 
@@ -406,7 +406,7 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
                while (eventFound) {
 
-                  const String TypeName (config_to_string ("type", event));
+                  const String TypeName (config_to_string ("name", event));
 
                   if (!ps->events.add_event_type (
                         TypeName,

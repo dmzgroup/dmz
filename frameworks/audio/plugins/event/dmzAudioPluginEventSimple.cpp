@@ -148,23 +148,23 @@ dmz::AudioPluginEventSimple::_init (Config &local) {
 
    Config eventList;
 
-   if (local.lookup_all_config ("event", eventList)) {
+   if (local.lookup_all_config ("event-type", eventList)) {
 
       ConfigIterator it;
       Config event;
 
       while (eventList.get_next_config (it, event)) {
 
+         const String EventTypeName = config_to_string ("name", event);
          const String FileName = config_to_string ("file", event);
-         const String EventName = config_to_string ("type", event);
 
-         if (FileName && EventName) {
+         if (FileName && EventTypeName) {
 
             EventStruct *es = new EventStruct (FileName);
 
             if (es) {
 
-               es->event = activate_event_callback (EventName, EventCloseMask);
+               es->event = activate_event_callback (EventTypeName, EventCloseMask);
 
                if (es->event) {
 
@@ -176,7 +176,7 @@ dmz::AudioPluginEventSimple::_init (Config &local) {
                      es = _eventTable.lookup (EventHandle);
 
                      _log.error << "Unable to bind sound: " << FileName << " to event: "
-                        << EventName << " because file: "
+                        << EventTypeName << " because file: "
                         << (es ? es->File : "<Unknown File>")
                         << " has already been bound to the event type" << endl;
                   }
@@ -185,7 +185,7 @@ dmz::AudioPluginEventSimple::_init (Config &local) {
 
                   delete es; es = 0;
 
-                  _log.error << "Unknown event type: " << EventName << endl;
+                  _log.error << "Unknown event type: " << EventTypeName << endl;
                }
             }
          }
@@ -193,10 +193,10 @@ dmz::AudioPluginEventSimple::_init (Config &local) {
          if (!FileName) {
 
             _log.error << "No audio file specified for event type: "
-               << (EventName ? EventName : "<Unknown Type>") << endl;
+               << (EventTypeName ? EventTypeName : "<Unknown Type>") << endl;
          }
 
-         if (!EventName) {
+         if (!EventTypeName) {
 
             _log.error << "No event type specified for audio file: "
                << (FileName ? FileName : "<Unknown File>") << endl;

@@ -20,7 +20,7 @@
 \details The archive XML format:
 \code
 <dmz>
-<objects>
+<archive>
    <!-- If name is not specified, the UUID is used in its place -->
    <object type="Type Name" uuid="UUID String" name="unique name">
       <!-- If name is not specified, the default attribute handle is used. -->
@@ -64,7 +64,7 @@
       </attributes>
       <!-- more object attributes -->
    </object>
-</objects>
+</archive>
 </dmz>
 \endcode
 The filter XML format:
@@ -72,11 +72,11 @@ The filter XML format:
 <dmz>
 <dmzArchivePluginObject>
    <archive name="Archive Name" import="Boolean Value" export="Boolean Value">
-      <objects>
-         <type name="Object Type Name" exclude="Boolean Value"/>
+      <object-type-set>
+         <object-type name="Object Type Name" exclude="Boolean Value"/>
          <!-- more object types -->
-         <type name="Last Object Type Name"/>
-      </objects>
+         <object-type name="Last Object Type Name"/>
+      </object-type-set>
       <attribute name="Object Attribute Name" contains="Boolean Value">
          <mask name="Mask Name"/>
          <!-- more mask names -->
@@ -1241,7 +1241,7 @@ void
 dmz::ArchivePluginObject::_init (Config &local) {
 
    _scope = config_to_string_container ("scope.string", local);
-   if (_scope.get_count () == 0) { _scope.add_string ("objects"); }
+   if (_scope.get_count () == 0) { _scope.add_string ("archive"); }
 
    RuntimeContext *context (get_plugin_runtime_context ());
 
@@ -1271,7 +1271,7 @@ dmz::ArchivePluginObject::_init (Config &local) {
             fs->exportArchive = config_to_boolean ("export", filter, True);
             Config objects;
 
-            if (filter.lookup_all_config ("objects.type", objects)) {
+            if (filter.lookup_all_config ("object-type-set.object-type", objects)) {
 
                ConfigIterator typesIt;
                Config typeConfig;

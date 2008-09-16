@@ -22,8 +22,8 @@
    <types>
       <object name="object type name">
          <audio>
-            <sound
-               state="state name"
+            <state
+               name="state name"
                activatefile="audio file name"
                loopedfile="audio file name"
                deactivatefile="audio file name"
@@ -473,7 +473,7 @@ dmz::AudioPluginObject::_object_type_to_sound_list (const ObjectType &Type) {
 
    Config list;
 
-   if (Type.get_config ().lookup_all_config ("audio.sound", list)) {
+   if (Type.get_config ().lookup_all_config ("audio.state", list)) {
 
       SoundDefStruct *current (0);
 
@@ -485,7 +485,7 @@ dmz::AudioPluginObject::_object_type_to_sound_list (const ObjectType &Type) {
       while (found) {
 
          Mask state;
-         const String StateName (config_to_string ("state", data));
+         const String StateName (config_to_string ("name", data));
 
          if (StateName) {
 

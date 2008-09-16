@@ -447,9 +447,9 @@ dmz::NetModuleAttributeMapBasic::_process_net_object_type (const ObjectType &Typ
 
    Config typeMap;
 
-   if (Type.get_config ().lookup_config ("net.type", typeMap)) {
+   if (Type.get_config ().lookup_config ("net.enum", typeMap)) {
 
-      const String NetEnum (config_to_string ("enum", typeMap));
+      const String NetEnum (config_to_string ("value", typeMap));
       const Int32 Depth (config_to_int32 ("depth", typeMap));
 
       if (NetEnum) {

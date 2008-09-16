@@ -516,10 +516,10 @@ dmz::runtime_init (const Config &Init, RuntimeContext *context, Log *log) {
    Config mconfig;
    Config tconfig;
 
-   Init.lookup_all_config ("types.event", econfig);
-   Init.lookup_all_config ("types.object", oconfig);
-   Init.lookup_all_config ("states.state", sconfig);
-   Init.lookup_all_config ("types.message", mconfig);
+   Init.lookup_all_config ("event-type", econfig);
+   Init.lookup_all_config ("object-type", oconfig);
+   Init.lookup_all_config ("state", sconfig);
+   Init.lookup_all_config ("message", mconfig);
    Init.lookup_all_config_merged ("time", tconfig);
 
    if (context) {

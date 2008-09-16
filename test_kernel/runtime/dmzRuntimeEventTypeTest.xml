@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dmz>
 <runtime>
-  <types>
-    <event name="cat">
+   <event-type name="cat">
       <info texture="catSkin.png"/>
       <info howTo="skin_a_cat"/>
       <attitude lifestyle="lazy"/>
-    </event>
-    <event name="caracal" parent="cat">
+   </event-type>
+   <event-type name="caracal" parent="cat">
       <info ears="awesome" madeOf="win"/>
       <info motivation="evil"/>
-    </event>
-    <event name="serval" parent="cat">
+   </event-type>
+   <event-type name="serval" parent="cat">
       <info ears="cute" madeOf="meow"/>
       <info motivation="food"/>
-    </event>
-  </types>
+   </event-type>
 </runtime>
 </dmz>

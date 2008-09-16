@@ -5,8 +5,6 @@
    <plugin name="dmzObjectModuleBasic"/>
 </plugins>
 <runtime>
-   <types>
-      <object name="rootType" />
-   </types>
+   <object-type name="rootType" />
 </runtime>
 </dmz>

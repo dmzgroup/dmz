@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dmz>
-  <runtime>
-    <types>
-      <message name="undo1"/>
-      <message name="undo2"/>
-      <message name="undo3"/>
-      <message name="redo1"/>
-      <message name="redo2"/>
-      <message name="redo3"/>
-    </types>
-  </runtime>
-  <test1 undo="undo1" redo="redo1"/>
-  <test2 undo="undo2" redo="redo2"/>
-  <test3 undo="undo3" redo="redo3"/>
+<runtime>
+   <message name="undo1"/>
+   <message name="undo2"/>
+   <message name="undo3"/>
+   <message name="redo1"/>
+   <message name="redo2"/>
+   <message name="redo3"/>
+</runtime>
+<test1 undo="undo1" redo="redo1"/>
+<test2 undo="undo2" redo="redo2"/>
+<test3 undo="undo3" redo="redo3"/>
 </dmz>

@@ -47,7 +47,7 @@ local_config_to_string (
 \details Defined in dmzRuntimeEventType.h.
 \code
 RuntimeContext *context (get_plugin_runtime_context ());
-dmz::EventType value = dmz::config_to_event_type ("dmz.event.type", local, context);
+dmz::EventType value = dmz::config_to_event_type ("dmz.event-type.name", local, context);
 \endcode
 \param[in] Name String containing name of config context to convert.
 \param[in] Source Config containing config context to convert.
@@ -63,7 +63,7 @@ dmz::EventType value = dmz::config_to_event_type ("dmz.event.type", local, conte
 \code
 RuntimeContext *context (get_plugin_runtime_context ());
 const dmz::String DefaultEventTypeName ("Some_Event");
-dmz::EventType value = dmz::config_to_event_type ("dmz.event.type", local, DefaultEventTypeName, context);
+dmz::EventType value = dmz::config_to_event_type ("dmz.event-type.name", local, DefaultEventTypeName, context);
 \endcode
 \param[in] Name String containing name of config context to convert.
 \param[in] Source Config containing config context to convert.
@@ -136,14 +136,16 @@ dmz::config_to_event_type (
 \details Defined in dmzRuntimeEventType.h.
 \code
 RuntimeContext *context (get_plugin_runtime_context ());
-dmz::EventTypeSet value = dmz::config_to_event_type_set ("dmz.event", global, context);
+dmz::EventTypeSet value = dmz::config_to_event_type_set ("dmz.set", global, context);
 \endcode
 The Config for the above example would be formated as follows:
 \code
 <dmz>
-   <event type="Some Event"/>
-   <event type="Another Event"/>
-   <event type="Yet Another Event"/>
+<set>
+   <event-type name="Some Event"/>
+   <event-type name="Another Event"/>
+   <event-type name="Yet Another Event"/>
+</set>
 </dmz>
 \endcode
 \param[in] Name String containing name of config context to convert.
@@ -162,14 +164,14 @@ dmz::config_to_event_type_set (
 
    Config list;
 
-   if (Source.lookup_all_config (Name, list)) {
+   if (Source.lookup_all_config (Name + "event-type", list)) {
 
       ConfigIterator it;
       Config type;
 
       while (list.get_next_config (it, type)) {
 
-         result.add_event_type (config_to_event_type ("type", type, context));
+         result.add_event_type (config_to_event_type ("name", type, context));
       }
    }
 
@@ -237,7 +239,7 @@ dmz::config_to_object_type (
 \code
 RuntimeContext *context (get_plugin_runtime_context ());
 const dmz::ObjectType DefaultObjectType ("Some_Object", context);
-dmz::ObjectType value = dmz::config_to_object_type ("dmz.object.type", local, DefaultObjectType, context);
+dmz::ObjectType value = dmz::config_to_object_type ("dmz.object-type.name", local, DefaultObjectType, context);
 \endcode
 \param[in] Name String containing name of config context to convert.
 \param[in] Source Config containing config context to convert.
@@ -277,14 +279,16 @@ dmz::config_to_object_type (
 \details Defined in dmzRuntimeObjectType.h.
 \code
 RuntimeContext *context (get_plugin_runtime_context ());
-dmz::ObjectTypeSet value = dmz::config_to_object_type_set ("dmz.object", global, context);
+dmz::ObjectTypeSet value = dmz::config_to_object_type_set ("dmz.set", global, context);
 \endcode
 The Config for the above example would be formated as follows:
 \code
 <dmz>
-   <object type="Some Object"/>
-   <object type="Another Object"/>
-   <object type="Yet Another Object"/>
+<set>
+   <object-type name="Some Object"/>
+   <object-type name="Another Object"/>
+   <object-type name="Yet Another Object"/>
+</set>
 </dmz>
 \endcode
 \param[in] Name String containing name of config context to convert.
@@ -303,14 +307,14 @@ dmz::config_to_object_type_set (
 
    Config list;
 
-   if (Source.lookup_all_config (Name, list)) {
+   if (Source.lookup_all_config (Name + ".object-type", list)) {
 
       ConfigIterator it;
       Config type;
 
       while (list.get_next_config (it, type)) {
 
-         result.add_object_type (config_to_object_type ("type", type, context));
+         result.add_object_type (config_to_object_type ("name", type, context));
       }
    }
 

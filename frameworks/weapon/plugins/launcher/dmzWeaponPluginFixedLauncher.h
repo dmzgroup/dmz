@@ -24,6 +24,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          WeaponPluginFixedLauncher (const PluginInfo &Info, Config &local);
          ~WeaponPluginFixedLauncher ();
 
@@ -120,6 +121,8 @@ namespace dmz {
          Handle _sourceEventHandle;
 
          ObjectType _ammoType;
+         UInt32 _launchButton;
+         //! \endcond
 
       private:
          WeaponPluginFixedLauncher ();

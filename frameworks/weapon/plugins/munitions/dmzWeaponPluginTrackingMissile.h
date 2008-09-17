@@ -13,6 +13,8 @@ namespace dmz {
  
    class RenderModuleIsect;
 
+// MOVE once plugin is finished.
+//! \cond
    class WeaponPluginTrackingMissile :
          public Plugin,
          public TimeSlice,
@@ -54,6 +56,7 @@ namespace dmz {
          RenderModuleIsect *_isectMod;
          HashTableHandleTemplate<Float64> _objectTable;
          HashTableHandleTemplate<Float64> _speedTable;
+         //! \endcond
 
       private:
          WeaponPluginTrackingMissile ();

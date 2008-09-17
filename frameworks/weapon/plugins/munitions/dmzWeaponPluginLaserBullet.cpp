@@ -10,6 +10,34 @@
 #include <dmzTypesVector.h>
 #include "dmzWeaponPluginLaserBullet.h"
 
+/*!
+
+\defgroup Weapon DMZ Weapon Framework
+
+\class dmz::WeaponPluginLaserBullet
+\ingroup Weapon
+\brief Weapon munitions factory that creates laser bullets.
+\details This plugin attaches to locally created objects that are of one of the
+types defined in the configuration data. A laser bullet travels along a straight line
+at a constant velocity until it impacts something.
+\code
+<dmz>
+<dmzWeaponPluginLaserBullet>
+   <!-- Speed at which the projectile is flown out. -->
+   <speed value="100.0"/>
+   <!-- Lists the ObjectTypes that this plugin attaches to. -->
+   <munitions>
+      <object-type name="First Munitions Type"/>
+      <object-type name="Next Munitions Type"/>
+      ...
+      <object-type name="Last Munitions Type"/>
+   </munitions>
+</dmzWeaponPluginLaserBullet>
+</dmz>
+\endcode
+*/
+
+//! \cond
 dmz::WeaponPluginLaserBullet::WeaponPluginLaserBullet (
       const PluginInfo &Info,
       Config &local) :
@@ -198,6 +226,7 @@ dmz::WeaponPluginLaserBullet::_init (Config &local) {
 
    _defaultSpeed = config_to_float64 ("speed.value", local, _defaultSpeed);
 }
+//! \endcond
 
 
 extern "C" {

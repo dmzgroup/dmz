@@ -10,6 +10,34 @@
 #include <dmzTypesVector.h>
 #include "dmzWeaponPluginGravityBullet.h"
 
+/*!
+
+\class dmz::WeaponPluginGravityBullet
+\ingroup Weapon
+\brief Weapon munitions factory that creates gravity bullets.
+\details This plugin attaches to locally created objects that are of one of the
+types defined in the configuration data. A gravity bullet is like a laser bullet except
+that the bullet will drop over time as if being pulled down by gravity. It will travel
+until it impacts something.
+\code
+<dmz>
+<dmzWeaponPluginGravityBullet>
+   <!-- Speed at which the projectile is flown out. -->
+   <speed value="100.0"/>
+   <!-- Lists the ObjectTypes that this plugin attaches to. -->
+   <munitions>
+      <object-type name="First Munitions Type"/>
+      <object-type name="Next Munitions Type"/>
+      ...
+      <object-type name="Last Munitions Type"/>
+   </munitions>
+</dmzWeaponPluginGravityBullet>
+</dmz>
+\endcode
+\sa dmz::WeaponPluginLaserBullet
+*/
+
+//! \cond
 dmz::WeaponPluginGravityBullet::WeaponPluginGravityBullet (
       const PluginInfo &Info,
       Config &local) :
@@ -216,7 +244,7 @@ dmz::WeaponPluginGravityBullet::_init (Config &local) {
 
    _defaultSpeed = config_to_float64 ("speed.value", local, _defaultSpeed);
 }
-
+//! \endcond
 
 extern "C" {
 

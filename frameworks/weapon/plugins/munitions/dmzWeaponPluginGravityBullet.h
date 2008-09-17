@@ -20,6 +20,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          WeaponPluginGravityBullet (const PluginInfo &Info, Config &local);
          ~WeaponPluginGravityBullet ();
 
@@ -57,6 +58,7 @@ namespace dmz {
          RenderModuleIsect *_isectMod;
          HashTableHandleTemplate<Float64> _objectTable;
          HashTableHandleTemplate<Float64> _speedTable;
+         //! \endcond
 
       private:
          WeaponPluginGravityBullet ();

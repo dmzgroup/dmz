@@ -2,10 +2,10 @@
 #define DMZ_RENDER_MODULE_PICK_BASIC_DOT_H
 
 #include <dmzRenderModulePick.h>
+#include <dmzRenderPick.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
-
 
 namespace dmz {
 
@@ -28,9 +28,9 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
-         // RenderModule2dPick Interface
-         virtual Boolean register_pick_2d (const Handle Source, RenderPick2d &pick);
-         virtual Boolean release_pick_2d (const Handle Source, RenderPick2d &pick);
+         // RenderModulePick Interface
+         virtual Boolean register_pick (const Handle Source, RenderPick &pick);
+         virtual Boolean release_pick (const Handle Source, RenderPick &pick);
 
          virtual Boolean screen_to_world (
             const Handle Source,
@@ -63,7 +63,7 @@ namespace dmz {
 
          Log _log;
 
-         HashTableHandleTemplate<RenderPick2d> _pick2dTable;
+         HashTableHandleTemplate<RenderPick> _pickTable;
          //! \endcond
 
       private:

@@ -2,12 +2,12 @@ lmk.set_name "dmzRenderUtil"
 lmk.set_type "shared"
 
 lmk.add_files {
-   "dmzRenderPick2dUtil.h",
+   "dmzRenderPickUtil.h",
    "dmzRenderUtilExport.h",
 }
 
 lmk.add_files {
-   "dmzRenderPick2dUtil.cpp",
+   "dmzRenderPickUtil.cpp",
 }
 
 lmk.add_libs {"dmzKernel",}

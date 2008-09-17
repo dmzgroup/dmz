@@ -94,7 +94,8 @@ INPUT                  = ../kernel \
                          ../frameworks/event \
                          ../frameworks/input \
                          ../frameworks/object \
-                         ../frameworks/render
+                         ../frameworks/render \
+                         ../frameworks/weapon
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cpp \

@@ -5,13 +5,11 @@
 #include <dmzRuntimeRTTI.h>
 #include <dmzTypesBase.h>
 
-#define DMZ_RENDER_MODULE_PICK_INTERFACE_NAME "RenderModulePickInterface"
-
-
 namespace dmz {
 
-   class RenderPick2d;
-   class RenderPick3d;
+   const char RenderModulePickInterfaceName[] = "RenderModulePickInterface";
+
+   class RenderPick;
 
    class RenderModulePick {
 
@@ -20,13 +18,10 @@ namespace dmz {
             const Plugin *PluginPtr,
             const String &PluginName = "");
 
-         virtual Boolean register_pick_2d (const Handle Source, RenderPick2d &pick) = 0;
-         virtual Boolean release_pick_2d (const Handle Source, RenderPick2d &pick) = 0;
+         virtual Boolean register_pick (const Handle Source, RenderPick &pick) = 0;
+         virtual Boolean release_pick (const Handle Source, RenderPick &pick) = 0;
 
-//         virtual Boolean register_pick_3d (const Handle Source, RenderPick3d &pick) = 0;
-//         virtual Boolean release_pick_3d (const Handle Source, RenderPick3d &pick) = 0;
-
-         // RenderPick2d
+         // RenderPick
          virtual Boolean screen_to_world (
             const Handle Source,
             const Int32 ScreenPosX,
@@ -53,9 +48,6 @@ namespace dmz {
             Int32 &screenPosX,
             Int32 &screenPosY) = 0;
 
-         // RenderPick3d
-         // TODO
-
       protected:
          RenderModulePick (const PluginInfo &Info);
          ~RenderModulePick ();
@@ -70,7 +62,7 @@ inline dmz::RenderModulePick *
 dmz::RenderModulePick::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (RenderModulePick *)lookup_rtti_interface (
-      DMZ_RENDER_MODULE_PICK_INTERFACE_NAME,
+      RenderModulePickInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -80,14 +72,14 @@ inline
 dmz::RenderModulePick::RenderModulePick (const PluginInfo &Info) :
       __Info (Info) {
 
-   store_rtti_interface (DMZ_RENDER_MODULE_PICK_INTERFACE_NAME, __Info, (void *)this);
+   store_rtti_interface (RenderModulePickInterfaceName, __Info, (void *)this);
 }
 
 
 inline
 dmz::RenderModulePick::~RenderModulePick () {
 
-   remove_rtti_interface (DMZ_RENDER_MODULE_PICK_INTERFACE_NAME, __Info);
+   remove_rtti_interface (RenderModulePickInterfaceName, __Info);
 }
 
 

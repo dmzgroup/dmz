@@ -9,6 +9,7 @@
 #include <dmzTypesVector.h>
 #include "dmzWeaponPluginTrackingMissile.h"
 
+//! \cond
 dmz::WeaponPluginTrackingMissile::WeaponPluginTrackingMissile (
       const PluginInfo &Info,
       Config &local) :
@@ -178,6 +179,7 @@ dmz::WeaponPluginTrackingMissile::_init (Config &local) {
 
    _defaultSpeed = config_to_float64 ("speed.value", local, _defaultSpeed);
 }
+//! \endcond
 
 
 extern "C" {

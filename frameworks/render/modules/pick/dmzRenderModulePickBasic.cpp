@@ -1,5 +1,5 @@
 #include "dmzRenderModulePickBasic.h"
-#include <dmzRenderPick2d.h>
+#include <dmzRenderPick.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
@@ -18,8 +18,7 @@ dmz::RenderModulePickBasic::RenderModulePickBasic (
       Config &local) :
       Plugin (Info),
       RenderModulePick (Info),
-      _log (Info),
-      _pick2dTable () {
+      _log (Info) {
 
    _init (local);
 }
@@ -31,19 +30,19 @@ dmz::RenderModulePickBasic::~RenderModulePickBasic () {
 
    RuntimeContext *context (_PluginInfoData.get_context ());
 
-   RenderPick2d *pick2d (_pick2dTable.get_first (it));
+   RenderPick *pick (_pickTable.get_first (it));
 
-   while (pick2d) {
+   while (pick) {
 
-      if (RenderPick2d::is_valid (pick2d->get_pick_2d_handle (), context)) {
+      if (RenderPick::is_valid (pick->get_pick_handle (), context)) {
 
-         pick2d->remove_render_module_pick (get_plugin_name (), *this);
+         pick->remove_render_module_pick (get_plugin_name (), *this);
       }
 
-      pick2d  = _pick2dTable.get_next (it);
+      pick = _pickTable.get_next (it);
    }
 
-   _pick2dTable.clear ();
+   _pickTable.clear ();
 }
 
 
@@ -53,30 +52,30 @@ dmz::RenderModulePickBasic::discover_plugin (
       const PluginDiscoverEnum Mode,
       const Plugin *PluginPtr) {
 
-   RenderPick2d *pick2d (RenderPick2d::cast (PluginPtr));
+   RenderPick *pick (RenderPick::cast (PluginPtr));
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (pick2d) { pick2d->store_render_module_pick (get_plugin_name (), *this); }
+      if (pick) { pick->store_render_module_pick (get_plugin_name (), *this); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (pick2d) { pick2d->remove_render_module_pick (get_plugin_name (), *this); }
+      if (pick) { pick->remove_render_module_pick (get_plugin_name (), *this); }
    }
 }
 
 
-// RenderModule2dPick Interface
+// RenderModulePick Interface
 dmz::Boolean
-dmz::RenderModulePickBasic::register_pick_2d (
+dmz::RenderModulePickBasic::register_pick (
       const Handle SourceHandle,
-      RenderPick2d &pick2d) {
+      RenderPick &pick) {
 
    Boolean result (False);
 
-   if (!_pick2dTable.lookup (SourceHandle)) {
+   if (!_pickTable.lookup (SourceHandle)) {
 
-      if (_pick2dTable.store (SourceHandle, &pick2d)) { result = True; }
+      if (_pickTable.store (SourceHandle, &pick)) { result = True; }
    }
 
    return result;
@@ -84,19 +83,19 @@ dmz::RenderModulePickBasic::register_pick_2d (
 
 
 dmz::Boolean
-dmz::RenderModulePickBasic::release_pick_2d (
+dmz::RenderModulePickBasic::release_pick (
       const Handle SourceHandle,
-      RenderPick2d &pick2d) {
+      RenderPick &pick) {
 
    Boolean result (False);
 
-   RenderPick2d *pick2dStored (_pick2dTable.lookup (SourceHandle));
+   RenderPick *pickStored (_pickTable.lookup (SourceHandle));
 
-   if (pick2dStored) {
+   if (pickStored) {
 
-      if (pick2dStored->get_pick_2d_handle () == pick2d.get_pick_2d_handle ()) {
+      if (pickStored->get_pick_handle () == pick.get_pick_handle ()) {
 
-         if (_pick2dTable.remove (SourceHandle)) { result = True; }
+         if (_pickTable.remove (SourceHandle)) { result = True; }
       }
    }
 
@@ -114,12 +113,12 @@ dmz::RenderModulePickBasic::screen_to_world (
 
    Boolean retVal (False);
 
-   RenderPick2d *pick2d (_pick2dTable.lookup (Source));
+   RenderPick *pick (_pickTable.lookup (Source));
 
-   if (pick2d) {
+   if (pick) {
 
       retVal =
-         pick2d->screen_to_world (
+         pick->screen_to_world (
             ScreenPosX,
             ScreenPosY,
             worldPosition,
@@ -139,11 +138,11 @@ dmz::RenderModulePickBasic::world_to_screen (
 
    Boolean retVal (False);
 
-   RenderPick2d *pick2d (_pick2dTable.lookup (Source));
+   RenderPick *pick (_pickTable.lookup (Source));
 
-   if (pick2d) {
+   if (pick) {
 
-      retVal = pick2d->world_to_screen (WorldPosition, screenPosX, screenPosY);
+      retVal = pick->world_to_screen (WorldPosition, screenPosX, screenPosY);
    }
 
    return retVal;
@@ -160,12 +159,12 @@ dmz::RenderModulePickBasic::source_to_world (
 
    Boolean retVal (False);
 
-   RenderPick2d *pick2d (_pick2dTable.lookup (Source));
+   RenderPick *pick (_pickTable.lookup (Source));
 
-   if (pick2d) {
+   if (pick) {
 
       retVal =
-         pick2d->source_to_world (
+         pick->source_to_world (
             SourcePosX,
             SourcePosY,
             worldPosition,
@@ -185,11 +184,11 @@ dmz::RenderModulePickBasic::world_to_source (
 
    Boolean retVal (False);
 
-   RenderPick2d *pick2d (_pick2dTable.lookup (Source));
+   RenderPick *pick (_pickTable.lookup (Source));
 
-   if (pick2d) {
+   if (pick) {
 
-      retVal = pick2d->world_to_source (WorldPosition, sourcePosX, sourcePosY);
+      retVal = pick->world_to_source (WorldPosition, sourcePosX, sourcePosY);
    }
 
    return retVal;

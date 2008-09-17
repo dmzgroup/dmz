@@ -12,6 +12,32 @@
 #include <dmzRuntimePluginInfo.h>
 #include "dmzWeaponPluginFixedLauncher.h"
 
+/*!
+
+\class dmz::WeaponPluginFixedLauncher
+\ingroup Weapon
+\brief Creates a munition object.
+\details
+\code
+<dmz>
+<dmzWeaponPluginFixedLauncher>
+   <state>
+      <dead value="Dead State Name"/>
+   </state>
+   <munitions>
+      <object-type name="Munitions ObjectType Name"/>
+   </munitions>
+   <delay value="Delay time between launches"/>
+   <offset x="X Value" y="Y Value" z="Z Value"/>
+   <rotation x="Pitch Value" y="Heading Value" z="Roll Value"/>
+   <button value="Button ID"/>
+</dmzWeaponPluginFixedLauncher>
+</dmz>
+\endcode
+
+*/
+
+//! \cond
 dmz::WeaponPluginFixedLauncher::WeaponPluginFixedLauncher (
       const PluginInfo &Info,
       Config &local) :
@@ -27,7 +53,8 @@ dmz::WeaponPluginFixedLauncher::WeaponPluginFixedLauncher (
       _hilHandle (0),
       _hil (0),
       _defaultHandle (0),
-      _sourceEventHandle (0) {
+      _sourceEventHandle (0),
+      _launchButton (2) {
 
    _init (local);
 }
@@ -125,7 +152,7 @@ dmz::WeaponPluginFixedLauncher::receive_button_event (
 
    if (_hil) {
 
-      if (Value.get_button_id () == 2) {
+      if (Value.get_button_id () == _launchButton) {
 
          LaunchStruct *ls (_get_struct (_hil));
 
@@ -303,7 +330,7 @@ dmz::WeaponPluginFixedLauncher::_init (Config &local) {
       DefaultStateNameDead,
       context);
 
-   _ammoType = config_to_object_type ("munitions.type", local, context);
+   _ammoType = config_to_object_type ("munitions.object-type.name", local, context);
 
    if (!_ammoType) {
 
@@ -318,12 +345,15 @@ dmz::WeaponPluginFixedLauncher::_init (Config &local) {
    _launcherRotation.pitch_in_place (HPR.get_x ());
    _launcherRotation.yaw_in_place (HPR.get_y ());
 
+   _launchButton = config_to_uint32 ("button.value", local, _launchButton);
+
    init_input_channels (
       local,
       InputEventButtonMask | InputEventChannelStateMask,
       &_log);
 
 }
+//! \endcond
 
 
 extern "C" {

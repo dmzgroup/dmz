@@ -28,11 +28,9 @@ conditions are met. The state machine XML format:
       <source name="Event Source Name"/>
    </input>
    <!--
-      Attribute: "type" specifies the type of source the event.
-      Right now only events from 2D sources is supported and is the default.
       Attribute: "start" specifies the name of the starting state.
    -->
-   <converter type="2D" start="first">
+   <converter start="first">
       <!--
          A converter may have multiple states.
          Attribute: "name" specifies the name of the state.
@@ -176,33 +174,23 @@ struct InputPluginMouseEventToMessage::AttrStruct {
 struct InputPluginMouseEventToMessage::ConverterStruct {
 
    const String Name;
-
-   ConverterStruct (const String TheName) : Name (TheName) {;}
-   virtual ~ConverterStruct () {;}
-
-   virtual ConverterStruct *process_event (const InputEventMouse &Event) = 0;
-};
-
-
-struct InputPluginMouseEventToMessage::Converter2DStruct : public cstruct {
-
    PickPtr &pickMod;
 
-   Converter2DStruct (const String Name, PickPtr &ptr) :
-      ConverterStruct (Name),
+   ConverterStruct (const String TheName, PickPtr &ptr) :
+      Name (TheName),
       pickMod (ptr) {;}
 
-   virtual cstruct *process_results (
+   virtual ConverterStruct *process_results (
       const InputEventMouse &Event,
       const Vector &WorldPosition,
       const Handle ObjectHandle) = 0;
 
-   cstruct *process_event (const InputEventMouse &Event) {
+   virtual ConverterStruct *process_event (const InputEventMouse &Event) {
 
       Vector pos;
       Handle obj (0);
 
-      cstruct *result (0);
+      ConverterStruct *result (0);
 
       if (pickMod) {
 
@@ -265,17 +253,17 @@ struct ConditionStruct {
 };
 
 
-struct Converter2DBasicStruct : InputPluginMouseEventToMessage::Converter2DStruct {
+struct ConverterBasicStruct : cstruct {
 
    ConditionStruct *list;
 
-   Converter2DBasicStruct (
+   ConverterBasicStruct (
          const String &Name,
          PickPtr &ptr) :
-         Converter2DStruct (Name, ptr),
+         ConverterStruct (Name, ptr),
          list (0) {;}
 
-   ~Converter2DBasicStruct () { if (list) { delete list; list = 0; } }
+   ~ConverterBasicStruct () { if (list) { delete list; list = 0; } }
 
    virtual cstruct *process_results (
       const InputEventMouse &Event,
@@ -285,7 +273,7 @@ struct Converter2DBasicStruct : InputPluginMouseEventToMessage::Converter2DStruc
 
 
 cstruct *
-Converter2DBasicStruct::process_results (
+ConverterBasicStruct::process_results (
       const InputEventMouse &Event,
       const Vector &WorldPosition,
       const Handle ObjectHandle) {
@@ -550,16 +538,16 @@ dmz::InputPluginMouseEventToMessage::_get_targets (
 }
 
 
-dmz::InputPluginMouseEventToMessage::Converter2DStruct *
-dmz::InputPluginMouseEventToMessage::_create_converter2d_basic (
-      HashTableStringTemplate<Converter2DStruct> &nameTable,
+dmz::InputPluginMouseEventToMessage::ConverterStruct *
+dmz::InputPluginMouseEventToMessage::_create_converter_basic (
+      HashTableStringTemplate<ConverterStruct> &nameTable,
       ConfigIterator &it,
       Config &converterConfig,
       Config &config) {
 
    const String Name (config_to_string ("name", config));
 
-   Converter2DBasicStruct *result (new Converter2DBasicStruct (
+   ConverterBasicStruct *result (new ConverterBasicStruct (
          Name,
          _pickMod));
 
@@ -626,7 +614,7 @@ dmz::InputPluginMouseEventToMessage::_create_converter2d_basic (
 
    if (result) {
 
-     _create_converter2d (nameTable, it, converterConfig);
+     _create_converter (nameTable, it, converterConfig);
 
      ConditionStruct *current (result->list);
 
@@ -653,13 +641,13 @@ dmz::InputPluginMouseEventToMessage::_create_converter2d_basic (
 }
 
 
-dmz::InputPluginMouseEventToMessage::Converter2DStruct *
-dmz::InputPluginMouseEventToMessage::_create_converter2d (
-      HashTableStringTemplate<Converter2DStruct> &nameTable,
+dmz::InputPluginMouseEventToMessage::ConverterStruct *
+dmz::InputPluginMouseEventToMessage::_create_converter (
+      HashTableStringTemplate<ConverterStruct> &nameTable,
       ConfigIterator &it,
       Config &converterConfig) {
 
-   Converter2DStruct *result (0);
+   ConverterStruct *result (0);
 
    Config config;
 
@@ -670,7 +658,7 @@ dmz::InputPluginMouseEventToMessage::_create_converter2d (
 
       if (!Type || Type == "basic") {
 
-         result = _create_converter2d_basic (nameTable, it, converterConfig, config);
+         result = _create_converter_basic (nameTable, it, converterConfig, config);
       }
       else {
 
@@ -690,27 +678,19 @@ dmz::InputPluginMouseEventToMessage::_create_converter (Config &local) {
    Config converterConfig;
    local.lookup_all_config_merged ("converter", converterConfig);
 
-   const String TypeOrig (config_to_string ("type", converterConfig));
-   const String Type (TypeOrig.get_lower ());
+   HashTableStringTemplate<ConverterStruct> nameTable;
+   ConfigIterator it;
+   result = _create_converter (nameTable, it, converterConfig);
 
-   if (Type == "2d") {
+   const String StartName (config_to_string ("start", converterConfig));
 
-      HashTableStringTemplate<Converter2DStruct> nameTable;
-      ConfigIterator it;
-      result = _create_converter2d (nameTable, it, converterConfig);
+   if (StartName) {
 
-      const String StartName (config_to_string ("start", converterConfig));
+      ConverterStruct *start (nameTable.lookup (StartName));
 
-      if (StartName) {
-
-         Converter2DStruct *start (nameTable.lookup (StartName));
-
-         if (start) { result = start; }
-         else { _log.error << "Unable to find starting state: " << StartName << endl; }
-      }
+      if (start) { result = start; }
+      else { _log.error << "Unable to find starting state: " << StartName << endl; }
    }
-   else if (!Type) { _log.error << "Converter type not defined" << endl; }
-   else { _log.error << "Unknown converter type: " << TypeOrig << endl; }
 
    return result;
 }

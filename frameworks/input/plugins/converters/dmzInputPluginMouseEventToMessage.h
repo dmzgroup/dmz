@@ -25,7 +25,6 @@ namespace dmz {
          //! \cond
          struct AttrStruct;
          struct ConverterStruct;
-         struct Converter2DStruct;
 
          InputPluginMouseEventToMessage (const PluginInfo &Info, Config &local);
          ~InputPluginMouseEventToMessage ();
@@ -50,24 +49,25 @@ namespace dmz {
          void _send (const Message &Message, HandleContainer &targets);
          void _get_targets (const String &Name, Config &config, HandleContainer &targets);
 
+         ConverterStruct *_create_converter_basic (
+            HashTableStringTemplate<ConverterStruct> &nameTable,
+            ConfigIterator &it,
+            Config &converterConfig,
+            Config &config);
+
+         ConverterStruct *_create_converter (
+            HashTableStringTemplate<ConverterStruct> &nameTable,
+            ConfigIterator &it,
+            Config &converterConfig);
+
          AttrStruct *_create_attributes (
             Config &config,
             DataBinder &binder,
             Vector *position,
             Handle *object);
 
-         Converter2DStruct *_create_converter2d_basic (
-            HashTableStringTemplate<Converter2DStruct> &table,
-            ConfigIterator &it,
-            Config &converterConfig,
-            Config &config);
-
-         Converter2DStruct *_create_converter2d (
-            HashTableStringTemplate<Converter2DStruct> &table,
-            ConfigIterator &it,
-            Config &config);
-
          ConverterStruct *_create_converter (Config &local);
+
          void _init (Config &local);
 
          HashTableStringTemplate<ConverterStruct> _table;

@@ -38,14 +38,22 @@ struct PluginStruct {
 
    void delete_plugin () {
 
-      if (plugin) {
+      if (info && (dmz::PluginDeleteModeDelete == info->get_delete_mode ())) {
 
-         if (log && info) {
+         if (plugin) {
 
-            log->info << "Deleting plugin: " << info->get_name () << dmz::endl;
+            if (log && info) {
+
+               log->info << "Deleting plugin: " << info->get_name () << dmz::endl;
+            }
+
+            delete plugin; plugin = 0;
          }
+      }
+      else if (log) {
 
-         delete plugin; plugin = 0;
+         log->info << "Not Deleting plugin: " << (info ? info->get_name () : "Unknown")
+            << dmz::endl;
       }
    }
 
@@ -62,14 +70,10 @@ struct PluginStruct {
 
       // Info must be delete AFTER plugin so the lib is unloaded After the
       // plugin's destructor is called.
-      if (info && (dmz::PluginDeleteModeDelete == info->get_delete_mode ())) {
+      if (info) {
 
          delete_plugin ();
          delete info; info = 0;
-      }
-      else if (log) {
-
-         log->info << "Not Deleting plugin: " << (info ? info->get_name () : "Unknown") << dmz::endl;
       }
    }
 };

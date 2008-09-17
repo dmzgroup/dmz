@@ -33,14 +33,14 @@ namespace dmz {
          virtual Boolean register_event_observer (
             const EventType &Type,
             const Mask &CallbackMask,
-            EventObserver &Observer) = 0;
+            EventObserver &observer) = 0;
 
          virtual Boolean release_event_observer (
             const EventType &Type,
             const Mask &CallbackMask,
-            EventObserver &Observer) = 0;
+            EventObserver &observer) = 0;
 
-         virtual Boolean release_event_observer_all (EventObserver &Observer) = 0;
+         virtual Boolean release_event_observer_all (EventObserver &observer) = 0;
 
          virtual void dump_event (const Handle EventHandle, EventDump &dump) = 0;
 

@@ -58,7 +58,7 @@ and not equal to the Plugin's name.
 \fn dmz::Boolean dmz::EventModule::register_event_observer (
 const EventType &Type,
 const Mask &CallbackMask,
-EventObserver &Observer)
+EventObserver &observer)
 \brief Registers event observer.
 \details Allows an event observer to register 
 for event creation and close callbacks. The same observer may be passed in multiple times
@@ -73,7 +73,7 @@ given event type once.
 \fn dmz::Boolean dmz::EventModule::release_event_observer (
 const EventType &Type,
 const Mask &CallbackMask,
-EventObserver &Observer)
+EventObserver &observer)
 \brief Release an event observer.
 \details This function will only release the observer from the  defined
 in the \a CallbackMask. If an observer has subscribed to create and close
@@ -84,7 +84,7 @@ continue to receive close callbacks.
 \param[in] observer EventObserver to register.
 \return Returns dmz::True if the event observer was successfully registered.
 
-\fn dmz::Boolean dmz::EventModule::release_event_observer_all (EventObserver &Observer)
+\fn dmz::Boolean dmz::EventModule::release_event_observer_all (EventObserver &observer)
 \brief Releases event observer from all event type subscriptions.
 \param[in] observer EventObserver to be released.
 \return Returns dmz::True if the observer is released from all subscriptions.
@@ -126,134 +126,272 @@ EventType &value)
 \return Returns dmz::True if the event type was returned.
 
 \fn dmz::EventLocalityEnum dmz::EventModule::lookup_locality (const Handle EventHandle)
+\brief Looks up event's locality.
+\details The locality defines whether the event is locally or remotely.
+\param[in] EventHandle dmz::Handle of event.
+\return Returns dmz::EventLocal if event is local. Returns dmz::EventRemote if event
+is remote. Returns dmz::ObjectLocalityUnknown if the event's handle is unknown.
 
 \fn dmz::Boolean dmz::EventModule::store_object_handle (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const Handle Value)
+\brief Stores a Handle with the event.
+\details This attribute is used to associate objects with events. No validation is done
+to confirm that the object handle is for a valid object.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Object's Handle.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_object_handle (
 const Handle EventHandle,
 const Handle AttributeHandle,
 Handle &value)
+\brief Looks up a Handle stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[out] value Object's Handle.
+\return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::EventModule::store_object_type (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const ObjectType &Value)
+\brief Stores an ObjectType with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value ObjectType.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_object_type (
 const Handle EventHandle,
 const Handle AttributeHandle,
 ObjectType &value)
+\brief Looks up an ObjectType stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[out] value ObjectType.
+\return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::EventModule::store_state (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const Mask &Value)
+\brief Stores a state with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Mask containing the state.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_state (
 const Handle EventHandle,
 const Handle AttributeHandle,
 Mask &value)
+\brief Looks up a state stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[out] value Mask containing the state.
+\return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::EventModule::store_time_stamp (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const Float64 &Value)
+\brief Stores a time stamp with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Float64 containing the time stamp.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_time_stamp (
 const Handle EventHandle,
 const Handle AttributeHandle,
 Float64 &value)
+\brief Looks up a time stamp stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] value Float64 containing the time stamp.
+\return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::EventModule::store_position (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const Vector &Value)
+\brief Stores a position with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Vector containing the position.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_position (
 const Handle EventHandle,
 const Handle AttributeHandle,
 Vector &value)
+\brief Looks up a position stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] value Vector containing the position.
+\return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::EventModule::store_orientation (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const Matrix &Value)
+\brief Stores an orientation with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Matrix containing the orientation.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_orientation (
 const Handle EventHandle,
 const Handle AttributeHandle,
 Matrix &value)
+\brief Looks up an orientation stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] value Matrix containing the orientation.
+\return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::EventModule::store_velocity (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const Vector &Value)
+\brief Stores a velocity with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Vector containing the velocity.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_velocity (
 const Handle EventHandle,
 const Handle AttributeHandle,
 Vector &value)
+\brief Looks up a velocity stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] value Vector containing the velocity.
+\return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::EventModule::store_acceleration (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const Vector &Value)
+\brief Stores an accleration with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Vector containing the acceleration.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_acceleration (
 const Handle EventHandle,
 const Handle AttributeHandle,
 Vector &value)
+\brief Looks up an acceleration stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] value Vector containing the acceleration.
+\return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::EventModule::store_scale (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const Vector &Value)
+\brief Stores a scale with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Vector containing the scale.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_scale (
 const Handle EventHandle,
 const Handle AttributeHandle,
 Vector &value)
+\brief Looks up a scale stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] value Vector containing the scale.
+\return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::EventModule::store_vector (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const Vector &Value)
+\brief Stores a generic vector with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Vector containing the generic vector.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_vector (
 const Handle EventHandle,
 const Handle AttributeHandle,
 Vector &value)
+\brief Looks up a generic vector stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] value Vector containing the generic vector.
+\return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::EventModule::store_scalar (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const Float64 Value)
+\brief Stores a scalar with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Float64 containing the scalar.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_scalar (
 const Handle EventHandle,
 const Handle AttributeHandle,
 Float64 &value)
+\brief Looks up a scalar stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] value Float64 containing the scalar.
+\return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::EventModule::store_text (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const String &Value)
+\brief Stores text with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value String containing the text.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_text (
 const Handle EventHandle,
 const Handle AttributeHandle,
 String &value)
+\brief Looks up text stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] value String containing the text.
+\return Returns dmz::True if the attribute was found.
 
 \fn dmz::Boolean dmz::EventModule::store_data (
 const Handle EventHandle,
 const Handle AttributeHandle,
 const Data &Value)
+\brief Stores data with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Data object containing the data.
+\return Returns dmz::True if the attribute was successfully updated.
 
 \fn dmz::Boolean dmz::EventModule::lookup_data (
 const Handle EventHandle,
 const Handle AttributeHandle,
 Data &value)
+\brief Looks up data stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] value Data object containing the data.
+\return Returns dmz::True if the attribute was found.
+
 */

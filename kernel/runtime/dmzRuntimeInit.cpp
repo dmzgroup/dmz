@@ -465,8 +465,8 @@ local_init_time (const Config &Init, RuntimeContext *context, Log *log) {
 
 /*!
 
-\ingroup Runtime
 \brief Initialized the runtime types, state, and time.
+\ingroup Runtime
 \details Defined in dmzRuntimeInit.h. \n
 An XML example for defining the various runtime types and time settings:
 \code
@@ -478,26 +478,21 @@ An XML example for defining the various runtime types and time settings:
       <frequency value="60"/>
    </time>
 
-   <states>
-      <!-- State definition -->
-      <state name="State Name"/>
-   </states>
+   <!-- State definition -->
+   <state name="State Name"/>
 
-   <types>
-      <!-- dmz::ObjectType definition -->
-      <object name="Object Name" parent="Parent Name">
-         <!-- Object data -->
-      </object>
+   <!-- dmz::ObjectType definition -->
+   <object-type name="Object Name" parent="Parent Name">
+      <!-- Object data -->
+   </object-type>
 
-      <!-- dmz::EventType definition -->
-      <event name="Event Name" parent="Parent Name">
-         <!-- Event data -->
-      </event>
+   <!-- dmz::EventType definition -->
+   <event-type name="Event Name" parent="Parent Name">
+      <!-- Event data -->
+   </event-type>
 
-      <!-- dmz::Message definition -->
-      <message name="Message Name" parent="Parent Name"/>
-   </types>
-
+   <!-- dmz::Message definition -->
+   <message name="Message Name" parent="Parent Name"/>
 </runtime>
 </dmz>
 \endcode

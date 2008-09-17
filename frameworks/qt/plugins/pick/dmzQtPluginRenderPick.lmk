@@ -1,0 +1,7 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginRenderPick"
+lmk.set_type "plugin"
+lmk.add_files {"dmzQtPluginRenderPick.cpp",}
+lmk.add_libs {"dmzKernel", "dmzRenderUtil",}
+lmk.add_preqs {"dmzRenderFramework", "dmzObjectFramework","dmzQtFramework",}
+lmkQt.add_libs {"QtCore", "QtGui",}

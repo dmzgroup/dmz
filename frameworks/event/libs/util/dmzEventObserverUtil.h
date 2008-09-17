@@ -38,7 +38,7 @@ namespace dmz {
             const EventLocalityEnum Locality);
 
       protected:
-         EventObserverUtil (const PluginInfo &Info, const Config &Data);
+         EventObserverUtil (const PluginInfo &Info, const Config &Init);
          ~EventObserverUtil ();
 
       private:

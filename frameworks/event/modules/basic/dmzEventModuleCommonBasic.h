@@ -16,6 +16,7 @@ namespace dmz {
          public EventModuleCommon {
 
       public:
+         //! \cond
          EventModuleCommonBasic (const PluginInfo &Info, Config &local);
          ~EventModuleCommonBasic ();
 
@@ -71,6 +72,7 @@ namespace dmz {
          Handle _sourceHandle;
          Handle _targetHandle;
          Handle _munitionsHandle;
+         //! \endcond
 
       private:
          EventModuleCommonBasic ();

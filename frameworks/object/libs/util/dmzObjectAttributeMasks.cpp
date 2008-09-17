@@ -3,6 +3,15 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectMaskConsts.h>
 
+/*!
+
+\file dmzObjectAttributeMasks.h
+\ingroup Object
+\brief Defines ObjectObserver attribute subscription masks.
+\sa dmz::ObjectObserverUtil::activate_object_attribute()
+
+*/
+
 //! \cond
 const dmz::Mask dmz::ObjectCreateMask (0, dmz::ObjectAttributeCreateObject);
 const dmz::Mask dmz::ObjectDestroyMask (0, dmz::ObjectAttributeDestroyObject);

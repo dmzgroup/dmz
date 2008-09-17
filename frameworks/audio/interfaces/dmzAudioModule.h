@@ -21,8 +21,8 @@ namespace dmz {
             const Plugin *PluginPtr,
             const String &PluginName = "");
 
-         virtual Handle create_audio_handle (const String &FileName) = 0;
-         virtual Boolean destroy_audio_handle (const Handle AudioHandle) = 0;
+         virtual Handle create_sound (const String &FileName) = 0;
+         virtual Boolean destroy_sound (const Handle AudioHandle) = 0;
 
          virtual Handle play_sound (
             const Handle AudioHandle,
@@ -30,15 +30,15 @@ namespace dmz {
             const SoundAttributes &Attributes) = 0;
 
          virtual Boolean update_sound (
-            const Handle AudioHandle,
+            const Handle SoundHandle,
             const SoundAttributes &Attributes) = 0;
 
          virtual Boolean lookup_sound (
-            const Handle AudioHandle,
+            const Handle SoundHandle,
             SoundInit &init,
             SoundAttributes &attributes) = 0;
 
-         virtual Boolean stop_sound (const Handle AudioHandle) = 0;
+         virtual Boolean stop_sound (const Handle SoundHandle) = 0;
 
          virtual Boolean set_mute_all_state (const Boolean Mute) = 0;
          virtual Boolean get_mute_all_state (Boolean &mute) = 0;

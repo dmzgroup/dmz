@@ -6,6 +6,20 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EventPluginDump
+\brief Prints event attribute values when an event is created.
+\ingroup Event
+\details The plugin is useful for debugging events. Any time an
+event is created in the EventModule, that event is sent to the
+plugin's Log. This class should not be create explicitly but instead should be loaded
+as a Plugin by the runtime. This Plugin currently has no configuration parameters.
+
+*/
+
+
+//! \cond
 dmz::EventPluginDump::EventPluginDump (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       EventObserverUtil (Info, local),
@@ -251,7 +265,7 @@ dmz::EventPluginDump::_init (Config &local) {
    _rootEventType = _defs.get_root_event_type ();
    activate_event_callback (_rootEventType, EventCloseMask);
 }
-
+//! \endcond
 
 extern "C" {
 

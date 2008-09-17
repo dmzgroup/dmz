@@ -8,6 +8,14 @@
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 
+/*!
+
+\class dmz::EventObserverUtil
+\ingroup Event
+\brief Event observer utility class.
+
+*/
+
 namespace {
 
 struct typeStruct {
@@ -30,10 +38,10 @@ struct dmz::EventObserverUtil::State {
    Definitions defs;
 
    State (
-         const Config &Data,
+         const Config &Init,
          const String &LogName,
          RuntimeContext *context) :
-         EventModuleName (config_to_string ("module.event.name", Data)),
+         EventModuleName (config_to_string ("module.event.name", Init)),
          module (0),
          log (LogName + ".EventObserverUtil", context),
          defs (context, &log) {
@@ -66,15 +74,34 @@ struct dmz::EventObserverUtil::State {
 };
 
 
+/*!
+
+\brief Constructor
+\details The EventObserverUtil uses the Config object passed in to specify which
+EventModule to register with. This is done by giving the name of the EventModule. The
+format is as follows:
+\code
+<module>
+   <event name="Event Module Name"/>
+</module>
+\endcode
+If the EventModule name is not specified, the observer will register with the first
+EventModule that discovers it.
+\param[in] Info PluginInfo used to initialize the Plugin that is derived from this class.
+\param[in] Init Config used to initialize the class. This is most often the Config object
+passed in as local to the Plugin.
+
+*/
 dmz::EventObserverUtil::EventObserverUtil (
       const PluginInfo &Info,
-      const Config &Data) :
+      const Config &Init) :
       EventObserver (Info),
-      __state (*(new State (Data, Info.get_name (), Info.get_context ()))) {
+      __state (*(new State (Init, Info.get_name (), Info.get_context ()))) {
 
 }
 
 
+//! Destructor.
 dmz::EventObserverUtil::~EventObserverUtil () {
 
    if (__state.module) { remove_event_module ("", *(__state.module)); }
@@ -82,6 +109,17 @@ dmz::EventObserverUtil::~EventObserverUtil () {
 }
 
 
+/*!
+
+\brief Activates callbacks for a specific event type.
+\param[in] EventTypeName String containing the name of the EventType callback to
+activate.
+\param[in] CallbackMask Mask containing the callbacks to activate. The masks defined
+in dmzEventCallbackMasks.h should be used to compose \a CallbackMask.
+\return Returns the EventType.
+\sa EventModule
+
+*/
 dmz::EventType
 dmz::EventObserverUtil::activate_event_callback (
       const String &EventTypeName,
@@ -98,6 +136,17 @@ dmz::EventObserverUtil::activate_event_callback (
 }
 
 
+/*!
+
+\brief Activates callbacks for a specific event type.
+\param[in] Type EventType of callback to activate.
+\param[in] CallbackMask Mask containing the callbacks to activate. The masks defined
+in dmzEventCallbackMasks.h should be used to compose \a CallbackMask.
+\note To subscribe to all events, Use the root event type which can be obtained from
+the dmz::Definitions class.
+\sa EventModule \n dmz::Definitions::get_root_event_type()
+
+*/
 void
 dmz::EventObserverUtil::activate_event_callback (
       const EventType &Type,
@@ -115,6 +164,16 @@ dmz::EventObserverUtil::activate_event_callback (
 }
 
 
+/*!
+
+\brief Deactivates callbacks for a specific event type.
+\param[in] Type EventType of callback to deactivate.
+\param[in] CallbackMask Mask containing the callbacks to deactivate. The masks defined
+in dmzEventCallbackMasks.h should be used to compose \a CallbackMask.
+\note The EventType must be the exact type used to activate callbacks. Sub EventTypes may
+not be used to deactivate callbacks to subtypes of activate EventTypes.
+
+*/
 void
 dmz::EventObserverUtil::deactivate_event_callback (
       const EventType &Type,
@@ -126,6 +185,13 @@ dmz::EventObserverUtil::deactivate_event_callback (
 }
 
 
+/*!
+
+\brief Gets event module with which the observer is registered.
+\return Returns a pointer to the EventModule with which the observer is registered.
+Returns NULL if the observer is not registered with any EventModule.
+
+*/
 dmz::EventModule *
 dmz::EventObserverUtil::get_event_module () { return __state.module; }
 

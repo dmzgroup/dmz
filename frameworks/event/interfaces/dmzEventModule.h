@@ -8,9 +8,10 @@
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
 
-#define DMZ_EVENT_MODULE_INTERFACE_NAME "EventModuleInterface"
-
 namespace dmz {
+
+   //! dmz::EventModule interface name.
+   const char EventModuleInterfaceName[] = "EventModuleInterface";
 
    class Data;
    class EventDump;
@@ -203,7 +204,7 @@ inline dmz::EventModule *
 dmz::EventModule::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return  (EventModule *)lookup_rtti_interface (
-      DMZ_EVENT_MODULE_INTERFACE_NAME,
+      EventModuleInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -213,14 +214,14 @@ inline
 dmz::EventModule::EventModule (const PluginInfo &Info) :
       __Info (Info) {
 
-   store_rtti_interface (DMZ_EVENT_MODULE_INTERFACE_NAME, __Info, (void *)this);
+   store_rtti_interface (EventModuleInterfaceName, __Info, (void *)this);
 }
 
 
 inline
 dmz::EventModule::~EventModule () {
 
-   remove_rtti_interface (DMZ_EVENT_MODULE_INTERFACE_NAME, __Info);
+   remove_rtti_interface (EventModuleInterfaceName, __Info);
 }
 
 #endif // DMZ_EVENT_MODULE_DOT_H

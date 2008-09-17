@@ -160,17 +160,60 @@ const Handle PrevAttributeObjectHandle)
 \param[in] PrevAttributeIdentity Attribute object's previous UUID.
 \param[in] PrevAttributeObjectHandle Attribute object's previous unique runtime handle.
 
-\fn void dmz::ObjectObserver::update_object_type (
+\fn void dmz::ObjectObserver::update_object_counter (
+const UUID &Identity,
+const Handle ObjectHandle,
+const Handle AttributeHandle,
+const Int64 Value,
+const Int64 *PreviousValue)
+\brief Update object's counter.
+\param[in] Identity Object's UUID.
+\param[in] ObjectHandle Objects unique runtime handle.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Object's current counter value.
+\param[in] PreviousValue Pointer to previous counter value.
+\note \a PreviousValue will be NULL if the there is no previous value.
+
+\fn void dmz::ObjectObserver::update_object_counter_minimum (
+const UUID &Identity,
+const Handle ObjectHandle,
+const Handle AttributeHandle,
+const Int64 Value,
+const Int64 *PreviousValue)
+\brief Update object's counter minimum.
+\param[in] Identity Object's UUID.
+\param[in] ObjectHandle Objects unique runtime handle.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Object's current minimum counter value.
+\param[in] PreviousValue Pointer to previous minimum counter value.
+\note \a PreviousValue will be NULL if the there is no previous value.
+
+
+\fn void dmz::ObjectObserver::update_object_counter_maximum (
+const UUID &Identity,
+const Handle ObjectHandle,
+const Handle AttributeHandle,
+const Int64 Value,
+const Int64 *PreviousValue)
+\brief Update object's counter maximum.
+\param[in] Identity Object's UUID.
+\param[in] ObjectHandle Objects unique runtime handle.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Object's current maximum counter value.
+\param[in] PreviousValue Pointer to previous maximum counter value.
+\note \a PreviousValue will be NULL if the there is no previous value.
+
+\fn void dmz::ObjectObserver::update_object_alternate_type (
 const UUID &Identity,
 const Handle ObjectHandle,
 const Handle AttributeHandle,
 const ObjectType &Value,
 const ObjectType *PreviousValue)
-\brief Update object type callback.
+\brief Update alternate object type callback.
 \param[in] Identity Object's UUID.
 \param[in] ObjectHandle Objects unique runtime handle.
 \param[in] AttributeHandle Attribute handle.
-\param[in] Value Current object type.
+\param[in] Value Object's current alternate type.
 \param[in] PreviousValue Pointer to previous object type.
 \note \a PreviousValue will be NULL if the there is no previous value.
 

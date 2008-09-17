@@ -16,6 +16,7 @@ namespace dmz {
          public EventDump {
 
       public:
+         //! \cond
          EventPluginDump (const PluginInfo &Info, Config &local);
          ~EventPluginDump ();
 
@@ -118,6 +119,7 @@ namespace dmz {
          Handle _defaultHandle;
 
          EventType _rootEventType;
+         //! \endcond
 
       private:
          EventPluginDump ();

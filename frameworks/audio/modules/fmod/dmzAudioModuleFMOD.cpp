@@ -111,7 +111,7 @@ dmz::AudioModuleFMOD::update_time_slice (const Float64 TimeDelta) {
 
 // AudioModule Interface
 dmz::Handle
-dmz::AudioModuleFMOD::create_audio_handle (const String &FileName) {
+dmz::AudioModuleFMOD::create_sound (const String &FileName) {
 
    Handle result (0);
    String absPath;
@@ -172,7 +172,7 @@ dmz::AudioModuleFMOD::create_audio_handle (const String &FileName) {
 
 
 dmz::Boolean
-dmz::AudioModuleFMOD::destroy_audio_handle (const Handle AudioHandle) {
+dmz::AudioModuleFMOD::destroy_sound (const Handle AudioHandle) {
 
    Boolean result (False);
 

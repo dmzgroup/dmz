@@ -85,7 +85,7 @@ format is as follows:
 </module>
 \endcode
 If the ObjectModule name is not specified, the observer will register with the first
-ObjectModule the discovers it.
+ObjectModule that discovers it.
 \param[in] Info PluginInfo used to initialize the Plugin that is derived from this class.
 \param[in] Init Config used to initialize the class. This is most often the Config object
 passed in as local to the Plugin.

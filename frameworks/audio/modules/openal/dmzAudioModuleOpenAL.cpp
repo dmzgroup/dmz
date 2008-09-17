@@ -121,7 +121,7 @@ dmz::AudioModuleOpenAL::update_time_slice (const Float64 TimeDelta) {
 
 // Audio Module Interface
 dmz::Handle
-dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
+dmz::AudioModuleOpenAL::create_sound (const String &FileName) {
 
    Handle result (0); 
    String absPath;
@@ -198,7 +198,7 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
                   _log.error << "Unable to bind file: " << FileName
                      << " to OpenAL buffer." << endl;
 
-                  destroy_audio_handle (bs->Handle.get_runtime_handle ());
+                  destroy_sound (bs->Handle.get_runtime_handle ());
                   bs = 0;
                }
                else {
@@ -220,7 +220,7 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
                      << " BPS: " << BPS << endl;
                }
 
-               destroy_audio_handle (bs->Handle.get_runtime_handle ());
+               destroy_sound (bs->Handle.get_runtime_handle ());
                bs = 0;
             }
          }
@@ -238,7 +238,7 @@ dmz::AudioModuleOpenAL::create_audio_handle (const String &FileName) {
 
 
 dmz::Boolean
-dmz::AudioModuleOpenAL::destroy_audio_handle (const Handle AudioHandle) {
+dmz::AudioModuleOpenAL::destroy_sound (const Handle AudioHandle) {
 
    Boolean result (False);
 

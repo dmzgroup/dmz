@@ -182,6 +182,12 @@ dmz::ObjectModule::activate_object().
 should also be cloned.
 \return Returns the dmz::Handle of the newly cloned object.
 
+\fn dmz::ObjectType dmz::ObjectModule::lookup_object_type (const Handle ObjectHandle)
+\brief Looks up object's type.
+\param[in] ObjectHandle dmz::Handle of object.
+\return Returns the dmz::ObjectType of the object. Returns an invalid dmz::ObjectType
+if the object does not exist.
+
 \fn dmz::Boolean dmz::ObjectModule::store_uuid (
 const dmz::Handle ObjectHandle,
 const dmz::UUID &Value)
@@ -322,6 +328,101 @@ object for a specific attribute handle.
 sub links.
 \return Returns dmz::True if the object has sub links.
 
+\fn dmz::Boolean dmz::ObjectModule::store_counter (
+const Handle ObjectHandle,
+const Handle AttributeHandle,
+const Int64 Value)
+\brief Stores counter value.
+\note If the \b Value is greater than the maximum value or
+less than the minimum value, it is clamped to the limit.
+\param[in] ObjectHandle dmz::Handle of object.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Object's counter value.
+\return Returns dmz::True if the object's counter was set.
+
+\fn dmz::Boolean dmz::ObjectModule::lookup_counter (
+const Handle ObjectHandle,
+const Handle AttributeHandle,
+Int64 &value)
+\brief Looks up counter value.
+\param[in] ObjectHandle dmz::Handle of the object.
+\param[in] AttributeHandle Attribute handle.
+\param[out] value Object's counter value.
+\return Returns dmz::True if the object's counter was found.
+
+\fn dmz::Int64 dmz::ObjectModule::add_to_counter (
+const Handle ObjectHandle,
+const Handle AttributeHandle,
+const Int64 Value)
+\brief Adds value to the counter.
+\details If the added value takes the counter over the maximum or under the minimum,
+the counter is ether clamped is the rollover state is dmz::False or the value rollover
+if the rollover state is set to dmz::True.
+\param[in] ObjectHandle dmz::Handle of the object.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Value to add the object's counter.
+\return Returns the new value of the counter.
+
+\fn dmz::Boolean dmz::ObjectModule::store_counter_minimum (
+const Handle ObjectHandle,
+const Handle AttributeHandle,
+const Int64 Value)
+\brief Stores the minimum value the counter may have.
+\param[in] ObjectHandle dmz::Handle of the object.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Object's minimum counter value.
+\return Returns dmz::True if the counters minimum was set.
+
+\fn dmz::Boolean dmz::ObjectModule::lookup_counter_minimum (
+const Handle ObjectHandle,
+const Handle AttributeHandle,
+Int64 &value)
+\brief Looks up the minimum value the counter may have.
+\param[in] ObjectHandle dmz::Handle of the object.
+\param[in] AttributeHandle Attribute handle.
+\param[out] value Object's minimum counter value.
+\return Returns dmz::True if the counters minimum was found.
+
+\fn dmz::Boolean dmz::ObjectModule::store_counter_maximum (
+const Handle ObjectHandle,
+const Handle AttributeHandle,
+const Int64 Value)
+\brief Stores the maximum value the counter may have.
+\param[in] ObjectHandle dmz::Handle of the object.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Object's maximum counter value.
+\return Returns dmz::True if the counters maximum was set.
+
+\fn dmz::Boolean dmz::ObjectModule::lookup_counter_maximum (
+const Handle ObjectHandle,
+const Handle AttributeHandle,
+Int64 &value)
+\brief Looks up the maximum value the counter may have.
+\param[in] ObjectHandle dmz::Handle of the object.
+\param[in] AttributeHandle Attribute handle.
+\param[out] value Object's maximum counter value.
+\return Returns dmz::True if the counters maximum was found.
+
+\fn dmz::Boolean dmz::ObjectModule::store_counter_rollover (
+const Handle ObjectHandle,
+const Handle AttributeHandle,
+const Boolean Value)
+\brief Stores the rollover state of the counter.
+\param[in] ObjectHandle dmz::Handle of the object.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value The rollover state.
+\return Returns dmz::True if the rollover state was updated.
+
+\fn dmz::Boolean dmz::ObjectModule::lookup_counter_rollover (
+const Handle ObjectHandle,
+const Handle AttributeHandle,
+Boolean &value)
+\brief Looks up the rollover state of the counter.
+\param[in] ObjectHandle dmz::Handle of the object.
+\param[in] AttributeHandle Attribute handle.
+\param[out] value Contains the counter's rollover state.
+\return Returns dmz::True if the counters rollover state was found.
+
 \fn dmz::Boolean dmz::ObjectModule::store_locality (
 const dmz::Handle ObjectHandle,
 const dmz::ObjectLocalityEnum Locality)
@@ -346,17 +447,17 @@ is remote. Returns dmz::ObjectLocalityUnknown if the object's handle is unknown.
 \return Returns dmz::ObjectLocal if object is local. Returns dmz::ObjectRemote if object
 is remote. Returns dmz::ObjectLocalityUnknown if the UUID is unknown.
 
-\fn dmz::Boolean dmz::ObjectModule::store_object_type (
+\fn dmz::Boolean dmz::ObjectModule::store_alternate_object_type (
 const dmz::Handle ObjectHandle,
 const dmz::Handle AttributeHandle,
 const dmz::ObjectType &Value)
 \brief Stores an ObjectType with the object.
 \param[in] ObjectHandle dmz::Handle of object.
 \param[in] AttributeHandle Attribute handle.
-\param[in] Value Object's new type value.
+\param[in] Value Object's alternate type value.
 \return Returns dmz::True if the attribute was successfully updated.
 
-\fn dmz::Boolean dmz::ObjectModule::lookup_object_type (
+\fn dmz::Boolean dmz::ObjectModule::lookup_alternate_object_type (
 const dmz::Handle ObjectHandle,
 const dmz::Handle AttributeHandle,
 dmz::ObjectType &value)

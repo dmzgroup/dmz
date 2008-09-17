@@ -8,6 +8,18 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::EventModuleCommonBasic
+\ingroup Event
+\brief Basic EventModuleCommon implementation.
+\details This provides a basic implementation of the EventModule. At this time the
+EventModuleCommonBasic has no configuration parameters.
+\sa EventModuleCommon
+
+*/
+
+//! \cond
 dmz::EventModuleCommonBasic::EventModuleCommonBasic (
       const PluginInfo &Info,
       Config &local) :
@@ -258,6 +270,7 @@ dmz::EventModuleCommonBasic::_init (Config &local) {
    defs.lookup_event_type (EventDetonationName, _detonationType);
    defs.lookup_event_type (EventCollisionName, _collisionType);
 }
+//! \endcond
 
 
 extern "C" {

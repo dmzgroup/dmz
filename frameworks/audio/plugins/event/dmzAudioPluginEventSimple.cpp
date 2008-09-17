@@ -79,7 +79,7 @@ dmz::AudioPluginEventSimple::discover_plugin (
 
             while (es) {
 
-               es->sound = _audioMod->create_audio_handle (es->File);
+               es->sound = _audioMod->create_sound (es->File);
 
                if (!es->sound) {
 

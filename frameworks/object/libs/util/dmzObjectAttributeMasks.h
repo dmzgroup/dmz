@@ -3,15 +3,6 @@
 
 #include <dmzObjectUtilExport.h>
 #include <dmzTypesMask.h>
-/*!
-
-\file dmzObjectAttributeMasks.h
-\ingroup Object
-\brief Defines ObjectObserver attribute subscription masks.
-\sa dmz::ObjectObserverUtil::activate_object_attribute()
-
-*/
-
 
 namespace dmz {
 

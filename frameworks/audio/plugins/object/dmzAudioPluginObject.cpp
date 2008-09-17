@@ -172,19 +172,19 @@ dmz::AudioPluginObject::discover_plugin (
 
                if (current->activateHandle) {
 
-                  _audioMod->destroy_audio_handle (current->activateHandle);
+                  _audioMod->destroy_sound (current->activateHandle);
                   current->activateHandle = 0;
                }
 
                if (current->loopHandle) {
 
-                  _audioMod->destroy_audio_handle (current->loopHandle);
+                  _audioMod->destroy_sound (current->loopHandle);
                   current->loopHandle = 0;
                }
 
                if (current->deactivateHandle) {
 
-                  _audioMod->destroy_audio_handle (current->deactivateHandle);
+                  _audioMod->destroy_sound (current->deactivateHandle);
                   current->deactivateHandle = 0;
                }
 
@@ -545,17 +545,17 @@ dmz::AudioPluginObject::_lookup_sound_handles (SoundDefStruct &ss) {
 
       if (ss.activateName) {
 
-         ss.activateHandle = _audioMod->create_audio_handle (ss.activateName);
+         ss.activateHandle = _audioMod->create_sound (ss.activateName);
       }
 
       if (ss.deactivateName) {
 
-         ss.deactivateHandle = _audioMod->create_audio_handle (ss.deactivateName);
+         ss.deactivateHandle = _audioMod->create_sound (ss.deactivateName);
       }
 
       if ( ss.loopName) {
 
-         ss.loopHandle = _audioMod->create_audio_handle (ss.loopName);
+         ss.loopHandle = _audioMod->create_sound (ss.loopName);
       }
    }
 }

@@ -11,6 +11,18 @@
 #include <dmzTypesString.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::EventModuleBasic
+\ingroup Event
+\brief Basic EventModule implementation.
+\details This provides a basic implementation of the EventModule. At this time the
+EventModuleBasic has no configuration parameters.
+\sa EventModule
+
+*/
+
+//! \cond
 namespace {
 
 static const dmz::Mask CreateMask (0, dmz::EventCallbackCreateEvent);
@@ -1251,6 +1263,8 @@ dmz::EventModuleBasic::_init (Config &local) {
    _eventTTL = config_to_float64 ("ttl.value", local, 1.0);
    _maxEvents = config_to_int32 ("max.value", local, 0);
 }
+
+//! \endcond
 
 
 extern "C" {

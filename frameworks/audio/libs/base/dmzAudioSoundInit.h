@@ -6,10 +6,11 @@
 
 namespace dmz {
 
+   //! Initialization parameter types.
    enum SoundInitEnum {
-      SoundLooped,
-      SoundRelative,
-      SoundMaxEnumValue,
+      SoundLooped, //!< Looped sound source.
+      SoundRelative, //!< Relative to the listener sound source.
+      SoundMaxEnumValue, //!< Maximum parameter value.
    };
 
    class DMZ_AUDIO_BASE_LINK_SYMBOL SoundInit {

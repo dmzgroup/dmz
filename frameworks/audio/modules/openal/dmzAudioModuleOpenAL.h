@@ -47,8 +47,8 @@ namespace dmz {
          virtual void update_time_slice (const Float64 TimeDelta);
 
          // Audio Module Interface
-         virtual Handle create_audio_handle (const String &FileName);
-         virtual Boolean destroy_audio_handle (const Handle AudioHandle);
+         virtual Handle create_sound (const String &FileName);
+         virtual Boolean destroy_sound (const Handle AudioHandle);
 
          virtual Handle play_sound (
             const Handle AudioHandle,

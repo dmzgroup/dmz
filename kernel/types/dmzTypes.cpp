@@ -48,17 +48,29 @@ static const dmz::ArrayFloat32 LocalWorkArroundArrayFloat32;
 static const dmz::ArrayFloat64 LocalWorkArroundArrayFloat64;
 #endif
 
+//! Minimum Int8 Value
 const dmz::Int8 dmz::MinInt8 = SCHAR_MIN;
+//! Maximum Int8 Value
 const dmz::Int8 dmz::MaxInt8 = SCHAR_MAX;
+//! Maximum UInt8 Value
 const dmz::UInt8 dmz::MaxUInt8 = UCHAR_MAX;
+//! Minimum Int16 Value
 const dmz::Int16 dmz::MinInt16 = SHRT_MIN;
+//! Maximum Int16 Value
 const dmz::Int16 dmz::MaxInt16 = SHRT_MAX;
+//! Maximum UInt16 Value
 const dmz::UInt16 dmz::MaxUInt16 = USHRT_MAX;
+//! Minimum Int32 Value
 const dmz::Int32 dmz::MinInt32 = LONG_MIN;
+//! Maximum Int32 Value
 const dmz::Int32 dmz::MaxInt32 = LONG_MAX;
+//! Maximum UInt32 Value
 const dmz::UInt32 dmz::MaxUInt32 = ULONG_MAX;
+//! Minimum Int64 Value
 const dmz::Int64 dmz::MinInt64 = LLONG_MIN;
+//! Maximum Int64 Value
 const dmz::Int64 dmz::MaxInt64 = LLONG_MAX;
+//! Maximum UInt64 Value
 const dmz::UInt64 dmz::MaxUInt64 = ULLONG_MAX;
 
 //! Constant true value.

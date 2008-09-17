@@ -128,7 +128,7 @@ audio_create_handle (lua_State *L) {
 
    if (audio) {
 
-      lua_create_handle (L, audio->create_audio_handle (FileName));
+      lua_create_handle (L, audio->create_sound (FileName));
       result = 1;
    }
 
@@ -150,7 +150,7 @@ audio_destroy_handle (lua_State *L) {
 
    if (audio && *AudioHandle) {
 
-      lua_pushboolean (L, audio->destroy_audio_handle (*AudioHandle) ? 1 : 0);
+      lua_pushboolean (L, audio->destroy_sound (*AudioHandle) ? 1 : 0);
       result = 1;
    }
 

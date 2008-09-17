@@ -17,7 +17,9 @@
 
 namespace dmz {
 
+   //! \cond
    typedef HashTableHandleTemplate<EventObserver> EventObserverStruct;
+   //! \endcond
 
    class EventModuleBasic :
          public Plugin,
@@ -25,6 +27,7 @@ namespace dmz {
          public EventModule {
 
       public:
+         //! \cond
          EventModuleBasic (const PluginInfo &Info, Config &local);
          ~EventModuleBasic ();
 
@@ -311,6 +314,7 @@ namespace dmz {
          HashTableHandleTemplate<SubscriptionStruct> _subscriptionTable;
          HashTableHandleTemplate<EventObserverStruct> _createTable;
          HashTableHandleTemplate<EventObserverStruct> _closeTable;
+         //! \endcond
 
       private:
          EventModuleBasic ();
@@ -320,6 +324,7 @@ namespace dmz {
 };
 
 
+//! \cond
 inline dmz::EventModuleBasic::EventStruct *
 dmz::EventModuleBasic::_lookup_event (const Handle EventHandle) {
 
@@ -330,5 +335,6 @@ dmz::EventModuleBasic::_lookup_event (const Handle EventHandle) {
 
    return _eventCache;
 }
+//! \endcond
 
 #endif // DMZ_EVENT_MODULE_BASIC_DOT_H

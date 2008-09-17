@@ -8,6 +8,7 @@
 
 namespace dmz {
 
+   //! dmz::EventModuleCommon interface name.
    const char EventModuleCommonInterfaceName[] = "EventModuleCommonInterface";
 
    class EventModuleCommon {

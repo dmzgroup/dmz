@@ -3,6 +3,14 @@
 
 #include <dmzTypesBase.h>
 
+/*!
+
+\file dmzEventConsts.h
+\ingroup Event
+\brief Contains event enumeration, attribute names, and event type names.
+
+*/
+
 namespace dmz {
 
 //! \addtogroup Event

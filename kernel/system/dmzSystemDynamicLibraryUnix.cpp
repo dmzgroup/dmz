@@ -61,11 +61,7 @@ dmz::DynamicLibrary::DynamicLibrary (
       const String &LibName,
       const DynamicLibraryModeEnum LibMode) : _state (*(new State (LibMode))) {
 
-#if defined(__APPLE__) || defined(MACOSX)
-   const int Mode (RTLD_LOCAL | RTLD_LAZY);
-#else
-   const int Mode (RTLD_GLOBAL | RTLD_LAZY);
-#endif
+   const int Mode (RTLD_LOCAL | RTLD_NOW); // Note: RTLD_LAZY seems to cause RTTI problems under Linux
 
    _state.handle = dlopen (LibName.get_buffer (), Mode);
    _state.name = LibName;

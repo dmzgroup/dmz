@@ -3,6 +3,7 @@
 
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeResources.h>
 #include <dmzRuntimeTimeSlice.h>
 
 #include <osg/Camera>
@@ -35,11 +36,12 @@ namespace dmz {
 
          Log _log;
 
-         String _imageFile;
+         String _imageResource;
 
          osg::ref_ptr<osg::Camera> _camera;
          osg::ref_ptr<osg::Camera> _masterCamera;
          RenderModuleCoreOSG *_core;
+         Resources _rc;
 
       private:
          RenderPluginLogoOSG ();

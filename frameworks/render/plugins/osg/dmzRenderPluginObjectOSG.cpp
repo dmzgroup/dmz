@@ -16,6 +16,7 @@ dmz::RenderPluginObjectOSG::RenderPluginObjectOSG (
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
+      _rc (Info),
       _core (0) {
 
    _noModel.model = new osg::Group;
@@ -203,7 +204,7 @@ dmz::RenderPluginObjectOSG::_create_def_struct (const ObjectType &Type) {
 
             while (modelList.get_next_config (it, model)) {
 
-               const String FileName (config_to_string ("file", model));
+               const String ResourceName (config_to_string ("resource", model));
                const Boolean NoModel (config_to_boolean ("none", model));
                Mask state;
                String stateName;
@@ -213,7 +214,7 @@ dmz::RenderPluginObjectOSG::_create_def_struct (const ObjectType &Type) {
 
                if (!StateNameFound || state) {
 
-                  ModelStruct *ms = (NoModel ? &_noModel : _load_model (FileName));
+                  ModelStruct *ms = (NoModel ? &_noModel : _load_model (ResourceName));
 
                   if (ms) {
 
@@ -254,10 +255,10 @@ dmz::RenderPluginObjectOSG::_create_def_struct (const ObjectType &Type) {
 
 
 dmz::RenderPluginObjectOSG::ModelStruct *
-dmz::RenderPluginObjectOSG::_load_model (const String &FileName) {
+dmz::RenderPluginObjectOSG::_load_model (const String &ResourceName) {
 
    ModelStruct *result (0);
-   String foundFile (_core ? _core->find_file (FileName) : "");
+   String foundFile (_rc.find_file (ResourceName));
 
    if (foundFile) {
 
@@ -270,18 +271,19 @@ dmz::RenderPluginObjectOSG::_load_model (const String &FileName) {
 
          if (result->model.valid ()) {
 
-            _log.info << "Loaded file: " << foundFile << " (" << FileName << ")" << endl;
+            _log.info << "Loaded file: " << foundFile << " (" << ResourceName << ")"
+               << endl;
             _modelTable.store (foundFile, result);
          }
          else {
 
             delete result; result = 0;
-            _log.error << "Failed loading file: " << foundFile << " (" << FileName << ")"
-               << endl;
+            _log.error << "Failed loading file: " << foundFile << " (" << ResourceName
+               << ")" << endl;
          }
       }
    }
-   else { _log.error << "Failed finding file: " << FileName << endl; }
+   else { _log.error << "Failed finding resource: " << ResourceName << endl; }
 
    return result;
 }

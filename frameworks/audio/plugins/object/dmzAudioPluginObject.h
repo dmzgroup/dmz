@@ -5,6 +5,7 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeResources.h>
 #include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesHashTableStringTemplate.h>
@@ -169,6 +170,7 @@ namespace dmz {
 
          Log _log;
          Definitions _defs;
+         Resources _rc;
 
          Handle _defaultHandle;
 

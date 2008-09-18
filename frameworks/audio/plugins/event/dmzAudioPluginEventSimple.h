@@ -5,6 +5,7 @@
 #include <dmzRuntimeEventType.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeResources.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 
 namespace dmz {
@@ -51,6 +52,7 @@ namespace dmz {
          Handle _defaultEventHandle;
 
          HashTableHandleTemplate<EventStruct> _eventTable;
+         Resources _rc;
          //! \endcond
 
       private:

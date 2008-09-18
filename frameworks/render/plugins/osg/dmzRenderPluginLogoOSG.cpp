@@ -22,7 +22,8 @@ dmz::RenderPluginLogoOSG::RenderPluginLogoOSG (const PluginInfo &Info, Config &l
       Plugin (Info),
       TimeSlice (Info),
       _log (Info),
-      _core (0) {
+      _core (0),
+      _rc (Info) {
 
    _init (local);
 }
@@ -104,9 +105,9 @@ dmz::RenderPluginLogoOSG::update_time_slice (const Float64 TimeDelta) {
 void
 dmz::RenderPluginLogoOSG::_create_logo () {
 
-   const String FoundFile (_core ? _core->find_file (_imageFile) : "");
+   const String FoundFile (_rc.find_file (_imageResource));
 
-   osg::Image *img = osgDB::readImageFile (FoundFile.get_buffer ());
+   osg::Image *img = (FoundFile ? osgDB::readImageFile (FoundFile.get_buffer ()) : 0);
 
    if (img) {
 
@@ -175,13 +176,21 @@ dmz::RenderPluginLogoOSG::_create_logo () {
          if (s) { s->addChild (_camera.get ()); }
       }
    }
+   else if (FoundFile) {
+
+      _log.error << "Unable to load overlay image: " << FoundFile << endl;
+   }
+   else {
+
+      _log.error << "Unable to find resource: " << _imageResource << endl;
+   }
 }
 
 
 void
 dmz::RenderPluginLogoOSG::_init (Config &local) {
 
-   _imageFile = config_to_string ("image.file", local, "DMZ.png");
+   _imageResource = config_to_string ("image.resource", local, "logo");
 }
 
 

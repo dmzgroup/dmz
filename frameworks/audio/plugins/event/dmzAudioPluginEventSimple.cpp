@@ -27,7 +27,8 @@ dmz::AudioPluginEventSimple::AudioPluginEventSimple (
       EventObserverUtil (Info, local),
       _log (Info),
       _audioMod (0),
-      _defaultEventHandle (0) {
+      _defaultEventHandle (0),
+      _rc (Info) {
 
    _init (local);
 }
@@ -156,7 +157,7 @@ dmz::AudioPluginEventSimple::_init (Config &local) {
       while (eventList.get_next_config (it, event)) {
 
          const String EventTypeName = config_to_string ("name", event);
-         const String FileName = config_to_string ("file", event);
+         const String FileName = _rc.find_file (config_to_string ("resource", event));
 
          if (FileName && EventTypeName) {
 

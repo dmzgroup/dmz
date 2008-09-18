@@ -3,6 +3,7 @@
 #include "dmzRuntimeContext.h"
 #include "dmzRuntimeContextDefinitions.h"
 #include "dmzRuntimeContextMessaging.h"
+#include "dmzRuntimeContextResources.h"
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeHandleAllocator.h>
 #include <dmzRuntimeInit.h>
@@ -58,6 +59,10 @@ static void local_init_time (
    RuntimeContext *context,
    Log *log);
 
+static void local_init_resources (
+   const Config &Init,
+   RuntimeContext *context,
+   Log *log);
 
 static void
 local_init_event_type (
@@ -461,6 +466,96 @@ local_init_time (const Config &Init, RuntimeContext *context, Log *log) {
    }
 }
 
+
+void
+local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
+
+   RuntimeContextResources *rc (context ? context->get_resources_context () : 0);
+
+   if (rc) {
+
+      Config searchList;
+
+      if (Init.lookup_all_config ("search", searchList)) {
+
+         ConfigIterator it;
+         Config search;
+
+         while (searchList.get_next_config (it, search)) {
+
+            const String Name = config_to_string ("name", search);
+
+            PathContainer *pc = rc->pathTable.lookup (Name);
+
+            if (!pc) {
+
+               pc = new PathContainer;
+               if (!rc->pathTable.store (Name, pc)) { delete pc; pc = 0; }
+            }
+
+            if (pc) {
+
+               ConfigIterator pathIt;
+               Config path;
+
+               while (search.get_next_config (pathIt, path)) {
+
+                  if (path.get_name () == "path") {
+
+                     pc->add_path (config_to_string ("value", path));
+                  }
+               }
+            }
+         }
+      }
+
+      Config rcList;
+
+      if (Init.lookup_all_config ("resource", rcList)) {
+
+         ConfigIterator it;
+         Config resource;
+
+         while (rcList.get_next_config (it, resource)) {
+
+            const String Name = config_to_string ("name", resource);
+
+            if (Name) {
+
+               Config *ptr (rc->rcTable.remove (Name));
+
+               if (ptr) {
+
+                  if (log) {
+
+                     String oldFile = config_to_string ("file", *ptr);
+                     if (!oldFile) { oldFile = "<Unknown>"; }
+                     String newFile = config_to_string ("file", resource);
+                     if (!newFile) { newFile = "<Unknown>"; }
+
+                     log->warn << "Resource: " << Name << " with file: " << oldFile
+                        << " is being overwritten with: " << newFile << endl;
+                  }
+
+                  delete ptr; ptr = 0;
+               }
+
+               ptr = new Config (resource);
+
+               if (!rc->rcTable.store (Name, ptr)) { delete ptr; ptr = 0; }
+            }
+            else if (log) {
+
+               String fileName = config_to_string ("file", resource);
+               if (!fileName) { fileName = "<Unknown>"; }
+               log->error << "Found unnamed resource for file: " << fileName << endl;
+            }
+         }
+      }
+      else if (log) { log->error << "No resources found" << endl; }
+   }
+}
+
 };
 
 /*!
@@ -510,12 +605,14 @@ dmz::runtime_init (const Config &Init, RuntimeContext *context, Log *log) {
    Config sconfig;
    Config mconfig;
    Config tconfig;
+   Config rconfig;
 
    Init.lookup_all_config ("event-type", econfig);
    Init.lookup_all_config ("object-type", oconfig);
    Init.lookup_all_config ("state", sconfig);
    Init.lookup_all_config ("message", mconfig);
    Init.lookup_all_config_merged ("time", tconfig);
+   Init.lookup_all_config_merged ("resource-map", rconfig);
 
    if (context) {
 
@@ -544,6 +641,9 @@ dmz::runtime_init (const Config &Init, RuntimeContext *context, Log *log) {
 
       if (tconfig) { local_init_time (tconfig, context, log); }
       else if (log) { log->debug << "Runtime time data not found" << endl; }
+
+      if (rconfig) { local_init_resources (rconfig, context, log); }
+      else if (log) { log->debug << "Runtime resource data not found" << endl; }
    }
 }
 

@@ -69,6 +69,7 @@ dmz::AudioPluginObject::AudioPluginObject (
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
+      _rc (Info),
       _audioMod (0),
       _defaultHandle (0) {
 
@@ -519,9 +520,9 @@ dmz::AudioPluginObject::_object_type_to_sound_list (const ObjectType &Type) {
 void
 dmz::AudioPluginObject::_init_sound_struct (Config &data, SoundDefStruct &ss) {
 
-   ss.activateName = config_to_string ("activatefile", data);
-   ss.deactivateName = config_to_string ("deactivatefile", data);
-   ss.loopName = config_to_string ("loopedfile", data);
+   ss.activateName = _rc.find_file (config_to_string ("activate-resource", data));
+   ss.deactivateName = _rc.find_file (config_to_string ("deactivate-resource", data));
+   ss.loopName = _rc.find_file (config_to_string ("looped-resource", data));
 
    _lookup_sound_handles (ss);
 

@@ -3,6 +3,7 @@
 #include "dmzRuntimeContextLog.h"
 #include "dmzRuntimeContextMessaging.h"
 #include "dmzRuntimeContextTime.h"
+#include "dmzRuntimeContextResources.h"
 #include "dmzRuntimeContextRTTI.h"
 #include "dmzRuntimeContextThreadKey.h"
 #include "dmzRuntimeContextUndo.h"
@@ -25,6 +26,7 @@ dmz::RuntimeContext::RuntimeContext () :
       _defContext (0),
       _messageContainerContext (0),
       _messagingContext (0),
+      _rcContext (0),
       _rttiContext (0),
       _timeContext (0),
       _undoContext (0),
@@ -57,6 +59,10 @@ dmz::RuntimeContext::~RuntimeContext () {
    _msgLock.lock ();
    if (_messagingContext) { _messagingContext->unref (); _messagingContext = 0; }
    _msgLock.unlock ();
+
+   _rcLock.lock ();
+   if (_rcContext) { _rcContext->unref (); _rcContext = 0; }
+   _rcLock.unlock ();
 
    _rttiLock.lock ();
    if (_rttiContext) { _rttiContext->unref (); _rttiContext = 0; }
@@ -172,6 +178,21 @@ dmz::RuntimeContext::get_messaging_context () {
    }
 
    return _messagingContext;
+}
+
+
+//! Gets Resources context.
+dmz::RuntimeContextResources *
+dmz::RuntimeContext::get_resources_context () {
+
+   if (!_rcContext) {
+
+      _rcLock.lock ();
+      if (!_rcContext) { _rcContext = new RuntimeContextResources (); }
+      _rcLock.unlock ();
+   }
+
+   return _rcContext;
 }
 
 

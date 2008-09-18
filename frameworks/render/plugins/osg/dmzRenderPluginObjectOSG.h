@@ -5,6 +5,7 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeResources.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 
@@ -124,6 +125,7 @@ namespace dmz {
          HashTableHandleTemplate<ObjectStruct> _objectTable;
 
          Definitions _defs;
+         Resources _rc;
          ModelStruct _noModel;
          RenderModuleCoreOSG *_core;
 

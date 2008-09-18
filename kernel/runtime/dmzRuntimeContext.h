@@ -13,6 +13,7 @@ namespace dmz {
    class RuntimeContextLog;
    class RuntimeContextMessaging;
    class RuntimeContextMessageContainer;
+   class RuntimeContextResources;
    class RuntimeContextRTTI;
    class RuntimeContextThreadKey;
    class RuntimeContextTime;
@@ -36,6 +37,7 @@ namespace dmz {
          RuntimeContextDefinitions *get_definitions_context ();
          RuntimeContextMessageContainer *get_message_container_context ();
          RuntimeContextMessaging *get_messaging_context ();
+         RuntimeContextResources *get_resources_context ();
          RuntimeContextRTTI *get_rtti_context ();
          RuntimeContextTime *get_time_context ();
          RuntimeContextUndo *get_undo_context ();
@@ -53,6 +55,8 @@ namespace dmz {
          RuntimeContextMessageContainer *_messageContainerContext;
          SpinLock _msgLock;
          RuntimeContextMessaging *_messagingContext; //!< Messaging context.
+         SpinLock _rcLock;
+         RuntimeContextResources *_rcContext; //!< Resources context.
          SpinLock _rttiLock;
          RuntimeContextRTTI *_rttiContext; //!< RTTI context.
          SpinLock _timeLock;

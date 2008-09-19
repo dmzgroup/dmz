@@ -89,9 +89,9 @@ rc_remove_config (lua_State *L) {
 
 static const luaL_Reg arrayFunc [] = {
    {"find_file", rc_find_file},
-   {"store_config", rc_find_file},
-   {"lookup_config", rc_find_file},
-   {"remove_config", rc_find_file},
+   {"store_config", rc_store_config},
+   {"lookup_config", rc_lookup_config},
+   {"remove_config", rc_remove_config},
    {NULL, NULL},
 };
 

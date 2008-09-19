@@ -10,6 +10,7 @@
 
 namespace dmz {
 
+   //! \cond
    class RuntimeContextResources : public RefCountDeleteOnZero {
 
       public:
@@ -21,6 +22,7 @@ namespace dmz {
       private:
          ~RuntimeContextResources ();
    };
+   //! \endcond
 };
 
 inline

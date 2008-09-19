@@ -43,7 +43,9 @@ namespace dmz {
          Boolean remove_search_path (const String &SearchPathName);
 
       protected:
+         //! \cond
          RuntimeContextResources *_context;
+         //! \endcond
 
       private:
          Resources ();

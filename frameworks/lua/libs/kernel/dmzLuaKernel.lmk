@@ -24,6 +24,7 @@ lmk.add_files {
    "dmzLuaKernelMessageObserver.cpp",
    "dmzLuaKernelMessageType.cpp",
    "dmzLuaKernelObjectType.cpp",
+   "dmzLuaKernelResources.cpp",
    "dmzLuaKernelRuntime.cpp",
    "dmzLuaKernelTimeSlice.cpp",
    "dmzLuaKernelTime.cpp",

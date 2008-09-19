@@ -6,6 +6,21 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeResources.h>
 
+/*!
+
+\class dmz::Resources
+\ingroup Runtime
+\brief Runtime Resource Map.
+\details
+
+*/
+
+/*!
+
+\brief Runtime context Constructor.
+\param[in] context Pointer to the runtime context.
+
+*/
 dmz::Resources::Resources (RuntimeContext *context) : _context (0) {
 
    _context = (context ? context->get_resources_context () : 0);
@@ -13,6 +28,12 @@ dmz::Resources::Resources (RuntimeContext *context) : _context (0) {
 }
 
 
+/*!
+
+\brief PluginInfo Constructor.
+\param[in] Info Reference to the PluginInfo.
+
+*/
 dmz::Resources::Resources (const PluginInfo &Info) : _context (0) {
 
    RuntimeContext *context (Info.get_context ());
@@ -21,9 +42,18 @@ dmz::Resources::Resources (const PluginInfo &Info) : _context (0) {
 }
 
 
+//! Destructor.
 dmz::Resources::~Resources () { if (_context) { _context->unref (); _context = 0; } }
 
 
+/*!
+
+\brief Find resource.
+\param[in] ResourceName String containing the name of the resource file.
+\return Returns a String containing the found resource file. Will return an empty
+string if the resource is not found.
+
+*/
 dmz::String
 dmz::Resources::find_file (const String &ResourceName) const {
 
@@ -49,6 +79,17 @@ dmz::Resources::find_file (const String &ResourceName) const {
 }
 
 
+/*!
+
+\brief Store a resource config.
+\details Existing resource can not be overwritten. They must be removed first before
+a new resource config with the same name may be stored.
+\param[in] ResourceName String containing the name of the resource Config.
+\param[in] Resource Config containing the resource data to store.
+\return Returns dmz::True if the resource config was stored. Will return dmz::False
+if there is already a resource config with the same name.
+
+*/
 dmz::Boolean
 dmz::Resources::store_resource_config (
       const String &ResourceName,
@@ -69,6 +110,14 @@ dmz::Resources::store_resource_config (
 }
 
 
+/*!
+
+\brief Lookup a resource config.
+\param[in] ResourceName String containing the name of the resource Config.
+\param[out] resource Config used to return the found resource Config.
+\return Returns dmz::True if the named resource Config was found.
+
+*/
 dmz::Boolean
 dmz::Resources::lookup_resource_config (
       const String &ResourceName,
@@ -87,6 +136,13 @@ dmz::Resources::lookup_resource_config (
 }
 
 
+/*!
+
+\brief Removes a resource config.
+\param[in] ResourceName String containing the name of the resource Config.
+\return Returns dmz::True if the named resource Config was removed.
+
+*/
 dmz::Boolean
 dmz::Resources::remove_resource_config (const String &ResourceName) {
 
@@ -103,6 +159,17 @@ dmz::Resources::remove_resource_config (const String &ResourceName) {
 }
 
 
+/*!
+
+\brief Store a search path.
+\details Existing search paths can not be overwritten. They must be removed first before
+a new search path with the same name may be stored.
+\param[in] SearchPathName String containing the name of the search path.
+\param[in] SearchPath PathContainer containing the search paths to store.
+\return Returns dmz::True if the search path was stored. Will return dmz::False
+if there is already a search path with the same name.
+
+*/
 dmz::Boolean
 dmz::Resources::store_search_path (
       const String &SearchPathName,
@@ -123,6 +190,14 @@ dmz::Resources::store_search_path (
 }
 
 
+/*!
+
+\brief Lookup a search path.
+\param[in] SearchPathName String containing the name of the search path.
+\param[out] searchPath PathContainer used to return the found search path.
+\return Returns dmz::True if the named search path was found.
+
+*/
 dmz::Boolean
 dmz::Resources::lookup_search_path (
       const String &SearchPathName,
@@ -141,6 +216,13 @@ dmz::Resources::lookup_search_path (
 }
 
 
+/*!
+
+\brief Removes a search path.
+\param[in] SearchPathName String containing the name of the search path.
+\return Returns dmz::True if the named search path was removed.
+
+*/
 dmz::Boolean
 dmz::Resources::remove_search_path (const String &SearchPathName) {
 

@@ -588,6 +588,22 @@ An XML example for defining the various runtime types and time settings:
 
    <!-- dmz::Message definition -->
    <message name="Message Name" parent="Parent Name"/>
+
+   <!-- dmz::Resources definition -->
+   <resource-map>
+      <!-- Search Path Group -->
+      <search name="Search Path Name">
+         <path value="Search Path 1"/>
+         <path value="Search Path 2"/>
+         ...
+         <path value="Search Path N"/>
+      </search>
+      <!-- Resource List -->
+      <resource name="Resource Name 1" file="Resource File" path="Search Name"/>
+      <resource name="Resource Name 2" file="Resource File" path="Search Name"/>
+      ...
+      <resource name="Resource Name N" file="Resource File" path="Search Name"/>
+   </resource-map>
 </runtime>
 </dmz>
 \endcode

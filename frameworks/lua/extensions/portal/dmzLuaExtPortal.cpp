@@ -8,6 +8,9 @@
 
 #include <luacpp.h>
 
+#include <qdb.h>
+static dmz::qdb out;
+
 using namespace dmz;
 
 namespace {
@@ -100,8 +103,8 @@ dmz::LuaExtPortal::get_view (const String &Name, Vector &pos, Matrix &ori) {
 
    if (!Name) {
 
-      if (_audioMaster) { Vector v; _audioMaster->get_view (pos, ori, v); }
       if (_renderMaster) { _renderMaster->get_view (pos, ori); }
+      else if (_audioMaster) { Vector v; _audioMaster->get_view (pos, ori, v); }
    }
 }
 
@@ -116,11 +119,14 @@ dmz::LuaExtPortal::discover_plugin (
 
       AudioModulePortal *audioPortal (AudioModulePortal::cast (PluginPtr));
 
-      if (audioPortal && audioPortal->is_master_portal ()) { _audioMaster = audioPortal; }
+      if (audioPortal) { // && audioPortal->is_master_portal ()) {
+
+         _audioMaster = audioPortal;
+      }
 
       RenderModulePortal *renderPortal (RenderModulePortal::cast (PluginPtr));
 
-      if (renderPortal && renderPortal->is_master_portal ()) {
+      if (renderPortal) { //  && renderPortal->is_master_portal ()) {
 
          _renderMaster = renderPortal;
       }

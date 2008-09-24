@@ -22,8 +22,6 @@ namespace dmz {
       public:
          static RenderModuleCoreOSG *cast (const Plugin *PluginPtr);
 
-         virtual String find_file (const String &FileName) = 0;
-
          virtual osg::Group *get_scene () = 0;
          virtual osg::Group *get_overlay () = 0;
          virtual osg::Group *get_isect () = 0;

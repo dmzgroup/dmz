@@ -71,7 +71,6 @@ namespace dmz {
             const Matrix *PreviousValue);
 
          // RenderModuloeCoreOSG Interface
-         virtual String find_file (const String &FileName);
          virtual osg::Group *get_scene ();
          virtual osg::Group *get_overlay ();
          virtual osg::Group *get_isect ();
@@ -142,7 +141,6 @@ namespace dmz {
          osg::ref_ptr<osg::Group> _dynamicObjects;
          HashTableStringTemplate<PortalStruct> _portalTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
-         PathContainer _searchPath;
          ObjectStruct *_dirtyObjects;
    };
 }

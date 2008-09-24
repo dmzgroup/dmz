@@ -199,18 +199,6 @@ dmz::RenderModuleCoreOSGBasic::update_object_orientation (
 }
 
 
-// RenderModuloeCoreOSG Interface
-dmz::String
-dmz::RenderModuleCoreOSGBasic::find_file (const String &FileName) {
-
-   String result;
-
-   dmz::find_file (_searchPath, FileName, result);
-
-   return result;
-}
-
-
 osg::Group *
 dmz::RenderModuleCoreOSGBasic::get_scene () { return _scene.get (); }
 
@@ -427,8 +415,6 @@ dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
          _extensions.discover_external_plugin (this);
       }
    }
-
-   _searchPath = config_to_path_container ("search.path", local);
 
    _defaultHandle = activate_default_object_attribute (
       ObjectDestroyMask | ObjectPositionMask | ObjectOrientationMask);

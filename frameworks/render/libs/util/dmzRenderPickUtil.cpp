@@ -4,6 +4,13 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 
+/*!
+
+\class dmz::RenderPickUtil
+\ingroup Render
+\brief Render Pick utility class
+
+*/
 
 struct dmz::RenderPickUtil::State {
 
@@ -15,7 +22,7 @@ struct dmz::RenderPickUtil::State {
 
    State (const PluginInfo &Info, const Config &Init) :
          RenderModulePickName (config_to_string ("module.pick.name", Init)),
-         SourceName (config_to_string ("source.name", Init)),
+         SourceName (config_to_string ("source.name", Init, Info.get_name ())),
          log (Info.get_name () + ".RenderPickUtil", Info.get_context ()),
          defs (Info, &log),
          module (0) {
@@ -36,6 +43,25 @@ struct dmz::RenderPickUtil::State {
 };
 
 
+/*!
+
+\brief Constructor.
+\details The RenderPickUtil uses the Config object passed in to specify with
+RenderModulePick to register with. This is done bye giving the name of the
+RenderModulePick. The source name may also be specified. If a source name is not
+specified, the name in the PluginInfo is used as the source name.
+The format is as follows:
+\code
+<module>
+   <pick name="Pick Module Name"/>
+<module>
+<source name="Source Name"/>
+\endcode
+\param[in] Info PluginInfo used to initialize the Plugin that is derived from this class.
+\param[in] Init Config used to initialize the class. This is most often the Config object
+passed in as local to the Plugin.
+
+*/
 dmz::RenderPickUtil::RenderPickUtil (
       const PluginInfo &Info,
       const Config &Init) :
@@ -43,6 +69,7 @@ dmz::RenderPickUtil::RenderPickUtil (
       __state (*(new State (Info, Init))) {;}
 
 
+//! Destructor.
 dmz::RenderPickUtil::~RenderPickUtil () {
 
    if (__state.module) { remove_render_module_pick ("", *(__state.module)); }
@@ -50,6 +77,14 @@ dmz::RenderPickUtil::~RenderPickUtil () {
 }
 
 
+/*!
+
+\brief Gets pick module with which the pick object is registered.
+\return Returns a pointer to the RenderModulePick with which the pick object is
+registered.
+Returns NULL if the pick object is not registered with any RenderModulePick.
+
+*/
 dmz::RenderModulePick *
 dmz::RenderPickUtil::get_render_module_pick () { return __state.module; }
 
@@ -147,3 +182,12 @@ dmz::RenderPickUtil::world_to_source (
    return False;
 }
 
+/*!
+
+\fn void dmz::RenderPickUtil::_store_render_module_pick (RenderModulePick &pickMod)
+\brief Callback made when pick module is discovered.
+
+\fn void dmz::RenderPickUtil::_remove_render_module_pick (RenderModulePick &pickMod)
+\brief Callback made when pick module is removed.
+
+*/

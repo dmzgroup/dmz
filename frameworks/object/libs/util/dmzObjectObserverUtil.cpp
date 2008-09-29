@@ -98,6 +98,7 @@ dmz::ObjectObserverUtil::ObjectObserverUtil (
       __state (*(new State (Info, Init))) {;}
 
 
+//! Destructor.
 dmz::ObjectObserverUtil::~ObjectObserverUtil () {
 
    if (__state.module) { remove_object_module ("", *(__state.module)); }

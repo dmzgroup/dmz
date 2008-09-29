@@ -4,9 +4,7 @@
 #include <dmzRenderUtilExport.h>
 #include <dmzRenderPick.h>
 
-
 namespace dmz {
-
 
    class DMZ_RENDER_UTIL_LINK_SYMBOL RenderPickUtil : public RenderPick {
 

@@ -25,21 +25,21 @@ and not equal to the Plugin's name.
 \fn dmz::RenderModulePick::~RenderModulePick ();
 \brief Destructor
 
-\fn dmz::Boolean dmz::RenderModulePick::register_pick_2d (
+\fn dmz::Boolean dmz::RenderModulePick::register_pick (
 const Handle Source,
-RenderPick2d &pick)
-\brief Registers a 2D pick source with the module.
+RenderPick &pick)
+\brief Registers a pick source with the module.
 \param[in] Source Unique runtime handle of the source.
-\param[in] pick Reference to the 2D pick interface.
-\return Returns dmz::True if the 2D pick interface was successfully registered.
+\param[in] pick Reference to the pick interface.
+\return Returns dmz::True if the pick interface was successfully registered.
 
-\fn dmz::Boolean dmz::RenderModulePick::release_pick_2d (
+\fn dmz::Boolean dmz::RenderModulePick::release_pick (
 const Handle Source,
-RenderPick2d &pick)
-\brief Releases a 2D pick source from the module.
+RenderPick &pick)
+\brief Releases a pick source from the module.
 \param[in] Source Unique runtime handle of the source.
-\param[in] pick Reference to the 2D pick interface to release.
-\return Returns dmz::True if the 2D pick interface was successfully released.
+\param[in] pick Reference to the pick interface to release.
+\return Returns dmz::True if the pick interface was successfully released.
 
 \fn dmz::Boolean dmz::RenderModulePick::screen_to_world (
 const Handle Source,
@@ -86,8 +86,8 @@ Handle &objectHandle)
 \param[out] worldPosition Vector in which the calculated world coordinates will be stored.
 \param[out] objectHandle Handle in which the object handle of any object that may have
 been clicked on in the scene. It will be zero if an object was not clicked on.
-\return Returns dmz::True if the source is known and source coordinates can be converted
-into world coordinates.
+\return Returns dmz::True if the source is known and the source coordinates can be
+converted into world coordinates.
 
 \fn dmz::Boolean dmz::RenderModulePick::world_to_source (
 const Handle Source,

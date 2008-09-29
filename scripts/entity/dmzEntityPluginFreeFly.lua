@@ -130,7 +130,7 @@ function new (config, name)
       obs = dmz.input_observer.new (),
       active = 0,
       moveSpeed = config:to_number ("movement.speed", 1.0),
-      turnRate = config:to_number ("movement.turnRate", 1.0),
+      turnRate = config:to_number ("movement.turn-rate", 1.0),
       speed = 0.0,
       strafe = 0.0,
       turn = 0.0,

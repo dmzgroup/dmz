@@ -14,6 +14,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginHorn (const PluginInfo &Info, Config &local);
          ~EntityPluginHorn ();
 
@@ -54,6 +55,7 @@ namespace dmz {
          Mask _hornState;
 
          Log _log;
+         //! \endcond
 
       private:
          EntityPluginHorn ();

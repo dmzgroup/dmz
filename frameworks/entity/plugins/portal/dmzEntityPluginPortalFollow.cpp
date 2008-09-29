@@ -8,6 +8,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginPortalFollow
+\ingroup Entity
+\brief Follows human-in-th-loop object with the render and audio portals.
+
+*/
+
+//! \cond
 dmz::EntityPluginPortalFollow::EntityPluginPortalFollow (
       const PluginInfo &Info,
       Config &local) :
@@ -229,6 +238,7 @@ dmz::EntityPluginPortalFollow::_init (Config &local) {
    _log.info << "Using " << (foundOffset ? "" : "default ") << "camera offset: "
       << _offset << endl;
 }
+//! \endcond
 
 
 extern "C" {

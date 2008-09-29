@@ -15,6 +15,7 @@ namespace dmz {
          public EventObserverUtil {
 
       public:
+         //! \cond
          EntityPluginDamage (const PluginInfo &Info, Config &local);
          ~EntityPluginDamage ();
 
@@ -56,6 +57,7 @@ namespace dmz {
          Mask _deadState;
 
          EventType _detonationType;
+         //! \endcond
 
       private:
          EntityPluginDamage ();

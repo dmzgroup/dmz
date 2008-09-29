@@ -8,6 +8,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginPortalTether
+\ingroup Entity
+\brief Tethers the render and audio portals to the human-in-the-loop object.
+
+*/
+
+//! \cond
 dmz::EntityPluginPortalTether::EntityPluginPortalTether (
       const PluginInfo &Info,
       Config &local) :
@@ -145,6 +154,7 @@ dmz::EntityPluginPortalTether::_init (Config &local) {
    _log.info << "Using " << (foundOffset ? "" : "default ") << "camera offset: "
       << _offset << endl;
 }
+//! \endcond
 
 
 extern "C" {

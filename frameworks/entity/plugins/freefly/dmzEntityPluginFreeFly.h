@@ -26,6 +26,7 @@ namespace dmz {
          public InputObserverUtil {
 
       public:
+         //! \cond
          EntityPluginFreeFly (const PluginInfo &Info, Config &local);
 
          ~EntityPluginFreeFly ();
@@ -116,6 +117,7 @@ namespace dmz {
          Int32 _active;
 
          Log _log;
+         //! \endcond
 
       private:
          EntityPluginFreeFly (const EntityPluginFreeFly &);

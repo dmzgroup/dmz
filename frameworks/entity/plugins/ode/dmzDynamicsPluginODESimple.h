@@ -23,6 +23,7 @@ namespace dmz {
    class Vector;
    class Matrix;
 
+   //! \cond
    class DynamicsPluginODESimple :
          public Plugin,
          public ObjectObserverUtil,
@@ -174,6 +175,7 @@ namespace dmz {
 
 
          static void _ode_collision_callback (void* data, dGeomID o1, dGeomID o2);
+         //! \endcond
 
 
       private:

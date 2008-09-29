@@ -10,6 +10,20 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesMask.h>
 
+/*!
+
+\defgroup Entity DMZ Entity Framework
+
+\class dmz::EntityPluginFreeFly
+\ingroup Entity
+\brief Plugin provides free fly motion.
+\details
+\code
+<movement speed="max speed" turn-rate="turn rate"/>
+\endcode
+*/
+
+//! \cond
 dmz::EntityPluginFreeFly::EntityPluginFreeFly (
       const PluginInfo &Info,
       Config &local) :
@@ -235,21 +249,8 @@ dmz::EntityPluginFreeFly::_init (Config &local) {
       ObjectAttributeHumanInTheLoopName,
       ObjectFlagMask);
 
-   Config movement;
-
-   if (local.lookup_all_config ("movement", movement)) {
-
-      ConfigIterator it;
-      Config cd;
-
-      Boolean found (movement.get_first_config (it, cd));
-
-      if (found)  {
-         _move.moveSpeed = config_to_uint32 ("speed", cd);
-         _move.turnRate = config_to_uint32 ("turnRate", cd);
-      }
-      _log.info << "Loaded movement info" << endl;
-   }
+   _move.moveSpeed = config_to_uint32 ("movement.speed", local, _move.moveSpeed);
+   _move.turnRate = config_to_uint32 ("movement.turn-rate", local, _move.turnRate);
 
    init_input_channels (
       local,
@@ -262,6 +263,7 @@ dmz::EntityPluginFreeFly::_init (Config &local) {
    _isectParameters.set_calculate_distance (True);
    _isectParameters.set_calculate_cull_mode (False);
 }
+//! \endcond
 
 
 extern "C" {

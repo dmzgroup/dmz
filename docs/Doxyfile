@@ -91,6 +91,7 @@ INPUT                  = ../kernel \
                          ../foundation \
                          ../frameworks/archive \
                          ../frameworks/audio \
+                         ../frameworks/entity \
                          ../frameworks/event \
                          ../frameworks/input \
                          ../frameworks/object \

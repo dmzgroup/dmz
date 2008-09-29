@@ -9,6 +9,18 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginDamage
+\ingroup Entity
+\brief Determines damage for the human-in-the-loop object.
+\details The current implementation currently uses a one-hit-one-kill model.
+Hits are determined by detonation events and have the human-in-the-loop object
+as the target object.
+
+*/
+
+//! \cond
 dmz::EntityPluginDamage::EntityPluginDamage (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       ObjectObserverUtil (Info, local),
@@ -105,6 +117,7 @@ dmz::EntityPluginDamage::_init (Config &local) {
 
    _detonationType = activate_event_callback (EventDetonationName, EventCloseMask);
 }
+//! \endcond
 
 
 extern "C" {

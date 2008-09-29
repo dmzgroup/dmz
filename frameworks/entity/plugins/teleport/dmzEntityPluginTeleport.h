@@ -16,6 +16,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginTeleport (const PluginInfo &Info, Config &local);
          ~EntityPluginTeleport ();
 
@@ -64,6 +65,7 @@ namespace dmz {
          Matrix _startOri;
 
          Log _log;
+         //! \endcond
 
       private:
          EntityPluginTeleport ();

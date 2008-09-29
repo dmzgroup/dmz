@@ -10,7 +10,7 @@
 #include <dmzTypesMask.h>
 
 
-
+//! \cond
 dmz::DynamicsPluginODESimple::DynamicsPluginODESimple (
       const PluginInfo &Info,
       const String &InputModuleName,
@@ -708,6 +708,7 @@ dmz::DynamicsPluginODESimple::_init (Config &local) {
    }
 
 }
+//! \endcond
 
 
 extern "C" {

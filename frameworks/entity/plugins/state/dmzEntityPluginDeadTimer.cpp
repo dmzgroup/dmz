@@ -7,6 +7,19 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginDeadTimer
+\ingroup Entity
+\brief Automatically revives a dead human-in-the-loop after a predetermined time.
+\details
+\code
+<timer value="Time to wait to revive"/>
+\endcode
+
+*/
+
+//! \cond
 dmz::EntityPluginDeadTimer::EntityPluginDeadTimer (
       const PluginInfo &Info,
       Config &local) :
@@ -102,6 +115,7 @@ dmz::EntityPluginDeadTimer::_init (Config &local) {
    set_time_slice_interval (
       config_to_float64 ("timer.value", local, get_time_slice_interval ()));
 }
+//! \endcond
 
 
 extern "C" {

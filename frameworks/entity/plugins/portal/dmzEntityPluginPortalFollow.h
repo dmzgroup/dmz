@@ -21,6 +21,7 @@ namespace dmz {
          public InputObserverUtil {
 
       public:
+         //! \cond
          EntityPluginPortalFollow (const PluginInfo &Info, Config &local);
          ~EntityPluginPortalFollow ();
 
@@ -64,6 +65,7 @@ namespace dmz {
          Int32 _active;
 
          Log _log;
+         //! \endcond
 
       private:
          EntityPluginPortalFollow ();

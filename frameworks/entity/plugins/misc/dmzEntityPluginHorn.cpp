@@ -7,6 +7,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginHorn
+\ingroup Entity
+\brief Toggles the horn state for the human-in-the-loop object.
+
+*/
+
+//! \cond
 dmz::EntityPluginHorn::EntityPluginHorn (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       InputObserverUtil (Info, local),
@@ -113,6 +122,7 @@ dmz::EntityPluginHorn::_init (Config &local) {
 
    defs.lookup_state ("Horn_On", _hornState);
 }
+//! \endcond
 
 
 extern "C" {

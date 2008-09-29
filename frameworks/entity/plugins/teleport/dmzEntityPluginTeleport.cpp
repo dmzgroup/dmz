@@ -8,6 +8,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginTeleport
+\ingroup Entity
+\brief Teleports the human-in-the-loop object back to its start position.
+
+*/
+
+//! \cond
 dmz::EntityPluginTeleport::EntityPluginTeleport (
       const PluginInfo &Info,
       Config &local) :
@@ -121,6 +130,7 @@ dmz::EntityPluginTeleport::_init (Config &local) {
 
    init_input_channels (local, inputMask, &_log);
 }
+//! \endcond
 
 
 extern "C" {

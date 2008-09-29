@@ -8,6 +8,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginRaceLight
+\ingroup Entity
+\brief Discovers race light objects that can be triggered to countdown.
+
+*/
+
+//! \cond
 dmz::EntityPluginRaceLight::EntityPluginRaceLight (
       const PluginInfo &Info,
       Config &local) :
@@ -196,6 +205,7 @@ dmz::EntityPluginRaceLight::_init (Config &local) {
    current = current->next;
    current->next = new StateStruct (_greenState, 0.0);
 }
+//! \endcond
 
 
 extern "C" {

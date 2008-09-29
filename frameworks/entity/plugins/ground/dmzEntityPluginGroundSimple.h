@@ -25,6 +25,7 @@ namespace dmz {
          public InputObserverUtil {
 
       public:
+         //! \cond
          EntityPluginGroundSimple (const PluginInfo &Info, Config &local);
          ~EntityPluginGroundSimple ();
 
@@ -191,6 +192,7 @@ namespace dmz {
          Time _time;
 
          Log _log;
+         //! \endcond
 
       private:
          EntityPluginGroundSimple (const EntityPluginGroundSimple &);

@@ -21,6 +21,7 @@ namespace dmz {
          public InputObserverUtil {
 
       public:
+         //! \cond
          EntityPluginPortalTether (const PluginInfo &Info, Config &local);
          ~EntityPluginPortalTether ();
 
@@ -61,6 +62,7 @@ namespace dmz {
          Int32 _active;
 
          Log _log;
+         //! \endcond
 
       private:
          EntityPluginPortalTether ();

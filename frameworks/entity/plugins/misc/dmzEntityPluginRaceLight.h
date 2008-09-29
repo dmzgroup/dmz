@@ -17,6 +17,7 @@ namespace dmz {
          public TimeSlice {
 
       public:
+         //! \cond
          EntityPluginRaceLight (const PluginInfo &Info, Config &local);
          ~EntityPluginRaceLight ();
 
@@ -87,6 +88,7 @@ namespace dmz {
          HashTableHandleTemplate<Handle> _lightTable;
 
          Log _log;
+         //! \endcond
 
       private:
          EntityPluginRaceLight ();

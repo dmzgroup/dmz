@@ -12,6 +12,25 @@
 #include <dmzTypesMask.h>
 #include <dmzTypesMath.h>
 
+/*!
+
+\class dmz::EntityPluginGroundSimple
+\ingroup Entity
+\brief Provides simple ground vehicle movement.
+\details
+\code
+<movement
+   speed="Max Speed"
+   acceleration="Acceleration"
+   deceleration="Deceleration"
+   turn="Turn Rate"
+   brake="Brake Rate"
+/>
+<whisker length="Whisker Length" height="Whisker Height"/>
+\endcode
+*/
+
+//! \cond
 dmz::EntityPluginGroundSimple::EntityPluginGroundSimple (
       const PluginInfo &Info,
       Config &local) :
@@ -814,6 +833,7 @@ dmz::EntityPluginGroundSimple::_init (Config &local) {
    _isectParameters.set_calculate_distance (False);
    _isectParameters.set_calculate_cull_mode (True);
 }
+//! \endcond
 
 
 extern "C" {

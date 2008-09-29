@@ -14,6 +14,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginDeadTimer (const PluginInfo &Info, Config &local);
          ~EntityPluginDeadTimer ();
 
@@ -56,6 +57,7 @@ namespace dmz {
          Handle _defaultHandle;
 
          Mask _deadState;
+         //! \endcond
 
       private:
          EntityPluginDeadTimer ();

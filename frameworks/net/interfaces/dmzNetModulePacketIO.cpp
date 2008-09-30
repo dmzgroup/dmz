@@ -1,6 +1,6 @@
 /*!
 
-\defgroup Net DMZ Network Framework.
+\defgroup Net DMZ Network Framework
 
 \class dmz::NetPacketObserver
 \ingroup Net

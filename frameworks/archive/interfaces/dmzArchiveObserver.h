@@ -8,9 +8,9 @@
 
 namespace dmz {
 
-   //! \ingroup Archive
-   //! \brief ArchiveObserver interface name.
+   //! \cond
    const char ArchiveObserverInterfaceName[] = "ArchiveObserverInterface";
+   //! \endcond
 
    class ArchiveModule;
 

@@ -9,8 +9,9 @@
 
 namespace dmz {
 
-   //! Interface name.
+   //! \cond
    const char ObjectModuleSelectInterfaceName[] = "ObjectModuleSelectInterface";
+   //! \endcond
 
    class ObjectModuleSelect {
 

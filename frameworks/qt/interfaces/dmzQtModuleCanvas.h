@@ -12,7 +12,9 @@ class QGraphicsView;
 
 namespace dmz {
 
+   //! \cond
    const char QtModuleCanvasInterfaceName[] = "QtModuleCanvasInterface";
+   //! \endcond
 
    const UInt32 QtCanvasObjectNameIndex (0);
    const UInt32 QtCanvasObjectHandleIndex (1);

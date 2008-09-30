@@ -5,9 +5,11 @@
 #include <dmzRuntimeRTTI.h>
 #include <dmzTypesBase.h>
 
-#define DMZ_INPUT_MODULE_INTERFACE_NAME "InputModuleInterface"
-
 namespace dmz {
+
+   //! \cond
+   const char InputModuleInterfaceName[] = "InputModuleInterface";
+   //! \endcond
 
    class Data;
    class InputEventAxis;
@@ -64,7 +66,7 @@ inline dmz::InputModule *
 dmz::InputModule::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (InputModule *)lookup_rtti_interface (
-      DMZ_INPUT_MODULE_INTERFACE_NAME,
+      InputModuleInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -74,14 +76,14 @@ inline
 dmz::InputModule::InputModule (const PluginInfo &Info) :
       __Info (Info) {
 
-   store_rtti_interface (DMZ_INPUT_MODULE_INTERFACE_NAME, __Info, (void *)this);
+   store_rtti_interface (InputModuleInterfaceName, __Info, (void *)this);
 }
 
 
 inline
 dmz::InputModule::~InputModule () {
 
-   remove_rtti_interface (DMZ_INPUT_MODULE_INTERFACE_NAME, __Info);
+   remove_rtti_interface (InputModuleInterfaceName, __Info);
 }
 
 #endif // DMZ_INPUT_MODULE_DOT_H

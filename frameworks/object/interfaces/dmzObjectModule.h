@@ -9,9 +9,11 @@
 #include <dmzTypesHandleContainer.h>
 #include <dmzTypesString.h>
 
-#define DMZ_OBJECT_MODULE_INTERFACE_NAME "ObjectModuleInterface"
-
 namespace dmz {
+
+   //! \cond
+   const char ObjectModuleInterfaceName[] = "ObjectModuleInterface";
+   //! \endcond
 
    class Data;
    class Mask;
@@ -321,7 +323,7 @@ inline dmz::ObjectModule *
 dmz::ObjectModule::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (ObjectModule *)lookup_rtti_interface (
-      DMZ_OBJECT_MODULE_INTERFACE_NAME,
+      ObjectModuleInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -331,14 +333,14 @@ inline
 dmz::ObjectModule::ObjectModule (const PluginInfo &Info) :
       __Info (Info) {
 
-   store_rtti_interface (DMZ_OBJECT_MODULE_INTERFACE_NAME, __Info, (void *)this);
+   store_rtti_interface (ObjectModuleInterfaceName, __Info, (void *)this);
 }
 
 
 inline
 dmz::ObjectModule::~ObjectModule () {
 
-   remove_rtti_interface (DMZ_OBJECT_MODULE_INTERFACE_NAME, __Info);
+   remove_rtti_interface (ObjectModuleInterfaceName, __Info);
 }
 
 #endif // DMZ_OBJECT_MODULE_DOT_H

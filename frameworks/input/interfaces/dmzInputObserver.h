@@ -6,9 +6,11 @@
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
 
-#define DMZ_INPUT_OBSERVER_INTERFACE_NAME "InputObserverInteface"
-
 namespace dmz {
+
+   //! \cond
+   const char InputObserverInterfaceName[] = "InputObserverInteface";
+   //! \endcond
 
    class Data;
    class InputEventAxis;
@@ -85,7 +87,7 @@ inline dmz::InputObserver *
 dmz::InputObserver::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (InputObserver *)lookup_rtti_interface (
-      DMZ_INPUT_OBSERVER_INTERFACE_NAME,
+      InputObserverInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -95,7 +97,7 @@ inline dmz::Boolean
 dmz::InputObserver::is_valid (const Handle ObserverHandle, RuntimeContext *context) {
 
    return lookup_rtti_interface (
-      DMZ_INPUT_OBSERVER_INTERFACE_NAME,
+      InputObserverInterfaceName,
       ObserverHandle,
       context) != 0;
 }
@@ -105,14 +107,14 @@ inline
 dmz::InputObserver::InputObserver (const PluginInfo &Info) :
       __Info (Info) {
 
-   store_rtti_interface (DMZ_INPUT_OBSERVER_INTERFACE_NAME, __Info, (void *)this);
+   store_rtti_interface (InputObserverInterfaceName, __Info, (void *)this);
 }
 
 
 inline
 dmz::InputObserver::~InputObserver () {
 
-   remove_rtti_interface (DMZ_INPUT_OBSERVER_INTERFACE_NAME, __Info);
+   remove_rtti_interface (InputObserverInterfaceName, __Info);
 }
 
 

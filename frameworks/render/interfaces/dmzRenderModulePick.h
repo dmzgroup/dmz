@@ -7,9 +7,9 @@
 
 namespace dmz {
 
-   //! \brief dmz::RenderModulePick Interface name.
-   //! \ingroup Render
+   //! \cond
    const char RenderModulePickInterfaceName[] = "RenderModulePickInterface";
+   //! \endcond
 
    class RenderPick;
 

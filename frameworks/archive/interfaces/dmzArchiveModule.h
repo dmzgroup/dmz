@@ -7,15 +7,13 @@
 
 namespace dmz {
 
-   //! \addtogroup Archive
-   //! @{
-
-   //! \brief ArchiveModule interface name.
+   //! \cond
    const char ArchiveModuleInterfaceName[] = "ArchiveModuleInterface";
+   //! \endcond
 
    //! \brief Default archive group name.
+   //! \ingroup Archive
    const char ArchiveDefaultName[] = "Default_Archive";
-   //! @}
 
    class ArchiveObserver;
    class Config;

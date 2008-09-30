@@ -15,7 +15,9 @@ class QWidget;
 
 namespace dmz {
 
+   //! \cond
    const char QtModuleMainWindowInterfaceName[] = "QtModuleMainWindowInterface";
+   //! \endcond
 
    class QtModuleMainWindow {
 

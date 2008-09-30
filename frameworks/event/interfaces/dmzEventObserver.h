@@ -8,9 +8,12 @@
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
 
-#define DMZ_EVENT_OBSERVER_INTERFACE_NAME "EventObserverInteface"
 
 namespace dmz {
+
+   //! \cond
+   const char EventObserverInterfaceName[] = "EventObserverInteface";
+   //! \endcond
 
    class EventModule;
    class EventType;
@@ -58,7 +61,7 @@ inline dmz::EventObserver *
 dmz::EventObserver::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (EventObserver *)lookup_rtti_interface (
-      DMZ_EVENT_OBSERVER_INTERFACE_NAME,
+      EventObserverInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -68,7 +71,7 @@ inline dmz::Boolean
 dmz::EventObserver::is_valid (const Handle ObserverHandle, RuntimeContext *context) {
 
    return lookup_rtti_interface (
-      DMZ_EVENT_OBSERVER_INTERFACE_NAME,
+      EventObserverInterfaceName,
       ObserverHandle,
       context) != 0;
 }
@@ -78,14 +81,14 @@ inline
 dmz::EventObserver::EventObserver (const PluginInfo &Info) :
       __Info (Info) {
 
-   store_rtti_interface (DMZ_EVENT_OBSERVER_INTERFACE_NAME, __Info, (void *)this);
+   store_rtti_interface (EventObserverInterfaceName, __Info, (void *)this);
 }
 
 
 inline
 dmz::EventObserver::~EventObserver () {
 
-   remove_rtti_interface (DMZ_EVENT_OBSERVER_INTERFACE_NAME, __Info);
+   remove_rtti_interface (EventObserverInterfaceName, __Info);
 }
 
 

@@ -10,8 +10,9 @@ struct lua_Debug;
 
 namespace dmz {
 
-   //! Lua observer interface name.
+   //! \cond
    const char LuaObserverInterfaceName[] = "LuaObserverInterface";
+   //! \endcond
 
    class LuaModule;
 

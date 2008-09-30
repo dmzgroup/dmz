@@ -5,9 +5,11 @@
 #include <dmzRuntimeRTTI.h>
 #include <dmzTypesBase.h>
 
-#define DMZ_AUDIO_MODULE_INTERFACE_NAME "AudioModuleInterface"
-
 namespace dmz {
+
+   //! \cond
+   const char AudioModuleInterfaceName[] =  "AudioModuleInterface";
+   //! \endcond
 
    class Vector;
    class Matrix;
@@ -76,7 +78,7 @@ inline dmz::AudioModule *
 dmz::AudioModule::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (AudioModule *)lookup_rtti_interface (
-      DMZ_AUDIO_MODULE_INTERFACE_NAME,
+      AudioModuleInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -86,14 +88,14 @@ inline
 dmz::AudioModule::AudioModule (const PluginInfo &Info) :
       __Info (Info) {
 
-   store_rtti_interface (DMZ_AUDIO_MODULE_INTERFACE_NAME, __Info, (void *)this);
+   store_rtti_interface (AudioModuleInterfaceName, __Info, (void *)this);
 }
 
 
 inline
 dmz::AudioModule::~AudioModule () {
 
-   remove_rtti_interface (DMZ_AUDIO_MODULE_INTERFACE_NAME, __Info);
+   remove_rtti_interface (AudioModuleInterfaceName, __Info);
 }
 
 #endif //  DMZ_AUDIO_MODULE_DOT_H

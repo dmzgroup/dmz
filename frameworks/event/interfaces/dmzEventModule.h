@@ -10,8 +10,9 @@
 
 namespace dmz {
 
-   //! dmz::EventModule interface name.
+   //! \cond
    const char EventModuleInterfaceName[] = "EventModuleInterface";
+   //! \endcond
 
    class Data;
    class EventDump;

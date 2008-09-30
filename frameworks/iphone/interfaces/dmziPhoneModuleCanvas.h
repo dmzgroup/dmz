@@ -10,8 +10,9 @@
 
 namespace dmz {
 
+   //! \cond
    const char iPhoneModuleCanvasInterfaceName[] = "iPhoneModuleCanvasInterface";
-
+   //! \endcond
 
    class iPhoneModuleCanvas {
 

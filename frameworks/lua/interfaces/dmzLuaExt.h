@@ -9,10 +9,11 @@ struct lua_State;
 
 namespace dmz {
 
-   class LuaModule;
-
-   //! Lua extension interface name.
+   //! \cond
    const char LuaExtInterfaceName[] = "LuaExtInterface";
+   //! \endcond
+
+   class LuaModule;
 
    class LuaExt {
 

@@ -7,6 +7,7 @@
 namespace dmz {
 
    //! Initialization parameter types.
+   //! \ingroup Audio
    enum SoundInitEnum {
       SoundLooped, //!< Looped sound source.
       SoundRelative, //!< Relative to the listener sound source.

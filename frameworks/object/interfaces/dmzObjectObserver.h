@@ -8,9 +8,11 @@
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
 
-#define DMZ_OBJECT_OBSERVER_INTERFACE_NAME "ObjectObserverInteface"
-
 namespace dmz {
+
+   //! \cond
+   const char ObjectObserverInterfaceName[] = "ObjectObserverInteface";
+   //! \endcond
 
    class Data;
    class Mask;
@@ -222,7 +224,7 @@ inline dmz::ObjectObserver *
 dmz::ObjectObserver::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (ObjectObserver *)lookup_rtti_interface (
-      DMZ_OBJECT_OBSERVER_INTERFACE_NAME,
+      ObjectObserverInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -232,7 +234,7 @@ inline dmz::Boolean
 dmz::ObjectObserver::is_valid (const Handle ObserverHandle, RuntimeContext *context) {
 
    return (ObjectObserver *)lookup_rtti_interface (
-      DMZ_OBJECT_OBSERVER_INTERFACE_NAME,
+      ObjectObserverInterfaceName,
       ObserverHandle,
       context) != 0;
 }
@@ -242,14 +244,14 @@ inline
 dmz::ObjectObserver::ObjectObserver (const PluginInfo &Info) :
       __Info (Info) {
 
-   store_rtti_interface (DMZ_OBJECT_OBSERVER_INTERFACE_NAME, __Info, (void *)this);
+   store_rtti_interface (ObjectObserverInterfaceName, __Info, (void *)this);
 }
 
 
 inline
 dmz::ObjectObserver::~ObjectObserver () {
 
-   remove_rtti_interface (DMZ_OBJECT_OBSERVER_INTERFACE_NAME, __Info);
+   remove_rtti_interface (ObjectObserverInterfaceName, __Info);
 }
 
 

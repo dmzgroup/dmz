@@ -6,9 +6,11 @@
 #include <dmzTypesBase.h>
 #include <dmzRenderIsect.h>
 
-#define DMZ_RENDER_MODULE_ISECT_INTERFACE_NAME "RenderModuleIsectInterface"
-
 namespace dmz {
+
+   //! \cond
+   const char RenderModuleIsectInterfaceName[] = "RenderModuleIsectInterface";
+   //! \endcond
 
    class IsectParameters;
    class IsectResult;
@@ -45,7 +47,7 @@ inline dmz::RenderModuleIsect *
 dmz::RenderModuleIsect::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (RenderModuleIsect *)lookup_rtti_interface (
-      DMZ_RENDER_MODULE_ISECT_INTERFACE_NAME,
+      RenderModuleIsectInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -55,14 +57,14 @@ inline
 dmz::RenderModuleIsect::RenderModuleIsect (const PluginInfo &Info) :
       __Info (Info) {
 
-   store_rtti_interface (DMZ_RENDER_MODULE_ISECT_INTERFACE_NAME, __Info, (void *)this);
+   store_rtti_interface (RenderModuleIsectInterfaceName, __Info, (void *)this);
 }
 
 
 inline
 dmz::RenderModuleIsect::~RenderModuleIsect () {
 
-   remove_rtti_interface (DMZ_RENDER_MODULE_ISECT_INTERFACE_NAME, __Info);
+   remove_rtti_interface (RenderModuleIsectInterfaceName, __Info);
 }
 
 #endif //  DMZ_RENDER_MODULE_ISECT_DOT_H

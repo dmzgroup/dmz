@@ -8,9 +8,9 @@
 
 namespace dmz {
 
-   //! \brief NetModulePacketIO interface name.
-   //! \ingroup Net
+   //! \cond
    const char NetModulePacketIOInterfaceName[] = "NetModulePacketIOInterface";
+   //! \endcond
 
    class NetPacketObserver {
 

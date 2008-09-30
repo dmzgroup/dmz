@@ -9,9 +9,9 @@ struct lua_State;
 
 namespace dmz {
 
-   //! \brief dmz::LuaModule interface name.
-   //! \ingroup Lua
+   //! \cond
    const char LuaModuleInterfaceName[] = "LuaModuleInterface";
+   //! \endcond
 
    class LuaObserver;
 

@@ -18,6 +18,7 @@ NOTE: DO NOT USE THESE FOR OBJECT ATTRIBUTE SUBSCRIPTION! USE THE MASKS DEFINED 
 
 namespace dmz {
 
+   //! \cond
    const UInt32 ObjectAttributeCreateObject  = 0x00000001;
    const UInt32 ObjectAttributeDestroyObject = 0x00000002;
    const UInt32 ObjectAttributeLocality      = 0x00000004;
@@ -43,6 +44,7 @@ namespace dmz {
    const UInt32 ObjectAttributeText          = 0x00400000;
    const UInt32 ObjectAttributeData          = 0x00800000;
    const UInt32 ObjectAttributeAll           = 0xffffffff;
+   //! \endcond
 };
 
 #endif // DMZ_OBJECT_MASK_CONSTS_DOT_H

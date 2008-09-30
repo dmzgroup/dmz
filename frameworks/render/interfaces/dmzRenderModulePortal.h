@@ -5,9 +5,11 @@
 #include <dmzRuntimeRTTI.h>
 #include <dmzTypesBase.h>
 
-#define DMZ_RENDER_MODULE_PORTAL_INTERFACE_NAME "RenderModulePortalInterface"
-
 namespace dmz {
+
+   //! \cond
+   const char RenderModulePortalInterfaceName[] = "RenderModulePortalInterface";
+   //! \endcond
 
    class Matrix;
    class Vector;
@@ -67,7 +69,7 @@ inline dmz::RenderModulePortal *
 dmz::RenderModulePortal::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (RenderModulePortal *)lookup_rtti_interface (
-      DMZ_RENDER_MODULE_PORTAL_INTERFACE_NAME,
+      RenderModulePortalInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -77,14 +79,14 @@ inline
 dmz::RenderModulePortal::RenderModulePortal (const PluginInfo &Info) :
       __Info (Info) {
 
-   store_rtti_interface (DMZ_RENDER_MODULE_PORTAL_INTERFACE_NAME, __Info, (void *)this);
+   store_rtti_interface (RenderModulePortalInterfaceName, __Info, (void *)this);
 }
 
 
 inline
 dmz::RenderModulePortal::~RenderModulePortal () {
 
-   remove_rtti_interface (DMZ_RENDER_MODULE_PORTAL_INTERFACE_NAME, __Info);
+   remove_rtti_interface (RenderModulePortalInterfaceName, __Info);
 }
 
 #endif //  DMZ_RENDER_MODULE_PORTAL_DOT_H

@@ -7,7 +7,9 @@
 
 namespace dmz {
 
+   //! \cond
    const char NetModuleLocalDRInterfaceName[] = "NetModuleLocalDRInterface";
+   //! \endcond
 
    class NetModuleLocalDR {
 

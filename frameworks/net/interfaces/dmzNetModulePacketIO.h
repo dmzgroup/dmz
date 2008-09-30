@@ -5,9 +5,12 @@
 #include <dmzRuntimeRTTI.h>
 #include <dmzTypesBase.h>
 
-#define DMZ_NET_MODULE_PACKET_IO_INTERFACE_NAME "NetModulePacketIOInterface"
 
 namespace dmz {
+
+   //! \brief NetModulePacketIO interface name.
+   //! \ingroup Net
+   const char NetModulePacketIOInterfaceName[] = "NetModulePacketIOInterface";
 
    class NetPacketObserver {
 
@@ -59,7 +62,7 @@ inline dmz::NetModulePacketIO *
 dmz::NetModulePacketIO::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (NetModulePacketIO *)lookup_rtti_interface (
-      DMZ_NET_MODULE_PACKET_IO_INTERFACE_NAME,
+      NetModulePacketIOInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -69,14 +72,14 @@ inline
 dmz::NetModulePacketIO::NetModulePacketIO (const PluginInfo &Info) :
       __Info (Info) {
 
-   store_rtti_interface (DMZ_NET_MODULE_PACKET_IO_INTERFACE_NAME, __Info, (void *)this);
+   store_rtti_interface (NetModulePacketIOInterfaceName, __Info, (void *)this);
 }
 
 
 inline
 dmz::NetModulePacketIO::~NetModulePacketIO () {
 
-   remove_rtti_interface (DMZ_NET_MODULE_PACKET_IO_INTERFACE_NAME, __Info);
+   remove_rtti_interface (NetModulePacketIOInterfaceName, __Info);
 }
 
 #endif //  DMZ_NET_MODULE_PACKET_IO_DOT_H

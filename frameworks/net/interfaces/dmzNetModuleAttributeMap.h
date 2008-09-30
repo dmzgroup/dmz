@@ -6,9 +6,11 @@
 #include <dmzTypesArrays.h>
 #include <dmzTypesBase.h>
 
-#define DMZ_NET_MODULE_ATTRIBUTE_MAP_INTERFACE_NAME "NetModuleAttributeMapInterface"
-
 namespace dmz {
+
+   //! \cond
+   const char NetModuleAttributeMapInterfaceName[] = "NetModuleAttributeMapInterface";
+   //! \endcond
 
    class Mask;
    class ObjectType;
@@ -74,7 +76,7 @@ inline dmz::NetModuleAttributeMap *
 dmz::NetModuleAttributeMap::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (NetModuleAttributeMap *)lookup_rtti_interface (
-      DMZ_NET_MODULE_ATTRIBUTE_MAP_INTERFACE_NAME,
+      NetModuleAttributeMapInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -84,17 +86,14 @@ inline
 dmz::NetModuleAttributeMap::NetModuleAttributeMap (const PluginInfo &Info) :
       __Info (Info) {
 
-   store_rtti_interface (
-      DMZ_NET_MODULE_ATTRIBUTE_MAP_INTERFACE_NAME,
-      __Info,
-     (void *)this);
+   store_rtti_interface (NetModuleAttributeMapInterfaceName, __Info, (void *)this);
 }
 
 
 inline
 dmz::NetModuleAttributeMap::~NetModuleAttributeMap () {
 
-   remove_rtti_interface (DMZ_NET_MODULE_ATTRIBUTE_MAP_INTERFACE_NAME, __Info);
+   remove_rtti_interface (NetModuleAttributeMapInterfaceName, __Info);
 }
 
 #endif //  DMZ_NET_MODULE_ATTRIBUTE_MAP_DOT_H

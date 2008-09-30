@@ -5,17 +5,26 @@
 #include <dmzRuntimeRTTI.h>
 #include <dmzTypesBase.h>
 
-#define DMZ_NET_EXT_PACKET_CODEC_OBJECT_INTERFACE_NAME "NetExtPacketCodecObjectInterface"
-#define DMZ_NET_EXT_PACKET_CODEC_EVENT_INTERFACE_NAME "NetExtPacketCodecEventInterface"
 
 namespace dmz {
+
+   //! \cond
+   const char NetExtPacketCodecObjectInterfaceName[] = "NetExtPacketCodecObjectInterface";
+   const char NetExtPacketCodecEventInterfaceName[] = "NetExtPacketCodecEventInterface";
+   //! \endcond
 
    class Data;
    class Marshal;
    class Message;
    class Unmarshal;
 
-   enum NetObjectEncodeEnum { NetObjectActivate, NetObjectUpdate, NetObjectDeactivate, };
+   //! \brief Object encode enum.
+   //! \ingroup Net
+   enum NetObjectEncodeEnum {
+      NetObjectActivate,   //!< Activate object.
+      NetObjectUpdate,     //!< Update object.
+      NetObjectDeactivate, //!< Deactivate object.
+   };
 
    class NetExtPacketCodec {
 
@@ -28,7 +37,9 @@ namespace dmz {
          NetExtPacketCodec (const PluginInfo &Info);
          ~NetExtPacketCodec () {;}
 
+         //! \cond
          const PluginInfo &_Info;
+         //! \endcond
    };
 
    class NetExtPacketCodecObject : public NetExtPacketCodec {
@@ -80,7 +91,7 @@ inline dmz::NetExtPacketCodecObject *
 dmz::NetExtPacketCodecObject::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (NetExtPacketCodecObject *)lookup_rtti_interface (
-      DMZ_NET_EXT_PACKET_CODEC_OBJECT_INTERFACE_NAME,
+      NetExtPacketCodecObjectInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -91,7 +102,7 @@ dmz::NetExtPacketCodecObject::NetExtPacketCodecObject (const PluginInfo &Info) :
       NetExtPacketCodec (Info) {
 
    store_rtti_interface (
-      DMZ_NET_EXT_PACKET_CODEC_OBJECT_INTERFACE_NAME,
+      NetExtPacketCodecObjectInterfaceName,
       _Info,
       (void *)this);
 }
@@ -100,7 +111,7 @@ dmz::NetExtPacketCodecObject::NetExtPacketCodecObject (const PluginInfo &Info) :
 inline
 dmz::NetExtPacketCodecObject::~NetExtPacketCodecObject () {
 
-   remove_rtti_interface (DMZ_NET_EXT_PACKET_CODEC_OBJECT_INTERFACE_NAME, _Info);
+   remove_rtti_interface (NetExtPacketCodecObjectInterfaceName, _Info);
 }
 
 
@@ -108,7 +119,7 @@ inline dmz::NetExtPacketCodecEvent *
 dmz::NetExtPacketCodecEvent::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (NetExtPacketCodecEvent *)lookup_rtti_interface (
-      DMZ_NET_EXT_PACKET_CODEC_EVENT_INTERFACE_NAME,
+      NetExtPacketCodecEventInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -119,7 +130,7 @@ dmz::NetExtPacketCodecEvent::NetExtPacketCodecEvent (const PluginInfo &Info) :
       NetExtPacketCodec (Info) {
 
    store_rtti_interface (
-      DMZ_NET_EXT_PACKET_CODEC_EVENT_INTERFACE_NAME,
+      NetExtPacketCodecEventInterfaceName,
       _Info,
       (void *)this);
 }
@@ -128,7 +139,7 @@ dmz::NetExtPacketCodecEvent::NetExtPacketCodecEvent (const PluginInfo &Info) :
 inline
 dmz::NetExtPacketCodecEvent::~NetExtPacketCodecEvent () {
 
-   remove_rtti_interface (DMZ_NET_EXT_PACKET_CODEC_EVENT_INTERFACE_NAME, _Info);
+   remove_rtti_interface (NetExtPacketCodecEventInterfaceName, _Info);
 }
 
 #endif //  DMZ_NET_EXT_PACKET_CODEC_DOT_H

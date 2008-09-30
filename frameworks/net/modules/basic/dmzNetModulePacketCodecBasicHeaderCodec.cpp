@@ -15,22 +15,22 @@ namespace {
          constElement (const T &TheValue);
          ~constElement () {;}
 
-         virtual Boolean read_element (Unmarshal &data, Handle &packetHandle);
-         virtual Boolean write_element (const Handle PacketHandle, Marshal &data);
+         virtual Boolean read_element (Unmarshal &data, Handle &packetID);
+         virtual Boolean write_element (const Handle PacketID, Marshal &data);
 
       protected:
          const T _Value;
    };
 
-   template <class T> class handleElement :
+   template <class T> class idElement :
          public NetModulePacketCodecBasic::HeaderElement {
 
       public:
-         handleElement () {;}
-         ~handleElement () {;}
+         idElement () {;}
+         ~idElement () {;}
 
-         virtual Boolean read_element (Unmarshal &data, Handle &packetHandle);
-         virtual Boolean write_element (const Handle PacketHandle, Marshal &data);
+         virtual Boolean read_element (Unmarshal &data, Handle &packetID);
+         virtual Boolean write_element (const Handle PacketID, Marshal &data);
 
       protected:
    };
@@ -42,8 +42,8 @@ namespace {
          sizeElement () {;}
          ~sizeElement () {;}
 
-         virtual Boolean read_element (Unmarshal &data, Handle &packetHandle);
-         virtual Boolean write_element (const Handle PacketHandle, Marshal &data);
+         virtual Boolean read_element (Unmarshal &data, Handle &packetID);
+         virtual Boolean write_element (const Handle PacketID, Marshal &data);
 
       protected:
    };
@@ -55,7 +55,7 @@ constElement<T>::constElement (const T &TheValue) : _Value (TheValue) {;}
 
 
 template <class T> Boolean
-constElement<T>::read_element (Unmarshal &data, UInt32 &packetHandle) {
+constElement<T>::read_element (Unmarshal &data, UInt32 &packetID) {
 
    T value (_Value);
 
@@ -68,7 +68,7 @@ constElement<T>::read_element (Unmarshal &data, UInt32 &packetHandle) {
 
 
 template <class T> Boolean
-constElement<T>::write_element (const UInt32 PacketHandle, Marshal &data) {
+constElement<T>::write_element (const UInt32 PacketID, Marshal &data) {
 
    MarshalWrap wrap (data);
    wrap.set_next (_Value);
@@ -78,7 +78,7 @@ constElement<T>::write_element (const UInt32 PacketHandle, Marshal &data) {
 
 
 template <class T> Boolean
-handleElement<T>::read_element (Unmarshal &data, UInt32 &packetHandle) {
+idElement<T>::read_element (Unmarshal &data, UInt32 &packetID) {
 
    T value (0);
 
@@ -86,18 +86,18 @@ handleElement<T>::read_element (Unmarshal &data, UInt32 &packetHandle) {
 
    wrap.get_next (value);
 
-   packetHandle = (UInt32)value;
+   packetID = (UInt32)value;
 
    return True;
 }
 
 
 template <class T> Boolean
-handleElement<T>::write_element (const UInt32 PacketHandle, Marshal &data) {
+idElement<T>::write_element (const UInt32 PacketID, Marshal &data) {
 
    T value (0);
 
-   value = T (PacketHandle);
+   value = T (PacketID);
 
    MarshalWrap wrap (data);
 
@@ -108,7 +108,7 @@ handleElement<T>::write_element (const UInt32 PacketHandle, Marshal &data) {
 
 
 template <class T> Boolean
-sizeElement<T>::read_element (Unmarshal &data, UInt32 &packetHandle) {
+sizeElement<T>::read_element (Unmarshal &data, UInt32 &packetID) {
 
    T value (0);
 
@@ -122,7 +122,7 @@ sizeElement<T>::read_element (Unmarshal &data, UInt32 &packetHandle) {
 
 
 template <class T> Boolean
-sizeElement<T>::write_element (const UInt32 PacketHandle, Marshal &data) {
+sizeElement<T>::write_element (const UInt32 PacketID, Marshal &data) {
 
    T value (0);
 
@@ -136,12 +136,13 @@ sizeElement<T>::write_element (const UInt32 PacketHandle, Marshal &data) {
 }
 
 
+//! \cond
 void
 dmz::NetModulePacketCodecBasic::_build_header_codec (Config &local) {
 
    Config header;
 
-   if (local.lookup_all_config_merged ("header", header)) {
+   if (local.lookup_all_config ("header.element", header)) {
 
       Boolean error (False);
 
@@ -157,10 +158,10 @@ dmz::NetModulePacketCodecBasic::_build_header_codec (Config &local) {
 
          HeaderElement *next (0);
 
-         const String TypeName (element.get_name ().to_lower ());
+         const String TypeName (config_to_string ("type", element).to_lower ());
 
          const BaseTypeEnum BaseType (
-            string_to_base_type_enum (config_to_string ("type", element)));
+            string_to_base_type_enum (config_to_string ("base", element)));
 
          if (TypeName == "const") {
 
@@ -202,25 +203,27 @@ dmz::NetModulePacketCodecBasic::_build_header_codec (Config &local) {
             }
             else {
 
-               _log.error << "Header codec element: " << element.get_name ()
-                  << " is an unsupported type: " << base_type_enum_to_string (BaseType)
+               _log.error << "Header codec element: " << TypeName
+                  << " is an unsupported base type: "
+                  << base_type_enum_to_string (BaseType)
                   << endl;
             }
          }
-         else if (TypeName == "handle") {
+         else if (TypeName == "id") {
 
-            if (BaseType == BaseTypeInt8) { next = new handleElement<Int8>; }
-            else if (BaseType == BaseTypeInt16) { next = new handleElement<Int16>; }
-            else if (BaseType == BaseTypeInt32) { next = new handleElement<Int32>; }
-            else if (BaseType == BaseTypeInt64) { next = new handleElement<Int64>; }
-            else if (BaseType == BaseTypeUInt8) { next = new handleElement<UInt8>; }
-            else if (BaseType == BaseTypeUInt16) { next = new handleElement<UInt16>; }
-            else if (BaseType == BaseTypeUInt32) { next = new handleElement<UInt32>; }
-            else if (BaseType == BaseTypeUInt64) { next = new handleElement<UInt64>; }
+            if (BaseType == BaseTypeInt8) { next = new idElement<Int8>; }
+            else if (BaseType == BaseTypeInt16) { next = new idElement<Int16>; }
+            else if (BaseType == BaseTypeInt32) { next = new idElement<Int32>; }
+            else if (BaseType == BaseTypeInt64) { next = new idElement<Int64>; }
+            else if (BaseType == BaseTypeUInt8) { next = new idElement<UInt8>; }
+            else if (BaseType == BaseTypeUInt16) { next = new idElement<UInt16>; }
+            else if (BaseType == BaseTypeUInt32) { next = new idElement<UInt32>; }
+            else if (BaseType == BaseTypeUInt64) { next = new idElement<UInt64>; }
             else {
 
-               _log.error << "Header codec element: " << element.get_name ()
-                  << " is an unsupported type: " << base_type_enum_to_string (BaseType)
+               _log.error << "Header codec element: " << TypeName
+                  << " is an unsupported base type: "
+                  << base_type_enum_to_string (BaseType)
                   << endl;
             }
          }
@@ -236,14 +239,15 @@ dmz::NetModulePacketCodecBasic::_build_header_codec (Config &local) {
             else if (BaseType == BaseTypeUInt64) { next = new sizeElement<UInt64>; }
             else {
 
-               _log.error << "Header codec element: " << element.get_name ()
-                  << " is an unsupported type: " << base_type_enum_to_string (BaseType)
+               _log.error << "Header codec element: " << TypeName
+                  << " is an unsupported base type: "
+                  << base_type_enum_to_string (BaseType)
                   << endl;
             }
          }
          else {
 
-            _log.error << "Header codec element: " << element.get_name ()
+            _log.error << "Header codec element: " << TypeName
                << " is an unknown type" << endl;
          }
 
@@ -261,4 +265,5 @@ dmz::NetModulePacketCodecBasic::_build_header_codec (Config &local) {
    }
    else { _log.error << "No header codec defined" << endl; }
 }
+//! \endcond
 

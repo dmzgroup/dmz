@@ -18,6 +18,7 @@ namespace dmz {
          public  NetModuleAttributeMap {
 
       public:
+         //! \cond
          NetModuleAttributeMapBasic (const PluginInfo &Info, Config &local);
          ~NetModuleAttributeMapBasic ();
 
@@ -205,6 +206,7 @@ namespace dmz {
          HashTableUInt32Template<NetEventStruct> _netEventTypeTable;
          HashTableUInt32Template<InternalEventStruct> _internalEventTypeTable;
          HashTableUInt32Template<EventMaskStruct> _eventMaskTable;
+         //! \endcond
 
       private:
          NetModuleAttributeMapBasic ();

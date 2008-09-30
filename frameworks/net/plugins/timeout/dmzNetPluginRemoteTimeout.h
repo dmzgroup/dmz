@@ -17,6 +17,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          NetPluginRemoteTimeout (const PluginInfo &Info, Config &local);
          ~NetPluginRemoteTimeout ();
 
@@ -78,6 +79,7 @@ namespace dmz {
          HashTableHandleTemplate<ObjStruct> _objTable;
 
          ObjectModule *_objMod;
+         //! \endcond
 
       private:
          NetPluginRemoteTimeout ();

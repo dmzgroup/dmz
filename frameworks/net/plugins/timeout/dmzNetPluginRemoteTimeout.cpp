@@ -5,6 +5,20 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::NetPluginRemoteTimeout
+\ingroup Net
+\brief Removes remote objects that have timed out.
+\code
+<local-scope>
+   <timeout value="Timeout in Seconds"/>
+</local-scope>
+\endcode
+The default timeout interval is 10sec.
+*/
+
+//! \cond
 dmz::NetPluginRemoteTimeout::NetPluginRemoteTimeout (
       const PluginInfo &Info,
       Config &local) :
@@ -136,6 +150,7 @@ dmz::NetPluginRemoteTimeout::_init (Config &local) {
 
    _timeoutInterval = config_to_float64 ("timeout.value", local, _timeoutInterval);
 }
+//! \endcond
 
 
 extern "C" {

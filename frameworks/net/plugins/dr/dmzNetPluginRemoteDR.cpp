@@ -5,6 +5,19 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::NetPluginRemoteDR
+\ingroup Net
+\brief Performs basic linear dead-reckoning of remote objects using the last network value
+times stamp, velocity, and position.
+\code
+CurrentPosition = LastNetworkValuePosition + (LastNetworkValueVelocity * (CurrentTime - LastNetworkValueTimeStamp))
+\endcode
+
+*/
+
+//! \cond
 dmz::NetPluginRemoteDR::NetPluginRemoteDR (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (Info),
@@ -119,6 +132,7 @@ void
 dmz::NetPluginRemoteDR::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

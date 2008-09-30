@@ -25,6 +25,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          NetPluginPacket (
             const PluginInfo &Info,
             const ByteOrderEnum Endian,
@@ -94,6 +95,7 @@ namespace dmz {
 
         HashTableHandleTemplate<ObjStruct> _objTable;
         HashTableHandleTemplate<ObjStruct> _preRegObjTable;
+        //! \endcond
 
       private:
          NetPluginPacket ();

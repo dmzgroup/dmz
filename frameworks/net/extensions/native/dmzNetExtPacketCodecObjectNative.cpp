@@ -17,6 +17,36 @@
 #include <dmzTypesUUID.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::NetExtPacketCodecObjectNative
+\ingroup Net
+\brief Encodes and decodes objects for the network.
+\details
+\code
+<local-scope>
+   <adapter
+      type="Adapter Type"
+      attribute="Attribute Name"
+      lnv="True/False"
+      lnv-attribute="Last Network Value Attribute Name"
+   />
+   ...
+</local-scope>
+\endcode
+Possible types are:
+link, superlink, counter, state, flag, position, orientation, velocity, acceleration,
+scale, vector, scalar, timestamp, and text. \n \n
+The lnv attribute is boolean. If it is set to true, the last network value will be
+stored. The lnv attribute name is automatically generated. It defaults to false.
+If the lnv attribute is not set, the lnv attribute name may be explicitly set with
+the lnv-attribute attribute. \n \n
+A counter type adapter may also have the following boolean attributes:
+counter, minimum, maximum, and rollover. These attribute determine whether each value
+is encoded/decode in the packet. They default to true.
+*/
+
+//! \cond
 dmz::NetExtPacketCodecObjectNative::NetExtPacketCodecObjectNative (
       const PluginInfo &Info,
       Config &local) :
@@ -305,7 +335,7 @@ local_create_lnv_handle (dmz::Config &local, dmz::RuntimeContext *context) {
    }
    else {
 
-      result = defs.create_named_handle (config_to_string ("lnvattribute", local));
+      result = defs.create_named_handle (config_to_string ("lnv-attribute", local));
    }
 
    return result;
@@ -514,7 +544,7 @@ Counter::Counter (dmz::Config &local, dmz::RuntimeContext *context) :
       _includeCounter (dmz::config_to_boolean ("counter", local, dmz::True)),
       _includeMin (dmz::config_to_boolean ("minimum", local, dmz::False)),
       _includeMax (dmz::config_to_boolean ("maximum", local, dmz::False)),
-      _includeRollover (dmz::config_to_boolean ("counter", local, dmz::False)) {;}
+      _includeRollover (dmz::config_to_boolean ("rollover", local, dmz::False)) {;}
 
 void
 Counter::decode (
@@ -1195,4 +1225,5 @@ dmz::NetExtPacketCodecObjectNative::create_object_adapter (
 
    return result;
 }
+//! \endcond
 

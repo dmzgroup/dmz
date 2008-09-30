@@ -6,6 +6,36 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesStringTokenizer.h>
 
+/*!
+
+\class dmz::NetModuleAttributeMapBasic
+\ingroup Net
+\brief Basic Network Attribute Module.
+\details
+\code
+<dmz>
+<runtime>
+   <object-type name="Type Name">
+      <net>
+         <enum value="X.X.X" depth="enumeration depth"/>
+         <state name="State Name" mask="Bit mask"/>
+         ...
+      </net>
+   </object-type>
+   <event-type name="Type Name">
+      <net>
+         <enum value="X.X.X" depth="enumeration depth"/>
+         <state name="State Name" mask="Bit mask"/>
+         ...
+      </net>
+   </event-type>
+</runtime>
+</dmz>
+\endcode
+
+*/
+
+//! \cond
 static dmz::String
 local_array_to_enum (const dmz::ArrayUInt32 &Array) {
 
@@ -743,6 +773,8 @@ dmz::NetModuleAttributeMapBasic::_process_net_event_type (const EventType &Type)
       }
    }
 }
+//! \endcond
+
 
 extern "C" {
 

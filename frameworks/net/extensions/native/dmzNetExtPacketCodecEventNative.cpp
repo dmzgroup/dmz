@@ -18,6 +18,26 @@
 #include <dmzTypesUUID.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::NetExtPacketCodecEventNative
+\ingroup Net
+\brief Encodes and decodes events for the network.
+\details
+\code
+<local-scope>
+   <adapter
+      type="Adapter Type"
+      attribute="Attribute Name"
+   />
+   ...
+</local-scope>
+\endcode
+Possible types are: id, object-type, state, position, orientation, velocity, acceleration, scale, vector, scalar, timestamp, and text. Data object are not currently supported.
+
+*/
+
+//! \cond
 dmz::NetExtPacketCodecEventNative::NetExtPacketCodecEventNative (
       const PluginInfo &Info,
       Config &local) :
@@ -932,7 +952,7 @@ dmz::NetExtPacketCodecEventNative::create_event_adapter (
    const String Type = config_to_string ("type", local).to_lower ();
 
    if (Type == "id") { result = new ObjectID (local, context); }
-   else if (Type == "objecttype") { result = new ObjectTypeAttr (local, context); }
+   else if (Type == "object-type") { result = new ObjectTypeAttr (local, context); }
    else if (Type == "state") { result = new State (local, context); }
    else if (Type == "position") { result = new Position (local, context); }
    else if (Type == "orientation") { result = new Orientation (local, context); }
@@ -950,4 +970,4 @@ dmz::NetExtPacketCodecEventNative::create_event_adapter (
 
    return result;
 }
-
+//! \endcond

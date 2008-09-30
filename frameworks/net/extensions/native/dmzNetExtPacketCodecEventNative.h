@@ -19,6 +19,7 @@ namespace dmz {
          public NetExtPacketCodecEvent {
 
       public:
+         //! \cond
          class EventAttributeAdapter {
 
             public:
@@ -82,6 +83,7 @@ namespace dmz {
          EventModule *_eventMod;
          NetModuleAttributeMap *_attrMod;
          EventAttributeAdapter *_adapterList;
+         //! \endcond
 
       private:
          NetExtPacketCodecEventNative ();

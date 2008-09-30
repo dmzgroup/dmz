@@ -13,6 +13,44 @@
 
 #include <math.h>
 
+/*!
+\class dmz::NetModuleLocalDRBasic
+\ingroup Net
+\brief Basic module for when the next packet for an object should be transmitted.
+\details
+\code
+<dmz>
+<runtime>
+   <object-type name="Type Name">
+      <net>
+         <rule
+            type="Rule Type"
+            attribute="Attribute Name"
+            lnv-attribute="Last Network Value Attribute Name"
+            value="Delta Value"
+         />
+         ...
+      </net>
+   </object-type>
+</runtime>
+</dmz>
+\endcode
+Possible rule types and their default values:\n
+position = 0.25m \n
+velocity = 0.25m/s \n
+acceleration = 0.25m/s^2 \n
+vector = 0.25 \n
+orientation = 0.25 radians \n
+scalar = 0.25 \n
+counter = N/A \n
+state = Empty Mask \n
+skew = 0.25 radians \n
+heartbeat = 5.0sec \n
+rate-limit = 1/15 of a second \n
+
+*/
+
+//! \cond
 namespace {
 
    enum TestTypeEnum { TestPosition, TestVelocity, TestAcceleration, TestVector };
@@ -678,7 +716,7 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
 
       const Handle LNVHandle (defs.create_named_handle (
          config_to_string (
-            "lnvattribute",
+            "lnv-attribute",
             cd,
             create_last_network_value_name (AttributeName))));
 
@@ -757,13 +795,13 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
             _time,
             config_to_float64 ("value", cd, 5.0));
       }
-      else if (Type == "ratelimit") {
+      else if (Type == "rate-limit") {
 
          next = new limitRateTest (
             LNVHandle,
             _time,
             // 1/15 of a second max update rate is the default.
-            config_to_float64 ("diff", cd, 0.066666666667));
+            config_to_float64 ("value", cd, 0.066666666667));
       }
 
       if (next) {
@@ -830,6 +868,7 @@ dmz::NetModuleLocalDRBasic::_create_test_from_type (const ObjectType &Type) {
 
    return result;
 }
+//! \endcond
 
 
 extern "C" {

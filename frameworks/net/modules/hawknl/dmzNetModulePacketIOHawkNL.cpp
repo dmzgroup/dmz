@@ -3,6 +3,23 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::NetModulePacketIOHawkNL
+\ingroup Net
+\brief HawkNL implementation of the Network Packet I/O Module.
+\details Creates a broadcast socket for reading and writing. Defaults to port 3001 and
+a max packet size of 1024 bytes.
+\code
+<local-scope>
+   <socket port="Port Number"/>
+   <buffer size="Buffer Size"/>
+</local-scope>
+\endcode
+
+*/
+
+//! \cond
 dmz::NetModulePacketIOHawkNL::NetModulePacketIOHawkNL (
       const PluginInfo &Info,
       Config &local) :
@@ -128,6 +145,7 @@ dmz::NetModulePacketIOHawkNL::_get_error () {
    return (const char *)(nlGetError () == NL_SYSTEM_ERROR ?
       nlGetSystemErrorStr (nlGetSystemError ()) : nlGetErrorStr (nlGetError ()));
 }
+//! \endcond
 
 
 extern "C" {

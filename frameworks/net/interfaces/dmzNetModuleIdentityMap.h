@@ -5,9 +5,12 @@
 #include <dmzRuntimeRTTI.h>
 #include <dmzTypesBase.h>
 
-#define DMZ_NET_MODULE_IDENTITY_MAP_INTERFACE_NAME "NetModuleIdentityMapInterface"
 
 namespace dmz {
+
+   //! \cond
+   const char NetModuleIdentityMapInterfaceName[] = "NetModuleIdentityMapInterface";
+   //! \endcond
 
    class NetModuleIdentityMap {
 
@@ -16,8 +19,8 @@ namespace dmz {
             const Plugin *PluginPtr,
             const String &PluginName = "");
 
-         virtual UInt32 get_site_handle () = 0;
-         virtual UInt32 get_host_handle () = 0;
+         virtual UInt32 get_site_id () = 0;
+         virtual UInt32 get_host_id () = 0;
 
          virtual Boolean create_site_host_entity (
             const Handle ObjectHandle,
@@ -71,7 +74,7 @@ inline dmz::NetModuleIdentityMap *
 dmz::NetModuleIdentityMap::cast (const Plugin *PluginPtr, const String &PluginName) {
 
    return (NetModuleIdentityMap *)lookup_rtti_interface (
-      DMZ_NET_MODULE_IDENTITY_MAP_INTERFACE_NAME,
+      NetModuleIdentityMapInterfaceName,
       PluginName,
       PluginPtr);
 }
@@ -82,7 +85,7 @@ dmz::NetModuleIdentityMap::NetModuleIdentityMap (const PluginInfo &Info) :
       __Info (Info) {
 
    store_rtti_interface (
-      DMZ_NET_MODULE_IDENTITY_MAP_INTERFACE_NAME,
+      NetModuleIdentityMapInterfaceName,
       __Info,
      (void *)this);
 }
@@ -91,7 +94,7 @@ dmz::NetModuleIdentityMap::NetModuleIdentityMap (const PluginInfo &Info) :
 inline
 dmz::NetModuleIdentityMap::~NetModuleIdentityMap () {
 
-   remove_rtti_interface (DMZ_NET_MODULE_IDENTITY_MAP_INTERFACE_NAME, __Info);
+   remove_rtti_interface (NetModuleIdentityMapInterfaceName, __Info);
 }
 
 #endif //  DMZ_NET_MODULE_IDENTITY_MAP_DOT_H

@@ -19,6 +19,7 @@ namespace dmz {
          public NetExtPacketCodecObject {
 
       public:
+         //! \cond
          NetExtPacketCodecObjectBasic (const PluginInfo &Info, Config &local);
          ~NetExtPacketCodecObjectBasic ();
 
@@ -70,6 +71,7 @@ namespace dmz {
          Mask _deactivateState;
 
          HashTableHandleTemplate<ScalarStruct> _scalarTable;
+         //! \endcond
 
       private:
          NetExtPacketCodecObjectBasic ();

@@ -19,6 +19,7 @@ namespace dmz {
          public NetExtPacketCodecObject {
 
       public:
+         //! \cond
          class ObjectAttributeAdapter {
 
             public:
@@ -84,6 +85,7 @@ namespace dmz {
          ObjectModule *_objMod;
          NetModuleAttributeMap *_attrMod;
          ObjectAttributeAdapter *_adapterList;
+         //! \endcond
 
       private:
          NetExtPacketCodecObjectNative ();

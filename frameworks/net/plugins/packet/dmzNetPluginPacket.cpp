@@ -8,6 +8,21 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesUUID.h>
 
+/*!
+
+\class dmz::NetPluginPacket
+\ingroup Net
+\brief Automatically encodes and decodes local objects and events.
+\details
+\code
+<local-scope>
+   <endian value="big/little"/>
+</local-scope>
+\endcode
+
+*/
+
+//! \cond
 dmz::NetPluginPacket::NetPluginPacket (
       const PluginInfo &Info,
       const ByteOrderEnum Endian,
@@ -305,6 +320,7 @@ void
 dmz::NetPluginPacket::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {
@@ -318,7 +334,7 @@ create_dmzNetPluginPacket (
    dmz::ByteOrderEnum endian (dmz::ByteOrderBigEndian);
 
    const dmz::String ByteOrderName (
-      dmz::config_to_string ("endian", local).to_lower ());
+      dmz::config_to_string ("endian.value", local).to_lower ());
 
    if (ByteOrderName == "little") { endian = dmz::ByteOrderLittleEndian; }
    else if (ByteOrderName == "big") { endian = dmz::ByteOrderBigEndian; }

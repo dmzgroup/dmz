@@ -17,6 +17,15 @@
 #include <dmzTypesUUID.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::NetExtPacketCodecEventBasic
+\ingroup Net
+\brief Basic event network codec.
+
+*/
+
+//! \cond
 dmz::NetExtPacketCodecEventBasic::NetExtPacketCodecEventBasic (
       const PluginInfo &Info,
       Config &local) :
@@ -283,6 +292,7 @@ dmz::NetExtPacketCodecEventBasic::_init (Config &local) {
       config_to_string ("events.collision.name", local, EventCollisionName),
       context);
 }
+//! \endcond
 
 
 extern "C" {

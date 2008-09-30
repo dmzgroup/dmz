@@ -17,6 +17,7 @@ namespace dmz {
          public NetModuleLocalDR {
 
       public:
+         //! \cond
          class ObjectUpdate {
 
             public:
@@ -68,6 +69,7 @@ namespace dmz {
          ObjectModule *_objMod;
 
          UInt32 _defaultHandle;
+         //! \endcond
 
       private:
          NetModuleLocalDRBasic ();

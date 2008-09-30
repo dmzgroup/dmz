@@ -5,6 +5,22 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::NetModuleIdentityMapBasic
+\ingroup Net
+\brief Basic Network Identity Module.
+\details
+\code
+<local-scope>
+   <site value="Site Value"/>
+   <host value="Host Value"/>
+</local-scope>
+\endcode
+
+*/
+
+//! \cond
 dmz::NetModuleIdentityMapBasic::NetModuleIdentityMapBasic (
       const PluginInfo &Info,
       Config &local) :
@@ -37,11 +53,11 @@ dmz::NetModuleIdentityMapBasic::~NetModuleIdentityMapBasic () {
 
 
 dmz::UInt32
-dmz::NetModuleIdentityMapBasic::get_site_handle () { return _site; }
+dmz::NetModuleIdentityMapBasic::get_site_id () { return _site; }
 
 
 dmz::UInt32
-dmz::NetModuleIdentityMapBasic::get_host_handle () { return _host; }
+dmz::NetModuleIdentityMapBasic::get_host_id () { return _host; }
 
 
 dmz::Boolean
@@ -328,6 +344,7 @@ dmz::NetModuleIdentityMapBasic::_create_entity_struct (const Handle ObjectHandle
 
    return es;
 }
+//! \endcond
 
 
 extern "C" {

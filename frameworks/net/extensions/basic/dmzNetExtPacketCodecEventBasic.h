@@ -20,6 +20,7 @@ namespace dmz {
          public NetExtPacketCodecEvent {
 
       public:
+         //! \cond
          NetExtPacketCodecEventBasic (const PluginInfo &Info, Config &local);
          ~NetExtPacketCodecEventBasic ();
 
@@ -61,6 +62,7 @@ namespace dmz {
          EventModule *_eventMod;
          NetModuleAttributeMap *_attrMod;
          ObjectModule *_objMod;
+         //! \endcond
 
       private:
          NetExtPacketCodecEventBasic ();

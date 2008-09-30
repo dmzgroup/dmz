@@ -18,6 +18,7 @@ namespace dmz {
          public MessageObserver {
 
       public:
+         //! \cond
          NetModuleIdentityMapBasic (const PluginInfo &Info, Config &local);
          ~NetModuleIdentityMapBasic ();
 
@@ -31,8 +32,8 @@ namespace dmz {
             const Plugin *PluginPtr) {;}
 
          // NetModuleIdentityMap Interface
-         virtual UInt32 get_site_handle ();
-         virtual UInt32 get_host_handle ();
+         virtual UInt32 get_site_id ();
+         virtual UInt32 get_host_id ();
 
          virtual Boolean create_site_host_entity (
             const Handle ObjectHandle,
@@ -132,6 +133,7 @@ namespace dmz {
 
          Message _removeObjMsg;
          DataConverterHandle _handleConverter;
+         //! \endcond
 
       private:
          NetModuleIdentityMapBasic ();

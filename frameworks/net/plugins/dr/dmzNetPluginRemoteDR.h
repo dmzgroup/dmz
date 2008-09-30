@@ -17,6 +17,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          NetPluginRemoteDR (const PluginInfo &Info, Config &local);
          ~NetPluginRemoteDR ();
 
@@ -59,6 +60,7 @@ namespace dmz {
          Handle _lnvHandle;
 
          HashTableHandleTemplate<NetPluginRemoteDR> _objTable;
+         //! \endcond
 
       private:
          NetPluginRemoteDR ();

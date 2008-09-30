@@ -16,6 +16,7 @@ namespace dmz {
          public NetModulePacketIO {
 
       public:
+         //! \cond
          NetModulePacketIOHawkNL (const PluginInfo &Info, Config &local);
          ~NetModulePacketIOHawkNL ();
 
@@ -46,6 +47,7 @@ namespace dmz {
          HashTableUInt32Template<NetPacketObserver> _obsTable;
          Int32 _bufferSize;
          char *_buffer;
+         //! \endcond
 
       private:
          NetModulePacketIOHawkNL (const NetModulePacketIOHawkNL &);

@@ -62,18 +62,36 @@ ObjectType &type)
 const EventType &Type,
 const Mask &InValue,
 ArrayUInt32 &outValue)
+\brief Converts a dmz::Mask to a network bitmask.
+\param[in] Type ObjectType of object.
+\param[in] InValue Mask to convert.
+\param[out] outValue ArrayUInt32 containing the bitmasks.
+\return Returns dmz::True if the dmz::Mask was successfully converted.
 
 \fn dmz::Boolean dmz::NetModuleAttributeMap::to_internal_event_mask (
 const EventType &Type,
 const ArrayUInt32 &InValue,
 Mask &outValue)
+\brief Converts a network bitmask to a dmz::Mask.
+\param[in] Type ObjectType of object.
+\param[in] InValue ArrayUInt32 of network bitmasks to convert.
+\param[out] outValue Mask with the converted network bitmasks.
+\return Returns dmz::True if the network bitmask was successfully converted.
 
 \fn dmz::Boolean dmz::NetModuleAttributeMap::to_net_event_type (
 const EventType &Type,
 ArrayUInt32 &array)
+\brief Converts a dmz::EventType to the network enumeration.
+\param[in] Type EventType to convert.
+\param[out] array ArrayUInt32 containing the object's network type enumeration.
+\return Returns dmz::True if the EventType was successfully converted.
 
 \fn dmz::Boolean dmz::NetModuleAttributeMap::to_internal_event_type (
 const ArrayUInt32 &Array,
 EventType &type)
+\brief Converts a network enumeration to a dmz::EventType.
+\param[in] Array ArrayUInt32 containing the object's network type enumeration.
+\param[out] type converted EventType.
+\return Returns dmz::True if the network enumeration was successfully converted.
 
 */

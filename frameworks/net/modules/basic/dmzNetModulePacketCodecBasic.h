@@ -18,16 +18,17 @@ namespace dmz {
          public NetModulePacketCodec {
 
       public:
+         //! \cond
          class HeaderElement {
 
             public:
                HeaderElement *next;
                virtual ~HeaderElement () { if (next) { delete next; next = 0; } }
                Boolean read_header (Unmarshal &data, Handle &handle);
-               Boolean write_header (const Handle PacketHandle, Marshal &data);
-               virtual Boolean read_element (Unmarshal &data, Handle &packetHandle) = 0;
+               Boolean write_header (const Handle PacketID, Marshal &data);
+               virtual Boolean read_element (Unmarshal &data, Handle &packetID) = 0;
                virtual Boolean write_element (
-                  const Handle PacketHandle,
+                  const Handle PacketID,
                   Marshal &data) = 0;
 
             protected:
@@ -82,49 +83,49 @@ namespace dmz {
          struct PacketStruct {
 
             const String ExtName;
-            const Handle PacketHandle;
+            const Handle PacketID;
             ObjectTypeSet objects;
             EventTypeSet events;
-            PacketStruct (const String &TheName, const Handle TheHandle) :
+            PacketStruct (const String &TheName, const Handle ThePacketID) :
                ExtName (TheName),
-               PacketHandle (TheHandle) {;}
+               PacketID (ThePacketID) {;}
 
             ~PacketStruct () {;}
          };
 
          struct DecodeStruct {
 
-            const Handle PacketHandle;
+            const Handle PacketID;
             NetExtPacketCodec &decoder;
 
             DecodeStruct (
-                  const Handle TheHandle,
+                  const Handle ThePacketID,
                   NetExtPacketCodec &theCodec) :
-                  PacketHandle (TheHandle),
+                  PacketID (ThePacketID),
                   decoder (theCodec) {;}
          };
 
          struct EncodeObjectStruct {
 
-            const Handle PacketHandle;
+            const Handle PacketID;
             NetExtPacketCodecObject &codec;
 
             EncodeObjectStruct (
-                  const Handle TheHandle,
+                  const Handle ThePacketID,
                   NetExtPacketCodecObject &theCodec) :
-                  PacketHandle (TheHandle),
+                  PacketID (ThePacketID),
                   codec (theCodec) {;}
          };
 
          struct EncodeEventStruct {
 
-            const Handle PacketHandle;
+            const Handle PacketID;
             NetExtPacketCodecEvent &codec;
 
             EncodeEventStruct (
-                  const Handle TheHandle,
+                  const Handle ThePacketID,
                   NetExtPacketCodecEvent &theCodec) :
-                  PacketHandle (TheHandle),
+                  PacketID (ThePacketID),
                   codec (theCodec) {;}
          };
 
@@ -150,6 +151,7 @@ namespace dmz {
          HashTableHandleTemplate<EncodeObjectStruct> _objTable;
          HashTableHandleTemplate<EncodeEventStruct> _eventEncodeTable;
          HashTableHandleTemplate<EncodeEventStruct> _eventTypeTable;
+         //! \endcond
 
       private:
          NetModulePacketCodecBasic (const NetModulePacketCodecBasic &);

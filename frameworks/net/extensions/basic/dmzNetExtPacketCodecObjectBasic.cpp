@@ -16,6 +16,15 @@
 #include <dmzTypesUUID.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::NetExtPacketCodecObjectBasic
+\ingroup Net
+\brief Basic object network codec.
+
+*/
+
+//! \cond
 dmz::NetExtPacketCodecObjectBasic::NetExtPacketCodecObjectBasic (
       const PluginInfo &Info,
       Config &local) :
@@ -334,6 +343,7 @@ dmz::NetExtPacketCodecObjectBasic::_init (Config &local) {
       if (ss && !_scalarTable.store (ss->NetHandle, ss)) { delete ss; ss = 0; }
    }
 }
+//! \endcond
 
 
 extern "C" {

@@ -7,6 +7,42 @@
 #include <dmzSystemMarshal.h>
 #include <dmzSystemUnmarshal.h>
 
+/*!
+
+\class dmz::NetModulePacketCodecBasic
+\ingroup Net
+\brief Basic Packet Codec Module.
+\details The Basic Codec Module parses the network packet's header and decodes the
+packet with the correct codec extension. It will also write the packet header before using
+the appropriate codec to encode the packet.
+\code
+<local-scope>
+   <header>
+      <element type="Element Type" base="Element Base"/>
+      <element type="const" base="Element Base" value="Const Value"/>
+      ...
+   </header>
+   <packet id="Packet ID" name="Codec Name">
+      <object-type name="Object Type Name"/>
+      ...
+   </packet>
+   <packet id="Packet ID" name="Codec Name">
+      <event-type name="Event Type Name"/>
+      ...
+   </packet>
+   <plugins>
+      <plugin name="Net Extention Name"/>
+   </plugins>
+</local-scope>
+\endcode
+Possible type attribute values: const, id, and size.\n
+Possible base attribute values: uint8, uint16, uint32, uint64,
+int8, int16, int32, and int64.\n
+The const type may have a value attribute where the const value is specified.
+
+*/
+
+//! \cond
 dmz::Boolean
 dmz::NetModulePacketCodecBasic::HeaderElement::read_header (
       Unmarshal &data,
@@ -34,18 +70,18 @@ dmz::NetModulePacketCodecBasic::HeaderElement::read_header (
 
 dmz::Boolean
 dmz::NetModulePacketCodecBasic::HeaderElement::write_header (
-      const Handle PacketHandle,
+      const Handle PacketID,
       Marshal &data) {
 
    Boolean result (True);
 
-   if (write_element (PacketHandle, data)) {
+   if (write_element (PacketID, data)) {
 
       HeaderElement *current (next);
 
       while (current) {
 
-         result = current->write_element (PacketHandle, data);
+         result = current->write_element (PacketID, data);
 
          if (!result) { current = 0; }
          else { current = current->next; }
@@ -231,12 +267,12 @@ dmz::NetModulePacketCodecBasic::encode_event (
    if (ees && _headerCodec) {
 
       const Int32 Place (outData.get_place ());
-      if (_headerCodec->write_header (ees->PacketHandle, outData)) {
+      if (_headerCodec->write_header (ees->PacketID, outData)) {
 
          if (ees->codec.encode_event (EventHandle, outData)) {
 
             outData.set_place (Place);
-            result = _headerCodec->write_header (ees->PacketHandle, outData);
+            result = _headerCodec->write_header (ees->PacketID, outData);
          }
       }
    }
@@ -258,12 +294,12 @@ dmz::NetModulePacketCodecBasic::_write_object (
    if (eos && _headerCodec) {
 
       const Int32 Place (outData.get_place ());
-      if (_headerCodec->write_header (eos->PacketHandle, outData)) {
+      if (_headerCodec->write_header (eos->PacketID, outData)) {
 
          if (eos->codec.encode_object (ObjectHandle, Mode, outData)) {
 
             outData.set_place (Place);
-            result = _headerCodec->write_header (eos->PacketHandle, outData);
+            result = _headerCodec->write_header (eos->PacketID, outData);
          }
       }
    }
@@ -287,17 +323,17 @@ dmz::NetModulePacketCodecBasic::_discover_codec (const Plugin *PluginPtr) {
       if (hs) {
 
          DecodeStruct *ds (0);
-         if (objCodec) { ds = new DecodeStruct (hs->PacketHandle, *objCodec); }
-         else if (eventCodec) { ds = new DecodeStruct (hs->PacketHandle, *eventCodec); }
+         if (objCodec) { ds = new DecodeStruct (hs->PacketID, *objCodec); }
+         else if (eventCodec) { ds = new DecodeStruct (hs->PacketID, *eventCodec); }
 
-         if (ds && _decodeTable.store (hs->PacketHandle, ds)) {
+         if (ds && _decodeTable.store (hs->PacketID, ds)) {
 
             if (objCodec && hs->objects.get_count ()) {
 
                EncodeObjectStruct *eos (
-                  new EncodeObjectStruct (hs->PacketHandle, *objCodec));
+                  new EncodeObjectStruct (hs->PacketID, *objCodec));
 
-               if (eos && _objEncodeTable.store (hs->PacketHandle, eos)) {
+               if (eos && _objEncodeTable.store (hs->PacketID, eos)) {
 
                   ObjectTypeIterator it;
 
@@ -316,9 +352,9 @@ dmz::NetModulePacketCodecBasic::_discover_codec (const Plugin *PluginPtr) {
             else if (eventCodec && hs->events.get_count ()) {
 
                EncodeEventStruct *ees (
-                  new EncodeEventStruct (hs->PacketHandle, *eventCodec));
+                  new EncodeEventStruct (hs->PacketID, *eventCodec));
 
-               if (ees && _eventEncodeTable.store (hs->PacketHandle, ees)) {
+               if (ees && _eventEncodeTable.store (hs->PacketID, ees)) {
 
                   EventTypeIterator it;
 
@@ -360,11 +396,11 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
       while (found) {
 
          const String Name (config_to_string ("name", packet));
-         const Handle PacketHandle (config_to_uint32 ("handle", packet));
+         const Handle PacketID (config_to_uint32 ("id", packet));
 
-         if (Name && PacketHandle) {
+         if (Name && PacketID) {
 
-            PacketStruct *ps (new PacketStruct (Name, PacketHandle));
+            PacketStruct *ps (new PacketStruct (Name, PacketID));
 
             if (ps && _packetTable.store (Name, ps)) {
 
@@ -388,7 +424,7 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
                      _log.error << "Unknown object type: " << TypeName
                         << ". Unable to bind to codec: " << Name
-                        << " with handle: " << PacketHandle << endl;
+                        << " with id: " << PacketID << endl;
                   }
 
                   objectFound = objectList.get_next_config (objectIt, object);
@@ -414,7 +450,7 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
                      _log.error << "Unknown event type: " << TypeName
                         << ". Unable to bind to codec: " << Name
-                        << " with handle: " << PacketHandle << endl;
+                        << " with id: " << PacketID << endl;
                   }
 
                   eventFound = eventList.get_next_config (eventIt, event);
@@ -460,6 +496,7 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
    }
 }
+//! \endcond
 
 
 extern "C" {

@@ -1,5 +1,5 @@
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeInit.h>

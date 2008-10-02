@@ -4,7 +4,7 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectConsts.h>
 #include <dmzObjectModule.h>
-#include <dmzRuntimeConfigToBase.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfigToState.h>
 #include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimeDefinitions.h>

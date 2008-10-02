@@ -1,5 +1,5 @@
 #include "dmzExPluginMessageReceive.h"
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 

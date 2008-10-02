@@ -2,7 +2,7 @@
 #include "dmzNetExtPacketCodecEventNative.h"
 #include <dmzObjectModule.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigToBase.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeEventType.h>
 #include <dmzRuntimeObjectType.h>

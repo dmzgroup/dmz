@@ -2,7 +2,7 @@
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginObjectOSG.h"
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigToBase.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfigToPathContainer.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>

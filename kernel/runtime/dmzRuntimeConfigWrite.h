@@ -8,7 +8,9 @@
 namespace dmz {
 
    class Data;
+   class Log;
    class Matrix;
+   class RuntimeContext;
    class String;
    class Vector;
 

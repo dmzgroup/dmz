@@ -1,7 +1,7 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectModule.h>
 #include "dmzObjectModuleSelectBasic.h"
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 /*!

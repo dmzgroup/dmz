@@ -11,55 +11,80 @@ namespace dmz {
 //! \addtogroup Object
 //! @{
 
-   //! Create object ObjectObserverUtil subscription mask.
+   //! \brief Create object ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectCreateMask;
-   //! Destroy object ObjectObserverUtil subscription mask.
+   //! \brief Destroy object ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectDestroyMask;
-   //! Object locality ObjectObserverUtil subscription mask.
+   //! \brief Object locality ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectLocalityMask;
-   //! Object UUID ObjectObserverUtil subscription mask.
+   //! \brief Object UUID ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectUUIDMask;
-   //! Remove object attribute ObjectObserverUtil subscription mask.
+   //! \brief Remove object attribute ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectRemoveAttributeMask;
-   //! Object link ObjectObserverUtil subscription mask.
+   //! \brief Object link ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectLinkMask;
-   //! Object unlink ObjectObserverUtil subscription mask.
+   //! \brief Object unlink ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectUnlinkMask;
-   //! Object link attribute object ObjectObserverUtil subscription mask.
+   //! \brief Object link attribute object ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectLinkAttributeMask;
-   //! Object counter ObjectObserverUtil subscription mask.
+   //! \brief Object counter ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectCounterMask;
-   //! Object minimum counter ObjectObserverUtil subscription mask.
+   //! \brief Object minimum counter ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectMinCounterMask;
-   //! Object maximum counter ObjectObserverUtil subscription mask.
+   //! \brief Object maximum counter ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectMaxCounterMask;
-   //! Object type ObjectObserverUtil subscription mask.
+   //! \brief Object type ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectAltTypeMask;
-   //! Object state ObjectObserverUtil subscription mask.
+   //! \brief Object state ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectStateMask;
-   //! Object flag ObjectObserverUtil subscription mask.
+   //! \brief Object flag ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectFlagMask;
-   //! Object time stamp ObjectObserverUtil subscription mask.
+   //! \brief Object time stamp ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectTimeStampMask;
-   //! Object position ObjectObserverUtil subscription mask.
+   //! \brief Object position ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectPositionMask;
-   //! Object orientation ObjectObserverUtil subscription mask.
+   //! \brief Object orientation ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectOrientationMask;
-   //! Object velocity ObjectObserverUtil subscription mask.
+   //! \brief Object velocity ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectVelocityMask;
-   //! Object acceleration ObjectObserverUtil subscription mask.
+   //! \brief Object acceleration ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectAccelerationMask;
-   //! Object scale ObjectObserverUtil subscription mask.
+   //! \brief Object scale ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectScaleMask;
-   //! Object vector ObjectObserverUtil subscription mask.
+   //! \brief Object vector ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectVectorMask;
-   //! Object scalar ObjectObserverUtil subscription mask.
+   //! \brief Object scalar ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectScalarMask;
-   //! Object text ObjectObserverUtil subscription mask.
+   //! \brief Object text ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectTextMask;
-   //! Object Data ObjectObserverUtil subscription mask.
+   //! \brief Object Data ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectDataMask;
-   //! All object attributes ObjectObserverUtil subscription mask.
+   //! \brief All object attributes ObjectObserverUtil subscription mask.
+   //! Defined in dmzObjectAttributeMasks.h.
    DMZ_OBJECT_UTIL_LINK_SYMBOL extern const Mask ObjectAllMask;
 
    DMZ_OBJECT_UTIL_LINK_SYMBOL Mask

@@ -4,7 +4,7 @@
 #include "dmzRenderModuleCoreOgreBasic.h"
 #include <dmzRenderUtilOgre.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>

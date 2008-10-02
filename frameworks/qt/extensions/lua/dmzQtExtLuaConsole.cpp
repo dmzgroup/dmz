@@ -2,7 +2,7 @@
 #include <dmzLuaModule.h>
 #include "dmzQtExtLuaConsole.h"
 #include <dmzQtUtil.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfigWrite.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>

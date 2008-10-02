@@ -4,7 +4,7 @@
 #include <dmzInputModule.h>
 #include "dmzInputPluginControllerWin32.h"
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzTypesBase.h>

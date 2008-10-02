@@ -2,7 +2,7 @@
 #include <dmzInputEventKey.h>
 #include <dmzInputEventMasks.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 
 /*!

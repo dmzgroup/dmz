@@ -2,11 +2,12 @@
 #include <dmzInputEventMouse.h>
 #include "dmzInputPluginMouseEventToMessage.h"
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeDataBinder.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzTypesVector.h>
 
 #include <qdb.h>
 static dmz::qdb out;

@@ -1,5 +1,5 @@
 #include <dmzInputEventKey.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeLog.h>
 #include <dmzSystemStream.h>
 #include <dmzTypesString.h>

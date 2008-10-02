@@ -6,7 +6,7 @@
 #include <dmzQtModuleMainWindow.h>
 #include <dmzQtUtil.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
@@ -14,7 +14,9 @@
 #include <dmzRuntimeSession.h>
 #include <dmzTypesMask.h>
 #include <dmzTypesMath.h>
+#include <dmzTypesMatrix.h>
 #include <dmzTypesUUID.h>
+#include <dmzTypesVector.h>
 #include <QtGui/QtGui>
 #include <QtSvg/QtSvg>
 

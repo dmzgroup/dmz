@@ -10,6 +10,10 @@
 
 /*!
 
+\file dmzRuntimeMessaging.h
+\ingroup Runtime
+\brief Contains messaging related classes and initialization functions.
+
 \class dmz::Message
 \ingroup Runtime
 \brief Container for message type context.

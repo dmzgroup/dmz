@@ -1,6 +1,6 @@
 #include <dmzArchiveModule.h>
 #include <dmzArchiveObserverUtil.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzTypesHashTableStringTemplate.h>

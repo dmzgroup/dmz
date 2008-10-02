@@ -3,7 +3,7 @@
 #include <dmzRenderModuleCoreOgre.h>
 #include "dmzRenderPluginStatsOgre.h"
 #include <dmzRenderUtilOgre.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <Ogre/Ogre.h>

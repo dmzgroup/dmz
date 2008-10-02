@@ -1,24 +1,43 @@
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToMatrix.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToPathContainer.h>
 #include <dmzRuntimeConfigToState.h>
 #include <dmzRuntimeConfigToStringContainer.h>
+#include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimeConfigWrite.h>
 #include <dmzRuntimeEventType.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzTypesBase.h>
+#include <dmzTypesMatrix.h>
 #include <dmzTypesString.h>
+#include <dmzTypesVector.h>
 
 /*!
 
-\file dmzRuntimeConfigRead.h
-\brief Contains functions to convert config contexts into various object types.
+\file dmzRuntimeConfigToTypesBase.h
+\ingroup Runtime
+\brief Contains functions to convert config contexts to various base types.
+
+\file dmzRuntimeConfigToNamedHandle.h
+\ingroup Runtime
+\brief Contains functions to convert config contexts to named handles.
+
+\file dmzRuntimeConfigToMatrix.h
+\ingroup Runtime
+\brief Contains functions to convert config contexts to Matrices.
+
+\file dmzRuntimeConfigToVector.h
+\ingroup Runtime
+\brief Contains functions to convert config contexts to Vectors.
 
 \file dmzRuntimeConfigWrite.h
+\ingroup Runtime
 \brief Contains functions to convert various object types into config contexts.
 
 */
@@ -536,7 +555,7 @@ dmz::config_to_string_container (const String &Name, const Config &Source) {
 /*!
 
 \brief Converts Config to Vector.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeConfigToVector.h.
 This function assumes that the Vector will be defined by three attributes stored
 in the config context. The three attributes should be named "x", "y", and "z".
 This function \b is case sensitive. The name value may be scoped. For example:
@@ -577,7 +596,7 @@ dmz::config_to_vector (
 /*!
 
 \brief Converts Config to Matrix.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeConfigToMatrix.h.
 This function assumes that the Matrix will be defined by nine attributes stored
 in the config context. The nine attributes should be named "v0" to "v8".
 This function \b is case sensitive. The \a Name value may be scoped. For example:
@@ -629,7 +648,7 @@ dmz::config_to_matrix (
 /*!
 
 \brief Converts Config to dmz::BaseTypeEnum.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeConfigToTypesBase.h.
 This function uses dmz::config_to_sring to retrieve the value and then uses
 dmz::string_to_base_type_enum to convert the returned String to a dmz::BaseTypeEnum.
 \param[in] Name String containing name of the attribute in the config context to convert.
@@ -661,7 +680,7 @@ dmz::config_to_base_type_enum (
 /*!
 
 \brief Converts Config to dmz::Boolean.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeConfigToTypesBase.h.
 This function uses dmz::config_to_sring to retrieve the value and then uses
 dmz::string_to_boolean to convert the returned String to a dmz::Boolean.
 \param[in] Name String containing name of the attribute in the config context to convert.
@@ -693,7 +712,7 @@ dmz::config_to_boolean (
 /*!
 
 \brief Converts Config to dmz::Int32.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeConfigToTypesBase.h.
 This function uses dmz::config_to_sring to retrieve the value and then uses
 dmz::string_to_int32 to convert the returned String to a dmz::Int32.
 \param[in] Name String containing name of the attribute in the config context to convert.
@@ -722,7 +741,7 @@ dmz::config_to_int32 (
 /*!
 
 \brief Converts Config to dmz::UInt32.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeConfigToTypesBase.h.
 This function uses dmz::config_to_sring to retrieve the value and then uses
 dmz::string_to_uint32 to convert the returned String to a dmz::UInt32.
 \param[in] Name String containing name of the attribute in the config context to convert.
@@ -751,7 +770,7 @@ dmz::config_to_uint32 (
 /*!
 
 \brief Converts Config to dmz::Int64.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeConfigToTypesBase.h.
 This function uses dmz::config_to_sring to retrieve the value and then uses
 dmz::string_to_int64 to convert the returned String to a dmz::Int64.
 \param[in] Name String containing name of the attribute in the config context to convert.
@@ -780,7 +799,7 @@ dmz::config_to_int64 (
 /*!
 
 \brief Converts Config to dmz::UInt64.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeConfigToTypesBase.h.
 This function uses dmz::config_to_sring to retrieve the value and then uses
 dmz::string_to_uint64 to convert the returned String to a dmz::UInt64.
 \param[in] Name String containing name of the attribute in the config context to convert.
@@ -809,7 +828,7 @@ dmz::config_to_uint64 (
 /*!
 
 \brief Converts Config to dmz::Float32.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeConfigToTypesBase.h.
 This function uses dmz::config_to_sring to retrieve the value and then uses
 dmz::string_to_float32 to convert the returned String to a dmz::Float32.
 \param[in] Name String containing name of the attribute in the config context to convert.
@@ -841,7 +860,7 @@ dmz::config_to_float32 (
 /*!
 
 \brief Converts Config to dmz::Float64.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeConfigToTypesBase.h.
 This function uses dmz::config_to_sring to retrieve the value and then uses
 dmz::string_to_float64 to convert the returned String to a dmz::Float64.
 \param[in] Name String containing name of the attribute in the config context to convert.
@@ -873,7 +892,7 @@ dmz::config_to_float64 (
 /*!
 
 \brief Converts Config to dmz::String.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeConfigToTypesBase.h.
 This function converts the named attribute to a dmz::String. It is assumed that the
 last part of the \a Name variable specifies the attribute name. If the String
 "foo.value" is passed in as \a Name, it will try to find a  config context called
@@ -904,7 +923,7 @@ dmz::config_to_string (
 /*!
 
 \brief Converts Config to Message.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeMessaging.h.
 This function converts the named attribute to a dmz::Message. It is assumed that the
 last part of the \a Name variable specifies the attribute name. If the String
 "type.name" is passed in as \a Name, it will try to find a  config context called
@@ -961,7 +980,7 @@ dmz::config_to_message_type (
 /*!
 
 \brief Creates dmz::Message from dmz::Config.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeMessaging.h.
 This function converts the named attribute to a dmz::Message. It is assumed that the
 last part of the \a Name variable specifies the attribute name. If the String
 "type.name" is passed in as \a Name, it will try to find a  config context called
@@ -1008,7 +1027,7 @@ dmz::config_create_message_type (
 /*!
 
 \brief Converts Config to name Handle.
-\details Defined in dmzRuntimeConfigRead.h.
+\details Defined in dmzRuntimeConfigToNamedHandle.h.
 This function converts the named attribute to a named Handle It is assumed that the
 last part of the \a Name variable specifies the attribute name. If the String
 "type.name" is passed in as \a Name, it will try to find a  config context called

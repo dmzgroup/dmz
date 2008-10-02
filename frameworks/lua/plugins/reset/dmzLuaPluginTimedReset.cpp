@@ -1,6 +1,6 @@
 #include "dmzLuaPluginTimedReset.h"
 #include <dmzLuaModule.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 

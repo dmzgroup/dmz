@@ -3,7 +3,7 @@
 #include <dmzObjectModule.h>
 #include <dmzRenderIsect.h>
 #include <dmzRenderModuleIsect.h>
-#include <dmzRuntimeConfigToBase.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesMatrix.h>

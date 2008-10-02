@@ -5,7 +5,7 @@
 #include <dmzFileCacheLocal.h>
 #include <dmzRuntime.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeExit.h>
 #include <dmzRuntimeInit.h>
 #include <dmzRuntimeLog.h>

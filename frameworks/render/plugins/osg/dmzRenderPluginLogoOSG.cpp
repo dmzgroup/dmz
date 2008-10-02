@@ -1,6 +1,6 @@
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginLogoOSG.h"
-#include <dmzRuntimeConfigToBase.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 

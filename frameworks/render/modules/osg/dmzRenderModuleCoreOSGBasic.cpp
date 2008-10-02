@@ -3,7 +3,7 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzRenderObjectDataOSG.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfigToPathContainer.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>

@@ -1,7 +1,7 @@
 #include <dmzObjectModule.h>
 #include <dmzQtModuleCanvas.h>
 #include "dmzQtPluginRenderPick.h"
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesVector.h>

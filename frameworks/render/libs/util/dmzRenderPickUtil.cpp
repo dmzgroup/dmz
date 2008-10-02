@@ -1,6 +1,6 @@
 #include <dmzRenderModulePick.h>
 #include <dmzRenderPickUtil.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 

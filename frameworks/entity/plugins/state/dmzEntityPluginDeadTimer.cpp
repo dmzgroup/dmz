@@ -2,7 +2,7 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectConsts.h>
 #include <dmzObjectModule.h>
-#include <dmzRuntimeConfigToBase.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>

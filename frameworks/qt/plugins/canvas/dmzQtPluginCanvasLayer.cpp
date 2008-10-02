@@ -6,7 +6,8 @@
 #include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginCanvasLayer.h"
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>

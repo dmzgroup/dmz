@@ -3,7 +3,7 @@
 #include <dmzObjectModule.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzTypesHandleContainer.h>
 

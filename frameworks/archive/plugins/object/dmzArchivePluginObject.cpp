@@ -1,8 +1,10 @@
 #include <dmzArchiveModule.h>
 #include "dmzArchivePluginObject.h"
 #include <dmzObjectAttributeMasks.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToMatrix.h>
 #include <dmzRuntimeConfigToStringContainer.h>
+#include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimeConfigWrite.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>

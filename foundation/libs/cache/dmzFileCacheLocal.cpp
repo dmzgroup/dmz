@@ -1,6 +1,6 @@
 #include <dmzFileCacheLocal.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzSystemFile.h>
 
 /*!

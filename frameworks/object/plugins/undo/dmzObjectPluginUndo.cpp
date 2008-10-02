@@ -2,7 +2,7 @@
 #include <dmzObjectConsts.h>
 #include <dmzObjectModule.h>
 #include "dmzObjectPluginUndo.h"
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>

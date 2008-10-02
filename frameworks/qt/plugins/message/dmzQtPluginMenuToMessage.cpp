@@ -2,10 +2,12 @@
 #include <dmzObjectModule.h>
 #include <dmzQtModuleCanvas.h>
 #include <dmzRenderModulePick.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzTypesVector.h>
 #include <QtGui/QtGui>
 
 

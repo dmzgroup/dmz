@@ -2,7 +2,7 @@
 #include <dmzEventModule.h>
 #include <dmzEventObserverUtil.h>
 #include <dmzRuntimeLog.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeEventType.h>
 #include <dmzTypesHashTableStringTemplate.h>

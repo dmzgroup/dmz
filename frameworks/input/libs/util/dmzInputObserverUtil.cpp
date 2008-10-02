@@ -3,7 +3,7 @@
 #include <dmzInputModule.h>
 #include <dmzInputObserverUtil.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzTypesHashTableHandleTemplate.h>

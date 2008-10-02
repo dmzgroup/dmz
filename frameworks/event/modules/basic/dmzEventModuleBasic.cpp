@@ -1,6 +1,6 @@
 #include <dmzEventDump.h>
 #include "dmzEventModuleBasic.h"
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeInit.h>
 #include <dmzRuntimeEventType.h>

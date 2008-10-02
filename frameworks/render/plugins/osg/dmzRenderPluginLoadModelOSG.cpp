@@ -1,7 +1,8 @@
 #include <dmzRenderUtilOSG.h>
 #include "dmzRenderPluginLoadModelOSG.h"
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 
 #include <osgDB/ReadFile>

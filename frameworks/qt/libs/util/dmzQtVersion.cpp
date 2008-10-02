@@ -1,4 +1,4 @@
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzQtVersion.h>
 #include <QtGui/QAction>
 #include <QtGui/QPixmap>

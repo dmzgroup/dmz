@@ -2,7 +2,8 @@
 #include <dmzObjectModule.h>
 #include <dmzQtCanvasConsts.h>
 #include "dmzQtPluginCanvasAutoLink.h"
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 

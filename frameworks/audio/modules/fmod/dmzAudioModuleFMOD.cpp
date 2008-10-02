@@ -2,7 +2,7 @@
 #include <dmzAudioSoundAttributes.h>
 #include <dmzAudioSoundInit.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigToBase.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzSystemFile.h>
 

@@ -1,5 +1,5 @@
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeLog.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStream.h>

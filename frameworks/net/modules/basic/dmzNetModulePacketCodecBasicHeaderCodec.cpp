@@ -1,6 +1,6 @@
 #include "dmzNetModulePacketCodecBasic.h"
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzSystemMarshal.h>
 #include <dmzSystemUnmarshal.h>
 

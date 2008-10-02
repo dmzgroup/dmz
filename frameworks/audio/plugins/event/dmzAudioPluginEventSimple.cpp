@@ -5,7 +5,7 @@
 #include <dmzEventCallbackMasks.h>
 #include <dmzEventConsts.h>
 #include <dmzEventModule.h>
-#include <dmzRuntimeConfigToBase.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>

@@ -6,7 +6,7 @@
 #include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginCanvasZoomPan.h"
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>

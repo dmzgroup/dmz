@@ -4,7 +4,9 @@
 #include <dmzRenderUtilOgre.h>
 #include <dmzRenderModuleCoreOgre.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToMatrix.h>
+#include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>

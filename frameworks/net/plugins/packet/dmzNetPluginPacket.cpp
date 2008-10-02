@@ -2,7 +2,7 @@
 #include <dmzEventModule.h>
 #include "dmzNetPluginPacket.h"
 #include <dmzObjectAttributeMasks.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeEventType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>

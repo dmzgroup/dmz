@@ -1,7 +1,7 @@
 #include "dmzRenderModulePortalOgre.h"
 #include <dmzRenderUtilOgre.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzTypesVector.h>
 #include <dmzTypesMatrix.h>

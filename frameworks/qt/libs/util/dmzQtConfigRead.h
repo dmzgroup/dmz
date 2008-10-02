@@ -3,7 +3,8 @@
 
 #include <dmzQtUtilExport.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToVector.h>
 #include <dmzTypesString.h>
 #include <dmzTypesVector.h>
 #include <QtCore/QByteArray>

@@ -1,7 +1,7 @@
 #include "dmzAudioModulePortalBasic.h"
 #include <dmzAudioModule.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>

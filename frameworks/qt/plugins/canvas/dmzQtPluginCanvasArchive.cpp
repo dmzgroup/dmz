@@ -4,7 +4,7 @@
 #include <dmzQtCanvasView.h>
 #include <dmzQtModuleCanvas.h>
 #include "dmzQtPluginCanvasArchive.h"
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <QtGui/QtGui>

@@ -1,5 +1,7 @@
 #include "dmzArchivePluginUndo.h"
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeMessaging.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigWrite.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>

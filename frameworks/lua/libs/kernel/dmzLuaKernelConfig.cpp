@@ -2,7 +2,9 @@
 #include "dmzLuaKernelPrivate.h"
 #include <dmzLuaKernelValidate.h>
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToMatrix.h>
+#include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeEventType.h>
 #include <dmzRuntimeObjectType.h>

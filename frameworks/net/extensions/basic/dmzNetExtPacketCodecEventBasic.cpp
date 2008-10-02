@@ -3,7 +3,7 @@
 #include "dmzNetExtPacketCodecEventBasic.h"
 #include <dmzNetModuleAttributeMap.h>
 #include <dmzObjectModule.h>
-#include <dmzRuntimeConfigRead.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeEventType.h>
 #include <dmzRuntimeObjectType.h>

@@ -6,6 +6,7 @@
 #include <dmzInputModule.h>
 #include "dmzArchivePluginInput.h"
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeData.h>
 
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>

@@ -1,32 +1,204 @@
-dmz.config.get_global () [dmz.config]
-dmz.config.new ([string name]) [dmz.config]
-dmz.config.is_a (value) [dmz.config | nil]
+return {
 
-dmz.config:get_name () [string | nil]
-dmz.config:get_attributes () [{<attributes>}]
-dmz.config:store_attribute (string name, string value) [boolean]
-dmz.config:lookup_attribute (string name) [value | nil]
-dmz.config:lookup_boolean (string name, [boolean default]) [boolean]
-dmz.config:lookup_string (string name, [string default]) [string]
-dmz.config:lookup_number (string name, [number default]) [number]
-dmz.config:lookup_handle (string name, [dmz.handle default]) [dmz.handle]
-dmz.config:lookup_matrix (string name, [default dmz.matrix]) [dmz.matrix]
-dmz.config:lookup_event_type (string name, [dmz.event_type default]) [dmz.event_type | nil]
-dmz.config:lookup_message_type (string name, [dmz.message_type default]) [dmz.message_type | nil]
-dmz.config:lookup_object_type (string name, [dmz.object_type default]) [dmz.object_type | nil]
-dmz.config:lookup_state (string name, [dmz.mask default]) [dmz.mask]
-dmz.config:lookup_uuid (string name, [dmz.uuid default]) [dmz.uuid]
-dmz.config:lookup_vector (string name, [dmz.vector default]) [dmz.vector]
-dmz.config:set_value (string value) [boolean]
-dmz.config:append_value (string value) [boolean]
-dmz.config:get_value () [string | nil]
-dmz.config:get_children () [{dmz.config children}]
-dmz.config:add_config ([string scope], dmz.config | {dmz.config}) [boolean]
-dmz.config:lookup_config (string scope) [dmz.config | nil]
-dmz.config:lookup_all_config (string scope) [{dmz.config} | nil]
-dmz.config:lookup_all_config_merged (string scope) [dmz.config | nil]
+t = "DMZ Lua API Reference Guide",
 
+{
 
+t = "dmz.config",
+b = [[
+The dmz.config class is a wrapper for the dmz::Config class.
+]],
+
+{
+t = "dmz.config.get_global",
+p = {},
+b = [[
+Returns a dmz.config object containing the global config data.
+]],
+},{
+t = "dmz.config.new",
+p = {},
+o = {"name",},
+b = [[
+Returns a new dmz.config object. The name is used to set the new dmz.config
+objects tag.
+]],
+},{
+t = "dmz.config.is_a",
+p = {"value",},
+b = [[
+Returns a dmz.config if value is a dmz.config object. Returns nil if it is not.
+]],
+},{
+t = "dmz.config:get_name",
+p = {},
+b = [[
+Returns the name of the dmz.config object. Returns nil if the dmz.config object is empty.
+]],
+},{
+t = "dmz.config:get_attributes",
+p = {},
+b = [[
+Returns a table containing the attributes stored in the dmz.config object.
+Returns nil if the dmz.config object is empty.
+]],
+},{
+t = "dmz.config:store_attribute",
+p = {"name", "value",},
+b = [[
+Store an attribute of name with value in the dmz.config object.
+Returns true if the attribute was successfully stored. ]],
+},{
+t = "dmz.config:lookup_attribute",
+p = {"name",},
+b = [[
+Returns the value of the attribute name. Returns nil if
+the dmz.config object does not contain an attribute with the given name.
+]],
+},{
+t = "dmz.config:lookup_boolean",
+p = {"name",},
+o = {"default",},
+b = [[
+Looks up the attribute value name and returns it as a boolean.
+If the attribute name is not found, then default is returned.
+]],
+},{
+t = "dmz.config:lookup_string",
+p = {"name",},
+o = {"default",},
+b = [[
+Looks up the attribute value name and returns it as a string.
+If the attribute name is not found, then default is returned.
+]],
+-- [string]
+},{
+t = "dmz.config:lookup_number",
+p = {"name",},
+o = {"default",},
+b = [[
+Looks up the attribute value name and returns it as a number.
+If the attribute name is not found, then default is returned.
+]],
+-- [number]
+},{
+t = "dmz.config:lookup_handle",
+p = {"name",},
+o = {"default",},
+b = [[
+Looks up the attribute value name and returns it as a dmz.handle.
+If the attribute name is not found, then default is returned.
+]],
+},{
+t = "dmz.config:lookup_matrix",
+p = {"name",},
+o = {"default",},
+b = [[
+Looks up the attribute value name and returns it as a dmz.matrix.
+If the attribute name is not found, then default is returned.
+]],
+-- [dmz.matrix]
+},{
+t = "dmz.config:lookup_event_type",
+p = {"name",},
+o = {"default",},
+b = [[
+Looks up the attribute value name and returns it as a dmz.event_type.
+If the attribute name is not found, then default is returned. Returns nil if
+a dmz.event_type can not be found.
+]],
+},{
+t = "dmz.config:lookup_message",
+p = {"name",},
+o = {"default",},
+b = [[
+Looks up the attribute value name and returns it as a dmz.message.
+If the attribute name is not found, then default is returned. Returns nil if
+a dmz.message can not be found.
+]],
+},{
+t = "dmz.config:lookup_object_type",
+p = {"name",},
+o = {"default",},
+b = [[
+Looks up the attribute value name and returns it as a dmz.object_type.
+If the attribute name is not found, then default is returned. Returns nil if
+a dmz.object_type can not be found.
+]],
+-- [dmz.object_type | nil]
+},{
+t = "dmz.config:lookup_state",
+p = {"name",},
+o = {"default",},
+b = [[
+Looks up the attribute value name and returns it as a dmz.mask.
+If the attribute name is not found, then default is returned.
+]],
+-- [dmz.mask]
+},{
+t = "dmz.config:lookup_uuid",
+p = {"name",},
+o = {"default",},
+b = [[
+]],
+--  [dmz.uuid]
+},{
+t = "dmz.config:lookup_vector",
+p = {"name",},
+o = {"default",},
+b = [[
+]],
+-- [dmz.vector]
+},{
+t = "dmz.config:set_value",
+p = {"value",},
+b = [[
+]],
+-- [boolean]
+},{
+t = "dmz.config:append_value",
+p = {"value",},
+b = [[
+]],
+-- [boolean]
+},{
+t = "dmz.config:get_value",
+p = {},
+b = [[
+]],
+-- [string | nil]
+},{
+t = "dmz.config:get_children",
+p = {},
+b = [[
+]],
+-- [{dmz.config children}]
+},{
+t = "dmz.config:add_config",
+p = {"scope", "dmz.config | {dmz.config})",},
+b = [[
+]],
+--[boolean]
+},{
+t = "dmz.config:lookup_config",
+p = {"scope",},
+b = [[
+]],
+-- [dmz.config | nil]
+},{
+t = "dmz.config:lookup_all_config",
+p = {"scope",},
+b = [[
+]],
+-- [{dmz.config} | nil]
+},{
+t = "dmz.config:lookup_all_config_merged",
+p = {"scope",},
+b = [[
+]],
+-- [dmz.config | nil]
+},
+--[[
 dmz.data.new ([dmz.data]) [dmz.data]
 dmz.data.is_a (value) [dmz.data | nil]
 
@@ -429,5 +601,6 @@ dmz.vector:dot (dmz.vector value) [number | nil]
 dmz.vector:cross (dmz.vector value) [dmz.vector | nil]
 dmz.vector:is_zero ([number epsilon]) [boolean | nil]
 dmz.vector:get_angle (dmz.vector value) [number | nil]
-
-
+--]]
+}
+}

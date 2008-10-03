@@ -35,7 +35,7 @@ following factory function:
 extern "C" {
 
 DMZ_PLUGIN_FACTORY_LINK_SYMBOL dmz::Plugin *
-create_ObjectDump (const dmz::PluginInfo &Info, dmz::Config &local, dmz::Config global) {
+create_ObjectDump (const dmz::PluginInfo &Info, dmz::Config &local, dmz::Config &global) {
 
    return new ObjectDump (Info, local);
 }

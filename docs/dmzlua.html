@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>DMZ Lua API Reference Guide</title>
+</head>
+<body>
+<h1>DMZ Lua API Reference Guide</h1>
+<h2>dmz.config</h2>
+The dmz.config class is a wrapper for the dmz::Config class.
+
+<hr>
+<h3>dmz.config.get_global ()</h3>
+Returns a dmz.config object containing the global config data.
+
+<hr>
+<h3>dmz.config.new ([name])</h3>
+Returns a new dmz.config object. The name is used to set the new dmz.config
+objects tag.
+
+<hr>
+<h3>dmz.config.is_a (value)</h3>
+Returns a dmz.config if value is a dmz.config object. Returns nil if it is not.
+
+<hr>
+<h3>dmz.config:get_name ()</h3>
+Returns the name of the dmz.config object. Returns nil if the dmz.config object is empty.
+
+<hr>
+<h3>dmz.config:get_attributes ()</h3>
+Returns a table containing the attributes stored in the dmz.config object.
+Returns nil if the dmz.config object is empty.
+
+<hr>
+<h3>dmz.config:store_attribute (name, value)</h3>
+Store an attribute of name with value in the dmz.config object.
+Returns true if the attribute was successfully stored. 
+<hr>
+<h3>dmz.config:lookup_attribute (name)</h3>
+Returns the value of the attribute name. Returns nil if
+the dmz.config object does not contain an attribute with the given name.
+
+<hr>
+<h3>dmz.config:lookup_boolean (name, [default])</h3>
+Looks up the attribute value name and returns it as a boolean.
+If the attribute name is not found, then default is returned.
+
+<hr>
+<h3>dmz.config:lookup_string (name, [default])</h3>
+Looks up the attribute value name and returns it as a string.
+If the attribute name is not found, then default is returned.
+
+<hr>
+<h3>dmz.config:lookup_number (name, [default])</h3>
+Looks up the attribute value name and returns it as a number.
+If the attribute name is not found, then default is returned.
+
+<hr>
+<h3>dmz.config:lookup_handle (name, [default])</h3>
+Looks up the attribute value name and returns it as a dmz.handle.
+If the attribute name is not found, then default is returned.
+
+<hr>
+<h3>dmz.config:lookup_matrix (name, [default])</h3>
+Looks up the attribute value name and returns it as a dmz.matrix.
+If the attribute name is not found, then default is returned.
+
+<hr>
+<h3>dmz.config:lookup_event_type (name, [default])</h3>
+Looks up the attribute value name and returns it as a dmz.event_type.
+If the attribute name is not found, then default is returned. Returns nil if
+a dmz.event_type can not be found.
+
+<hr>
+<h3>dmz.config:lookup_message (name, [default])</h3>
+Looks up the attribute value name and returns it as a dmz.message.
+If the attribute name is not found, then default is returned. Returns nil if
+a dmz.message can not be found.
+
+<hr>
+<h3>dmz.config:lookup_object_type (name, [default])</h3>
+Looks up the attribute value name and returns it as a dmz.object_type.
+If the attribute name is not found, then default is returned. Returns nil if
+a dmz.object_type can not be found.
+
+<hr>
+<h3>dmz.config:lookup_state (name, [default])</h3>
+Looks up the attribute value name and returns it as a dmz.mask.
+If the attribute name is not found, then default is returned.
+
+<hr>
+<h3>dmz.config:lookup_uuid (name, [default])</h3>
+
+<hr>
+<h3>dmz.config:lookup_vector (name, [default])</h3>
+
+<hr>
+<h3>dmz.config:set_value (value)</h3>
+
+<hr>
+<h3>dmz.config:append_value (value)</h3>
+
+<hr>
+<h3>dmz.config:get_value ()</h3>
+
+<hr>
+<h3>dmz.config:get_children ()</h3>
+
+<hr>
+<h3>dmz.config:add_config (scope, dmz.config | {dmz.config}))</h3>
+
+<hr>
+<h3>dmz.config:lookup_config (scope)</h3>
+
+<hr>
+<h3>dmz.config:lookup_all_config (scope)</h3>
+
+<hr>
+<h3>dmz.config:lookup_all_config_merged (scope)</h3>
+
+<hr>
+</body>
+</html> 

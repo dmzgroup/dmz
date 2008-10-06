@@ -299,14 +299,14 @@
 		7A202F450E5CAC57007F800D /* dmzRenderModuleIsect.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202EE70E5CAC49007F800D /* dmzRenderModuleIsect.h */; };
 		7A202F460E5CAC57007F800D /* dmzRenderModulePick.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202EE90E5CAC49007F800D /* dmzRenderModulePick.h */; };
 		7A202F470E5CAC57007F800D /* dmzRenderModulePortal.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202EEB0E5CAC49007F800D /* dmzRenderModulePortal.h */; };
-		7A202F480E5CAC57007F800D /* dmzRenderPick2d.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202EEC0E5CAC49007F800D /* dmzRenderPick2d.h */; };
+		7A202F480E5CAC57007F800D /* dmzRenderPick.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202EEC0E5CAC49007F800D /* dmzRenderPick.h */; };
 		7A202F880E5CAD97007F800D /* dmzRenderIsect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202EEF0E5CAC49007F800D /* dmzRenderIsect.cpp */; };
 		7A202F890E5CAD97007F800D /* dmzRenderIsect.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202EF00E5CAC49007F800D /* dmzRenderIsect.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A202F8A0E5CAD97007F800D /* dmzRenderIsectExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202EF20E5CAC49007F800D /* dmzRenderIsectExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A202F8B0E5CAD97007F800D /* dmzRenderIsectUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202EF30E5CAC49007F800D /* dmzRenderIsectUtil.cpp */; };
 		7A202F8C0E5CAD97007F800D /* dmzRenderIsectUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202EF40E5CAC49007F800D /* dmzRenderIsectUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7A202FA20E5CAE06007F800D /* dmzRenderPick2dUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202F050E5CAC49007F800D /* dmzRenderPick2dUtil.cpp */; };
-		7A202FA30E5CAE06007F800D /* dmzRenderPick2dUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202F060E5CAC49007F800D /* dmzRenderPick2dUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A202FA20E5CAE06007F800D /* dmzRenderPickUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202F050E5CAC49007F800D /* dmzRenderPickUtil.cpp */; };
+		7A202FA30E5CAE06007F800D /* dmzRenderPickUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202F060E5CAC49007F800D /* dmzRenderPickUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A202FA40E5CAE06007F800D /* dmzRenderUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A202F080E5CAC49007F800D /* dmzRenderUtilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A202FC20E5CAE6A007F800D /* dmzRenderModulePickBasic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A202F300E5CAC49007F800D /* dmzRenderModulePickBasic.cpp */; };
 		7A202FF70E5CAF32007F800D /* dmzArchiveModule.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202FCC0E5CAF0A007F800D /* dmzArchiveModule.h */; };
@@ -1244,7 +1244,7 @@
 				7A202F450E5CAC57007F800D /* dmzRenderModuleIsect.h in CopyFiles */,
 				7A202F460E5CAC57007F800D /* dmzRenderModulePick.h in CopyFiles */,
 				7A202F470E5CAC57007F800D /* dmzRenderModulePortal.h in CopyFiles */,
-				7A202F480E5CAC57007F800D /* dmzRenderPick2d.h in CopyFiles */,
+				7A202F480E5CAC57007F800D /* dmzRenderPick.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1568,15 +1568,15 @@
 		7A202EE90E5CAC49007F800D /* dmzRenderModulePick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderModulePick.h; sourceTree = "<group>"; };
 		7A202EEA0E5CAC49007F800D /* dmzRenderModulePortal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderModulePortal.cpp; sourceTree = "<group>"; };
 		7A202EEB0E5CAC49007F800D /* dmzRenderModulePortal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderModulePortal.h; sourceTree = "<group>"; };
-		7A202EEC0E5CAC49007F800D /* dmzRenderPick2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderPick2d.h; sourceTree = "<group>"; };
+		7A202EEC0E5CAC49007F800D /* dmzRenderPick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderPick.h; sourceTree = "<group>"; };
 		7A202EEF0E5CAC49007F800D /* dmzRenderIsect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderIsect.cpp; sourceTree = "<group>"; };
 		7A202EF00E5CAC49007F800D /* dmzRenderIsect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderIsect.h; sourceTree = "<group>"; };
 		7A202EF10E5CAC49007F800D /* dmzRenderIsect.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzRenderIsect.lmk; sourceTree = "<group>"; };
 		7A202EF20E5CAC49007F800D /* dmzRenderIsectExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderIsectExport.h; sourceTree = "<group>"; };
 		7A202EF30E5CAC49007F800D /* dmzRenderIsectUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderIsectUtil.cpp; sourceTree = "<group>"; };
 		7A202EF40E5CAC49007F800D /* dmzRenderIsectUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderIsectUtil.h; sourceTree = "<group>"; };
-		7A202F050E5CAC49007F800D /* dmzRenderPick2dUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderPick2dUtil.cpp; sourceTree = "<group>"; };
-		7A202F060E5CAC49007F800D /* dmzRenderPick2dUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderPick2dUtil.h; sourceTree = "<group>"; };
+		7A202F050E5CAC49007F800D /* dmzRenderPickUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderPickUtil.cpp; sourceTree = "<group>"; };
+		7A202F060E5CAC49007F800D /* dmzRenderPickUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderPickUtil.h; sourceTree = "<group>"; };
 		7A202F070E5CAC49007F800D /* dmzRenderUtil.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzRenderUtil.lmk; sourceTree = "<group>"; };
 		7A202F080E5CAC49007F800D /* dmzRenderUtilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderUtilExport.h; sourceTree = "<group>"; };
 		7A202F300E5CAC49007F800D /* dmzRenderModulePickBasic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderModulePickBasic.cpp; sourceTree = "<group>"; };
@@ -2776,7 +2776,7 @@
 				7A202EE90E5CAC49007F800D /* dmzRenderModulePick.h */,
 				7A202EEA0E5CAC49007F800D /* dmzRenderModulePortal.cpp */,
 				7A202EEB0E5CAC49007F800D /* dmzRenderModulePortal.h */,
-				7A202EEC0E5CAC49007F800D /* dmzRenderPick2d.h */,
+				7A202EEC0E5CAC49007F800D /* dmzRenderPick.h */,
 			);
 			path = interfaces;
 			sourceTree = "<group>";
@@ -2806,8 +2806,8 @@
 		7A202F040E5CAC49007F800D /* util */ = {
 			isa = PBXGroup;
 			children = (
-				7A202F050E5CAC49007F800D /* dmzRenderPick2dUtil.cpp */,
-				7A202F060E5CAC49007F800D /* dmzRenderPick2dUtil.h */,
+				7A202F050E5CAC49007F800D /* dmzRenderPickUtil.cpp */,
+				7A202F060E5CAC49007F800D /* dmzRenderPickUtil.h */,
 				7A202F070E5CAC49007F800D /* dmzRenderUtil.lmk */,
 				7A202F080E5CAC49007F800D /* dmzRenderUtilExport.h */,
 			);
@@ -3679,7 +3679,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A202FA30E5CAE06007F800D /* dmzRenderPick2dUtil.h in Headers */,
+				7A202FA30E5CAE06007F800D /* dmzRenderPickUtil.h in Headers */,
 				7A202FA40E5CAE06007F800D /* dmzRenderUtilExport.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4633,7 +4633,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A202FA20E5CAE06007F800D /* dmzRenderPick2dUtil.cpp in Sources */,
+				7A202FA20E5CAE06007F800D /* dmzRenderPickUtil.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

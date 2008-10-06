@@ -324,6 +324,10 @@
 								<string>7A202FC80E5CAF0A007F800D</string>
 								<string>7A20BF660E52302E00D169ED</string>
 								<string>2280F5910E19A535003A2238</string>
+								<string>7A202ED70E5CAC49007F800D</string>
+								<string>7A202EE40E5CAC49007F800D</string>
+								<string>7A202EED0E5CAC49007F800D</string>
+								<string>7A202F040E5CAC49007F800D</string>
 								<string>19C28FACFE9D520D11CA2CBB</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>1C37FABC05509CD000000102</string>
@@ -331,12 +335,16 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>95</integer>
-									<integer>61</integer>
+									<integer>40</integer>
+									<integer>39</integer>
+									<integer>37</integer>
+									<integer>27</integer>
+									<integer>10</integer>
+									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 456}, {357, 802}}</string>
+							<string>{{0, 34}, {357, 802}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -355,7 +363,7 @@
 							<real>357</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>1699 177 1056 861 1680 0 1680 1050 </string>
+						<string>857 664 1056 861 0 0 2560 1578 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -371,7 +379,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>dmzInputPluginMouseEventToMessage.cpp</string>
+								<string>dmzRenderModulePortal.h</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -379,11 +387,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>dmzInputPluginMouseEventToMessage.cpp</string>
+										<string>dmzRenderModulePortal.h</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>7AF2E3180E6F37260062C261</string>
+										<string>7A1164540E9A941C006302C9</string>
 										<key>history</key>
 										<array>
 											<string>7A39BB330E4B8C910035E12A</string>
@@ -415,11 +423,9 @@
 											<string>7A6F1C0C0E5CA62C004FB18E</string>
 											<string>7A6F1C0D0E5CA62C004FB18E</string>
 											<string>7A202F4A0E5CAC65007F800D</string>
-											<string>7A202F5C0E5CAD68007F800D</string>
 											<string>7A202FA60E5CAE1E007F800D</string>
 											<string>7A202FA70E5CAE1E007F800D</string>
 											<string>7A202FA80E5CAE1E007F800D</string>
-											<string>7A2030080E5CAF7C007F800D</string>
 											<string>7A2030090E5CAF7C007F800D</string>
 											<string>7A20300A0E5CAF7C007F800D</string>
 											<string>7A20300B0E5CAF7C007F800D</string>
@@ -440,7 +446,8 @@
 											<string>7A09A6190E5E1EE9000CB01C</string>
 											<string>7A09A6AD0E5E381A000CB01C</string>
 											<string>7A09A6AE0E5E381A000CB01C</string>
-											<string>7A2290ED0E6F24DD0095F071</string>
+											<string>7A1164510E9A941C006302C9</string>
+											<string>7A1164520E9A941C006302C9</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -473,11 +480,9 @@
 											<string>7A6F1C170E5CA62C004FB18E</string>
 											<string>7A6F1C180E5CA62C004FB18E</string>
 											<string>7A202F4C0E5CAC65007F800D</string>
-											<string>7A202F5E0E5CAD68007F800D</string>
 											<string>7A202FAA0E5CAE1E007F800D</string>
 											<string>7A202FAB0E5CAE1E007F800D</string>
 											<string>7A202FAD0E5CAE1E007F800D</string>
-											<string>7A20300D0E5CAF7C007F800D</string>
 											<string>7A20300E0E5CAF7C007F800D</string>
 											<string>7A20300F0E5CAF7C007F800D</string>
 											<string>7A2030100E5CAF7C007F800D</string>
@@ -499,6 +504,7 @@
 											<string>7A09A6B00E5E381A000CB01C</string>
 											<string>7A09A6B10E5E381A000CB01C</string>
 											<string>7A09A6B20E5E381A000CB01C</string>
+											<string>7A1164530E9A941C006302C9</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -510,14 +516,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {677, 597}}</string>
+								<string>{{0, 0}, {677, 815}}</string>
 								<key>RubberWindowFrame</key>
-								<string>1699 177 1056 861 1680 0 1680 1050 </string>
+								<string>857 664 1056 861 0 0 2560 1578 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>597pt</string>
+							<string>815pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -530,14 +536,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 602}, {677, 218}}</string>
+								<string>{{0, 820}, {677, 0}}</string>
 								<key>RubberWindowFrame</key>
-								<string>1699 177 1056 861 1680 0 1680 1050 </string>
+								<string>857 664 1056 861 0 0 2560 1578 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>218pt</string>
+							<string>0pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -556,9 +562,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>7AF2E2B40E6F26A30062C261</string>
+				<string>7A11643D0E9A930A006302C9</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>7AF2E2B50E6F26A30062C261</string>
+				<string>7A11643E0E9A930A006302C9</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -677,7 +683,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>242169638.80497801</real>
+	<real>245011186.876353</real>
 	<key>ToolbarDisplayMode</key>
 	<integer>1</integer>
 	<key>ToolbarIsVisible</key>
@@ -692,11 +698,10 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>7A0E0D6C0E11837200E55011</string>
 		<string>/Users/shillcock/cm/src/dmz/xcode/dmzXcode/dmzXcode.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>1699 177 1056 861 1680 0 1680 1050 </string>
+	<string>857 664 1056 861 0 0 2560 1578 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>

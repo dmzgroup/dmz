@@ -135,7 +135,6 @@
 		7A0147C20E118421001813A7 /* dmzRuntimeConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A0147230E118421001813A7 /* dmzRuntimeConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A0147C30E118421001813A7 /* dmzRuntimeConfigContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A0147240E118421001813A7 /* dmzRuntimeConfigContext.h */; settings = {ATTRIBUTES = (); }; };
 		7A0147C40E118421001813A7 /* dmzRuntimeConfigRead.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A0147250E118421001813A7 /* dmzRuntimeConfigRead.cpp */; };
-		7A0147C50E118421001813A7 /* dmzRuntimeConfigRead.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A0147260E118421001813A7 /* dmzRuntimeConfigRead.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A0147C60E118421001813A7 /* dmzRuntimeConfigUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A0147270E118421001813A7 /* dmzRuntimeConfigUtil.cpp */; };
 		7A0147C70E118421001813A7 /* dmzRuntimeConfigWrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A0147280E118421001813A7 /* dmzRuntimeConfigWrite.cpp */; };
 		7A0147C80E118421001813A7 /* dmzRuntimeConfigWrite.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A0147290E118421001813A7 /* dmzRuntimeConfigWrite.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -296,6 +295,10 @@
 		7A09B1720E11A6AD003C5B32 /* dmzFileCacheLocal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A09AFC40E118D16003C5B32 /* dmzFileCacheLocal.cpp */; };
 		7A09B1750E11A6EA003C5B32 /* dmzFileCacheLocal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A09AFC50E118D16003C5B32 /* dmzFileCacheLocal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A09B1760E11A6EA003C5B32 /* dmzFileCacheLocalExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A09AFC70E118D16003C5B32 /* dmzFileCacheLocalExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A11645C0E9A9997006302C9 /* dmzRuntimeConfigToTypesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A11645B0E9A9997006302C9 /* dmzRuntimeConfigToTypesBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A11648D0E9A9BC4006302C9 /* dmzLuaKernelResources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A11648C0E9A9BC4006302C9 /* dmzLuaKernelResources.cpp */; };
+		7A11649E0E9A9C0F006302C9 /* dmzRuntimeResources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A11649C0E9A9C0F006302C9 /* dmzRuntimeResources.cpp */; };
+		7A11649F0E9A9C0F006302C9 /* dmzRuntimeResources.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A11649D0E9A9C0F006302C9 /* dmzRuntimeResources.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A202F450E5CAC57007F800D /* dmzRenderModuleIsect.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202EE70E5CAC49007F800D /* dmzRenderModuleIsect.h */; };
 		7A202F460E5CAC57007F800D /* dmzRenderModulePick.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202EE90E5CAC49007F800D /* dmzRenderModulePick.h */; };
 		7A202F470E5CAC57007F800D /* dmzRenderModulePortal.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A202EEB0E5CAC49007F800D /* dmzRenderModulePortal.h */; };
@@ -335,7 +338,6 @@
 		7A20C0510E52351A00D169ED /* dmzInputObserverUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A20BF7D0E52302E00D169ED /* dmzInputObserverUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A20C0520E52351A00D169ED /* dmzInputUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A20BF7F0E52302E00D169ED /* dmzInputUtilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A35FBE30E5CCD280002DA61 /* dmzObjectPluginCleanup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2280F5B70E19A535003A2238 /* dmzObjectPluginCleanup.cpp */; };
-		7A39BB280E4B8C360035E12A /* dmzRuntimeConfigToBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB210E4B8C360035E12A /* dmzRuntimeConfigToBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A39BB290E4B8C360035E12A /* dmzRuntimeConfigToMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB220E4B8C360035E12A /* dmzRuntimeConfigToMatrix.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A39BB2A0E4B8C360035E12A /* dmzRuntimeConfigToNamedHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB230E4B8C360035E12A /* dmzRuntimeConfigToNamedHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7A39BB2B0E4B8C360035E12A /* dmzRuntimeConfigToPathContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A39BB240E4B8C360035E12A /* dmzRuntimeConfigToPathContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1297,7 +1299,6 @@
 		7A0147230E118421001813A7 /* dmzRuntimeConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfig.h; sourceTree = "<group>"; };
 		7A0147240E118421001813A7 /* dmzRuntimeConfigContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigContext.h; sourceTree = "<group>"; };
 		7A0147250E118421001813A7 /* dmzRuntimeConfigRead.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeConfigRead.cpp; sourceTree = "<group>"; };
-		7A0147260E118421001813A7 /* dmzRuntimeConfigRead.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigRead.h; sourceTree = "<group>"; };
 		7A0147270E118421001813A7 /* dmzRuntimeConfigUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeConfigUtil.cpp; sourceTree = "<group>"; };
 		7A0147280E118421001813A7 /* dmzRuntimeConfigWrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeConfigWrite.cpp; sourceTree = "<group>"; };
 		7A0147290E118421001813A7 /* dmzRuntimeConfigWrite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigWrite.h; sourceTree = "<group>"; };
@@ -1561,6 +1562,10 @@
 		7A09B1660E11A688003C5B32 /* libdmzFileCacheLocal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzFileCacheLocal.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A0E0D5D0E117CC100E55011 /* libdmzKernel.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzKernel.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A0E0D610E117CD800E55011 /* dmz.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = dmz.xcconfig; path = ../dmz.xcconfig; sourceTree = "<group>"; };
+		7A11645B0E9A9997006302C9 /* dmzRuntimeConfigToTypesBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigToTypesBase.h; sourceTree = "<group>"; };
+		7A11648C0E9A9BC4006302C9 /* dmzLuaKernelResources.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzLuaKernelResources.cpp; sourceTree = "<group>"; };
+		7A11649C0E9A9C0F006302C9 /* dmzRuntimeResources.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeResources.cpp; sourceTree = "<group>"; };
+		7A11649D0E9A9C0F006302C9 /* dmzRuntimeResources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeResources.h; sourceTree = "<group>"; };
 		7A202EE50E5CAC49007F800D /* dmzRenderFramework.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzRenderFramework.lmk; sourceTree = "<group>"; };
 		7A202EE60E5CAC49007F800D /* dmzRenderModuleIsect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRenderModuleIsect.cpp; sourceTree = "<group>"; };
 		7A202EE70E5CAC49007F800D /* dmzRenderModuleIsect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRenderModuleIsect.h; sourceTree = "<group>"; };
@@ -1685,7 +1690,6 @@
 		7A20C0110E52311500D169ED /* libdmzInputEvents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzInputEvents.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A20C04B0E52350200D169ED /* libdmzInputUtil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzInputUtil.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A35FBD60E5CCCF90002DA61 /* libdmzObjectPluginCleanup.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzObjectPluginCleanup.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		7A39BB210E4B8C360035E12A /* dmzRuntimeConfigToBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigToBase.h; sourceTree = "<group>"; };
 		7A39BB220E4B8C360035E12A /* dmzRuntimeConfigToMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigToMatrix.h; sourceTree = "<group>"; };
 		7A39BB230E4B8C360035E12A /* dmzRuntimeConfigToNamedHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigToNamedHandle.h; sourceTree = "<group>"; };
 		7A39BB240E4B8C360035E12A /* dmzRuntimeConfigToPathContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeConfigToPathContainer.h; sourceTree = "<group>"; };
@@ -2329,13 +2333,12 @@
 				7A0147230E118421001813A7 /* dmzRuntimeConfig.h */,
 				7A0147240E118421001813A7 /* dmzRuntimeConfigContext.h */,
 				7A0147250E118421001813A7 /* dmzRuntimeConfigRead.cpp */,
-				7A0147260E118421001813A7 /* dmzRuntimeConfigRead.h */,
-				7A39BB210E4B8C360035E12A /* dmzRuntimeConfigToBase.h */,
 				7A39BB220E4B8C360035E12A /* dmzRuntimeConfigToMatrix.h */,
 				7A39BB230E4B8C360035E12A /* dmzRuntimeConfigToNamedHandle.h */,
 				7A39BB240E4B8C360035E12A /* dmzRuntimeConfigToPathContainer.h */,
 				7A39BB250E4B8C360035E12A /* dmzRuntimeConfigToState.h */,
 				7A39BB260E4B8C360035E12A /* dmzRuntimeConfigToStringContainer.h */,
+				7A11645B0E9A9997006302C9 /* dmzRuntimeConfigToTypesBase.h */,
 				7A39BB270E4B8C360035E12A /* dmzRuntimeConfigToVector.h */,
 				7A0147270E118421001813A7 /* dmzRuntimeConfigUtil.cpp */,
 				7A0147280E118421001813A7 /* dmzRuntimeConfigWrite.cpp */,
@@ -2390,6 +2393,8 @@
 				7A0147570E118421001813A7 /* dmzRuntimePluginFactoryLinkSymbol.h */,
 				7A0147580E118421001813A7 /* dmzRuntimePluginInfo.cpp */,
 				7A0147590E118421001813A7 /* dmzRuntimePluginInfo.h */,
+				7A11649C0E9A9C0F006302C9 /* dmzRuntimeResources.cpp */,
+				7A11649D0E9A9C0F006302C9 /* dmzRuntimeResources.h */,
 				7A01475C0E118421001813A7 /* dmzRuntimeRTTI.cpp */,
 				7A01475D0E118421001813A7 /* dmzRuntimeRTTI.h */,
 				7A01475E0E118421001813A7 /* dmzRuntimeRTTINamed.h */,
@@ -3441,6 +3446,7 @@
 				7A560B4E0E12D27A0049409D /* dmzLuaKernelMessageType.cpp */,
 				7A560B4F0E12D27A0049409D /* dmzLuaKernelObjectType.cpp */,
 				7A560B500E12D27A0049409D /* dmzLuaKernelPrivate.h */,
+				7A11648C0E9A9BC4006302C9 /* dmzLuaKernelResources.cpp */,
 				7A560B510E12D27A0049409D /* dmzLuaKernelRuntime.cpp */,
 				7A560B520E12D27A0049409D /* dmzLuaKernelRuntime.h */,
 				7A560B530E12D27A0049409D /* dmzLuaKernelTime.cpp */,
@@ -3576,7 +3582,6 @@
 				7A0147C00E118421001813A7 /* dmzRuntime.h in Headers */,
 				7A0147C20E118421001813A7 /* dmzRuntimeConfig.h in Headers */,
 				7A0147C30E118421001813A7 /* dmzRuntimeConfigContext.h in Headers */,
-				7A0147C50E118421001813A7 /* dmzRuntimeConfigRead.h in Headers */,
 				7A0147C80E118421001813A7 /* dmzRuntimeConfigWrite.h in Headers */,
 				7A0147CA0E118421001813A7 /* dmzRuntimeContext.h in Headers */,
 				7A0147CC0E118421001813A7 /* dmzRuntimeContextDefinitions.h in Headers */,
@@ -3653,7 +3658,6 @@
 				7A0148590E118421001813A7 /* dmzTypesUUID.h in Headers */,
 				7A01485A0E118421001813A7 /* dmzTypesVector.h in Headers */,
 				7A09AF860E118C41003C5B32 /* dmzRuntimeLoadPlugins.h in Headers */,
-				7A39BB280E4B8C360035E12A /* dmzRuntimeConfigToBase.h in Headers */,
 				7A39BB290E4B8C360035E12A /* dmzRuntimeConfigToMatrix.h in Headers */,
 				7A39BB2A0E4B8C360035E12A /* dmzRuntimeConfigToNamedHandle.h in Headers */,
 				7A39BB2B0E4B8C360035E12A /* dmzRuntimeConfigToPathContainer.h in Headers */,
@@ -3662,6 +3666,8 @@
 				7A39BB2E0E4B8C360035E12A /* dmzRuntimeConfigToVector.h in Headers */,
 				7A39BB3A0E4B8CA50035E12A /* dmzRuntimeUUID.h in Headers */,
 				7A39BB430E4B8CD60035E12A /* dmzTypesStringContainer.h in Headers */,
+				7A11645C0E9A9997006302C9 /* dmzRuntimeConfigToTypesBase.h in Headers */,
+				7A11649F0E9A9C0F006302C9 /* dmzRuntimeResources.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4617,6 +4623,7 @@
 				7A0148570E118421001813A7 /* dmzTypesStringUtil.cpp in Sources */,
 				7A09AF850E118C41003C5B32 /* dmzRuntimeLoadPlugins.cpp in Sources */,
 				7A39BB420E4B8CD60035E12A /* dmzTypesStringContainer.cpp in Sources */,
+				7A11649E0E9A9C0F006302C9 /* dmzRuntimeResources.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4774,6 +4781,7 @@
 				7A560BC20E12D7CC0049409D /* dmzLuaKernelUndo.cpp in Sources */,
 				7A560BC30E12D7CC0049409D /* dmzLuaKernelUUID.cpp in Sources */,
 				7A560BC40E12D7CC0049409D /* dmzLuaKernelVector.cpp in Sources */,
+				7A11648D0E9A9BC4006302C9 /* dmzLuaKernelResources.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

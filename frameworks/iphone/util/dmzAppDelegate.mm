@@ -2,7 +2,7 @@
 #import "dmzApplicationiPhone.h"
 #import "dmzLogObserverNSLog.h"
 #import <dmzRuntimeSession.h>
-#import <dmzRuntimeConfigRead.h>
+#import <dmzRuntimeConfigToTypesBase.h>
 #import <dmzRuntimeConfigWrite.h>
 #import <dmzSystemFile.h>
 #import "dmzSystemFileMacOS.h"

@@ -47,7 +47,8 @@ t = "dmz.config:store_attribute",
 p = {"name", "value",},
 b = [[
 Store an attribute of name with value in the dmz.config object.
-Returns true if the attribute was successfully stored. ]],
+Returns true if the attribute was successfully stored.
+]],
 },{
 t = "dmz.config:lookup_attribute",
 p = {"name",},
@@ -198,117 +199,382 @@ b = [[
 ]],
 -- [dmz.config | nil]
 },
+}, -- dmz.config
+{
+
+t = "dmz.data",
+
+{
+t = "dmz.data.new",
+o = {"data",},
+b = [[
+]],
+-- [dmz.data]
+},{
+t = "dmz.data.is_a",
+p = {"value",},
+-- [dmz.data | nil]
+b = [[
+]],
+},{
+t = "dmz.data:get_attributes",
+p = {},
+--  [{dmz.handle}]
+b = [[
+]],
+},{
+t = "dmz.data:store_string",
+p = {"attribute", "offset", "value",},
+b = [[
+]],
+},{
+t = "dmz.data:lookup_string",
+p = {"attribute", "offset",},
+-- [string | nil]
+b = [[
+]],
+},{
+t = "dmz.data:store_number",
+p = {"attribute", "offset", "value",},
+b = [[
+]],
+},{
+t = "dmz.data:lookup_number",
+p = {"attribute", "offset",},
+-- [number | nil]
+b = [[
+]],
+},{
+t = "dmz.data:store_handle",
+p = {"attribute", "offset", "value",},
+b = [[
+]],
+},{
+t = "dmz.data:lookup_handle",
+p = {"attribute", "offset",},
+-- [dmz.handle | nil]
+b = [[
+]],
+},{
+t = "dmz.data:store_vector",
+p = {"attribute", "offset", "value",},
+b = [[
+]],
+},{
+t = "dmz.data:lookup_vector",
+p = {"attribute", "offset",},
+-- [dmz.vector | nil]
+b = [[
+]],
+},
+}, -- dmz.data
+{
+
+t = " dmz.event_type",
+
+{
+t = "dmz.event_type.new",
+o = {"dmz.event_type",},
+-- [dmz.event_type]
+b = [[
+]],
+},{
+t = "dmz.event_type.is_a",
+p = {"value",},
+-- [dmz.event_type | nil]
+b = [[
+]],
+},{
+t = "dmz.event_type:is_of_type",
+p = {"event_type",},
+-- [boolean]
+b = [[
+]],
+},{
+t = "dmz.event_type:get_name",
+p = {},
+-- [string]
+b = [[
+]],
+},{
+t = "dmz.event_type:get_handle",
+p = {},
+-- [dmz.handle | nil]
+b = [[
+]],
+},{
+t = "dmz.event_type:get_parent",
+p = {},
+-- [dmz.event_type]
+b = [[
+]],
+},{
+t = "dmz.event_type:become_parent",
+p = {},
+-- [boolean]
+b = [[
+]],
+},{
+t = "dmz.event_type:get_children",
+p = {},
+-- [{dmz.event_type} | nil]
+b = [[
+]],
+},
+}, -- dmz.event_type
+
+{
+
+t = "dmz.handle",
+
+{
+t = "dmz.handle.new",
+p = {"value",},
+b = [[
+]],
+--[dmz.handle | nil]
+},{
+t = "dmz.handle.is_a",
+p = {"value",},
+-- [dmz.handle | nil]
+b = [[
+]],
+},
+}, -- dmz.handle
+{
+
+t = "dmz.input",
+
+{
+t = "dmz.input.ChannelState",
+b = [[
+]],
+},{
+t = "dmz.input.Axis",
+b = [[
+]],
+},{
+t = "dmz.input.Button",
+b = [[
+]],
+},{
+t = "dmz.input.Switch",
+b = [[
+]],
+},{
+t = "dmz.input.Key",
+b = [[
+]],
+},{
+t = "dmz.input.Mouse",
+b = [[
+]],
+},{
+t = "dmz.input.Data",
+b = [[
+]],
+},{
+t = "dmz.input.All",
+b = [[
+]],
+},{
+t = "dmz.input.has_buttons_changed",
+p = {"buttonEvent",},
+--[boolean]
+b = [[
+]],
+},{
+t = "dmz.input.is_button_changed",
+p = {"buttonNumber", "buttonEvent",},
+-- [boolean]
+b = [[
+]],
+},{
+t = "dmz.input.is_button_pressed",
+p = {"buttonNumber", "buttonEvent",},
+-- [boolean]
+b = [[
+]],
+},
+}, -- dmz.input
+{
+
+t = "dmz.input_observer",
+b = [[
+
+An event is stored as a table and has the following structure:
+<code>
+<pre>
+{
+   axis = {
+      source, -- dmz.handle
+      which, -- number
+      value, -- number
+      previous_value, -- number
+      delta, -- number
+   },
+   button = {
+      source, -- dmz.handle
+      which, -- number
+      value, -- boolean
+      previous_value, -- boolean
+      changed, -- boolean
+   },
+   switch = {
+      source, -- dmz.handle
+      which, -- number
+      value, -- number
+      previous_value, -- number
+      changed, -- boolean
+   },
+   key = {
+      source, -- dmz.handle
+      value, -- number
+      state, -- boolean
+   },
+   mouse = {
+      source, -- dmz.handle
+      window_size_x, -- number
+      window_size_y, -- number
+      x, -- number
+      y, -- number
+      previous_x, -- number
+      previous_y, -- number
+      delta_x, -- number
+      delta_y, -- number
+      scroll_delta_x, -- number
+      scroll_delta_y, -- number
+      buttons, -- dmz.mask
+      previous_buttons, -- dmz.mask
+   },
+}
+</pre>
+</code>
+
+The input callback should accept two parameters: self and an event.
+<code>
+<pre>
+   function input_callback (self, event)
+      if event.button then -- process mouse event
+      elseif event.key then -- process key event
+      elseif event.mouse then -- process mouse event
+      end
+   end
+</pre>
+</code>
+]],
+{
+t = "dmz.input_observer.new",
+p = {},
+b = [[
+]],
+-- [dmz.input_observer]
+},{
+t = "dmz.input_observer.is_a",
+p = {"value",},
+-- [dmz.input_observer | nil]
+b = [[
+]],
+},{
+t = "dmz.input_observer:init_channels",
+p = {"config", "mask", "callback", "self",},
+b = [[
+]],
+},{
+t = "dmz.input_observer:register_channel",
+p = {"channelName", "mask", "callback", "self",},
+b = [[
+]],
+},{
+t = "dmz.input_observer:register_default_channel",
+p = {"mask", "callback", "self"},
+b = [[
+]],
+},{
+t = "dmz.input_observer:release_channel",
+p = {"channelName",},
+b = [[
+]],
+},{
+t = "dmz.input_observer:release_default_channel",
+p = {},
+b = [[
+]],
+},{
+t = "dmz.input_observer:release_all",
+p = {},
+b = [[
+]],
+},
+}, -- dmz.input_observer
+{
+
+t = "dmz.isect",
+
+{
+t = "dmz.isect.RayTest",
+-- Test type
+b = [[
+]],
+},{
+t = "dmz.isect.SegmentTest",
+-- Test type
+b = [[
+]],
+},{
+t = "dmz.isect.FirstPoint",
+-- Param type
+b = [[
+]],
+},{
+t = "dmz.isect.ClosestPoint",
+-- Param type
+b = [[
+]],
+},{
+t = "dmz.isect.AllPoints",
+-- Param type
+b = [[
+]],
+},{
+t = "dmz.isect.BackCull",
+-- Cull mask
+b = [[
+]],
+},{
+t = "dmz.isect.FrontCull",
+-- Cull mask
+b = [[
+]],
+},{
+t = "dmz.isect.Invisible",
+-- Cull mask
+b = [[
+]],
+},{
+t = "dmz.isect.clamp",
+p = {"point",},
+-- [(dmz.vector point, dmz.vector normal) | nil]
+b = [[
+]],
+},{
+t = "dmz.isect.enable_isect",
+p = {"handle",},
+-- [boolean]
+b = [[
+]],
+},{
+t = "dmz.isect.disable_isect",
+p = {"handle",},
+--  [boolean]
+b = [[
+]],
+},{
+t = "dmz.isect.do_isect",
+p = {"test"},
+o = {"parameters"},
 --[[
-dmz.data.new ([dmz.data]) [dmz.data]
-dmz.data.is_a (value) [dmz.data | nil]
-
-dmz.data:get_attributes () [{dmz.handle}]
-dmz.data:store_string (dmz.handle attribute, int offset, string value)
-dmz.data:lookup_string (dmz.handle attribute, int offset) [string | nil]
-dmz.data:store_number (dmz.handle attribute, int offset, number value)
-dmz.data:lookup_number (dmz.handle attribute, int offset) [number | nil]
-dmz.data:store_handle (dmz.handle attribute, int offset, dmz.handle value)
-dmz.data:lookup_handle (dmz.handle attribute, int offset) [dmz.handle | nil]
-dmz.data:store_vector (dmz.handle attribute, int offset, dmz.vector value)
-dmz.data:lookup_vector (dmz.handle attribute, int offset) [dmz.vector | nil]
-
-
-dmz.event_type.new ([dmz.event_type]) [dmz.event_type]
-dmz.event_type.is_a (value) [dmz.event_type | nil]
-
-dmz.event_type:is_of_type (dmz.event_type event) [boolean]
-dmz.event_type:get_name () [string]
-dmz.event_type:get_handle () [dmz.handle | nil]
-dmz.event_type:get_parent () [dmz.event_type]
-dmz.event_type:become_parent () [boolean]
-dmz.event_type:get_children () [{dmz.event_type} | nil]
-
-
-dmz.handle.new ([string name | dmz.handle value]) [dmz.handle | nil]
-dmz.handle.is_a (value) [dmz.handle | nil]
-
-
-dmz.input.ChannelState
-dmz.input.Axis
-dmz.input.Button
-dmz.input.Switch
-dmz.input.Key
-dmz.input.Mouse
-dmz.input.Data
-dmz.input.All
-
-dmz.input.has_buttons_changed (table buttonEvent) [boolean]
-dmz.input.is_button_changed (number buttonNumber, table buttonEvent) [boolean]
-dmz.input.is_button_pressed (number buttonNumber, table buttonEvent) [boolean]
-
-dmz.input_observer.new () [dmz.input_observer]
-dmz.input_observer.is_a (value) [dmz.input_observer | nil]
-
-dmz.input_observer:init_channels (dmz.config config, dmz.mask mask, function callback, table self)
-dmz.input_observer:register_channel (string channelName, dmz.mask mask, function callback, table self)
-dmz.input_observer:register_default_channel (dmz.mask, function callback, table self)
-dmz.input_observer:release_channel (string channelName)
-dmz.input_observer:release_default_channel ()
-dmz.input_observer:release_all ()
-
-dmz.input_observer.callback (self, {
-[axis = {
-   dmz.handle source,
-   integer which,
-   number value,
-   number previous_value,
-   number delta,
-}],
-[button = {
-   dmz.handle source,
-   integer which,
-   boolean value,
-   boolean previous_value,
-   boolean changed,
-}],
-[switch = {
-   dmz.handle source,
-   integer which,
-   integer value,
-   integer previous_value,
-   boolean changed,
-}],
-[key = {
-   dmz.handle source,
-   integer value,
-   boolean state,
-}],
-[mouse = {
-   dmz.handle source,
-   integer window_size_x, 
-   integer window_size_y, 
-   integer x,
-   integer y,
-   integer previous_x,
-   integer previous_y,
-   integer delta_x,
-   integer delta_y,
-   integer scroll_delta_x,
-   integer scroll_delta_y,
-   dmz.mask buttons,
-   dmz.mask previous_buttons,
-}],
-})
-
-
-dmz.isect.RayTest -- Test type
-dmz.isect.SegmentTest -- Test type
-dmz.isect.FirstPoint -- Param type
-dmz.isect.ClosestPoint -- Param type
-dmz.isect.AllPoints -- Param type
-dmz.isect.BackCull -- Cull mask
-dmz.isect.FrontCull -- Cull mask
-dmz.isect.Invisible -- Cull mask
-dmz.isect.clamp (dmz.vector point) [(dmz.vector point, dmz.vector normal) | nil]
-dmz.isect.enable_isect (dmz.handle handle) [boolean]
-dmz.isect.disable_isect (dmz.handle handle) [boolean]
-
-dmz.isect.do_isect (
+ (
 { integer type, dmz.vector start, dmz.vector vector },
 [{
    [integer type],
@@ -328,8 +594,15 @@ dmz.isect.do_isect (
       [dmz.mask cull],
    }
 }]
-
-dmz.isect.do_batch_isect (
+--]]
+b = [[
+]],
+},{
+t = "dmz.isect.do_batch_isect",
+p = {"tests"},
+o = {"parameters"},
+--[[
+(
 {
    { integer type, dmz.vector start, dmz.vector vector }
 },
@@ -351,58 +624,261 @@ dmz.isect.do_batch_isect (
       [dmz.mask cull],
    }
 }]
+--]]
+b = [[
+]],
+},
+}, -- dmz.isect
+{
 
+t = "dmz.log",
 
-dmz.log.new ([string name]) [dmz.log]
-dmz.log.is_a (value) [dmz.log | nil]
+{
+t = "dmz.log.new",
+o = {"name",},
+b = [[
+]],
+-- [dmz.log]
+},{
+t = "dmz.log.is_a",
+p = {"value",},
+-- [dmz.log | nil]
+b = [[
+]],
+},{
+t = "dmz.log:out",
+p = {"...",},
+},{
+t = "dmz.log:error",
+p ={"...",},
+},{
+t = "dmz.log:warn",
+p = {"...",},
+},{
+t = "dmz.log:info",
+p = {"...",},
+},{
+t = "dmz.log:debug",
+p = {"...",},
+b = [[
+]],
+},
+}, -- dmz.log
+{
 
-dmz.log:out (...)
-dmz.log:error (...)
-dmz.log:warn (...)
-dmz.log:info (...)
-dmz.log:debug (...)
+t = "dmz.mask",
 
+{
+t = "dmz.mask.new",
+o = {"value"},
+-- [dmz.mask]
+b = [[
+]],
+},{
+t = "dmz.mask.is_a",
+p = {"value",},
+-- (value) [dmz.mask | nil]
+b = [[
+]],
+},{
+t = "dmz.mask:clear",
+p = {},
+b = [[
+]],
+},{
+t = "dmz.mask:contains",
+p = {"value",},
+--  [boolean]
+b = [[
+]],
+},{
+t = "dmz.mask:unset",
+p = {"value",},
+-- [boolean]
+b = [[
+]],
+},{
+t = "dmz.mask:bit_and",
+p = {"value",},
+--  [dmz.mask]
+b = [[
+]],
+},{
+t = "dmz.mask:bit_or",
+p = {"value",},
+--  [dmz.mask]
+b = [[
+]],
+},{
+t = "dmz.mask:bit_xor",
+p = {"value",},
+--  [dmz.mask]
+b = [[
+]],
+},{
+t = "dmz.mask:bit_set",
+p = {"value",},
+-- [dmz.mask]
+b = [[
+]],
+},{
+t = "dmz.mask:bit_unset",
+p = {"value",},
+-- [dmz.mask]
+b = [[
+]],
+},{
+t = "dmz.mask:bit_not",
+p = {},
+-- [dmz.mask]
+b = [[
+]],
+},{
+t = "dmz.mask:bit_shift",
+p = {"shift",},
+-- (int shift) [dmz.mask]
+b = [[
+]],
+},
+}, -- dmz.mask
+{
 
-dmz.mask.new ([dmz.mask value]) [dmz.mask]
-dmz.mask.is_a (value) [dmz.mask | nil]
+t = "dmz.math",
 
-dmz.mask:clear ()
-dmz.mask:contains (dmz.mask value) [boolean]
-dmz.mask:unset (dmz.mask value) [boolean]
-dmz.mask:bit_and (dmz.mask value) [dmz.mask]
-dmz.mask:bit_or (dmz.mask value) [dmz.mask]
-dmz.mask:bit_xor (dmz.mask value) [dmz.mask]
-dmz.mask:bit_set (int value) [dmz.mask]
-dmz.mask:bit_unset (int value) [dmz.mask]
-dmz.mask:bit_not () [dmz.mask]
-dmz.mask:bit_shift (int shift) [dmz.mask]
+{
+t = "dmz.math.is_zero",
+p = {"value",},
+-- [boolean]
+b = [[
+]],
+},{
+t = "dmz.math.to_degrees",
+p = {"value",},
+-- [number]
+b = [[
+]],
+},{
+t = "dmz.math.to_radians",
+p = {"value",},
+-- [number]
+b = [[
+]],
+},{
+t = "dmz.math.up",
+p = {},
+-- [dmz.vector]
+b = [[
+]],
+},{
+t = "dmz.math.down",
+p = {},
+-- [dmz.vector]
+b = [[
+]],
+},{
+t = "dmz.math.right",
+p = {},
+-- [dmz.vector]
+b = [[
+]],
+},{
+t = "dmz.math.left",
+p = {},
+-- [dmz.vector]
+b = [[
+]],
+},{
+t = "dmz.math.forward",
+p = {},
+-- [dmz.vector]
+b = [[
+]],
+},{
+t = "dmz.math.backward",
+p = {},
+-- [dmz.vector]
+b = [[
+]],
+},
+}, -- dmz.math
 
+{
 
-dmz.math.is_zero (number value) [boolean]
-dmz.math.to_degrees (number value) [number]
-dmz.math.to_radians (number value) [number]
-dmz.math.up () [dmz.vector]
-dmz.math.down () [dmz.vector]
-dmz.math.right () [dmz.vector]
-dmz.math.left () [dmz.vector]
-dmz.math.forward () [dmz.vector]
-dmz.math.backward () [dmz.vector]
+t = "dmz.matrix",
 
-
-dmz.matrix.new ([dmz.matrix | {number}] | number v1, number v2, number v3, number v4, number v5, number v6, number v7, number v8, number v9) [dmz.matrix]
-dmz.matrix.is_a (value) [dmz.matrix | nil]
-
-dmz.matrix:transpose () [dmz.matrix]
-dmz.matrix:invert () [dmz.matrix]
-dmz.matrix:transform (dmz.vector) [dmz.vector]
-dmz.matrix:from_table ({number}) [dmz.matrix]
-dmz.matrix:to_table () [{number}]
-dmz.matrix:from_two_vectors (dmz.vector from, dmz.vector to) [dmz.matrix]
-dmz.matrix:from_axis_and_angle (dmz.vector axis, number angle) [dmz.matrix]
-dmz.matrix:is_identity () [boolean]
-dmz.matrix:set_identity () [dmz.matrix]
-
-
+{
+t = "dmz.matrix.new",
+p = {"value",},
+-- value can be dmz.matrix or array of nine numbers
+},{
+t = "dmz.matrix.new",
+p = {"v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9",},
+-- [dmz.matrix]
+b = [[
+]],
+},{
+t = "dmz.matrix.is_a",
+p = {"value",},
+-- [dmz.matrix | nil]
+b = [[
+]],
+},{
+t = "dmz.matrix:transpose",
+p = {},
+-- [dmz.matrix]
+b = [[
+]],
+},{
+t = "dmz.matrix:invert",
+p = {},
+-- [dmz.matrix]
+b = [[
+]],
+},{
+t = "dmz.matrix:transform",
+p = {"value",},
+-- (dmz.vector) [dmz.vector]
+b = [[
+]],
+},{
+t = "dmz.matrix:from_table",
+p = {"value"},
+-- table [dmz.matrix]
+b = [[
+]],
+},{
+t = "dmz.matrix:to_table",
+p = {},
+--  [{number}]
+b = [[
+]],
+},{
+t = "dmz.matrix:from_two_vectors",
+p = {"from", "to", },
+-- [dmz.matrix]
+b = [[
+]],
+},{
+t = "dmz.matrix:from_axis_and_angle",
+p = {"axis", "angle",},
+-- [dmz.matrix]
+b = [[
+]],
+},{
+t = "dmz.matrix:is_identity",
+p = {},
+-- [boolean]
+b = [[
+]],
+},{
+t = "dmz.matrix:set_identity",
+p = {},
+-- [dmz.matrix]
+b = [[
+]],
+},
+}, -- dmz.matrix
+--[[
 dmz.message_observer.new (string name) [dmz.message_observer]
 dmz.message_observer.is_a (value) [dmz.message_observer | nil]
 
@@ -602,5 +1078,4 @@ dmz.vector:cross (dmz.vector value) [dmz.vector | nil]
 dmz.vector:is_zero ([number epsilon]) [boolean | nil]
 dmz.vector:get_angle (dmz.vector value) [number | nil]
 --]]
-}
 }

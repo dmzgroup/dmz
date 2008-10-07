@@ -3,119 +3,346 @@
 <title>DMZ Lua API Reference Guide</title>
 </head>
 <body>
-<h1>DMZ Lua API Reference Guide</h1>
-<h2>dmz.config</h2>
+<h1></h1>
+<h2><a name="dmz.config">dmz.config</a></h2>
 The dmz.config class is a wrapper for the dmz::Config class.
-
 <hr>
-<h3>dmz.config.get_global ()</h3>
+<h3><a name="dmz.config.get_global">dmz.config.get_global</a> ()</h3>
 Returns a dmz.config object containing the global config data.
-
 <hr>
-<h3>dmz.config.new ([name])</h3>
+<h3><a name="dmz.config.new">dmz.config.new</a> ([name])</h3>
 Returns a new dmz.config object. The name is used to set the new dmz.config
 objects tag.
-
 <hr>
-<h3>dmz.config.is_a (value)</h3>
+<h3><a name="dmz.config.is_a">dmz.config.is_a</a> (value)</h3>
 Returns a dmz.config if value is a dmz.config object. Returns nil if it is not.
-
 <hr>
-<h3>dmz.config:get_name ()</h3>
+<h3><a name="dmz.config:get_name">dmz.config:get_name</a> ()</h3>
 Returns the name of the dmz.config object. Returns nil if the dmz.config object is empty.
-
 <hr>
-<h3>dmz.config:get_attributes ()</h3>
+<h3><a name="dmz.config:get_attributes">dmz.config:get_attributes</a> ()</h3>
 Returns a table containing the attributes stored in the dmz.config object.
 Returns nil if the dmz.config object is empty.
-
 <hr>
-<h3>dmz.config:store_attribute (name, value)</h3>
+<h3><a name="dmz.config:store_attribute">dmz.config:store_attribute</a> (name, value)</h3>
 Store an attribute of name with value in the dmz.config object.
-Returns true if the attribute was successfully stored. 
+Returns true if the attribute was successfully stored.
 <hr>
-<h3>dmz.config:lookup_attribute (name)</h3>
+<h3><a name="dmz.config:lookup_attribute">dmz.config:lookup_attribute</a> (name)</h3>
 Returns the value of the attribute name. Returns nil if
 the dmz.config object does not contain an attribute with the given name.
-
 <hr>
-<h3>dmz.config:lookup_boolean (name, [default])</h3>
+<h3><a name="dmz.config:lookup_boolean">dmz.config:lookup_boolean</a> (name [, default])</h3>
 Looks up the attribute value name and returns it as a boolean.
 If the attribute name is not found, then default is returned.
-
 <hr>
-<h3>dmz.config:lookup_string (name, [default])</h3>
+<h3><a name="dmz.config:lookup_string">dmz.config:lookup_string</a> (name [, default])</h3>
 Looks up the attribute value name and returns it as a string.
 If the attribute name is not found, then default is returned.
-
 <hr>
-<h3>dmz.config:lookup_number (name, [default])</h3>
+<h3><a name="dmz.config:lookup_number">dmz.config:lookup_number</a> (name [, default])</h3>
 Looks up the attribute value name and returns it as a number.
 If the attribute name is not found, then default is returned.
-
 <hr>
-<h3>dmz.config:lookup_handle (name, [default])</h3>
+<h3><a name="dmz.config:lookup_handle">dmz.config:lookup_handle</a> (name [, default])</h3>
 Looks up the attribute value name and returns it as a dmz.handle.
 If the attribute name is not found, then default is returned.
-
 <hr>
-<h3>dmz.config:lookup_matrix (name, [default])</h3>
+<h3><a name="dmz.config:lookup_matrix">dmz.config:lookup_matrix</a> (name [, default])</h3>
 Looks up the attribute value name and returns it as a dmz.matrix.
 If the attribute name is not found, then default is returned.
-
 <hr>
-<h3>dmz.config:lookup_event_type (name, [default])</h3>
+<h3><a name="dmz.config:lookup_event_type">dmz.config:lookup_event_type</a> (name [, default])</h3>
 Looks up the attribute value name and returns it as a dmz.event_type.
 If the attribute name is not found, then default is returned. Returns nil if
 a dmz.event_type can not be found.
-
 <hr>
-<h3>dmz.config:lookup_message (name, [default])</h3>
+<h3><a name="dmz.config:lookup_message">dmz.config:lookup_message</a> (name [, default])</h3>
 Looks up the attribute value name and returns it as a dmz.message.
 If the attribute name is not found, then default is returned. Returns nil if
 a dmz.message can not be found.
-
 <hr>
-<h3>dmz.config:lookup_object_type (name, [default])</h3>
+<h3><a name="dmz.config:lookup_object_type">dmz.config:lookup_object_type</a> (name [, default])</h3>
 Looks up the attribute value name and returns it as a dmz.object_type.
 If the attribute name is not found, then default is returned. Returns nil if
 a dmz.object_type can not be found.
-
 <hr>
-<h3>dmz.config:lookup_state (name, [default])</h3>
+<h3><a name="dmz.config:lookup_state">dmz.config:lookup_state</a> (name [, default])</h3>
 Looks up the attribute value name and returns it as a dmz.mask.
 If the attribute name is not found, then default is returned.
-
 <hr>
-<h3>dmz.config:lookup_uuid (name, [default])</h3>
-
+<h3><a name="dmz.config:lookup_uuid">dmz.config:lookup_uuid</a> (name [, default])</h3>
 <hr>
-<h3>dmz.config:lookup_vector (name, [default])</h3>
-
+<h3><a name="dmz.config:lookup_vector">dmz.config:lookup_vector</a> (name [, default])</h3>
 <hr>
-<h3>dmz.config:set_value (value)</h3>
-
+<h3><a name="dmz.config:set_value">dmz.config:set_value</a> (value)</h3>
 <hr>
-<h3>dmz.config:append_value (value)</h3>
-
+<h3><a name="dmz.config:append_value">dmz.config:append_value</a> (value)</h3>
 <hr>
-<h3>dmz.config:get_value ()</h3>
-
+<h3><a name="dmz.config:get_value">dmz.config:get_value</a> ()</h3>
 <hr>
-<h3>dmz.config:get_children ()</h3>
-
+<h3><a name="dmz.config:get_children">dmz.config:get_children</a> ()</h3>
 <hr>
-<h3>dmz.config:add_config (scope, dmz.config | {dmz.config}))</h3>
-
+<h3><a name="dmz.config:add_config">dmz.config:add_config</a> (scope, dmz.config | {dmz.config}))</h3>
 <hr>
-<h3>dmz.config:lookup_config (scope)</h3>
-
+<h3><a name="dmz.config:lookup_config">dmz.config:lookup_config</a> (scope)</h3>
 <hr>
-<h3>dmz.config:lookup_all_config (scope)</h3>
-
+<h3><a name="dmz.config:lookup_all_config">dmz.config:lookup_all_config</a> (scope)</h3>
 <hr>
-<h3>dmz.config:lookup_all_config_merged (scope)</h3>
+<h3><a name="dmz.config:lookup_all_config_merged">dmz.config:lookup_all_config_merged</a> (scope)</h3>
+<hr>
+<h2><a name="dmz.data">dmz.data</a></h2>
+<h3><a name="dmz.data.new">dmz.data.new</a> ([data])</h3>
+<hr>
+<h3><a name="dmz.data.is_a">dmz.data.is_a</a> (value)</h3>
+<hr>
+<h3><a name="dmz.data:get_attributes">dmz.data:get_attributes</a> ()</h3>
+<hr>
+<h3><a name="dmz.data:store_string">dmz.data:store_string</a> (attribute, offset, value)</h3>
+<hr>
+<h3><a name="dmz.data:lookup_string">dmz.data:lookup_string</a> (attribute, offset)</h3>
+<hr>
+<h3><a name="dmz.data:store_number">dmz.data:store_number</a> (attribute, offset, value)</h3>
+<hr>
+<h3><a name="dmz.data:lookup_number">dmz.data:lookup_number</a> (attribute, offset)</h3>
+<hr>
+<h3><a name="dmz.data:store_handle">dmz.data:store_handle</a> (attribute, offset, value)</h3>
+<hr>
+<h3><a name="dmz.data:lookup_handle">dmz.data:lookup_handle</a> (attribute, offset)</h3>
+<hr>
+<h3><a name="dmz.data:store_vector">dmz.data:store_vector</a> (attribute, offset, value)</h3>
+<hr>
+<h3><a name="dmz.data:lookup_vector">dmz.data:lookup_vector</a> (attribute, offset)</h3>
+<hr>
+<h2><a name=" dmz.event_type"> dmz.event_type</a></h2>
+<h3><a name="dmz.event_type.new">dmz.event_type.new</a> ([dmz.event_type])</h3>
+<hr>
+<h3><a name="dmz.event_type.is_a">dmz.event_type.is_a</a> (value)</h3>
+<hr>
+<h3><a name="dmz.event_type:is_of_type">dmz.event_type:is_of_type</a> (event_type)</h3>
+<hr>
+<h3><a name="dmz.event_type:get_name">dmz.event_type:get_name</a> ()</h3>
+<hr>
+<h3><a name="dmz.event_type:get_handle">dmz.event_type:get_handle</a> ()</h3>
+<hr>
+<h3><a name="dmz.event_type:get_parent">dmz.event_type:get_parent</a> ()</h3>
+<hr>
+<h3><a name="dmz.event_type:become_parent">dmz.event_type:become_parent</a> ()</h3>
+<hr>
+<h3><a name="dmz.event_type:get_children">dmz.event_type:get_children</a> ()</h3>
+<hr>
+<h2><a name="dmz.handle">dmz.handle</a></h2>
+<h3><a name="dmz.handle.new">dmz.handle.new</a> (value)</h3>
+<hr>
+<h3><a name="dmz.handle.is_a">dmz.handle.is_a</a> (value)</h3>
+<hr>
+<h2><a name="dmz.input">dmz.input</a></h2>
+<h3><a name="dmz.input.ChannelState">dmz.input.ChannelState</a></h3>
+<hr>
+<h3><a name="dmz.input.Axis">dmz.input.Axis</a></h3>
+<hr>
+<h3><a name="dmz.input.Button">dmz.input.Button</a></h3>
+<hr>
+<h3><a name="dmz.input.Switch">dmz.input.Switch</a></h3>
+<hr>
+<h3><a name="dmz.input.Key">dmz.input.Key</a></h3>
+<hr>
+<h3><a name="dmz.input.Mouse">dmz.input.Mouse</a></h3>
+<hr>
+<h3><a name="dmz.input.Data">dmz.input.Data</a></h3>
+<hr>
+<h3><a name="dmz.input.All">dmz.input.All</a></h3>
+<hr>
+<h3><a name="dmz.input.has_buttons_changed">dmz.input.has_buttons_changed</a> (buttonEvent)</h3>
+<hr>
+<h3><a name="dmz.input.is_button_changed">dmz.input.is_button_changed</a> (buttonNumber, buttonEvent)</h3>
+<hr>
+<h3><a name="dmz.input.is_button_pressed">dmz.input.is_button_pressed</a> (buttonNumber, buttonEvent)</h3>
+<hr>
+<h2><a name="dmz.input_observer">dmz.input_observer</a></h2>
 
+An event is stored as a table and has the following structure:
+<code>
+<pre>
+{
+   axis = {
+      source, -- dmz.handle
+      which, -- number
+      value, -- number
+      previous_value, -- number
+      delta, -- number
+   },
+   button = {
+      source, -- dmz.handle
+      which, -- number
+      value, -- boolean
+      previous_value, -- boolean
+      changed, -- boolean
+   },
+   switch = {
+      source, -- dmz.handle
+      which, -- number
+      value, -- number
+      previous_value, -- number
+      changed, -- boolean
+   },
+   key = {
+      source, -- dmz.handle
+      value, -- number
+      state, -- boolean
+   },
+   mouse = {
+      source, -- dmz.handle
+      window_size_x, -- number
+      window_size_y, -- number
+      x, -- number
+      y, -- number
+      previous_x, -- number
+      previous_y, -- number
+      delta_x, -- number
+      delta_y, -- number
+      scroll_delta_x, -- number
+      scroll_delta_y, -- number
+      buttons, -- dmz.mask
+      previous_buttons, -- dmz.mask
+   },
+}
+</pre>
+</code>
+
+The input callback should accept two parameters: self and an event.
+<code>
+<pre>
+   function input_callback (self, event)
+      if event.button then -- process mouse event
+      elseif event.key then -- process key event
+      elseif event.mouse then -- process mouse event
+      end
+   end
+</pre>
+</code>
+<hr>
+<h3><a name="dmz.input_observer.new">dmz.input_observer.new</a> ()</h3>
+<hr>
+<h3><a name="dmz.input_observer.is_a">dmz.input_observer.is_a</a> (value)</h3>
+<hr>
+<h3><a name="dmz.input_observer:init_channels">dmz.input_observer:init_channels</a> (config, mask, callback, self)</h3>
+<hr>
+<h3><a name="dmz.input_observer:register_channel">dmz.input_observer:register_channel</a> (channelName, mask, callback, self)</h3>
+<hr>
+<h3><a name="dmz.input_observer:register_default_channel">dmz.input_observer:register_default_channel</a> (mask, callback, self)</h3>
+<hr>
+<h3><a name="dmz.input_observer:release_channel">dmz.input_observer:release_channel</a> (channelName)</h3>
+<hr>
+<h3><a name="dmz.input_observer:release_default_channel">dmz.input_observer:release_default_channel</a> ()</h3>
+<hr>
+<h3><a name="dmz.input_observer:release_all">dmz.input_observer:release_all</a> ()</h3>
+<hr>
+<h2><a name="dmz.isect">dmz.isect</a></h2>
+<h3><a name="dmz.isect.RayTest">dmz.isect.RayTest</a></h3>
+<hr>
+<h3><a name="dmz.isect.SegmentTest">dmz.isect.SegmentTest</a></h3>
+<hr>
+<h3><a name="dmz.isect.FirstPoint">dmz.isect.FirstPoint</a></h3>
+<hr>
+<h3><a name="dmz.isect.ClosestPoint">dmz.isect.ClosestPoint</a></h3>
+<hr>
+<h3><a name="dmz.isect.AllPoints">dmz.isect.AllPoints</a></h3>
+<hr>
+<h3><a name="dmz.isect.BackCull">dmz.isect.BackCull</a></h3>
+<hr>
+<h3><a name="dmz.isect.FrontCull">dmz.isect.FrontCull</a></h3>
+<hr>
+<h3><a name="dmz.isect.Invisible">dmz.isect.Invisible</a></h3>
+<hr>
+<h3><a name="dmz.isect.clamp">dmz.isect.clamp</a> (point)</h3>
+<hr>
+<h3><a name="dmz.isect.enable_isect">dmz.isect.enable_isect</a> (handle)</h3>
+<hr>
+<h3><a name="dmz.isect.disable_isect">dmz.isect.disable_isect</a> (handle)</h3>
+<hr>
+<h3><a name="dmz.isect.do_isect">dmz.isect.do_isect</a> (test [, parameters])</h3>
+<hr>
+<h3><a name="dmz.isect.do_batch_isect">dmz.isect.do_batch_isect</a> (tests [, parameters])</h3>
+<hr>
+<h2><a name="dmz.log">dmz.log</a></h2>
+<h3><a name="dmz.log.new">dmz.log.new</a> ([name])</h3>
+<hr>
+<h3><a name="dmz.log.is_a">dmz.log.is_a</a> (value)</h3>
+<hr>
+<h3><a name="dmz.log:out">dmz.log:out</a> (...)</h3>
+<h3><a name="dmz.log:error">dmz.log:error</a> (...)</h3>
+<h3><a name="dmz.log:warn">dmz.log:warn</a> (...)</h3>
+<h3><a name="dmz.log:info">dmz.log:info</a> (...)</h3>
+<h3><a name="dmz.log:debug">dmz.log:debug</a> (...)</h3>
+<hr>
+<h2><a name="dmz.mask">dmz.mask</a></h2>
+<h3><a name="dmz.mask.new">dmz.mask.new</a> ([value])</h3>
+<hr>
+<h3><a name="dmz.mask.is_a">dmz.mask.is_a</a> (value)</h3>
+<hr>
+<h3><a name="dmz.mask:clear">dmz.mask:clear</a> ()</h3>
+<hr>
+<h3><a name="dmz.mask:contains">dmz.mask:contains</a> (value)</h3>
+<hr>
+<h3><a name="dmz.mask:unset">dmz.mask:unset</a> (value)</h3>
+<hr>
+<h3><a name="dmz.mask:bit_and">dmz.mask:bit_and</a> (value)</h3>
+<hr>
+<h3><a name="dmz.mask:bit_or">dmz.mask:bit_or</a> (value)</h3>
+<hr>
+<h3><a name="dmz.mask:bit_xor">dmz.mask:bit_xor</a> (value)</h3>
+<hr>
+<h3><a name="dmz.mask:bit_set">dmz.mask:bit_set</a> (value)</h3>
+<hr>
+<h3><a name="dmz.mask:bit_unset">dmz.mask:bit_unset</a> (value)</h3>
+<hr>
+<h3><a name="dmz.mask:bit_not">dmz.mask:bit_not</a> ()</h3>
+<hr>
+<h3><a name="dmz.mask:bit_shift">dmz.mask:bit_shift</a> (shift)</h3>
+<hr>
+<h2><a name="dmz.math">dmz.math</a></h2>
+<h3><a name="dmz.math.is_zero">dmz.math.is_zero</a> (value)</h3>
+<hr>
+<h3><a name="dmz.math.to_degrees">dmz.math.to_degrees</a> (value)</h3>
+<hr>
+<h3><a name="dmz.math.to_radians">dmz.math.to_radians</a> (value)</h3>
+<hr>
+<h3><a name="dmz.math.up">dmz.math.up</a> ()</h3>
+<hr>
+<h3><a name="dmz.math.down">dmz.math.down</a> ()</h3>
+<hr>
+<h3><a name="dmz.math.right">dmz.math.right</a> ()</h3>
+<hr>
+<h3><a name="dmz.math.left">dmz.math.left</a> ()</h3>
+<hr>
+<h3><a name="dmz.math.forward">dmz.math.forward</a> ()</h3>
+<hr>
+<h3><a name="dmz.math.backward">dmz.math.backward</a> ()</h3>
+<hr>
+<h2><a name="dmz.matrix">dmz.matrix</a></h2>
+<h3><a name="dmz.matrix.new">dmz.matrix.new</a> (value)</h3>
+<h3><a name="dmz.matrix.new">dmz.matrix.new</a> (v1, v2, v3, v4, v5, v6, v7, v8, v9)</h3>
+<hr>
+<h3><a name="dmz.matrix.is_a">dmz.matrix.is_a</a> (value)</h3>
+<hr>
+<h3><a name="dmz.matrix:transpose">dmz.matrix:transpose</a> ()</h3>
+<hr>
+<h3><a name="dmz.matrix:invert">dmz.matrix:invert</a> ()</h3>
+<hr>
+<h3><a name="dmz.matrix:transform">dmz.matrix:transform</a> (value)</h3>
+<hr>
+<h3><a name="dmz.matrix:from_table">dmz.matrix:from_table</a> (value)</h3>
+<hr>
+<h3><a name="dmz.matrix:to_table">dmz.matrix:to_table</a> ()</h3>
+<hr>
+<h3><a name="dmz.matrix:from_two_vectors">dmz.matrix:from_two_vectors</a> (from, to)</h3>
+<hr>
+<h3><a name="dmz.matrix:from_axis_and_angle">dmz.matrix:from_axis_and_angle</a> (axis, angle)</h3>
+<hr>
+<h3><a name="dmz.matrix:is_identity">dmz.matrix:is_identity</a> ()</h3>
+<hr>
+<h3><a name="dmz.matrix:set_identity">dmz.matrix:set_identity</a> ()</h3>
 <hr>
 </body>
-</html> 
+</html>

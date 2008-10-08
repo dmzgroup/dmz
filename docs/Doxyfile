@@ -94,6 +94,7 @@ INPUT                  = ../kernel \
                          ../frameworks/entity \
                          ../frameworks/event \
                          ../frameworks/input \
+                         ../frameworks/lua \
                          ../frameworks/net \
                          ../frameworks/object \
                          ../frameworks/render \

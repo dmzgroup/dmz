@@ -30,8 +30,53 @@ local function create_contents (name, doc)
   file:close ()  
 end
 
-local function print_doc (file, doc, count)
+local function create_class_index (doc)
+   local index = {}
+   local count = 1
+   while doc[count] do
+      if doc[count].link then index[#index + 1] = doc[count].t end
+      count = count + 1
+   end
+   return index
+end
+
+local function add_code_blocks (body, keys)
+   if keys then
+      local count = 1
+      while keys[count] do
+         body = string.gsub (body, "([ \n])(" .. keys[count] .. ")([ .,\n])",
+            function (s1, s2, s3)
+               return s1 .. "<code>" .. s2 .. "</code>" .. s3
+            end)
+         count = count + 1
+      end
+   end
+   return body
+end
+
+local emList = {"nil", "number", "boolean", "string"}
+
+local function add_em_blocks (body)
+    for i, v in ipairs (emList) do
+      body = string.gsub (body, "([ \n])(" .. v .. ")([ .,\n])", function (s1, s2, s3)
+         return s1 ..'<em>' .. s2 .. '</em>' .. s3
+      end)
+   end
+   return body
+end
+
+local function add_class_links (body, classIndex)
+   for i, v in ipairs (classIndex) do
+      body = string.gsub (body, "([ \n])(" .. v .. ")([ .,\n])", function (s1, s2, s3)
+         return s1 .. '<a href="#' .. s2 .. '">' .. s2 .. '</a>' .. s3
+      end)
+   end
+   return body
+end
+
+local function print_doc (file, doc, classIndex, count)
    local title = doc.title
+   if not title then title = doc.t end
    if not title then title = "" end
    local param = ""
    if doc.p or doc.o then
@@ -57,14 +102,18 @@ local function print_doc (file, doc, count)
    file:write ("<h" .. tostring (count) .. ">" .. title .. param .. "</h"
       .. tostring (count) .. ">\n")
    if doc.b then
-      file:write (doc.b)
+      doc.body = add_code_blocks (doc.b, doc.p)
+      doc.body = add_code_blocks (doc.body, doc.o)
+      doc.body = add_em_blocks (doc.body)
+      doc.body = add_class_links (doc.body, classIndex)
+      file:write (doc.body)
       if count >= 2 then file:write ("<hr>\n") end
    end
 
    local current = 1
 
    while doc[current] do
-      print_doc (file, doc[current], count + 1)
+      print_doc (file, doc[current], classIndex, count + 1)
       current = current + 1
    end 
 end
@@ -72,6 +121,7 @@ end
 local doc = dofile (arg[1])
 
 create_contents (arg[2], doc)
+local classIndex = create_class_index (doc)
 
 local count = 1
 local file = io.open (arg[2] .. ".html", "w")
@@ -81,7 +131,7 @@ file:write ([[
 <title>]] .. doc.t .. [[</title>
 </head>
 <body>]] .. "\n")
-print_doc (file, doc, count)
+print_doc (file, doc, classIndex, count)
 file:write ([[
 </body>
 </html>]] .. "\n")

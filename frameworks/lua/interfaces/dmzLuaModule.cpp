@@ -1,6 +1,11 @@
 /*!
 
 \defgroup Lua DMZ Lua Framework
+\brief The Lua Framework provides Lua bindings for the DMZ Kernel and various
+frameworks. More information about Lua may be found here: http://www.lua.org/ \n\n
+\htmlonly
+The DMZ Lua binding documentation is available <a href="dmzlua.html">here</a>.
+\endhtmlonly
 
 \class dmz::LuaModule
 \ingroup Lua

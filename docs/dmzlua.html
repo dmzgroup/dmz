@@ -155,8 +155,22 @@ Creates and returns a mask that is the bitwise not of the <a href="#dmz.mask">dm
 Shifts the mask. A positive value shifts up while a negative value shifts down.
 Returns a reference to self.
 <hr>
+<h2><a name="dmz.handle">dmz.handle</a></h2>
+The <a href="#dmz.handle">dmz.handle</a> class provides bindings for the dmz::Handle type. Handles are atomic
+and maybe be used as key values in tables.
+<hr>
+<h3><a name="dmz.handle.new">dmz.handle.new</a> (value)</h3>
+Creates a <a href="#dmz.handle">dmz.handle</a>. The parameter <code>value</code> must either be a <em>string</em> or <em>number</em>. If <code>value</code>
+is a <em>string</em>, a named handle is created. If <code>value</code> is a <em>number</em>, the <a href="#dmz.handle">dmz.handle</a> is
+initialized with the <em>number</em>.
+<hr>
+<h3><a name="dmz.handle.is_a">dmz.handle.is_a</a> (value)</h3>
+Tests if <code>value</code> is a <a href="#dmz.handle">dmz.handle</a>. Returns a <a href="#dmz.handle">dmz.handle</a> if <code>value</code> is a <a href="#dmz.handle">dmz.handle</a> and returns
+<em>nil</em> if it is not.
+<hr>
 <h2><a name="dmz.uuid">dmz.uuid</a></h2>
-The <a href="#dmz.uuid">dmz.uuid</a> class provides bindings for the dmz::UUID class.
+The <a href="#dmz.uuid">dmz.uuid</a> class provides bindings for the dmz::UUID class.  UUIDs are atomic
+and maybe be used as key values in tables.
 <hr>
 <h3><a name="dmz.uuid.new">dmz.uuid.new</a> ()</h3>
 Creates a new <a href="#dmz.uuid">dmz.uuid</a>. The newly created <a href="#dmz.uuid">dmz.uuid</a> is initialized with a unique UUID.
@@ -228,13 +242,13 @@ Looks up the attribute value <code>name</code> and returns it as a <a href="#dmz
 If the attribute <code>name</code> is not found, then <code>default</code> is returned. Returns <em>nil</em> if
 a <a href="#dmz.object_type">dmz.object_type</a> can not be found.
 <hr>
-<h3><a name="dmz.config:lookup_state">dmz.config:lookup_state</a> (name [, default])</h3>
-Looks up the attribute value <code>name</code> and returns it as a <a href="#dmz.mask">dmz.mask</a>.
+<h3><a name="dmz.config:lookup_uuid">dmz.config:lookup_uuid</a> (name [, default])</h3>
+Looks up the attribute value <code>name</code> and returns it as a <a href="#dmz.uuid">dmz.uuid</a>.
 If the attribute <code>name</code> is not found, then <code>default</code> is returned.
 <hr>
-<h3><a name="dmz.config:lookup_uuid">dmz.config:lookup_uuid</a> (name [, default])</h3>
-<hr>
 <h3><a name="dmz.config:lookup_vector">dmz.config:lookup_vector</a> (name [, default])</h3>
+Looks up the attribute value <code>name</code> and returns it as a <a href="#dmz.vector">dmz.vector</a>.
+If the attribute <code>name</code> is not found, then <code>default</code> is returned.
 <hr>
 <h3><a name="dmz.config:set_value">dmz.config:set_value</a> (value)</h3>
 <hr>
@@ -317,11 +331,6 @@ If the attribute <code>name</code> is not found, then <code>default</code> is re
 <h3><a name="dmz.event_type:become_parent">dmz.event_type:become_parent</a> ()</h3>
 <hr>
 <h3><a name="dmz.event_type:get_children">dmz.event_type:get_children</a> ()</h3>
-<hr>
-<h2><a name="dmz.handle">dmz.handle</a></h2>
-<h3><a name="dmz.handle.new">dmz.handle.new</a> (value)</h3>
-<hr>
-<h3><a name="dmz.handle.is_a">dmz.handle.is_a</a> (value)</h3>
 <hr>
 <h2><a name="dmz.log">dmz.log</a></h2>
 <h3><a name="dmz.log.new">dmz.log.new</a> ([name])</h3>

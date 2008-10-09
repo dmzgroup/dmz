@@ -291,12 +291,36 @@ Returns a reference to self.
 ]],
 },
 }, -- dmz.mask
+{
 
+t = "dmz.handle",
+b = [[
+The dmz.handle class provides bindings for the dmz::Handle type. Handles are atomic
+and maybe be used as key values in tables.
+]],
+{
+t = "dmz.handle.new",
+p = {"value",},
+b = [[
+Creates a dmz.handle. The parameter value must either be a string or number. If value
+is a string, a named handle is created. If value is a number, the dmz.handle is
+initialized with the number.
+]],
+},{
+t = "dmz.handle.is_a",
+p = {"value",},
+b = [[
+Tests if value is a dmz.handle. Returns a dmz.handle if value is a dmz.handle and returns
+nil if it is not.
+]],
+},
+}, -- dmz.handle
 {
 
 t = "dmz.uuid",
 b = [[
-The dmz.uuid class provides bindings for the dmz::UUID class.
+The dmz.uuid class provides bindings for the dmz::UUID class.  UUIDs are atomic
+and maybe be used as key values in tables.
 ]],
 
 {
@@ -446,17 +470,17 @@ t = "dmz.config:lookup_uuid",
 p = {"name",},
 o = {"default",},
 b = [[
+Looks up the attribute value name and returns it as a dmz.uuid.
+If the attribute name is not found, then default is returned.
 ]],
---  [dmz.uuid]
 },{
 t = "dmz.config:lookup_vector",
 p = {"name",},
 o = {"default",},
 b = [[
-Looks up the attribute value name and returns it as a dmz.uuid.
+Looks up the attribute value name and returns it as a dmz.vector.
 If the attribute name is not found, then default is returned.
 ]],
--- [dmz.vector]
 },{
 t = "dmz.config:set_value",
 p = {"value",},
@@ -479,8 +503,8 @@ b = [[
 t = "dmz.config:get_children",
 p = {},
 b = [[
+Returns a table of children dmz.config objects.
 ]],
--- [{dmz.config children}]
 },{
 t = "dmz.config:add_config",
 p = {"scope", "dmz.config | {dmz.config})",},
@@ -710,25 +734,6 @@ b = [[
 ]],
 },
 }, -- dmz.event_type
-
-{
-
-t = "dmz.handle",
-
-{
-t = "dmz.handle.new",
-p = {"value",},
-b = [[
-]],
---[dmz.handle | nil]
-},{
-t = "dmz.handle.is_a",
-p = {"value",},
--- [dmz.handle | nil]
-b = [[
-]],
-},
-}, -- dmz.handle
 {
 
 t = "dmz.log",

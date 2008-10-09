@@ -5,101 +5,175 @@
 <body>
 <h1>DMZ Lua API Reference Guide</h1>
 <h2><a name="dmz.vector">dmz.vector</a></h2>
-<h3><a name="dmz.vector.new">dmz.vector.new</a></h3>
+The <a href="#dmz.vector">dmz.vector</a> class provides bindings for the dmz::Vector class.
+<hr>
+<h3><a name="dmz.vector.new">dmz.vector.new</a> (x, y, z)</h3>
+<h3><a name="dmz.vector.new">dmz.vector.new</a> (value)</h3>
+Creates a new <a href="#dmz.vector">dmz.vector</a>. The parameter <code>value</code> may either be a <a href="#dmz.vector">dmz.vector</a> or
+an array with three numbers. The parameters x, y, and z are numbers.
 <hr>
 <h3><a name="dmz.vector.is_a">dmz.vector.is_a</a> (value)</h3>
+Tests if <code>value</code> is a <a href="#dmz.vector">dmz.vector</a>. Returns a <a href="#dmz.vector">dmz.vector</a> if <em>true</em> and <em>nil</em> if <em>false</em>.
 <hr>
 <h3><a name="dmz.vector:set_x">dmz.vector:set_x</a> (value)</h3>
+Sets the x <code>value</code> of the <a href="#dmz.vector">dmz.vector</a>. Returns a reference to self.
 <hr>
 <h3><a name="dmz.vector:set_y">dmz.vector:set_y</a> (value)</h3>
+Sets the y <code>value</code> of the <a href="#dmz.vector">dmz.vector</a>. Returns a reference to self.
 <hr>
 <h3><a name="dmz.vector:set_z">dmz.vector:set_z</a> (value)</h3>
+Sets the z <code>value</code> of the <a href="#dmz.vector">dmz.vector</a>. Returns a reference to self.
 <hr>
 <h3><a name="dmz.vector:set_xyz">dmz.vector:set_xyz</a> (x, y, z)</h3>
+Sets the <code>x</code>, <code>y</code>, and <code>z</code> components of the <a href="#dmz.vector">dmz.vector</a>. Returns a reference to self.
 <hr>
 <h3><a name="dmz.vector:get_x">dmz.vector:get_x</a> ()</h3>
+Gets the x value of the <a href="#dmz.vector">dmz.vector</a>. Returns a <em>number</em>.
 <hr>
 <h3><a name="dmz.vector:get_y">dmz.vector:get_y</a> ()</h3>
+Gets the y value of the <a href="#dmz.vector">dmz.vector</a>. Returns a <em>number</em>.
 <hr>
 <h3><a name="dmz.vector:get_z">dmz.vector:get_z</a> ()</h3>
+Gets the z value of the <a href="#dmz.vector">dmz.vector</a>. Returns a <em>number</em>.
 <hr>
 <h3><a name="dmz.vector:get_xyz">dmz.vector:get_xyz</a> ()</h3>
+Gets the x, y, and z components of the <a href="#dmz.vector">dmz.vector</a>. Returns three numbers.
 <hr>
 <h3><a name="dmz.vector:magnitude">dmz.vector:magnitude</a> ()</h3>
+Calculates the magnitude of the vector. Returns a <em>number</em>.
 <hr>
 <h3><a name="dmz.vector:normalize">dmz.vector:normalize</a> ()</h3>
+Creates and returns a normalized version of the vector.
 <hr>
 <h3><a name="dmz.vector:dot">dmz.vector:dot</a> (value)</h3>
+Calculates and returns the dot product of the <a href="#dmz.vector">dmz.vector</a> and <code>value</code>. The parameter <code>value</code>
+must evaluate to a <a href="#dmz.vector">dmz.vector</a>.
 <hr>
 <h3><a name="dmz.vector:cross">dmz.vector:cross</a> (value)</h3>
+Calculates and returns the cross product of the <a href="#dmz.vector">dmz.vector</a> and <code>value</code>. The parameter <code>value</code>
+must evaluate to a <a href="#dmz.vector">dmz.vector</a>. Returns a <a href="#dmz.vector">dmz.vector</a>.
 <hr>
 <h3><a name="dmz.vector:is_zero">dmz.vector:is_zero</a> ([epsilon])</h3>
+Tests if the x, y, and z components of the <a href="#dmz.vector">dmz.vector</a> are zero. Returns <em>true</em> if the
+all components are zero. It will otherwise return <em>false</em>. The optional parameter <code>epsilon</code>
+specifies the error to allow when calculating the value of zero.
 <hr>
 <h3><a name="dmz.vector:get_angle">dmz.vector:get_angle</a> (value)</h3>
+Calculates and returns the angle between the <a href="#dmz.vector">dmz.vector</a> and <code>value</code>. The angle is returned
+as a <em>number</em> in radians. The parameter <code>value</code> must evaluate to a <a href="#dmz.vector">dmz.vector</a>.
 <hr>
 <h2><a name="dmz.matrix">dmz.matrix</a></h2>
-<h3><a name="dmz.matrix.new">dmz.matrix.new</a> (value)</h3>
+The <a href="#dmz.matrix">dmz.matrix</a> class provides bindings for the dmz::Matrix class.
+<hr>
 <h3><a name="dmz.matrix.new">dmz.matrix.new</a> (v1, v2, v3, v4, v5, v6, v7, v8, v9)</h3>
+<h3><a name="dmz.matrix.new">dmz.matrix.new</a> (value)</h3>
+Creates a new <a href="#dmz.matrix">dmz.matrix</a>. The parameter <code>value</code> may either be a <a href="#dmz.matrix">dmz.matrix</a> or an array
+with nine numbers. The parameters v1 through v9 are numbers.
 <hr>
 <h3><a name="dmz.matrix.is_a">dmz.matrix.is_a</a> (value)</h3>
+Tests if <code>value</code> is a <a href="#dmz.matrix">dmz.matrix</a>. Returns a <a href="#dmz.matrix">dmz.matrix</a> if <code>value</code> is a <a href="#dmz.matrix">dmz.matrix</a> and <em>nil</em>
+if it is not.
 <hr>
 <h3><a name="dmz.matrix:transpose">dmz.matrix:transpose</a> ()</h3>
+Creates and returns a <a href="#dmz.matrix">dmz.matrix</a> that is a transpose of the current <a href="#dmz.matrix">dmz.matrix</a>.
 <hr>
 <h3><a name="dmz.matrix:invert">dmz.matrix:invert</a> ()</h3>
+Creates and returns a <a href="#dmz.matrix">dmz.matrix</a> that is an inverse of the current <a href="#dmz.matrix">dmz.matrix</a>.
 <hr>
 <h3><a name="dmz.matrix:transform">dmz.matrix:transform</a> (value)</h3>
+Creates and returns a <a href="#dmz.vector">dmz.vector</a> that is the transformed <code>value</code>. The parameter
+<code>value</code> must evaluate to a <a href="#dmz.vector">dmz.vector</a>.
 <hr>
 <h3><a name="dmz.matrix:from_table">dmz.matrix:from_table</a> (value)</h3>
+Updates the <a href="#dmz.matrix">dmz.matrix</a> to use the array of numbers stored in <code>value</code>. The parameter
+<code>value</code> is an array of nine numbers. A reference to self is returned.
 <hr>
 <h3><a name="dmz.matrix:to_table">dmz.matrix:to_table</a> ()</h3>
+The nine components of the <a href="#dmz.matrix">dmz.matrix</a> are returned in an array.
 <hr>
-<h3><a name="dmz.matrix:from_two_vectors">dmz.matrix:from_two_vectors</a> (from, to)</h3>
+<h3><a name="dmz.matrix:from_two_vectors">dmz.matrix:from_two_vectors</a> (fromVec, toVec)</h3>
+Use the <code>fromVec</code> and <code>toVec</code> to compose new values for the <a href="#dmz.matrix">dmz.matrix</a>. The parameters
+<code>fromVec</code> and <code>toVec</code> must evaluate to dmz.vectors. A reference to self is returned.
 <hr>
 <h3><a name="dmz.matrix:from_axis_and_angle">dmz.matrix:from_axis_and_angle</a> (axis, angle)</h3>
+Use the <code>axis</code> and <code>angle</code> to compose new values for the <a href="#dmz.matrix">dmz.matrix</a>. The parameter
+<code>axis</code> must evaluate to a <a href="#dmz.vector">dmz.vector</a>. The parameter <code>angle</code> is a <em>number</em>.
+A reference to self is returned.
 <hr>
 <h3><a name="dmz.matrix:is_identity">dmz.matrix:is_identity</a> ()</h3>
+Test if the <a href="#dmz.matrix">dmz.matrix</a> is an identity matrix. Returns <em>true</em> if it is an identity matrix.
 <hr>
 <h3><a name="dmz.matrix:set_identity">dmz.matrix:set_identity</a> ()</h3>
+Coverts the matrix to an identity matrix. A reference to self is returned.
 <hr>
 <h2><a name="dmz.mask">dmz.mask</a></h2>
+The <a href="#dmz.mask">dmz.mask</a> class provides bindings for the dmz::Mask class.
+<hr>
 <h3><a name="dmz.mask.new">dmz.mask.new</a> ([value])</h3>
+Creates and returns a new <a href="#dmz.mask">dmz.mask</a>. The optional <code>value</code> may be a <a href="#dmz.mask">dmz.mask</a> which is used
+to initialized the new <a href="#dmz.mask">dmz.mask</a>.
 <hr>
 <h3><a name="dmz.mask.is_a">dmz.mask.is_a</a> (value)</h3>
+Tests if <code>value</code> is a <a href="#dmz.mask">dmz.mask</a>. Returns a <a href="#dmz.mask">dmz.mask</a> if <code>value</code> is a <a href="#dmz.mask">dmz.mask</a> and <em>nil</em>
+if it is not.
 <hr>
 <h3><a name="dmz.mask:clear">dmz.mask:clear</a> ()</h3>
+Clears the mask. Returns a reference to self.
 <hr>
 <h3><a name="dmz.mask:contains">dmz.mask:contains</a> (value)</h3>
+Test if the <a href="#dmz.mask">dmz.mask</a> contains <code>value</code>. The parameter <code>value</code> must evaluate to a <a href="#dmz.mask">dmz.mask</a>.
+Returns <em>true</em> if the mask contains <code>value</code>.
 <hr>
 <h3><a name="dmz.mask:unset">dmz.mask:unset</a> (value)</h3>
+The <a href="#dmz.mask">dmz.mask</a> has all bits defined in <code>value</code> unset. The parameter must evaluate to a 
+<a href="#dmz.mask">dmz.mask</a>. Returns <em>true</em> if the mask is successfully unset. 
 <hr>
 <h3><a name="dmz.mask:bit_and">dmz.mask:bit_and</a> (value)</h3>
+Creates and returns a <a href="#dmz.mask">dmz.mask</a> that is a bitwise and of the <a href="#dmz.mask">dmz.mask</a> and <code>value</code>. The
+parameter <code>value</code> must evaluate to a <a href="#dmz.mask">dmz.mask</a>.
 <hr>
 <h3><a name="dmz.mask:bit_or">dmz.mask:bit_or</a> (value)</h3>
+Creates and returns a <a href="#dmz.mask">dmz.mask</a> that is a bitwise or of the <a href="#dmz.mask">dmz.mask</a> and <code>value</code>. The
+parameter <code>value</code> must evaluate to a <a href="#dmz.mask">dmz.mask</a>.
 <hr>
 <h3><a name="dmz.mask:bit_xor">dmz.mask:bit_xor</a> (value)</h3>
+Creates and returns a <a href="#dmz.mask">dmz.mask</a> that is a bitwise exclusive-or  (i.e. xor) of the
+<a href="#dmz.mask">dmz.mask</a> and <code>value</code>.  The parameter <code>value</code> must evaluate to a <a href="#dmz.mask">dmz.mask</a>.
 <hr>
 <h3><a name="dmz.mask:bit_set">dmz.mask:bit_set</a> (value)</h3>
+Sets the bit specified by <code>value</code>. The parameter <code>value</code> is a <em>number</em>. Returns a reference
+to self.
 <hr>
 <h3><a name="dmz.mask:bit_unset">dmz.mask:bit_unset</a> (value)</h3>
+Unsets the bit specified by <code>value</code>. The parameter <code>value</code> is a <em>number</em>. Returns a reference
+to self.
 <hr>
 <h3><a name="dmz.mask:bit_not">dmz.mask:bit_not</a> ()</h3>
+Creates and returns a mask that is the bitwise not of the <a href="#dmz.mask">dmz.mask</a>.
 <hr>
 <h3><a name="dmz.mask:bit_shift">dmz.mask:bit_shift</a> (shift)</h3>
+Shifts the mask. A positive value shifts up while a negative value shifts down.
+Returns a reference to self.
 <hr>
 <h2><a name="dmz.uuid">dmz.uuid</a></h2>
-<h3><a name="dmz.uuid.new">dmz.uuid.new</a> ([value])</h3>
+The <a href="#dmz.uuid">dmz.uuid</a> class provides bindings for the dmz::UUID class.
+<hr>
+<h3><a name="dmz.uuid.new">dmz.uuid.new</a> ()</h3>
+Creates a new <a href="#dmz.uuid">dmz.uuid</a>. The newly created <a href="#dmz.uuid">dmz.uuid</a> is initialized with a unique UUID.
 <hr>
 <h3><a name="dmz.uuid.is_a">dmz.uuid.is_a</a> (value)</h3>
+Tests if <code>value</code> is a <a href="#dmz.uuid">dmz.uuid</a>. Returns a <a href="#dmz.uuid">dmz.uuid</a> if <code>value</code> is a <a href="#dmz.uuid">dmz.uuid</a> and returns
+<em>nil</em> if it is not.
 <hr>
 <h2><a name="dmz.config">dmz.config</a></h2>
-The <a href="#dmz.config">dmz.config</a> class is a wrapper for the dmz::Config class.
+The <a href="#dmz.config">dmz.config</a> class provides bindings for the dmz::Config class.
 <hr>
 <h3><a name="dmz.config.get_global">dmz.config.get_global</a> ()</h3>
 Returns a <a href="#dmz.config">dmz.config</a> object containing the global config data.
 <hr>
 <h3><a name="dmz.config.new">dmz.config.new</a> ([name])</h3>
-Returns a new <a href="#dmz.config">dmz.config</a> object. The <code>name</code> is used to set the new <a href="#dmz.config">dmz.config</a>
-objects tag.
+Returns a new <a href="#dmz.config">dmz.config</a> object. The <code>name</code> is used to initalize the new <a href="#dmz.config">dmz.config</a>
+object's tag.
 <hr>
 <h3><a name="dmz.config.is_a">dmz.config.is_a</a> (value)</h3>
 Returns a <a href="#dmz.config">dmz.config</a> if <code>value</code> is a <a href="#dmz.config">dmz.config</a> object. Returns <em>nil</em> if it is not.
@@ -113,7 +187,7 @@ Returns <em>nil</em> if the <a href="#dmz.config">dmz.config</a> object is empty
 <hr>
 <h3><a name="dmz.config:store_attribute">dmz.config:store_attribute</a> (name, value)</h3>
 Store an attribute of <code>name</code> with <code>value</code> in the <a href="#dmz.config">dmz.config</a> object.
-Returns true if the attribute was successfully stored.
+Returns <em>true</em> if the attribute was successfully stored.
 <hr>
 <h3><a name="dmz.config:lookup_attribute">dmz.config:lookup_attribute</a> (name)</h3>
 Returns the value of the attribute <code>name</code>. Returns <em>nil</em> if

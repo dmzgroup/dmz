@@ -13,6 +13,8 @@ namespace dmz {
 \ingroup Types
 \details Standard 3D Vector class. Each of the three components are a 64 bit floating
 point number.
+\htmlonly Lua bindings are <a href="dmzlua.html#dmz.vector">available</a>.
+\endhtmlonly
 
 */
    class Vector {
@@ -68,9 +70,11 @@ point number.
          Boolean is_zero (const Float64 Epsilon) const;
 
       protected:
-         Float64 _x; //!< X component.
-         Float64 _y; //!< Y component.
-         Float64 _z; //!< Z component.
+         //! \cond
+         Float64 _x;
+         Float64 _y;
+         Float64 _z;
+         //! \endcond
    };
 };
 

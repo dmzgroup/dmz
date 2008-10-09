@@ -12,6 +12,9 @@ The indices are as follows:
 - 3 4 5
 - 6 7 8
 
+\htmlonly Lua bindings are <a href="dmzlua.html#dmz.matrix">available</a>
+\endhtmlonly
+
 */
 
 
@@ -33,7 +36,6 @@ dmz::Matrix::from_quaternion (const Quaternion &Quat) {
 
    const Float64 ZZ = z * z;
    const Float64 ZW = z * w;
-
 
    //Row 1
    _data[0] = 1.0 - 2.0 * (YY + ZZ);

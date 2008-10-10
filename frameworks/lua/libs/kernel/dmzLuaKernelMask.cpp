@@ -72,11 +72,18 @@ static const luaL_Reg arrayFunc [] = {
 static int
 mask_clear (lua_State *L) {
 
+   int result (0);
+
    Mask **mask = mask_check (L, 1);
 
-   if (mask && *mask) { (*mask)->clear (); }
+   if (mask && *mask) {
 
-   return 0;
+      (*mask)->clear ();
+      lua_pushvalue (L, 1);
+      result = 1;
+   }
+
+   return result;
 }
 
 

@@ -4,5 +4,5 @@ lmk.set_type "plugin"
 lmk.add_libs {"dmzRenderUtilOSG", "dmzRenderIsect", "dmzKernel",}
 lmk.add_preqs {"dmzRenderFramework", "dmzRenderModuleCoreOSG",}
 lmk.add_files {"dmzRenderModuleIsectOSG.cpp"}
-lmkOSG.add_libs {"osg", "osgSim", "osgGA", "osgViewer", "osgUtil"}
+lmkOSG.add_libs {"osg", "osgSim", "osgGA", "osgViewer", "osgUtil", "OpenThreads",}
 

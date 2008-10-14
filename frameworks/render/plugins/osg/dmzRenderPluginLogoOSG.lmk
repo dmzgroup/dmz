@@ -5,4 +5,4 @@ lmk.set_type "plugin"
 lmk.add_files {"dmzRenderPluginLogoOSG.cpp",}
 lmk.add_libs { "dmzKernel", }
 lmk.add_preqs {"dmzRenderModuleCoreOSG",}
-lmkOSG.add_libs {"osgDB", "osg",}
+lmkOSG.add_libs {"osgDB", "osg", "OpenThreads",}

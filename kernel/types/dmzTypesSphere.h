@@ -22,8 +22,10 @@ class DMZ_KERNEL_LINK_SYMBOL Sphere : public Volume {
       Float64 get_radius ();
 
    protected:
+      //! \cond
       struct State;
       State &_state;
+      //! \endcond
       
    private:
       Sphere (const Sphere &);

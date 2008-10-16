@@ -35,8 +35,10 @@ class DMZ_KERNEL_LINK_SYMBOL Cylinder : public Volume {
       VectorComponentEnum get_axis () const;
 
    protected:
+      //! \cond
       struct State;
       State &_state;
+      //! \endcond
       
    private:
       Cylinder (const Cylinder &);

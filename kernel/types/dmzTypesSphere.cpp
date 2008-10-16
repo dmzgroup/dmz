@@ -3,6 +3,15 @@
 
 #include <math.h>
 
+/*!
+
+\class dmz::Sphere
+\ingroup Types
+\brief Provides a sphere implementation of the Volume base class.
+\details The origin of the sphere is its center. The radius must be greater than zero.
+
+*/
+
 struct dmz::Sphere::State {
 
    Vector origin;
@@ -12,9 +21,17 @@ struct dmz::Sphere::State {
    State () : radius (1.0), radiusSquared (1.0) {;}
 };
 
+//! Base constructor.
 dmz::Sphere::Sphere () : _state (*(new State)) {;}
 
 
+/*!
+
+\brief Constructor.
+\param[in] Origin Vector containing the origin of the Sphere.
+\param[in] Radius Scalar value containing the radius of the Sphere.
+
+*/
 dmz::Sphere::Sphere (const Vector &Origin, const Float64 Radius) :
       _state (*(new State)) {
 
@@ -24,8 +41,8 @@ dmz::Sphere::Sphere (const Vector &Origin, const Float64 Radius) :
 }
 
 
+//! Destructor.
 dmz::Sphere::~Sphere () { delete &_state; }
-
 
 void
 dmz::Sphere::set_origin (const Vector &Origin) { _state.origin = Origin; }
@@ -50,6 +67,7 @@ dmz::Sphere::get_extents (Vector &min, Vector &max) const {
 }
 
 
+//! Sets the radius of the Sphere.
 void
 dmz::Sphere::set_radius (const Float64 Radius) {
 
@@ -61,6 +79,7 @@ dmz::Sphere::set_radius (const Float64 Radius) {
 }
 
 
+//! Gets the radius of the Sphere.
 dmz::Float64
 dmz::Sphere::get_radius () { return _state.radius; }
 

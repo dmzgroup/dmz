@@ -16,12 +16,14 @@ class Volume {
       virtual void get_extents (Vector &min, Vector &max) const = 0;
 
    protected:
-       Volume () {;}
-       ~Volume () {;}
+      //! \cond
+      Volume () {;}
+      ~Volume () {;}
+      //! \endcond
 
    private:
-       Volume (const Volume &);
-       Volume &operator= (const Volume &);
+      Volume (const Volume &);
+      Volume &operator= (const Volume &);
 };
 
 };

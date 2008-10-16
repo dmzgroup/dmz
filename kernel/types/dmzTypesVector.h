@@ -7,6 +7,15 @@
 
 namespace dmz {
 
+//! \brief Vector component enumeration.
+//! \ingroup Types
+//! \sa dmz::Vector::set() \n dmz::Vector::get()
+enum VectorComponentEnum {
+   VectorComponentX, //!< The X component.
+   VectorComponentY, //!< The Y component.
+   VectorComponentZ, //!< The Z component.
+};
+
 /*!
 
 \brief 3D Vector class.
@@ -17,66 +26,69 @@ point number.
 \endhtmlonly
 
 */
-   class Vector {
+class Vector {
 
-      public:
-         Vector ();
-         Vector (const Float64 X, const Float64 Y, const Float64 Z);
-         Vector (const Vector &Vec);
-         ~Vector () {;}
+   public:
+      Vector ();
+      Vector (const Float64 X, const Float64 Y, const Float64 Z);
+      Vector (const Vector &Vec);
+      ~Vector () {;}
 
-         Vector &operator= (const Vector &Vec);
+      Vector &operator= (const Vector &Vec);
 
-         Vector &operator+= (const Vector &Vec);
-         Vector &operator+= (const Float64 Value);
-         Vector operator+ (const Vector &Vec) const;
-         Vector operator+ (const Float64 Value) const;
+      Vector &operator+= (const Vector &Vec);
+      Vector &operator+= (const Float64 Value);
+      Vector operator+ (const Vector &Vec) const;
+      Vector operator+ (const Float64 Value) const;
 
-         Vector operator- () const;
+      Vector operator- () const;
 
-         Vector &operator-= (const Vector &Vec);
-         Vector &operator-= (const Float64 Value);
-         Vector operator- (const Vector &Vec) const;
-         Vector operator- (const Float64 Value) const;
+      Vector &operator-= (const Vector &Vec);
+      Vector &operator-= (const Float64 Value);
+      Vector operator- (const Vector &Vec) const;
+      Vector operator- (const Float64 Value) const;
 
-         Vector &operator*= (const Vector &Vec);
-         Vector &operator*= (const Float64 Value);
-         Vector operator* (const Vector &Vec) const;
-         Vector operator* (const Float64 Value) const;
+      Vector &operator*= (const Vector &Vec);
+      Vector &operator*= (const Float64 Value);
+      Vector operator* (const Vector &Vec) const;
+      Vector operator* (const Float64 Value) const;
 
-         Boolean operator== (const Vector &Vec) const;
-         Boolean operator!= (const Vector &Vec) const;
+      Boolean operator== (const Vector &Vec) const;
+      Boolean operator!= (const Vector &Vec) const;
 
-         Float64 get_x () const;
-         Float64 get_y () const;
-         Float64 get_z () const;
-         void get_xyz (Float64 &x, Float64 &y, Float64 &z) const;
+      void set_x (const Float64 X);
+      void set_y (const Float64 Y);
+      void set_z (const Float64 Z);
+      void set_xyz (const Float64 X, const Float64 Y, const Float64 Z);
+      void set (const VectorComponentEnum Component, const Float64 Value);
 
-         void set_x (const Float64 X);
-         void set_y (const Float64 Y);
-         void set_z (const Float64 Z);
-         void set_xyz (const Float64 X, const Float64 Y, const Float64 Z);
+      Float64 get_x () const;
+      Float64 get_y () const;
+      Float64 get_z () const;
+      void get_xyz (Float64 &x, Float64 &y, Float64 &z) const;
+      Float64 get (const VectorComponentEnum Component) const;
 
-         Float64 magnitude_squared () const;
-         Float64 magnitude () const;
-         Vector &normalize_in_place ();
-         Vector normalize () const;
-         Float64 dot (const Vector &Vec) const;
-         Vector &cross_in_place (const Vector &Vec);
-         Vector cross (const Vector &Vec) const;
+      Float64 magnitude_squared () const;
+      Float64 magnitude () const;
+      Vector &normalize_in_place ();
+      Vector normalize () const;
+      Float64 dot (const Vector &Vec) const;
+      Vector &cross_in_place (const Vector &Vec);
+      Vector cross (const Vector &Vec) const;
 
-         Float64 get_angle (const Vector &Vec) const;
-         Boolean is_zero () const;
-         Boolean is_zero (const Float64 Epsilon) const;
+      Float64 get_angle (const Vector &Vec) const;
+      Boolean is_zero () const;
+      Boolean is_zero (const Float64 Epsilon) const;
 
-      protected:
-         //! \cond
-         Float64 _x;
-         Float64 _y;
-         Float64 _z;
-         //! \endcond
-   };
-};
+   protected:
+      //! \cond
+      Float64 _x;
+      Float64 _y;
+      Float64 _z;
+      //! \endcond
+}; // class Vector
+
+}; // namespace dmz
 
 
 /*!
@@ -294,6 +306,54 @@ inline dmz::Boolean
 dmz::Vector::operator!= (const Vector &Vec) const { return !(*this == Vec); }
 
 
+//! Set the X component.
+inline void
+dmz::Vector::set_x (const Float64 X) { _x = X; }
+
+
+//! Set the Y component.
+inline void
+dmz::Vector::set_y (const Float64 Y) { _y = Y; }
+
+
+//! Set the Z component.
+inline void
+dmz::Vector::set_z (const Float64 Z) { _z = Z; }
+
+
+/*!
+
+\brief Sets  the X, Y, and Z components of the Vector.
+\param[in] X component.
+\param[in] Y component.
+\param[in] Z component.
+
+*/
+inline void
+dmz::Vector::set_xyz (const Float64 X, const Float64 Y, const Float64 Z) {
+
+   _x = X;
+   _y = Y;
+   _z = Z;
+}
+
+
+/*!
+
+\brief Sets the specified Vector component.
+\param[in] Component VectorComponentEnum specifying the component to set.
+\param[in] Value Float64 containing the new value of the component.
+
+*/
+inline void
+dmz::Vector::set (const VectorComponentEnum Component, const Float64 Value) {
+
+   if (Component == VectorComponentX) { _x = Value; }
+   else if (Component == VectorComponentY) { _y = Value; }
+   else if (Component == VectorComponentZ) { _z = Value; }
+}
+
+
 //! Returns the X component.
 inline dmz::Float64
 dmz::Vector::get_x () const { return _x; }
@@ -326,37 +386,19 @@ dmz::Vector::get_xyz (Float64 &x, Float64 &y, Float64 &z) const {
 }
 
 
-//! Set the X component.
-inline void
-dmz::Vector::set_x (const Float64 X) { _x = X; }
-
-
-//! Set the Y component.
-inline void
-dmz::Vector::set_y (const Float64 Y) { _y = Y; }
-
-
-//! Set the Z component.
-inline void
-dmz::Vector::set_z (const Float64 Z) { _z = Z; }
-
-
 /*!
 
-\brief Sets  the X, Y, and Z components of the Vector.
-\param[in] X component.
-\param[in] Y component.
-\param[in] Z component.
+\brief Return the specified Vector component.
+\param[in] Component VectorComponentEnum specifying the component to return.
+\return Returns the component as a Float64.
 
 */
-inline void
-dmz::Vector::set_xyz (const Float64 X, const Float64 Y, const Float64 Z) {
+inline dmz::Float64
+dmz::Vector::get (const VectorComponentEnum Component) const {
 
-   _x = X;
-   _y = Y;
-   _z = Z;
+   return
+      ((Component == VectorComponentX) ? _x : (Component == VectorComponentY) ? _y : _z);
 }
-
 
 //! Returns the squared magnitude of the Vector.
 inline dmz::Float64

@@ -64,6 +64,7 @@ lmk.add_files {
    "types/dmzTypesArrayTemplate.h",
    "types/dmzTypesBase.h",
    "types/dmzTypesBooleanOperator.h",
+   "types/dmzTypesCylinder.h",
    "types/dmzTypesConsts.h",
    "types/dmzTypesHandleContainer.h",
    "types/dmzTypesHashTableLock.h",
@@ -77,6 +78,7 @@ lmk.add_files {
    "types/dmzTypesQuaternion.h",
    "types/dmzTypesUUID.h",
    "types/dmzTypesVector.h",
+   "types/dmzTypesVolume.h",
 }
 
 lmk.add_files {
@@ -119,6 +121,7 @@ lmk.add_files {
    "system/dmzSystemThreadCommon.cpp",
    "system/dmzSystemUnmarshal.cpp",
    "types/dmzTypes.cpp",
+   "types/dmzTypesCylinder.cpp",
    "types/dmzTypesHandleContainer.cpp",
    "types/dmzTypesMask.cpp",
    "types/dmzTypesMath.cpp",

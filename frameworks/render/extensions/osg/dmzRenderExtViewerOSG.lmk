@@ -16,5 +16,5 @@ lmk.add_preqs {
 }
 
 lmk.add_files {"dmzRenderExtViewerOSG.cpp",}
-lmkOSG.add_libs {"osg", "osgGA", "osgViewer",}
+lmkOSG.add_libs {"osg", "osgGA", "osgViewer", "OpenThreads",}
 

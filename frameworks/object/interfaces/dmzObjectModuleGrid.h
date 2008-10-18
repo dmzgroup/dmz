@@ -10,6 +10,7 @@ namespace dmz {
 
    class HandleContainer;
    class ObjectObserverGrid;
+   class ObjectTypeSet;
    class Volume;
 
    class ObjectModuleGrid {

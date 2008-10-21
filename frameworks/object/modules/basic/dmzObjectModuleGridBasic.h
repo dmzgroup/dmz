@@ -2,6 +2,7 @@
 #define DMZ_OBJECT_MODULE_GRID_BASIC_DOT_H
 
 #include <dmzObjectModuleGrid.h>
+#include <dmzObjectObserverGrid.h>
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
@@ -59,6 +60,7 @@ namespace dmz {
       protected:
          struct ObjectStruct {
 
+            const Handle Object;
             const ObjectType Type;
             Vector pos;
 
@@ -66,15 +68,22 @@ namespace dmz {
             ObjectStruct *prev;
             ObjectStruct *next;
 
+            Float64 distanceSquared;
             ObjectStruct *node;
 
-            ObjectStruct (const ObjectType &TheType) :
+            ObjectStruct (const Handle TheObject, const ObjectType &TheType) :
+                  Object (TheObject),
                   Type (TheType),
                   place (-1),
                   prev (0),
                   next (0),
+                  distanceSquared (0.0),
                   node (0) {;}
          };
+
+//         struct ObsStruct {
+//
+//         };
 
          struct GridStruct {
 
@@ -83,10 +92,11 @@ namespace dmz {
             GridStruct () : objList (0) {;}
          };
 
-         void _init (Config &local);
          Int32 _map_coord (const Int32 X, const Int32 Y);
          void _map_point_to_coord (const Vector &Point, Int32 &x, Int32 &y);
          Int32 _map_point (const Vector &Point);
+         void _remove_object_from_grid (ObjectStruct &obj);
+         void _init (Config &local);
 
          Log _log;
 
@@ -100,6 +110,8 @@ namespace dmz {
          Vector _maxGrid;
          Float64 _xCellSize;
          Float64 _yCellSize;
+
+         HashTableHandleTemplate<ObjectStruct> _objTable;
 
          GridStruct *_grid;
 

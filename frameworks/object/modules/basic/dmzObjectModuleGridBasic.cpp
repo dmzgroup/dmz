@@ -1,8 +1,11 @@
+#include <dmzObjectAttributeMasks.h>
 #include "dmzObjectModuleGridBasic.h"
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzTypesHandleContainer.h>
+#include <dmzTypesVolume.h>
 
 dmz::ObjectModuleGridBasic::ObjectModuleGridBasic (
       const PluginInfo &Info,
@@ -27,6 +30,8 @@ dmz::ObjectModuleGridBasic::ObjectModuleGridBasic (
 dmz::ObjectModuleGridBasic::~ObjectModuleGridBasic () {
 
    if (_grid) { delete []_grid; _grid = 0; }
+
+   _objTable.empty ();
 }
 
 
@@ -99,7 +104,83 @@ dmz::ObjectModuleGridBasic::find_objects (
       const ObjectTypeSet *IncludeTypes,
       const ObjectTypeSet *ExcludeTypes) {
 
+   const Vector Center = SearchSpace.get_origin ();
+   Vector min, max;
+   SearchSpace.get_extents (min, max);
+   Int32 minX = 0, minY = 0, maxX = 0, maxY = 0;
+   _map_point_to_coord (min, minX, minY);
+   _map_point_to_coord (max, maxX, maxY);
+
+   ObjectStruct *list (0);
+
+   for (Int32 ix = minX; ix <= maxX; ix++) {
+
+      for (Int32 jy = minY; jy <= maxY; jy++) {
+
+         ObjectStruct *current (_grid[_map_coord (ix, jy)].objList);
+
+         while (current) {
+
+            Boolean test (True);
+
+            if (IncludeTypes && !IncludeTypes->contains_type (current->Type)) {
+
+               test = False;
+            }
+            else if (ExcludeTypes && ExcludeTypes->contains_type (current->Type)) {
+
+               test = False;
+            }
+
+            if (test && SearchSpace.contains_point (current->pos)) {
+
+               current->distanceSquared = (Center - current->pos).magnitude_squared ();
+
+               current->node = 0;
+
+               if (!list) { list = current; }
+               else {
+
+                  ObjectStruct *p = 0, *c = list;
+
+                  Boolean done (False);
+
+                  while (!done) {
+
+                     if (c->distanceSquared > current->distanceSquared) {
+
+                        if (!c->node) { c->node = current; done = True; }
+                        else {
+
+                           p = c; c = c->node;
+
+                           if (!c) { p->node = current; done = True; }
+                        }
+                     }
+                     else {
+
+                        if (p) { p->node = current; }
+                        else { list = current; }
+
+                        current->node = c;
+                        done = True;
+                     }
+                  }
+               }
+            }
+
+            current = current->next;
+         }
+      }
+   }
+
+   while (list) {
+
+      objects.add_handle (list->Object);
+      list = list->node;
+   }
 }
+
 
 // Object Observer Interface
 void
@@ -109,6 +190,9 @@ dmz::ObjectModuleGridBasic::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
+   ObjectStruct *os = new ObjectStruct (ObjectHandle, Type);
+
+   if (!_objTable.store (ObjectHandle, os)) { delete os; os = 0; }
 }
 
 
@@ -117,6 +201,14 @@ dmz::ObjectModuleGridBasic::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
+   ObjectStruct *os (_objTable.remove (ObjectHandle));
+
+   if (os) {
+
+      _remove_object_from_grid (*os);
+
+      delete os; os = 0;
+   }
 }
 
 
@@ -128,6 +220,41 @@ dmz::ObjectModuleGridBasic::update_object_position (
       const Vector &Value,
       const Vector *PreviousValue) {
 
+   ObjectStruct *os (_objTable.lookup (ObjectHandle));
+
+   if (os && _grid) {
+
+      os->pos = Value;
+
+      const Int32 Place = _map_point (Value);
+
+      if (Place != os->place) {
+
+         _remove_object_from_grid (*os);
+         os->place = Place;
+         os->next = _grid[Place].objList;
+         if (_grid[Place].objList) { _grid[Place].objList->prev = os; }
+         _grid[Place].objList = os;
+      }
+   }
+}
+
+
+void
+dmz::ObjectModuleGridBasic::_remove_object_from_grid (ObjectStruct &obj) {
+
+   if (_grid && obj.place >= 0) {
+
+      if (obj.prev) {
+
+         obj.prev->next = obj.next;
+      }
+      else { _grid[obj.place].objList = obj.next; }
+
+      if (obj.next) { obj.next->prev = obj.prev; }
+
+      obj.next = obj.prev = 0;
+   }
 }
 
 
@@ -147,6 +274,9 @@ dmz::ObjectModuleGridBasic::_init (Config &local) {
    if (is_zero64 (_yCellSize)) { _yCellSize = 1.0; }
 
    _grid = new GridStruct[_xCoordMax * _yCoordMax];
+
+   activate_default_object_attribute (
+      ObjectCreateMask | ObjectDestroyMask | ObjectPositionMask);
 }
 
 

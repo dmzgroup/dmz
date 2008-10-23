@@ -81,9 +81,15 @@ namespace dmz {
                   node (0) {;}
          };
 
-//         struct ObsStruct {
-//
-//         };
+         struct ObsStruct {
+
+            const Handle ObsHandle;
+            ObjectObserverGrid &obs;
+
+            ObsStruct (ObjectObserverGrid &theObs) :
+               ObsHandle (theObs.get_object_observer_grid_handle ()),
+               obs (theObs) {;}
+         };
 
          struct GridStruct {
 

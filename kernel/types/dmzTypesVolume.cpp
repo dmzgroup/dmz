@@ -17,8 +17,9 @@
 \brief Test if the Point is contained in the Volume.
 \param[in] Point Vector containing point to test.
 
-\fn void dmz::Volume::get_extents (Vector &min, Vector &max) const
+\fn void dmz::Volume::get_extents (Vector &origin, Vector &min, Vector &max) const
 \brief Gets the bounding box of the Volume.
+\param[out] origin Vector containing the origin of the volume.
 \param[out] min Vector containing the minimum values of the bounding box.
 \param[out] max Vector containing the maximum values of the bounding box.
 

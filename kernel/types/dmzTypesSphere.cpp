@@ -60,8 +60,9 @@ dmz::Sphere::contains_point (const Vector &Point) const {
 
 
 void
-dmz::Sphere::get_extents (Vector &min, Vector &max) const {
+dmz::Sphere::get_extents (Vector &origin, Vector &min, Vector &max) const {
 
+   origin = _state.origin;
    min = _state.origin - _state.radius;
    max = _state.origin + _state.radius;
 }

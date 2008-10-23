@@ -104,9 +104,8 @@ dmz::ObjectModuleGridBasic::find_objects (
       const ObjectTypeSet *IncludeTypes,
       const ObjectTypeSet *ExcludeTypes) {
 
-   const Vector Center = SearchSpace.get_origin ();
-   Vector min, max;
-   SearchSpace.get_extents (min, max);
+   Vector origin, min, max;
+   SearchSpace.get_extents (origin, min, max);
    Int32 minX = 0, minY = 0, maxX = 0, maxY = 0;
    _map_point_to_coord (min, minX, minY);
    _map_point_to_coord (max, maxX, maxY);
@@ -134,7 +133,7 @@ dmz::ObjectModuleGridBasic::find_objects (
 
             if (test && SearchSpace.contains_point (current->pos)) {
 
-               current->distanceSquared = (Center - current->pos).magnitude_squared ();
+               current->distanceSquared = (origin - current->pos).magnitude_squared ();
 
                current->node = 0;
 

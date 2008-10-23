@@ -61,6 +61,19 @@ get_object_module_select (lua_State *L) {
 }
 
 
+static inline ObjectModuleGrid *
+get_object_module_grid (lua_State *L) {
+
+  ObjectModuleGrid *result (0);
+  lua_pushlightuserdata (L, (void *)&ObjectKey);
+  lua_rawget (L, LUA_REGISTRYINDEX);
+  ostruct **os = (ostruct **)lua_touserdata (L, -1);
+  if (os && *os) { result = (*os)->gridMod; }
+  lua_pop (L, 1); // pop ostruct
+  return result;
+}
+
+
 static inline ostruct *
 get_object_struct (lua_State *L) {
 
@@ -1520,6 +1533,21 @@ object_select (lua_State *L) {
 
 
 static int
+object_find (lua_State *L) {
+
+   int result (0);
+
+   ObjectModuleGrid *grid (get_object_module_grid (L));
+
+   if (grid) {
+
+   }
+
+   return result;
+}
+
+
+static int
 object_unselect (lua_State *L) {
 
    int result (0);
@@ -1596,6 +1624,7 @@ static const luaL_Reg arrayFunc[] = {
    {"get_selected", object_get_selected},
    {"is_selected", object_is_selected},
    {"select", object_select},
+   {"find", object_find},
    {"unselect", object_unselect},
    {"unselect_all", object_unselect_all},
    {NULL, NULL},
@@ -1697,6 +1726,8 @@ dmz::LuaExtObject::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
+      if (!_obj.gridMod) { _obj.gridMod = ObjectModuleGrid::cast (PluginPtr); }
+
       if (!_obj.selectMod) { _obj.selectMod = ObjectModuleSelect::cast (PluginPtr); }
 
       ObjectModule *objMod (ObjectModule::cast (PluginPtr));
@@ -1711,6 +1742,11 @@ dmz::LuaExtObject::discover_plugin (
       if (_obj.selectMod && (_obj.selectMod == ObjectModuleSelect::cast (PluginPtr))) {
 
          _obj.selectMod = 0;
+      }
+
+      if (_obj.gridMod && (_obj.gridMod == ObjectModuleGrid::cast (PluginPtr))) {
+
+         _obj.gridMod = 0;
       }
 
       ObjectModule *objMod (ObjectModule::cast (PluginPtr));

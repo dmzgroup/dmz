@@ -2,6 +2,7 @@
 #define DMZ_LUA_EXT_OBJECT_DOT_H
 
 #include <dmzLuaExt.h>
+#include <dmzObjectModuleGrid.h>
 #include <dmzObjectModuleSelect.h>
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
@@ -31,6 +32,7 @@ namespace dmz {
 
             ObjectModule *objMod;
             ObjectModuleSelect *selectMod;
+            ObjectModuleGrid *gridMod;
             LuaExtObject *ext;
             Handle defaultHandle;
             Handle hilHandle;
@@ -46,6 +48,7 @@ namespace dmz {
             ObjectStruct () :
                objMod (0),
                selectMod (0),
+               gridMod (0),
                ext (0),
                defaultHandle (0),
                hilHandle (0),

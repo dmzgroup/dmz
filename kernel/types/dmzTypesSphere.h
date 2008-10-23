@@ -16,7 +16,7 @@ class DMZ_KERNEL_LINK_SYMBOL Sphere : public Volume {
       virtual void set_origin (const Vector &Origin);
       virtual Vector get_origin () const;
       virtual Boolean contains_point (const Vector &Point) const;
-      virtual void get_extents (Vector &min, Vector &max) const;
+      virtual void get_extents (Vector &origin, Vector &min, Vector &max) const;
 
       void set_radius (const Float64 Radius);
       Float64 get_radius ();

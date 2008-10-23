@@ -115,8 +115,9 @@ dmz::Cylinder::contains_point (const Vector &Point) const {
 
 
 void
-dmz::Cylinder::get_extents (Vector &min, Vector &max) const {
+dmz::Cylinder::get_extents (Vector &origin, Vector &min, Vector &max) const {
 
+   origin = _state.origin;
    min = _state.origin - _state.radius;
    max = _state.origin + _state.radius;
 

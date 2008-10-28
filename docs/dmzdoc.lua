@@ -6,272 +6,335 @@ t = "DMZ Lua API Reference Guide",
 
 t = "dmz.vector",
 
+b = [[
+The dmz.vector class provides bindings for the dmz::Vector class.
+]],
 {
 t = "dmz.vector.new",
--- ([dmz.vector value | {number} | number x, number y, number z]) [dmz.vector]
+p = {"x", "y", "z",},
+},{
+t = "dmz.vector.new",
+p = {"value",},
 b = [[
+Creates a new dmz.vector. The parameter value may either be a dmz.vector or
+an array with three numbers. The parameters x, y, and z are numbers.
 ]],
 },{
 t = "dmz.vector.is_a",
 p = {"value",},
--- [dmz.vector | nil]
 b = [[
+Tests if value is a dmz.vector. Returns a dmz.vector if true and nil if false.
 ]],
 },{
 t = "dmz.vector:set_x",
 p = {"value"},
--- [self | nil]
 b = [[
+Sets the x value of the dmz.vector. Returns a reference to self.
 ]],
 },{
 t = "dmz.vector:set_y",
 p = {"value",},
--- [self | nil]
 b = [[
+Sets the y value of the dmz.vector. Returns a reference to self.
 ]],
 },{
 t = "dmz.vector:set_z",
 p = {"value",},
--- [self | nil]
 b = [[
+Sets the z value of the dmz.vector. Returns a reference to self.
 ]],
 },{
 t = "dmz.vector:set_xyz",
 p = {"x", "y", "z",},
--- [self | nil]
 b = [[
+Sets the x, y, and z components of the dmz.vector. Returns a reference to self.
 ]],
 },{
 t = "dmz.vector:get_x",
 p = {},
--- [number | nil]
 b = [[
+Gets the x value of the dmz.vector. Returns a number.
 ]],
 },{
 t = "dmz.vector:get_y",
 p = {},
--- [number | nil]
 b = [[
+Gets the y value of the dmz.vector. Returns a number.
 ]],
 },{
 t = "dmz.vector:get_z",
 p = {},
--- [number | nil]
 b = [[
+Gets the z value of the dmz.vector. Returns a number.
 ]],
 },{
 t = "dmz.vector:get_xyz",
 p = {},
--- [(number, number, number) | nil]
 b = [[
+Gets the x, y, and z components of the dmz.vector. Returns three numbers.
 ]],
 },{
 t = "dmz.vector:magnitude",
 p = {},
--- [number | nil]
 b = [[
+Calculates the magnitude of the vector. Returns a number.
 ]],
 },{
 t = "dmz.vector:normalize",
 p = {},
--- [dmz.vector | nil]
 b = [[
+Creates and returns a normalized version of the vector.
 ]],
 },{
 t = "dmz.vector:dot",
 p = {"value",},
--- [number | nil]
 b = [[
+Calculates and returns the dot product of the dmz.vector and value. The parameter value
+must evaluate to a dmz.vector.
 ]],
 },{
 t = "dmz.vector:cross",
 p = {"value",},
--- [dmz.vector | nil]
 b = [[
+Calculates and returns the cross product of the dmz.vector and value. The parameter value
+must evaluate to a dmz.vector. Returns a dmz.vector.
 ]],
 },{
 t = "dmz.vector:is_zero",
 o = {"epsilon",},
--- [boolean | nil]
 b = [[
+Tests if the x, y, and z components of the dmz.vector are zero. Returns true if the
+all components are zero. It will otherwise return false. The optional parameter epsilon
+specifies the error to allow when calculating the value of zero.
 ]],
 },{
 t = "dmz.vector:get_angle",
 p = {"value",},
--- [number | nil]
 b = [[
+Calculates and returns the angle between the dmz.vector and value. The angle is returned
+as a number in radians. The parameter value must evaluate to a dmz.vector.
 ]],
 },
 }, -- dmz.vector
 {
 
 t = "dmz.matrix",
-
+b = [[
+The dmz.matrix class provides bindings for the dmz::Matrix class.
+]],
 {
 t = "dmz.matrix.new",
-p = {"value",},
--- value can be dmz.matrix or array of nine numbers
+p = {"v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9",},
 },{
 t = "dmz.matrix.new",
-p = {"v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9",},
--- [dmz.matrix]
+p = {"value",},
 b = [[
+Creates a new dmz.matrix. The parameter value may either be a dmz.matrix or an array
+with nine numbers. The parameters v1 through v9 are numbers.
 ]],
 },{
 t = "dmz.matrix.is_a",
 p = {"value",},
--- [dmz.matrix | nil]
 b = [[
+Tests if value is a dmz.matrix. Returns a dmz.matrix if value is a dmz.matrix and nil
+if it is not.
 ]],
 },{
 t = "dmz.matrix:transpose",
 p = {},
--- [dmz.matrix]
 b = [[
+Creates and returns a dmz.matrix that is a transpose of the current dmz.matrix.
 ]],
 },{
 t = "dmz.matrix:invert",
 p = {},
--- [dmz.matrix]
 b = [[
+Creates and returns a dmz.matrix that is an inverse of the current dmz.matrix.
 ]],
 },{
 t = "dmz.matrix:transform",
 p = {"value",},
--- (dmz.vector) [dmz.vector]
 b = [[
+Creates and returns a dmz.vector that is the transformed value. The parameter
+value must evaluate to a dmz.vector.
 ]],
 },{
 t = "dmz.matrix:from_table",
 p = {"value"},
--- table [dmz.matrix]
 b = [[
+Updates the dmz.matrix to use the array of numbers stored in value. The parameter
+value is an array of nine numbers. A reference to self is returned.
 ]],
 },{
 t = "dmz.matrix:to_table",
 p = {},
---  [{number}]
 b = [[
+The nine components of the dmz.matrix are returned in an array.
 ]],
 },{
 t = "dmz.matrix:from_two_vectors",
-p = {"from", "to", },
--- [dmz.matrix]
+p = {"fromVec", "toVec", },
 b = [[
+Use the fromVec and toVec to compose new values for the dmz.matrix. The parameters
+fromVec and toVec must evaluate to dmz.vectors. A reference to self is returned.
 ]],
 },{
 t = "dmz.matrix:from_axis_and_angle",
 p = {"axis", "angle",},
--- [dmz.matrix]
 b = [[
+Use the axis and angle to compose new values for the dmz.matrix. The parameter
+axis must evaluate to a dmz.vector. The parameter angle is a number.
+A reference to self is returned.
 ]],
 },{
 t = "dmz.matrix:is_identity",
 p = {},
--- [boolean]
 b = [[
+Test if the dmz.matrix is an identity matrix. Returns true if it is an identity matrix.
 ]],
 },{
 t = "dmz.matrix:set_identity",
 p = {},
--- [dmz.matrix]
 b = [[
+Coverts the matrix to an identity matrix. A reference to self is returned.
 ]],
 },
 }, -- dmz.matrix
 {
 
 t = "dmz.mask",
+b = [[
+The dmz.mask class provides bindings for the dmz::Mask class.
+]],
 
 {
 t = "dmz.mask.new",
 o = {"value"},
--- [dmz.mask]
 b = [[
+Creates and returns a new dmz.mask. The optional value may be a dmz.mask which is used
+to initialized the new dmz.mask.
 ]],
 },{
 t = "dmz.mask.is_a",
 p = {"value",},
--- (value) [dmz.mask | nil]
 b = [[
+Tests if value is a dmz.mask. Returns a dmz.mask if value is a dmz.mask and nil
+if it is not.
 ]],
 },{
 t = "dmz.mask:clear",
 p = {},
 b = [[
+Clears the mask. Returns a reference to self.
 ]],
 },{
 t = "dmz.mask:contains",
 p = {"value",},
---  [boolean]
 b = [[
+Test if the dmz.mask contains value. The parameter value must evaluate to a dmz.mask.
+Returns true if the mask contains value.
 ]],
 },{
 t = "dmz.mask:unset",
 p = {"value",},
--- [boolean]
 b = [[
+The dmz.mask has all bits defined in value unset. The parameter must evaluate to a 
+dmz.mask. Returns true if the mask is successfully unset. 
 ]],
 },{
 t = "dmz.mask:bit_and",
 p = {"value",},
---  [dmz.mask]
 b = [[
+Creates and returns a dmz.mask that is a bitwise and of the dmz.mask and value. The
+parameter value must evaluate to a dmz.mask.
 ]],
 },{
 t = "dmz.mask:bit_or",
 p = {"value",},
---  [dmz.mask]
 b = [[
+Creates and returns a dmz.mask that is a bitwise or of the dmz.mask and value. The
+parameter value must evaluate to a dmz.mask.
 ]],
 },{
 t = "dmz.mask:bit_xor",
 p = {"value",},
---  [dmz.mask]
 b = [[
+Creates and returns a dmz.mask that is a bitwise exclusive-or  (i.e. xor) of the
+dmz.mask and value.  The parameter value must evaluate to a dmz.mask.
 ]],
 },{
 t = "dmz.mask:bit_set",
 p = {"value",},
--- [dmz.mask]
 b = [[
+Sets the bit specified by value. The parameter value is a number. Returns a reference
+to self.
 ]],
 },{
 t = "dmz.mask:bit_unset",
 p = {"value",},
--- [dmz.mask]
 b = [[
+Unsets the bit specified by value. The parameter value is a number. Returns a reference
+to self.
 ]],
 },{
 t = "dmz.mask:bit_not",
 p = {},
--- [dmz.mask]
 b = [[
+Creates and returns a mask that is the bitwise not of the dmz.mask.
 ]],
 },{
 t = "dmz.mask:bit_shift",
 p = {"shift",},
--- (int shift) [dmz.mask]
 b = [[
+Shifts the mask. A positive value shifts up while a negative value shifts down.
+Returns a reference to self.
 ]],
 },
 }, -- dmz.mask
+{
 
+t = "dmz.handle",
+b = [[
+The dmz.handle class provides bindings for the dmz::Handle type. Handles are atomic
+and maybe be used as key values in tables.
+]],
+{
+t = "dmz.handle.new",
+p = {"value",},
+b = [[
+Creates a dmz.handle. The parameter value must either be a string or number. If value
+is a string, a named handle is created. If value is a number, the dmz.handle is
+initialized with the number.
+]],
+},{
+t = "dmz.handle.is_a",
+p = {"value",},
+b = [[
+Tests if value is a dmz.handle. Returns a dmz.handle if value is a dmz.handle and returns
+nil if it is not.
+]],
+},
+}, -- dmz.handle
 {
 
 t = "dmz.uuid",
+b = [[
+The dmz.uuid class provides bindings for the dmz::UUID class.  UUIDs are atomic
+and maybe be used as key values in tables.
+]],
 
 {
 t = "dmz.uuid.new",
-o = {"value",},
--- [dmz.uuid | nil]
+p = {},
 b = [[
+Creates a new dmz.uuid. The newly created dmz.uuid is initialized with a unique UUID.
 ]],
 },{
 t = "dmz.uuid.is_a",
 p = {"value"},
--- [dmz.uuid | nil]
 b = [[
+Tests if value is a dmz.uuid. Returns a dmz.uuid if value is a dmz.uuid and returns
+nil if it is not.
 ]],
 },
 }, -- dmz.uuid
@@ -279,7 +342,7 @@ b = [[
 
 t = "dmz.config",
 b = [[
-The dmz.config class is a wrapper for the dmz::Config class.
+The dmz.config class provides bindings for the dmz::Config class.
 ]],
 
 {
@@ -290,11 +353,10 @@ Returns a dmz.config object containing the global config data.
 ]],
 },{
 t = "dmz.config.new",
-p = {},
 o = {"name",},
 b = [[
-Returns a new dmz.config object. The name is used to set the new dmz.config
-objects tag.
+Returns a new dmz.config object. The name is used to initalize the new dmz.config
+object's tag.
 ]],
 },{
 t = "dmz.config.is_a",
@@ -345,7 +407,6 @@ b = [[
 Looks up the attribute value name and returns it as a string.
 If the attribute name is not found, then default is returned.
 ]],
--- [string]
 },{
 t = "dmz.config:lookup_number",
 p = {"name",},
@@ -354,7 +415,6 @@ b = [[
 Looks up the attribute value name and returns it as a number.
 If the attribute name is not found, then default is returned.
 ]],
--- [number]
 },{
 t = "dmz.config:lookup_handle",
 p = {"name",},
@@ -371,7 +431,6 @@ b = [[
 Looks up the attribute value name and returns it as a dmz.matrix.
 If the attribute name is not found, then default is returned.
 ]],
--- [dmz.matrix]
 },{
 t = "dmz.config:lookup_event_type",
 p = {"name",},
@@ -399,7 +458,6 @@ Looks up the attribute value name and returns it as a dmz.object_type.
 If the attribute name is not found, then default is returned. Returns nil if
 a dmz.object_type can not be found.
 ]],
--- [dmz.object_type | nil]
 },{
 t = "dmz.config:lookup_state",
 p = {"name",},
@@ -408,21 +466,21 @@ b = [[
 Looks up the attribute value name and returns it as a dmz.mask.
 If the attribute name is not found, then default is returned.
 ]],
--- [dmz.mask]
-},{
 t = "dmz.config:lookup_uuid",
 p = {"name",},
 o = {"default",},
 b = [[
+Looks up the attribute value name and returns it as a dmz.uuid.
+If the attribute name is not found, then default is returned.
 ]],
---  [dmz.uuid]
 },{
 t = "dmz.config:lookup_vector",
 p = {"name",},
 o = {"default",},
 b = [[
+Looks up the attribute value name and returns it as a dmz.vector.
+If the attribute name is not found, then default is returned.
 ]],
--- [dmz.vector]
 },{
 t = "dmz.config:set_value",
 p = {"value",},
@@ -445,8 +503,8 @@ b = [[
 t = "dmz.config:get_children",
 p = {},
 b = [[
+Returns a table of children dmz.config objects.
 ]],
--- [{dmz.config children}]
 },{
 t = "dmz.config:add_config",
 p = {"scope", "dmz.config | {dmz.config})",},
@@ -676,25 +734,6 @@ b = [[
 ]],
 },
 }, -- dmz.event_type
-
-{
-
-t = "dmz.handle",
-
-{
-t = "dmz.handle.new",
-p = {"value",},
-b = [[
-]],
---[dmz.handle | nil]
-},{
-t = "dmz.handle.is_a",
-p = {"value",},
--- [dmz.handle | nil]
-b = [[
-]],
-},
-}, -- dmz.handle
 {
 
 t = "dmz.log",

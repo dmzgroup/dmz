@@ -8,4 +8,4 @@ lmk.add_libs {
    "dmzKernel",
 }
 lmk.add_preqs {"dmzRenderModuleCoreOSG", "dmzObjectFramework",}
-lmkOSG.add_libs {"osgDB", "osgUtil", "osg",}
+lmkOSG.add_libs {"osgDB", "osgUtil", "osg", "OpenThreads",}

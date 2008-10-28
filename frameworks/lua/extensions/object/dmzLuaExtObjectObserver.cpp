@@ -186,7 +186,8 @@ obs_register (lua_State *L) {
 
    optr obs (obs_check (L, 1));
    Handle defaultHandle (0);
-   Handle *handle = lua_to_handle (L, 2);
+   Handle *handle (0);
+   if (!lua_isnil (L, 2)) { handle = lua_check_handle (L, 2); }
 
    if (!handle) {
 

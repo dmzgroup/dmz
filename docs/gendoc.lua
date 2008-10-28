@@ -54,7 +54,7 @@ local function add_code_blocks (body, keys)
    return body
 end
 
-local emList = {"nil", "number", "boolean", "string"}
+local emList = {"nil", "number", "boolean", "string", "true", "false",}
 
 local function add_em_blocks (body)
     for i, v in ipairs (emList) do

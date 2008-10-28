@@ -26,6 +26,8 @@ namespace dmz {
 
          Handle get_first () const;
          Handle get_next () const;
+         Handle get_prev () const;
+         Handle get_last () const;
 
       protected:
          struct State;

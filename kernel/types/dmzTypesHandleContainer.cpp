@@ -145,3 +145,49 @@ dmz::HandleContainer::get_next () const {
    return result;
 }
 
+
+/*!
+
+\brief Gets previous Handle in the container.
+\return Returns the previous Handle in the container. Returns zero if at the
+beginning of the table.
+
+*/
+dmz::Handle
+dmz::HandleContainer::get_prev () const {
+
+   Handle result (0);
+
+   if (_state.table.get_next (_state.it, True) != 0) {
+
+      result = _state.it.get_hash_key ();
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Gets last Handle in the container.
+\return Returns last Handle in the container. Returns zero if the container is
+empty.
+
+*/
+dmz::Handle
+dmz::HandleContainer::get_last () const {
+
+   Handle result (0);
+
+   _state.it.reset ();
+
+   if (_state.table.get_next (_state.it, True) != 0) {
+
+      result = _state.it.get_hash_key ();
+   }
+
+   return result;
+}
+
+
+

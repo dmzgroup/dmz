@@ -11,7 +11,8 @@
 or 64 bit flags as with typical bit masks that use unsigned integers, a dmz::Mask
 is able to accommodate as may bit flags as memory will allow. The dmz::Mask supports
 most typical bitwise operations.
-
+\htmlonly Lua bindings are <a href="dmzlua.html#dmz.mask">available</a>.
+\endhtmlonly
 */
 
 struct dmz::Mask::State {

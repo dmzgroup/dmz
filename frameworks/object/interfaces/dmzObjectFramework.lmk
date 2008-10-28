@@ -3,6 +3,8 @@ lmk.add_files {
    "dmzObjectConsts.h",
    "dmzObjectMaskConsts.h",
    "dmzObjectModule.h",
+   "dmzObjectModuleGrid.h",
    "dmzObjectModuleSelect.h",
    "dmzObjectObserver.h",
+   "dmzObjectObserverGrid.h",
 }

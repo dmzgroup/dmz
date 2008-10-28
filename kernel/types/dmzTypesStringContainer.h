@@ -28,6 +28,8 @@ namespace dmz {
 
          Boolean get_first (String &value) const;
          Boolean get_next (String &value) const;
+         Boolean get_prev (String &value) const;
+         Boolean get_last (String &value) const;
 
       protected:
          struct State;

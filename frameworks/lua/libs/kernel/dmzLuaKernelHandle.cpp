@@ -79,7 +79,6 @@ handle_check (lua_State *L, int index) {
          lua_error (L);
       }
    }
-
    else { result = (Handle *)luaL_checkudata (L, index, HandleName); }
 
    LUA_END_VALIDATE (L, 0);

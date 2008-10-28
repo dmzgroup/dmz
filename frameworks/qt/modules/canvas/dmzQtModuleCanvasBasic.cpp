@@ -488,7 +488,7 @@ void
 dmz::QtModuleCanvasBasic::_init (Config &local) {
 
    _inputModuleName = config_to_string ("module.input.name", local);
-   _mainWindowModuleName = config_to_string ("module.mainWindow.namne", local);
+   _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
 
    _channel = config_to_named_handle (
       "channel.name",

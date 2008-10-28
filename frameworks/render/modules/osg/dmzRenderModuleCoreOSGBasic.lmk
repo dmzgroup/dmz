@@ -18,5 +18,5 @@ lmk.add_libs {
 
 lmk.add_files { "dmzRenderModuleCoreOSGBasic.cpp" }
 
-lmkOSG.add_libs {"osg", "osgGA", "osgViewer",}
+lmkOSG.add_libs {"osg", "osgGA", "osgViewer", "OpenThreads",}
 

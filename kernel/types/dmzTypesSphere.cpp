@@ -18,11 +18,30 @@ struct dmz::Sphere::State {
    Float64 radius;
    Float64 radiusSquared;
 
+   State &operator= (const State &Value) {
+
+      origin = Value.origin;
+      radius = Value.radius;
+      radiusSquared = Value.radiusSquared;
+
+      return *this;
+   }
+
+   Boolean operator== (const State &Value) const {
+
+      return (origin == Value.origin) && is_zero64 (radius - Value.radius);
+   }
+
    State () : radius (1.0), radiusSquared (1.0) {;}
+   State (const State &Value) : radius (1.0), radiusSquared (1.0) { *this = Value; }
 };
 
 //! Base constructor.
 dmz::Sphere::Sphere () : _state (*(new State)) {;}
+
+
+//! Copy constructor.
+dmz::Sphere::Sphere (const Sphere &Value) : _state (*(new State (Value._state))) {;}
 
 
 /*!
@@ -66,6 +85,16 @@ dmz::Sphere::get_extents (Vector &origin, Vector &min, Vector &max) const {
    min = _state.origin - _state.radius;
    max = _state.origin + _state.radius;
 }
+
+
+//! Assignment operator.
+dmz::Sphere &
+dmz::Sphere::operator= (const Sphere &Value) { _state = Value._state; return *this; }
+
+
+//! Relational "equal to" operator.
+dmz::Boolean
+dmz::Sphere::operator== (const Sphere &Value) const { return _state == Value._state; }
 
 
 //! Sets the radius of the Sphere.

@@ -19,6 +19,7 @@ namespace dmz {
    class RuntimeContext;
    class Stream;
    class String;
+   class Sphere;
    class UUID;
    class Vector;
 
@@ -98,6 +99,13 @@ namespace dmz {
 
    DMZ_LUA_KERNEL_LINK_SYMBOL ObjectType *
    lua_check_object_type (lua_State *L, int narg);
+
+   DMZ_LUA_KERNEL_LINK_SYMBOL Sphere *lua_create_sphere (
+      lua_State *L,
+      const Sphere &Value);
+
+   DMZ_LUA_KERNEL_LINK_SYMBOL Sphere *lua_to_sphere (lua_State *L, int narg);
+   DMZ_LUA_KERNEL_LINK_SYMBOL Sphere *lua_check_sphere (lua_State *L, int narg);
 
    DMZ_LUA_KERNEL_LINK_SYMBOL UUID *lua_create_uuid (
       lua_State *L,

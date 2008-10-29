@@ -11,6 +11,7 @@ class DMZ_KERNEL_LINK_SYMBOL Cylinder : public Volume {
 
    public:
       Cylinder ();
+      Cylinder (const Cylinder &);
       Cylinder (
          const Vector &Origin,
          const Float64 Radius,
@@ -24,6 +25,8 @@ class DMZ_KERNEL_LINK_SYMBOL Cylinder : public Volume {
       virtual Boolean contains_point (const Vector &Point) const;
       virtual void get_extents (Vector &origin, Vector &min, Vector &max) const;
 
+      Cylinder &operator= (const Cylinder &);
+      Boolean operator== (const Cylinder &) const;
 
       void set_radius (const Float64 Radius);
       Float64 get_radius () const;
@@ -39,10 +42,6 @@ class DMZ_KERNEL_LINK_SYMBOL Cylinder : public Volume {
       struct State;
       State &_state;
       //! \endcond
-      
-   private:
-      Cylinder (const Cylinder &);
-      Cylinder &operator= (const Cylinder &);
 };
 
 };

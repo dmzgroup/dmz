@@ -26,6 +26,7 @@ lmk.add_files {
    "dmzLuaKernelObjectType.cpp",
    "dmzLuaKernelResources.cpp",
    "dmzLuaKernelRuntime.cpp",
+   "dmzLuaKernelSphere.cpp",
    "dmzLuaKernelTimeSlice.cpp",
    "dmzLuaKernelTime.cpp",
    "dmzLuaKernelUndo.cpp",

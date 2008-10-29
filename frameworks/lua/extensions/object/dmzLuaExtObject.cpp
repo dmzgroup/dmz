@@ -12,6 +12,7 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesHandleContainer.h>
 #include <dmzTypesMatrix.h>
+#include <dmzTypesSphere.h>
 #include <dmzTypesUUID.h>
 #include <dmzTypesVector.h>
 
@@ -1538,9 +1539,15 @@ object_find (lua_State *L) {
    int result (0);
 
    ObjectModuleGrid *grid (get_object_module_grid (L));
+   Sphere *sphere = lua_check_sphere (L, 1);
 
-   if (grid) {
+   if (grid && sphere) {
 
+      HandleContainer list;
+
+      grid->find_objects (*sphere, list, 0, 0);
+      handle_container_to_table (L, list);
+      result = 1;
    }
 
    return result;

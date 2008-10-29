@@ -23,7 +23,32 @@ struct dmz::Cylinder::State {
    Float64 height;
    VectorComponentEnum axis;
 
+   State &operator= (const State &Value) {
+
+      origin = Value.origin;
+      radius = Value.radius;
+      radiusSquared = Value.radiusSquared;
+      height = Value.height;
+      axis = Value.axis;
+
+      return *this;
+   }
+
+   Boolean operator== (const State &Value) const {
+
+      return (origin == Value.origin) &&
+         is_zero64 (radius - Value.radius) &&
+         is_zero64 (height - Value.height) &&
+         (axis == Value.axis);
+   }
+
    State () : radius (1.0), radiusSquared (1.0), height (1.0), axis (VectorComponentY) {;}
+
+   State (const State &Value) :
+         radius (1.0),
+         radiusSquared (1.0),
+         height (1.0),
+         axis (VectorComponentY) { *this = Value; }
 };
 
 
@@ -35,6 +60,10 @@ dmz::VectorComponentY.
 
 */
 dmz::Cylinder::Cylinder () : _state (*(new State)) {;}
+
+
+//! Copy constructor.
+dmz::Cylinder::Cylinder (const Cylinder &Value) : _state (*(new State (Value._state))) {;}
 
 
 /*!
@@ -133,6 +162,16 @@ dmz::Cylinder::get_extents (Vector &origin, Vector &min, Vector &max) const {
    }
    else { min.set (_state.axis, 0.0); max.set (_state.axis, 0.0); }
 }
+
+
+//! Assignment operator.
+dmz::Cylinder &
+dmz::Cylinder::operator= (const Cylinder &Value) { _state = Value._state; return *this; }
+
+
+//! Relational "equal to" operator.
+dmz::Boolean
+dmz::Cylinder::operator== (const Cylinder &Value) const { return _state == Value._state; }
 
 
 /*!

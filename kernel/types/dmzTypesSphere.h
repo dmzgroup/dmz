@@ -10,6 +10,7 @@ class DMZ_KERNEL_LINK_SYMBOL Sphere : public Volume {
 
    public:
       Sphere ();
+      Sphere (const Sphere &Value);
       Sphere (const Vector &Origin, const Float64 Radius);
       ~Sphere ();
 
@@ -17,6 +18,9 @@ class DMZ_KERNEL_LINK_SYMBOL Sphere : public Volume {
       virtual Vector get_origin () const;
       virtual Boolean contains_point (const Vector &Point) const;
       virtual void get_extents (Vector &origin, Vector &min, Vector &max) const;
+
+      Boolean operator== (const Sphere &Value) const;
+      Sphere &operator= (const Sphere &Value);
 
       void set_radius (const Float64 Radius);
       Float64 get_radius ();
@@ -26,10 +30,6 @@ class DMZ_KERNEL_LINK_SYMBOL Sphere : public Volume {
       struct State;
       State &_state;
       //! \endcond
-      
-   private:
-      Sphere (const Sphere &);
-      Sphere &operator= (const Sphere &);
 };
 
 };

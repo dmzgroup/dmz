@@ -4,10 +4,12 @@
 #include <dmzQtLogObserver.h>
 #include "dmzQtSplashScreen.h"
 #include <dmzSystem.h>
+#include <dmzSystemFile.h>
 #include <QtGui/QtGui>
 
 using namespace dmz;
 
+const char LocalIconFile[] = "./assets/DMZ-Icon.png";
 
 int
 main (int argc, char *argv[]) {
@@ -20,7 +22,9 @@ main (int argc, char *argv[]) {
 
    qsrand (QTime (0,0,0).secsTo (QTime::currentTime ()));
 
-   QPixmap iconPixmap (":/AppQt/DMZ-Splash.png");
+   QPixmap iconPixmap (
+      is_valid_path (LocalIconFile) ? LocalIconFile : ":/AppQt/DMZ-Splash.png");
+
    iconPixmap.scaledToWidth (30, Qt::SmoothTransformation);
    qtApp.setWindowIcon (QIcon (iconPixmap));
 
@@ -35,6 +39,7 @@ main (int argc, char *argv[]) {
 
    QtSplashScreen *splash = new QtSplashScreen (app.get_context ());
    splash->show ();
+   splash->raise ();
 
    CommandLine cl (argc, argv);
 

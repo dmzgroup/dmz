@@ -52,7 +52,7 @@ vector_new (lua_State *L) {
 
    int result (0);
 
-   int stackCount = lua_gettop (L);
+   const int StackCount = lua_gettop (L);
 
    Vector *ptr = lua_create_vector (L);
 
@@ -60,11 +60,11 @@ vector_new (lua_State *L) {
 
       result = 1;
 
-      if (0 == stackCount) {
+      if (0 == StackCount) {
 
          // do nothing
       }
-      else if (1 == stackCount) {
+      else if (1 == StackCount) {
 
          if (lua_isuserdata (L, 1)) {
 
@@ -88,7 +88,7 @@ vector_new (lua_State *L) {
          }
          else { luaL_error (L, "Unsupported parameter."); }
       }
-      else if (3 == stackCount) {
+      else if (3 == StackCount) {
 
          lua_Number x = luaL_checknumber (L, 1);
          lua_Number y = luaL_checknumber (L, 2);
@@ -495,14 +495,14 @@ vector_is_zero (lua_State *L) {
 
    if (vec && *vec) {
 
-      int stackCount = lua_gettop (L);
+      const int StackCount = lua_gettop (L);
 
-      if (stackCount == 1) {
+      if (StackCount == 1) {
 
          lua_pushboolean (L, (*vec)->is_zero ());
          result = 1;
       }
-      else if (stackCount > 1) {
+      else if (StackCount > 1) {
 
          lua_Number value (luaL_checknumber (L, 2));
 

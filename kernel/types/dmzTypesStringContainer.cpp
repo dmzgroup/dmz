@@ -147,3 +147,51 @@ dmz::StringContainer::get_next (String &value) const {
    return result;
 }
 
+
+/*!
+
+\brief Gets previous String in the container.
+\param[out] value String use to return the previous String in the container.
+\return Returns dmz::True if the previous string is returned. Returns dmz::False if all
+the Strings have been returned.
+
+*/
+dmz::Boolean
+dmz::StringContainer::get_prev (String &value) const {
+
+   Boolean result (False);
+
+   if (_state.table.get_next (_state.it, True) != 0) {
+
+      result = True;
+      value = _state.it.get_hash_key ();
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Gets last String in the container.
+\param[out] value String use to return the last String in the container.
+\return Returns dmz::True if the last string is returned. Returns dmz::False if the
+container is empty.
+
+*/
+dmz::Boolean
+dmz::StringContainer::get_last (String &value) const {
+
+   Boolean result (False);
+
+   _state.it.reset ();
+
+   if (_state.table.get_next (_state.it, True) != 0) {
+
+      result = True;
+      value = _state.it.get_hash_key ();
+   }
+
+   return result;
+}
+

@@ -39,6 +39,7 @@ main (int argc, char *argv[]) {
 
    QtSplashScreen *splash = new QtSplashScreen (app.get_context ());
    splash->show ();
+   splash->raise ();
 
    CommandLine cl (argc, argv);
 

@@ -371,6 +371,8 @@ dmz::QtPluginCanvasZoomPan::_init (Config &local) {
    qtoolbutton_config_read ("zoomAll", local, _ui.zoomAllButton);
    qtoolbutton_config_read ("zoomIn", local, _ui.zoomInButton);
    qtoolbutton_config_read ("zoomOut", local, _ui.zoomOutButton);
+
+   if (config_to_boolean ("hide.value", local, False)) { hide (); }
 }
 
 

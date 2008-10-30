@@ -41,6 +41,8 @@ dmz::QtPluginCanvasZoomPan::QtPluginCanvasZoomPan (
    _ui.setupUi (this);
 
    _init (local);
+
+   hide ();
 }
 
 

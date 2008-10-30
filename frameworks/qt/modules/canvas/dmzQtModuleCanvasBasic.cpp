@@ -35,30 +35,6 @@ dmz::QtModuleCanvasBasic::QtModuleCanvasBasic (const PluginInfo &Info, Config &l
       _zoomStep (1.5f),
       _zoomDefault (1.0f) {
 
-   _scene.setSceneRect (QRectF (-50000, -50000, 100000, 100000));
-   //_scene.setItemIndexMethod (QGraphicsScene::NoIndex);
-
-   _canvas = new QtCanvasView (this);
-   _canvas->setTransformationAnchor (QGraphicsView::AnchorViewCenter);
-   _canvas->setHorizontalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
-   _canvas->setVerticalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
-   _canvas->setMouseTracking (true);
-   //_canvas->setDragMode (QGraphicsView::ScrollHandDrag);
-
-   setObjectName (get_plugin_name ().get_buffer ());
-   _scene.setObjectName (objectName () + "Scene");
-   _canvas->setObjectName (objectName () + "View");
-
-   _canvas->setScene (&_scene);
-
-   //_canvas->setBackgroundBrush (QPixmap ("/assets/images/background1.png"));
-
-   QVBoxLayout *layout (new QVBoxLayout ());
-   layout->addWidget (_canvas);
-
-   setLayout (layout);
-   setMouseTracking (true);
-
    _init (local);
 }
 
@@ -487,6 +463,41 @@ dmz::QtModuleCanvasBasic::_load_session () {
 void
 dmz::QtModuleCanvasBasic::_init (Config &local) {
 
+   const Int32 MinX = config_to_int32 ("scene.min.x", local, -50000);
+   const Int32 MinY = config_to_int32 ("scene.min.y", local, -50000);
+   const Int32 MaxX = config_to_int32 ("scene.max.x", local, 100000);
+   const Int32 MaxY = config_to_int32 ("scene.max.y", local, 100000);
+
+   _scene.setSceneRect (QRectF (MinX, MinY, MaxX - MinX, MaxY - MinY));
+   //_scene.setItemIndexMethod (QGraphicsScene::NoIndex);
+
+   _canvas = new QtCanvasView (this);
+   _canvas->setTransformationAnchor (QGraphicsView::AnchorViewCenter);
+
+   const Boolean ScrollBars = config_to_boolean ("scrollbars.value", local, False);
+
+   if (!ScrollBars) {
+
+      _canvas->setHorizontalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
+      _canvas->setVerticalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
+   }
+
+   _canvas->setMouseTracking (true);
+   //_canvas->setDragMode (QGraphicsView::ScrollHandDrag);
+
+   setObjectName (get_plugin_name ().get_buffer ());
+   _scene.setObjectName (objectName () + "Scene");
+   _canvas->setObjectName (objectName () + "View");
+
+   _canvas->setScene (&_scene);
+
+   //_canvas->setBackgroundBrush (QPixmap ("/assets/images/background1.png"));
+
+   QVBoxLayout *layout (new QVBoxLayout ());
+   layout->addWidget (_canvas);
+
+   setLayout (layout);
+   setMouseTracking (true);
    _inputModuleName = config_to_string ("module.input.name", local);
    _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
 

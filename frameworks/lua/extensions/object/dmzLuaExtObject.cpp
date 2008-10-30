@@ -1148,7 +1148,7 @@ object_position (lua_State *L) {
    if (objMod && objHandle && attrHandle) {
 
       Vector *ptr (0);
-      if (!lua_isnone (L, 3)) { ptr = lua_check_vector (L, 3); }
+      if (!lua_isnoneornil (L, 3)) { ptr = lua_check_vector (L, 3); }
 
       if (ptr) {
 

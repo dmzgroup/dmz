@@ -145,7 +145,9 @@ dmz::ObjectModuleGridBasic::_map_point_to_coord (
 
    Vector vec (Point - _minGrid);
    x = (Int32)(vec.get (_primaryAxis) / _xCellSize);
+   if (x < 0) { x = 0; } else if (x >= _xCoordMax) { x = _xCoordMax - 1; }
    y = (Int32)(vec.get (_secondaryAxis) / _yCellSize);
+   if (y < 0) { y = 0; } else if (y >= _yCoordMax) { y = _yCoordMax - 1; }
 }
 
 

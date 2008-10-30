@@ -15,7 +15,7 @@ dmz::ObjectModuleGridBasic::ObjectModuleGridBasic (
       ObjectObserverUtil (Info, local),
       _log (Info),
       _primaryAxis (VectorComponentX),
-      _secondaryAxis (VectorComponentY),
+      _secondaryAxis (VectorComponentZ),
       _xCoordMax (100),
       _yCoordMax (100),
       _maxGrid (100000.0, 0.0, 100000.0),
@@ -265,9 +265,16 @@ dmz::ObjectModuleGridBasic::_init (Config &local) {
    _minGrid = config_to_vector ("grid.min", local, _minGrid);
    _maxGrid = config_to_vector ("grid.max", local, _maxGrid);
 
+   _log.info << "grid: " << _xCoordMax << "x" << _yCoordMax << endl;
+   _log.info << "extents:" << endl
+      << "\t" << _minGrid << endl
+      << "\t" << _maxGrid << endl;
+
    Vector vec (_maxGrid - _minGrid);
-   _xCellSize = (Int32)(vec.get (_primaryAxis) / (Float64)(_xCoordMax));
-   _yCellSize = (Int32)(vec.get (_secondaryAxis) / (Float64)(_yCoordMax));
+   _xCellSize = vec.get (_primaryAxis) / (Float64)(_xCoordMax);
+   _yCellSize = vec.get (_secondaryAxis) / (Float64)(_yCoordMax);
+
+   _log.info << "cell count: " << _xCoordMax * _yCoordMax << endl;
 
    if (is_zero64 (_xCellSize)) { _xCellSize = 1.0; }
    if (is_zero64 (_yCellSize)) { _yCellSize = 1.0; }

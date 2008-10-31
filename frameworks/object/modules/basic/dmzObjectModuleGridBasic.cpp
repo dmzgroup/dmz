@@ -175,8 +175,13 @@ dmz::ObjectModuleGridBasic::find_objects (
 
    while (list) {
 
-      objects.add_handle (list->Object);
-      list = list->node;
+      if (!objects.add_handle (list->Object)) {
+
+         _log.error << "Loop detected in object list for object: " << list->Object
+            << endl;
+         list = 0;
+      }
+      else { list = list->node; }
    }
 }
 

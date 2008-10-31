@@ -132,7 +132,7 @@ namespace dmz {
 inline dmz::Int32
 dmz::ObjectModuleGridBasic::_map_coord (const Int32 X, const Int32 Y) {
 
-   return ((_yCoordMax - 1) * (Y < 0 ? 0 : (Y >= _yCoordMax ? _yCoordMax - 1 : Y))) +
+   return ((_xCoordMax) * (Y < 0 ? 0 : (Y >= _yCoordMax ? _yCoordMax - 1 : Y))) +
       (X < 0 ? 0 : (X >= _xCoordMax ? _xCoordMax - 1 : X));
 }
 

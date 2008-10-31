@@ -112,6 +112,8 @@ dmz::ObjectModuleGridBasic::find_objects (
 
    ObjectStruct *list (0);
 
+//   HandleContainer found;
+
    for (Int32 ix = minX; ix <= maxX; ix++) {
 
       for (Int32 jy = minY; jy <= maxY; jy++) {
@@ -132,6 +134,27 @@ dmz::ObjectModuleGridBasic::find_objects (
             }
 
             if (test && SearchSpace.contains_point (current->pos)) {
+
+#if 0
+if (!found.add_handle (current->Object)) {
+
+_log.error << "origin: " << origin << endl
+   << "minX: " << minX << endl
+   << "minY: " << minY << endl
+   << "maxX: " << maxX << endl
+   << "maxY: " << maxY << endl;
+
+
+HandleContainer cc;
+   for (Int32 xx = minX; xx <= maxX; xx++) {
+
+      for (Int32 yy = minY; yy <= maxY; yy++) {
+Boolean s = cc.add_handle ((Handle)_map_coord (xx, yy));
+_log.error << (s ? "" : "##### NOT UNIQUE ") << xx << " " << yy << " = " << _map_coord (xx, yy) << endl;
+      }
+   }
+}
+#endif // 0
 
                current->distanceSquared = (origin - current->pos).magnitude_squared ();
 

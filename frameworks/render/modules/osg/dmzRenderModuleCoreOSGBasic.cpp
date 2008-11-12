@@ -8,6 +8,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeLoadPlugins.h>
+#include <dmzSystem.h>
 #include <dmzSystemFile.h>
 #include <osg/DeleteHandler>
 #include <osg/LightSource>
@@ -421,7 +422,7 @@ dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
    osgDB::Registry *reg = osgDB::Registry::instance ();
    Config pathList;
 
-   if (reg && local.lookup_all_config ("db.path", pathList)) {
+   if (reg && local.lookup_all_config ("loader.path", pathList)) {
 
       osgDB::FilePathList &fpl = reg->getLibraryFilePathList ();
 

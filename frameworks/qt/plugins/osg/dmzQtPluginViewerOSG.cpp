@@ -1,0 +1,252 @@
+#include "dmzQtPluginViewerOSG.h"
+#include <dmzInputConsts.h>
+#include <dmzInputModule.h>
+#include <dmzQtModuleMainWindow.h>
+#include <dmzRenderModuleCoreOSG.h>
+#include <dmzRenderCameraManipulatorOSG.h>
+#include <dmzRenderEventHandlerOSG.h>
+#include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimePluginFactoryLinkSymbol.h>
+#include <dmzRuntimePluginInfo.h>
+#include <dmzTypesVector.h>
+#include <dmzTypesMatrix.h>
+
+dmz::QtPluginViewerOSG::QtPluginViewerOSG (
+      const PluginInfo &Info,
+      Config &local) :
+      Plugin (Info),
+      TimeSlice (Info),
+      _log (Info),
+      _window (0),
+      _core (0),
+      _channels (0),
+      _defaultChannel (0),
+      _portalName (DefaultPortalNameOSG),
+      _camera (0),
+      _cameraManipulator (0),
+      _eventHandler (0),
+      _viewer (0) {
+
+   _viewer = new ViewerQt;
+   _viewer->setThreadingModel (osgViewer::Viewer::SingleThreaded);
+   _cameraManipulator = new RenderCameraManipulatorOSG;
+   _eventHandler = new RenderEventHandlerOSG;
+
+   osgViewer::StatsHandler *stats = new osgViewer::StatsHandler;
+   stats->setKeyEventTogglesOnScreenStats (osgGA::GUIEventAdapter::KEY_F1);
+   stats->setKeyEventPrintsOutStats (osgGA::GUIEventAdapter::KEY_F2);
+   _viewer->addEventHandler (stats);
+   _viewer->setCameraManipulator (_cameraManipulator.get ());
+   _viewer->addEventHandler (_eventHandler.get ());
+   _viewer->setKeyEventSetsDone (0);
+
+   _init (local);
+
+   _camera = _viewer->getCamera ();
+}
+
+
+dmz::QtPluginViewerOSG::~QtPluginViewerOSG () {
+
+    _eventHandler = 0;
+}
+
+
+// Plugin Interface
+void
+dmz::QtPluginViewerOSG::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
+
+   if (State == PluginStateStart) {
+
+   }
+}
+
+
+void
+dmz::QtPluginViewerOSG::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
+
+   if (Mode == PluginDiscoverAdd) {
+
+      if (!_core) {
+
+         _core = RenderModuleCoreOSG::cast (PluginPtr);
+         if (_core) {
+
+            osg::ref_ptr<osg::Group> scene = _core->get_scene ();
+            if (scene.valid ()) { _viewer->setSceneData (scene.get ()); }
+
+            if (_cameraManipulator.valid ()) {
+
+               _core->add_camera_manipulator (_portalName, _cameraManipulator.get ());
+            }
+
+            if (_camera.valid ()) {
+
+               _core->add_camera (_portalName, _camera.get ());
+            }
+         }
+      }
+
+      if (!_channels) {
+
+         _channels = InputModule::cast (PluginPtr);
+         if (_channels) {
+
+            Definitions defs (get_plugin_runtime_context (), &_log);
+            const Handle SourceHandle = defs.create_named_handle (_portalName);
+            _eventHandler->set_input_module_channels (_channels, SourceHandle);
+         }
+      }
+
+      if (!_window) {
+
+         _window = QtModuleMainWindow::cast (PluginPtr);
+
+         if (_window) {
+
+            _window->add_central_widget (_defaultChannel, _viewer.get ());
+         }
+      }
+
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
+
+         _viewer->setCameraManipulator (0);
+         _core->remove_camera (_portalName);
+         _core->remove_camera_manipulator (_portalName);
+         osg::ref_ptr<osg::Group> scene = new osg::Group;
+         if (scene.valid ()) { _viewer->setSceneData (scene.get ()); }
+         _viewer.release ();
+         _core = 0;
+      }
+
+      if (_channels && (_channels == InputModule::cast (PluginPtr))) {
+
+         _eventHandler->set_input_module_channels (0, 0);
+         _channels = 0;
+      }
+
+      if (_window) {
+
+         if (_window == QtModuleMainWindow::cast (PluginPtr)) {
+
+            _window->remove_central_widget (_defaultChannel);
+            _window = 0;
+         }
+      }
+   }
+}
+
+
+void
+dmz::QtPluginViewerOSG::update_time_slice (const Float64 TimeDelta) {
+
+   if (_viewer.valid ()) {
+
+      _viewer->frame (); // Render a complete new frame
+   }
+}
+
+
+void
+dmz::QtPluginViewerOSG::_init (const Config &Local) {
+
+   _portalName = config_to_string ("portal.name", Local, DefaultPortalNameOSG);
+
+   Config windowData;
+
+   if (Local.lookup_all_config ("window", windowData)) {
+
+      ConfigIterator it;
+      Config cd;
+
+      Boolean found (windowData.get_first_config (it, cd));
+      if (found)  {
+
+         UInt32 windowLeft = config_to_uint32 ("left", cd);
+         UInt32 windowTop = config_to_uint32 ("top", cd);
+         UInt32 windowWidth = config_to_uint32 ("width", cd);
+         UInt32 windowHeight = config_to_uint32 ("height", cd);
+         UInt32 screen = config_to_uint32 ("screen", cd);
+
+         __init_viewer_window (windowLeft, windowTop, windowWidth, windowHeight, screen);
+      }
+
+      _log.info << "Loading viewer windowed" << endl;
+   }
+   else if (Local.lookup_all_config ("fullscreen", windowData)) {
+
+      ConfigIterator it;
+      Config cd;
+
+      Boolean found (windowData.get_first_config (it, cd));
+      if (found)  {
+
+         UInt32 screen = config_to_uint32 ("screen", cd);
+         __init_viewer_fullscreen (screen);
+      }
+
+      _log.info << "Loading viewer full-screen" << endl;
+   }
+   else {
+
+      __init_viewer_window (100, 100, 800, 600, 0);
+      _log.info << "Loading viewer windowed with defaults" << endl;
+   }
+
+   _defaultChannel = Definitions (get_plugin_runtime_context ()).create_named_handle (
+      InputChannelDefaultName);
+}
+
+
+void
+dmz::QtPluginViewerOSG::__init_viewer_window (
+      UInt32 windowLeft,
+      UInt32 windowTop,
+      UInt32 windowWidth,
+      UInt32 windowHeight,
+      UInt32 screen) {
+
+   if (_viewer.valid ()) {
+
+      _viewer->setUpViewInWindow (
+         windowLeft,
+         windowTop,
+         windowWidth,
+         windowHeight,
+         screen);
+   }
+}
+
+
+void
+dmz::QtPluginViewerOSG::__init_viewer_fullscreen (UInt32 screen) {
+
+   if (_viewer.valid ()) {
+
+      _viewer->setUpViewOnSingleScreen (screen);
+      if (_viewer->done ()) { _log.error << "The viewer thinks it is done?" << endl; }
+   }
+}
+
+
+extern "C" {
+
+DMZ_PLUGIN_FACTORY_LINK_SYMBOL dmz::Plugin *
+create_dmzQtPluginViewerOSG (
+      const dmz::PluginInfo &Info,
+      dmz::Config &local,
+      dmz::Config &global) {
+
+   return new dmz::QtPluginViewerOSG (Info, local);
+}
+
+};

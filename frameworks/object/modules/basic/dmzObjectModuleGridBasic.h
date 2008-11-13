@@ -7,6 +7,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesVector.h>
 
@@ -81,20 +82,29 @@ namespace dmz {
                   node (0) {;}
          };
 
-         struct ObsStruct {
+         struct ObserverStruct {
 
             const Handle ObsHandle;
             ObjectObserverGrid &obs;
+            HandleContainer objects;
+            Int32 minX;
+            Int32 minY;
+            Int32 maxX;
+            Int32 maxY;
 
-            ObsStruct (ObjectObserverGrid &theObs) :
-               ObsHandle (theObs.get_object_observer_grid_handle ()),
-               obs (theObs) {;}
+            ObserverStruct (ObjectObserverGrid &theObs) :
+                  ObsHandle (theObs.get_object_observer_grid_handle ()),
+                  obs (theObs),
+                  minX (-1),
+                  minY (-1),
+                  maxX (-1),
+                  maxY (-1) {;}
          };
 
          struct GridStruct {
 
             ObjectStruct *objList;
-
+            HashTableHandleTemplate<ObserverStruct> obsTable;
             GridStruct () : objList (0) {;}
          };
 
@@ -118,6 +128,7 @@ namespace dmz {
          Float64 _yCellSize;
 
          HashTableHandleTemplate<ObjectStruct> _objTable;
+         HashTableHandleTemplate<ObserverStruct> _obsTable;
 
          GridStruct *_grid;
 

@@ -29,7 +29,7 @@ dmz::QtPluginViewerOSG::QtPluginViewerOSG (
       _eventHandler (0),
       _viewer (0) {
 
-   _viewer = new ViewerQt;
+   _viewer = new ViewerQOSG;
    _viewer->setThreadingModel (osgViewer::Viewer::SingleThreaded);
    _cameraManipulator = new RenderCameraManipulatorOSG;
    _eventHandler = new RenderEventHandlerOSG;

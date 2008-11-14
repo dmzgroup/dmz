@@ -6,7 +6,7 @@
 #include <dmzRuntimeTimeSlice.h>
 
 #include <osg/Camera>
-#include "ViewerQt.h"
+#include "ViewerQOSG.h"
 
 
 namespace dmz {
@@ -47,7 +47,7 @@ namespace dmz {
          osg::ref_ptr<osg::Camera> _camera;
          osg::ref_ptr<RenderCameraManipulatorOSG> _cameraManipulator;
          osg::ref_ptr<RenderEventHandlerOSG> _eventHandler;
-         osg::ref_ptr<ViewerQt> _viewer;
+         osg::ref_ptr<ViewerQOSG> _viewer;
 
       private:
          void __init_viewer_window (

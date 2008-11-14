@@ -18,7 +18,7 @@ lmk.add_preqs {
    "dmzInputFramework",
 }
 
-lmk.add_files {"ViewerQt.cpp", "dmzQtPluginViewerOSG.cpp",}
+lmk.add_files {"QOSGWidget.cpp", "ViewerQOSG.cpp", "dmzQtPluginViewerOSG.cpp",}
 
 lmkOSG.add_libs {"osg", "osgGA", "osgViewer", "OpenThreads",}
 

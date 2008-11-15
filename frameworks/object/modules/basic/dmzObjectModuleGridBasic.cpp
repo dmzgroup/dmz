@@ -303,7 +303,7 @@ _log.error << (s ? "" : "##### NOT UNIQUE ") << xx << " " << yy << " = " << _map
                }
             }
 
-            cell->objTable.get_next (it);
+            current = cell->objTable.get_next (it);
          }
       }
    }

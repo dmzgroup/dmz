@@ -66,20 +66,16 @@ namespace dmz {
             Vector pos;
 
             Int32 place;
-            ObjectStruct *prev;
-            ObjectStruct *next;
 
             Float64 distanceSquared;
-            ObjectStruct *node;
+            ObjectStruct *next;
 
             ObjectStruct (const Handle TheObject, const ObjectType &TheType) :
                   Object (TheObject),
                   Type (TheType),
                   place (-1),
-                  prev (0),
-                  next (0),
                   distanceSquared (0.0),
-                  node (0) {;}
+                  next (0) {;}
          };
 
          struct ObserverStruct {
@@ -103,15 +99,22 @@ namespace dmz {
 
          struct GridStruct {
 
-            ObjectStruct *objList;
+            HashTableHandleTemplate<ObjectStruct> objTable;
             HashTableHandleTemplate<ObserverStruct> obsTable;
-            GridStruct () : objList (0) {;}
+            GridStruct () {;}
+            ~GridStruct () { objTable.clear (); obsTable.clear (); }
          };
 
          Int32 _map_coord (const Int32 X, const Int32 Y);
          void _map_point_to_coord (const Vector &Point, Int32 &x, Int32 &y);
          Int32 _map_point (const Vector &Point);
          void _remove_object_from_grid (ObjectStruct &obj);
+
+         void _update_observer (
+            const Volume &SearchSpace,
+            const ObjectStruct &Obj,
+            ObserverStruct &os);
+
          void _init (Config &local);
 
          Log _log;

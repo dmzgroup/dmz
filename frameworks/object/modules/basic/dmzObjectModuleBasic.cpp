@@ -407,19 +407,23 @@ dmz::ObjectModuleBasic::dump_object_attributes (
 
    if (sub && obj) {
 
+      Mask *mask (sub->table.lookup (_defaultHandle));
+
+      if (mask) { _dump_object_create (*obj, *mask, sub->obs); }
+
       HashTableHandleIterator it;
 
-      Mask *ptr (sub->table.get_first (it));
+      mask = sub->table.get_first (it);
 
-      while (ptr) {
+      while (mask) {
 
          _dump_object_attributes_to_observer (
             *obj,
             it.get_hash_key (),
-            *ptr,
+            *mask,
             sub->obs);
 
-         ptr = sub->table.get_next (it);
+         mask = sub->table.get_next (it);
       }
 
       result = True;
@@ -440,11 +444,13 @@ dmz::ObjectModuleBasic::dump_all_object_attributes (
 
    if (obj) {
 
+      _dump_object_create (*obj, AllMask, observer);
+
       HashTableHandleIterator it;
 
-      void *ptr (obj->attrTable.get_next (it));
+      void *mask (obj->attrTable.get_next (it));
 
-      while (ptr) {
+      while (mask) {
 
          const Handle AttributeHandle (it.get_hash_key ());
 
@@ -454,7 +460,7 @@ dmz::ObjectModuleBasic::dump_all_object_attributes (
             AllMask,
             observer);
 
-         ptr = obj->attrTable.get_next (it);
+         mask = obj->attrTable.get_next (it);
       }
 
       result = True;
@@ -4458,6 +4464,11 @@ dmz::ObjectModuleBasic::_dump_all_objects (
 
    while (obj) {
 
+      if (AttributeHandle == _defaultHandle) {
+
+         _dump_object_create (*obj, AttributeMask, Observer);
+      }
+
       _dump_object_attributes_to_observer (
          *obj,
          AttributeHandle,
@@ -4476,6 +4487,40 @@ dmz::ObjectModuleBasic::_dump_object (const Handle ObjectHandle) {
 
    if (obj && obj->active) {
 
+      HashTableHandleIterator it;
+
+      SubscriptionStruct *sub (_subscriptionTable.get_first (it));
+
+      while (sub) {
+
+         Mask *mask (sub->table.lookup (_defaultHandle));
+
+         if (mask) {
+
+            _dump_object_create (
+               *obj,
+               *mask,
+               sub->obs);
+         }
+
+         sub = _subscriptionTable.get_next (it);
+      }
+
+      if (_globalCount > 0) {
+
+         ObjectObserver *obs (_globalTable.get_first (it));
+
+         while (obs) {
+
+            _dump_object_create (
+               *obj,
+               AllMask,
+               *obs);
+
+            obs = _globalTable.get_next (it);
+         }
+      }
+
       HashTableHandleIterator handleIt;
 
       void *ptr (obj->attrTable.get_next (handleIt));
@@ -4484,13 +4529,12 @@ dmz::ObjectModuleBasic::_dump_object (const Handle ObjectHandle) {
 
          const Handle AttributeHandle (handleIt.get_hash_key ());
 
-         HashTableHandleIterator it;
-
-         SubscriptionStruct *sub (_subscriptionTable.get_first (it));
+         sub = _subscriptionTable.get_first (it);
 
          while (sub) {
 
             Mask *mask (sub->table.lookup (AttributeHandle));
+
             if (mask) {
 
                _dump_object_attributes_to_observer (
@@ -4526,18 +4570,17 @@ dmz::ObjectModuleBasic::_dump_object (const Handle ObjectHandle) {
 
 
 void
-dmz::ObjectModuleBasic::_dump_object_attributes_to_observer (
+dmz::ObjectModuleBasic::_dump_object_create (
       const ObjectStruct &Obj,
-      const Handle AttributeHandle,
       const Mask &AttributeMask,
       ObjectObserver &obs) {
 
-   if ((CreateMask & AttributeMask) && (AttributeHandle == _defaultHandle)) {
+   if (CreateMask & AttributeMask) {
 
       obs.create_object (Obj.uuid, Obj.handle, Obj.type, Obj.locality);
    }
 
-   if ((UUIDMask & AttributeMask) && (AttributeHandle == _defaultHandle)) {
+   if (UUIDMask & AttributeMask) {
 
       if (Obj.uuid) {
 
@@ -4546,7 +4589,15 @@ dmz::ObjectModuleBasic::_dump_object_attributes_to_observer (
          obs.update_object_uuid (Obj.handle, Obj.uuid, EmptyUUID);
       }
    }
+}
 
+
+void
+dmz::ObjectModuleBasic::_dump_object_attributes_to_observer (
+      const ObjectStruct &Obj,
+      const Handle AttributeHandle,
+      const Mask &AttributeMask,
+      ObjectObserver &obs) {
    if (AltObjectTypeMask & AttributeMask) {
 
       ObjectType *ptr (Obj.altTypeTable.lookup (AttributeHandle));

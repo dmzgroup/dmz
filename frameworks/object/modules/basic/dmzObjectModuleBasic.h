@@ -712,6 +712,11 @@ namespace dmz {
 
          void _dump_object (const Handle ObjectHandle);
 
+         void _dump_object_create (
+            const ObjectStruct &Obj,
+            const Mask &AttributeMask,
+            ObjectObserver &obs);
+
          void _dump_object_attributes_to_observer (
             const ObjectStruct &Obj,
             const Handle AttibuteHandle,

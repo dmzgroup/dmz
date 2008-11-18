@@ -42,6 +42,13 @@ functions thread safe.
          Int32 get_size () const;
          Int32 get_count () const;
 
+         Boolean move_first (const $(type) &Key);
+         Boolean move_up (const $(type) &Key);
+         Boolean move_before (const $(type) &Key, const $(type) &TargetKey);
+         Boolean move_after (const $(type) &Key, const $(type) &TargetKey);
+         Boolean move_down (const $(type) &Key);
+         Boolean move_last (const $(type) &Key);
+
          T *get_first (HashTable$(type)Iterator &it) const;
          T *get_last (HashTable$(type)Iterator &it) const;
          T *get_next (HashTable$(type)Iterator &it) const;
@@ -261,6 +268,80 @@ dmz::HashTable$(type)Template<T>::get_size () const { return __table.get_size ()
 //! Gets number of elements stored in the table.
 template <class T> inline dmz::Int32
 dmz::HashTable$(type)Template<T>::get_count () const { return __table.get_count (); }
+
+
+//! Moves element to the beginning of the list.
+template <class T> inline dmz::Boolean
+dmz::HashTable$(type)Template<T>::move_first (const $(type) &Key) {
+
+   __lock ();
+   Boolean result = __table.move (Key, 0, False, True);
+   __unlock ();
+
+   return result;
+}
+
+
+//! Moves element to the beginning of the list.
+template <class T> inline dmz::Boolean
+dmz::HashTable$(type)Template<T>::move_up (const $(type) &Key) {
+
+   __lock ();
+   Boolean result = __table.move (Key, 0, True, True);
+   __unlock ();
+
+   return result;
+}
+
+//! Moves element before the element specified by TargetKey.
+template <class T> inline dmz::Boolean
+dmz::HashTable$(type)Template<T>::move_before (
+      const $(type) &Key,
+      const $(type) &TargetKey) {
+
+   __lock ();
+   Boolean result = __table.move (Key, &TargetKey, False, True);
+   __unlock ();
+
+   return result;
+}
+
+
+//! Moves element after the element specified by TargetKey.
+template <class T> inline dmz::Boolean
+dmz::HashTable$(type)Template<T>::move_after (
+      const $(type) &Key,
+      const $(type) &TargetKey) {
+
+   __lock ();
+   Boolean result = __table.move (Key, &TargetKey, False, False);
+   __unlock ();
+
+   return result;
+}
+
+
+//! Moves element to the end of the list.
+template <class T> inline dmz::Boolean
+dmz::HashTable$(type)Template<T>::move_down (const $(type) &Key) {
+
+   __lock ();
+   Boolean result = __table.move (Key, 0, True, False);
+   __unlock ();
+
+   return result;
+}
+
+//! Moves element to the end of the list.
+template <class T> inline dmz::Boolean
+dmz::HashTable$(type)Template<T>::move_last (const $(type) &Key) {
+
+   __lock ();
+   Boolean result = __table.move (Key, 0, False, False);
+   __unlock ();
+
+   return result;
+}
 
 
 /*!

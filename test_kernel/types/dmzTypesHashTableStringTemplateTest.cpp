@@ -363,5 +363,344 @@ int main (int argc, char *argv[]) {
       ((*iteratorStringLast) == (*iteratorStringLast2)) &&
       (iteratorKeyLast == iteratorKeyLast2));
 
+   HashTableStringTemplate<String> orderTable;
+   const String E1 ("Element 1");
+   const String E2 ("Element 2");
+   const String E3 ("Element 3");
+   const String E4 ("Element 4");
+   const String E5 ("Element 5");
+
+   orderTable.store (E1, new String (E1));
+   orderTable.store (E2, new String (E2));
+   orderTable.store (E3, new String (E3));
+   orderTable.store (E4, new String (E4));
+   orderTable.store (E5, new String (E5));
+
+   String *v1 = orderTable.get_first (it);
+   String *v2 = orderTable.get_next (it);
+   String *v3 = orderTable.get_next (it);
+   String *v4 = orderTable.get_next (it);
+   String *v5 = orderTable.get_next (it);
+   String *v6 = orderTable.get_next (it);
+
+   String *p5 = orderTable.get_last (it);
+   String *p4 = orderTable.get_prev (it);
+   String *p3 = orderTable.get_prev (it);
+   String *p2 = orderTable.get_prev (it);
+   String *p1 = orderTable.get_prev (it);
+   String *p0 = orderTable.get_prev (it);
+
+
+   test.validate (
+      "Strings returned in order stored",
+      v1 && v2 && v3 && v4 && v5 && !v6 &&
+      p1 && p2 && p3 && p4 && p5 && !p0 &&
+      (E1 == *v1) && (E1 == *p1) &&
+      (E2 == *v2) && (E2 == *p2) &&
+      (E3 == *v3) && (E3 == *p3) &&
+      (E4 == *v4) && (E4 == *p4) &&
+      (E5 == *v5) && (E5 == *p5));
+
+   test.validate (
+      "move_up (E3) returns True",
+      orderTable.move_up (E3));
+
+   // NOTE: 2 and 3 are swapped.
+   v1 = orderTable.get_first (it);
+   v3 = orderTable.get_next (it);
+   v2 = orderTable.get_next (it);
+   v4 = orderTable.get_next (it);
+   v5 = orderTable.get_next (it);
+   v6 = orderTable.get_next (it);
+
+   p5 = orderTable.get_last (it);
+   p4 = orderTable.get_prev (it);
+   p2 = orderTable.get_prev (it);
+   p3 = orderTable.get_prev (it);
+   p1 = orderTable.get_prev (it);
+   p0 = orderTable.get_prev (it);
+
+   test.validate (
+      "Element 3 was moved up one place",
+      v1 && v2 && v3 && v4 && v5 && !v6 &&
+      p1 && p2 && p3 && p4 && p5 && !p0 &&
+      (E1 == *v1) && (E1 == *p1) &&
+      (E2 == *v2) && (E2 == *p2) &&
+      (E3 == *v3) && (E3 == *p3) &&
+      (E4 == *v4) && (E4 == *p4) &&
+      (E5 == *v5) && (E5 == *p5));
+
+   test.validate (
+      "move_down (E2) returns True",
+      orderTable.move_down (E2));
+
+   // NOTE: 2 and 4 are swapped.
+   v1 = orderTable.get_first (it);
+   v3 = orderTable.get_next (it);
+   v4 = orderTable.get_next (it);
+   v2 = orderTable.get_next (it);
+   v5 = orderTable.get_next (it);
+   v6 = orderTable.get_next (it);
+
+   p5 = orderTable.get_last (it);
+   p2 = orderTable.get_prev (it);
+   p4 = orderTable.get_prev (it);
+   p3 = orderTable.get_prev (it);
+   p1 = orderTable.get_prev (it);
+   p0 = orderTable.get_prev (it);
+
+   test.validate (
+      "Element 2 was moved down one place",
+      v1 && v2 && v3 && v4 && v5 && !v6 &&
+      p1 && p2 && p3 && p4 && p5 && !p0 &&
+      (E1 == *v1) && (E1 == *p1) &&
+      (E2 == *v2) && (E2 == *p2) &&
+      (E3 == *v3) && (E3 == *p3) &&
+      (E4 == *v4) && (E4 == *p4) &&
+      (E5 == *v5) && (E5 == *p5));
+
+   test.validate (
+      "move_first (E4) returns True",
+      orderTable.move_first (E4));
+
+   // NOTE: 4 is moved to the front.
+   v4 = orderTable.get_first (it);
+   v1 = orderTable.get_next (it);
+   v3 = orderTable.get_next (it);
+   v2 = orderTable.get_next (it);
+   v5 = orderTable.get_next (it);
+   v6 = orderTable.get_next (it);
+
+   p5 = orderTable.get_last (it);
+   p2 = orderTable.get_prev (it);
+   p3 = orderTable.get_prev (it);
+   p1 = orderTable.get_prev (it);
+   p4 = orderTable.get_prev (it);
+   p0 = orderTable.get_prev (it);
+
+   test.validate (
+      "Element 4 was moved to the front",
+      v1 && v2 && v3 && v4 && v5 && !v6 &&
+      p1 && p2 && p3 && p4 && p5 && !p0 &&
+      (E1 == *v1) && (E1 == *p1) &&
+      (E2 == *v2) && (E2 == *p2) &&
+      (E3 == *v3) && (E3 == *p3) &&
+      (E4 == *v4) && (E4 == *p4) &&
+      (E5 == *v5) && (E5 == *p5));
+
+   test.validate (
+      "move_last (E2) returns True",
+      orderTable.move_last (E2));
+
+   // NOTE: 2 is moved to the end
+   v4 = orderTable.get_first (it);
+   v1 = orderTable.get_next (it);
+   v3 = orderTable.get_next (it);
+   v5 = orderTable.get_next (it);
+   v2 = orderTable.get_next (it);
+   v6 = orderTable.get_next (it);
+
+   p2 = orderTable.get_last (it);
+   p5 = orderTable.get_prev (it);
+   p3 = orderTable.get_prev (it);
+   p1 = orderTable.get_prev (it);
+   p4 = orderTable.get_prev (it);
+   p0 = orderTable.get_prev (it);
+
+   test.validate (
+      "Element 2 was moved to the end",
+      v1 && v2 && v3 && v4 && v5 && !v6 &&
+      p1 && p2 && p3 && p4 && p5 && !p0 &&
+      (E1 == *v1) && (E1 == *p1) &&
+      (E2 == *v2) && (E2 == *p2) &&
+      (E3 == *v3) && (E3 == *p3) &&
+      (E4 == *v4) && (E4 == *p4) &&
+      (E5 == *v5) && (E5 == *p5));
+
+   test.validate (
+      "move_last (E4) returns True",
+      orderTable.move_last (E4));
+
+   // NOTE: 4 is moved to the end.
+   v1 = orderTable.get_first (it);
+   v3 = orderTable.get_next (it);
+   v5 = orderTable.get_next (it);
+   v2 = orderTable.get_next (it);
+   v4 = orderTable.get_next (it);
+   v6 = orderTable.get_next (it);
+
+   p4 = orderTable.get_last (it);
+   p2 = orderTable.get_prev (it);
+   p5 = orderTable.get_prev (it);
+   p3 = orderTable.get_prev (it);
+   p1 = orderTable.get_prev (it);
+   p0 = orderTable.get_prev (it);
+
+   test.validate (
+      "Element 4 was moved from first to last",
+      v1 && v2 && v3 && v4 && v5 && !v6 &&
+      p1 && p2 && p3 && p4 && p5 && !p0 &&
+      (E1 == *v1) && (E1 == *p1) &&
+      (E2 == *v2) && (E2 == *p2) &&
+      (E3 == *v3) && (E3 == *p3) &&
+      (E4 == *v4) && (E4 == *p4) &&
+      (E5 == *v5) && (E5 == *p5));
+
+   test.validate (
+      "move_first (E4) returns True",
+      orderTable.move_first (E4));
+
+   // NOTE: 4 is moved to the front.
+   v4 = orderTable.get_first (it);
+   v1 = orderTable.get_next (it);
+   v3 = orderTable.get_next (it);
+   v5 = orderTable.get_next (it);
+   v2 = orderTable.get_next (it);
+   v6 = orderTable.get_next (it);
+
+   p2 = orderTable.get_last (it);
+   p5 = orderTable.get_prev (it);
+   p3 = orderTable.get_prev (it);
+   p1 = orderTable.get_prev (it);
+   p4 = orderTable.get_prev (it);
+   p0 = orderTable.get_prev (it);
+
+   test.validate (
+      "Element 4 was moved from last to first",
+      v1 && v2 && v3 && v4 && v5 && !v6 &&
+      p1 && p2 && p3 && p4 && p5 && !p0 &&
+      (E1 == *v1) && (E1 == *p1) &&
+      (E2 == *v2) && (E2 == *p2) &&
+      (E3 == *v3) && (E3 == *p3) &&
+      (E4 == *v4) && (E4 == *p4) &&
+      (E5 == *v5) && (E5 == *p5));
+
+   test.validate (
+      "move_first (E4) returns False",
+      !orderTable.move_first (E4));
+
+   // NOTE: 4 is moved to the front.
+   v4 = orderTable.get_first (it);
+   v1 = orderTable.get_next (it);
+   v3 = orderTable.get_next (it);
+   v5 = orderTable.get_next (it);
+   v2 = orderTable.get_next (it);
+   v6 = orderTable.get_next (it);
+
+   p2 = orderTable.get_last (it);
+   p5 = orderTable.get_prev (it);
+   p3 = orderTable.get_prev (it);
+   p1 = orderTable.get_prev (it);
+   p4 = orderTable.get_prev (it);
+   p0 = orderTable.get_prev (it);
+
+   test.validate (
+      "Element are in same order",
+      v1 && v2 && v3 && v4 && v5 && !v6 &&
+      p1 && p2 && p3 && p4 && p5 && !p0 &&
+      (E1 == *v1) && (E1 == *p1) &&
+      (E2 == *v2) && (E2 == *p2) &&
+      (E3 == *v3) && (E3 == *p3) &&
+      (E4 == *v4) && (E4 == *p4) &&
+      (E5 == *v5) && (E5 == *p5));
+
+   test.validate (
+      "move_after (E1, E5) returns True",
+      orderTable.move_after (E1, E5));
+
+   // NOTE: 1 is moved after 5.
+   v4 = orderTable.get_first (it);
+   v3 = orderTable.get_next (it);
+   v5 = orderTable.get_next (it);
+   v1 = orderTable.get_next (it);
+   v2 = orderTable.get_next (it);
+   v6 = orderTable.get_next (it);
+
+   p2 = orderTable.get_last (it);
+   p1 = orderTable.get_prev (it);
+   p5 = orderTable.get_prev (it);
+   p3 = orderTable.get_prev (it);
+   p4 = orderTable.get_prev (it);
+   p0 = orderTable.get_prev (it);
+
+   test.validate (
+      "Element 1 was after Element 5",
+      v1 && v2 && v3 && v4 && v5 && !v6 &&
+      p1 && p2 && p3 && p4 && p5 && !p0 &&
+      (E1 == *v1) && (E1 == *p1) &&
+      (E2 == *v2) && (E2 == *p2) &&
+      (E3 == *v3) && (E3 == *p3) &&
+      (E4 == *v4) && (E4 == *p4) &&
+      (E5 == *v5) && (E5 == *p5));
+
+   test.validate (
+      "move_before (E5, E3) returns True",
+      orderTable.move_before (E5, E3));
+
+   // NOTE: 1 is moved after 5.
+   v4 = orderTable.get_first (it);
+   v5 = orderTable.get_next (it);
+   v3 = orderTable.get_next (it);
+   v1 = orderTable.get_next (it);
+   v2 = orderTable.get_next (it);
+   v6 = orderTable.get_next (it);
+
+   p2 = orderTable.get_last (it);
+   p1 = orderTable.get_prev (it);
+   p3 = orderTable.get_prev (it);
+   p5 = orderTable.get_prev (it);
+   p4 = orderTable.get_prev (it);
+   p0 = orderTable.get_prev (it);
+
+   test.validate (
+      "Element 5 is before Element 3",
+      v1 && v2 && v3 && v4 && v5 && !v6 &&
+      p1 && p2 && p3 && p4 && p5 && !p0 &&
+      (E1 == *v1) && (E1 == *p1) &&
+      (E2 == *v2) && (E2 == *p2) &&
+      (E3 == *v3) && (E3 == *p3) &&
+      (E4 == *v4) && (E4 == *p4) &&
+      (E5 == *v5) && (E5 == *p5));
+
+   test.validate (
+      "move_before (E4, E2) returns True",
+      orderTable.move_before (E4, E2));
+
+   // NOTE: 1 is moved after 5.
+   v5 = orderTable.get_first (it);
+   v3 = orderTable.get_next (it);
+   v1 = orderTable.get_next (it);
+   v4 = orderTable.get_next (it);
+   v2 = orderTable.get_next (it);
+   v6 = orderTable.get_next (it);
+
+   p2 = orderTable.get_last (it);
+   p4 = orderTable.get_prev (it);
+   p1 = orderTable.get_prev (it);
+   p3 = orderTable.get_prev (it);
+   p5 = orderTable.get_prev (it);
+   p0 = orderTable.get_prev (it);
+
+   test.validate (
+      "Element 4 is before Element 2",
+      v1 && v2 && v3 && v4 && v5 && !v6 &&
+      p1 && p2 && p3 && p4 && p5 && !p0 &&
+      (E1 == *v1) && (E1 == *p1) &&
+      (E2 == *v2) && (E2 == *p2) &&
+      (E3 == *v3) && (E3 == *p3) &&
+      (E4 == *v4) && (E4 == *p4) &&
+      (E5 == *v5) && (E5 == *p5));
+
+#if 0
+test.log.error
+<< *v4 << " "
+<< *v5 << " "
+<< *v3 << " "
+<< *v1 << " "
+<< *v2 << " "
+<< (v6 ? "Extra Data!" : "No Extra Data")
+<< endl;
+#endif
+
    return test.result ();
 }

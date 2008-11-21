@@ -11,6 +11,8 @@ dmz::QtPluginHistogram::QtPluginHistogram (const PluginInfo &Info, Config &local
       _log (Info),
       _scene (0),
       _view (0),
+      _xAxis (0),
+      _yAxis (0),
       _maxCount (0),
       _ascendingOrder (True),
       _barWidth (20.0f),
@@ -36,13 +38,11 @@ dmz::QtPluginHistogram::update_plugin_state (
 
    if (State == PluginStateInit) {
 
-      QGraphicsRectItem *bar = new QGraphicsRectItem;
-      bar->setRect (0.0f, 0.0f, 0.0, -100.0);
-      _scene->addItem (bar);
+      _xAxis = new QGraphicsLineItem (0.0f, 0.0f, 200.0f, 0.0);
+      _scene->addItem (_xAxis);
 
-      bar = new QGraphicsRectItem;
-      bar->setRect (0.0f, 0.0f, 200.0, 0.0);
-      _scene->addItem (bar);
+      _yAxis = new QGraphicsLineItem (0.0f, 0.0f, 0.0f, -100.0);
+      _scene->addItem (_yAxis);
    }
    else if (State == PluginStateStart) {
 
@@ -89,7 +89,7 @@ dmz::QtPluginHistogram::create_object (
          if (os->bar) {
 
             os->bar->count++;
-            _update_bar (*(os->bar));
+            _update_graph ();
          }
       }
       else { delete os; os = 0; }
@@ -109,7 +109,7 @@ dmz::QtPluginHistogram::destroy_object (
       if (os->bar) {
 
          os->bar->count--;
-         _update_bar (*(os->bar));
+         _update_graph ();
       }
 
       delete os; os = 0;
@@ -131,6 +131,8 @@ dmz::QtPluginHistogram::link_objects (
 
    if (super) { _update_object_count (1, *super); }
    if (sub) { _update_object_count (1, *sub); }
+
+   _update_graph ();
 }
 
 
@@ -148,6 +150,8 @@ dmz::QtPluginHistogram::unlink_objects (
 
    if (super) { _update_object_count (-1, *super); }
    if (sub) { _update_object_count (-1, *sub); }
+
+   _update_graph ();
 }
 
 
@@ -159,6 +163,7 @@ dmz::QtPluginHistogram::update_object_counter (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
+   _update_graph ();
 }
 
 
@@ -167,19 +172,11 @@ dmz::QtPluginHistogram::_update_object_count (const Int32 Value, ObjectStruct &o
 
    obj.count += Value;
 
-   if (obj.bar) {
-
-      obj.bar->count--;
-      _update_bar (*(obj.bar));
-   }
+   if (obj.bar) { obj.bar->count--; }
 
    obj.bar = _lookup_bar (obj.count);
 
-   if (obj.bar) {
-
-      obj.bar->count++;
-      _update_bar (*(obj.bar));
-   }
+   if (obj.bar) { obj.bar->count++; }
 }
 
 
@@ -193,8 +190,6 @@ dmz::QtPluginHistogram::_lookup_bar (const Int32 Count) {
       BarStruct *bar = new BarStruct (_maxCount);
 
       if (!_barTable.store ((UInt32)_maxCount, bar)) { delete bar; bar = 0; }
-
-      _update_graph ();
 
       _maxCount++;
    }
@@ -254,6 +249,8 @@ dmz::QtPluginHistogram::_update_graph () {
 
       bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
    }
+
+   if (_xAxis) { _xAxis->setLine (0.0f, 0.0f, offset, 0.0f); }
 }
 
 

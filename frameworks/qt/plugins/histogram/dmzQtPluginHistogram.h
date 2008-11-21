@@ -8,6 +8,7 @@
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableUInt32Template.h>
 
+#include <QtGui/QGraphicsLineItem>
 #include <QtGui/QGraphicsRectItem>
 #include <QtGui/QGraphicsScene>
 #include <QtGui/QGraphicsTextItem>
@@ -98,6 +99,8 @@ namespace dmz {
          Log _log;
          QGraphicsScene *_scene;
          QGraphicsView *_view;
+         QGraphicsLineItem *_xAxis;
+         QGraphicsLineItem *_yAxis;
 
          Int32 _maxCount;
 

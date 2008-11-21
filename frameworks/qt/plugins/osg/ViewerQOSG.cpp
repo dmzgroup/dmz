@@ -20,13 +20,13 @@
 ViewerQOSG::ViewerQOSG(QWidget *parent, const char *name, WindowFlags f):
       QOSGWidget (parent, name, f) {
 
-#if 0
    getCamera()->setViewport(new osg::Viewport(0,0,width(),height()));
    getCamera()->setProjectionMatrixAsPerspective(
       30.0f,
       static_cast<double>(width())/static_cast<double>(height()),
       1.0f,
       10000.0f);
+#if 0
 #endif
 
    getCamera()->setGraphicsContext(getGraphicsWindow());

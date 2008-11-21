@@ -4,7 +4,6 @@
 #include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
-#include <dmzTypesHandleContainer.h>
 #include <dmzTypesVolume.h>
 
 dmz::ObjectModuleGridBasic::ObjectModuleGridBasic (
@@ -32,6 +31,7 @@ dmz::ObjectModuleGridBasic::~ObjectModuleGridBasic () {
    if (_grid) { delete []_grid; _grid = 0; }
 
    _objTable.empty ();
+   _obsTable.empty ();
 }
 
 
@@ -75,6 +75,16 @@ dmz::ObjectModuleGridBasic::register_object_observer_grid (ObjectObserverGrid &o
 
    Boolean result (False);
 
+   ObserverStruct *os (_obsTable.lookup (observer.get_object_observer_grid_handle ()));
+
+   if (!os) {
+
+      os = new ObserverStruct (observer);
+
+      if (!_obsTable.store (os->ObsHandle, os)) { delete os; os = 0; }
+      result = update_object_observer_grid (observer);
+   }
+
    return result;
 }
 
@@ -83,6 +93,88 @@ dmz::Boolean
 dmz::ObjectModuleGridBasic::update_object_observer_grid (ObjectObserverGrid &observer) {
 
    Boolean result (False);
+
+   ObserverStruct *os (_obsTable.lookup (observer.get_object_observer_grid_handle ()));
+
+   if (os) {
+
+      const Volume &SearchSpace = os->obs.get_observer_volume ();
+
+      Vector origin, min, max;
+      SearchSpace.get_extents (origin, min, max);
+      Int32 minX = 0, minY = 0, maxX = 0, maxY = 0;
+      _map_point_to_coord (min, minX, minY);
+      _map_point_to_coord (max, maxX, maxY);
+
+      Boolean updateExtents = False;
+
+      if (
+            (minX != os->minX) ||
+            (maxX != os->maxX) ||
+            (minY != os->minY) ||
+            (maxY != os->maxY)) { updateExtents = True; }
+
+      if (updateExtents && (os->minX >= 0)) {
+
+         for (Int32 ix = os->minX; ix <= os->maxX; ix++) {
+
+            for (Int32 jy = os->minY; jy <= os->maxY; jy++) {
+
+               const Int32 Place = _map_coord (ix, jy);
+
+               _grid[Place].obsTable.remove (os->ObsHandle);
+
+               HashTableHandleIterator it;
+               GridStruct *cell = &(_grid[Place]);
+               ObjectStruct *current = cell->objTable.get_first (it);
+
+               while (current) {
+
+                  if (!SearchSpace.contains_point (current->pos) &&
+                        os->objects.remove_handle (current->Object)) {
+
+                     observer.update_object_grid_state (
+                        current->Object,
+                        current->Type,
+                        current->pos,
+                        ObjectGridStateExit);
+                  }
+
+                  current = cell->objTable.get_next (it);
+               }
+            }
+         }
+      }
+
+      os->minX = minX;
+      os->maxX = maxX;
+      os->minY = minY;
+      os->maxY = maxX;
+
+      for (Int32 ix = os->minX; ix <= os->maxX; ix++) {
+
+         for (Int32 jy = os->minY; jy <= os->maxY; jy++) {
+
+            const Int32 Place = _map_coord (ix, jy);
+
+            GridStruct *cell = &(_grid[Place]);
+
+            if (updateExtents) { cell->obsTable.store (os->ObsHandle, os); }
+
+            HashTableHandleIterator it;
+            ObjectStruct *current = cell->objTable.get_first (it);
+
+            while (current) {
+
+               _update_observer (SearchSpace, *current, *os);
+
+               current = cell->objTable.get_next (it);
+            }
+         }
+      }
+
+      result = True;
+   }
 
    return result;
 }
@@ -93,6 +185,24 @@ dmz::ObjectModuleGridBasic::release_object_observer_grid (ObjectObserverGrid &ob
 
    Boolean result (False);
 
+   ObserverStruct *os (_obsTable.remove (observer.get_object_observer_grid_handle ()));
+
+   if (os) {
+
+      for (Int32 ix = os->minX; ix <= os->maxX; ix++) {
+
+         for (Int32 jy = os->minY; jy <= os->maxY; jy++) {
+
+            const Int32 Place = _map_coord (ix, jy);
+
+            _grid[Place].obsTable.remove (os->ObsHandle);
+         }
+      }
+
+      delete os; os = 0;
+      result = True;
+   }
+ 
    return result;
 }
 
@@ -118,7 +228,9 @@ dmz::ObjectModuleGridBasic::find_objects (
 
       for (Int32 jy = minY; jy <= maxY; jy++) {
 
-         ObjectStruct *current (_grid[_map_coord (ix, jy)].objList);
+         HashTableHandleIterator it;
+         GridStruct *cell = &(_grid[_map_coord (ix, jy)]);
+         ObjectStruct *current = cell->objTable.get_first (it);
 
          while (current) {
 
@@ -158,7 +270,7 @@ _log.error << (s ? "" : "##### NOT UNIQUE ") << xx << " " << yy << " = " << _map
 
                current->distanceSquared = (origin - current->pos).magnitude_squared ();
 
-               current->node = 0;
+               current->next = 0;
 
                if (!list) { list = current; }
                else {
@@ -171,27 +283,27 @@ _log.error << (s ? "" : "##### NOT UNIQUE ") << xx << " " << yy << " = " << _map
 
                      if (c->distanceSquared > current->distanceSquared) {
 
-                        if (!c->node) { c->node = current; done = True; }
+                        if (!c->next) { c->next = current; done = True; }
                         else {
 
-                           p = c; c = c->node;
+                           p = c; c = c->next;
 
-                           if (!c) { p->node = current; done = True; }
+                           if (!c) { p->next = current; done = True; }
                         }
                      }
                      else {
 
-                        if (p) { p->node = current; }
+                        if (p) { p->next = current; }
                         else { list = current; }
 
-                        current->node = c;
+                        current->next = c;
                         done = True;
                      }
                   }
                }
             }
 
-            current = current->next;
+            current = cell->objTable.get_next (it);
          }
       }
    }
@@ -204,7 +316,7 @@ _log.error << (s ? "" : "##### NOT UNIQUE ") << xx << " " << yy << " = " << _map
             << endl;
          list = 0;
       }
-      else { list = list->node; }
+      else { list = list->next; }
    }
 }
 
@@ -234,6 +346,19 @@ dmz::ObjectModuleGridBasic::destroy_object (
 
       _remove_object_from_grid (*os);
 
+      if (os->place >= 0) {
+
+         HashTableHandleIterator it;
+
+         ObserverStruct *obs = _grid[os->place].obsTable.get_first (it);
+
+         while (obs) {
+
+            obs->objects.remove_handle (ObjectHandle);
+            obs = _grid[os->place].obsTable.get_next (it);
+         }
+      }
+
       delete os; os = 0;
    }
 }
@@ -247,21 +372,71 @@ dmz::ObjectModuleGridBasic::update_object_position (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   ObjectStruct *os (_objTable.lookup (ObjectHandle));
+   ObjectStruct *current (_objTable.lookup (ObjectHandle));
 
-   if (os && _grid) {
+   if (current && _grid) {
 
-      os->pos = Value;
+      current->pos = Value;
 
+      const Int32 OldPlace = current->place;
       const Int32 Place = _map_point (Value);
 
-      if (Place != os->place) {
+      if (Place != current->place) {
 
-         _remove_object_from_grid (*os);
-         os->place = Place;
-         os->next = _grid[Place].objList;
-         if (_grid[Place].objList) { _grid[Place].objList->prev = os; }
-         _grid[Place].objList = os;
+         _remove_object_from_grid (*current);
+         current->place = Place;
+         _grid[Place].objTable.store (current->Object, current);
+      }
+
+      if ((Place != OldPlace) && (OldPlace >= 0)) {
+
+         HashTableHandleIterator it;
+         GridStruct *cell = &(_grid[OldPlace]);
+         ObserverStruct *os = cell->obsTable.get_first (it);
+         HandleContainer tested;
+
+         while (os) {
+
+            tested.add_handle (os->ObsHandle);
+            _update_observer (
+               os->obs.get_observer_volume (),
+               *current,
+               *os);
+
+            os = cell->obsTable.get_next (it);
+         }
+
+         cell = &(_grid[Place]);
+         os = cell->obsTable.get_first (it);
+
+         while (os) {
+
+            if (!tested.contains (os->ObsHandle)) {
+
+               _update_observer (
+                  os->obs.get_observer_volume (),
+                  *current,
+                  *os);
+            }
+
+            os = cell->obsTable.get_next (it);
+         }
+      }
+      else {
+
+         HashTableHandleIterator it;
+         GridStruct *cell = &(_grid[Place]);
+         ObserverStruct *os = cell->obsTable.get_first (it);
+
+         while (os) {
+
+            _update_observer (
+               os->obs.get_observer_volume (),
+               *current,
+               *os);
+
+            os = cell->obsTable.get_next (it);
+         }
       }
    }
 }
@@ -272,15 +447,34 @@ dmz::ObjectModuleGridBasic::_remove_object_from_grid (ObjectStruct &obj) {
 
    if (_grid && obj.place >= 0) {
 
-      if (obj.prev) {
+      _grid[obj.place].objTable.remove (obj.Object);
+   }
+}
 
-         obj.prev->next = obj.next;
-      }
-      else { _grid[obj.place].objList = obj.next; }
 
-      if (obj.next) { obj.next->prev = obj.prev; }
+void
+dmz::ObjectModuleGridBasic::_update_observer (
+      const Volume &SearchSpace,
+      const ObjectStruct &Obj,
+      ObserverStruct &os) {
 
-      obj.next = obj.prev = 0;
+   const Boolean Contains = SearchSpace.contains_point (Obj.pos);
+
+   if (Contains && os.objects.add_handle (Obj.Object)) {
+
+      os.obs.update_object_grid_state (
+         Obj.Object,
+         Obj.Type,
+         Obj.pos,
+         ObjectGridStateEnter);
+   }
+   else if (!Contains && os.objects.remove_handle (Obj.Object)) {
+
+      os.obs.update_object_grid_state (
+         Obj.Object,
+         Obj.Type,
+         Obj.pos,
+         ObjectGridStateExit);
    }
 }
 

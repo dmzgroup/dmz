@@ -31,6 +31,9 @@ namespace dmz {
             const Plugin *PluginPtr,
             const String &PluginName ="");
 
+         String get_object_module_name () const;
+         Handle get_object_module_handle () const;
+
          virtual Boolean register_global_object_observer (ObjectObserver &observer) = 0;
          virtual Boolean release_global_object_observer (ObjectObserver &observer) = 0;
 
@@ -341,6 +344,17 @@ inline
 dmz::ObjectModule::~ObjectModule () {
 
    remove_rtti_interface (ObjectModuleInterfaceName, __Info);
+}
+
+
+inline dmz::String
+dmz::ObjectModule::get_object_module_name () const { return __Info.get_name (); }
+
+
+inline dmz::Handle
+dmz::ObjectModule::get_object_module_handle () const {
+
+   return __Info.get_handle ();
 }
 
 #endif // DMZ_OBJECT_MODULE_DOT_H

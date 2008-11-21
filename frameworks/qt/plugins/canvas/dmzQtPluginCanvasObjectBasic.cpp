@@ -283,6 +283,7 @@ dmz::QtPluginCanvasObjectBasic::create_object (
 
    if (ms) {
 
+
       if (_create_object (ObjectHandle, Type, *ms)) {
 
          Mask objState;

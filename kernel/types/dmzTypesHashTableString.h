@@ -33,6 +33,12 @@ namespace dmz {
          Int32 get_size () const;
          Int32 get_count () const;
 
+         Boolean move (
+            const String &Key,
+            const String *TargetKey,
+            const Boolean SignleStep,
+            const Boolean Before);
+
          void *get_next (HashTableStringIterator &it, const Boolean Prev = False) const;
 
          void *lookup (const String &Key) const;

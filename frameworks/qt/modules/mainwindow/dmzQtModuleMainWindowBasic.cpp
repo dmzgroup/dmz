@@ -559,6 +559,8 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
       local, _showUnifiedTitleAndToolBar);
 
    set_qwidget_stylesheet ("stylesheet", local, this);
+
+   if (config_to_boolean ("hide.value", local, False)) { hide (); }
 }
 
 

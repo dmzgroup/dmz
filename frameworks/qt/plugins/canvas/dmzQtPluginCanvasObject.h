@@ -114,6 +114,9 @@ namespace dmz {
             void update ();
          };
 
+         virtual void _store_object_module (ObjectModule &module);
+         virtual void _remove_object_module (ObjectModule &module);
+
          Boolean _find_config_from_type (Config &local, ObjectType &objType);
 
          void _init (Config &local, Config &global);

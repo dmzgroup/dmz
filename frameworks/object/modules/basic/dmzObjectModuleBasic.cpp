@@ -407,19 +407,23 @@ dmz::ObjectModuleBasic::dump_object_attributes (
 
    if (sub && obj) {
 
+      Mask *mask (sub->table.lookup (_defaultHandle));
+
+      if (mask) { _dump_object_create (*obj, *mask, sub->obs); }
+
       HashTableHandleIterator it;
 
-      Mask *ptr (sub->table.get_first (it));
+      mask = sub->table.get_first (it);
 
-      while (ptr) {
+      while (mask) {
 
          _dump_object_attributes_to_observer (
             *obj,
             it.get_hash_key (),
-            *ptr,
+            *mask,
             sub->obs);
 
-         ptr = sub->table.get_next (it);
+         mask = sub->table.get_next (it);
       }
 
       result = True;
@@ -440,11 +444,13 @@ dmz::ObjectModuleBasic::dump_all_object_attributes (
 
    if (obj) {
 
+      _dump_object_create (*obj, AllMask, observer);
+
       HashTableHandleIterator it;
 
-      void *ptr (obj->attrTable.get_next (it));
+      void *mask (obj->attrTable.get_next (it));
 
-      while (ptr) {
+      while (mask) {
 
          const Handle AttributeHandle (it.get_hash_key ());
 
@@ -454,7 +460,7 @@ dmz::ObjectModuleBasic::dump_all_object_attributes (
             AllMask,
             observer);
 
-         ptr = obj->attrTable.get_next (it);
+         mask = obj->attrTable.get_next (it);
       }
 
       result = True;
@@ -1326,8 +1332,6 @@ dmz::ObjectModuleBasic::store_counter (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       Int64 prevValue (0);
       Boolean prevValueExists (True);
       Boolean updateObservers (True);
@@ -1351,6 +1355,8 @@ dmz::ObjectModuleBasic::store_counter (
          else { updateObservers = False; }
       }
       else {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -1486,8 +1492,6 @@ dmz::ObjectModuleBasic::store_counter_minimum (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Int64 prevValue;
@@ -1503,6 +1507,8 @@ dmz::ObjectModuleBasic::store_counter_minimum (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -1582,8 +1588,6 @@ dmz::ObjectModuleBasic::store_counter_maximum (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Int64 prevValue;
@@ -1599,6 +1603,8 @@ dmz::ObjectModuleBasic::store_counter_maximum (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -1719,8 +1725,6 @@ dmz::ObjectModuleBasic::store_alternate_object_type (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       ObjectType prevValue;
@@ -1735,6 +1739,8 @@ dmz::ObjectModuleBasic::store_alternate_object_type (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -1807,8 +1813,6 @@ dmz::ObjectModuleBasic::store_state (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Mask prevValue;
@@ -1823,6 +1827,8 @@ dmz::ObjectModuleBasic::store_state (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -1895,8 +1901,6 @@ dmz::ObjectModuleBasic::store_flag (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Boolean prevValue;
@@ -1911,6 +1915,8 @@ dmz::ObjectModuleBasic::store_flag (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -1982,8 +1988,6 @@ dmz::ObjectModuleBasic::store_time_stamp (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Float64 prevValue;
@@ -1998,6 +2002,8 @@ dmz::ObjectModuleBasic::store_time_stamp (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -2070,8 +2076,6 @@ dmz::ObjectModuleBasic::store_position (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Vector prevValue;
@@ -2086,6 +2090,8 @@ dmz::ObjectModuleBasic::store_position (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -2158,8 +2164,6 @@ dmz::ObjectModuleBasic::store_orientation (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Matrix prevValue;
@@ -2174,6 +2178,8 @@ dmz::ObjectModuleBasic::store_orientation (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -2246,8 +2252,6 @@ dmz::ObjectModuleBasic::store_velocity (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Vector prevValue;
@@ -2262,6 +2266,8 @@ dmz::ObjectModuleBasic::store_velocity (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -2334,8 +2340,6 @@ dmz::ObjectModuleBasic::store_acceleration (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Vector prevValue;
@@ -2350,6 +2354,8 @@ dmz::ObjectModuleBasic::store_acceleration (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -2422,8 +2428,6 @@ dmz::ObjectModuleBasic::store_scale (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Vector prevValue;
@@ -2438,6 +2442,8 @@ dmz::ObjectModuleBasic::store_scale (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -2510,8 +2516,6 @@ dmz::ObjectModuleBasic::store_vector (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Vector prevValue;
@@ -2526,6 +2530,8 @@ dmz::ObjectModuleBasic::store_vector (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -2598,8 +2604,6 @@ dmz::ObjectModuleBasic::store_scalar (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Float64 prevValue (0.0);
@@ -2614,6 +2618,8 @@ dmz::ObjectModuleBasic::store_scalar (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -2686,8 +2692,6 @@ dmz::ObjectModuleBasic::store_text (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       String prevValue;
@@ -2702,6 +2706,8 @@ dmz::ObjectModuleBasic::store_text (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -2774,8 +2780,6 @@ dmz::ObjectModuleBasic::store_data (
 
    if (obj && AttributeHandle) {
 
-      obj->attrTable.store (AttributeHandle, (void *)this);
-
       result = True;
 
       Data prevValue;
@@ -2790,6 +2794,8 @@ dmz::ObjectModuleBasic::store_data (
          else { updateObservers = False; }
       }
       else if (!ptr) {
+
+         obj->attrTable.store (AttributeHandle, (void *)this);
 
          prevValueExists = False;
 
@@ -4458,6 +4464,11 @@ dmz::ObjectModuleBasic::_dump_all_objects (
 
    while (obj) {
 
+      if (AttributeHandle == _defaultHandle) {
+
+         _dump_object_create (*obj, AttributeMask, Observer);
+      }
+
       _dump_object_attributes_to_observer (
          *obj,
          AttributeHandle,
@@ -4476,6 +4487,40 @@ dmz::ObjectModuleBasic::_dump_object (const Handle ObjectHandle) {
 
    if (obj && obj->active) {
 
+      HashTableHandleIterator it;
+
+      SubscriptionStruct *sub (_subscriptionTable.get_first (it));
+
+      while (sub) {
+
+         Mask *mask (sub->table.lookup (_defaultHandle));
+
+         if (mask) {
+
+            _dump_object_create (
+               *obj,
+               *mask,
+               sub->obs);
+         }
+
+         sub = _subscriptionTable.get_next (it);
+      }
+
+      if (_globalCount > 0) {
+
+         ObjectObserver *obs (_globalTable.get_first (it));
+
+         while (obs) {
+
+            _dump_object_create (
+               *obj,
+               AllMask,
+               *obs);
+
+            obs = _globalTable.get_next (it);
+         }
+      }
+
       HashTableHandleIterator handleIt;
 
       void *ptr (obj->attrTable.get_next (handleIt));
@@ -4484,13 +4529,12 @@ dmz::ObjectModuleBasic::_dump_object (const Handle ObjectHandle) {
 
          const Handle AttributeHandle (handleIt.get_hash_key ());
 
-         HashTableHandleIterator it;
-
-         SubscriptionStruct *sub (_subscriptionTable.get_first (it));
+         sub = _subscriptionTable.get_first (it);
 
          while (sub) {
 
             Mask *mask (sub->table.lookup (AttributeHandle));
+
             if (mask) {
 
                _dump_object_attributes_to_observer (
@@ -4526,18 +4570,17 @@ dmz::ObjectModuleBasic::_dump_object (const Handle ObjectHandle) {
 
 
 void
-dmz::ObjectModuleBasic::_dump_object_attributes_to_observer (
+dmz::ObjectModuleBasic::_dump_object_create (
       const ObjectStruct &Obj,
-      const Handle AttributeHandle,
       const Mask &AttributeMask,
       ObjectObserver &obs) {
 
-   if ((CreateMask & AttributeMask) && (AttributeHandle == _defaultHandle)) {
+   if (CreateMask & AttributeMask) {
 
       obs.create_object (Obj.uuid, Obj.handle, Obj.type, Obj.locality);
    }
 
-   if ((UUIDMask & AttributeMask) && (AttributeHandle == _defaultHandle)) {
+   if (UUIDMask & AttributeMask) {
 
       if (Obj.uuid) {
 
@@ -4546,7 +4589,15 @@ dmz::ObjectModuleBasic::_dump_object_attributes_to_observer (
          obs.update_object_uuid (Obj.handle, Obj.uuid, EmptyUUID);
       }
    }
+}
 
+
+void
+dmz::ObjectModuleBasic::_dump_object_attributes_to_observer (
+      const ObjectStruct &Obj,
+      const Handle AttributeHandle,
+      const Mask &AttributeMask,
+      ObjectObserver &obs) {
    if (AltObjectTypeMask & AttributeMask) {
 
       ObjectType *ptr (Obj.altTypeTable.lookup (AttributeHandle));

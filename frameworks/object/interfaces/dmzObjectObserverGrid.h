@@ -8,6 +8,14 @@
 
 namespace dmz {
 
+   class ObjectType;
+   class Volume;
+
+   enum ObjectGridStateEnum {
+      ObjectGridStateEnter,
+      ObjectGridStateExit,
+   };
+
    class ObjectObserverGrid {
 
       public:
@@ -19,6 +27,13 @@ namespace dmz {
          Handle get_object_observer_grid_handle () const;
 
          // ObjectObserverGrid Interface
+         virtual const Volume &get_observer_volume () = 0;
+
+         virtual void update_object_grid_state (
+            const Handle ObjectHandle,
+            const ObjectType &Type,
+            const Vector &Position,
+            const ObjectGridStateEnum State) = 0;
 
       protected:
          ObjectObserverGrid (const PluginInfo &Info);
@@ -64,10 +79,16 @@ dmz::ObjectObserverGrid::~ObjectObserverGrid () {
 
 
 inline dmz::String
-dmz::ObjectObserverGrid::get_object_observer_grid_name () const { return __Info.get_name (); }
+dmz::ObjectObserverGrid::get_object_observer_grid_name () const {
+
+   return __Info.get_name ();
+}
 
 
 inline dmz::Handle
-dmz::ObjectObserverGrid::get_object_observer_grid_handle () const { return __Info.get_handle (); }
+dmz::ObjectObserverGrid::get_object_observer_grid_handle () const {
+
+   return __Info.get_handle ();
+}
 
 #endif // DMZ_OBJECT_OBSERVER_GRID_DOT_H

@@ -44,6 +44,13 @@ functions thread safe.
          Int32 get_size () const;
          Int32 get_count () const;
 
+         Boolean move_first (const String &Key);
+         Boolean move_up (const String &Key);
+         Boolean move_before (const String &Key, const String &TargetKey);
+         Boolean move_after (const String &Key, const String &TargetKey);
+         Boolean move_down (const String &Key);
+         Boolean move_last (const String &Key);
+
          T *get_first (HashTableStringIterator &it) const;
          T *get_last (HashTableStringIterator &it) const;
          T *get_next (HashTableStringIterator &it) const;
@@ -263,6 +270,80 @@ dmz::HashTableStringTemplate<T>::get_size () const { return __table.get_size ();
 //! Gets number of elements stored in the table.
 template <class T> inline dmz::Int32
 dmz::HashTableStringTemplate<T>::get_count () const { return __table.get_count (); }
+
+
+//! Moves element to the beginning of the list.
+template <class T> inline dmz::Boolean
+dmz::HashTableStringTemplate<T>::move_first (const String &Key) {
+
+   __lock ();
+   Boolean result = __table.move (Key, 0, False, True);
+   __unlock ();
+
+   return result;
+}
+
+
+//! Moves element to the beginning of the list.
+template <class T> inline dmz::Boolean
+dmz::HashTableStringTemplate<T>::move_up (const String &Key) {
+
+   __lock ();
+   Boolean result = __table.move (Key, 0, True, True);
+   __unlock ();
+
+   return result;
+}
+
+//! Moves element before the element specified by TargetKey.
+template <class T> inline dmz::Boolean
+dmz::HashTableStringTemplate<T>::move_before (
+      const String &Key,
+      const String &TargetKey) {
+
+   __lock ();
+   Boolean result = __table.move (Key, &TargetKey, False, True);
+   __unlock ();
+
+   return result;
+}
+
+
+//! Moves element after the element specified by TargetKey.
+template <class T> inline dmz::Boolean
+dmz::HashTableStringTemplate<T>::move_after (
+      const String &Key,
+      const String &TargetKey) {
+
+   __lock ();
+   Boolean result = __table.move (Key, &TargetKey, False, False);
+   __unlock ();
+
+   return result;
+}
+
+
+//! Moves element to the end of the list.
+template <class T> inline dmz::Boolean
+dmz::HashTableStringTemplate<T>::move_down (const String &Key) {
+
+   __lock ();
+   Boolean result = __table.move (Key, 0, True, False);
+   __unlock ();
+
+   return result;
+}
+
+//! Moves element to the end of the list.
+template <class T> inline dmz::Boolean
+dmz::HashTableStringTemplate<T>::move_last (const String &Key) {
+
+   __lock ();
+   Boolean result = __table.move (Key, 0, False, False);
+   __unlock ();
+
+   return result;
+}
 
 
 /*!

@@ -67,15 +67,15 @@ local_hash (const dmz::UUID &Value) {
 
 namespace {
 
-   struct dataStruct {
+   struct DataStruct {
 
-      dataStruct *prev;
-      dataStruct *next;
+      DataStruct *prev;
+      DataStruct *next;
       dmz::$(type) key;
       void *data;
       dmz::Boolean dirty;
 
-      dataStruct () :
+      DataStruct () :
          prev (0),
          next (0),
          key (0),
@@ -161,9 +161,9 @@ struct dmz::HashTable$(type)::State {
    Int32 size;
    Int32 count;
    Boolean autoGrow;
-   dataStruct *table;
-   dataStruct *head;
-   dataStruct *tail;
+   DataStruct *table;
+   DataStruct *head;
+   DataStruct *tail;
 
    State () :
       growCount (0),
@@ -215,7 +215,7 @@ struct dmz::HashTable$(type)::State {
       head = tail = 0;
    }
 
-   Int32 find_ptr_index (dataStruct *data) const {
+   Int32 find_ptr_index (DataStruct *data) const {
 
       return Int32 (data - table);
    }
@@ -267,6 +267,77 @@ dmz::Int32
 dmz::HashTable$(type)::get_count () const { return _state.count; }
 
 
+//! Moves an element in the list.
+dmz::Boolean
+dmz::HashTable$(type)::move (
+      const $(type) &Key,
+      const $(type) *TargetKey,
+      const Boolean SingleStep,
+      const Boolean Before) {
+
+   Boolean result (False);
+
+   Int32 index (-1);
+
+   if (_state.find_index (Key, index)) {
+
+      DataStruct &current = _state.table[index];
+      DataStruct *target (0);
+
+      if (TargetKey) {
+
+         Int32 targetIndex (-1);
+
+         if (_state.find_index (*TargetKey, targetIndex)) {
+
+            target = &(_state.table[targetIndex]);
+         }
+      }
+      else if (Before) { target = SingleStep ? current.prev : _state.head; }
+      else { target = SingleStep ? current.next : _state.tail; }
+
+      if (target && (target != &current)) {
+
+         if (current.next) { current.next->prev = current.prev; }
+         else { _state.tail = current.prev; }
+
+         if (current.prev) { current.prev->next = current.next; }
+         else { _state.head = current.next; }
+ 
+         if (Before) {
+
+            current.next = target;
+
+            if (target->prev) {
+
+               target->prev->next = &current;
+               current.prev = target->prev;
+            }
+            else { _state.head = &current; current.prev = 0; }
+
+            target->prev = &current;
+         }
+         else {
+
+            current.prev = target;
+
+            if (target->next) {
+
+               target->next->prev = &current;
+               current.next = target->next;
+            }
+            else { _state.tail = &current; current.next = 0; }
+
+            target->next = &current;
+         }
+
+         result = True;
+      }
+   }
+
+   return result;
+}
+
 
 //! Gets first/next/previous/last element in hash table.
 void *
@@ -293,7 +364,7 @@ dmz::HashTable$(type)::get_next (HashTable$(type)Iterator &it, const Boolean Pre
       // different table, just reset to prevent from going out of bounds.
       if (it.data.index >= _state.size) { it.data.index = -1; }
 
-      dataStruct *cur = (it.data.index >= 0) ?
+      DataStruct *cur = (it.data.index >= 0) ?
          &(_state.table[it.data.index]) :
          (Prev ? _state.tail : _state.head);
 
@@ -409,7 +480,7 @@ dmz::HashTable$(type)::remove (const $(type) &Key) {
 
    if (_state.table && _state.find_index (Key, index)) {
 
-      dataStruct &el = _state.table[index];
+      DataStruct &el = _state.table[index];
       data = el.data;
       el.data = 0;
 
@@ -458,17 +529,17 @@ dmz::HashTable$(type)::grow (const Int32 Size) {
 
       const Int32 OldSize (_state.size);
       const Int32 OldCount (_state.count);
-      dataStruct *table (_state.table);
+      DataStruct *table (_state.table);
 
       _state.size = 0;
       _state.count = 0;
-      _state.table = new dataStruct[newSize];
+      _state.table = new DataStruct[newSize];
 
       if (table && _state.table) {
 
          _state.size = newSize;
 
-         dataStruct *cur (_state.head);
+         DataStruct *cur (_state.head);
          _state.tail = _state.head = 0;
 
          while (cur) {
@@ -501,7 +572,7 @@ dmz::HashTable$(type)::set_table_size (const Int32 Size) {
 
    if (Size) {
 
-      _state.table = new dataStruct[Size];
+      _state.table = new DataStruct[Size];
 
       if (_state.table) { _state.size = Size; }
    }

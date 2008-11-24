@@ -46,6 +46,7 @@ dmz::string_to_log_level (const String &Level) {
    else if (LowerLevel == "warn") { result = LogLevelWarn; }
    else if (LowerLevel == "error") { result = LogLevelError; }
    else if (LowerLevel == "out") { result = LogLevelOut; }
+   else if (LowerLevel == "never") { result = LogLevelNever; }
 
    return result;
 }

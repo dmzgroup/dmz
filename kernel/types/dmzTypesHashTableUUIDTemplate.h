@@ -44,6 +44,13 @@ functions thread safe.
          Int32 get_size () const;
          Int32 get_count () const;
 
+         Boolean move_first (const UUID &Key);
+         Boolean move_up (const UUID &Key);
+         Boolean move_before (const UUID &Key, const UUID &TargetKey);
+         Boolean move_after (const UUID &Key, const UUID &TargetKey);
+         Boolean move_down (const UUID &Key);
+         Boolean move_last (const UUID &Key);
+
          T *get_first (HashTableUUIDIterator &it) const;
          T *get_last (HashTableUUIDIterator &it) const;
          T *get_next (HashTableUUIDIterator &it) const;
@@ -263,6 +270,80 @@ dmz::HashTableUUIDTemplate<T>::get_size () const { return __table.get_size (); }
 //! Gets number of elements stored in the table.
 template <class T> inline dmz::Int32
 dmz::HashTableUUIDTemplate<T>::get_count () const { return __table.get_count (); }
+
+
+//! Moves element to the beginning of the list.
+template <class T> inline dmz::Boolean
+dmz::HashTableUUIDTemplate<T>::move_first (const UUID &Key) {
+
+   __lock ();
+   Boolean result = __table.move (Key, 0, False, True);
+   __unlock ();
+
+   return result;
+}
+
+
+//! Moves element to the beginning of the list.
+template <class T> inline dmz::Boolean
+dmz::HashTableUUIDTemplate<T>::move_up (const UUID &Key) {
+
+   __lock ();
+   Boolean result = __table.move (Key, 0, True, True);
+   __unlock ();
+
+   return result;
+}
+
+//! Moves element before the element specified by TargetKey.
+template <class T> inline dmz::Boolean
+dmz::HashTableUUIDTemplate<T>::move_before (
+      const UUID &Key,
+      const UUID &TargetKey) {
+
+   __lock ();
+   Boolean result = __table.move (Key, &TargetKey, False, True);
+   __unlock ();
+
+   return result;
+}
+
+
+//! Moves element after the element specified by TargetKey.
+template <class T> inline dmz::Boolean
+dmz::HashTableUUIDTemplate<T>::move_after (
+      const UUID &Key,
+      const UUID &TargetKey) {
+
+   __lock ();
+   Boolean result = __table.move (Key, &TargetKey, False, False);
+   __unlock ();
+
+   return result;
+}
+
+
+//! Moves element to the end of the list.
+template <class T> inline dmz::Boolean
+dmz::HashTableUUIDTemplate<T>::move_down (const UUID &Key) {
+
+   __lock ();
+   Boolean result = __table.move (Key, 0, True, False);
+   __unlock ();
+
+   return result;
+}
+
+//! Moves element to the end of the list.
+template <class T> inline dmz::Boolean
+dmz::HashTableUUIDTemplate<T>::move_last (const UUID &Key) {
+
+   __lock ();
+   Boolean result = __table.move (Key, 0, False, False);
+   __unlock ();
+
+   return result;
+}
 
 
 /*!

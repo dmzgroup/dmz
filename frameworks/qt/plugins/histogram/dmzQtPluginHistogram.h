@@ -8,11 +8,13 @@
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableUInt32Template.h>
 
+#include <QtGui/QBrush>
 #include <QtGui/QGraphicsLineItem>
 #include <QtGui/QGraphicsRectItem>
 #include <QtGui/QGraphicsScene>
 #include <QtGui/QGraphicsTextItem>
 #include <QtGui/QGraphicsView>
+#include <QtGui/QPen>
 
 namespace dmz {
 
@@ -92,6 +94,7 @@ namespace dmz {
 
          void _update_object_count (const Int32 Value, ObjectStruct &obj);
          BarStruct *_lookup_bar (const Int32 Count);
+         void _remove_bar (BarStruct &bar);
          void _update_bar (BarStruct &bar);
          void _update_graph ();
          void _init (Config &local);
@@ -101,13 +104,20 @@ namespace dmz {
          QGraphicsView *_view;
          QGraphicsLineItem *_xAxis;
          QGraphicsLineItem *_yAxis;
+         QGraphicsTextItem **_yLabels;
+
+         QBrush _barFill;
+         QPen _barStroke;
 
          Int32 _maxCount;
+         Int32 _totalCount;
+         Int32 _maxBarCount;
 
          Boolean _ascendingOrder;
          Float32 _barWidth;
-         Float32 _barHeightScale;
+         Float32 _barHeight;
          Float32 _spaceWidth;
+         Int32 _yDivisions;
 
          HashTableUInt32Template<BarStruct> _barTable;
          HashTableUInt32Template<ObjectStruct> _objTable;

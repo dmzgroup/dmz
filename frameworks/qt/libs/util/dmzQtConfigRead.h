@@ -11,9 +11,11 @@
 #include <QtCore/QPointF>
 #include <QtCore/QRectF>
 #include <QtCore/QSizeF>
+#include <QtGui/QBrush>
 #include <QtGui/QColor>
 #include <QtGui/QIcon>
 #include <QtGui/QMatrix>
+#include <QtGui/QPen>
 
 class QAbstractButton;
 class QAction;
@@ -78,6 +80,16 @@ namespace dmz {
       const String &Name,
       const Config &Source,
       const QColor &DefaultValue);
+
+   DMZ_QT_UTIL_LINK_SYMBOL QPen config_to_qpen (
+      const String &Name,
+      const Config &Source,
+      const QPen &DefaultValue);
+
+   DMZ_QT_UTIL_LINK_SYMBOL QBrush config_to_qbrush (
+      const String &Name,
+      const Config &Source,
+      const QBrush &DefaultValue);
 
    DMZ_QT_UTIL_LINK_SYMBOL void qicon_config_read (
       const String &Name,

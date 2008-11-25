@@ -1,4 +1,5 @@
 #include <dmzObjectAttributeMasks.h>
+#include <dmzQtConfigRead.h>
 #include "dmzQtPluginHistogram.h"
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
@@ -11,11 +12,17 @@ dmz::QtPluginHistogram::QtPluginHistogram (const PluginInfo &Info, Config &local
       _log (Info),
       _scene (0),
       _view (0),
+      _xAxis (0),
+      _yAxis (0),
+      _yLabels (0),
       _maxCount (0),
+      _totalCount (0),
+      _maxBarCount (0),
       _ascendingOrder (True),
       _barWidth (20.0f),
-      _barHeightScale (-10.0),
-      _spaceWidth (5.0f) {
+      _barHeight (130.0f),
+      _spaceWidth (5.0f),
+      _yDivisions (4) {
 
    _init (local);
 }
@@ -23,6 +30,7 @@ dmz::QtPluginHistogram::QtPluginHistogram (const PluginInfo &Info, Config &local
 
 dmz::QtPluginHistogram::~QtPluginHistogram () {
 
+   delete []_yLabels; _yLabels = 0;
    _objTable.empty ();
    _barTable.empty ();
 }
@@ -36,13 +44,11 @@ dmz::QtPluginHistogram::update_plugin_state (
 
    if (State == PluginStateInit) {
 
-      QGraphicsRectItem *bar = new QGraphicsRectItem;
-      bar->setRect (0.0f, 0.0f, 0.0, -100.0);
-      _scene->addItem (bar);
+      _xAxis = new QGraphicsLineItem (0.0f, 0.0f, _barWidth + _spaceWidth, 0.0);
+      _scene->addItem (_xAxis);
 
-      bar = new QGraphicsRectItem;
-      bar->setRect (0.0f, 0.0f, 200.0, 0.0);
-      _scene->addItem (bar);
+      _yAxis = new QGraphicsLineItem (0.0f, 0.0f, 0.0f, -_barHeight);
+      _scene->addItem (_yAxis);
    }
    else if (State == PluginStateStart) {
 
@@ -84,12 +90,14 @@ dmz::QtPluginHistogram::create_object (
 
       if (_objTable.store (ObjectHandle, os)) {
 
+         _totalCount++;
+
          os->bar = _lookup_bar (os->count);
 
          if (os->bar) {
 
             os->bar->count++;
-            _update_bar (*(os->bar));
+            _update_graph ();
          }
       }
       else { delete os; os = 0; }
@@ -106,10 +114,12 @@ dmz::QtPluginHistogram::destroy_object (
 
    if (os) {
 
+      _totalCount--;
+
       if (os->bar) {
 
          os->bar->count--;
-         _update_bar (*(os->bar));
+         _update_graph ();
       }
 
       delete os; os = 0;
@@ -131,6 +141,8 @@ dmz::QtPluginHistogram::link_objects (
 
    if (super) { _update_object_count (1, *super); }
    if (sub) { _update_object_count (1, *sub); }
+
+   _update_graph ();
 }
 
 
@@ -148,6 +160,8 @@ dmz::QtPluginHistogram::unlink_objects (
 
    if (super) { _update_object_count (-1, *super); }
    if (sub) { _update_object_count (-1, *sub); }
+
+   _update_graph ();
 }
 
 
@@ -159,6 +173,7 @@ dmz::QtPluginHistogram::update_object_counter (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
+   _update_graph ();
 }
 
 
@@ -167,19 +182,11 @@ dmz::QtPluginHistogram::_update_object_count (const Int32 Value, ObjectStruct &o
 
    obj.count += Value;
 
-   if (obj.bar) {
-
-      obj.bar->count--;
-      _update_bar (*(obj.bar));
-   }
+   if (obj.bar) { obj.bar->count--; }
 
    obj.bar = _lookup_bar (obj.count);
 
-   if (obj.bar) {
-
-      obj.bar->count++;
-      _update_bar (*(obj.bar));
-   }
+   if (obj.bar) { obj.bar->count++; }
 }
 
 
@@ -194,8 +201,6 @@ dmz::QtPluginHistogram::_lookup_bar (const Int32 Count) {
 
       if (!_barTable.store ((UInt32)_maxCount, bar)) { delete bar; bar = 0; }
 
-      _update_graph ();
-
       _maxCount++;
    }
 
@@ -206,11 +211,32 @@ dmz::QtPluginHistogram::_lookup_bar (const Int32 Count) {
 
 
 void
+dmz::QtPluginHistogram::_remove_bar (BarStruct &bar) {
+
+   if (bar.bar) {
+
+      if (_scene) { _scene->removeItem (bar.bar); }
+      delete (bar.bar); bar.bar = 0;
+   }
+
+   if (bar.text) {
+
+      if (_scene) { _scene->removeItem (bar.text); }
+      delete (bar.text); bar.text = 0;
+   }
+}
+
+
+void
 dmz::QtPluginHistogram::_update_bar (BarStruct &bar) {
 
    if (bar.bar) {
 
-      bar.bar->setRect (bar.offset, 0.0, _barWidth, _barHeightScale * (Float32)bar.count);
+      const Float32 Height = ((_maxBarCount > 0) ?
+         -(_barHeight * ((Float32)bar.count / (Float32)_maxBarCount)) :
+         0.0);
+
+      bar.bar->setRect (bar.offset, 0.0, _barWidth, Height);
    }
 
    if (bar.text) {
@@ -228,31 +254,85 @@ dmz::QtPluginHistogram::_update_graph () {
 
    HashTableUInt32Iterator it;
 
-   BarStruct *bar (_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
+   BarStruct *lastBar (0);
+   BarStruct *bar (!_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
 
+   _maxBarCount = 0;
+
+   while (bar) {
+
+      if (bar->count > _maxBarCount) { _maxBarCount = bar->count; }
+      if (!lastBar) {
+
+         if (bar->count) { lastBar = bar; bar = 0; }
+         else { _remove_bar (*bar); }
+      }
+
+      bar = (!_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
+   }
+
+   bar = (_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
+
+   Boolean foundFirstBar (False);
    Float32 offset = _spaceWidth;
 
    while (bar) {
 
-      if (!bar->bar) {
+      if (!foundFirstBar && bar->count) { foundFirstBar = True; }
 
-         bar->bar = new QGraphicsRectItem;
-         if (_scene) { _scene->addItem (bar->bar); }
+      if (foundFirstBar) {
+
+         if (!bar->bar) {
+
+            bar->bar = new QGraphicsRectItem;
+            bar->bar->setPen (_barStroke);
+            bar->bar->setBrush (_barFill);
+            if (_scene) { _scene->addItem (bar->bar); }
+         }
+
+         if (!bar->text) {
+
+            bar->text = new QGraphicsTextItem (QString::number (bar->Id));
+            if (_scene) { _scene->addItem (bar->text); }
+         }
+
+         bar->offset = offset;
+
+         _update_bar (*bar);
+
+         offset += (_barWidth + _spaceWidth);
       }
+      else { _remove_bar (*bar); }
 
-      if (!bar->text) {
+      if (bar == lastBar) { bar = 0; }
+      else {
 
-         bar->text = new QGraphicsTextItem (QString::number (bar->Id));
-         if (_scene) { _scene->addItem (bar->text); }
+         bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
       }
+   }
 
-      bar->offset = offset;
+   if (_xAxis) { _xAxis->setLine (0.0f, 0.0f, offset, 0.0f); }
 
-      _update_bar (*bar);
 
-      offset += (_barWidth + _spaceWidth);
+   for (Int32 ix = 0; ix < _yDivisions; ix++) {
 
-      bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
+      const QString Value (
+         // QString::number ((_maxBarCount * (ix + 1)) / _yDivisions) +
+         // QString (" " ) +
+         ((_totalCount > 0) ?
+            QString::number (
+               Int32 ((Float32)(_maxBarCount * (ix + 1)) * 100.0f /
+               (Float32)(_yDivisions * _totalCount))) : QString ("0")) +
+         QString ("%"));
+
+      _yLabels[ix]->setPlainText (Value);
+
+      QRectF rect = _yLabels[ix]->boundingRect ();
+
+      _yLabels[ix]->setPos (
+         -5.0  - rect.width (),
+         (-_barHeight * ((Float32)(ix + 1)) / (Float32)_yDivisions) -
+            (rect.height () * 0.5f));
    }
 }
 
@@ -317,6 +397,33 @@ dmz::QtPluginHistogram::_init (Config &local) {
    _ascendingOrder = config_to_boolean ("ascending.value", local, _ascendingOrder);
 
    _maxCount = config_to_int32 ("start.value", local, _maxCount);
+
+   _barStroke = config_to_qpen ("bar.stroke", local, _barStroke);
+   _barFill = config_to_qbrush ("bar.fill", local, _barFill);
+
+   _yDivisions = config_to_int32 ("divisions.value", local, _yDivisions);
+
+   _yLabels = new QGraphicsTextItem*[_yDivisions];
+
+   for (Int32 ix = 0; ix < _yDivisions; ix++) {
+
+      const Float32 Offset (-_barHeight * ((Float32)(ix + 1)) / (Float32)_yDivisions);
+
+      _yLabels[ix] = new QGraphicsTextItem;
+
+      _yLabels[ix]->setPlainText (
+         QString::number (100 * (ix +1) / _yDivisions) + QString ("%"));
+
+      QRectF rect = _yLabels[ix]->boundingRect ();
+
+      _yLabels[ix]->setPos (-5.0 - rect.width (), Offset - (rect.height () * 0.5f));
+
+      _scene->addItem (_yLabels[ix]);
+
+      QGraphicsLineItem *line = new QGraphicsLineItem (-4.0, Offset, 0.0f, Offset);
+
+      _scene->addItem (line);
+   }
 }
 
 

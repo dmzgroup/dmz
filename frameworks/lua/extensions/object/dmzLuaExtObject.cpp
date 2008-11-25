@@ -207,11 +207,16 @@ object_is_object (lua_State *L) {
    int result (0);
 
    ObjectModule *objMod (get_object_module (L));
-   Handle *ptr (lua_check_handle (L, 1));
+   Handle *ptr (lua_to_handle (L, 1));
 
    if (objMod && ptr) {
 
       lua_pushboolean (L, objMod->is_object (*ptr) ? 1 : 0);
+      result = 1;
+   }
+   else {
+
+      lua_pushboolean (L, 0);
       result = 1;
    }
 
@@ -225,11 +230,16 @@ object_is_link (lua_State *L) {
    int result (0);
 
    ObjectModule *objMod (get_object_module (L));
-   Handle *ptr (lua_check_handle (L, 1));
+   Handle *ptr (lua_to_handle (L, 1));
 
    if (objMod && ptr) {
 
       lua_pushboolean (L, objMod->is_link (*ptr) ? 1 : 0);
+      result = 1;
+   }
+   else {
+
+      lua_pushboolean (L, 0);
       result = 1;
    }
 

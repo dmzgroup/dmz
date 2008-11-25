@@ -110,6 +110,7 @@ dmz::QtPluginViewerOSG::discover_plugin (
 
          if (_window) {
 
+            _viewer->show ();
             _window->add_central_widget (_defaultChannel, _viewer.get ());
          }
       }
@@ -161,6 +162,7 @@ dmz::QtPluginViewerOSG::_init (const Config &Local) {
 
    _portalName = config_to_string ("portal.name", Local, DefaultPortalNameOSG);
 
+#if 0
    Config windowData;
 
    if (Local.lookup_all_config ("window", windowData)) {
@@ -201,6 +203,7 @@ dmz::QtPluginViewerOSG::_init (const Config &Local) {
       __init_viewer_window (100, 100, 800, 600, 0);
       _log.info << "Loading viewer windowed with defaults" << endl;
    }
+#endif
 
    _defaultChannel = Definitions (get_plugin_runtime_context ()).create_named_handle (
       InputChannelDefaultName);

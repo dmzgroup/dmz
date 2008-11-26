@@ -21,7 +21,7 @@ namespace dmz {
          Handle get_qt_widget_handle () const;
 
          // QtWidget Interface
-         QWidget *get_qt_widget () = 0;
+         virtual QWidget *get_qt_widget () = 0;
 
       protected:
          QtWidget (const PluginInfo &Info);

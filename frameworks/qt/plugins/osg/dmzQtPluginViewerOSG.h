@@ -1,6 +1,7 @@
 #ifndef DMZ_QT_PLUGIN_VIEWER_OSG_DOT_H
 #define DMZ_QT_PLUGIN_VIEWER_OSG_DOT_H
 
+#include <dmzQtWidget.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
@@ -12,12 +13,11 @@
 namespace dmz {
 
    class InputModule;
-   class QtModuleMainWindow;
    class RenderModuleCoreOSG;
    class RenderCameraManipulatorOSG;
    class RenderEventHandlerOSG;
 
-   class QtPluginViewerOSG : public Plugin, public TimeSlice {
+   class QtPluginViewerOSG : public Plugin, public TimeSlice, public QtWidget {
 
       public:
          QtPluginViewerOSG (const PluginInfo &Info, Config &local);
@@ -35,14 +35,15 @@ namespace dmz {
          // TimeSlice Interface
          virtual void update_time_slice (const Float64 TimeDelta);
 
+         // QtPlugin Interface
+         virtual QWidget *get_qt_widget ();
+
       protected:
          void _init (const Config &Local);
 
          Log _log;
-         QtModuleMainWindow *_window;
          RenderModuleCoreOSG *_core;
          InputModule *_channels;
-         Handle _defaultChannel;
          String _portalName;
          osg::ref_ptr<osg::Camera> _camera;
          osg::ref_ptr<RenderCameraManipulatorOSG> _cameraManipulator;

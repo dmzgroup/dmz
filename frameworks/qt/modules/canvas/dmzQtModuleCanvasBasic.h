@@ -5,6 +5,7 @@
 #include <dmzInputEventMouse.h>
 #include "dmzQtCanvasScene.h"
 #include <dmzQtModuleCanvas.h>
+#include <dmzQtWidget.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
@@ -15,12 +16,12 @@ namespace dmz {
 
    class InputModule;
    class QtCanvasView;
-   class QtModuleMainWindow;
 
    class QtModuleCanvasBasic :
          public QWidget,
          public Plugin,
-         public QtModuleCanvas {
+         public QtModuleCanvas,
+         public QtWidget {
 
       Q_OBJECT
 
@@ -65,6 +66,9 @@ namespace dmz {
 
          virtual void center_on (const Handle ObjectHandle);
 
+         // QtWidget Interface
+         virtual QWidget *get_qt_widget ();
+
       protected:
          virtual void resizeEvent (QResizeEvent* event);
          virtual void keyPressEvent (QKeyEvent *event);
@@ -88,9 +92,6 @@ namespace dmz {
          String _canvasName;
          InputModule *_inputModule;
          String _inputModuleName;
-         QtModuleMainWindow *_mainWindowModule;
-         String _mainWindowModuleName;
-         Handle _channel;
          QtCanvasScene _scene;
          QtCanvasView *_canvas;
          InputEventKey _keyEvent;

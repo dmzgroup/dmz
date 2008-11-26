@@ -1,6 +1,7 @@
 #ifndef DMZ_QT_PLUGIN_BUTTON_TO_CHANNEL_DOT_H
 #define DMZ_QT_PLUGIN_BUTTON_TO_CHANNEL_DOT_H
 
+#include <dmzQtWidget.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
@@ -14,10 +15,8 @@ class QDockWidget;
 namespace dmz {
 
    class InputModule;
-   class QtModuleMainWindow;
 
-
-   class QtPluginButtonToChannel : public QWidget, public Plugin {
+   class QtPluginButtonToChannel : public QWidget, public Plugin, public QtWidget {
 
       Q_OBJECT
 
@@ -33,6 +32,9 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
+
+         // QtWidget Interface
+         virtual QWidget *get_qt_widget ();
 
       protected slots:
          void _slot_change_channel (QAction *action);
@@ -58,9 +60,6 @@ namespace dmz {
          Definitions _defs;
          InputModule *_inputModule;
          String _inputModuleName;
-         QtModuleMainWindow *_mainWindowModule;
-         String _mainWindowModuleName;
-         Handle _channel;
          QString _dockWidgetTitle;
          QDockWidget *_dock;
          QActionGroup *_actionGroup;

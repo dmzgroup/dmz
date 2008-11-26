@@ -60,8 +60,6 @@ namespace dmz {
          Definitions _defs;
          InputModule *_inputModule;
          String _inputModuleName;
-         QString _dockWidgetTitle;
-         QDockWidget *_dock;
          QActionGroup *_actionGroup;
          ChannelStruct *_channelList;
          Handle _defaultChannel;

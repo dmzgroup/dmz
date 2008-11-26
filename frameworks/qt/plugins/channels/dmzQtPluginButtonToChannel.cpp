@@ -18,8 +18,6 @@ dmz::QtPluginButtonToChannel::QtPluginButtonToChannel (
       _defs (Info, &_log),
       _inputModule (0),
       _inputModuleName (),
-      _dockWidgetTitle (tr ("Channels")),
-      _dock (0),
       _actionGroup (0),
       _channelList (0),
       _defaultChannel (0) {
@@ -120,11 +118,6 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
    Definitions defs (get_plugin_runtime_context (), &_log);
 
    _inputModuleName = config_to_string ("module.input.name", local);
-
-   _dockWidgetTitle = config_to_string (
-      "dockWidget.title",
-      local,
-      qPrintable (_dockWidgetTitle)).get_buffer ();
 
    const String DefaultName = config_to_string ("defaultChannel.name", local);
 

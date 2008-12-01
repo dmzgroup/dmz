@@ -7,6 +7,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesHashTableStringTemplate.h>
 #include <QtGui/QMainWindow>
 #include "ui_dmzQtMainWindow.h"
 
@@ -32,7 +33,7 @@ namespace dmz {
 
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
-            const Plugin *PluginPtr) {;}
+            const Plugin *PluginPtr);
 
          // Input Observer Interface
          virtual void update_channel_state (const UInt32 Channel, const Boolean State);
@@ -92,6 +93,11 @@ namespace dmz {
             QToolBar *toolBar;
             Qt::ToolBarArea area;
             Boolean visible;
+
+            ToolBarStruct () :
+                  toolBar (0),
+                  area (Qt::NoToolBarArea),
+                  visible (False) {;}
          };
 
          struct DockWidgetStruct {
@@ -99,6 +105,11 @@ namespace dmz {
             QDockWidget *dockWidget;
             Qt::DockWidgetArea area;
             Boolean visible;
+
+            DockWidgetStruct () :
+                  dockWidget (0),
+                  area (Qt::NoDockWidgetArea),
+                  visible (False) {;}
          };
 
          typedef QList<ToolBarStruct *> ToolBarList;
@@ -124,6 +135,7 @@ namespace dmz {
          QAction *_fileExitAction;
          QMenu *_fileMenu;
          Boolean _showUnifiedTitleAndToolBar;
+         HashTableStringTemplate<QWidget> _widgetTable;
          HashTableHandleTemplate<QWidget> _centralWidgetTable;
          HashTableHandleTemplate<DockWidgetList> _dockWidgetTable;
          HashTableHandleTemplate<ToolBarList> _toolBarTable;

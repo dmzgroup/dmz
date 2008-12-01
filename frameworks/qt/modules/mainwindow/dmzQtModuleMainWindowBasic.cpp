@@ -2,6 +2,7 @@
 #include <dmzInputModule.h>
 #include "dmzQtModuleMainWindowBasic.h"
 #include <dmzQtUtil.h>
+#include <dmzQtWidget.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -49,6 +50,7 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
 
 dmz::QtModuleMainWindowBasic::~QtModuleMainWindowBasic () {
 
+   _widgetTable.clear ();
    _centralWidgetTable.clear ();
    _dockWidgetTable.empty ();
    _toolBarTable.empty ();
@@ -79,6 +81,40 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
 
 
 void
+dmz::QtModuleMainWindowBasic::discover_plugin (
+      const PluginDiscoverEnum Mode,
+      const Plugin *PluginPtr) {
+
+   if (Mode == PluginDiscoverAdd) {
+
+      QtWidget *w = QtWidget::cast (PluginPtr);
+
+      if (w) {
+
+         const String Name = w->get_qt_widget_name ();
+         QWidget *widget = w->get_qt_widget ();
+
+         if (widget) {
+
+            widget->show ();
+            _widgetTable.store (Name, widget);
+         }
+      }
+   }
+   else if (Mode == PluginDiscoverRemove) {
+
+      QtWidget *w = QtWidget::cast (PluginPtr);
+
+      if (w) {
+
+         const String Name = w->get_qt_widget_name ();
+         _widgetTable.remove (Name);
+      }
+   }
+}
+
+
+void
 dmz::QtModuleMainWindowBasic::update_channel_state (
       const UInt32 Channel,
       const Boolean State) {
@@ -93,10 +129,10 @@ dmz::QtModuleMainWindowBasic::update_channel_state (
 
    if (count) {
 
-      if (State) { (*count)++; }
+      if (State) { (*count)++; _channel = Channel; }
       else if (*count) { (*count)--; }
 
-      _channel = Channel;
+      // _channel = Channel;
       _update ();
    }
 }
@@ -435,7 +471,6 @@ dmz::QtModuleMainWindowBasic::_create_tool_bars () {
 
 void
 dmz::QtModuleMainWindowBasic::_create_status_bar () {
-
 
    statusBar()->showMessage (tr ("Ready"), 2000);
 }

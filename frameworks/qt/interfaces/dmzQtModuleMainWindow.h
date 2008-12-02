@@ -15,10 +15,6 @@ class QWidget;
 
 namespace dmz {
 
-   //! \cond
-   const char QtModuleMainWindowInterfaceName[] = "QtModuleMainWindowInterface";
-   //! \endcond
-
    class QtModuleMainWindow {
 
       public:
@@ -68,6 +64,10 @@ namespace dmz {
 
          const PluginInfo &__Info;
    };
+
+   //! \cond
+   const char QtModuleMainWindowInterfaceName[] = "QtModuleMainWindowInterface";
+   //! \endcond
 }
 
 

@@ -9,6 +9,7 @@
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <QtGui/QMainWindow>
+#include <QtGui/QDockWidget>
 #include "ui_dmzQtMainWindow.h"
 
 
@@ -88,6 +89,53 @@ namespace dmz {
          virtual Boolean remove_central_widget (const Handle Channel);
 
       protected:
+         struct ChannelStruct;
+         struct ToolBarStruct;
+         typedef QList<ToolBarStruct *> ToolBarList;
+
+         struct MainWindowStruct {
+
+            QMainWindow *main;
+            QStackedWidget *stack;
+
+            MainWindowStruct () : main (0), stack (0) {;}
+         };
+
+         struct WidgetStruct {
+
+            QWidget *widget;
+
+            virtual void show (MainWindowStruct &window) = 0;
+            virtual void hide (MainWindowStruct &window) = 0;
+ 
+            WidgetStruct () : widget (0) {;}
+
+            virtual ~WidgetStruct () {;}
+         };
+
+         struct DockWidgetStruct : public WidgetStruct {
+
+            QDockWidget *dock;
+            QDockWidget::DockWidgetFeatures features;
+            Qt::DockWidgetAreas areas;
+
+            virtual void show (MainWindowStruct &window);
+            virtual void hide (MainWindowStruct &window);
+
+            DockWidgetStruct () :
+                  dock (0),
+                  features (QDockWidget::NoDockWidgetFeatures),
+                  areas (Qt::NoDockWidgetArea) {;}
+         };
+
+         struct CentralWidgetStruct : public WidgetStruct {
+
+            virtual void show (MainWindowStruct &window);
+            virtual void hide (MainWindowStruct &window);
+
+            CentralWidgetStruct () {;}
+         };
+
          struct ToolBarStruct {
 
             QToolBar *toolBar;
@@ -100,20 +148,15 @@ namespace dmz {
                   visible (False) {;}
          };
 
-         struct DockWidgetStruct {
+         struct ChannelStruct {
 
-            QDockWidget *dockWidget;
-            Qt::DockWidgetArea area;
-            Boolean visible;
+            const Handle Channel;
+            Int32 count;
+            ToolBarList toolbar;
+            HashTableStringTemplate<WidgetStruct> widgetTable;
 
-            DockWidgetStruct () :
-                  dockWidget (0),
-                  area (Qt::NoDockWidgetArea),
-                  visible (False) {;}
+            ChannelStruct (const Handle TheChannel) : Channel (TheChannel), count (0) {;}
          };
-
-         typedef QList<ToolBarStruct *> ToolBarList;
-         typedef QList<DockWidgetStruct *> DockWidgetList;
 
          virtual void closeEvent (QCloseEvent *event);
 
@@ -131,16 +174,13 @@ namespace dmz {
          Exit _exit;
          Log _log;
          Ui::MainWindow _ui;
+         MainWindowStruct _windowInfo;
          QString _windowName;
          QAction *_fileExitAction;
          QMenu *_fileMenu;
          Boolean _showUnifiedTitleAndToolBar;
-         HashTableStringTemplate<QWidget> _widgetTable;
-         HashTableHandleTemplate<QWidget> _centralWidgetTable;
-         HashTableHandleTemplate<DockWidgetList> _dockWidgetTable;
-         HashTableHandleTemplate<ToolBarList> _toolBarTable;
-         HashTableHandleTemplate<Int32> _channelTable;
-         Handle _channel;
+         HashTableStringTemplate<WidgetStruct> _widgetTable;
+         HashTableHandleTemplate<ChannelStruct> _channelTable;
 
       private:
          QtModuleMainWindowBasic ();

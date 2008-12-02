@@ -22,17 +22,15 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
       _log (Info),
       _fileExitAction (0),
       _fileMenu (0),
-      _showUnifiedTitleAndToolBar (False),
-      _centralWidgetTable (),
-      _dockWidgetTable (),
-      _toolBarTable (),
-      _channelTable (),
-      _channel (0) {
+      _showUnifiedTitleAndToolBar (False) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 //   setAttribute (Qt::WA_AlwaysShowToolTips);
 
    _ui.setupUi (this);
+
+   _windowInfo.main = this;
+   _windowInfo.stack = _ui.stackedWidget;
 
    _create_actions ();
    _create_menus ();
@@ -50,10 +48,7 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
 
 dmz::QtModuleMainWindowBasic::~QtModuleMainWindowBasic () {
 
-   _widgetTable.clear ();
-   _centralWidgetTable.clear ();
-   _dockWidgetTable.empty ();
-   _toolBarTable.empty ();
+   _widgetTable.empty ();
    _channelTable.empty ();
 }
 
@@ -93,11 +88,11 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
 
          const String Name = w->get_qt_widget_name ();
          QWidget *widget = w->get_qt_widget ();
+         WidgetStruct *ws = _widgetTable.lookup (Name);
 
-         if (widget) {
+         if (ws) {
 
-            widget->show ();
-            _widgetTable.store (Name, widget);
+            ws->widget = widget;
          }
       }
    }
@@ -108,7 +103,8 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
       if (w) {
 
          const String Name = w->get_qt_widget_name ();
-         _widgetTable.remove (Name);
+         WidgetStruct *ws = _widgetTable.lookup (Name);
+         if (ws->widget == w->get_qt_widget ()) { ws->widget = 0; }
       }
    }
 }
@@ -119,20 +115,13 @@ dmz::QtModuleMainWindowBasic::update_channel_state (
       const UInt32 Channel,
       const Boolean State) {
 
-   Int32 *count (_channelTable.lookup (Channel));
+   ChannelStruct *cs (_channelTable.lookup (Channel));
 
-   if (!count) {
+   if (cs) {
 
-      count = new Int32 (0);
-      if (!_channelTable.store (Channel, count)) { delete count; count = 0; }
-   }
+      if (State) { cs->count++; }
+      else { cs->count--; }
 
-   if (count) {
-
-      if (State) { (*count)++; _channel = Channel; }
-      else if (*count) { (*count)--; }
-
-      // _channel = Channel;
       _update ();
    }
 }
@@ -175,34 +164,23 @@ dmz::QtModuleMainWindowBasic::add_tool_bar (const Handle Channel, QToolBar *tool
 
    Boolean retVal (False);
 
-   if (toolBar) {
+   ChannelStruct *cs (_channelTable.lookup (Channel));
 
-      ToolBarList *list (_toolBarTable.lookup (Channel));
+   if (cs && toolBar) {
 
-      if (!list) {
+      ToolBarStruct *tbs (new ToolBarStruct ());
+      tbs->visible = True;
+      tbs->toolBar = toolBar;
+      tbs->area = Qt::TopToolBarArea;
 
-         list = new ToolBarList ();
-         _toolBarTable.store (Channel, list);
+      cs->toolbar.append (tbs);
+
+      if (cs->count) {
+
+         addToolBar (toolBar);
       }
 
-      if (list) {
-
-         ToolBarStruct *tbs (new ToolBarStruct ());
-         tbs->visible = True;
-         tbs->toolBar = toolBar;
-         tbs->area = Qt::TopToolBarArea;
-
-         list->append (tbs);
-
-         Int32 *channel (_channelTable.lookup (Channel));
-
-         if (channel && *channel) {
-
-            addToolBar (toolBar);
-         }
-
-         retVal = True;
-      }
+      retVal = True;
    }
 
    return retVal;
@@ -228,40 +206,29 @@ dmz::Boolean
 dmz::QtModuleMainWindowBasic::remove_tool_bar (const Handle Channel, QToolBar *toolBar) {
 
    Boolean retVal (False);
+   ChannelStruct *cs (_channelTable.lookup (Channel));
 
-   if (toolBar) {
+   if (cs && toolBar) {
 
-      ToolBarList *list (_toolBarTable.lookup (Channel));
+      ToolBarStruct *tbs (0);
 
-      if (list) {
+      foreach (ToolBarStruct *ctbs, cs->toolbar) {
 
-         ToolBarStruct *tbs (0);
+         if (ctbs->toolBar == toolBar) {
 
-         foreach (ToolBarStruct *ctbs, *list) {
-
-            if (ctbs->toolBar == toolBar) {
-
-               tbs = ctbs;
-               break;
-            }
+            tbs = ctbs;
+            break;
          }
+      }
 
-         Int32 index (list->indexOf (tbs));
+      Int32 index (cs->toolbar.indexOf (tbs));
 
-         if (index != -1) {
+      if (index != -1) {
 
-            list->takeAt (index);
-            removeToolBar (tbs->toolBar);
-            delete tbs; tbs = 0;
-            retVal = True;
-         }
-
-         if (!list->count ()) {
-
-            _toolBarTable.remove (Channel);
-            delete list;
-            list = 0;
-         }
+         cs->toolbar.takeAt (index);
+         removeToolBar (tbs->toolBar);
+         delete tbs; tbs = 0;
+         retVal = True;
       }
    }
 
@@ -301,6 +268,7 @@ dmz::QtModuleMainWindowBasic::add_dock_widget (
 
    Boolean retVal (False);
 
+#if 0
    if (dock) {
 
       DockWidgetList *list (_dockWidgetTable.lookup (Channel));
@@ -331,6 +299,7 @@ dmz::QtModuleMainWindowBasic::add_dock_widget (
          retVal = True;
       }
    }
+#endif
 
    return retVal;
 }
@@ -358,6 +327,7 @@ dmz::QtModuleMainWindowBasic::remove_dock_widget (
 
    Boolean retVal (False);
 
+#if 0
    if (dock) {
 
       DockWidgetList *list (_dockWidgetTable.lookup (Channel));
@@ -393,6 +363,7 @@ dmz::QtModuleMainWindowBasic::remove_dock_widget (
          }
       }
    }
+#endif
 
    return retVal;
 }
@@ -403,6 +374,7 @@ dmz::QtModuleMainWindowBasic::add_central_widget (const Handle Channel, QWidget 
 
    Boolean retVal (False);
 
+#if 0
    if (widget) {
 
       if (!_centralWidgetTable.lookup (Channel)) {
@@ -416,6 +388,7 @@ dmz::QtModuleMainWindowBasic::add_central_widget (const Handle Channel, QWidget 
          }
       }
    }
+#endif
 
    return retVal;
 }
@@ -426,6 +399,7 @@ dmz::QtModuleMainWindowBasic::remove_central_widget (const Handle Channel) {
 
    Boolean retVal (False);
 
+#if 0
    QWidget *widget (_centralWidgetTable.remove (Channel));
 
    if (widget) {
@@ -433,6 +407,7 @@ dmz::QtModuleMainWindowBasic::remove_central_widget (const Handle Channel) {
       _ui.stackedWidget->removeWidget (widget);
       retVal = True;
    }
+#endif
 
    return retVal;
 }
@@ -483,15 +458,13 @@ dmz::QtModuleMainWindowBasic::_update () {
 
    HashTableHandleIterator it;
 
-   ToolBarList *tbList (_toolBarTable.get_first (it));
+   ChannelStruct *cs (_channelTable.get_first (it));
 
-   while (tbList) {
+   while (cs) {
 
-      foreach (ToolBarStruct *tbs, *tbList) {
+      foreach (ToolBarStruct *tbs, cs->toolbar) {
 
-         Int32 *channel (_channelTable.lookup (it.get_hash_key ()));
-
-         if (channel && *channel) {
+         if (cs->count > 0) {
 
             addToolBar (tbs->area, tbs->toolBar);
             //if (tbs->visible) { tbs->toolBar->setVisible (True); }
@@ -505,36 +478,20 @@ dmz::QtModuleMainWindowBasic::_update () {
          }
       }
 
-      tbList = _toolBarTable.get_next (it);
-   }
+      HashTableStringIterator wit;
+      WidgetStruct *ws (cs->widgetTable.get_first (wit));
 
-   DockWidgetList *dwList (_dockWidgetTable.get_first (it));
+      while (ws) {
 
-   while (dwList) {
+         
+         if (cs->count > 0) { ws->show (_windowInfo); } 
+         else { ws->hide (_windowInfo); }
 
-      foreach (DockWidgetStruct *dws, *dwList) {
-
-         Int32 *channel (_channelTable.lookup (it.get_hash_key ()));
-
-         if (channel && *channel) {
-
-            addDockWidget (dws->area, dws->dockWidget);
-            //if (dws->visible) { dws->dockWidget->setVisible (True); }
-            dws->dockWidget->setVisible (True);
-         }
-         else {
-
-            //dws->visible = dws->dockWidget->isVisible ();
-            //dws->area = dockWidgetArea (dws->dockWidget);
-            removeDockWidget (dws->dockWidget);
-         }
+         ws = cs->widgetTable.get_next (wit);
       }
 
-      dwList = _dockWidgetTable.get_next (it);
+      cs = _channelTable.get_next (it);
    }
-
-   QWidget *widget (_centralWidgetTable.lookup (_channel));
-   if (widget) { _ui.stackedWidget->setCurrentWidget (widget); }
 }
 
 

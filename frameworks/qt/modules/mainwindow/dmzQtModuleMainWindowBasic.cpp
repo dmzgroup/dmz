@@ -10,6 +10,13 @@
 #include <dmzRuntimeSession.h>
 #include <QtGui/QtGui>
 
+void
+dmz::QtModuleMainWindowBasic::DockWidgetStruct::show (MainWindowStruct &window) { }
+
+void
+dmz::QtModuleMainWindowBasic::DockWidgetStruct::hide (MainWindowStruct &window) { }
+
+
 
 dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
       const PluginInfo &Info,

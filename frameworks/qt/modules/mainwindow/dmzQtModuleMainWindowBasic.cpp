@@ -1,5 +1,6 @@
 #include <dmzInputEventMasks.h>
 #include <dmzInputModule.h>
+#include <dmzInputConsts.h>
 #include "dmzQtModuleMainWindowBasic.h"
 #include <dmzQtUtil.h>
 #include <dmzQtWidget.h>
@@ -11,11 +12,60 @@
 #include <QtGui/QtGui>
 
 void
-dmz::QtModuleMainWindowBasic::DockWidgetStruct::show (MainWindowStruct &window) { }
+dmz::QtModuleMainWindowBasic::DockWidgetStruct::show (MainWindowStruct &window) {
+
+   if (widget && window.main && !dock) {
+
+      dock = new QDockWidget (title ? title.get_buffer () : "");
+      dock->setObjectName (name.get_buffer ());
+      dock->setAllowedAreas (startArea);
+      dock->setFeatures (features);
+      window.main->addDockWidget (startArea, dock);
+      dock->setWidget (widget);
+      dock->show ();
+   }
+
+   if (window.main && dock && !dock->parentWidget ()) {
+
+      window.main->addDockWidget (startArea, dock);
+      
+      dock->show ();
+   }
+}
+
 
 void
-dmz::QtModuleMainWindowBasic::DockWidgetStruct::hide (MainWindowStruct &window) { }
+dmz::QtModuleMainWindowBasic::DockWidgetStruct::hide (MainWindowStruct &window) {
 
+   if (dock && dock->parentWidget ()) {
+
+      window.main->removeDockWidget (dock);
+      dock->setParent (0);
+   }
+}
+
+
+void
+dmz::QtModuleMainWindowBasic::CentralWidgetStruct::show (MainWindowStruct &window) {
+
+   if (widget && window.stack) {
+
+      if (!widget->parentWidget ()) {
+
+         window.stack->addWidget (widget);
+         widget->show ();
+      }
+
+      window.stack->setCurrentWidget (widget);
+   }
+}
+
+
+void
+dmz::QtModuleMainWindowBasic::CentralWidgetStruct::hide (MainWindowStruct &window) {
+
+   // Nothing to do?
+}
 
 
 dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
@@ -111,7 +161,7 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
 
          const String Name = w->get_qt_widget_name ();
          WidgetStruct *ws = _widgetTable.lookup (Name);
-         if (ws->widget == w->get_qt_widget ()) { ws->widget = 0; }
+         if (ws && (ws->widget == w->get_qt_widget ())) { ws->widget = 0; }
       }
    }
 }
@@ -489,7 +539,6 @@ dmz::QtModuleMainWindowBasic::_update () {
       WidgetStruct *ws (cs->widgetTable.get_first (wit));
 
       while (ws) {
-
          
          if (cs->count > 0) { ws->show (_windowInfo); } 
          else { ws->hide (_windowInfo); }
@@ -531,6 +580,117 @@ dmz::QtModuleMainWindowBasic::_load_session () {
 
 
 void
+dmz::QtModuleMainWindowBasic::_init_widget_group (ChannelStruct &cs, Config &group) {
+
+   Config widgetList;
+
+   Qt::DockWidgetArea area = Qt::NoDockWidgetArea;
+
+   Boolean isMain (False);
+
+   String AreaName (config_to_string ("area", group).get_lower ());
+
+   if (AreaName == "main") { isMain = True; }
+   else if (AreaName == "left") { area = Qt::LeftDockWidgetArea; }
+   else if (AreaName == "right") { area = Qt::RightDockWidgetArea; }
+   else if (AreaName == "top") { area = Qt::TopDockWidgetArea; }
+   else if (AreaName == "bottom") { area = Qt::BottomDockWidgetArea; }
+   else {
+
+      _log.error << "Unknown widget area: " << AreaName << endl;
+   }
+
+   if (group.lookup_all_config ("widget", widgetList)) {
+
+      ConfigIterator it;
+      Config widget;
+
+      while (widgetList.get_next_config (it, widget)) {
+
+         const String WidgetName (config_to_string ("name", widget));
+         const String WidgetTitle (config_to_string ("title", widget));
+
+         if (!_widgetTable.lookup (WidgetName)) {
+
+            WidgetStruct *ws (0);
+
+            if (isMain) {
+
+               CentralWidgetStruct *cws = new CentralWidgetStruct;
+               ws = cws;
+            }
+            else {
+
+               DockWidgetStruct *dws = new DockWidgetStruct;
+               ws = dws;
+
+               if (dws) { dws->startArea = area; dws->name = WidgetName; }
+            }
+
+            if (ws && _widgetTable.store (WidgetName, ws)) {
+
+               ws->title = WidgetTitle;
+               cs.widgetTable.store (WidgetName, ws);
+            }
+            else { delete ws; ws = 0; }
+         }
+         else {
+
+            _log.error << "Widget: " << WidgetName
+               << " has already been mapped to the main window." << endl;
+         }
+      }
+   }
+}
+
+
+void
+dmz::QtModuleMainWindowBasic::_init_input_channels (Config &local) {
+
+   Config channelList;
+
+   if (local.lookup_all_config ("channel", channelList)) {
+
+      ConfigIterator it;
+      Config channel;
+
+      while (channelList.get_next_config (it, channel)) {
+
+         const String ChannelName (
+            config_to_string ("name", channel, InputChannelDefaultName));
+
+         const Handle ChannelHandle (
+            activate_input_channel (ChannelName, InputEventChannelStateMask));
+
+         ChannelStruct *cs (_channelTable.lookup (ChannelHandle));
+
+         if (!cs) {
+
+            cs = new ChannelStruct (ChannelHandle);
+
+            if (cs && !_channelTable.store (cs->Channel, cs)) { delete cs; cs = 0; }
+         }
+
+         if (cs) {
+
+            Config groupList;
+
+            if (channel.lookup_all_config ("group", groupList)) {
+
+               ConfigIterator wit;
+               Config group;
+
+               while (groupList.get_next_config (wit, group)) {
+
+                  _init_widget_group (*cs, group);
+               }
+            }
+         }
+      }
+   }
+}
+
+void
 dmz::QtModuleMainWindowBasic::_init (Config &local) {
 
    _windowName =
@@ -551,7 +711,7 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
       }
    }
 
-   init_input_channels (local, InputEventChannelStateMask, &_log);
+   _init_input_channels (local);
 
    _showUnifiedTitleAndToolBar = config_to_boolean (
       "showUnifiedTitleAndToolBar.value",

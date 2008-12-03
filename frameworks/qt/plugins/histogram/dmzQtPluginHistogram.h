@@ -2,6 +2,7 @@
 #define DMZ_QT_PLUGIN_HISTOGRAM_DOT_H
 
 #include <dmzObjectObserverUtil.h>
+#include <dmzQtWidget.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
@@ -20,7 +21,8 @@ namespace dmz {
 
    class QtPluginHistogram :
          public Plugin,
-         public ObjectObserverUtil {
+         public ObjectObserverUtil,
+         public QtWidget {
 
       public:
          QtPluginHistogram (const PluginInfo &Info, Config &local);
@@ -66,6 +68,9 @@ namespace dmz {
             const Handle AttributeHandle,
             const Int64 Value,
             const Int64 *PreviousValue);
+
+         // QtWidget Interface
+         virtual QWidget *get_qt_widget ();
 
       protected:
          struct BarStruct {

@@ -8,10 +8,10 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
+#include <dmzTypesStringContainer.h>
 #include <QtGui/QMainWindow>
 #include <QtGui/QDockWidget>
 #include "ui_dmzQtMainWindow.h"
-
 
 namespace dmz {
 
@@ -104,6 +104,7 @@ namespace dmz {
          struct WidgetStruct {
 
             QWidget *widget;
+            String title;
 
             virtual void show (MainWindowStruct &window) = 0;
             virtual void hide (MainWindowStruct &window) = 0;
@@ -115,9 +116,10 @@ namespace dmz {
 
          struct DockWidgetStruct : public WidgetStruct {
 
+            String name;
             QDockWidget *dock;
             QDockWidget::DockWidgetFeatures features;
-            Qt::DockWidgetAreas areas;
+            Qt::DockWidgetArea startArea;
 
             virtual void show (MainWindowStruct &window);
             virtual void hide (MainWindowStruct &window);
@@ -125,7 +127,7 @@ namespace dmz {
             DockWidgetStruct () :
                   dock (0),
                   features (QDockWidget::NoDockWidgetFeatures),
-                  areas (Qt::NoDockWidgetArea) {;}
+                  startArea (Qt::NoDockWidgetArea) {;}
          };
 
          struct CentralWidgetStruct : public WidgetStruct {
@@ -169,6 +171,8 @@ namespace dmz {
 
          void _save_session ();
          void _load_session ();
+         void _init_widget_group (ChannelStruct &cs, Config &group);
+         void _init_input_channels (Config &local);
          void _init (Config &local);
 
          Exit _exit;
@@ -181,6 +185,7 @@ namespace dmz {
          Boolean _showUnifiedTitleAndToolBar;
          HashTableStringTemplate<WidgetStruct> _widgetTable;
          HashTableHandleTemplate<ChannelStruct> _channelTable;
+         HashTableStringTemplate<StringContainer> _tabTable;
 
       private:
          QtModuleMainWindowBasic ();

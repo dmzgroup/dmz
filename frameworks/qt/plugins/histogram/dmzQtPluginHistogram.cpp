@@ -9,6 +9,7 @@
 dmz::QtPluginHistogram::QtPluginHistogram (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       ObjectObserverUtil (Info, local),
+      QtWidget (Info),
       _log (Info),
       _scene (0),
       _view (0),
@@ -175,6 +176,11 @@ dmz::QtPluginHistogram::update_object_counter (
 
    _update_graph ();
 }
+
+
+// QtWidget Interface
+QWidget *
+dmz::QtPluginHistogram::get_qt_widget () { return _view; }
 
 
 void
@@ -346,8 +352,8 @@ dmz::QtPluginHistogram::_init (Config &local) {
    _scene = new QGraphicsScene;
    _view = new QGraphicsView (_scene);
    //_view->setAlignment (Qt::AlignLeft | Qt::AlignBottom);
-   _view->resize (400, 300);
-   _view->show ();
+   //_view->resize (400, 300);
+   //_view->show ();
 
    _typeSet = config_to_object_type_set ("set", local, context);
 

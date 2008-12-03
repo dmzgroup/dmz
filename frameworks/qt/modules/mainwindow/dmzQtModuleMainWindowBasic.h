@@ -73,21 +73,6 @@ namespace dmz {
 
          virtual void add_tool_bar_break (const Qt::ToolBarArea Area);
 
-         virtual Boolean add_dock_widget (
-            const Qt::DockWidgetArea Area,
-            QDockWidget *dock);
-
-         virtual Boolean add_dock_widget (
-            const Handle Channel,
-            const Qt::DockWidgetArea Area,
-            QDockWidget *dock);
-
-         virtual Boolean remove_dock_widget (QDockWidget *dock);
-         virtual Boolean remove_dock_widget (const Handle Channel, QDockWidget *dock);
-
-         virtual Boolean add_central_widget (const Handle Channel, QWidget *widget);
-         virtual Boolean remove_central_widget (const Handle Channel);
-
       protected:
          struct ChannelStruct;
          struct ToolBarStruct;

@@ -277,6 +277,7 @@ dmz::QtModuleMainWindowBasic::remove_tool_bar (QToolBar *toolBar) {
    if (toolBar) {
 
       removeToolBar (toolBar);
+      toolBar->setParent (0);
       retVal = True;
    }
 
@@ -312,6 +313,8 @@ dmz::QtModuleMainWindowBasic::remove_tool_bar (const Handle Channel, QToolBar *t
          delete tbs; tbs = 0;
          retVal = True;
       }
+
+      toolBar->setParent (0);
    }
 
    return retVal;
@@ -322,176 +325,6 @@ void
 dmz::QtModuleMainWindowBasic::add_tool_bar_break (const Qt::ToolBarArea Area) {
 
    addToolBarBreak (Area);
-}
-
-
-dmz::Boolean
-dmz::QtModuleMainWindowBasic::add_dock_widget (
-      const Qt::DockWidgetArea Area,
-      QDockWidget *dock) {
-
-   Boolean retVal (False);
-
-   if (dock) {
-
-      addDockWidget (Area, dock);
-      retVal = True;
-   }
-
-   return retVal;
-}
-
-
-dmz::Boolean
-dmz::QtModuleMainWindowBasic::add_dock_widget (
-      const Handle Channel,
-      const Qt::DockWidgetArea Area,
-      QDockWidget *dock) {
-
-   Boolean retVal (False);
-
-#if 0
-   if (dock) {
-
-      DockWidgetList *list (_dockWidgetTable.lookup (Channel));
-
-      if (!list) {
-
-         list = new DockWidgetList ();
-         _dockWidgetTable.store (Channel, list);
-      }
-
-      if (list) {
-
-         DockWidgetStruct *dws (new DockWidgetStruct ());
-         dws->visible = True;
-         dws->dockWidget = dock;
-         dws->area = Area;
-         list->append (dws);
-
-         addDockWidget (Area, dock);
-
-         Int32 *channel (_channelTable.lookup (Channel));
-
-         if (channel && !(*channel)) {
-
-            removeDockWidget (dock);
-         }
-
-         retVal = True;
-      }
-   }
-#endif
-
-   return retVal;
-}
-
-
-dmz::Boolean
-dmz::QtModuleMainWindowBasic::remove_dock_widget (QDockWidget *dock) {
-
-   Boolean retVal (False);
-
-   if (dock) {
-
-      removeDockWidget (dock);
-      retVal = True;
-   }
-
-   return retVal;
-}
-
-
-dmz::Boolean
-dmz::QtModuleMainWindowBasic::remove_dock_widget (
-      const Handle Channel,
-      QDockWidget *dock) {
-
-   Boolean retVal (False);
-
-#if 0
-   if (dock) {
-
-      DockWidgetList *list (_dockWidgetTable.lookup (Channel));
-
-      if (list) {
-
-         DockWidgetStruct *dws (0);
-
-         foreach (DockWidgetStruct *cdws, *list) {
-
-            if (cdws->dockWidget == dock) {
-
-               dws = cdws;
-               break;
-            }
-         }
-
-         Int32 index (list->indexOf (dws));
-
-         if (index != -1) {
-
-            list->takeAt (index);
-            removeDockWidget (dws->dockWidget);
-            delete dws; dws = 0;
-            retVal = True;
-         }
-
-         if (!list->count ()) {
-
-            _dockWidgetTable.remove (Channel);
-            delete list;
-            list = 0;
-         }
-      }
-   }
-#endif
-
-   return retVal;
-}
-
-
-dmz::Boolean
-dmz::QtModuleMainWindowBasic::add_central_widget (const Handle Channel, QWidget *widget) {
-
-   Boolean retVal (False);
-
-#if 0
-   if (widget) {
-
-      if (!_centralWidgetTable.lookup (Channel)) {
-
-         _centralWidgetTable.store (Channel, widget);
-         _ui.stackedWidget->addWidget (widget);
-
-         if (Channel == _channel) {
-
-            _ui.stackedWidget->setCurrentWidget (widget);
-         }
-      }
-   }
-#endif
-
-   return retVal;
-}
-
-
-dmz::Boolean
-dmz::QtModuleMainWindowBasic::remove_central_widget (const Handle Channel) {
-
-   Boolean retVal (False);
-
-#if 0
-   QWidget *widget (_centralWidgetTable.remove (Channel));
-
-   if (widget) {
-
-      _ui.stackedWidget->removeWidget (widget);
-      retVal = True;
-   }
-#endif
-
-   return retVal;
 }
 
 

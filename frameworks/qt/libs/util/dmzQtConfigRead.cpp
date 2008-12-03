@@ -25,6 +25,25 @@ dmz::config_to_qpointf (
 }
 
 
+QSize
+dmz::config_to_qsize (
+      const String &Name,
+      const Config &Source,
+      const QSize &DefaultValue) {
+
+   Config cd;
+
+   if (Name) { Source.lookup_config (Name, cd); }
+   else { cd = Source; }
+
+   const QSize Result (
+      config_to_int32 ("width", cd, DefaultValue.width ()),
+      config_to_int32 ("height", cd, DefaultValue.height ()));
+
+   return Result;
+}
+
+
 QSizeF
 dmz::config_to_qsizef (
       const String &Name,

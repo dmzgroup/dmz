@@ -1,7 +1,5 @@
 #include "dmzQtPluginViewerOSG.h"
-#include <dmzInputConsts.h>
 #include <dmzInputModule.h>
-#include <dmzQtModuleMainWindow.h>
 #include <dmzRenderModuleCoreOSG.h>
 #include <dmzRenderCameraManipulatorOSG.h>
 #include <dmzRenderEventHandlerOSG.h>
@@ -18,11 +16,10 @@ dmz::QtPluginViewerOSG::QtPluginViewerOSG (
       Config &local) :
       Plugin (Info),
       TimeSlice (Info),
+      QtWidget (Info),
       _log (Info),
-      _window (0),
       _core (0),
       _channels (0),
-      _defaultChannel (0),
       _portalName (DefaultPortalNameOSG),
       _camera (0),
       _cameraManipulator (0),
@@ -96,6 +93,7 @@ dmz::QtPluginViewerOSG::discover_plugin (
       if (!_channels) {
 
          _channels = InputModule::cast (PluginPtr);
+
          if (_channels) {
 
             Definitions defs (get_plugin_runtime_context (), &_log);
@@ -103,18 +101,6 @@ dmz::QtPluginViewerOSG::discover_plugin (
             _eventHandler->set_input_module_channels (_channels, SourceHandle);
          }
       }
-
-      if (!_window) {
-
-         _window = QtModuleMainWindow::cast (PluginPtr);
-
-         if (_window) {
-
-            _viewer->show ();
-            _window->add_central_widget (_defaultChannel, _viewer.get ());
-         }
-      }
-
    }
    else if (Mode == PluginDiscoverRemove) {
 
@@ -134,15 +120,6 @@ dmz::QtPluginViewerOSG::discover_plugin (
          _eventHandler->set_input_module_channels (0, 0);
          _channels = 0;
       }
-
-      if (_window) {
-
-         if (_window == QtModuleMainWindow::cast (PluginPtr)) {
-
-            _window->remove_central_widget (_defaultChannel);
-            _window = 0;
-         }
-      }
    }
 }
 
@@ -155,6 +132,11 @@ dmz::QtPluginViewerOSG::update_time_slice (const Float64 TimeDelta) {
       _viewer->frame (); // Render a complete new frame
    }
 }
+
+
+// QtWidget Interface
+QWidget *
+dmz::QtPluginViewerOSG::get_qt_widget () { return _viewer.get (); }
 
 
 void
@@ -204,9 +186,6 @@ dmz::QtPluginViewerOSG::_init (const Config &Local) {
       _log.info << "Loading viewer windowed with defaults" << endl;
    }
 #endif
-
-   _defaultChannel = Definitions (get_plugin_runtime_context ()).create_named_handle (
-      InputChannelDefaultName);
 }
 
 

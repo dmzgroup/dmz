@@ -46,6 +46,13 @@ dmz::QtModuleMainWindowBasic::DockWidgetStruct::hide (MainWindowStruct &window) 
 
 
 void
+dmz::QtModuleMainWindowBasic::DockWidgetStruct::remove (MainWindowStruct &window) {
+
+   hide (window);
+}
+
+
+void
 dmz::QtModuleMainWindowBasic::CentralWidgetStruct::show (MainWindowStruct &window) {
 
    if (widget && window.stack) {
@@ -65,6 +72,20 @@ void
 dmz::QtModuleMainWindowBasic::CentralWidgetStruct::hide (MainWindowStruct &window) {
 
    // Nothing to do?
+}
+
+
+void
+dmz::QtModuleMainWindowBasic::CentralWidgetStruct::remove (MainWindowStruct &window) {
+
+   if (widget && window.stack) {
+
+      if (widget->parentWidget ()) {
+
+         window.stack->removeWidget (widget);
+         widget->setParent (0);
+      }
+   }
 }
 
 
@@ -161,7 +182,11 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
 
          const String Name = w->get_qt_widget_name ();
          WidgetStruct *ws = _widgetTable.lookup (Name);
-         if (ws && (ws->widget == w->get_qt_widget ())) { ws->widget = 0; }
+         if (ws && (ws->widget == w->get_qt_widget ())) {
+
+            ws->remove (_windowInfo);
+            ws->widget = 0;
+         }
       }
    }
 }

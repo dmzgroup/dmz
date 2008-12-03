@@ -36,6 +36,15 @@ namespace dmz {
       const Config &Source,
       const QPointF &DefaultValue);
 
+   QSize config_to_qsize (const Config &Source);
+   QSize config_to_qsize (const String &Name, const Config &Source);
+   QSize config_to_qsize (const Config &Source, const QSize &DefaultValue);
+
+   DMZ_QT_UTIL_LINK_SYMBOL QSize config_to_qsize (
+      const String &Name,
+      const Config &Source,
+      const QSize &DefaultValue);
+
    QSizeF config_to_qsizef (const Config &Source);
    QSizeF config_to_qsizef (const String &Name, const Config &Source);
    QSizeF config_to_qsizef (const Config &Source, const QSizeF &DefaultValue);
@@ -158,6 +167,29 @@ inline QPointF
 dmz::config_to_qpointf (const Config &Data, const QPointF &Value) {
 
    return config_to_qpointf ("", Data, Value);
+}
+
+
+inline QSize
+dmz::config_to_qsize (const Config &Data) {
+
+   const QSize Value;
+   return config_to_qsize ("", Data, Value);
+}
+
+
+inline QSize
+dmz::config_to_qsize (const String &Name, const Config &Data) {
+
+   const QSize Value;
+   return config_to_qsize (Name, Data, Value);
+}
+
+
+inline QSize
+dmz::config_to_qsize (const Config &Data, const QSize &Value) {
+
+   return config_to_qsize ("", Data, Value);
 }
 
 

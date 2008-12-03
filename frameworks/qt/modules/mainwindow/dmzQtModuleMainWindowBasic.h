@@ -108,6 +108,7 @@ namespace dmz {
 
             virtual void show (MainWindowStruct &window) = 0;
             virtual void hide (MainWindowStruct &window) = 0;
+            virtual void remove (MainWindowStruct &window) = 0;
  
             WidgetStruct () : widget (0) {;}
 
@@ -123,6 +124,7 @@ namespace dmz {
 
             virtual void show (MainWindowStruct &window);
             virtual void hide (MainWindowStruct &window);
+            virtual void remove (MainWindowStruct &window);
 
             DockWidgetStruct () :
                   dock (0),
@@ -134,6 +136,7 @@ namespace dmz {
 
             virtual void show (MainWindowStruct &window);
             virtual void hide (MainWindowStruct &window);
+            virtual void remove (MainWindowStruct &window);
 
             CentralWidgetStruct () {;}
          };

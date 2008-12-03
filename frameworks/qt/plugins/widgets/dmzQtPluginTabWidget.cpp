@@ -1,4 +1,5 @@
 #include "dmzQtPluginTabWidget.h"
+#include <dmzQtConfigRead.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -17,6 +18,7 @@ dmz::QtPluginTabWidget::QtPluginTabWidget (const PluginInfo &Info, Config &local
 dmz::QtPluginTabWidget::~QtPluginTabWidget () {
 
    _widgetTable.empty ();
+   if (_tab) { delete _tab; _tab = 0; }
 }
 
 
@@ -103,7 +105,8 @@ void
 dmz::QtPluginTabWidget::_init (Config &local) {
 
    _tab = new QTabWidget;
-   _tab->setMinimumSize (300, 250);;
+   _tab->setMinimumSize (config_to_qsize ("minimum-size", local, _tab->minimumSize ()));
+   _tab->setMaximumSize (config_to_qsize ("maximum-size", local, _tab->maximumSize ()));
 
    Config widgetList;
 

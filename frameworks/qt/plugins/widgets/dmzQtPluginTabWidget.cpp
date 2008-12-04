@@ -5,10 +5,14 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+#include <QtGui/QGridLayout>
+
+
 dmz::QtPluginTabWidget::QtPluginTabWidget (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       QtWidget (Info),
       _log (Info),
+      _parent (0),
       _tab (0) {
 
    _init (local);
@@ -18,7 +22,8 @@ dmz::QtPluginTabWidget::QtPluginTabWidget (const PluginInfo &Info, Config &local
 dmz::QtPluginTabWidget::~QtPluginTabWidget () {
 
    _widgetTable.empty ();
-   if (_tab) { delete _tab; _tab = 0; }
+   _tab = 0; // will be auto deleted by _parent
+   if (_parent) { delete _parent; _parent = 0; }
 }
 
 
@@ -97,16 +102,23 @@ dmz::QtPluginTabWidget::discover_plugin (
 QWidget *
 dmz::QtPluginTabWidget::get_qt_widget () {
 
-   return _tab;
+   return _parent;
 }
 
 
 void
 dmz::QtPluginTabWidget::_init (Config &local) {
 
-   _tab = new QTabWidget;
+   _parent = new QWidget;
+
+   QGridLayout *layout = new QGridLayout (_parent);
+
+   _tab = new QTabWidget (_parent);
+
    _tab->setMinimumSize (config_to_qsize ("minimum-size", local, _tab->minimumSize ()));
    _tab->setMaximumSize (config_to_qsize ("maximum-size", local, _tab->maximumSize ()));
+
+   layout->addWidget (_tab);
 
    Config widgetList;
 

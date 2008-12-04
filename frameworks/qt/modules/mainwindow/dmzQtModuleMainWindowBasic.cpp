@@ -17,11 +17,12 @@ dmz::QtModuleMainWindowBasic::DockWidgetStruct::show (MainWindowStruct &window) 
    if (widget && window.main && !dock) {
 
       dock = new QDockWidget (title ? title.get_buffer () : "");
+      QLayout *layout (dock->layout ());
       dock->setObjectName (name.get_buffer ());
       dock->setAllowedAreas (startArea);
       dock->setFeatures (features);
-      window.main->addDockWidget (startArea, dock);
       dock->setWidget (widget);
+      window.main->addDockWidget (startArea, dock);
       dock->show ();
    }
 
@@ -150,6 +151,7 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
       _load_session ();
       setUnifiedTitleAndToolBarOnMac (_showUnifiedTitleAndToolBar);
       show ();
+      raise ();
    }
    else if (State == PluginStateStop) {
 

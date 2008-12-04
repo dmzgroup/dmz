@@ -2,7 +2,6 @@ require "lmkQt"
 lmkQt.set_name "dmzQtPluginTabWidget"
 lmk.set_type "plugin"
 lmk.add_files {"dmzQtPluginTabWidget.cpp",}
-lmk.add_files {"tabbed.ui",}
 lmk.add_libs {
    "dmzQtUtil",
    "dmzKernel",

@@ -49,6 +49,12 @@ void
 dmz::QtModuleMainWindowBasic::DockWidgetStruct::remove (MainWindowStruct &window) {
 
    hide (window);
+
+   if (dock && widget) {
+
+      dock->setWidget (0);
+      widget->setParent (0);
+   }
 }
 
 

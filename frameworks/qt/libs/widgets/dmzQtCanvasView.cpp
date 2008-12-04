@@ -114,18 +114,31 @@ dmz::QtCanvasView::paintEvent (QPaintEvent *event) {
 }
 
 
-// void
-// dmz::QtCanvasView::resizeEvent (QResizeEvent *event) {
-//
-//    if (event) {
-//
-//       qWarning () << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-";
-//       qDebug () << event->size ();
-//       qDebug () << " scale: " << get_scale ();
-//       qDebug () << " vertical: " << verticalScrollBar ()->value ();
-//       qDebug () << " horizontal: " << horizontalScrollBar ()->value ();
-//    }
-// }
+#if 0
+void
+dmz::QtCanvasView::resizeEvent (QResizeEvent *event) {
+
+   if (event) {
+
+      QSize old = event->oldSize ();
+      QSize current = event->size ();
+      QPointF corner = mapToScene (0, 0);
+      QPointF newCorner = mapToScene (current.width (), current.height ());
+      QPointF oldCorner = mapToScene (old.width (), old.height());
+
+      qWarning () << corner << " " << newCorner << " " << oldCorner;
+
+      QPointF center = corner + (oldCorner * 0.5);
+
+      centerOn (center);
+      qWarning () << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-";
+      qDebug () << event->size ();
+      qDebug () << " scale: " << get_scale ();
+      qDebug () << " vertical: " << verticalScrollBar ()->value ();
+      qDebug () << " horizontal: " << horizontalScrollBar ()->value ();
+   }
+}
+#endif
 
 
 void

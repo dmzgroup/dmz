@@ -456,6 +456,7 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
 
    _canvas = new QtCanvasView (this);
    _canvas->setTransformationAnchor (QGraphicsView::AnchorViewCenter);
+   _canvas->setResizeAnchor (QGraphicsView::AnchorViewCenter);
 
    const Boolean ScrollBars = config_to_boolean ("scrollbars.value", local, False);
 

@@ -39,7 +39,7 @@ namespace dmz {
       protected:
          virtual void drawBackground (QPainter *painter, const QRectF &rect);
          virtual void paintEvent (QPaintEvent *event);
-//         virtual void resizeEvent (QResizeEvent *event);
+         //virtual void resizeEvent (QResizeEvent *event);
          virtual void keyPressEvent (QKeyEvent *event);
          virtual void keyReleaseEvent (QKeyEvent *event);
          virtual void wheelEvent (QWheelEvent *event);

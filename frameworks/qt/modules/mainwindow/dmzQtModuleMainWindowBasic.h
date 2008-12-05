@@ -115,6 +115,8 @@ namespace dmz {
                   dock (0),
                   features (QDockWidget::NoDockWidgetFeatures),
                   startArea (Qt::NoDockWidgetArea) {;}
+
+            virtual ~DockWidgetStruct () { if (dock) { delete dock; dock = 0; } }
          };
 
          struct CentralWidgetStruct : public WidgetStruct {

@@ -224,9 +224,12 @@ dmz::QtPluginCanvasBackground::_load_background () {
       _canvasModule->zoom_extents ();
       
       String lastFile (qPrintable (fileName));
-      
+
       _bgConfig.store_attribute ("file", lastFile);
-      //_bgConfig.set_value (lastFile);
+      
+      // Config data ("");
+      // data.set_value (lastFile);
+      // _bgConfig.add_config (data);
       
       qApp->restoreOverrideCursor ();
    }
@@ -282,7 +285,7 @@ dmz::QtPluginCanvasBackground::_init (Config &local) {
    _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
    _canvasModuleName = config_to_string ("module.canvas.name", local);
    
-//   init_archive (local);
+   init_archive (local);
    
    _backgroundEditMessage = config_create_message_type (
       "message.backgroundEdit.name",

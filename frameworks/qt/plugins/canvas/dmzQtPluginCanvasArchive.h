@@ -44,7 +44,6 @@ namespace dmz {
          Log _log;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
-         Handle _archiveHandle;
 
       private:
          QtPluginCanvasArchive ();

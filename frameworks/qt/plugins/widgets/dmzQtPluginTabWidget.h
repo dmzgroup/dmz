@@ -43,6 +43,7 @@ namespace dmz {
 
          Log _log;
 
+         QWidget *_parent;
          QTabWidget *_tab;
 
          HashTableStringTemplate<WidgetStruct> _widgetTable;

@@ -9,10 +9,15 @@ namespace dmz {
 
    class ArchiveModule;
    class Config;
+   class Log;
 
    class DMZ_ARCHIVE_UTIL_LINK_SYMBOL ArchiveObserverUtil : public ArchiveObserver {
 
       public:
+         Boolean is_active_archive_handle (const Handle ArchiveHandle);
+
+         void init_archive (const Config &Init, Log *log = 0);
+
          Handle activate_default_archive ();
          Handle activate_archive (const String &ArchiveName);
          void deactivate_default_archive ();

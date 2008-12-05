@@ -1,9 +1,11 @@
 #include <dmzArchiveModule.h>
 #include <dmzArchiveObserverUtil.h>
+#include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzTypesHashTableStringTemplate.h>
+#include <dmzTypesHandleContainer.h>
 
 /*!
 
@@ -20,6 +22,7 @@ struct dmz::ArchiveObserverUtil::State {
    Definitions defs;
    ArchiveModule *module;
    HashTableStringTemplate<Handle> handleTable;
+   HandleContainer validHandles;
 
    State (const PluginInfo &Info, const Config &Init) :
          ArchiveModuleName (config_to_string ("module.archive.name", Init)),
@@ -69,6 +72,32 @@ dmz::ArchiveObserverUtil::~ArchiveObserverUtil () {
 }
 
 
+dmz::Boolean
+dmz::ArchiveObserverUtil::is_active_archive_handle (const Handle ArchiveHandle) {
+
+   return __state.validHandles.contains (ArchiveHandle);
+}
+
+
+void
+dmz::ArchiveObserverUtil::init_archive (const Config &Init, Log *log) {
+
+   Config list;
+
+   if (Init.lookup_all_config ("archive", list)) {
+
+      ConfigIterator it;
+      Config archive;
+
+      while (list.get_next_config (it, archive)) {
+
+         activate_archive (config_to_string ("name", archive, ArchiveDefaultName));
+      }
+   }
+   else { activate_default_archive (); }
+}
+
+
 /*!
 
 \brief Joins default archive group.
@@ -95,6 +124,8 @@ dmz::ArchiveObserverUtil::activate_archive (const String &ArchiveName) {
    Handle result (__state.defs.create_named_handle (ArchiveName));
 
    if (result) {
+
+      __state.validHandles.add_handle (result);
 
       Handle *ptr (new Handle (result));
 
@@ -140,6 +171,8 @@ dmz::ArchiveObserverUtil::deactivate_archive (const String &ArchiveName) {
 
    if (ptr) {
 
+      __state.validHandles.remove_handle (*ptr);
+
       if (__state.module) { __state.module->release_archive_observer (*ptr, *this); }
 
       delete ptr; ptr = 0;
@@ -174,6 +207,7 @@ dmz::ArchiveObserverUtil::deactivate_archive_all () {
 
       while (ptr) {
 
+         __state.validHandles.remove_handle (*ptr);
          __state.module->release_archive_observer (*ptr, *this);
          ptr = __state.handleTable.get_next (it);
       }

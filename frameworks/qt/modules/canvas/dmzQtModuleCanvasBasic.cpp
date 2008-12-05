@@ -50,6 +50,8 @@ dmz::QtModuleCanvasBasic::update_plugin_state (
 
    if (State == PluginStateStart) {
 
+//      if (_canvas) { _canvas->centerOn (QPoint (0,0)); }
+      
       _load_session ();
       setFocus (Qt::ActiveWindowFocusReason);
    }

@@ -1,11 +1,15 @@
 #ifndef DMZ_QT_PLUGIN_CANVAS_BACKGROUND_DOT_H
 #define DMZ_QT_PLUGIN_CANVAS_BACKGROUND_DOT_H
 
+#include <dmzApplicationState.h>
+#include <dmzArchiveObserverUtil.h>
+#include <dmzRuntimeConfig.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
 
 class QGraphicsPixmapItem;
+class QPixmap;
 
 
 namespace dmz {
@@ -15,6 +19,7 @@ namespace dmz {
 
    class QtPluginCanvasBackground :
          public Plugin,
+         public ArchiveObserverUtil,
          public MessageObserver {
 
       public:
@@ -30,6 +35,17 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
+         // ArchiveObserver Interface.
+         virtual void create_archive (
+            const Handle ArchiveHandle,
+            Config &local,
+            Config &global);
+
+         virtual void process_archive (
+            const Handle ArchiveHandle,
+            Config &local,
+            Config &global);
+
          // Message Observer Interface
          virtual void receive_message (
             const Message &Type,
@@ -39,23 +55,26 @@ namespace dmz {
             Data *outData);
 
       protected:
+         QString _get_last_path ();
          void _load_background ();
+         void _load_pixmap (const QPixmap &Pixmap);
          void _clear_background ();
          void _init (Config &local);
 
          Log _log;
+         ApplicationStateWrapper _appState;
          QtModuleMainWindow *_mainWindowModule;
          String _mainWindowModuleName;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
          Message _backgroundEditMessage;
          QGraphicsPixmapItem *_bgItem;
+         Config _bgConfig;
 
       private:
          QtPluginCanvasBackground ();
          QtPluginCanvasBackground (const QtPluginCanvasBackground &);
          QtPluginCanvasBackground &operator= (const QtPluginCanvasBackground &);
-
    };
 };
 

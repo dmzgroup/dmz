@@ -554,3 +554,18 @@ dmz::decode_base64 (const String &Value) {
    return result;
 }
 
+
+dmz::Boolean
+dmz::decode_base64 (const String &Value, String &decoded) {
+
+   decoded.set_size (((Value.get_length () * 3) / 4) + 1);
+   StreamString stream (decoded);
+   Base64Decoder decoder;
+   decoder.set_stream (&stream);
+   Int32 size (0);
+   const  char *buffer = Value.get_buffer (size);
+   decoder.decode (buffer, size);
+
+   return decoded.get_length () != 0;
+}
+

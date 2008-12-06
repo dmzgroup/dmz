@@ -77,6 +77,9 @@ namespace dmz {
 
    DMZ_XML_LINK_SYMBOL String
    decode_base64 (const String &Value);
+
+   DMZ_XML_LINK_SYMBOL Boolean
+   decode_base64 (const String &Value, String &decoded);
 };
 
 #endif //  DMZ_XML_BASE_64_DOT_H

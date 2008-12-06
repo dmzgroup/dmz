@@ -6,6 +6,9 @@
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzSystemFile.h>
+#include <dmzSystemStreamString.h>
+#include <dmzXMLBase64.h>
 #include <QtGui/QtGui>
 
 
@@ -23,8 +26,11 @@ dmz::QtPluginCanvasBackground::QtPluginCanvasBackground (
       _mainWindowModuleName (),
       _backgroundEditMessage (),
       _bgItem (0),
-      _bgConfig ("image") {
+      _bgConfig ("image"),
+      _data ("") {
 
+   _bgConfig.add_config (_data);
+         
    _init (local);
 }
 
@@ -98,30 +104,10 @@ dmz::QtPluginCanvasBackground::create_archive (
    if (_bgItem) {
       
       local.add_config (_bgConfig);
-
-#if 0      
-      QPixmap pixmap (_bgItem->pixmap ());
-      
-      QByteArray bytes;
-      
-      QBuffer buffer (&bytes);
-      buffer.open (QIODevice::WriteOnly);
-      
-      if (pixmap.save (&buffer, "PNG")) {
-         
-         Config imageConfig (qbytearray_to_config ("image", bytes));
-         
-         local.add_config (imageConfig);
-         
-         _log.warn << "" << endl;
-         _log.warn << "bytes size: " << (Int32)bytes.size () << endl;
-         QByteArray base64 (bytes.toBase64 ());
-         
-         _log.warn << "base64 size: " << (Int32)base64.size () << endl;
-      }
-#endif
    }
 }
+
+#include <dmzSystem.h>
 
 
 void
@@ -130,17 +116,27 @@ dmz::QtPluginCanvasBackground::process_archive (
       Config &local,
       Config &global) {
 
-   String fileName (config_to_string ("image.file", local));
-//   QByteArray bytes (config_to_qbytearray ("image", local));
+   Config imageData;
    
-   if (fileName) {
+   if (local.lookup_config ("image", imageData)) {
+
+
+      String encodedValue;
       
-      QPixmap pixmap;
-
-      if (pixmap.load (fileName.get_buffer ())) {
-//      if (pixmap.loadFromData (bytes)) {
-
-         _load_pixmap (pixmap);
+      if (imageData.get_value (encodedValue)) {
+         
+         String decodedValue;
+         decode_base64 (encodedValue, decodedValue);
+         
+         QPixmap pixmap;
+         
+         Int32 size (0);
+         const uchar *buffer = (uchar *)decodedValue.get_buffer (size);
+         
+         if (pixmap.loadFromData (buffer, size)) {
+            
+            _load_pixmap (pixmap);
+         }
       }
    }
 }
@@ -218,18 +214,12 @@ dmz::QtPluginCanvasBackground::_load_background () {
       qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
       
       QPixmap bg (fileName);
-
+      
       _load_pixmap (bg);
-         
+      
       _canvasModule->zoom_extents ();
       
-      String lastFile (qPrintable (fileName));
-
-      _bgConfig.store_attribute ("file", lastFile);
-      
-      // Config data ("");
-      // data.set_value (lastFile);
-      // _bgConfig.add_config (data);
+      _encode_image (qPrintable (fileName));
       
       qApp->restoreOverrideCursor ();
    }
@@ -272,6 +262,45 @@ dmz::QtPluginCanvasBackground::_clear_background () {
          
          delete _bgItem;
          _bgItem = 0;
+      }
+   }
+}
+
+
+void
+dmz::QtPluginCanvasBackground::_encode_image (const String &FileName) {
+
+   if (FileName) {
+
+      _data.set_value ("");
+
+      FILE *file = open_file (FileName, "rb");
+
+      if (file) {
+
+         const UInt32 RawBufferSize (1024);
+         const UInt64 Base64BufferSize (get_file_size (FileName) * 2);
+
+         String rawBuffer (0, 0, RawBufferSize + 1);
+         String base64Buffer (0, 0, Base64BufferSize + 1);
+         
+         StreamString stream (base64Buffer);
+         
+         Base64Encoder encoder;
+         encoder.set_stream (&stream);
+         encoder.set_line_length (120);
+
+         while (read_file (file, RawBufferSize, rawBuffer)) {
+
+            Int32 size (0);
+            const char *buffer = rawBuffer.get_buffer (size);
+
+            encoder.encode (buffer, size);
+         }
+
+         encoder.encode (0, 0);
+         
+         _data.append_value (base64Buffer, False);
       }
    }
 }

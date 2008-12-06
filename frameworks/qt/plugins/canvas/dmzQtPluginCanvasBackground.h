@@ -59,6 +59,7 @@ namespace dmz {
          void _load_background ();
          void _load_pixmap (const QPixmap &Pixmap);
          void _clear_background ();
+         void _encode_image (const String &FileName);
          void _init (Config &local);
 
          Log _log;
@@ -70,6 +71,7 @@ namespace dmz {
          Message _backgroundEditMessage;
          QGraphicsPixmapItem *_bgItem;
          Config _bgConfig;
+         Config _data;
 
       private:
          QtPluginCanvasBackground ();

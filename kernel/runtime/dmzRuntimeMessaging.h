@@ -8,6 +8,7 @@ namespace dmz {
 
    class Config;
    class Data;
+   class HandleContainer;
    class Log;
    class MessageContext;
    class PluginInfo;
@@ -57,10 +58,21 @@ namespace dmz {
             const Data *InData,
             Data *outData) const;
 
-         UInt32 send (const Data *InData) const {
+         UInt32 send (
+            const HandleContainer &Targets,
+            const Data *InData,
+            Data *outData) const;
 
-            return send (0, InData, 0);
+         UInt32 send (
+            const HandleContainer &Targets,
+            const Data *InData) const { return send (Targets, InData, 0); }
+
+         UInt32 send (const HandleContainer &Targets) const {
+
+            return send (Targets, 0, 0);
          }
+
+         UInt32 send (const Data *InData) const { return send (0, InData, 0); }
 
          UInt32 send () const { return send (0, 0, 0); }
 

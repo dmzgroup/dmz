@@ -543,7 +543,7 @@ dmz::encode_base64 (const String &Value) {
 dmz::String
 dmz::decode_base64 (const String &Value) {
 
-   String result;
+   String result (0, 0, ((Value.get_length () * 3) / 4) + 1);
    StreamString stream (result);
    Base64Decoder decoder;
    decoder.set_stream (&stream);

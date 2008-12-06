@@ -6,6 +6,7 @@
 #include "dmzRuntimeMessageContext.h"
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzTypesHandleContainer.h>
 
 
 /*!
@@ -317,7 +318,7 @@ be NULL if no data is to be sent.
 \param[out] outData Pointer to Data object that will be used by the target
 message observer to return results. This parameter may be NULL if no data is to be
 returned.
-\return Returns a handle associated with the sent message. This handle is not a unique
+\return Returns a id associated with the sent message. This id is not a unique
 runtime handle but is instead a running counter that will roll over when max unsigned
 integer messages have been sent.
 \note The outData should only be used when sending a message to a specific message
@@ -341,6 +342,44 @@ dmz::Message::send (
       }
 
       result = _context->context->send (*this, ObserverHandle, InData, outData);
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Sends the message to multiple targets.
+\param[in] Targets HandleContainer of unique handles of message observers to send message.
+\param[in] InData Pointer to the data object that is sent along with the message. May
+be NULL if no data is to be sent.
+\param[out] outData Pointer to Data object that will be used by the target
+message observer to return results. This parameter may be NULL if no data is to be
+returned.
+\return Returns an id associated with the sent message. This id is not a unique
+runtime handle but is instead a running counter that will roll over when max unsigned
+integer messages have been sent.
+
+*/
+dmz::UInt32
+dmz::Message::send (
+      const HandleContainer &Targets,
+      const Data *InData,
+      Data *outData) const {
+
+   UInt32 result (0);
+   
+   if (_context && _context->context) {
+
+      Handle target (Targets.get_first ());
+
+      while (target) {
+
+         result = _context->context->send (*this, target, InData, outData);
+
+         target = Targets.get_next ();
+      }
    }
 
    return result;

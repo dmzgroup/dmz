@@ -147,27 +147,6 @@ dmz::QtPluginCanvasObject::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      ObjectModule *objectModule = ObjectModule::cast (PluginPtr);
-
-      if (objectModule) {
-
-         PluginIterator it;
-
-         Plugin *ptr (_extensions.get_first (it));
-
-         while (ptr) {
-
-            ObjectObserver *obs (ObjectObserver::cast (ptr));
-
-            if (obs) {
-
-               obs->store_object_module (PluginName, *objectModule);
-            }
-
-            ptr = _extensions.get_next (it);
-         }
-      }
-
       if (!_canvasModule) {
 
          _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
@@ -178,27 +157,6 @@ dmz::QtPluginCanvasObject::discover_plugin (
    else if (Mode == PluginDiscoverRemove) {
 
       _extensions.remove_external_plugin (PluginPtr);
-
-      ObjectModule *objectModule (ObjectModule::cast (PluginPtr));
-
-      if (objectModule) {
-
-         PluginIterator it;
-
-         Plugin *ptr (_extensions.get_first (it));
-
-         while (ptr) {
-
-            ObjectObserver *obs (ObjectObserver::cast (ptr));
-
-            if (obs) {
-
-               obs->remove_object_module (PluginName, *objectModule);
-            }
-
-            ptr = _extensions.get_next (it);
-         }
-      }
 
       if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
 
@@ -391,6 +349,48 @@ dmz::QtPluginCanvasObject::update_object_orientation (
             _updateTable.store (ObjectHandle, os);
          }
       }
+   }
+}
+
+
+void
+dmz::QtPluginCanvasObject::_store_object_module (ObjectModule &module) {
+
+   PluginIterator it;
+
+   Plugin *ptr (_extensions.get_first (it));
+
+   while (ptr) {
+
+      ObjectObserver *obs (ObjectObserver::cast (ptr));
+
+      if (obs) {
+
+         obs->store_object_module (module.get_object_module_name (), module);
+      }
+
+      ptr = _extensions.get_next (it);
+   }
+}
+
+
+void
+dmz::QtPluginCanvasObject::_remove_object_module (ObjectModule &module) {
+
+   PluginIterator it;
+
+   Plugin *ptr (_extensions.get_first (it));
+
+   while (ptr) {
+
+      ObjectObserver *obs (ObjectObserver::cast (ptr));
+
+      if (obs) {
+
+         obs->remove_object_module (module.get_object_module_name (), module);
+      }
+
+      ptr = _extensions.get_next (it);
    }
 }
 

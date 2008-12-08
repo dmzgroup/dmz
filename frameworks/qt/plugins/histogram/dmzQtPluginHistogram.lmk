@@ -1,0 +1,11 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginHistogram"
+lmk.set_type "plugin"
+lmk.add_files {"dmzQtPluginHistogram.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzObjectFramework", "dmzQtFramework", "dmzInputFramework",}
+lmk.add_libs {"dmzQtCanvasView", "dmzQtUtil", "dmzInputEvents", "dmzKernel",}
+lmkQt.add_libs {"QtCore", "QtGui",}

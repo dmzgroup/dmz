@@ -145,21 +145,7 @@ dmz::ArchivePluginUndo::store_action (
 void
 dmz::ArchivePluginUndo::_init (Config &local) {
 
-   Config archiveList;
-
-   if (local.lookup_all_config ("archive", archiveList)) {
-
-      ConfigIterator it;
-      Config archive;
-
-      while (archiveList.get_next_config (it, archive)) {
-
-         String name;
-
-         if (archive.lookup_attribute ("name", name)) { activate_archive (name); }
-      }
-   }
-   else { activate_default_archive (); }
+   init_archive (local);
 }
 //! \endcond
 

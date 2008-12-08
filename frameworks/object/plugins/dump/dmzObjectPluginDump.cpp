@@ -1,4 +1,5 @@
 #include <dmzObjectAttributeMasks.h>
+#include <dmzObjectModule.h>
 #include "dmzObjectPluginDump.h"
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeObjectType.h>
@@ -57,7 +58,14 @@ dmz::ObjectPluginDump::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
-   _log.debug << "Destroying object[" << ObjectHandle << "]:" << Identity << endl;
+   String typeName ("Unknown Type");
+
+   ObjectModule *objMod (get_object_module ());
+
+   if (objMod) { typeName = objMod->lookup_object_type (ObjectHandle).get_name (); }
+
+   _log.debug << "Destroying object[" << ObjectHandle << "]:"  << typeName << ":"
+      << Identity << endl;
 }
 
 

@@ -1064,6 +1064,50 @@ dmz::config_to_named_handle (
    return result;
 }
 
+/*!
+
+\brief Converts Config to a HandleContainer.
+\details Defined in dmzRuntimeConfigToNamedHandle.h.
+\code
+dmz::HandleContainer value = dmz::config_to_handle_container ("dmz.handle", global);
+\endcode
+The Config for the above example would be formatted as follows:
+\code
+<dmz>
+   <handle value="dmzToolPluginFoo"/>
+   <handle value="dmzToolPluginBar"/>
+</dmz>
+\endcode
+\param[in] Name String containing name of config context to convert.
+\param[in] Source Config containing config context to convert.
+\return Returns dmz::HandleContainer of the String values.
+
+*/
+dmz::HandleContainer
+dmz::config_to_handle_container (
+      const String &Name,
+      const Config &Source,
+      RuntimeContext *context) {
+
+   HandleContainer result;
+   Definitions defs (context);
+
+   Config nameList;
+
+   if (Name) { Source.lookup_all_config (Name, nameList); }
+   else { Source.lookup_all_config ("handle", nameList); }
+
+   ConfigIterator it;
+   Config name;
+
+   while (nameList.get_next_config (it, name)) {
+
+      result.add_handle (defs.create_named_handle (config_to_string ("value", name)));
+   }
+
+   return result;
+}
+
 
 /*!
 

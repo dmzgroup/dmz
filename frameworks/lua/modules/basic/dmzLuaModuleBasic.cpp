@@ -169,6 +169,14 @@ dmz::LuaModuleBasic::discover_plugin (
 
 // LuaModule Interface
 void
+dmz::LuaModuleBasic::add_lua_path (const String &Path) {
+
+   _luaPaths.add_path (Path);
+   _add_lua_paths ();
+}
+
+
+void
 dmz::LuaModuleBasic::register_lua_observer (
       const UInt32 CallbackMask,
       LuaObserver &observer) {

@@ -3,7 +3,6 @@
 #include <dmzQtCanvasConsts.h>
 #include <dmzQtConfigRead.h>
 #include <dmzQtModuleCanvas.h>
-#include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginCanvasLayer.h"
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
@@ -1238,17 +1237,13 @@ dmz::QtPluginCanvasLayer::QtPluginCanvasLayer (
       QWidget (0),
       Plugin (Info),
       TimeSlice (Info),
+      QtWidget (Info),
       _log (Info),
       _defs (Info, &_log),
       _canvasModule (0),
       _canvasModuleName (),
       _objectModule (0),
       _objectModuleName (),
-      _mainWindowModule (0),
-      _mainWindowModuleName (),
-      _channel (0),
-      _title (tr ("Layers")),
-      _dock (0),
       _layerModel (Info, Local, this),
       _newLayerCount (1) {
 
@@ -1340,24 +1335,6 @@ dmz::QtPluginCanvasLayer::discover_plugin (
             }
          }
       }
-
-      if (!_mainWindowModule) {
-
-         _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
-
-         if (_mainWindowModule) {
-
-            _dock = new QDockWidget (_title, this);
-            _dock->setObjectName (get_plugin_name ().get_buffer ());
-            _dock->setAllowedAreas (Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-
-            _dock->setFeatures (QDockWidget::NoDockWidgetFeatures);
-   //            QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-
-            _mainWindowModule->add_dock_widget (_channel, Qt::RightDockWidgetArea, _dock);
-            _dock->setWidget (this);
-         }
-      }
    }
    else if (Mode == PluginDiscoverRemove) {
 
@@ -1379,13 +1356,6 @@ dmz::QtPluginCanvasLayer::discover_plugin (
          }
 
          _objectModule = 0;
-      }
-
-      if (_mainWindowModule &&
-            (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
-
-         _mainWindowModule->remove_dock_widget (_channel, _dock);
-         _mainWindowModule = 0;
       }
    }
 }
@@ -1413,6 +1383,11 @@ dmz::QtPluginCanvasLayer::update_time_slice (const Float64 TimeDelta) {
       _ui.deleteButton->setEnabled (False);
    }
 }
+
+
+// QtWidget Interface
+QWidget *
+dmz::QtPluginCanvasLayer::get_qt_widget () { return this; }
 
 
 void
@@ -1477,18 +1452,6 @@ dmz::QtPluginCanvasLayer::_init (const Config &Local) {
 
    _objectModuleName = config_to_string ("module.object.name", Local);
    _canvasModuleName = config_to_string ("module.canvas.name", Local);
-   _mainWindowModuleName = config_to_string ("module.mainWindow.name", Local);
-
-   _title = config_to_string (
-      "dockWidget.title",
-      Local,
-      qPrintable (_title)).get_buffer ();
-
-   _channel = config_to_named_handle (
-      "channel.name",
-      Local,
-      "NetworkAnalysisChannel",
-      get_plugin_runtime_context ());
 
    qwidget_config_read ("widget", Local, this);
 

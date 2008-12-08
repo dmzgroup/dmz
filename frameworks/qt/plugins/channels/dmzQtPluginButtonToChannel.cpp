@@ -13,15 +13,11 @@ dmz::QtPluginButtonToChannel::QtPluginButtonToChannel (
       Config &local) :
       QWidget (0),
       Plugin (Info),
+      QtWidget (Info),
       _log (Info),
       _defs (Info, &_log),
       _inputModule (0),
       _inputModuleName (),
-      _mainWindowModule (0),
-      _mainWindowModuleName (),
-      _channel (0),
-      _dockWidgetTitle (tr ("Channels")),
-      _dock (0),
       _actionGroup (0),
       _channelList (0),
       _defaultChannel (0) {
@@ -54,9 +50,6 @@ dmz::QtPluginButtonToChannel::discover_plugin (
 
          if (_inputModule) {
 
-            // _inputModule->create_channel (_defaultChannel);
-            // _inputModule->set_channel_state (_defaultChannel, True);
-
             ChannelStruct *current (_channelList);
 
             while (current) {
@@ -70,25 +63,6 @@ dmz::QtPluginButtonToChannel::discover_plugin (
             }
          }
       }
-
-      if (!_mainWindowModule) {
-
-         _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
-
-         if (_mainWindowModule) {
-
-            _dock = new QDockWidget (_dockWidgetTitle, this);
-            _dock->setObjectName (get_plugin_name ().get_buffer ());
-            _dock->setAllowedAreas (Qt::AllDockWidgetAreas);
-
-         _dock->setFeatures (QDockWidget::NoDockWidgetFeatures);
-//            QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-
-            _mainWindowModule->add_dock_widget (_channel, Qt::RightDockWidgetArea, _dock);
-
-            _dock->setWidget (this);
-         }
-      }
    }
    else if (Mode == PluginDiscoverRemove) {
 
@@ -96,16 +70,13 @@ dmz::QtPluginButtonToChannel::discover_plugin (
 
          _inputModule = 0;
       }
-
-      if (_mainWindowModule &&
-            (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
-
-         _mainWindowModule->remove_dock_widget (_channel, _dock);
-
-         _mainWindowModule = 0;
-      }
    }
 }
+
+
+// QtWidget Interface
+QWidget *
+dmz::QtPluginButtonToChannel::get_qt_widget () { return this; }
 
 
 void
@@ -147,15 +118,6 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
    Definitions defs (get_plugin_runtime_context (), &_log);
 
    _inputModuleName = config_to_string ("module.input.name", local);
-   _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
-
-   _dockWidgetTitle = config_to_string (
-      "dockWidget.title",
-      local,
-      qPrintable (_dockWidgetTitle)).get_buffer ();
-
-   _channel = defs.create_named_handle (
-      config_to_string ("channel.name", local, "NetworkAnalysisChannel"));
 
    const String DefaultName = config_to_string ("defaultChannel.name", local);
 

@@ -5,13 +5,22 @@
 
 namespace {
 
-   struct dataStruct {
+   struct ValueStruct {
+
+      const dmz::String Value;
+      ValueStruct *next;
+
+      ValueStruct (const dmz::String &TheValue) : Value (TheValue), next (0) {;}
+      ~ValueStruct () { if (next) { delete next; next = 0; } }
+   };
+
+   struct DataStruct {
 
       dmz::Config data;
-      dataStruct *next;
+      DataStruct *next;
 
-      dataStruct (const dmz::Config &Config) : data (Config), next (0) {;}
-      ~dataStruct () { if (next) { delete next; next = 0; } }
+      DataStruct (const dmz::Config &Config) : data (Config), next (0) {;}
+      ~DataStruct () { if (next) { delete next; next = 0; } }
    };
 
    static void local_set_attributes (
@@ -30,6 +39,7 @@ namespace {
    }
 };
 
+
 /*!
 
 \class dmz::XMLInterpreterConfig
@@ -41,10 +51,12 @@ convert it into a config context tree.
 
 */
 
-
 struct dmz::XMLInterpreterConfig::State {
 
-   dataStruct *stack;
+   DataStruct *stack;
+   Int32 valueSize;
+   ValueStruct *valueStart;
+   ValueStruct *valueEnd;
    String value;
    Boolean inCDATA;
    String error;
@@ -52,19 +64,44 @@ struct dmz::XMLInterpreterConfig::State {
 
    State (const Config &RootConfig) :
          stack (0),
+         valueSize (0),
+         valueStart (0),
+         valueEnd (0),
          inCDATA (False) {
 
-      stack = new dataStruct (RootConfig);
+      stack = new DataStruct (RootConfig);
    }
 
    ~State () {
 
       if (stack) { delete stack; stack = 0; }
+      if (valueStart) { delete valueStart; valueStart = 0; }
    }
 
+   void append_value (const String &Value) {
+
+      valueSize += Value.get_length ();
+      ValueStruct *vs = new ValueStruct (Value);
+      if (valueEnd) { valueEnd->next = vs; valueEnd = vs; }
+      else { valueEnd = valueStart = vs; }
+   }
+ 
    void flush_value () {
 
-      if (stack) {
+      if (stack && valueSize && valueStart) {
+
+         value.set_size (valueSize + 1);
+
+         ValueStruct *current (valueStart);
+
+         while (current) {
+
+            value.append (current->Value);
+            current = current->next;
+         }
+
+         delete valueStart; valueStart = valueEnd = 0;
+         valueSize = 0;
 
          if (inCDATA || !is_ascii_white_space (value)) {
 
@@ -107,7 +144,7 @@ dmz::XMLInterpreterConfig::interpret_start_element (
 
       _state.stack->data.add_config (data);
 
-      dataStruct *next = new dataStruct (data);
+      DataStruct *next = new DataStruct (data);
 
       if (next) {
 
@@ -127,7 +164,7 @@ dmz::XMLInterpreterConfig::interpret_end_element (const String &Name) {
 
    Boolean result (False);
 
-   dataStruct *tmp = _state.stack;
+   DataStruct *tmp = _state.stack;
 
    if (tmp) {
 
@@ -159,7 +196,7 @@ dmz::XMLInterpreterConfig::interpret_character_data (const String &Data) {
 
    Boolean result (True);
 
-   _state.value << Data;
+   _state.append_value (Data);
 
    return result;
 }

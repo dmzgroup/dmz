@@ -87,13 +87,13 @@ dmz::Config
 dmz::qbytearray_to_config (const String &Name, const QByteArray &Value) {
 
    Config result (Name);
-
+   
    QByteArray base64 (Value.toBase64 ());
-   String val;
-
-   val << base64.constData ();
+   
+   String val (base64.constData (), base64.size ());
+   
    result.store_attribute ("data", val);
-
+   
    return result;
 }
 

@@ -8,9 +8,12 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeLoadPlugins.h>
+#include <dmzSystem.h>
+#include <dmzSystemFile.h>
 #include <osg/DeleteHandler>
 #include <osg/LightSource>
 #include <osg/Referenced>
+#include <osgDB/Registry>
 
 
 dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
@@ -413,6 +416,27 @@ dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
 
          _extensions.discover_plugins ();
          _extensions.discover_external_plugin (this);
+      }
+   }
+
+   osgDB::Registry *reg = osgDB::Registry::instance ();
+   Config pathList;
+
+   if (reg && local.lookup_all_config ("loader.path", pathList)) {
+
+      osgDB::FilePathList &fpl = reg->getLibraryFilePathList ();
+
+      ConfigIterator it;
+      Config path;
+
+      while (pathList.get_next_config (it, path)) {
+
+         String pathStr = config_to_string ("value", path);
+
+         if (get_absolute_path (pathStr, pathStr)) {
+
+            fpl.push_back (pathStr.get_buffer ());
+         }
       }
    }
 

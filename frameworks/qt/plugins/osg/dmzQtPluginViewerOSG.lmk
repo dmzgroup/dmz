@@ -1,0 +1,26 @@
+require "lmkOSG"
+require "lmkQt"
+
+lmkOSG.set_name ("dmzQtPluginViewerOSG")
+
+lmk.set_type "plugin"
+
+lmk.add_libs {
+   "dmzRenderUtilOSG",
+   "dmzInputEvents",
+   "dmzKernel",
+}
+
+lmk.add_preqs {
+   "dmzQtFramework",
+   "dmzRenderModuleCoreOSG", 
+   "dmzRenderFramework", 
+   "dmzInputFramework",
+}
+
+lmk.add_files {"QOSGWidget.cpp", "ViewerQOSG.cpp", "dmzQtPluginViewerOSG.cpp",}
+
+lmkOSG.add_libs {"osg", "osgGA", "osgViewer", "OpenThreads",}
+
+lmkQt.add_libs {"QtCore","QtGui", "QtOpenGL",}
+

@@ -2,6 +2,7 @@
 #define DMZ_QT_PLUGIN_CANVAS_LAYER_DOT_H
 
 #include <dmzObjectObserverUtil.h>
+#include <dmzQtWidget.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
@@ -19,7 +20,6 @@ class QDockWidget;
 namespace dmz {
 
    class QtModuleCanvas;
-   class QtModuleMainWindow;
 
    class QtCanvasLayer : public QGraphicsItem {
 
@@ -198,7 +198,11 @@ namespace dmz {
    };
 
 
-   class QtPluginCanvasLayer : public QWidget, public Plugin, public TimeSlice {
+   class QtPluginCanvasLayer :
+         public QWidget,
+         public Plugin,
+         public TimeSlice,
+         public QtWidget {
 
       Q_OBJECT
 
@@ -217,6 +221,9 @@ namespace dmz {
 
          // TimeSlice Interface
          virtual void update_time_slice (const Float64 TimeDelta);
+
+         // QtWidget Interface
+         virtual QWidget *get_qt_widget ();
 
       protected slots:
          void on_addButton_clicked ();
@@ -238,11 +245,6 @@ namespace dmz {
          String _objectModuleName;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
-         QtModuleMainWindow *_mainWindowModule;
-         String _mainWindowModuleName;
-         Handle _channel;
-         QString _title;
-         QDockWidget *_dock;
          QtPluginCanvasLayerModel _layerModel;
          Int32 _newLayerCount;
 

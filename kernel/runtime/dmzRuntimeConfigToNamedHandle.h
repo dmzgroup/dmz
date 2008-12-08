@@ -3,6 +3,7 @@
 
 #include <dmzKernelExport.h>
 #include <dmzTypesBase.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesString.h>
 
 namespace dmz {
@@ -18,6 +19,11 @@ namespace dmz {
       RuntimeContext *context);
 
    Handle config_to_named_handle (
+      const String &Name,
+      const Config &Source,
+      RuntimeContext *context);
+
+   DMZ_KERNEL_LINK_SYMBOL HandleContainer config_to_handle_container (
       const String &Name,
       const Config &Source,
       RuntimeContext *context);

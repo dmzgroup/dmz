@@ -25,6 +25,25 @@ dmz::config_to_qpointf (
 }
 
 
+QSize
+dmz::config_to_qsize (
+      const String &Name,
+      const Config &Source,
+      const QSize &DefaultValue) {
+
+   Config cd;
+
+   if (Name) { Source.lookup_config (Name, cd); }
+   else { cd = Source; }
+
+   const QSize Result (
+      config_to_int32 ("width", cd, DefaultValue.width ()),
+      config_to_int32 ("height", cd, DefaultValue.height ()));
+
+   return Result;
+}
+
+
 QSizeF
 dmz::config_to_qsizef (
       const String &Name,
@@ -142,6 +161,84 @@ dmz::config_to_qcolor (
    if (colorData.lookup_config ("alpha", cd)) {
 
       result.setAlphaF (config_to_float64 ("value", cd, 1.0));
+   }
+
+   return result;
+}
+
+
+QPen
+dmz::config_to_qpen (
+      const String &Name,
+      const Config &Source,
+      const QPen &DefaultValue) {
+
+   QPen result (DefaultValue);
+
+   Config penData;
+
+   if (Name) { Source.lookup_config (Name, penData); }
+   else { penData = Source; }
+
+#if 0
+   <pen>
+      <color red="0.0" green="0.0" blue="0.0" alpha="0.5"/>
+      <width value="1"/>
+   </pen>
+#endif
+
+   Config cd;
+
+   if (penData.lookup_config ("color", cd)) {
+
+      QColor color;
+      color.setRgbF (
+         config_to_float32 ("red", cd, 0.0f),
+         config_to_float32 ("green", cd, 0.0f),
+         config_to_float32 ("blue", cd, 0.0f),
+         config_to_float32 ("alpha", cd, 1.0f));
+
+      result.setColor (color);
+   }
+
+   result.setWidth (config_to_int32 ("width.value", penData, 1));
+
+   return result;
+}
+
+
+QBrush
+dmz::config_to_qbrush (
+      const String &Name,
+      const Config &Source,
+      const QBrush &DefaultValue) {
+
+   QBrush result (DefaultValue);
+
+   Config brushData;
+
+   if (Name) { Source.lookup_config (Name, brushData); }
+   else { brushData = Source; }
+
+#if 0
+   <brush>
+      <color red="0.0" green="0.0" blue="0.0" alpha="0.5"/>
+   </brush>
+#endif
+
+   Config cd;
+
+   if (brushData.lookup_config ("color", cd)) {
+
+      QColor color;
+      color.setRgbF (
+         config_to_float32 ("red", cd, 0.0f),
+         config_to_float32 ("green", cd, 0.0f),
+         config_to_float32 ("blue", cd, 0.0f),
+         config_to_float32 ("alpha", cd, 1.0f));
+
+      result.setColor (color);
+      result.setStyle (Qt::SolidPattern);
    }
 
    return result;

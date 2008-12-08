@@ -15,10 +15,6 @@ class QWidget;
 
 namespace dmz {
 
-   //! \cond
-   const char QtModuleMainWindowInterfaceName[] = "QtModuleMainWindowInterface";
-   //! \endcond
-
    class QtModuleMainWindow {
 
       public:
@@ -40,6 +36,7 @@ namespace dmz {
          virtual void add_tool_bar_break (
             const Qt::ToolBarArea Area = Qt::TopToolBarArea) = 0;
 
+#if 0
          virtual Boolean add_dock_widget (
             const Qt::DockWidgetArea Area,
             QDockWidget *dock) = 0;
@@ -54,6 +51,7 @@ namespace dmz {
 
          virtual Boolean add_central_widget (const Handle Channel, QWidget *widget) = 0;
          virtual Boolean remove_central_widget (const Handle Channel) = 0;
+#endif
 
       protected:
          QtModuleMainWindow (const PluginInfo &Info);
@@ -66,6 +64,10 @@ namespace dmz {
 
          const PluginInfo &__Info;
    };
+
+   //! \cond
+   const char QtModuleMainWindowInterfaceName[] = "QtModuleMainWindowInterface";
+   //! \endcond
 }
 
 

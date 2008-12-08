@@ -35,6 +35,7 @@ namespace dmz {
 
          void set_length (const Int32 Length, String *remainder = 0);
          Int32 get_length () const;
+         void set_size (const Int32 Size);
          Int32 get_size () const;
          void set_buffer (const char *Buffer, const Int32 Length, const Int32 Size);
 

@@ -31,6 +31,12 @@ namespace dmz {
          Int32 get_size () const;
          Int32 get_count () const;
 
+         Boolean move (
+            const $(type) &Key,
+            const $(type) *TargetKey,
+            const Boolean SignleStep,
+            const Boolean Before);
+
          void *get_next (HashTable$(type)Iterator &it, const Boolean Prev = False) const;
 
          void *lookup (const $(type) &Key) const;

@@ -17,8 +17,7 @@ dmz::QtPluginCanvasArchive::QtPluginCanvasArchive (
       ArchiveObserverUtil (Info, local),
       _log (Info),
       _canvasModule (0),
-      _canvasModuleName (),
-      _archiveHandle (0) {
+      _canvasModuleName () {
 
    _init (local);
 }
@@ -59,7 +58,7 @@ dmz::QtPluginCanvasArchive::create_archive (
       Config &local,
       Config &global) {
 
-   if (ArchiveHandle == _archiveHandle) {
+   if (is_active_archive_handle (ArchiveHandle)) {
 
       if (_canvasModule) {
 
@@ -85,7 +84,7 @@ dmz::QtPluginCanvasArchive::process_archive (
       Config &local,
       Config &global) {
 
-   if (ArchiveHandle == _archiveHandle) {
+   if (is_active_archive_handle (ArchiveHandle)) {
 
       if (_canvasModule) {
 
@@ -109,8 +108,7 @@ dmz::QtPluginCanvasArchive::process_archive (
 void
 dmz::QtPluginCanvasArchive::_init (Config &local) {
 
-   _archiveHandle = activate_archive (
-      config_to_string ("archive.name", local, ArchiveDefaultName));
+   init_archive (local);
 
    _canvasModuleName = config_to_string ("module.canvas.name", local);
 }

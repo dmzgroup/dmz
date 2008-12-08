@@ -38,6 +38,8 @@ namespace dmz {
             const Plugin *PluginPtr);
 
          // LuaModule Interface
+         virtual void add_lua_path (const String &Path);
+
          virtual void register_lua_observer (
             const UInt32 CallbackMask,
             LuaObserver &observer);

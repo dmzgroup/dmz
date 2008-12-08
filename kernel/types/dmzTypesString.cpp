@@ -278,6 +278,22 @@ dmz::Int32
 dmz::String::get_length () const { return _length; }
 
 
+/*!
+
+\brief Sets the size of the buffer.
+\details This function deletes the current buffer and creates a new
+buffer of \a Size. See dmz:: String::resize() for a non-destructive function
+for altering the size of the String's buffer.
+\param Size The new size of the buffer.
+
+*/
+void
+dmz::String::set_size (const Int32 Size) {
+
+   set_buffer (0, 0, Size);
+}
+
+
 //! \brief Returns the size of the buffer.
 dmz::Int32
 dmz::String::get_size () const { return _size; }
@@ -333,7 +349,9 @@ dmz::String::set_buffer (const char *Buffer, const Int32 Length, const Int32 Siz
 
       flush ();
    }
+   else if (!Size && !Length && !Buffer) { empty (); }
 }
+
 
 /*!
 

@@ -2,7 +2,6 @@
 #include <dmzInputModule.h>
 #include <dmzQtCanvasView.h>
 #include "dmzQtModuleCanvasBasic.h"
-#include <dmzQtModuleMainWindow.h>
 #include <dmzQtUtil.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
@@ -19,12 +18,10 @@ dmz::QtModuleCanvasBasic::QtModuleCanvasBasic (const PluginInfo &Info, Config &l
       QWidget (0),
       QtModuleCanvas (Info),
       Plugin (Info),
+      QtWidget (Info),
       _log (Info),
       _inputModule (0),
       _inputModuleName (),
-      _mainWindowModule (0),
-      _mainWindowModuleName (),
-      _channel (0),
       _scene (),
       _canvas (0),
       _keyEvent (),
@@ -53,6 +50,8 @@ dmz::QtModuleCanvasBasic::update_plugin_state (
 
    if (State == PluginStateStart) {
 
+//      if (_canvas) { _canvas->centerOn (QPoint (0,0)); }
+      
       _load_session ();
       setFocus (Qt::ActiveWindowFocusReason);
    }
@@ -69,31 +68,12 @@ dmz::QtModuleCanvasBasic::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_mainWindowModule) {
-
-         _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
-
-         if (_mainWindowModule) {
-
-            _mainWindowModule->add_central_widget (_channel, this);
-         }
-      }
-
       if (!_inputModule) {
 
          _inputModule = InputModule::cast (PluginPtr, _inputModuleName);
       }
    }
    else if (Mode == PluginDiscoverRemove) {
-
-      if (_mainWindowModule) {
-
-         if (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr)) {
-
-            _mainWindowModule->remove_central_widget (_channel);
-            _mainWindowModule = 0;
-         }
-      }
 
       if (_inputModule && (_inputModule == InputModule::cast (PluginPtr))) {
 
@@ -263,6 +243,11 @@ dmz::QtModuleCanvasBasic::center_on (const Handle ObjectHandle) {
       _canvas->centerOn (_itemTable.lookup (ObjectHandle));
    }
 }
+
+
+// QtWidget Interface
+QWidget *
+dmz::QtModuleCanvasBasic::get_qt_widget () { return this; }
 
 
 void
@@ -473,6 +458,7 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
 
    _canvas = new QtCanvasView (this);
    _canvas->setTransformationAnchor (QGraphicsView::AnchorViewCenter);
+   _canvas->setResizeAnchor (QGraphicsView::AnchorViewCenter);
 
    const Boolean ScrollBars = config_to_boolean ("scrollbars.value", local, False);
 
@@ -499,13 +485,6 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
    setLayout (layout);
    setMouseTracking (true);
    _inputModuleName = config_to_string ("module.input.name", local);
-   _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
-
-   _channel = config_to_named_handle (
-      "channel.name",
-      local,
-      InputChannelDefaultName,
-      get_plugin_runtime_context ());
 
    if (_canvas) {
 

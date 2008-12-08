@@ -30,6 +30,7 @@ dmz::QtPluginCanvasBackground::QtPluginCanvasBackground (
       _data ("") {
 
    _bgConfig.add_config (_data);
+   _data.set_formatted (True);
          
    _init (local);
 }
@@ -119,7 +120,6 @@ dmz::QtPluginCanvasBackground::process_archive (
    Config imageData;
    
    if (local.lookup_config ("image", imageData)) {
-
 
       String encodedValue;
       

@@ -274,6 +274,16 @@ dmz::Config::get_name () const {
 }
 
 
+void
+dmz::Config::set_formatted (const Boolean IsFormatted) {
+
+   if (_state.context && !_state.context->Name) {
+
+      _state.context->isFormatted = IsFormatted;
+   }
+}
+
+
 /*!
 
 \brief Get the formatted state of the config context.

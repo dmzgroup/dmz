@@ -180,6 +180,7 @@ dmz::QtPluginCanvasBackground::receive_message (
    }
    else if (Type == _cleanupMessage) {
       
+      // clear background when cleanupMessage is recieved
       _clear_background ();
    }
 }

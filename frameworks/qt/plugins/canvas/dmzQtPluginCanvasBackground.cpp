@@ -136,7 +136,7 @@ dmz::QtPluginCanvasBackground::process_archive (
          
          if (pixmap.loadFromData (buffer, size)) {
             
-            // save the data so it can be put in the next archive
+            // save the data so it can be put in the next archive -ss
             _data.set_value (encodedValue);
             
             _load_pixmap (pixmap);

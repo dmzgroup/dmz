@@ -50,7 +50,11 @@ void QOSGWidget::createContext() {
     traits->sampleBuffers = ds->getMultiSamples();
     traits->samples = ds->getNumMultiSamples();
 
+#if defined(__APPLE__) || defined(MACOSX)
     traits->inheritedWindowData = new WindowData((OpaqueWindowPtr*)winId());
+#else
+    traits->inheritedWindowData = new WindowData(winId());
+#endif
 
     if (ds->getStereo ()) {
 

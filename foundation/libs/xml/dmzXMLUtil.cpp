@@ -77,14 +77,17 @@ local_write_config (
       dmz::String value;
       Data.get_value (value);
 
-      if (Data.is_formatted ()) {
+      if (value) {
 
-         stream << "<![CDATA[" << value << "]]>" << dmz::endl;
-      }
-      else {
+         if (Data.is_formatted ()) {
 
-         dmz::trim_ascii_white_space (value);
-         stream << padding << value << dmz::endl;
+            stream << "<![CDATA[" << value << "]]>" << dmz::endl;
+         }
+         else {
+
+            dmz::trim_ascii_white_space (value);
+            stream << padding << value << dmz::endl;
+         }
       }
    }
    else {

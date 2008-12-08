@@ -42,6 +42,7 @@ namespace dmz {
          DMZ_BOOLEAN_OPERATOR;
 
          String get_name () const;
+         void set_formatted (const Boolean IsFormatted);
          Boolean is_formatted () const;
          Boolean has_children () const;
          Boolean is_empty () const;

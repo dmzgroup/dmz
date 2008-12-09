@@ -1,5 +1,6 @@
 #include <dmzRuntimeDataConverters.h>
 #include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimePluginInfo.h>
 
 /*!
 
@@ -22,6 +23,16 @@ struct dmz::DataConverterString::State {
       handle = defs.create_named_handle (base_type_enum_to_string (BaseTypeString));
    }
 };
+
+
+/*!
+
+\brief Constructor.
+\param[in] Info reference to PluginInfo.
+
+*/
+dmz::DataConverterString::DataConverterString (const PluginInfo &Info) :
+      _state (*(new State (Info.get_context ()))) {;}
 
 
 /*!
@@ -135,6 +146,16 @@ struct dmz::DataConverterHandle::State {
       handle = defs.create_named_handle ("handle");
    }
 };
+
+
+/*!
+
+\brief Constructor.
+\param[in] Info Reference to PluginInfo.
+
+*/
+dmz::DataConverterHandle::DataConverterHandle (const PluginInfo &Info) :
+      _state (*(new State (Info.get_context ()))) {;}
 
 
 /*!

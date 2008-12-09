@@ -75,6 +75,7 @@ namespace dmz {
             RuntimeContext *context);
 
          UInt32 send (
+            const Boolean IncrementCount,
             const Message &Type,
             const Handle ObserverHandle,
             const Data *InData,

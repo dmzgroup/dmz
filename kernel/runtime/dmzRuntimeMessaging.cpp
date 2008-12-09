@@ -341,7 +341,7 @@ dmz::Message::send (
          *(_context->monostate) = *InData;
       }
 
-      result = _context->context->send (*this, ObserverHandle, InData, outData);
+      result = _context->context->send (true, *this, ObserverHandle, InData, outData);
    }
 
    return result;
@@ -376,7 +376,12 @@ dmz::Message::send (
 
       while (target) {
 
-         result = _context->context->send (*this, target, InData, outData);
+         result = _context->context->send (
+            (result == 0 ? True : False),
+            *this,
+            target,
+            InData,
+            outData);
 
          target = Targets.get_next ();
       }
@@ -385,6 +390,26 @@ dmz::Message::send (
    return result;
 }
 
+/*!
+
+\fn dmz::UInt32 dmz::Message::send (const HandleContainer &Targets, const Data *InData) const
+\brief Sends the message to multiple targets.
+\param[in] Targets HandleContainer of unique handles of message observers to send message.
+\param[in] InData Pointer to the data object that is sent along with the message. May
+be NULL if no data is to be sent.
+\return Returns an id associated with the sent message. This id is not a unique
+runtime handle but is instead a running counter that will roll over when max unsigned
+integer messages have been sent.
+
+\fn dmz::UInt32 dmz::Message::send (const HandleContainer &Targets) const
+\brief Sends the message to multiple targets.
+\param[in] Targets HandleContainer of unique handles of message observers to send message.
+be NULL if no data is to be sent.
+\return Returns an id associated with the sent message. This id is not a unique
+runtime handle but is instead a running counter that will roll over when max unsigned
+integer messages have been sent.
+
+*/
 
 //! For internal use.
 void

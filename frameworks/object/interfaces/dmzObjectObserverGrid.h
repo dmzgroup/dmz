@@ -11,9 +11,12 @@ namespace dmz {
    class ObjectType;
    class Volume;
 
+   //! \brief Indicates the state of the object with regards to the observer bounding
+   //! Volume
+   //! \ingroup Object
    enum ObjectGridStateEnum {
-      ObjectGridStateEnter,
-      ObjectGridStateExit,
+      ObjectGridStateEnter, //!< Object has entered the bounding Volume.
+      ObjectGridStateExit,  //!< Object has exited the bounding Volume.
    };
 
    class ObjectObserverGrid {
@@ -30,10 +33,10 @@ namespace dmz {
          virtual const Volume &get_observer_volume () = 0;
 
          virtual void update_object_grid_state (
+            const ObjectGridStateEnum State,
             const Handle ObjectHandle,
             const ObjectType &Type,
-            const Vector &Position,
-            const ObjectGridStateEnum State) = 0;
+            const Vector &Position) = 0;
 
       protected:
          ObjectObserverGrid (const PluginInfo &Info);

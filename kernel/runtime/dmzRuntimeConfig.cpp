@@ -274,6 +274,15 @@ dmz::Config::get_name () const {
 }
 
 
+/*!
+
+\brief Sets the formatted state of the config context.
+\details A config context may contain formatted data. If the data is formatted, it is an
+indication to any thing displaying or saving the data that white space and line
+feeds should not be removed.
+\param[in] IsFormatted Boolean indicating if the config context is formatted.
+
+*/
 void
 dmz::Config::set_formatted (const Boolean IsFormatted) {
 

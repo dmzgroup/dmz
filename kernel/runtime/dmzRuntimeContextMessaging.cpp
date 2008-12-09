@@ -129,6 +129,7 @@ local_send (
 
 dmz::UInt32
 dmz::RuntimeContextMessaging::send (
+      const Boolean IncrementCount,
       const Message &Type,
       const Handle ObserverHandle,
       const Data *InData,
@@ -147,9 +148,12 @@ dmz::RuntimeContextMessaging::send (
 
          if (Type != globalType) {
 
-            self->messageCount++;
+            if (IncrementCount) {
 
-            if (messageCount <= 1) { self->messageCount = 2; }
+               self->messageCount++;
+
+               if (messageCount <= 1) { self->messageCount = 2; }
+            }
 
             result = messageCount;
 

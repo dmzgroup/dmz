@@ -72,6 +72,13 @@ dmz::ArchiveObserverUtil::~ArchiveObserverUtil () {
 }
 
 
+/*!
+
+\brief Tests if the observer is attached to the specified archive group.
+\param[in] ArchiveHandle Handle containing the archive group to test.
+\return Returns dmz::True if the observer is attached the specified group.
+
+*/
 dmz::Boolean
 dmz::ArchiveObserverUtil::is_active_archive_handle (const Handle ArchiveHandle) {
 
@@ -79,6 +86,26 @@ dmz::ArchiveObserverUtil::is_active_archive_handle (const Handle ArchiveHandle) 
 }
 
 
+/*!
+
+\brief Attaches observer to specified archive groups.
+\details The \a Init Config should contain a list of Config objects named
+"archive". These objects should also contain an attribute called "name" which
+contains the name of the archive group. If the name attribute is not set, the default
+archive group name is used.
+\code
+<dmz>
+<dmzFooPluginArchive>
+   <archive/> <!-- attaches to default archive group -->
+   <archive name="Extra Archive Group"/>
+   <archive name="Some Other Archive Group"/>
+</dmzFooPluginArchive>
+</dmz>
+\endcode
+\param[in] Init Config containing a list of the archive groups.
+\param[in] log Pointer to a Log used for logging.
+
+*/
 void
 dmz::ArchiveObserverUtil::init_archive (const Config &Init, Log *log) {
 

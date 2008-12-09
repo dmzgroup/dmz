@@ -4,6 +4,7 @@
 #include "dmzQtPluginCanvasBackground.h"
 #include <dmzQtUtil.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeData.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzSystemFile.h>
@@ -19,12 +20,16 @@ dmz::QtPluginCanvasBackground::QtPluginCanvasBackground (
       ArchiveObserverUtil (Info, local),
       MessageObserver (Info),
       _log (Info),
+      _undo (Info),
+      _dataConverter (Info.get_context ()),
       _appState (Info),
       _canvasModule (0),
       _canvasModuleName (),
       _mainWindowModule (0),
       _mainWindowModuleName (),
+      _cleanupMessage (),
       _backgroundEditMessage (),
+      _undoMessage (),
       _imageFile (),
       _bgItem (0),
       _bgConfig ("image"),
@@ -118,7 +123,7 @@ dmz::QtPluginCanvasBackground::process_archive (
 
    Config imageData;
 
-   _imageFile = config_to_string ("image.file", local);
+   String fileName (config_to_string ("image.file", local));
 
    if (local.lookup_config ("image", imageData)) {
 
@@ -140,11 +145,12 @@ dmz::QtPluginCanvasBackground::process_archive (
             _data.set_value (encodedValue);
             
             _load_pixmap (pixmap);
+            
+            _imageFile = fileName;
+            _bgConfig.store_attribute ("file", _imageFile);
          }
       }
    }
-   
-   _bgConfig.store_attribute ("file", _imageFile);
 }
 
 
@@ -160,27 +166,100 @@ dmz::QtPluginCanvasBackground::receive_message (
    if (Type == _backgroundEditMessage) {
 
       QMessageBox msgBox;
-      QPushButton *loadButton = msgBox.addButton ("1) Load...", QMessageBox::ActionRole);
-      QPushButton *clearButton = msgBox.addButton ("2) Clear", QMessageBox::DestructiveRole);
+      QPushButton *loadButton = msgBox.addButton ("Load...", QMessageBox::ActionRole);
+      
+      QPushButton *clearButton = msgBox.addButton ("Clear", QMessageBox::DestructiveRole);
+            
+      if (!_bgItem) { clearButton->setEnabled (False); }
+      
       QPushButton *cancelButton = msgBox.addButton ("Cancel", QMessageBox::RejectRole);
 
       msgBox.setIcon (QMessageBox::Question);
       msgBox.setText ("Background Image");
-      msgBox.setInformativeText("1) Load new background image.\n2) Clear background image.");
+      
+      QString infoText ("Load a new background image");
+      infoText.append ("or\nclear the current background image.");
+      
+      msgBox.setInformativeText (infoText);
       msgBox.exec();
 
       if (msgBox.clickedButton() == loadButton) {
    
-         _load_background ();
+         QList<QByteArray> imagesFormatList (QImageReader::supportedImageFormats ());
+         
+         QString filter ("Images (");
+         
+         foreach (QString format, imagesFormatList) {
+         
+            filter.append (QString ("*.%1 ").arg (format));
+         }
+
+         filter = filter.simplified () + ")";
+         
+         QString fileName =
+            QFileDialog::getOpenFileName (
+               _mainWindowModule ? _mainWindowModule->get_widget () : 0,
+               "Select Image File",
+               _get_last_path (),
+               filter);
+
+         if (!fileName.isEmpty ()) {
+         
+            qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
+            
+            const Handle UndoHandle (_undo.start_record ("Set Background"));
+
+            Data data (_dataConverter.to_data (_imageFile));
+            _undo.store_action (_undoMessage, get_plugin_handle (), &data);
+               
+            _load_background (qPrintable (fileName));
+            
+            _undo.stop_record (UndoHandle);
+            
+            qApp->restoreOverrideCursor ();
+         }
       }
       else if (msgBox.clickedButton() == clearButton) {
     
+         const Handle UndoHandle (_undo.start_record ("Clear Background"));
+      
+         Data data (_dataConverter.to_data (_imageFile));
+         _undo.store_action (_undoMessage, get_plugin_handle (), &data);
+            
+         _imageFile.flush ();
+         _bgConfig.store_attribute ("file", _imageFile);
+         
          _clear_background ();
+
+         _undo.stop_record (UndoHandle);
       }
    }
    else if (Type == _cleanupMessage) {
       
       _clear_background ();
+      _imageFile.flush ();
+   }
+   else if (Type == _undoMessage) {
+
+      String value (_dataConverter.to_string (InData));
+      
+      if (!value) {
+      
+         Data data (_dataConverter.to_data (_imageFile));
+         _undo.store_action (_undoMessage, get_plugin_handle (), &data);
+
+         _imageFile.flush ();
+         _bgConfig.store_attribute ("file", _imageFile);
+            
+         _clear_background ();
+      }
+      else if (QFile::exists (value.get_buffer ())) {
+
+         Data data (_dataConverter.to_data (_imageFile));
+         _undo.store_action (_undoMessage, get_plugin_handle (), &data);
+
+         _load_background (value);
+      }
    }
 }
 
@@ -190,49 +269,34 @@ dmz::QtPluginCanvasBackground::_get_last_path () {
    
    String lastPath (_appState.get_default_directory ());
 
-   // if (is_valid_path (lastPath)) {
-   // 
-   //    if (is_directory (lastPath)) {
-   // 
-   //       lastPath << "/" << _defaultExportName << "." << _suffix;
-   //    }
-   // }
-   // else {
-   // 
-   //    lastPath.flush () << get_home_directory () << "/" << _defaultExportName << "."
-   //       << _suffix;
-   // }
-
    QFileInfo fi (lastPath.get_buffer ());
 
    return fi.absoluteFilePath ();
 }
 
 
-void
-dmz::QtPluginCanvasBackground::_load_background () {
+dmz::Boolean
+dmz::QtPluginCanvasBackground::_load_background (const String &FileName) {
 
-   QString fileName =
-      QFileDialog::getOpenFileName (
-         _mainWindowModule ? _mainWindowModule->get_widget () : 0,
-         "Select Image File",
-         _get_last_path (),
-         "Images (*.png *.jpg)");
+   Boolean result (False);
+
+   _imageFile = FileName;
+   _bgConfig.store_attribute ("file", _imageFile);
          
-   if (!fileName.isEmpty ()) {
+   if (_imageFile) {
       
-      qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
-      
-      QPixmap bg (fileName);
+      QPixmap bg (_imageFile.get_buffer ());
       
       _load_pixmap (bg);
       
       _canvasModule->zoom_extents ();
       
-      _encode_image (qPrintable (fileName));
+      _encode_image (_imageFile);
       
-      qApp->restoreOverrideCursor ();
+      result = True;
    }
+   
+   return result;
 }
 
 
@@ -282,7 +346,6 @@ dmz::QtPluginCanvasBackground::_encode_image (const String &FileName) {
 
    if (FileName) {
 
-      _imageFile.flush ();
       _data.set_value ("\n");
 
       FILE *file = open_file (FileName, "rb");
@@ -312,11 +375,7 @@ dmz::QtPluginCanvasBackground::_encode_image (const String &FileName) {
          encoder.encode (0, 0);
          
          _data.append_value (base64Buffer, False);
-         
-         _imageFile = FileName;
       }
-      
-      _bgConfig.store_attribute ("file", _imageFile);
    }
 }
 
@@ -326,8 +385,15 @@ dmz::QtPluginCanvasBackground::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
 
-   _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
-   _canvasModuleName = config_to_string ("module.canvas.name", local);
+   _mainWindowModuleName = config_to_string (
+      "module.mainWindow.name",
+      local,
+      "dmzQtModuleMainWindowBasic");
+      
+   _canvasModuleName = config_to_string (
+      "module.canvas.name",
+      local,
+      "dmzQtModuleCanvasBasic");
    
    init_archive (local);
    
@@ -335,18 +401,26 @@ dmz::QtPluginCanvasBackground::_init (Config &local) {
       "message.name",
       local,
       "CleanupObjectsMessage",
-      context);
-
-   subscribe_to_message (_cleanupMessage);
+      context,
+      &_log);
    
    _backgroundEditMessage = config_create_message_type (
-      "message.backgroundEdit.name",
+      "message.background.edit",
       local,
       "CanvasBackgroundEditMessage",
       context,
       &_log);
-      
+
+   _undoMessage = config_create_message_type (
+      "message.background.undo",
+      local,
+      "CanvasBackgroundUndoMessage",
+      context,
+      &_log);
+
+   subscribe_to_message (_cleanupMessage);
    subscribe_to_message (_backgroundEditMessage);
+   subscribe_to_message (_undoMessage);
 }
 
 

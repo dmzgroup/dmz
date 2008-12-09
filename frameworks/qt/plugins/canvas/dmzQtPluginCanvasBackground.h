@@ -4,9 +4,11 @@
 #include <dmzApplicationState.h>
 #include <dmzArchiveObserverUtil.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeDataConverters.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeUndo.h>
 
 class QGraphicsPixmapItem;
 class QPixmap;
@@ -56,13 +58,15 @@ namespace dmz {
 
       protected:
          QString _get_last_path ();
-         void _load_background ();
+         Boolean _load_background (const String &FileName);
          void _load_pixmap (const QPixmap &Pixmap);
          void _clear_background ();
          void _encode_image (const String &FileName);
          void _init (Config &local);
 
          Log _log;
+         Undo _undo;
+         DataConverterString _dataConverter;
          ApplicationStateWrapper _appState;
          QtModuleMainWindow *_mainWindowModule;
          String _mainWindowModuleName;
@@ -70,11 +74,12 @@ namespace dmz {
          String _canvasModuleName;
          Message _cleanupMessage;
          Message _backgroundEditMessage;
+         Message _undoMessage;
          QGraphicsPixmapItem *_bgItem;
          String _imageFile;
          Config _bgConfig;
          Config _data;
-
+         
       private:
          QtPluginCanvasBackground ();
          QtPluginCanvasBackground (const QtPluginCanvasBackground &);

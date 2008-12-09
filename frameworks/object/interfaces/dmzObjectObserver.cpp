@@ -41,7 +41,7 @@ object observer interface.
 \return Returns String containing object observer's name.
 
 \fn dmz::Handle dmz::ObjectObserver::get_object_observer_handle ()
-\brief Gets object observers unique runtime handle.
+\brief Gets object observer's unique runtime handle.
 \return Returns unique runtime handle.
 
 \fn void dmz::ObjectObserver::store_object_module (

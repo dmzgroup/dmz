@@ -1080,6 +1080,7 @@ The Config for the above example would be formatted as follows:
 \endcode
 \param[in] Name String containing name of config context to convert.
 \param[in] Source Config containing config context to convert.
+\param[in] context Pointer to the runtime context.
 \return Returns dmz::HandleContainer of the String values.
 
 */

@@ -134,10 +134,10 @@ dmz::ObjectModuleGridBasic::update_object_observer_grid (ObjectObserverGrid &obs
                         os->objects.remove_handle (current->Object)) {
 
                      observer.update_object_grid_state (
+                        ObjectGridStateExit,
                         current->Object,
                         current->Type,
-                        current->pos,
-                        ObjectGridStateExit);
+                        current->pos);
                   }
 
                   current = cell->objTable.get_next (it);
@@ -463,18 +463,18 @@ dmz::ObjectModuleGridBasic::_update_observer (
    if (Contains && os.objects.add_handle (Obj.Object)) {
 
       os.obs.update_object_grid_state (
+         ObjectGridStateEnter,
          Obj.Object,
          Obj.Type,
-         Obj.pos,
-         ObjectGridStateEnter);
+         Obj.pos);
    }
    else if (!Contains && os.objects.remove_handle (Obj.Object)) {
 
       os.obs.update_object_grid_state (
+         ObjectGridStateExit,
          Obj.Object,
          Obj.Type,
-         Obj.pos,
-         ObjectGridStateExit);
+         Obj.pos);
    }
 }
 

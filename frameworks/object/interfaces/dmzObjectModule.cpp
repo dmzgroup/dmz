@@ -41,6 +41,15 @@ the ObjectModule interface of the Plugin is returned.
 implement the ObjectModule interface or the \a PluginName is not empty
 and not equal to the Plugin's name.
 
+\fn dmz::String dmz::ObjectModule::get_object_module_name () const
+\brief Gets object module's name.
+\return Returns String containing object module's name.
+
+\fn dmz::Handle dmz::ObjectModule::get_object_module_handle () const
+\brief Gets object module's runtime Handle.
+\return Returns Handle containing object module's runtime Handle.
+
+
 \fn dmz::Boolean dmz::ObjectModule::register_global_object_observer (
 ObjectObserver &observer)
 \brief Registers a global object observer.

@@ -531,7 +531,6 @@ dmz::encode_base64 (const String &Value) {
 }
 
 
-
 /*!
 
 \brief Base64 decodes a String.
@@ -543,18 +542,21 @@ dmz::encode_base64 (const String &Value) {
 dmz::String
 dmz::decode_base64 (const String &Value) {
 
-   String result (0, 0, ((Value.get_length () * 3) / 4) + 1);
-   StreamString stream (result);
-   Base64Decoder decoder;
-   decoder.set_stream (&stream);
-   Int32 size (0);
-   const  char *buffer = Value.get_buffer (size);
-   decoder.decode (buffer, size);
+   String result;
+   decode_base64 (Value, result);
 
    return result;
 }
 
 
+/*!
+
+\brief Base64 decodes a String.
+\ingroup Foundation
+\param[in] Value String containing value to be base64 decoded.
+\param[out] decoded String containing the base64 decoded result.
+
+*/
 dmz::Boolean
 dmz::decode_base64 (const String &Value, String &decoded) {
 

@@ -25,6 +25,7 @@ dmz::QtPluginCanvasBackground::QtPluginCanvasBackground (
       _mainWindowModule (0),
       _mainWindowModuleName (),
       _backgroundEditMessage (),
+      _imageFile (),
       _bgItem (0),
       _bgConfig ("image"),
       _data ("") {
@@ -108,8 +109,6 @@ dmz::QtPluginCanvasBackground::create_archive (
    }
 }
 
-#include <dmzSystem.h>
-
 
 void
 dmz::QtPluginCanvasBackground::process_archive (
@@ -118,7 +117,9 @@ dmz::QtPluginCanvasBackground::process_archive (
       Config &global) {
 
    Config imageData;
-   
+
+   _imageFile = config_to_string ("image.file", local);
+
    if (local.lookup_config ("image", imageData)) {
 
       String encodedValue;
@@ -135,10 +136,15 @@ dmz::QtPluginCanvasBackground::process_archive (
          
          if (pixmap.loadFromData (buffer, size)) {
             
+            // save the data so it can be put in the next archive -ss
+            _data.set_value (encodedValue);
+            
             _load_pixmap (pixmap);
          }
       }
    }
+   
+   _bgConfig.store_attribute ("file", _imageFile);
 }
 
 
@@ -171,6 +177,10 @@ dmz::QtPluginCanvasBackground::receive_message (
     
          _clear_background ();
       }
+   }
+   else if (Type == _cleanupMessage) {
+      
+      _clear_background ();
    }
 }
 
@@ -272,7 +282,8 @@ dmz::QtPluginCanvasBackground::_encode_image (const String &FileName) {
 
    if (FileName) {
 
-      _data.set_value ("");
+      _imageFile.flush ();
+      _data.set_value ("\n");
 
       FILE *file = open_file (FileName, "rb");
 
@@ -301,7 +312,11 @@ dmz::QtPluginCanvasBackground::_encode_image (const String &FileName) {
          encoder.encode (0, 0);
          
          _data.append_value (base64Buffer, False);
+         
+         _imageFile = FileName;
       }
+      
+      _bgConfig.store_attribute ("file", _imageFile);
    }
 }
 
@@ -315,6 +330,14 @@ dmz::QtPluginCanvasBackground::_init (Config &local) {
    _canvasModuleName = config_to_string ("module.canvas.name", local);
    
    init_archive (local);
+   
+   _cleanupMessage = config_create_message_type (
+      "message.name",
+      local,
+      "CleanupObjectsMessage",
+      context);
+
+   subscribe_to_message (_cleanupMessage);
    
    _backgroundEditMessage = config_create_message_type (
       "message.backgroundEdit.name",

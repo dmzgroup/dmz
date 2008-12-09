@@ -68,8 +68,10 @@ namespace dmz {
          String _mainWindowModuleName;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
+         Message _cleanupMessage;
          Message _backgroundEditMessage;
          QGraphicsPixmapItem *_bgItem;
+         String _imageFile;
          Config _bgConfig;
          Config _data;
 

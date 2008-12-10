@@ -174,7 +174,16 @@ dmz::QtPluginHistogram::update_object_counter (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
-   _update_graph ();
+   ObjectStruct *os (_objTable.lookup (ObjectHandle));
+
+   if (os) {
+
+      const Int32 Diff (Value - (PreviousValue ? *PreviousValue : 0));
+
+      _update_object_count (Diff, *os);
+
+      _update_graph ();
+   }
 }
 
 

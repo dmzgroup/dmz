@@ -425,7 +425,7 @@ dmz::QtModuleMainWindowBasic::_save_session () {
    Config session (get_plugin_name ());
 
    session.add_config (qbytearray_to_config ("geometry", saveGeometry ()));
-   session.add_config (qbytearray_to_config ("state", saveState (1)));
+   session.add_config (qbytearray_to_config ("state", saveState (3)));
 
    set_session_config (get_plugin_runtime_context (), session);
 }
@@ -440,7 +440,7 @@ dmz::QtModuleMainWindowBasic::_load_session () {
    QByteArray geometry (config_to_qbytearray ("geometry", session, saveGeometry ()));
    restoreGeometry (geometry);
 
-   QByteArray stateData (config_to_qbytearray ("state", session, saveState (1)));
+   QByteArray stateData (config_to_qbytearray ("state", session, saveState (3)));
    restoreState (stateData, 1);
 }
 

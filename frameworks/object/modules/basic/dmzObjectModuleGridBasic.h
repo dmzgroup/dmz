@@ -19,6 +19,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          ObjectModuleGridBasic (const PluginInfo &Info, Config &local);
          ~ObjectModuleGridBasic ();
 
@@ -134,6 +135,7 @@ namespace dmz {
          HashTableHandleTemplate<ObserverStruct> _obsTable;
 
          GridStruct *_grid;
+         //! \endcond
 
       private:
          ObjectModuleGridBasic ();
@@ -143,6 +145,7 @@ namespace dmz {
 };
 
 
+//! \cond
 inline dmz::Int32
 dmz::ObjectModuleGridBasic::_map_coord (const Int32 X, const Int32 Y) {
 
@@ -172,5 +175,6 @@ dmz::ObjectModuleGridBasic::_map_point (const Vector &Point) {
    _map_point_to_coord (Point, x, y);
    return _map_coord (x, y);
 }
+//! \endcond
 
 #endif // DMZ_OBJECT_MODULE_GRID_BASIC_DOT_H

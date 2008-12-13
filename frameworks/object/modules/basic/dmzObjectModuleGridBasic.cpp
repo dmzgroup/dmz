@@ -6,6 +6,26 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesVolume.h>
 
+/*!
+
+\class dmz::ObjectModuleGridBasic
+\ingroup Object
+\brief Basic ObjectModuleGrid implementation.
+\details This provids a basic implementation of the ObjectModuleGrid.
+\code
+<dmz>
+<dmzObjectModuleGridBasic>
+   <grid>
+      <cell x="X cell dimension" y="Y cell dimension"/>
+      <min x="min x" y="min y" z="min z"/>
+      <max x="max x" y="max y" z="max z"/>
+   </grid>
+</dmzObjectModuleGridBasic>
+</dmz>
+\endcode
+*/
+
+//! \cond
 dmz::ObjectModuleGridBasic::ObjectModuleGridBasic (
       const PluginInfo &Info,
       Config &local) :
@@ -506,6 +526,7 @@ dmz::ObjectModuleGridBasic::_init (Config &local) {
    activate_default_object_attribute (
       ObjectCreateMask | ObjectDestroyMask | ObjectPositionMask);
 }
+//! \endcond
 
 
 extern "C" {

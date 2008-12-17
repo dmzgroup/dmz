@@ -597,13 +597,31 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
    if (config_to_boolean ("hide.value", local, False)) { hide (); }
 
 
-   setCorner (Qt::BottomRightCorner, Qt::RightDockWidgetArea);
-#if 0
-   setCorner (Qt::TopRightCorner, Qt::RightDockWidgetArea);
-   setCorner (Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
-   setCorner (Qt::BottomRightCorner, Qt::BottomDockWidgetArea);
-   setCorner (Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
-#endif
+//   setCorner (Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+
+   setCorner (
+      Qt::TopRightCorner,
+      config_to_boolean ("corners.top.right", local, False) ?
+         Qt::TopDockWidgetArea :
+         Qt::RightDockWidgetArea);
+
+   setCorner (
+      Qt::TopLeftCorner,
+      config_to_boolean ("corners.top.left", local, False) ?
+         Qt::TopDockWidgetArea :
+         Qt::LeftDockWidgetArea);
+
+   setCorner (
+      Qt::BottomRightCorner,
+      config_to_boolean ("corners.bottom.right", local, False) ?
+         Qt::BottomDockWidgetArea :
+         Qt::RightDockWidgetArea);
+
+   setCorner (
+      Qt::BottomLeftCorner,
+      config_to_boolean ("corners.bottom.left", local, False) ?
+         Qt::BottomDockWidgetArea :
+         Qt::LeftDockWidgetArea);
 }
 
 

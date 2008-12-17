@@ -23,7 +23,8 @@ dmz::QtPluginHistogram::QtPluginHistogram (const PluginInfo &Info, Config &local
       _barWidth (20.0f),
       _barHeight (130.0f),
       _spaceWidth (5.0f),
-      _yDivisions (4) {
+      _yDivisions (4),
+      _steps (1) {
 
    _init (local);
 }
@@ -44,6 +45,12 @@ dmz::QtPluginHistogram::update_plugin_state (
       const UInt32 Level) {
 
    if (State == PluginStateInit) {
+
+      QColor white (1.0, 1.0, 1.0, 1.0);
+      QPen pen (white);
+      QGraphicsLineItem *spacer = new QGraphicsLineItem (0.0, 0.0, -40.0f, 0.0);
+      spacer->setPen (pen);
+      _scene->addItem (spacer);
 
       _xAxis = new QGraphicsLineItem (0.0f, 0.0f, _barWidth + _spaceWidth, 0.0);
       _scene->addItem (_xAxis);
@@ -199,7 +206,7 @@ dmz::QtPluginHistogram::_update_object_count (const Int32 Value, ObjectStruct &o
 
    if (obj.bar) { obj.bar->count--; }
 
-   obj.bar = _lookup_bar (obj.count);
+   obj.bar = _lookup_bar (obj.count - (obj.count % _steps));
 
    if (obj.bar) { obj.bar->count++; }
 }
@@ -297,25 +304,28 @@ dmz::QtPluginHistogram::_update_graph () {
 
       if (foundFirstBar) {
 
-         if (!bar->bar) {
+         if ((bar->Id % _steps) == 0) {
 
-            bar->bar = new QGraphicsRectItem;
-            bar->bar->setPen (_barStroke);
-            bar->bar->setBrush (_barFill);
-            if (_scene) { _scene->addItem (bar->bar); }
+            if (!bar->bar) {
+
+               bar->bar = new QGraphicsRectItem;
+               bar->bar->setPen (_barStroke);
+               bar->bar->setBrush (_barFill);
+               if (_scene) { _scene->addItem (bar->bar); }
+            }
+
+            if (!bar->text) {
+
+               bar->text = new QGraphicsTextItem (QString::number (bar->Id));
+               if (_scene) { _scene->addItem (bar->text); }
+            }
+
+            bar->offset = offset;
+
+            _update_bar (*bar);
+
+            offset += (_barWidth + _spaceWidth);
          }
-
-         if (!bar->text) {
-
-            bar->text = new QGraphicsTextItem (QString::number (bar->Id));
-            if (_scene) { _scene->addItem (bar->text); }
-         }
-
-         bar->offset = offset;
-
-         _update_bar (*bar);
-
-         offset += (_barWidth + _spaceWidth);
       }
       else { _remove_bar (*bar); }
 
@@ -418,6 +428,7 @@ dmz::QtPluginHistogram::_init (Config &local) {
    _barWidth = config_to_int32 ("bar.width", local, _barWidth);
    _barHeight = config_to_int32 ("bar.height", local, _barHeight);
    _spaceWidth = config_to_int32 ("bar.space", local, _spaceWidth);
+   _steps = config_to_int32 ("bar.steps", local, _steps);
 
    _yDivisions = config_to_int32 ("bar.divisions", local, _yDivisions);
 

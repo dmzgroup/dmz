@@ -123,6 +123,7 @@ namespace dmz {
          Float32 _barHeight;
          Float32 _spaceWidth;
          Int32 _yDivisions;
+         Int32 _steps;
 
          HashTableUInt32Template<BarStruct> _barTable;
          HashTableUInt32Template<ObjectStruct> _objTable;

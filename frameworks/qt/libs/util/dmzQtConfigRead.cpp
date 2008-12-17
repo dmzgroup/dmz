@@ -342,6 +342,12 @@ dmz::qwidget_config_read (const String &Name, const Config &Source, QWidget *wid
       </widget>
 #endif
 
+      widget->setMinimumSize (
+         config_to_qsize ("minimum-size", cd, widget->minimumSize ()));
+
+      widget->setMaximumSize (
+         config_to_qsize ("maximum-size", cd, widget->maximumSize ()));
+
       qobject_config_read ("object", cd, widget);
 
       String value;

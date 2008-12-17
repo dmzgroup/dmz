@@ -349,6 +349,8 @@ dmz::QtPluginHistogram::_update_graph () {
          (-_barHeight * ((Float32)(ix + 1)) / (Float32)_yDivisions) -
             (rect.height () * 0.5f));
    }
+
+   if (_scene) { _scene->setSceneRect (_scene->itemsBoundingRect ()); }
 }
 
 
@@ -360,9 +362,7 @@ dmz::QtPluginHistogram::_init (Config &local) {
 
    _scene = new QGraphicsScene;
    _view = new QGraphicsView (_scene);
-   //_view->setAlignment (Qt::AlignLeft | Qt::AlignBottom);
-   //_view->resize (400, 300);
-   //_view->show ();
+   _view->setAlignment (Qt::AlignLeft); // | Qt::AlignBottom);
 
    _typeSet = config_to_object_type_set ("set", local, context);
 
@@ -415,8 +415,11 @@ dmz::QtPluginHistogram::_init (Config &local) {
 
    _barStroke = config_to_qpen ("bar.stroke", local, _barStroke);
    _barFill = config_to_qbrush ("bar.fill", local, _barFill);
+   _barWidth = config_to_int32 ("bar.width", local, _barWidth);
+   _barHeight = config_to_int32 ("bar.height", local, _barHeight);
+   _spaceWidth = config_to_int32 ("bar.space", local, _spaceWidth);
 
-   _yDivisions = config_to_int32 ("divisions.value", local, _yDivisions);
+   _yDivisions = config_to_int32 ("bar.divisions", local, _yDivisions);
 
    _yLabels = new QGraphicsTextItem*[_yDivisions];
 

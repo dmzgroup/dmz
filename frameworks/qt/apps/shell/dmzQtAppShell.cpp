@@ -9,6 +9,7 @@
 #include <dmzRuntimeMessaging.h>
 #include <dmzQtLogObserver.h>
 #include <dmzQtSingletonApplication.h>
+#include "dmzQtSplashScreen.h"
 #include <dmzSystem.h>
 #include <dmzSystemFile.h>
 #include <dmzXMLUtil.h>
@@ -125,6 +126,8 @@ main (int argc, char *argv[]) {
          CFStringGetCStringPtr (macPath, CFStringGetSystemEncoding ());
 
       if (workingDir) { workingDir += "/Contents/Resources"; }
+
+      if (!is_valid_path (workingDir)) { workingDir.flush (); }
    }
 #endif
 
@@ -133,7 +136,11 @@ main (int argc, char *argv[]) {
       workingDir = qPrintable (settings.value ("/workingDir", ".").toString ());
    }
 
-   if (change_directory (workingDir)) {
+   if (!workingDir) {
+
+      app.log.info << "No working found." << endl;
+   }
+   else if (change_directory (workingDir)) {
 
       app.log.info << "Working directory: " << get_current_directory () << endl;
    }
@@ -141,6 +148,10 @@ main (int argc, char *argv[]) {
 
       app.log.error << "Unable to to change to working directory: " << workingDir << endl;
    }
+
+   QtSplashScreen *splash = create_splash_screen (AppName, app.get_context ());
+
+   if (splash) { splash->show (); splash->raise (); }
 
    QString manifestFile (get_env (AppPrefix + "_MANIFEST").get_buffer ());
 
@@ -284,6 +295,8 @@ main (int argc, char *argv[]) {
 
       qtLogObs.set_process_updates (False);
 
+      if (splash) { delete splash; splash = 0; }
+
       do {
 
          QApplication::sendPostedEvents (0, -1);
@@ -313,6 +326,7 @@ main (int argc, char *argv[]) {
    }
    else {
 
+      if (splash) { delete splash; splash = 0; }
       QString errorMsg ("Unable to process manifest:\n");
       local_starup_error (errorMsg + manifestFile);
    }

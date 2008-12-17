@@ -133,8 +133,6 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
    _ui.stackedWidget->addWidget (widget);
 
    _init (local);
-
-   setCorner (Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 }
 
 
@@ -597,6 +595,15 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
    set_qwidget_stylesheet ("stylesheet", local, this);
 
    if (config_to_boolean ("hide.value", local, False)) { hide (); }
+
+
+   setCorner (Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+#if 0
+   setCorner (Qt::TopRightCorner, Qt::RightDockWidgetArea);
+   setCorner (Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+   setCorner (Qt::BottomRightCorner, Qt::BottomDockWidgetArea);
+   setCorner (Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+#endif
 }
 
 

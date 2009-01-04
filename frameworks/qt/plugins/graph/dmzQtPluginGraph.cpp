@@ -1,12 +1,12 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzQtConfigRead.h>
-#include "dmzQtPluginHistogram.h"
+#include "dmzQtPluginGraph.h"
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
-dmz::QtPluginHistogram::QtPluginHistogram (const PluginInfo &Info, Config &local) :
+dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       ObjectObserverUtil (Info, local),
       QtWidget (Info),
@@ -30,7 +30,7 @@ dmz::QtPluginHistogram::QtPluginHistogram (const PluginInfo &Info, Config &local
 }
 
 
-dmz::QtPluginHistogram::~QtPluginHistogram () {
+dmz::QtPluginGraph::~QtPluginGraph () {
 
    delete []_yLabels; _yLabels = 0;
    _objTable.empty ();
@@ -40,7 +40,7 @@ dmz::QtPluginHistogram::~QtPluginHistogram () {
 
 // Plugin Interface
 void
-dmz::QtPluginHistogram::update_plugin_state (
+dmz::QtPluginGraph::update_plugin_state (
       const PluginStateEnum State,
       const UInt32 Level) {
 
@@ -71,7 +71,7 @@ dmz::QtPluginHistogram::update_plugin_state (
 
 
 void
-dmz::QtPluginHistogram::discover_plugin (
+dmz::QtPluginGraph::discover_plugin (
       const PluginDiscoverEnum Mode,
       const Plugin *PluginPtr) {
 
@@ -86,7 +86,7 @@ dmz::QtPluginHistogram::discover_plugin (
 
 // Object Observer Interface
 void
-dmz::QtPluginHistogram::create_object (
+dmz::QtPluginGraph::create_object (
       const UUID &Identity,
       const Handle ObjectHandle,
       const ObjectType &Type,
@@ -114,7 +114,7 @@ dmz::QtPluginHistogram::create_object (
 
 
 void
-dmz::QtPluginHistogram::destroy_object (
+dmz::QtPluginGraph::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
@@ -136,7 +136,7 @@ dmz::QtPluginHistogram::destroy_object (
 
 
 void
-dmz::QtPluginHistogram::link_objects (
+dmz::QtPluginGraph::link_objects (
       const Handle LinkHandle,
       const Handle AttributeHandle,
       const UUID &SuperIdentity,
@@ -155,7 +155,7 @@ dmz::QtPluginHistogram::link_objects (
 
 
 void
-dmz::QtPluginHistogram::unlink_objects (
+dmz::QtPluginGraph::unlink_objects (
       const Handle LinkHandle,
       const Handle AttributeHandle,
       const UUID &SuperIdentity,
@@ -174,7 +174,7 @@ dmz::QtPluginHistogram::unlink_objects (
 
 
 void
-dmz::QtPluginHistogram::update_object_counter (
+dmz::QtPluginGraph::update_object_counter (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -196,11 +196,11 @@ dmz::QtPluginHistogram::update_object_counter (
 
 // QtWidget Interface
 QWidget *
-dmz::QtPluginHistogram::get_qt_widget () { return _view; }
+dmz::QtPluginGraph::get_qt_widget () { return _view; }
 
 
 void
-dmz::QtPluginHistogram::_update_object_count (const Int32 Value, ObjectStruct &obj) {
+dmz::QtPluginGraph::_update_object_count (const Int32 Value, ObjectStruct &obj) {
 
    obj.count += Value;
 
@@ -212,8 +212,8 @@ dmz::QtPluginHistogram::_update_object_count (const Int32 Value, ObjectStruct &o
 }
 
 
-dmz::QtPluginHistogram::BarStruct *
-dmz::QtPluginHistogram::_lookup_bar (const Int32 Count) {
+dmz::QtPluginGraph::BarStruct *
+dmz::QtPluginGraph::_lookup_bar (const Int32 Count) {
 
    BarStruct *result (0);
 
@@ -233,7 +233,7 @@ dmz::QtPluginHistogram::_lookup_bar (const Int32 Count) {
 
 
 void
-dmz::QtPluginHistogram::_remove_bar (BarStruct &bar) {
+dmz::QtPluginGraph::_remove_bar (BarStruct &bar) {
 
    if (bar.bar) {
 
@@ -250,7 +250,7 @@ dmz::QtPluginHistogram::_remove_bar (BarStruct &bar) {
 
 
 void
-dmz::QtPluginHistogram::_update_bar (BarStruct &bar) {
+dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
 
    if (bar.bar) {
 
@@ -272,7 +272,7 @@ dmz::QtPluginHistogram::_update_bar (BarStruct &bar) {
 
 
 void
-dmz::QtPluginHistogram::_update_graph () {
+dmz::QtPluginGraph::_update_graph () {
 
    HashTableUInt32Iterator it;
 
@@ -365,7 +365,7 @@ dmz::QtPluginHistogram::_update_graph () {
 
 
 void
-dmz::QtPluginHistogram::_init (Config &local) {
+dmz::QtPluginGraph::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
    Definitions defs (context);
@@ -459,12 +459,12 @@ dmz::QtPluginHistogram::_init (Config &local) {
 extern "C" {
 
 DMZ_PLUGIN_FACTORY_LINK_SYMBOL dmz::Plugin *
-create_dmzQtPluginHistogram (
+create_dmzQtPluginGraph (
       const dmz::PluginInfo &Info,
       dmz::Config &local,
       dmz::Config &global) {
 
-   return new dmz::QtPluginHistogram (Info, local);
+   return new dmz::QtPluginGraph (Info, local);
 }
 
 };

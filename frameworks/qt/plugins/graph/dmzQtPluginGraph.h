@@ -1,5 +1,5 @@
-#ifndef DMZ_QT_PLUGIN_HISTOGRAM_DOT_H
-#define DMZ_QT_PLUGIN_HISTOGRAM_DOT_H
+#ifndef DMZ_QT_PLUGIN_GRAPH_DOT_H
+#define DMZ_QT_PLUGIN_GRAPH_DOT_H
 
 #include <dmzObjectObserverUtil.h>
 #include <dmzQtWidget.h>
@@ -19,14 +19,14 @@
 
 namespace dmz {
 
-   class QtPluginHistogram :
+   class QtPluginGraph :
          public Plugin,
          public ObjectObserverUtil,
          public QtWidget {
 
       public:
-         QtPluginHistogram (const PluginInfo &Info, Config &local);
-         ~QtPluginHistogram ();
+         QtPluginGraph (const PluginInfo &Info, Config &local);
+         ~QtPluginGraph ();
 
          // Plugin Interface
          virtual void update_plugin_state (
@@ -130,11 +130,11 @@ namespace dmz {
          ObjectTypeSet _typeSet;
 
       private:
-         QtPluginHistogram ();
-         QtPluginHistogram (const QtPluginHistogram &);
-         QtPluginHistogram &operator= (const QtPluginHistogram &);
+         QtPluginGraph ();
+         QtPluginGraph (const QtPluginGraph &);
+         QtPluginGraph &operator= (const QtPluginGraph &);
 
    };
 };
 
-#endif // DMZ_QT_PLUGIN_HISTOGRAM_DOT_H
+#endif // DMZ_QT_PLUGIN_GRAPH_DOT_H

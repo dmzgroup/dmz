@@ -8,6 +8,7 @@
 
 dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       Plugin (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       QtWidget (Info),
       _log (Info),
@@ -16,6 +17,7 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       _xAxis (0),
       _yAxis (0),
       _yLabels (0),
+      _graphDirty (False),
       _maxCount (0),
       _totalCount (0),
       _maxBarCount (0),
@@ -84,6 +86,14 @@ dmz::QtPluginGraph::discover_plugin (
 }
 
 
+// TimeSlice Interface
+void
+dmz::QtPluginGraph::update_time_slice (const Float64 TimeDelta) {
+
+   if (_graphDirty) { _update_graph (); _graphDirty = False; }
+}
+
+
 // Object Observer Interface
 void
 dmz::QtPluginGraph::create_object (
@@ -105,7 +115,7 @@ dmz::QtPluginGraph::create_object (
          if (os->bar) {
 
             os->bar->count++;
-            _update_graph ();
+            _graphDirty = True;
          }
       }
       else { delete os; os = 0; }
@@ -127,7 +137,7 @@ dmz::QtPluginGraph::destroy_object (
       if (os->bar) {
 
          os->bar->count--;
-         _update_graph ();
+         _graphDirty = True;
       }
 
       delete os; os = 0;
@@ -150,7 +160,7 @@ dmz::QtPluginGraph::link_objects (
    if (super) { _update_object_count (1, *super); }
    if (sub) { _update_object_count (1, *sub); }
 
-   _update_graph ();
+   _graphDirty = True;
 }
 
 
@@ -169,7 +179,7 @@ dmz::QtPluginGraph::unlink_objects (
    if (super) { _update_object_count (-1, *super); }
    if (sub) { _update_object_count (-1, *sub); }
 
-   _update_graph ();
+   _graphDirty = True;
 }
 
 
@@ -189,7 +199,7 @@ dmz::QtPluginGraph::update_object_counter (
 
       _update_object_count (Diff, *os);
 
-      _update_graph ();
+      _graphDirty = True;
    }
 }
 
@@ -246,17 +256,24 @@ dmz::QtPluginGraph::_remove_bar (BarStruct &bar) {
       if (_scene) { _scene->removeItem (bar.text); }
       delete (bar.text); bar.text = 0;
    }
+
+   if (bar.countText) {
+
+      if (_scene) { _scene->removeItem (bar.countText); }
+      delete (bar.countText); bar.countText = 0;
+   }
+
 }
 
 
 void
 dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
 
-   if (bar.bar) {
 
-      const Float32 Height = ((_maxBarCount > 0) ?
-         -(_barHeight * ((Float32)bar.count / (Float32)_maxBarCount)) :
-         0.0);
+   const Float32 Height = ((_maxBarCount > 0) ?
+      -(_barHeight * ((Float32)bar.count / (Float32)_maxBarCount)) : 0.0);
+
+   if (bar.bar) {
 
       bar.bar->setRect (bar.offset, 0.0, _barWidth, Height);
    }
@@ -267,6 +284,15 @@ dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
       bar.text->setPos (
          bar.offset + ((_barWidth * 0.5) - (rect.width () * 0.5)),
          5.0);
+   }
+
+   if (bar.countText) {
+
+      QRectF rect = bar.countText->boundingRect ();
+      bar.countText->setPlainText (QString::number (bar.count));
+      bar.countText->setPos (
+         bar.offset + ((_barWidth * 0.5) - (rect.width () * 0.5)),
+         Height - rect.height ());
    }
 }
 
@@ -318,6 +344,12 @@ dmz::QtPluginGraph::_update_graph () {
 
                bar->text = new QGraphicsTextItem (QString::number (bar->Id));
                if (_scene) { _scene->addItem (bar->text); }
+            }
+
+            if (!bar->countText) {
+
+               bar->countText = new QGraphicsTextItem (QString::number (bar->count));
+               if (_scene) { _scene->addItem (bar->countText); }
             }
 
             bar->offset = offset;

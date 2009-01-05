@@ -6,6 +6,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableUInt32Template.h>
 
@@ -21,6 +22,7 @@ namespace dmz {
 
    class QtPluginGraph :
          public Plugin,
+         public TimeSlice,
          public ObjectObserverUtil,
          public QtWidget {
 
@@ -36,6 +38,9 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
+
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
          // Object Observer Interface
          virtual void create_object (
@@ -80,13 +85,15 @@ namespace dmz {
             Float32 offset;
             QGraphicsRectItem *bar;
             QGraphicsTextItem *text;
+            QGraphicsTextItem *countText;
 
             BarStruct (const Int32 TheId) :
                Id (TheId),
                count (0),
                offset (0.0),
                bar (0),
-               text (0) {;}
+               text (0),
+               countText (0) {;}
          };
 
          struct ObjectStruct {
@@ -113,6 +120,8 @@ namespace dmz {
 
          QBrush _barFill;
          QPen _barStroke;
+
+         Boolean _graphDirty;
 
          Int32 _maxCount;
          Int32 _totalCount;

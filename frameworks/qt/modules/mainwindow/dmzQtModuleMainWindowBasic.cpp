@@ -13,7 +13,7 @@
 
 namespace {
 
-static const int LocalSessionVersion = 4;
+static const int LocalSessionVersion = 5;
 
 };
 

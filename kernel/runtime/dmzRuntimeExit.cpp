@@ -129,6 +129,13 @@ struct dmz::Exit::State {
 dmz::Exit::Exit (RuntimeContext *context) : _state (*(new State (context))) {;}
 
 
+/*!
+\brief Constructor
+\param[in] Info Reference to the PluginInfo.
+*/
+dmz::Exit::Exit (const PluginInfo &Info) : _state (*(new State (Info.get_context ()))) {;}
+
+
 //! Destructor.
 dmz::Exit::~Exit () { delete &_state; }
 

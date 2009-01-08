@@ -2,21 +2,22 @@
 #define DMZ_RENDER_EVENT_HANDLER_OSG_DOT_H
 
 #include <dmzRenderUtilOSGExport.h>
+#include <dmzRuntimeExit.h>
 #include <dmzInputEventKey.h>
 #include <dmzInputEventMouse.h>
 
 #include <osgGA/GUIEventHandler>
 
-
 namespace dmz {
 
+   class RuntimeContext;
    class InputModule;
 
    class DMZ_RENDER_UTIL_OSG_LINK_SYMBOL RenderEventHandlerOSG :
          public osgGA::GUIEventHandler {
 
       public:
-         RenderEventHandlerOSG ();
+         RenderEventHandlerOSG (RuntimeContext *context);
 
          virtual bool handle (
                const osgGA::GUIEventAdapter &Event,
@@ -35,6 +36,7 @@ namespace dmz {
 
       protected:
          ~RenderEventHandlerOSG ();
+         Exit _exit;
          InputModule *_channels;
          InputEventKey _keyEvent;
          InputEventMouse _mouseEvent;

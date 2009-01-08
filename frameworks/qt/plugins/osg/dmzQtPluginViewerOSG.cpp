@@ -29,7 +29,7 @@ dmz::QtPluginViewerOSG::QtPluginViewerOSG (
    _viewer = new ViewerQOSG;
    _viewer->setThreadingModel (osgViewer::Viewer::SingleThreaded);
    _cameraManipulator = new RenderCameraManipulatorOSG;
-   _eventHandler = new RenderEventHandlerOSG;
+   _eventHandler = new RenderEventHandlerOSG (get_plugin_runtime_context ());
 
    osgViewer::StatsHandler *stats = new osgViewer::StatsHandler;
    stats->setKeyEventTogglesOnScreenStats (osgGA::GUIEventAdapter::KEY_F1);

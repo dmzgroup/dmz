@@ -1,11 +1,9 @@
 #include <dmzInputModule.h>
 #include <dmzRenderEventHandlerOSG.h>
 
-dmz::RenderEventHandlerOSG::RenderEventHandlerOSG () :
-      osgGA::GUIEventHandler (),
-      _channels (0),
-      _keyEvent (),
-      _mouseEvent () {;}
+dmz::RenderEventHandlerOSG::RenderEventHandlerOSG (RuntimeContext *context) :
+      _exit (context),
+      _channels (0) {;}
 
 
 dmz::RenderEventHandlerOSG::~RenderEventHandlerOSG () {;}
@@ -82,7 +80,13 @@ dmz::RenderEventHandlerOSG::handle (
 
          case (osgGA::GUIEventAdapter::CLOSE_WINDOW): {
 
-            // this should be passed in in some way
+            _exit.request_exit (ExitStatusNormal, "Application Quit.");
+            break;
+         }
+
+         case (osgGA::GUIEventAdapter::QUIT_APPLICATION):  {
+
+            _exit.request_exit (ExitStatusNormal, "Application Quit.");
             break;
          }
 

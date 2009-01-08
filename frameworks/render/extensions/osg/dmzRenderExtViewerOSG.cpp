@@ -28,7 +28,7 @@ dmz::RenderExtViewerOSG::RenderExtViewerOSG (
    _viewer = new osgViewer::Viewer;
    _viewer->setThreadingModel (osgViewer::Viewer::SingleThreaded);
    _cameraManipulator = new RenderCameraManipulatorOSG;
-   _eventHandler = new RenderEventHandlerOSG;
+   _eventHandler = new RenderEventHandlerOSG (get_plugin_runtime_context ());
 
    osgViewer::StatsHandler *stats = new osgViewer::StatsHandler;
    stats->setKeyEventTogglesOnScreenStats (osgGA::GUIEventAdapter::KEY_F1);
@@ -37,6 +37,7 @@ dmz::RenderExtViewerOSG::RenderExtViewerOSG (
    _viewer->setCameraManipulator (_cameraManipulator.get ());
    _viewer->addEventHandler (_eventHandler.get ());
    _viewer->setKeyEventSetsDone (0);
+   _viewer->setQuitEventSetsDone (true);
 
    _init (local);
 
@@ -131,7 +132,13 @@ dmz::RenderExtViewerOSG::update_time_slice (const Float64 TimeDelta) {
 
    if (_viewer.valid ()) {
 
-      _viewer->frame (); // Render a complete new frame
+      if (_viewer->done ()) {
+
+         Exit (get_plugin_runtime_context ()).request_exit (
+            ExitStatusNormal,
+            "Application Quit.");
+      }
+      else { _viewer->frame (); } // Render a complete new frame
    }
 }
 

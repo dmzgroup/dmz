@@ -70,14 +70,9 @@ main (int argc, char *argv[]) {
 
    // Q_INIT_RESOURCE (mbra);
 
-   // Set up the custom qWarning/qDebug custom handler
-   qInstallMsgHandler (qt_message_handler);
-
-   QCoreApplication::setOrganizationName (OrganizationName);
-   QCoreApplication::setOrganizationDomain (OrganizationDomain);
-   QCoreApplication::setApplicationName (AppName.get_buffer ());
-
    Application app (AppName, OrganizationName);
+
+   if (!appLog) { appLog = &(app.log); }
 
 #if defined(__APPLE__) || defined(MACOSX) || defined (_WIN32)
    QtSingletonApplication qtApp (
@@ -95,6 +90,13 @@ main (int argc, char *argv[]) {
    QApplication qtApp (argc, argv);
 #endif
 
+   // Set up the custom qWarning/qDebug custom handler
+   qInstallMsgHandler (qt_message_handler);
+
+   QCoreApplication::setOrganizationName (OrganizationName);
+   QCoreApplication::setOrganizationDomain (OrganizationDomain);
+   QCoreApplication::setApplicationName (AppName.get_buffer ());
+
    app.state.set_autosave_file (
       get_home_directory () + "/." + AppPrefix + "_AUTO_SAVE_FILE");
 
@@ -108,8 +110,6 @@ main (int argc, char *argv[]) {
 
    app.load_session ();
    qtLogObs.load_session ();
-
-   if (!appLog) { appLog = &(app.log); }
 
    QSettings settings;
    String workingDir (get_env (AppPrefix + "_WORKING_DIR"));
@@ -235,6 +235,7 @@ main (int argc, char *argv[]) {
             String loadFile;
 
             if ((argc > 1) && argv[1]) { loadFile = argv[1]; }
+
 #if defined(__APPLE__) || defined(MACOSX)
            else if (!qtApp.get_requested_file ().isEmpty ()) {
 

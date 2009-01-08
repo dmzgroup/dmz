@@ -63,12 +63,18 @@ dmz::RenderExtViewerOSG::update_plugin_state (
       if (_viewer.valid ()) {
 
          _viewer->realize ();
+
+#if defined(__APPLE__) || defined(MACOSX)
+         // WARNING This code does not seem to work under Win32. Fortunately
+         // The OSG window comes up in focus under Win32. For the Mac, this
+         // gives the window focus on startup
          osgViewer::ViewerBase::Windows w;
          _viewer->getWindows (w);
 
          osgViewer::GraphicsWindow *gw = w.front ();
 
          if (gw) { gw->grabFocus (); }
+#endif
       }
    }
 }

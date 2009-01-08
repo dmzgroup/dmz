@@ -63,6 +63,12 @@ dmz::RenderExtViewerOSG::update_plugin_state (
       if (_viewer.valid ()) {
 
          _viewer->realize ();
+         osgViewer::ViewerBase::Windows w;
+         _viewer->getWindows (w);
+
+         osgViewer::GraphicsWindow *gw = w.front ();
+
+         if (gw) { gw->grabFocus (); }
       }
    }
 }

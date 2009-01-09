@@ -12,6 +12,7 @@
 
 #include <QtGui/QBrush>
 #include <QtGui/QGraphicsLineItem>
+#include <QtGui/QGraphicsPathItem>
 #include <QtGui/QGraphicsRectItem>
 #include <QtGui/QGraphicsScene>
 #include <QtGui/QGraphicsTextItem>
@@ -83,6 +84,7 @@ namespace dmz {
             const Int32 Id;
             Int32 count;
             Float32 offset;
+            Float32 height;
             QGraphicsRectItem *bar;
             QGraphicsTextItem *text;
             QGraphicsTextItem *countText;
@@ -91,6 +93,7 @@ namespace dmz {
                Id (TheId),
                count (0),
                offset (0.0),
+               height (0.0),
                bar (0),
                text (0),
                countText (0) {;}
@@ -108,6 +111,7 @@ namespace dmz {
          BarStruct *_lookup_bar (const Int32 Count);
          void _remove_bar (BarStruct &bar);
          void _update_bar (BarStruct &bar);
+         void _update_power_law (const BarStruct *LastBar);
          void _update_graph ();
          void _init (Config &local);
 
@@ -117,6 +121,7 @@ namespace dmz {
          QGraphicsLineItem *_xAxis;
          QGraphicsLineItem *_yAxis;
          QGraphicsTextItem **_yLabels;
+         QGraphicsPathItem *_powerLawPath;
 
          QBrush _barFill;
          QPen _barStroke;

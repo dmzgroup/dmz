@@ -6,6 +6,10 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+#include <QtGui/QPainterPath>
+
+#include <math.h>
+
 dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (Info),
@@ -17,6 +21,7 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       _xAxis (0),
       _yAxis (0),
       _yLabels (0),
+      _powerLawPath (0),
       _graphDirty (False),
       _maxCount (0),
       _totalCount (0),
@@ -52,12 +57,15 @@ dmz::QtPluginGraph::update_plugin_state (
       QPen pen (white);
       QGraphicsLineItem *spacer = new QGraphicsLineItem (0.0, 0.0, -40.0f, 0.0);
       spacer->setPen (pen);
+      spacer->setZValue (-1.0f);
       _scene->addItem (spacer);
 
       _xAxis = new QGraphicsLineItem (0.0f, 0.0f, _barWidth + _spaceWidth, 0.0);
+      _xAxis->setZValue (1.0);
       _scene->addItem (_xAxis);
 
       _yAxis = new QGraphicsLineItem (0.0f, 0.0f, 0.0f, -_barHeight);
+      _yAxis->setZValue (1.0);
       _scene->addItem (_yAxis);
    }
    else if (State == PluginStateStart) {
@@ -270,12 +278,12 @@ void
 dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
 
 
-   const Float32 Height = ((_maxBarCount > 0) ?
+   bar.height = ((_maxBarCount > 0) ?
       -(_barHeight * ((Float32)bar.count / (Float32)_maxBarCount)) : 0.0);
 
    if (bar.bar) {
 
-      bar.bar->setRect (bar.offset, 0.0, _barWidth, Height);
+      bar.bar->setRect (bar.offset, 0.0, _barWidth, bar.height);
    }
 
    if (bar.text) {
@@ -292,7 +300,102 @@ dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
       bar.countText->setPlainText (QString::number (bar.count));
       bar.countText->setPos (
          bar.offset + ((_barWidth * 0.5) - (rect.width () * 0.5)),
-         Height - rect.height ());
+         bar.height - rect.height ());
+   }
+}
+
+static inline dmz::Float64
+local_power (const dmz::Float64 P, const dmz::Float64 Q, const dmz::Float64 X) {
+
+   return (X <= 0.0 ? P : P * pow (X, Q));
+}
+
+
+void
+dmz::QtPluginGraph::_update_power_law (const BarStruct *LastBar) {
+
+   Boolean foundFirstBar (False);
+   Float32 offset = _spaceWidth;
+
+   Float64 p (0.0);
+   Float64 q (0.0);
+   Float64 nonZeroCount (0.0);
+   Float64 x (0.0);
+   Float64 y (0.0);
+   Float64 sumX (0.0);
+   Float64 sumY (0.0);
+   Float64 sumXY (0.0);
+   Float64 sumX2 (0.0);
+
+   HashTableUInt32Iterator it;
+   BarStruct *bar (_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
+
+   while (bar) {
+
+      if (!foundFirstBar && bar->count) { foundFirstBar = True; }
+
+      if (foundFirstBar) {
+
+         if (bar->Id == 0) { x = 1.0; }
+         else { x = log (Float64 (bar->Id)); }
+
+         if (bar->height < 0.0f) {
+
+            y = log (-bar->height);
+            sumY += y;
+            sumX += x;
+            sumXY += x * y;
+            sumX2 += x * x;
+            nonZeroCount++;
+         }
+      }
+
+      if (LastBar == bar) { bar = 0; }
+      else {
+
+         bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
+      }
+   }
+
+   if (nonZeroCount > 0.0) {
+
+      q = ((nonZeroCount * sumXY) - (sumX * sumY)) /
+            ((nonZeroCount * sumX2) - (sumX * sumX));
+
+      p = exp ((sumY - (q * sumX)) / nonZeroCount);
+   }
+
+   QPainterPath path;
+
+   bar = (_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
+
+   if (bar) { path.moveTo (bar->offset, -local_power (p, q, -bar->height)); }
+
+   bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
+
+   const Float32 Offset (_barWidth * 0.5f);
+
+   while (bar) {
+
+      path.lineTo (bar->offset + Offset, -local_power (p, q, -bar->height));
+      
+      if (LastBar == bar) { bar = 0; }
+      else {
+
+         bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
+      }
+   }
+
+   if (!_powerLawPath) {
+
+      _powerLawPath = new QGraphicsPathItem;
+      _powerLawPath->setZValue (2.0);
+      if (_scene) { _scene->addItem (_powerLawPath); }
+   }
+
+   if (_powerLawPath) {
+
+      _powerLawPath->setPath (path);
    }
 }
 
@@ -337,18 +440,21 @@ dmz::QtPluginGraph::_update_graph () {
                bar->bar = new QGraphicsRectItem;
                bar->bar->setPen (_barStroke);
                bar->bar->setBrush (_barFill);
+               bar->bar->setZValue (0.0f);
                if (_scene) { _scene->addItem (bar->bar); }
             }
 
             if (!bar->text) {
 
                bar->text = new QGraphicsTextItem (QString::number (bar->Id));
+               bar->text->setZValue (0.0);
                if (_scene) { _scene->addItem (bar->text); }
             }
 
             if (!bar->countText) {
 
                bar->countText = new QGraphicsTextItem (QString::number (bar->count));
+               bar->countText->setZValue (0.0);
                if (_scene) { _scene->addItem (bar->countText); }
             }
 
@@ -370,12 +476,9 @@ dmz::QtPluginGraph::_update_graph () {
 
    if (_xAxis) { _xAxis->setLine (0.0f, 0.0f, offset, 0.0f); }
 
-
    for (Int32 ix = 0; ix < _yDivisions; ix++) {
 
       const QString Value (
-         // QString::number ((_maxBarCount * (ix + 1)) / _yDivisions) +
-         // QString (" " ) +
          ((_totalCount > 0) ?
             QString::number (
                Int32 ((Float32)(_maxBarCount * (ix + 1)) * 100.0f /
@@ -391,6 +494,8 @@ dmz::QtPluginGraph::_update_graph () {
          (-_barHeight * ((Float32)(ix + 1)) / (Float32)_yDivisions) -
             (rect.height () * 0.5f));
    }
+
+   _update_power_law (lastBar);
 
    if (_scene) { _scene->setSceneRect (_scene->itemsBoundingRect ()); }
 }
@@ -474,6 +579,7 @@ dmz::QtPluginGraph::_init (Config &local) {
 
       _yLabels[ix]->setPlainText (
          QString::number (100 * (ix +1) / _yDivisions) + QString ("%"));
+      _yLabels[ix]->setZValue (1.0f);
 
       QRectF rect = _yLabels[ix]->boundingRect ();
 
@@ -482,6 +588,7 @@ dmz::QtPluginGraph::_init (Config &local) {
       _scene->addItem (_yLabels[ix]);
 
       QGraphicsLineItem *line = new QGraphicsLineItem (-4.0, Offset, 0.0f, Offset);
+      line->setZValue (1.0f);
 
       _scene->addItem (line);
    }

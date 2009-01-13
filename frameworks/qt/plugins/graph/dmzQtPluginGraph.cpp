@@ -24,6 +24,7 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       _powerLawPath (0),
       _powerLabel (0),
       _graphDirty (False),
+      _showPowerLaw (False),
       _maxCount (0),
       _totalCount (0),
       _maxBarCount (0),
@@ -541,7 +542,7 @@ dmz::QtPluginGraph::_update_graph () {
    }
 #endif
 
-   _update_power_law (lastBar, offset);
+   if (_showPowerLaw) { _update_power_law (lastBar, offset); }
 
    if (_scene) { _scene->setSceneRect (_scene->itemsBoundingRect ()); }
 }
@@ -606,6 +607,7 @@ dmz::QtPluginGraph::_init (Config &local) {
 
    _maxCount = config_to_int32 ("start.value", local, _maxCount);
 
+   _showPowerLaw = config_to_boolean ("power-law.show", local, _showPowerLaw);
    _powerStroke = config_to_qpen ("power-law.stroke", local, _powerStroke);
    _barStroke = config_to_qpen ("bar.stroke", local, _barStroke);
    _barFill = config_to_qbrush ("bar.fill", local, _barFill);

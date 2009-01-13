@@ -129,6 +129,7 @@ namespace dmz {
          QPen _powerStroke;
 
          Boolean _graphDirty;
+         Boolean _showPowerLaw;
 
          Int32 _maxCount;
          Int32 _totalCount;

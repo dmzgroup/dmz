@@ -418,14 +418,14 @@ dmz::QtPluginGraph::_update_power_law (
       if (!_powerLabel) {
 
          _powerLabel = new QGraphicsTextItem;
-         _powerLabel->setPos (300.0, -_barHeight);
+         _powerLabel->setPos (260.0, -_barHeight);
          if (_scene) { _scene->addItem (_powerLabel); }
       }
 
       if (_powerLabel) {
 
          _powerLabel->setPlainText (
-            QString::fromAscii ("Power = ") + QString::number (p));
+            QString::fromAscii ("Exponent = ") + QString::number (q));
       }
    }
    else if (_scene) {

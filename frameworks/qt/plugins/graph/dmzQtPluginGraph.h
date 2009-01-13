@@ -111,7 +111,7 @@ namespace dmz {
          BarStruct *_lookup_bar (const Int32 Count);
          void _remove_bar (BarStruct &bar);
          void _update_bar (BarStruct &bar);
-         void _update_power_law (const BarStruct *LastBar);
+         void _update_power_law (const BarStruct *LastBar, const Float64 EndOfXAxis);
          void _update_graph ();
          void _init (Config &local);
 
@@ -122,9 +122,11 @@ namespace dmz {
          QGraphicsLineItem *_yAxis;
          QGraphicsTextItem **_yLabels;
          QGraphicsPathItem *_powerLawPath;
+         QGraphicsTextItem *_powerLabel;
 
          QBrush _barFill;
          QPen _barStroke;
+         QPen _powerStroke;
 
          Boolean _graphDirty;
 

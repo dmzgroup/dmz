@@ -22,6 +22,7 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       _yAxis (0),
       _yLabels (0),
       _powerLawPath (0),
+      _powerLabel (0),
       _graphDirty (False),
       _maxCount (0),
       _totalCount (0),
@@ -53,14 +54,19 @@ dmz::QtPluginGraph::update_plugin_state (
 
    if (State == PluginStateInit) {
 
-      QColor white (1.0, 1.0, 1.0, 1.0);
+      QColor white (1.0f, 1.0f, 1.0f, 1.0f);
       QPen pen (white);
-      QGraphicsLineItem *spacer = new QGraphicsLineItem (0.0, 0.0, -40.0f, 0.0);
+      QGraphicsLineItem *spacer = new QGraphicsLineItem (0.0f, 0.0f, -40.0f, 0.0f);
       spacer->setPen (pen);
       spacer->setZValue (-1.0f);
       _scene->addItem (spacer);
 
-      _xAxis = new QGraphicsLineItem (0.0f, 0.0f, _barWidth + _spaceWidth, 0.0);
+      spacer = new QGraphicsLineItem (0.0f, -_barHeight, 0.0f, -(_barHeight + 20.0f));
+      spacer->setPen (pen);
+      spacer->setZValue (-1.0f);
+      _scene->addItem (spacer);
+
+      _xAxis = new QGraphicsLineItem (0.0f, 0.0f, _barWidth + _spaceWidth, 0.0f);
       _xAxis->setZValue (1.0);
       _scene->addItem (_xAxis);
 
@@ -277,13 +283,13 @@ dmz::QtPluginGraph::_remove_bar (BarStruct &bar) {
 void
 dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
 
-
-   bar.height = ((_maxBarCount > 0) ?
-      -(_barHeight * ((Float32)bar.count / (Float32)_maxBarCount)) : 0.0);
+   // Note: _totalCount was _maxBarCount
+   bar.height = ((_totalCount > 0) ?
+      -(_barHeight * ((Float32)bar.count / (Float32)_totalCount)) : 0.0f);
 
    if (bar.bar) {
 
-      bar.bar->setRect (bar.offset, 0.0, _barWidth, bar.height);
+      bar.bar->setRect (bar.offset, 0.0f, _barWidth, bar.height);
    }
 
    if (bar.text) {
@@ -312,7 +318,9 @@ local_power (const dmz::Float64 P, const dmz::Float64 Q, const dmz::Float64 X) {
 
 
 void
-dmz::QtPluginGraph::_update_power_law (const BarStruct *LastBar) {
+dmz::QtPluginGraph::_update_power_law (
+      const BarStruct *LastBar,
+      const Float64 EndOfXAxis) {
 
    Boolean foundFirstBar (False);
    Float32 offset = _spaceWidth;
@@ -365,19 +373,24 @@ dmz::QtPluginGraph::_update_power_law (const BarStruct *LastBar) {
       p = exp ((sumY - (q * sumX)) / nonZeroCount);
    }
 
+   foundFirstBar = false;
    QPainterPath path;
 
    bar = (_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
-
-   if (bar) { path.moveTo (bar->offset, -local_power (p, q, -bar->height)); }
-
-   bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
 
    const Float32 Offset (_barWidth * 0.5f);
 
    while (bar) {
 
-      path.lineTo (bar->offset + Offset, -local_power (p, q, -bar->height));
+      if (!foundFirstBar && bar->count) {
+
+         path.moveTo (bar->offset + Offset, -local_power (p, q, bar->Id));
+         foundFirstBar = True;
+      }
+      else if (foundFirstBar) {
+
+         path.lineTo (bar->offset + Offset, -local_power (p, q, bar->Id));
+      }
       
       if (LastBar == bar) { bar = 0; }
       else {
@@ -386,16 +399,47 @@ dmz::QtPluginGraph::_update_power_law (const BarStruct *LastBar) {
       }
    }
 
-   if (!_powerLawPath) {
+   if (path.elementCount () > 1) {
 
-      _powerLawPath = new QGraphicsPathItem;
-      _powerLawPath->setZValue (2.0);
-      if (_scene) { _scene->addItem (_powerLawPath); }
+      if (!_powerLawPath) {
+
+         _powerLawPath = new QGraphicsPathItem;
+         _powerLawPath->setPen (_powerStroke);
+         _powerLawPath->setZValue (2.0);
+         if (_scene) { _scene->addItem (_powerLawPath); }
+      }
+
+      if (_powerLawPath) {
+
+         _powerLawPath->setPath (path);
+      }
+
+      if (!_powerLabel) {
+
+         _powerLabel = new QGraphicsTextItem;
+         _powerLabel->setPos (300.0, -_barHeight);
+         if (_scene) { _scene->addItem (_powerLabel); }
+      }
+
+      if (_powerLabel) {
+
+         _powerLabel->setPlainText (
+            QString::fromAscii ("Power = ") + QString::number (p));
+      }
    }
+   else if (_scene) {
 
-   if (_powerLawPath) {
+      if (_powerLawPath) {
 
-      _powerLawPath->setPath (path);
+         _scene->removeItem (_powerLawPath);
+         delete _powerLawPath; _powerLawPath = 0;
+      }
+
+      if (_powerLabel) {
+
+         _scene->removeItem (_powerLabel);
+         delete _powerLabel; _powerLabel = 0;
+      }
    }
 }
 
@@ -447,14 +491,14 @@ dmz::QtPluginGraph::_update_graph () {
             if (!bar->text) {
 
                bar->text = new QGraphicsTextItem (QString::number (bar->Id));
-               bar->text->setZValue (0.0);
+               bar->text->setZValue (0.0f);
                if (_scene) { _scene->addItem (bar->text); }
             }
 
             if (!bar->countText) {
 
                bar->countText = new QGraphicsTextItem (QString::number (bar->count));
-               bar->countText->setZValue (0.0);
+               bar->countText->setZValue (0.0f);
                if (_scene) { _scene->addItem (bar->countText); }
             }
 
@@ -476,6 +520,7 @@ dmz::QtPluginGraph::_update_graph () {
 
    if (_xAxis) { _xAxis->setLine (0.0f, 0.0f, offset, 0.0f); }
 
+#if 0
    for (Int32 ix = 0; ix < _yDivisions; ix++) {
 
       const QString Value (
@@ -494,8 +539,9 @@ dmz::QtPluginGraph::_update_graph () {
          (-_barHeight * ((Float32)(ix + 1)) / (Float32)_yDivisions) -
             (rect.height () * 0.5f));
    }
+#endif
 
-   _update_power_law (lastBar);
+   _update_power_law (lastBar, offset);
 
    if (_scene) { _scene->setSceneRect (_scene->itemsBoundingRect ()); }
 }
@@ -560,6 +606,7 @@ dmz::QtPluginGraph::_init (Config &local) {
 
    _maxCount = config_to_int32 ("start.value", local, _maxCount);
 
+   _powerStroke = config_to_qpen ("power-law.stroke", local, _powerStroke);
    _barStroke = config_to_qpen ("bar.stroke", local, _barStroke);
    _barFill = config_to_qbrush ("bar.fill", local, _barFill);
    _barWidth = config_to_int32 ("bar.width", local, _barWidth);

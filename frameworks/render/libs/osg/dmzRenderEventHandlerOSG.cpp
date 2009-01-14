@@ -40,36 +40,25 @@ dmz::RenderEventHandlerOSG::handle (
 
          case (osgGA::GUIEventAdapter::PUSH):
          case (osgGA::GUIEventAdapter::RELEASE):
-         case (osgGA::GUIEventAdapter::DOUBLECLICK): {
-
-            _mouseEvent.set_button_mask (Event.getButtonMask ());
-            _channels->send_mouse_event (_mouseEvent);
-            result = true;
-            break;
-         }
-
-         case (osgGA::GUIEventAdapter::RESIZE): {
-
-            _mouseEvent.set_window_size (
-               Event.getWindowWidth (),
-               Event.getWindowHeight ());
-
-            _channels->send_mouse_event (_mouseEvent);
-            result = true;
-            break;
-         }
-
-         case (osgGA::GUIEventAdapter::MOVE): {
-
-            _mouseEvent.set_mouse_position (Event.getX (), Event.getY ());
-            _channels->send_mouse_event (_mouseEvent);
-            result = true;
-            break;
-         }
-
+         case (osgGA::GUIEventAdapter::DOUBLECLICK):
+         case (osgGA::GUIEventAdapter::RESIZE):
+         case (osgGA::GUIEventAdapter::MOVE):
          case (osgGA::GUIEventAdapter::SCROLL): {
 
+            _mouseEvent.set_button_mask (Event.getButtonMask ());
+
+            const Int32 Width = Event.getWindowWidth ();
+            const Int32 Height = Event.getWindowHeight ();
+
+            _mouseEvent.set_window_size (Width, Height);
+
             _mouseEvent.set_mouse_position (
+               // Width - Event.getX (),
+               // Height - Event.getY ());
+               Event.getX (),
+               Height - Event.getY ());
+
+            _mouseEvent.set_scroll_delta (
                Event.getScrollingDeltaX (),
                Event.getScrollingDeltaY ());
 

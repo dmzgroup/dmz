@@ -1,8 +1,9 @@
+// Note due to compiler issues on Linux, this header must go first.
+#include <dmzRenderEventHandlerOSG.h>
 #include "dmzQtPluginViewerOSG.h"
 #include <dmzInputModule.h>
 #include <dmzRenderModuleCoreOSG.h>
 #include <dmzRenderCameraManipulatorOSG.h>
-#include <dmzRenderEventHandlerOSG.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>

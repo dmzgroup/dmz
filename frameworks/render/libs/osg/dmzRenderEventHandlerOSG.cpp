@@ -43,6 +43,7 @@ dmz::RenderEventHandlerOSG::handle (
          case (osgGA::GUIEventAdapter::DOUBLECLICK):
          case (osgGA::GUIEventAdapter::RESIZE):
          case (osgGA::GUIEventAdapter::MOVE):
+         case (osgGA::GUIEventAdapter::DRAG):
          case (osgGA::GUIEventAdapter::SCROLL): {
 
             _mouseEvent.set_button_mask (Event.getButtonMask ());

@@ -5,8 +5,6 @@
 #include <dmzRuntimeRTTI.h>
 #include <dmzTypesBase.h>
 
-#define DMZ_RENDER_MODULE_CORE_OSG_INTERFACE_NAME "RenderModuleCoreInterface"
-
 namespace osg { class Group; class Transform; class Camera; }
 namespace osgViewer { class Viewer; }
 

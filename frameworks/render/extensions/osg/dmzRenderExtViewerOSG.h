@@ -17,7 +17,6 @@ namespace dmz {
    class RenderCameraManipulatorOSG;
    class RenderEventHandlerOSG;
 
-
    class RenderExtViewerOSG : public Plugin, public TimeSlice {
 
       public:

@@ -1,11 +1,9 @@
 require "lmkbuild"
 
 local ipairs = ipairs
-local print = print
 local sys = lmkbuild.system ()
 local resolve = lmkbuild.resolve
 local lmk = lmk
-local tostring = tostring
 
 module (...)
 

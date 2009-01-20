@@ -147,10 +147,7 @@ main (int argc, char *argv[]) {
       QApplication::addLibraryPath (plugins);
    }
 
-   if (!workingDir) {
-
-      app.log.info << "No working found." << endl;
-   }
+   if (!workingDir) { app.log.info << "No working found." << endl; }
    else if (change_directory (workingDir)) {
 
       app.log.info << "Working directory: " << get_current_directory () << endl;

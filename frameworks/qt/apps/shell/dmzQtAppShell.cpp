@@ -5,7 +5,7 @@
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
-#include <dmzRuntimeLogObserverBasic.h>
+#include <dmzRuntimeLogObserverFile.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzQtLogObserver.h>
 #include <dmzQtSingletonApplication.h>
@@ -14,6 +14,7 @@
 #include <dmzSystemFile.h>
 #include <dmzXMLUtil.h>
 #include <QtGui/QtGui>
+#include <time.h>
 
 #if defined(__APPLE__) || defined(MACOSX)
 #include <CoreServices/CoreServices.h>
@@ -68,8 +69,6 @@ main (int argc, char *argv[]) {
    const String AppPrefix = file.get_upper ();
    const String AppName = file.get_lower ();
 
-   // Q_INIT_RESOURCE (mbra);
-
    Application app (AppName, OrganizationName);
 
    if (!appLog) { appLog = &(app.log); }
@@ -102,8 +101,30 @@ main (int argc, char *argv[]) {
 
    qsrand (QTime (0,0,0).secsTo (QTime::currentTime ()));
 
-   LogObserverBasic logObs (app.get_context ());
-   logObs.set_level (string_to_log_level (get_env (AppPrefix + "_LOG_LEVEL")));
+   LogObserverFile *logFile (0);
+
+   if (string_to_boolean (get_env (AppPrefix + "_LOG"))) {
+
+      String logSuffix ("_log_");
+
+      time_t clock = time (0);
+      tm *tms = gmtime (&clock);
+
+      if (tms) {
+
+         logSuffix << (Int32)tms->tm_year + 1900
+            << (tms->tm_mon < 10 ? "0" : "") << (Int32)tms->tm_mon + 1
+            << (tms->tm_mday < 10 ? "0" : "") << (Int32)tms->tm_mday
+            << (tms->tm_hour < 10 ? "0" : "") << (Int32)tms->tm_hour
+            << (tms->tm_min < 10 ? "0" : "") << (Int32)tms->tm_min
+            << ".txt";
+      }
+      else { logSuffix << "unknown.txt"; }
+
+      logFile = new LogObserverFile (
+         get_home_directory () + "/" + AppName + logSuffix,
+         app.get_context ());
+   }
 
    QtLogObserver qtLogObs (app.get_context ());
    qtLogObs.set_process_updates (True);
@@ -343,6 +364,8 @@ main (int argc, char *argv[]) {
    qtApp.quit ();
 
    appLog = 0;
+
+   if (logFile) { delete logFile; logFile = 0; }
 
    return app.is_error () ? -1 : 0;
 }

@@ -26,8 +26,11 @@ namespace dmz {
          Boolean is_error () const;
          String get_error () const;
 
-         RuntimeContext *get_context ();
-         void get_global_config (Config &data);
+         String get_name () const;
+         String get_prefix () const;
+
+         RuntimeContext *get_context () const;
+         void get_global_config (Config &data) const;
          void add_global_config (Config &data);
          void add_config (const String &Name, Config &data);
 

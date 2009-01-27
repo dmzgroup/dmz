@@ -21,6 +21,9 @@ namespace dmz {
 
          ~Application ();
 
+         Boolean is_running () const;
+         void quit (const String &Reason);
+
          void set_quiet (const Boolean Value);
 
          Boolean is_error () const;

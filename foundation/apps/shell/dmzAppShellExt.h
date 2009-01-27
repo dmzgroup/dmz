@@ -6,22 +6,28 @@
 namespace dmz {
 
 class Application;
+class CommandLineArgs;
 class Config;
 
-struct AppShellInitExtStruct {
+struct AppShellInitStruct {
 
-   const String LaunchFile;
-   Boolean quit;
+   Config &manifest;
+   Application &app;
+   CommandLineArgs &files;
+   String &launchFile;
 
-   AppShellInitExtStruct (const String &TheLaunchFile) :
-         LaunchFile (TheLaunchFile),
-         quit (False) {;}
+   AppShellInitStruct (
+         Config &theManifest,
+         Application &theApp,
+         CommandLineArgs &theFiles,
+         String &theLaunchFile) :
+         manifest (theManifest),
+         app (theApp),
+         files (theFiles),
+         launchFile (theLaunchFile) {;}
 };
 
-typedef Boolean *(*init_shell_extension) (
-   Config &manifest,
-   Application &app,
-   AppShellInitExtStruct &init);
+typedef Boolean *(*init_shell_extension) (AppShellInitStruct &init);
 
 };
 

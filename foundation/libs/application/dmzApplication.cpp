@@ -48,6 +48,7 @@ struct dmz::Application::State {
    Runtime rt;
    Time time;
    Log log;
+   Exit exit;
    ExitObserverBasic exitObs;
    FileCacheLocal cache;
    ApplicationStateBasic appState;
@@ -68,6 +69,7 @@ struct dmz::Application::State {
          Domain (TheDomain),
          time (rt.get_context ()),
          log (TheName, rt.get_context ()),
+         exit (rt.get_context ()),
          exitObs (rt.get_context ()),
          cache (rt.get_context ()),
          appState (rt.get_context ()),
@@ -99,6 +101,18 @@ dmz::Application::Application (
 //! Destructor.
 dmz::Application::~Application () { delete &_state; }
 
+
+//! Tests if application is still running.
+dmz::Boolean
+dmz::Application::is_running () const { return !_state.exitObs.is_exit_requested (); }
+
+
+//! Requestion the application quit.
+void
+dmz::Application::quit (const String &Reason) {
+
+   _state.exit.request_exit (ExitStatusNormal, Reason);
+}
 
 /*!
 
@@ -351,7 +365,6 @@ dmz::Application::load_plugins () {
       Config pluginInit;
 
       _state.global.lookup_all_config_merged ("dmz", pluginInit);
-
 
       dmz::load_plugins (
          _state.rt.get_context (),

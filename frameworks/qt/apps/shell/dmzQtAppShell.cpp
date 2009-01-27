@@ -1,5 +1,6 @@
 #include <dmzApplication.h>
 #include <dmzApplicationState.h>
+#include <dmzAppShellExt.h>
 #include <dmzCommandLine.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
@@ -30,11 +31,6 @@ static dmz::Log *appLog (0);
 const char OrganizationName[] = "dmz";
 const char OrganizationDomain[] = "dmzgroup.org";
 
-typedef dmz::Boolean *(*init_extension) (
-   Config &manifest,
-   Application &app,
-   CommandLineArgs &fileList);
-
 static void
 local_starup_error (const QString &Msg) {
 
@@ -44,7 +40,7 @@ local_starup_error (const QString &Msg) {
 
 
 static void
-qt_message_handler (QtMsgType type, const char *msg) {
+local_qt_message_handler (QtMsgType type, const char *msg) {
 
    if (appLog) {
 
@@ -92,6 +88,7 @@ local_create_log_file (const Application &App) {
             << (tms->tm_mday < 10 ? "0" : "") << (Int32)tms->tm_mday
             << (tms->tm_hour < 10 ? "0" : "") << (Int32)tms->tm_hour
             << (tms->tm_min < 10 ? "0" : "") << (Int32)tms->tm_min
+            << (tms->tm_sec < 10 ? "0" : "") << (Int32)tms->tm_sec
             << ".txt";
       }
       else { logSuffix << "unknown.txt"; }
@@ -157,7 +154,11 @@ local_find_working_dir (const Application &App) {
 
 
 static dmz::Boolean
-local_init (Config &manifest, Application &app, CommandLineArgs &fileArgs) {
+local_init (
+      Config &manifest,
+      Application &app,
+      CommandLineArgs &fileArgs,
+      String &launchFile) {
 
    dmz::Boolean result (False);
 
@@ -171,7 +172,7 @@ local_init (Config &manifest, Application &app, CommandLineArgs &fileArgs) {
       const String FuncName =
          config_to_string ("extension.factory", manifest, app.get_name () + "_init");
 
-      init_extension func = (init_extension)dl.get_function_ptr (FuncName);
+      init_shell_extension func = (init_shell_extension)dl.get_function_ptr (FuncName);
 
       if (func) {
 
@@ -180,7 +181,9 @@ local_init (Config &manifest, Application &app, CommandLineArgs &fileArgs) {
          app.log.info << "Launching init extension: " << FuncName << " from "
             << LibName << endl;
 
-         func (manifest, app, fileArgs);
+         AppShellInitStruct init (manifest, app, fileArgs, launchFile);
+
+         func (init);
       }
       else {
 
@@ -198,8 +201,35 @@ local_init (Config &manifest, Application &app, CommandLineArgs &fileArgs) {
 
 
 static void
+local_auto_save_file (Application &app, String &launchFile) {
+
+   dmz::Boolean result (False);
+
+   const String AutoSaveFile (app.state.get_autosave_file ());
+
+   if (is_valid_path (AutoSaveFile)) {
+
+      const QMessageBox::StandardButton Value (QMessageBox::question (
+         0,
+         "Restore",
+         "Unsaved data from a previous session found."
+         " Would you like to recover?",
+         QMessageBox::Open | QMessageBox::Cancel,
+         QMessageBox::Open));
+
+      if (Value & QMessageBox::Open) { launchFile = AutoSaveFile; }
+      else if (!remove_file (AutoSaveFile)) {
+
+         app.log.error << "Failed removing auto save file: "
+            << AutoSaveFile << endl;
+      }
+   }
+}
+
+
+static void
 local_parse_manifest (
-      const String &LaunchFile,
+      String &launchFile,
       Application &app,
       CommandLineArgs &fileArgs) {
 
@@ -222,28 +252,6 @@ local_parse_manifest (
          Config manifest;
 
          if (global.lookup_all_config_merged ("manifest", manifest)) {
-
-            dmz::Boolean useLaunchFile (True);
-
-            const String AutoSaveFile (app.state.get_autosave_file ());
-
-            if (is_valid_path (AutoSaveFile)) {
-
-               const QMessageBox::StandardButton Value (QMessageBox::question (
-                  0,
-                  "Restore",
-                  "Unsaved data from a previous session found."
-                  " Would you like to recover?",
-                  QMessageBox::Open | QMessageBox::Cancel,
-                  QMessageBox::Open));
-
-               if (Value & QMessageBox::Open) { useLaunchFile = False; }
-               else if (!remove_file (AutoSaveFile)) {
-
-                  app.log.error << "Failed removing auto save file: "
-                     << AutoSaveFile << endl;
-               }
-            }
 
             Config searchList;
 
@@ -282,7 +290,22 @@ local_parse_manifest (
                }
             }
 
-            if (!local_init (manifest, app, fileArgs)) {
+            local_auto_save_file (app, launchFile);
+
+            const String VersionFile =
+               config_to_string ("version.file", manifest, "./config/version.xml");
+
+            if (is_valid_path (VersionFile)) { fileArgs.append_arg (VersionFile); }
+
+            if (!local_init (manifest, app, fileArgs, launchFile)) {
+
+               if (launchFile) {
+
+                  Config launchFileConfig ("launch-file");
+                  launchFileConfig.store_attribute ("name", launchFile);
+                  app.add_config ("", launchFileConfig);
+                  fileArgs.append_arg (launchFile);
+               }
 
                Config configList;
 
@@ -297,20 +320,11 @@ local_parse_manifest (
 
                      if (Value) { fileArgs.append_arg (Value); }
                   }
+
+                  CommandLine cl;
+                  cl.add_args (fileArgs);
+                  app.process_command_line (cl);
                }
-            }
-
-            if (useLaunchFile && LaunchFile) {
-
-               fileArgs.append_arg (LaunchFile);
-               Config startFileConfig ("launch_file");
-               startFileConfig.store_attribute ("name", LaunchFile);
-               app.add_config ("", startFileConfig);
-            }
-
-            if (is_valid_path ("./config/version.xml")) {
-
-               fileArgs.append_arg ("./config/version.xml");
             }
 
 #if 0
@@ -332,6 +346,9 @@ local_parse_manifest (
 #endif
          }
       }
+   }
+   else {
+
    }
 }
 
@@ -375,7 +392,7 @@ main (int argc, char *argv[]) {
 #endif
 
    // Set up the custom qWarning/qDebug custom handler
-   qInstallMsgHandler (qt_message_handler);
+   qInstallMsgHandler (local_qt_message_handler);
 
    QCoreApplication::setOrganizationName (OrganizationName);
    QCoreApplication::setOrganizationDomain (OrganizationDomain);
@@ -404,10 +421,6 @@ main (int argc, char *argv[]) {
 
    if (fileArgs.get_count ()) {
 
-      CommandLine cl;
-      cl.add_args (fileArgs);
-
-      app.process_command_line (cl);
       app.load_plugins ();
       app.start ();
 

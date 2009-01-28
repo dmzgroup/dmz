@@ -31,6 +31,8 @@ static dmz::Log *appLog (0);
 const char OrganizationName[] = "dmz";
 const char OrganizationDomain[] = "dmzgroup.org";
 
+static const String LocalInitPrefix ("dmz_init_");
+
 static void
 local_starup_error (const QString &Msg) {
 
@@ -157,8 +159,9 @@ static dmz::Boolean
 local_init (
       Config &manifest,
       Application &app,
-      CommandLineArgs &fileArgs,
-      String &launchFile) {
+      CommandLineArgs &fileList,
+      String &launchFile,
+      String versionFile) {
 
    dmz::Boolean result (False);
 
@@ -169,8 +172,10 @@ local_init (
 
    if (dl.is_loaded ()) {
 
-      const String FuncName =
-         config_to_string ("extension.factory", manifest, app.get_name () + "_init");
+      const String FuncName = config_to_string (
+         "extension.factory",
+         manifest,
+         LocalInitPrefix + app.get_name ());
 
       init_shell_extension func = (init_shell_extension)dl.get_function_ptr (FuncName);
 
@@ -181,7 +186,7 @@ local_init (
          app.log.info << "Launching init extension: " << FuncName << " from "
             << LibName << endl;
 
-         AppShellInitStruct init (manifest, app, fileArgs, launchFile);
+         AppShellInitStruct init (launchFile, versionFile, manifest, app, fileList);
 
          func (init);
       }
@@ -228,10 +233,7 @@ local_auto_save_file (Application &app, String &launchFile) {
 
 
 static void
-local_parse_manifest (
-      String &launchFile,
-      Application &app,
-      CommandLineArgs &fileArgs) {
+local_parse_manifest (String &launchFile, Application &app) {
 
    String manifestFile (get_env (app.get_prefix () + "_MANIFEST"));
 
@@ -295,16 +297,18 @@ local_parse_manifest (
             const String VersionFile =
                config_to_string ("version.file", manifest, "./config/version.xml");
 
-            if (is_valid_path (VersionFile)) { fileArgs.append_arg (VersionFile); }
+            CommandLineArgs fileList ("f");
 
-            if (!local_init (manifest, app, fileArgs, launchFile)) {
+            if (is_valid_path (VersionFile)) { fileList.append_arg (VersionFile); }
+
+            if (!local_init (manifest, app, fileList, launchFile, VersionFile)) {
 
                if (launchFile) {
 
                   Config launchFileConfig ("launch-file");
                   launchFileConfig.store_attribute ("name", launchFile);
                   app.add_config ("", launchFileConfig);
-                  fileArgs.append_arg (launchFile);
+                  fileList.append_arg (launchFile);
                }
 
                Config configList;
@@ -318,11 +322,11 @@ local_parse_manifest (
 
                      const String Value = config_to_string ("file", config);
 
-                     if (Value) { fileArgs.append_arg (Value); }
+                     if (Value) { fileList.append_arg (Value); }
                   }
 
                   CommandLine cl;
-                  cl.add_args (fileArgs);
+                  cl.add_args (fileList);
                   app.process_command_line (cl);
                }
             }
@@ -351,7 +355,6 @@ local_parse_manifest (
 
    }
 }
-
 
 };
 
@@ -413,13 +416,11 @@ main (int argc, char *argv[]) {
 
    local_find_working_dir (app);
 
-   QtSplashScreen *splash = create_splash_screen (app);
+   local_parse_manifest (launchFile, app);
 
-   CommandLineArgs fileArgs ("f");
+   if (app.is_running ()) {
 
-   local_parse_manifest (launchFile, app, fileArgs);
-
-   if (fileArgs.get_count ()) {
+      QtSplashScreen *splash = create_splash_screen (app);
 
       app.load_plugins ();
       app.start ();
@@ -457,8 +458,9 @@ main (int argc, char *argv[]) {
    }
    else {
 
-      if (splash) { delete splash; splash = 0; }
       QString errorMsg ("Unable to process manifest file.\n");
+      String appError = app.get_error ();
+      if (appError) { errorMsg = appError.get_buffer (); }
       local_starup_error (errorMsg);
    }
 

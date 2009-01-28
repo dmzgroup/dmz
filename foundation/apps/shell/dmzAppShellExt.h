@@ -11,23 +11,26 @@ class Config;
 
 struct AppShellInitStruct {
 
+   const String VersionFile;
+   const String LaunchFile;
    Config &manifest;
    Application &app;
    CommandLineArgs &files;
-   String &launchFile;
 
    AppShellInitStruct (
+         const String &TheLaunchFile,
+         const String &TheVersionFile, 
          Config &theManifest,
          Application &theApp,
-         CommandLineArgs &theFiles,
-         String &theLaunchFile) :
+         CommandLineArgs &theFiles) :
+         LaunchFile (TheLaunchFile),
+         VersionFile (TheVersionFile),
          manifest (theManifest),
          app (theApp),
-         files (theFiles),
-         launchFile (theLaunchFile) {;}
+         files (theFiles) {;}
 };
 
-typedef Boolean *(*init_shell_extension) (AppShellInitStruct &init);
+typedef void *(*init_shell_extension) (AppShellInitStruct &init);
 
 };
 

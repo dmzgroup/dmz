@@ -456,6 +456,7 @@ main (int argc, char *argv[]) {
          QApplication::processEvents ();
       }
    }
+#if 0
    else {
 
       QString errorMsg ("Unable to process manifest file.\n");
@@ -463,6 +464,7 @@ main (int argc, char *argv[]) {
       if (appError) { errorMsg = appError.get_buffer (); }
       local_starup_error (errorMsg);
    }
+#endif
 
    qtApp.quit ();
 

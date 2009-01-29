@@ -2,6 +2,7 @@
 #define DMZ_APP_SHELL_EXT_DOT_H
 
 #include <dmzTypesBase.h>
+#include <dmzTypesString.h>
 
 namespace dmz {
 

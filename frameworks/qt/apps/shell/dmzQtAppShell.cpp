@@ -453,7 +453,7 @@ main (int argc, char *argv[]) {
 
          // wait for log window to close
          QApplication::sendPostedEvents (0, -1);
-         QApplication::processEvents ();
+         QApplication::processEvents (QEventLoop::WaitForMoreEvents);
       }
    }
 #if 0

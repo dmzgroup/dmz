@@ -18,6 +18,8 @@ namespace dmz {
          ConfigIterator ();
          ~ConfigIterator ();
 
+         void reset ();
+
          struct State;
          State &state; //!< Internal state.
 

@@ -160,37 +160,38 @@ dmz::RenderExtViewerOSG::_init (const Config &Local) {
 
    _portalName = config_to_string ("portal.name", Local, DefaultPortalNameOSG);
 
-   Config window;
+   const Boolean Fullscreen = config_to_boolean ("window.fullscreen", Local, False);
+   const Boolean Centered = config_to_boolean ("window.center", Local, True);
+   Int32 windowLeft = config_to_uint32 ("window.left", Local, 100);
+   Int32 windowTop = config_to_uint32 ("window.top", Local, 100);
+   const UInt32 WindowWidth = config_to_uint32 ("window.width", Local, 800);
+   const UInt32 WindowHeight = config_to_uint32 ("window.height", Local, 600);
+   const UInt32 Screen = config_to_uint32 ("window.screen", Local, 0);
 
-   if (Local.lookup_config ("window", window)) {
-
-      const Boolean Fullscreen = config_to_boolean ("fullscreen", window);
-      const Boolean Centered = config_to_boolean ("center", window);
-      Int32 windowLeft = config_to_uint32 ("left", window);
-      Int32 windowTop = config_to_uint32 ("top", window);
-      const UInt32 WindowWidth = config_to_uint32 ("width", window);
-      const UInt32 WindowHeight = config_to_uint32 ("height", window);
-      const UInt32 Screen = config_to_uint32 ("screen", window);
-
-      if (Fullscreen) { __init_viewer_fullscreen (Screen); }
-      else {
-
+   if (Fullscreen) { __init_viewer_fullscreen (Screen); }
+   else {
          
-         if (Centered) {
+      if (Centered) {
 
-            __init_centered (Screen, WindowWidth, WindowHeight, windowLeft, windowTop);
-         }
-
-         __init_viewer_window (windowLeft, windowTop, WindowWidth, WindowHeight, Screen);
+         __init_centered (Screen, WindowWidth, WindowHeight, windowLeft, windowTop);
       }
 
-      _log.info << "Loading viewer windowed" << endl;
+      __init_viewer_window (windowLeft, windowTop, WindowWidth, WindowHeight, Screen);
    }
+
+   _log.info << "Viewer Info: ";
+
+   if (Fullscreen) { _log.info << "Full Screen: "; }
    else {
 
-      __init_viewer_window (100, 100, 800, 600, 0);
-      _log.info << "Loading viewer windowed with defaults" << endl;
+      _log.info << WindowWidth << "x" << WindowHeight;
+
+      if (Centered) { _log.info << " [Centered]"; }
+
+      _log.info << " Corner: " << windowLeft << ", " << windowTop << " Screen: ";
    }
+
+   _log.info << Screen << endl;
 }
 
 void

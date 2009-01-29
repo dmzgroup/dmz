@@ -48,12 +48,19 @@ namespace dmz {
          osg::ref_ptr<osgViewer::Viewer> _viewer;
 
       private:
+         void __init_centered (
+            const UInt32 Screen,
+            const UInt32 WindowWidth,
+            const UInt32 WindowHeight,
+            Int32 &windowLeft,
+            Int32 &windowTop);
+
          void __init_viewer_window (
-               UInt32 windowLeft,
-               UInt32 windowTop,
-               UInt32 windowWidth,
-               UInt32 windowHeight,
-               UInt32 screen);
+               const Int32 WindowLeft,
+               const Int32 WindowTop,
+               const UInt32 WindowWidth,
+               const UInt32 WindowHeight,
+               const UInt32 Screen);
 
          void __init_viewer_fullscreen (UInt32 screen);
    };

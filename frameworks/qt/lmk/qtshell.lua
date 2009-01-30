@@ -25,7 +25,7 @@ function set_up (appName)
    if appName ~= AppShellName then
       lmk.add_preqs {AppShellName,}
    end
-   lmk.add_preqs {"dmzAppShell", "dmzFoundation",}
+   lmk.add_preqs {"dmzFoundation",}
    lmkQt.add_libs {"QtCore", "QtGui"}
    lmk.add_vars ({localLibPaths = "-framework CoreFoundation"},{macos = true})
    lmk.add_vars (

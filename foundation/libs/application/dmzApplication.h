@@ -26,6 +26,7 @@ namespace dmz {
 
          void set_quiet (const Boolean Value);
 
+         void set_error (const String &ErrorMessage);
          Boolean is_error () const;
          String get_error () const;
 

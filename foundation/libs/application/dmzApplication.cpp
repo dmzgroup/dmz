@@ -123,6 +123,19 @@ dmz::Application::quit (const String &Reason) {
 void
 dmz::Application::set_quiet (const Boolean Value) { _state.quiet = Value; }
 
+/*!
+
+\brief Sets the error state.
+\param[in] ErrorMessage String containing th error message.
+
+*/
+void
+dmz::Application::set_error (const String &ErrorMessage) {
+
+   _state.error = True;
+   _state.errorMsg = ErrorMessage;
+}
+
 
 /*!
 

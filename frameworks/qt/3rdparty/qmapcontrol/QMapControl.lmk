@@ -20,6 +20,7 @@ lmk.add_files {
    "mapnetwork.h",
    "osmmapadapter.h",
    "point.h",
+   "qmapcontrol.h",
    "tilemapadapter.h",
    "wmsmapadapter.h",
    "yahoomapadapter.h",

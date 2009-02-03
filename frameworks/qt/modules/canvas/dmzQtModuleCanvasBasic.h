@@ -89,7 +89,6 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
-         String _canvasName;
          InputModule *_inputModule;
          String _inputModuleName;
          QtCanvasScene _scene;
@@ -106,7 +105,6 @@ namespace dmz {
          QtModuleCanvasBasic ();
          QtModuleCanvasBasic (const QtModuleCanvasBasic &);
          QtModuleCanvasBasic &operator= (const QtModuleCanvasBasic &);
-
    };
 };
 

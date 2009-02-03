@@ -32,8 +32,6 @@ namespace dmz {
 
          RenderModuleCoreOSG * _core;
          HashTableStringTemplate<String> _fileNameTable;
-         HashTableStringTemplate<Vector> _positionTable;
-         HashTableStringTemplate<Matrix> _rotationTable;
          Log _log;
    };
 };

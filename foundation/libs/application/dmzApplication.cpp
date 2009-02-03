@@ -43,10 +43,12 @@ files, manage session data, create the file cache, and manage plugins.
 struct dmz::Application::State {
 
    const String Name;
+   const String NamePrefix;
    const String Domain;
    Runtime rt;
    Time time;
    Log log;
+   Exit exit;
    ExitObserverBasic exitObs;
    FileCacheLocal cache;
    ApplicationStateBasic appState;
@@ -63,9 +65,11 @@ struct dmz::Application::State {
 
    State (const String &TheName, const String &TheDomain) :
          Name (TheName),
+         NamePrefix (TheName.get_upper ()),
          Domain (TheDomain),
          time (rt.get_context ()),
          log (TheName, rt.get_context ()),
+         exit (rt.get_context ()),
          exitObs (rt.get_context ()),
          cache (rt.get_context ()),
          appState (rt.get_context ()),
@@ -98,6 +102,18 @@ dmz::Application::Application (
 dmz::Application::~Application () { delete &_state; }
 
 
+//! Tests if application is still running.
+dmz::Boolean
+dmz::Application::is_running () const { return !_state.exitObs.is_exit_requested (); }
+
+
+//! Requestion the application quit.
+void
+dmz::Application::quit (const String &Reason) {
+
+   _state.exit.request_exit (ExitStatusNormal, Reason);
+}
+
 /*!
 
 \brief Disables all messages that are not errors or warnings.
@@ -106,6 +122,8 @@ dmz::Application::~Application () { delete &_state; }
 */
 void
 dmz::Application::set_quiet (const Boolean Value) { _state.quiet = Value; }
+
+
 /*!
 
 \brief Gets error state.
@@ -128,17 +146,38 @@ dmz::Application::get_error () const { return _state.errorMsg; }
 
 /*!
 
+\brief Gets the name of the application.
+\return Returns a string containing the name of the application.
+
+*/
+dmz::String
+dmz::Application::get_name () const { return _state.Name; }
+
+
+/*!
+
+\brief Gets the prefix of the application.
+\return Returns a string containing the prefix of the application.
+\note At this time, the prefix is the application name in all caps.
+
+*/
+dmz::String
+dmz::Application::get_prefix () const { return _state.NamePrefix; }
+
+
+/*!
+
 \brief Gets runtime context.
 \return Returns a pointer to the runtime context.
 
 */
 dmz::RuntimeContext *
-dmz::Application::get_context () { return _state.rt.get_context (); }
+dmz::Application::get_context () const { return _state.rt.get_context (); }
 
 
 //! Gets the root of the config context tree.
 void
-dmz::Application::get_global_config (Config &data) { data = _state.global; }
+dmz::Application::get_global_config (Config &data) const { data = _state.global; }
 
 
 //! Adds config contexts to the root of the config context tree.
@@ -326,7 +365,6 @@ dmz::Application::load_plugins () {
       Config pluginInit;
 
       _state.global.lookup_all_config_merged ("dmz", pluginInit);
-
 
       dmz::load_plugins (
          _state.rt.get_context (),

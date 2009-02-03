@@ -155,82 +155,109 @@ dmz::RenderExtViewerOSG::update_time_slice (const Float64 TimeDelta) {
 }
 
 
-
-
 void
 dmz::RenderExtViewerOSG::_init (const Config &Local) {
 
    _portalName = config_to_string ("portal.name", Local, DefaultPortalNameOSG);
 
-   Config windowData;
+   const Boolean Fullscreen = config_to_boolean ("window.fullscreen", Local, False);
+   const Boolean Centered = config_to_boolean ("window.center", Local, True);
+   Int32 windowLeft = config_to_uint32 ("window.left", Local, 100);
+   Int32 windowTop = config_to_uint32 ("window.top", Local, 100);
+   const UInt32 WindowWidth = config_to_uint32 ("window.width", Local, 800);
+   const UInt32 WindowHeight = config_to_uint32 ("window.height", Local, 600);
+   const UInt32 Screen = config_to_uint32 ("window.screen", Local, 0);
 
-   if (Local.lookup_all_config ("window", windowData)) {
+   if (Fullscreen) { __init_viewer_fullscreen (Screen); }
+   else {
+         
+      if (Centered) {
 
-      ConfigIterator it;
-      Config cd;
-
-      Boolean found (windowData.get_first_config (it, cd));
-      if (found)  {
-
-         UInt32 windowLeft = config_to_uint32 ("left", cd);
-         UInt32 windowTop = config_to_uint32 ("top", cd);
-         UInt32 windowWidth = config_to_uint32 ("width", cd);
-         UInt32 windowHeight = config_to_uint32 ("height", cd);
-         UInt32 screen = config_to_uint32 ("screen", cd);
-
-         __init_viewer_window (windowLeft, windowTop, windowWidth, windowHeight, screen);
+         __init_centered (Screen, WindowWidth, WindowHeight, windowLeft, windowTop);
       }
 
-      _log.info << "Loading viewer windowed" << endl;
+      __init_viewer_window (windowLeft, windowTop, WindowWidth, WindowHeight, Screen);
    }
-   else if (Local.lookup_all_config ("fullscreen", windowData)) {
 
-      ConfigIterator it;
-      Config cd;
+   _log.info << "Viewer Info: ";
 
-      Boolean found (windowData.get_first_config (it, cd));
-      if (found)  {
-
-         UInt32 screen = config_to_uint32 ("screen", cd);
-         __init_viewer_fullscreen (screen);
-      }
-
-      _log.info << "Loading viewer full-screen" << endl;
-   }
+   if (Fullscreen) { _log.info << "Full Screen: "; }
    else {
 
-      __init_viewer_window (100, 100, 800, 600, 0);
-      _log.info << "Loading viewer windowed with defaults" << endl;
+      _log.info << WindowWidth << "x" << WindowHeight;
+
+      if (Centered) { _log.info << " [Centered]"; }
+
+      _log.info << " Corner: " << windowLeft << ", " << windowTop << " Screen: ";
+   }
+
+   _log.info << Screen << endl;
+}
+
+void
+dmz::RenderExtViewerOSG::__init_centered (
+      const UInt32 Screen,
+      const UInt32 WindowWidth,
+      const UInt32 WindowHeight,
+      Int32 &windowLeft,
+      Int32 &windowTop) {
+
+   osg::GraphicsContext::WindowingSystemInterface* wsi =
+      osg::GraphicsContext::getWindowingSystemInterface();
+
+   if (wsi) {
+
+      osg::GraphicsContext::ScreenIdentifier si;
+
+#if 0
+      si.readDISPLAY();
+      // displayNum has not been set so reset it to 0.
+      if (si.displayNum < 0) { si.displayNum = 0; {
+#endif
+
+      si.screenNum = Screen;
+
+      unsigned int width = 0, height = 0;
+
+      wsi->getScreenResolution (si, width, height);
+
+      const UInt32 HalfScreenWidth (width / 2);
+      const UInt32 HalfScreenHeight (height / 2);
+      const UInt32 HalfWindowWidth (WindowWidth / 2);
+      const UInt32 HalfWindowHeight (WindowHeight / 2);
+
+      windowLeft = (Int32)HalfScreenWidth - (Int32)HalfWindowWidth;
+      windowTop = (Int32)HalfScreenHeight - (Int32)HalfWindowHeight;
    }
 }
 
 
 void
 dmz::RenderExtViewerOSG::__init_viewer_window (
-      UInt32 windowLeft,
-      UInt32 windowTop,
-      UInt32 windowWidth,
-      UInt32 windowHeight,
-      UInt32 screen) {
+      const Int32 WindowLeft,
+      const Int32 WindowTop,
+      const UInt32 WindowWidth,
+      const UInt32 WindowHeight,
+      const UInt32 Screen) {
 
    if (_viewer.valid ()) {
 
       _viewer->setUpViewInWindow (
-         windowLeft,
-         windowTop,
-         windowWidth,
-         windowHeight,
-         screen);
+         WindowLeft,
+         WindowTop,
+         WindowWidth,
+         WindowHeight,
+         Screen);
    }
 }
 
 
 void
-dmz::RenderExtViewerOSG::__init_viewer_fullscreen (UInt32 screen) {
+dmz::RenderExtViewerOSG::__init_viewer_fullscreen (const UInt32 Screen) {
 
    if (_viewer.valid ()) {
 
-      _viewer->setUpViewOnSingleScreen (screen);
+      _viewer->setUpViewOnSingleScreen (Screen);
       if (_viewer->done ()) { _log.error << "The viewer thinks it is done?" << endl; }
    }
 }

@@ -129,6 +129,11 @@ dmz::ConfigIterator::ConfigIterator () : state (*(new State)) {;}
 dmz::ConfigIterator::~ConfigIterator () { delete &state; }
 
 
+//! Reset the iterator
+void
+dmz::ConfigIterator::reset () { state.it.reset (); }
+
+
 struct dmz::Config::State {
 
    ConfigContext *context;

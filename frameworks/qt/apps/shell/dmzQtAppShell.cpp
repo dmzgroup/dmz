@@ -1,19 +1,22 @@
 #include <dmzApplication.h>
 #include <dmzApplicationState.h>
+#include <dmzAppShellExt.h>
 #include <dmzCommandLine.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
-#include <dmzRuntimeLogObserverBasic.h>
+#include <dmzRuntimeLogObserverFile.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzQtLogObserver.h>
 #include <dmzQtSingletonApplication.h>
 #include "dmzQtSplashScreen.h"
 #include <dmzSystem.h>
+#include <dmzSystemDynamicLibrary.h>
 #include <dmzSystemFile.h>
 #include <dmzXMLUtil.h>
 #include <QtGui/QtGui>
+#include <time.h>
 
 #if defined(__APPLE__) || defined(MACOSX)
 #include <CoreServices/CoreServices.h>
@@ -23,173 +26,262 @@ using namespace dmz;
 
 namespace {
 
-   static dmz::Log *appLog (0);
+static dmz::Log *appLog (0);
 
-   const char OrganizationName[] = "dmz";
-   const char OrganizationDomain[] = "dmz.nps.edu";
+const char OrganizationName[] = "dmz";
+const char OrganizationDomain[] = "dmzgroup.org";
 
-   void local_starup_error (const QString &Msg) {
+static const String LocalInitPrefix ("dmz_init_");
 
-      QString errorMsg (Msg + "\n\nStart up errors encountered.\nShutting down.");
-      QMessageBox::critical (0, "Start Up Error", errorMsg);
-   }
+static void
+local_starup_error (const QString &Msg) {
 
-   void qt_message_handler (QtMsgType type, const char *msg) {
+   QString errorMsg (Msg + "\n\nStart up errors encountered.\nShutting down.");
+   QMessageBox::critical (0, "Start Up Error", errorMsg);
+}
 
-      if (appLog) {
 
-         const dmz::String PreFix ("qt:");
+static void
+local_qt_message_handler (QtMsgType type, const char *msg) {
 
-         switch (type) {
+   if (appLog) {
 
-            case QtDebugMsg:
-               appLog->debug << PreFix << msg << endl;
-               break;
+      const dmz::String Prefix ("qt:");
 
-            case QtWarningMsg:
-               appLog->warn << PreFix << msg << endl;
-               break;
+      switch (type) {
 
-            case QtCriticalMsg:
-            case QtFatalMsg:
-               appLog->error << PreFix << msg << endl;
-               break;
-         }
+         case QtDebugMsg:
+            appLog->debug << Prefix << msg << endl;
+            break;
+
+         case QtWarningMsg:
+            appLog->warn << Prefix << msg << endl;
+            break;
+
+         case QtCriticalMsg:
+         case QtFatalMsg:
+            appLog->error << Prefix << msg << endl;
+            break;
+
+         default:
+            appLog->out << Prefix << msg << endl;
+            break;
       }
    }
-};
+}
 
 
-int
-main (int argc, char *argv[]) {
+static LogObserverFile *
+local_create_log_file (const Application &App) {
 
-   String path, file, ext;
-   split_path_file_ext (argv[0], path, file, ext);
-   const String AppPrefix = file.get_upper ();
-   const String AppName = file.get_lower ();
+   LogObserverFile *result (0);
 
-   // Q_INIT_RESOURCE (mbra);
+   if (string_to_boolean (get_env (App.get_prefix () + "_LOG"))) {
 
-   Application app (AppName, OrganizationName);
+      String logSuffix ("_log_");
 
-   if (!appLog) { appLog = &(app.log); }
+      time_t clock = time (0);
+      tm *tms = gmtime (&clock);
 
-#if defined(__APPLE__) || defined(MACOSX) || defined (_WIN32)
-   QtSingletonApplication qtApp (
-      AppName.get_buffer (),
-      argc,
-      argv,
-      app.get_context ());
+      if (tms) {
 
-   if (!qtApp.start_application ()) {
+         logSuffix << (Int32)tms->tm_year + 1900
+            << (tms->tm_mon < 10 ? "0" : "") << (Int32)tms->tm_mon + 1
+            << (tms->tm_mday < 10 ? "0" : "") << (Int32)tms->tm_mday
+            << (tms->tm_hour < 10 ? "0" : "") << (Int32)tms->tm_hour
+            << (tms->tm_min < 10 ? "0" : "") << (Int32)tms->tm_min
+            << (tms->tm_sec < 10 ? "0" : "") << (Int32)tms->tm_sec
+            << ".txt";
+      }
+      else { logSuffix << "unknown.txt"; }
 
-      if (argc > 1) { qtApp.send_to_running_application (argv[1]); }
-      return 0; // Application is already running so just bail out now -rb
+      result = new LogObserverFile (
+         get_home_directory () + "/" + App.get_name () + logSuffix,
+         App.get_context ());
    }
-#else
-   QApplication qtApp (argc, argv);
-#endif
 
-   // Set up the custom qWarning/qDebug custom handler
-   qInstallMsgHandler (qt_message_handler);
+   return result;
+}
 
-   QCoreApplication::setOrganizationName (OrganizationName);
-   QCoreApplication::setOrganizationDomain (OrganizationDomain);
-   QCoreApplication::setApplicationName (AppName.get_buffer ());
 
-   app.state.set_autosave_file (
-      get_home_directory () + "/." + AppPrefix + "_AUTO_SAVE_FILE");
+static void
+local_find_working_dir (const Application &App) {
 
-   qsrand (QTime (0,0,0).secsTo (QTime::currentTime ()));
-
-   LogObserverBasic logObs (app.get_context ());
-   logObs.set_level (string_to_log_level (get_env (AppPrefix + "_LOG_LEVEL")));
-
-   QtLogObserver qtLogObs (app.get_context ());
-   qtLogObs.set_process_updates (True);
-
-   app.load_session ();
-   qtLogObs.load_session ();
-
-   QSettings settings;
-   String workingDir (get_env (AppPrefix + "_WORKING_DIR"));
+   String result (get_env (App.get_prefix () + "_WORKING_DIR"));
 
 #if defined(__APPLE__) || defined(MACOSX)
-   if (!workingDir) {
+   if (!result) {
 
       CFURLRef pluginRef = CFBundleCopyBundleURL (CFBundleGetMainBundle ());
 
       CFStringRef macPath =
       CFURLCopyFileSystemPath (pluginRef, kCFURLPOSIXPathStyle);
 
-      workingDir =
+      result =
          CFStringGetCStringPtr (macPath, CFStringGetSystemEncoding ());
 
-      if (workingDir) {
+      if (result) {
 
          // Running as an app. Need to tell Qt where to find the plugins.
-         QString plugins (workingDir.get_buffer ());
+         QString plugins (result.get_buffer ());
          plugins += "/Contents/Frameworks/Qt/plugins";
          QApplication::addLibraryPath (plugins);
 
-         workingDir += "/Contents/Resources";
+         result += "/Contents/Resources";
       }
 
-      if (!is_valid_path (workingDir)) { workingDir.flush (); }
+      if (!is_valid_path (result)) { result.flush (); }
    }
 #endif
 
-   if (!workingDir) {
+   if (!result) {
 
-      workingDir = qPrintable (settings.value ("/workingDir", ".").toString ());
-      QString plugins (workingDir.get_buffer ());
+      QSettings settings;
+      result = qPrintable (settings.value ("/workingDir", ".").toString ());
+      QString plugins (result.get_buffer ());
       plugins += "/bin/plugins";
       QApplication::addLibraryPath (plugins);
    }
 
-   if (!workingDir) { app.log.info << "No working found." << endl; }
-   else if (change_directory (workingDir)) {
+   if (!result) { App.log.info << "No working found." << endl; }
+   else if (change_directory (result)) {
 
-      app.log.info << "Working directory: " << get_current_directory () << endl;
+      App.log.info << "Working directory: " << get_current_directory () << endl;
    }
    else {
 
-      app.log.error << "Unable to to change to working directory: " << workingDir << endl;
+      App.log.error << "Unable to to change to working directory: " << result << endl;
+   }
+}
+
+
+static dmz::Boolean
+local_init (
+      Config &manifest,
+      Application &app,
+      CommandLineArgs &fileList,
+      String &launchFile,
+      String versionFile) {
+
+   dmz::Boolean result (False);
+
+   const String LibName =
+      config_to_string ("extension.name", manifest, app.get_name () + "Init");
+
+   DynamicLibrary dl (LibName, DynamicLibraryModeUnload);
+
+   if (dl.is_loaded ()) {
+
+      const String FuncName = config_to_string (
+         "extension.factory",
+         manifest,
+         LocalInitPrefix + app.get_name ());
+
+      init_shell_extension func = (init_shell_extension)dl.get_function_ptr (FuncName);
+
+      if (func) {
+
+         result = True;
+
+         app.log.info << "Launching init extension: " << FuncName << " from "
+            << LibName << endl;
+
+         AppShellInitStruct init (launchFile, versionFile, manifest, app, fileList);
+
+         func (init);
+      }
+      else {
+
+         app.log.error << "Init extension function: " << FuncName << " not found."
+            << endl;
+      }
+   }
+   else {
+
+      app.log.info << "Init extension library: " << LibName << " not found." << endl;
    }
 
-   QtSplashScreen *splash = create_splash_screen (AppName, app.get_context ());
+   return result;
+}
 
-   if (splash) { splash->show (); splash->raise (); }
 
-   QString manifestFile (get_env (AppPrefix + "_MANIFEST").get_buffer ());
+static void
+local_auto_save_file (Application &app, String &launchFile) {
 
-   if (manifestFile.isEmpty ()) {
+   dmz::Boolean result (False);
 
-      manifestFile = settings.value ("/manifest", "config/manifest.xml").toString ();
+   const String AutoSaveFile (app.state.get_autosave_file ());
+
+   if (is_valid_path (AutoSaveFile)) {
+
+      const QMessageBox::StandardButton Value (QMessageBox::question (
+         0,
+         "Restore",
+         "Unsaved data from a previous session found."
+         " Would you like to recover?",
+         QMessageBox::Open | QMessageBox::Cancel,
+         QMessageBox::Open));
+
+      if (Value & QMessageBox::Open) { launchFile = AutoSaveFile; }
+      else if (!remove_file (AutoSaveFile)) {
+
+         app.log.error << "Failed removing auto save file: "
+            << AutoSaveFile << endl;
+      }
    }
+}
 
-   QFileInfo fi (manifestFile);
-   manifestFile = fi.absoluteFilePath ();
 
-   CommandLineArgs fileArgs ("f");
+static void
+local_parse_manifest (String &launchFile, Application &app) {
+
+   String manifestFile (get_env (app.get_prefix () + "_MANIFEST"));
+
+   if (!manifestFile) {
+
+      QSettings settings;
+      manifestFile =
+         qPrintable (settings.value ("/manifest", "config/manifest.xml").toString ());
+   }
 
    Config global ("global");
-   app.log.info << "Manifest file: " << qPrintable (manifestFile) << endl;
+   app.log.info << "Manifest file: " << manifestFile << endl;
 
-   if (fi.exists ()) {
+   if (is_valid_path (manifestFile)) {
 
-      if (xml_to_config (qPrintable (manifestFile), global, &(app.log))) {
+      if (xml_to_config (manifestFile, global, &(app.log))) {
 
          Config manifest;
 
          if (global.lookup_all_config_merged ("manifest", manifest)) {
 
-            String rcc (get_env (AppPrefix + "_RESOURCE"));
+            Config searchList;
+
+            if (manifest.lookup_all_config ("search.path", searchList)) {
+
+               ConfigIterator it;
+               Config path;
+
+               while (searchList.get_next_config (it, path)) {
+
+                  const String Prefix (config_to_string ("prefix", path));
+                  const String Value (config_to_string ("value", path));
+
+                  if (Prefix && Value) {
+
+                     QDir::addSearchPath (Prefix.get_buffer (), Value.get_buffer ());
+                     app.log.info << "Added Search Path: [" << Prefix << "]" << Value
+                        << endl;
+                  }
+               }
+            }
+
+            String rcc (get_env (app.get_prefix () + "_RESOURCE"));
 
             if (!rcc) {
 
                rcc = config_to_string (
-                  "resource.file", manifest, AppName + ".rcc");
+                  "resource.file", manifest, app.get_name () + ".rcc");
             }
 
             if (rcc) {
@@ -200,82 +292,48 @@ main (int argc, char *argv[]) {
                }
             }
 
-            ConfigIterator it;
-            Config cd;
-            String value;
+            local_auto_save_file (app, launchFile);
 
-            while (manifest.get_next_config (it, cd)) {
+            const String VersionFile =
+               config_to_string ("version.file", manifest, "./config/version.xml");
 
-               const String DataName (cd.get_name ().to_lower ());
+            CommandLineArgs fileList ("f");
 
-               if (DataName == "config") {
+            if (is_valid_path (VersionFile)) { fileList.append_arg (VersionFile); }
 
-                  if (cd.lookup_attribute ("file", value)) {
+            if (!local_init (manifest, app, fileList, launchFile, VersionFile)) {
 
-                     fileArgs.append_arg (value);
+               if (launchFile) {
+
+                  Config launchFileConfig ("launch-file");
+                  launchFileConfig.store_attribute ("name", launchFile);
+                  app.add_config ("", launchFileConfig);
+                  fileList.append_arg (launchFile);
+               }
+
+               Config configList;
+
+               if (manifest.lookup_all_config ("config", configList)) {
+
+                  ConfigIterator it;
+                  Config config;
+
+                  while (configList.get_next_config (it, config)) {
+
+                     const String Value = config_to_string ("file", config);
+
+                     if (Value) { fileList.append_arg (Value); }
                   }
-               }
-               else if (DataName == "searchpath") {
 
-                  const String Prefix (config_to_string ("prefix", cd));
-                  const String Path (config_to_string ("path", cd));
-
-                  if (Prefix && Path) {
-
-                     QDir::addSearchPath (Prefix.get_buffer (), Path.get_buffer ());
-                     app.log.info << "Added Search Path: [" << Prefix << "]" << Path
-                        << endl;
-                  }
+                  CommandLine cl;
+                  cl.add_args (fileList);
+                  app.process_command_line (cl);
                }
             }
 
-            String loadFile;
-
-            if ((argc > 1) && argv[1]) { loadFile = argv[1]; }
-
-#if defined(__APPLE__) || defined(MACOSX)
-           else if (!qtApp.get_requested_file ().isEmpty ()) {
-
-              loadFile = qPrintable (qtApp.get_requested_file ());
-           }
-#endif
-
-            const String AutoSaveFile (app.state.get_autosave_file ());
-
-            if (is_valid_path (AutoSaveFile)) {
-
-               const QMessageBox::StandardButton Value (QMessageBox::question (
-                  0,
-                  "Restore",
-                  "Unsaved data from a previous session found."
-                  " Would you like to recover?",
-                  QMessageBox::Open | QMessageBox::Cancel,
-                  QMessageBox::Open));
-
-               if (Value & QMessageBox::Open) { loadFile.flush (); }
-               else if (!remove_file (AutoSaveFile)) {
-
-                  app.log.error << "Failed removing auto save file: "
-                     << AutoSaveFile << endl;
-               }
-            }
-
-            if (loadFile) { fileArgs.append_arg (loadFile); }
-
-            if (loadFile) {
-
-               Config startFileConfig ("mbraStartFile");
-               startFileConfig.store_attribute ("name", loadFile);
-               app.add_config ("", startFileConfig);
-            }
-
-            if (is_valid_path ("./config/version.xml")) {
-
-               fileArgs.append_arg ("./config/version.xml");
-            }
-
+#if 0
             String qss (":/");
-            qss << AppName.get_buffer () << ".qss";
+            qss << app.get_name ().get_buffer () << ".qss";
             qss = config_to_string ("stylesheet.file", manifest, qss);
 
             if (qss) {
@@ -284,21 +342,86 @@ main (int argc, char *argv[]) {
                if (file.open (QFile::ReadOnly)) {
 
                   QString styleSheet (QLatin1String (file.readAll ()));
-                  qtApp.setStyleSheet (styleSheet);
+                  qtapp.setStyleSheet (styleSheet);
 
                   app.log.info << "Application Style Sheet: " << qss << endl;
                }
             }
+#endif
          }
       }
    }
+   else {
 
-   if (fileArgs.get_count ()) {
+   }
+}
 
-      CommandLine cl;
-      cl.add_args (fileArgs);
+};
 
-      app.process_command_line (cl);
+
+int
+main (int argc, char *argv[]) {
+
+   String path, name, ext;
+   split_path_file_ext (argv[0], path, name, ext);
+
+   Application app (name.get_lower (), OrganizationName);
+
+   if (!appLog) { appLog = &(app.log); }
+
+   String launchFile;
+
+   if ((argc > 1) && argv[1]) { launchFile = argv[1]; }
+
+#if defined(__APPLE__) || defined(MACOSX) || defined (_WIN32)
+   QtSingletonApplication qtApp (
+      app.get_name ().get_buffer (),
+      argc,
+      argv,
+      app.get_context ());
+
+   if (!qtApp.start_application ()) {
+
+      if (argc > 1) { qtApp.send_to_running_application (argv[1]); }
+      return 0; // Application is already running so just bail out now -rb
+   }
+
+   if (!qtApp.get_requested_file ().isEmpty ()) {
+
+     launchFile = qPrintable (qtApp.get_requested_file ());
+   }
+#else
+   QApplication qtApp (argc, argv);
+#endif
+
+   // Set up the custom qWarning/qDebug custom handler
+   qInstallMsgHandler (local_qt_message_handler);
+
+   QCoreApplication::setOrganizationName (OrganizationName);
+   QCoreApplication::setOrganizationDomain (OrganizationDomain);
+   QCoreApplication::setApplicationName (app.get_name ().get_buffer ());
+
+   app.state.set_autosave_file (
+      get_home_directory () + "/." + app.get_prefix () + "_AUTO_SAVE_FILE");
+
+   qsrand (QTime (0,0,0).secsTo (QTime::currentTime ()));
+
+   LogObserverFile *logFile = local_create_log_file (app);
+
+   QtLogObserver qtLogObs (app.get_context ());
+   qtLogObs.set_process_updates (True);
+
+   app.load_session ();
+   qtLogObs.load_session ();
+
+   local_find_working_dir (app);
+
+   local_parse_manifest (launchFile, app);
+
+   if (app.is_running ()) {
+
+      QtSplashScreen *splash = create_splash_screen (app);
+
       app.load_plugins ();
       app.start ();
 
@@ -330,19 +453,24 @@ main (int argc, char *argv[]) {
 
          // wait for log window to close
          QApplication::sendPostedEvents (0, -1);
-         QApplication::processEvents ();
+         QApplication::processEvents (QEventLoop::WaitForMoreEvents);
       }
    }
+#if 0
    else {
 
-      if (splash) { delete splash; splash = 0; }
-      QString errorMsg ("Unable to process manifest:\n");
-      local_starup_error (errorMsg + manifestFile);
+      QString errorMsg ("Unable to process manifest file.\n");
+      String appError = app.get_error ();
+      if (appError) { errorMsg = appError.get_buffer (); }
+      local_starup_error (errorMsg);
    }
+#endif
 
    qtApp.quit ();
 
    appLog = 0;
+
+   if (logFile) { delete logFile; logFile = 0; }
 
    return app.is_error () ? -1 : 0;
 }

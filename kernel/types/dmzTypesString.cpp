@@ -39,6 +39,102 @@ in the buffer to determine size and length.
 
 */
 
+dmz::String
+dmz::String::number (const char Value) {
+
+   String result;
+   return result << (Int32)Value;
+}
+
+
+dmz::String
+dmz::String::number (const unsigned char Value) {
+
+   String result;
+   return result << (UInt32)Value;
+}
+
+
+dmz::String
+dmz::String::number (const short Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+dmz::String
+dmz::String::number (const unsigned short Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+dmz::String
+dmz::String::number (const int Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+dmz::String
+dmz::String::number (const unsigned int Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+dmz::String
+dmz::String::number (const long Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+dmz::String
+dmz::String::number (const unsigned long Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+dmz::String
+dmz::String::number (const Int64 Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+dmz::String
+dmz::String::number (const UInt64 Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+dmz::String
+dmz::String::number (const Float32 Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+dmz::String
+dmz::String::number (const Float64 Value) {
+
+   String result;
+   return result << Value;
+}
+
+
 /*!
 
 \brief Base constructor.

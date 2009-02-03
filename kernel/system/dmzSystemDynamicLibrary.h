@@ -7,6 +7,8 @@
 
 namespace dmz {
 
+   class Stream;
+
    enum DynamicLibraryModeEnum {
       DynamicLibraryModeUnload, //!< Unload dynamic library when object destroyed.
       DynamicLibraryModeKeep, //!< Do not unload dynamic library when object destroyed.
@@ -15,6 +17,8 @@ namespace dmz {
    class DMZ_KERNEL_LINK_SYMBOL DynamicLibrary {
 
       public:
+         static void dump_loaded (Stream &out);
+
          DynamicLibrary (const String &LibName, const DynamicLibraryModeEnum Mode);
          ~DynamicLibrary ();
 

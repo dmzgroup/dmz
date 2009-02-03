@@ -2,6 +2,7 @@
 #include <dmzApplication.h>
 #include <dmzRuntimeLogObserverBasic.h>
 #include <dmzSystem.h>
+#include <dmzSystemDynamicLibrary.h>
 
 using namespace dmz;
 
@@ -24,6 +25,9 @@ main (int argc, char *argv[]) {
    app.stop ();
    app.unload_plugins ();
    app.save_session ();
+
+   app.log.info << "Dynamically Loaded Libraries: " << endl;
+   DynamicLibrary::dump_loaded (app.log.info);
 
    return app.is_error () ? -1 : 0;
 }

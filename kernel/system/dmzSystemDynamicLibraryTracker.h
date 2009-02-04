@@ -31,18 +31,14 @@ static inline void dump_dyld (dmz::Stream &out) {
 
       dmz::HashTableStringIterator it;
 
+      out << "Dynamically Loaded Libraries:" << dmz::endl;
+
       lock.lock ();
 
-      void *ptr = list.get_next (it);
-      while (ptr) {
-
-         out << it.get_hash_key () << dmz::endl;
-         ptr = list.get_next (it);
-      }
+      while (list.get_next (it)) { out << it.get_hash_key () << dmz::endl; }
 
       lock.unlock ();
    }
-   else { out << "DMZ_DUMP_DYLD environment variable not set." << dmz::endl; }
 }
 
 };

@@ -475,7 +475,6 @@ main (int argc, char *argv[]) {
    }
 #endif
 
-   app.log.info << "Dynamically Loaded Libraries: " << endl;
    DynamicLibrary::dump_loaded (app.log.info);
 
    qtApp.quit ();

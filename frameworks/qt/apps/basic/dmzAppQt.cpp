@@ -76,7 +76,6 @@ main (int argc, char *argv[]) {
       app.save_session ();
    }
 
-   app.log.info << "Dynamically Loaded Libraries: " << endl;
    DynamicLibrary::dump_loaded (app.log.info);
 
    while (qtLogObs.isVisible ()) {

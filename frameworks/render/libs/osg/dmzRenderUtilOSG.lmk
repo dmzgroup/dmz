@@ -26,7 +26,7 @@ lmk.add_files {
    "dmzRenderEventHandlerOSG.cpp",
 }
 
-lmkOSG.add_libs {"osg", "osgGA", "osgViewer",}
+lmkOSG.add_libs {"osg", "osgGA", "osgViewer", "OpenThreads"}
 
 lmk.add_vars ({
    localDefines = "$(lmk.defineFlag)DMZ_RENDER_UTIL_OSG_EXPORT",

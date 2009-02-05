@@ -116,6 +116,17 @@ dmz::load_plugins (
 
          Boolean load (True);
 
+         if (load && Platform && (SystemName != Platform)) {
+
+            if (log) {
+
+               log->info << "Skipping plugin: " << NameValue << " target platform: "
+                  << Platform << endl;
+            }
+
+            load = False;
+         }
+
          if (load && ReserveTimeSlice) {
 
             const Handle PluginHandle (defs.create_named_handle (PluginName));
@@ -157,17 +168,6 @@ dmz::load_plugins (
 
                log->error << "Plugin name: " << PluginName
                   << " is not unique and can not be loaded" << endl;
-            }
-
-            load = False;
-         }
-
-         if (load && Platform && (SystemName != Platform)) {
-
-            if (log) {
-
-               log->info << "Skipping plugin: " << NameValue << " target platform: "
-                  << Platform << endl;
             }
 
             load = False;

@@ -1,3 +1,0 @@
-lmk.set_name "dmzAppShell"
-lmk.add_files {"dmzAppShellExt.h",}
-lmk.add_preqs {"dmzKernel",}

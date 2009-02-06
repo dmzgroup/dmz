@@ -1,6 +1,7 @@
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeVersion.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStream.h>
 #include <dmzTypesStringUtil.h>
@@ -170,6 +171,23 @@ dmz::xml_to_config (const String &File, Config &data, Log *log) {
    }
 
    return !error;
+}
+
+
+
+dmz::Boolean
+dmz::xml_to_version (const String &File, Version &value, Log *log) {
+
+   Config data;
+   Boolean result = xml_to_config (File, data, log);
+
+   if (result) {
+
+      Version tmp (data); 
+      value = tmp;
+   }
+
+   return result;
 }
 
 

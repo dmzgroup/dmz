@@ -1,5 +1,5 @@
-#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzQtVersion.h>
+#include <dmzRuntimeVersion.h>
 #include <QtGui/QAction>
 #include <QtGui/QPixmap>
 #include <ui_dmzQtVersion.h>
@@ -11,21 +11,24 @@ struct dmz::QtVersion::State {
 
    QPixmap pix;
    Ui::QtVersionForm ui;
+   Version version;
+
+   State (const Config &Source, const String &Prefix) : version (Source, Prefix) {;}
 };
 
 dmz::QtVersion::QtVersion (Config &local, const String &Prefix) :
       QWidget (0, Qt::Dialog),
-      _state (*(new State)) {
+      _state (*(new State (local, Prefix))) {
 
    _state.ui.setupUi (this);
 
-   const String Name (config_to_string (Prefix + ".name.value", local));
-   const String Major (config_to_string (Prefix + ".major.value", local));
-   const String Minor (config_to_string (Prefix + ".minor.value", local));
-   const String Bug (config_to_string (Prefix + ".bug.value", local));
-   const String Build (config_to_string (Prefix + ".build.value", local));
-   const String Release (config_to_string (Prefix + ".release.value", local));
-   const String Image (config_to_string (Prefix + ".image.value", local));
+   const String Name (_state.version.get_name ());
+   const String Major (_state.version.get_major ());
+   const String Minor (_state.version.get_minor ());
+   const String Bug (_state.version.get_bug ());
+   const String Build (_state.version.get_build ());
+   const String Release (_state.version.get_release ());
+   const String Image (_state.version.get_image_name ());
 
    if (Image) {
 

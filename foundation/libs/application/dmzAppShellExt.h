@@ -41,7 +41,7 @@ struct AppShellInitStruct {
    private:
       AppShellInitStruct ();
       AppShellInitStruct (const AppShellInitStruct &);
-      AppShellInitStruct &operator= AppShellInitStruct (const AppShellInitStruct &);
+      AppShellInitStruct &operator= (const AppShellInitStruct &);
 };
 
 /*!

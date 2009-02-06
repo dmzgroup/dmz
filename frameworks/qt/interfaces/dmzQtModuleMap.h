@@ -18,12 +18,22 @@ namespace dmz {
          String get_qt_module_map_name () const;
          Handle get_qt_module_map_handle () const;
 
-         // QtModuleMap Interface
-         virtual void set_zoom (const UInt32 Value) = 0;
-         virtual UInt32 get_zoom () const = 0;
+         virtual void set_zoom_min_value (const Int32 Value) = 0;
+         virtual Int32 get_zoom_min_value () const = 0;
+
+         virtual void set_zoom_max_value (const Int32 Value) = 0;
+         virtual Int32 get_zoom_max_value () const = 0;
+         
+         virtual void set_zoom (const Int32 Value) = 0;
+         virtual Int32 get_zoom () const = 0;
 
          virtual void zoom_in () = 0;
          virtual void zoom_out () = 0;
+         //virtual void zoom_extents () = 0;
+         
+         virtual void pan_direction (const Int32 Dx, const Int32 Dy) = 0;
+
+         //virtual void center_on (const Handle ObjectHandle) = 0;
 
       protected:
          QtModuleMap (const PluginInfo &Info);

@@ -11,7 +11,7 @@
 
 namespace dmz {
 
-   class QtModuleCanvas;
+   class QtModuleMap;
    class QtModuleMainWindow;
 
 
@@ -92,7 +92,6 @@ namespace dmz {
          UInt32 _scrollDelta;
          Float32 _zoomMin;
          Float32 _zoomMax;
-         Float32 _zoomStep;
          Float32 _zoomDefault;
 
       private:

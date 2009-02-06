@@ -28,6 +28,8 @@ namespace dmz {
          public Plugin,
          public QtWidget,
          public QtModuleMap {
+            
+   Q_OBJECT
 
       public:
          QtModuleMapBasic (const PluginInfo &Info, Config &local);
@@ -46,6 +48,22 @@ namespace dmz {
          virtual QWidget *get_qt_widget ();
 
          // QtModuleMap Interface
+         virtual void set_zoom_min_value (const Int32 Value);
+         virtual Int32 get_zoom_min_value () const;
+
+         virtual void set_zoom_max_value (const Int32 Value);
+         virtual Int32 get_zoom_max_value () const;
+         
+         virtual void set_zoom (const Int32 Value);
+         virtual Int32 get_zoom () const;
+
+         virtual void zoom_in ();
+         virtual void zoom_out ();
+         
+         virtual void pan_direction (const Int32 Dx, const Int32 Dy);
+         
+      protected slots:
+         void _map_view_changed (const QPointF &coordinate, int zoom);
          
       protected:
          virtual void resizeEvent (QResizeEvent* event);
@@ -73,14 +91,12 @@ namespace dmz {
          InputEventKey _keyEvent;
          InputEventMouse _mouseEvent;
 //         HashTableHandleTemplate<QGraphicsItem> _itemTable;
-         // Float32 _zoomMin;
-         // Float32 _zoomMax;
-         // Float32 _zoomStep;
-         // Float32 _zoomDefault;
          qmapcontrol::MapControl *_map;
          qmapcontrol::MapAdapter *_mapAdapter;
          qmapcontrol::Layer *_baseLayer;
-         
+         Int32 _zoomMin;
+         Int32 _zoomMax;
+         Int32 _zoomDefault;
 
       private:
          QtModuleMapBasic ();

@@ -2,9 +2,10 @@
 #include <dmzInputEventMouse.h>
 #include <dmzInputEventMasks.h>
 #include <dmzQtConfigRead.h>
-#include <dmzQtModuleCanvas.h>
+#include <dmzQtModuleMap.h>
 #include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginMapZoomPan.h"
+#include <dmzQtWidget.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -21,8 +22,8 @@ dmz::QtPluginMapZoomPan::QtPluginMapZoomPan (
       InputObserverUtil (Info, local),
       _log (Info),
       _rti (Info, &_log),
-      _canvasModule (0),
-      _canvasModuleName (),
+      _mapModule (0),
+      _mapModuleName (),
       _mainWindowModule (0),
       _mainWindowModuleName (),
       _source (0),
@@ -31,10 +32,9 @@ dmz::QtPluginMapZoomPan::QtPluginMapZoomPan (
       _ignoreScaleChange (False),
       _handScrolling (False),
       _scrollDelta (10),
-      _zoomMin (0.5f),
-      _zoomMax (2.0f),
-      _zoomStep (1.1f),
-      _zoomDefault (1.0f) {
+      _zoomMin (0),
+      _zoomMax (17),
+      _zoomDefault (6) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
@@ -73,30 +73,39 @@ dmz::QtPluginMapZoomPan::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_canvasModule) {
+      if (!_mapModule) {
 
-         _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+         _mapModule = QtModuleMap::cast (PluginPtr, _mapModuleName);
 
-         if (_canvasModule) {
+         if (_mapModule) {
 
             _source = (PluginPtr ? PluginPtr->get_plugin_handle () : 0);
 
-            QGraphicsView *view = _canvasModule->get_view ();
+            QtWidget *qtWidget (QtWidget::cast (PluginPtr));
 
-            if (view) {
+            QWidget *widget (qtWidget ? qtWidget->get_qt_widget () : 0);
 
-               connect (
-                  view, SIGNAL (scale_changed (qreal)),
-                  this, SLOT (slot_scale_changed (qreal)));
+            if (widget) {
 
-               view->installEventFilter (this);
-               setParent (view);
+               widget->installEventFilter (this);
+               setParent (widget);
             }
 
-            _canvasModule->set_zoom_min_value (_zoomMin);
-            _canvasModule->set_zoom_max_value (_zoomMax);
-            _canvasModule->set_zoom_step_value (_zoomStep);
-            _canvasModule->set_zoom (_zoomDefault);
+//            QGraphicsView *view = _canvasModule->get_map ();
+
+//            if (view) {
+
+               // connect (
+               //    view, SIGNAL (scale_changed (qreal)),
+               //    this, SLOT (slot_scale_changed (qreal)));
+
+               // _mapModule->installEventFilter (this);
+               // setParent (view);
+//            }
+            
+            _mapModule->set_zoom_min_value (_zoomMin);
+            _mapModule->set_zoom_max_value (_zoomMax);
+            _mapModule->set_zoom (_zoomDefault);
          }
       }
 
@@ -107,18 +116,20 @@ dmz::QtPluginMapZoomPan::discover_plugin (
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
+      if (_mapModule && (_mapModule == QtModuleMap::cast (PluginPtr))) {
 
-         QGraphicsView *view = _canvasModule->get_view ();
+         QtWidget *qtWidget (QtWidget::cast (PluginPtr));
 
-         if (view) {
+         QWidget *widget (qtWidget ? qtWidget->get_qt_widget () : 0);
 
-            view->removeEventFilter (this);
+         if (widget) {
+
+            widget->removeEventFilter (this);
             hide ();
             setParent (0);
          }
 
-         _canvasModule = 0;
+         _mapModule = 0;
       }
    }
 }
@@ -148,7 +159,8 @@ dmz::QtPluginMapZoomPan::receive_mouse_event (
       const UInt32 Channel,
       const InputEventMouse &Value) {
 
-   if (_active && _canvasModule && (Value.get_source_handle () == _source)) {
+#if 0
+   if (_active && _mapModule && (Value.get_source_handle () == _source)) {
 
       QGraphicsView *view (_canvasModule->get_view ());
 
@@ -193,15 +205,16 @@ dmz::QtPluginMapZoomPan::receive_mouse_event (
          }
       }
    }
+#endif
 }
 
 
 void
 dmz::QtPluginMapZoomPan::on_panLeftButton_clicked () {
 
-   if (_canvasModule) {
+   if (_mapModule) {
 
-      _canvasModule->pan_direction (_scrollDelta, 0);
+      _mapModule->pan_direction (-(Int32)_scrollDelta, 0);
    }
 }
 
@@ -209,18 +222,18 @@ dmz::QtPluginMapZoomPan::on_panLeftButton_clicked () {
 void
 dmz::QtPluginMapZoomPan::on_panRightButton_clicked () {
 
-   if (_canvasModule) {
+   if (_mapModule) {
 
-      _canvasModule->pan_direction (-(Int32)_scrollDelta, 0);
+      _mapModule->pan_direction (_scrollDelta, 0);
    }
 }
 
 void
 dmz::QtPluginMapZoomPan::on_panUpButton_clicked () {
 
-   if (_canvasModule) {
+   if (_mapModule) {
 
-      _canvasModule->pan_direction (0, _scrollDelta);
+      _mapModule->pan_direction (0, -(Int32)_scrollDelta);
    }
 }
 
@@ -228,9 +241,9 @@ dmz::QtPluginMapZoomPan::on_panUpButton_clicked () {
 void
 dmz::QtPluginMapZoomPan::on_panDownButton_clicked () {
 
-   if (_canvasModule) {
+   if (_mapModule) {
 
-      _canvasModule->pan_direction (0, -(Int32)_scrollDelta);
+      _mapModule->pan_direction (0, _scrollDelta);
    }
 }
 
@@ -238,9 +251,9 @@ dmz::QtPluginMapZoomPan::on_panDownButton_clicked () {
 void
 dmz::QtPluginMapZoomPan::on_zoomAllButton_clicked () {
 
-   if (_canvasModule) {
-
-      _canvasModule->zoom_extents ();
+   if (_mapModule) {
+   
+      _mapModule->set_zoom (_mapModule->get_zoom_min_value ());
    }
 }
 
@@ -262,16 +275,16 @@ dmz::QtPluginMapZoomPan::on_zoomOutButton_clicked () {
 void
 dmz::QtPluginMapZoomPan::on_zoomSlider_valueChanged (int value) {
 
-   if (_canvasModule) {
+   if (_mapModule) {
 
-      const Float32 ZoomMin (_canvasModule->get_zoom_min_value ());
-      const Float32 ZoomMax (_canvasModule->get_zoom_max_value ());
+      const Float32 ZoomMin (_mapModule->get_zoom_min_value ());
+      const Float32 ZoomMax (_mapModule->get_zoom_max_value ());
       const Float32 ZoomRange (ZoomMax - ZoomMin);
       const Float32 SliderRange (_ui.zoomSlider->maximum () - _ui.zoomSlider->minimum ());
       const Float32 SliderValue (value / SliderRange);
 
       _ignoreScaleChange = True;
-      _canvasModule->set_zoom (ZoomMin + (ZoomRange * SliderValue));
+      _mapModule->set_zoom (ZoomMin + (ZoomRange * SliderValue));
       _ignoreScaleChange = False;
    }
 }
@@ -280,10 +293,10 @@ dmz::QtPluginMapZoomPan::on_zoomSlider_valueChanged (int value) {
 void
 dmz::QtPluginMapZoomPan::slot_scale_changed (qreal value) {
 
-   if (_canvasModule && !_ignoreScaleChange) {
+   if (_mapModule && !_ignoreScaleChange) {
 
-      const Float32 ZoomMin (_canvasModule->get_zoom_min_value ());
-      const Float32 ZoomMax (_canvasModule->get_zoom_max_value ());
+      const Float32 ZoomMin (_mapModule->get_zoom_min_value ());
+      const Float32 ZoomMax (_mapModule->get_zoom_max_value ());
       const Float32 ZoomRange (ZoomMax - ZoomMin);
       const Float32 SliderRange (_ui.zoomSlider->maximum () - _ui.zoomSlider->minimum ());
       const Float32 SliderValue ((value - ZoomMin) / ZoomRange);
@@ -295,18 +308,22 @@ dmz::QtPluginMapZoomPan::slot_scale_changed (qreal value) {
 
 bool
 dmz::QtPluginMapZoomPan::eventFilter (QObject *obj, QEvent *event) {
-
+#if 0
    bool retVal (False);
 
-   if (_canvasModule) {
+   if (_mapModule) {
 
-      QGraphicsView *view (_canvasModule->get_view ());
+      QtWidget *qtWidget (QtWidget::cast (PluginPtr));
 
-      if (view && (obj == view)) {
+      QWidget *widget (qtWidget ? qtWidget->get_qt_widget () : 0);
+
+//      QGraphicsView *view (_mapModule->get_view ());
+
+      if (widget && (obj == view)) {
 
          if (event->type() == QEvent::Resize) {
 
-            QRect viewRect (view->geometry ());
+            QRect viewRect (widget->geometry ());
             QRect myRect (geometry ());
 
             myRect.moveTopRight (viewRect.topRight ());
@@ -318,6 +335,7 @@ dmz::QtPluginMapZoomPan::eventFilter (QObject *obj, QEvent *event) {
 
    // pass the event on to the parent class
    return QWidget::eventFilter (obj, event);
+#endif
 }
 
 
@@ -346,7 +364,7 @@ dmz::QtPluginMapZoomPan::_load_session () {
 void
 dmz::QtPluginMapZoomPan::_init (Config &local) {
 
-   _canvasModuleName = config_to_string ("module.canvas.name", local);
+   _mapModuleName = config_to_string ("module.canvas.name", local);
    _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
 
    init_input_channels (
@@ -360,7 +378,6 @@ dmz::QtPluginMapZoomPan::_init (Config &local) {
 
    _zoomMin = config_to_float32 ("zoom.min", local, _zoomMin);
    _zoomMax = config_to_float32 ("zoom.max", local, _zoomMax);
-   _zoomStep = config_to_float32 ("zoom.step", local, _zoomStep);
    _zoomDefault = config_to_float32 ("zoom.default", local, _zoomDefault);
 
    qwidget_config_read ("widget", local, this);

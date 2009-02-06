@@ -27,6 +27,9 @@ namespace dmz {
             const Plugin *PluginPtr,
             const String &PluginName = "");
 
+         String get_qt_module_canvas_name () const;
+         Handle get_qt_module_canvas_handle () const;
+
          virtual QGraphicsScene *get_scene () = 0;
          virtual QGraphicsView *get_view () = 0;
 
@@ -115,5 +118,14 @@ dmz::QtModuleCanvas::~QtModuleCanvas () {
 
    remove_rtti_interface (QtModuleCanvasInterfaceName, __Info);
 }
+
+
+inline dmz::String
+dmz::QtModuleCanvas::get_qt_module_canvas_name () const { return __Info.get_name (); }
+
+
+inline dmz::Handle
+dmz::QtModuleCanvas::get_qt_module_canvas_handle () const { return __Info.get_handle (); }
+
 
 #endif //  DMZ_QT_MODULE_CANVAS_DOT_H

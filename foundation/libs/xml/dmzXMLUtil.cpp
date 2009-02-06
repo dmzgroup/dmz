@@ -178,7 +178,7 @@ dmz::xml_to_config (const String &File, Config &data, Log *log) {
 dmz::Boolean
 dmz::xml_to_version (const String &File, Version &value, Log *log) {
 
-   Config data;
+   Config data ("global");
    Boolean result = xml_to_config (File, data, log);
 
    if (result) {

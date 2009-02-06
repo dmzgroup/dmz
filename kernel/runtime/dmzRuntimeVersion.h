@@ -15,6 +15,7 @@ class DMZ_KERNEL_LINK_SYMBOL Version {
       Version (const Config &Source);
       Version (const Config &Source, const String &Prefix);
       Version (const Version &Value);
+      ~Version ();
 
       Version &operator= (const Version &Value);
 

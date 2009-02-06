@@ -56,6 +56,9 @@ dmz::Version::Version (const Version &Value) :
       _state (*(new State (Value._state))) {;}
 
 
+dmz::Version::~Version () { delete &_state; }
+
+
 dmz::Version &
 dmz::Version::operator= (const Version &Value) {
 

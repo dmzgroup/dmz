@@ -4,6 +4,7 @@
 #include <dmzQtLogObserver.h>
 #include "dmzQtSplashScreen.h"
 #include <dmzSystem.h>
+#include <dmzSystemDynamicLibrary.h>
 #include <dmzSystemFile.h>
 #include <QtGui/QtGui>
 
@@ -74,6 +75,8 @@ main (int argc, char *argv[]) {
       qtLogObs.save_session ();
       app.save_session ();
    }
+
+   DynamicLibrary::dump_loaded (app.log.info);
 
    while (qtLogObs.isVisible ()) {
 

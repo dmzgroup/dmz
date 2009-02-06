@@ -350,9 +350,18 @@ local_parse_manifest (String &launchFile, Application &app) {
 #endif
          }
       }
+      else {
+
+         String msg ("Failed to parse manifest file: ");
+         msg << manifestFile;
+         app.set_error (msg);
+      }
    }
    else {
 
+      String msg ("Unable to find manifest file: ");
+      msg << manifestFile;
+      app.set_error (msg);
    }
 }
 
@@ -465,6 +474,8 @@ main (int argc, char *argv[]) {
       local_starup_error (errorMsg);
    }
 #endif
+
+   DynamicLibrary::dump_loaded (app.log.info);
 
    qtApp.quit ();
 

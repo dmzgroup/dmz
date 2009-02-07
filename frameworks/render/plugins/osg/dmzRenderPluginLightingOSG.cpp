@@ -77,7 +77,7 @@ dmz::RenderPluginLightingOSG::_init (Config &local) {
    Config maxLights;
    Int32 maxLightValue;
 
-   if (local.lookup_all_config("maxLights", maxLights)) {
+   if (local.lookup_all_config ("maxLights", maxLights)) {
 
       ConfigIterator it;
       Config maxLight;
@@ -88,11 +88,8 @@ dmz::RenderPluginLightingOSG::_init (Config &local) {
    }
    else {
 
-      maxLightValue = 8;
-      _log.info << "Using default Max Lights." << endl;
+      maxLightValue = 8;      
    }
-
-   _log.info << "Max Lights value is " << maxLightValue << endl;
 
    if (local.lookup_all_config ("light", lights)) {
 
@@ -117,8 +114,6 @@ dmz::RenderPluginLightingOSG::_init_light (Config &light, const Int32 MaxLightVa
 
    if (LightValue >= 0 && LightValue < MaxLightValue) {
 
-      _log.info << "Light being initialized: " << LightValue << endl;
-      
       LightStruct *ptrLight;
       
       ptrLight = _lightTable.lookup (LightValue);
@@ -135,62 +130,61 @@ dmz::RenderPluginLightingOSG::_init_light (Config &light, const Int32 MaxLightVa
          }
       }
       
-      Config attr;
+      if (ptrLight->light.valid ()) {
 
-      if (light.lookup_config ("position", attr)) {
+         Config attr;
+         
+         if (light.lookup_config ("position", attr)) {
 
-         const Vector Value = config_to_vector (attr);
+            const Vector Value = config_to_vector (attr);
 
-         ptrLight->light->setPosition (osg::Vec4 (
-            Value.get_x (), 
-            Value.get_y (), 
-            Value.get_z (), 
-            1.0));
+            ptrLight->light->setPosition (osg::Vec4 (
+               Value.get_x (), 
+               Value.get_y (), 
+               Value.get_z (), 
+               1.0));
+         }
+
+         if (light.lookup_config ("direction", attr)) {
+
+            const Vector Value = config_to_vector (attr);
+
+            ptrLight->light->setDirection (osg::Vec3 (
+               Value.get_x (), 
+               Value.get_y (), 
+               Value.get_z ()));
+         }
+
+         if (light.lookup_config ("ambient", attr)) {
+
+            const osg::Vec4 Value = config_to_osg_vec4_color (
+               "ambient", 
+               light, 
+               osg::Vec4 (0.0, 0.0, 0.0, 1.0));
+
+            ptrLight->light->setAmbient (Value);
+         }
+
+         if (light.lookup_config ("specular", attr)) {
+
+            const osg::Vec4 Value = config_to_osg_vec4_color (
+               "specular", 
+               light, 
+               osg::Vec4 (0.0, 0.0, 0.0, 1.0));
+
+            ptrLight->light->setSpecular (Value);
+         }
+
+         if (light.lookup_config ("diffuse", attr)) {
+
+            const osg::Vec4 Value = config_to_osg_vec4_color (
+               "diffuse", 
+               light, 
+               osg::Vec4 (0.0, 0.0, 0.0, 1.0));
+
+            ptrLight->light->setDiffuse (Value);
+         }
       }
-
-      if (light.lookup_config ("direction", attr)) {
-
-         const Vector Value = config_to_vector (attr);
-
-         ptrLight->light->setDirection (osg::Vec3 (
-            Value.get_x (), 
-            Value.get_y (), 
-            Value.get_z ()));
-      }
-
-      if (light.lookup_config ("ambient", attr)) {
-
-         const osg::Vec4 Value = config_to_osg_vec4_color (
-            "ambient", 
-            light, 
-            osg::Vec4 (0.0, 0.0, 0.0, 1.0));
-
-         ptrLight->light->setAmbient (Value);
-      }
-
-      if (light.lookup_config ("specular", attr)) {
-
-         const osg::Vec4 Value = config_to_osg_vec4_color (
-            "specular", 
-            light, 
-            osg::Vec4 (0.0, 0.0, 0.0, 1.0));
-
-         ptrLight->light->setSpecular (Value);
-      }
-
-      if (light.lookup_config ("diffuse", attr)) {
-
-         const osg::Vec4 Value = config_to_osg_vec4_color (
-            "diffuse", 
-            light, 
-            osg::Vec4 (0.0, 0.0, 0.0, 1.0));
-
-         ptrLight->light->setDiffuse (Value);
-      }
-   }
-   else {
-
-      _log.info << "Some lights were outside the Max Lights range and have been skipped. " << endl;
    }
 }
 

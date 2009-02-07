@@ -1,0 +1,11 @@
+require "lmkOSG"
+require "lmkOpenGL"
+
+lmkOSG.set_name "dmzRenderPluginLightingOSG"
+lmk.set_type "plugin"
+lmk.add_files {"dmzRenderPluginLightingOSG.cpp",}
+lmk.add_libs {
+   "dmzKernel","dmzRenderUtilOSG"
+}
+lmk.add_preqs {"dmzRenderModuleCoreOSG"}
+lmkOSG.add_libs {"osg",}

@@ -209,9 +209,6 @@ dmz::RenderPluginLightingOSG::_add_lights () {
          ptrLight->setLightNum (0);
          ptrLight->setPosition (osg::Vec4 (0.0, 1000.0, 0.0, 1.0));
          ptrLight->setDirection (osg::Vec3 (0.0, -1.0, 0.0));
-         ptrLight->setAmbient (osg::Vec4 (0.5, 0.5, 0.5, 1.0));
-         ptrLight->setDiffuse (osg::Vec4 (0.2, 0.2, 0.2, 1.0));
-         ptrLight->setSpecular (osg::Vec4 (0.0, 0.0, 0.0, 1.0));
 
          osg::ref_ptr<osg::LightSource> ptrLightSource = new osg::LightSource;
          

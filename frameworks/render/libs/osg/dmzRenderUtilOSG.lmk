@@ -19,11 +19,13 @@ lmk.add_files {
    "dmzRenderObjectDataOSG.h",
    "dmzRenderUtilOSG.h",
    "dmzRenderUtilOSGExport.h",
+   "dmzRenderConfigToOSG.h",
 }
 
 lmk.add_files {
    "dmzRenderObjectDataOSG.cpp",
    "dmzRenderEventHandlerOSG.cpp",
+   "dmzRenderConfigToOSG.cpp",
 }
 
 lmkOSG.add_libs {"osg", "osgGA", "osgViewer", "OpenThreads"}

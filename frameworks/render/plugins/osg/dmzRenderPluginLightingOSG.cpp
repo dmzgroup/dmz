@@ -73,46 +73,29 @@ dmz::RenderPluginLightingOSG::discover_plugin (
 void
 dmz::RenderPluginLightingOSG::_init (Config &local) {
 
+   const Int32 MaxLights = (config_to_int32 ("max-lights.value", local, 8));
+
    Config lights;
-   Config maxLights;
-   Int32 maxLightValue;
-
-   if (local.lookup_all_config ("maxLights", maxLights)) {
-
-      ConfigIterator it;
-      Config maxLight;
-
-      Boolean found (maxLights.get_first_config (it, maxLight));
-
-      maxLightValue = (config_to_int32 ("value", maxLight, -1));
-   }
-   else {
-
-      maxLightValue = 8;      
-   }
 
    if (local.lookup_all_config ("light", lights)) {
 
       ConfigIterator it;
       Config light;
 
-      Boolean found (lights.get_first_config (it, light));
+      while (lights.get_next_config (it, light)) {
 
-      while (found) {
-
-         _init_light (light, maxLightValue);
-         found = lights.get_next_config (it, light);
+         _init_light (MaxLights, light);
       }
    }
 }
 
 
 void 
-dmz::RenderPluginLightingOSG::_init_light (Config &light, const Int32 MaxLightValue) {
+dmz::RenderPluginLightingOSG::_init_light (const Int32 MaxLights, Config &light) {
 
    const Int32 LightValue (config_to_int32 ("value", light, -1));
 
-   if (LightValue >= 0 && LightValue < MaxLightValue) {
+   if ((LightValue >= 0) && (LightValue < MaxLights)) {
 
       LightStruct *ptrLight;
       
@@ -123,7 +106,7 @@ dmz::RenderPluginLightingOSG::_init_light (Config &light, const Int32 MaxLightVa
          ptrLight = new LightStruct ();
          ptrLight->light = new osg::Light;
          ptrLight->light->setLightNum (LightValue);
-         if(!_lightTable.store (LightValue, ptrLight)) {
+         if (!_lightTable.store (LightValue, ptrLight)) {
 
             delete ptrLight;
             ptrLight = 0;
@@ -224,8 +207,8 @@ dmz::RenderPluginLightingOSG::_add_lights () {
          osg::ref_ptr<osg::Light> ptrLight = new osg::Light;
 
          ptrLight->setLightNum (0);
-         ptrLight->setPosition (osg::Vec4 (10.0, 100.0, 10.0, 1.0));
-         ptrLight->setDirection (osg::Vec3 (20.0, -20.0, 0.0));
+         ptrLight->setPosition (osg::Vec4 (0.0, 1000.0, 0.0, 1.0));
+         ptrLight->setDirection (osg::Vec3 (0.0, -1.0, 0.0));
          ptrLight->setAmbient (osg::Vec4 (0.5, 0.5, 0.5, 1.0));
          ptrLight->setDiffuse (osg::Vec4 (0.2, 0.2, 0.2, 1.0));
          ptrLight->setSpecular (osg::Vec4 (0.0, 0.0, 0.0, 1.0));

@@ -35,7 +35,7 @@ namespace dmz {
          };
 
          void _init (Config &local);
-         void _init_light (Config &light, const Int32 MaxLightValue);
+         void _init_light (const Int32 MaxLights, Config &light);
          void _add_lights ();
 
          Log _log;

@@ -84,7 +84,7 @@ dmz::RenderPluginLightingOSG::_init (Config &local) {
 
       Boolean found (maxLights.get_first_config (it, maxLight));
 
-      maxLightValue =  (config_to_int32 ("value", maxLight, -1));
+      maxLightValue = (config_to_int32 ("value", maxLight, -1));
    }
    else {
 

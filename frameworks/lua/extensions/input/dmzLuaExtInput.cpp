@@ -19,6 +19,18 @@
 #include <qdb.h>
 static dmz::qdb out;
 
+/*!
+         
+\class dmz::LuaExtInput
+\ingroup Lua
+\brief Provides a Lua API for the Input Framework.
+\details
+\htmlonly See the <a href="dmzlua.html#dmz.input">Lua Input API</a>.
+\endhtmlonly
+         
+*/       
+
+
 using namespace dmz;
 
 namespace {
@@ -644,6 +656,7 @@ static const luaL_Reg obsArrayMembers [] = {
 };
 
 
+//! \cond
 dmz::InputObserverLua::InputObserverLua (LuaExtInput &input) :
       _handle (input.get_plugin_name (), input.get_plugin_runtime_context ()),
       _input (input),
@@ -1516,6 +1529,7 @@ void
 dmz::LuaExtInput::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

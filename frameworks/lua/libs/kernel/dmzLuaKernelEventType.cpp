@@ -280,6 +280,7 @@ static const luaL_Reg arrayMembers [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_event_type_lib (lua_State *L) {
 
@@ -296,8 +297,13 @@ dmz::open_lua_kernel_event_type_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 
 
+//! \addtogroup Lua
+//! @{
+
+//! Creates an EventType on the Lua stack.
 dmz::EventType *
 dmz::lua_create_event_type (lua_State *L, const EventType *Value) {
 
@@ -321,6 +327,7 @@ dmz::lua_create_event_type (lua_State *L, const EventType *Value) {
 }
 
 
+//! Attempts to convert the specified object on the Lua stack to an EventType.
 dmz::EventType *
 dmz::lua_to_event_type (lua_State *L, int narg) {
 
@@ -332,6 +339,7 @@ dmz::lua_to_event_type (lua_State *L, int narg) {
 }
 
 
+//! Raises an error if the specified object on the Lua stack is not an EventType.
 dmz::EventType *
 dmz::lua_check_event_type (lua_State *L, int narg) {
 
@@ -341,3 +349,4 @@ dmz::lua_check_event_type (lua_State *L, int narg) {
 
    return result;
 }
+//! @}

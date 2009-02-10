@@ -16,6 +16,7 @@ static const char InstanceTableName[] = "dmz.runtime.table.instance";
 
 }
 
+//! Finds the first empty index in a Lua table.
 int
 dmz::lua_find_empty_index (lua_State *L) {
 
@@ -51,6 +52,7 @@ dmz::lua_find_empty_index (lua_State *L) {
 }
 
 
+//! Pushes an instance table onto the stack from the registry.
 void
 dmz::lua_push_instance_table (lua_State *L) {
 
@@ -63,6 +65,7 @@ dmz::lua_push_instance_table (lua_State *L) {
 }
 
 
+//! \cond
 void
 dmz::open_lua_kernel_runtime_lib (lua_State *L) {
 
@@ -74,4 +77,5 @@ dmz::open_lua_kernel_runtime_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 

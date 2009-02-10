@@ -4,7 +4,25 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
 
+\class dmz::LuaPluginTimedReset
+\ingroup Lua
+\brief Resets the Lua runtime over a timed interval.
+\details
+The default interval is six seconds.
+\code
+<dmz>
+<dmzLuaPluginTimedReset>
+   <time value="Time between resets in seconds"/>
+</dmzLuaPluginTimedReset>
+</dmz>
+\endcode
+
+*/
+
+
+//! \cond
 dmz::LuaPluginTimedReset::LuaPluginTimedReset (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (
@@ -54,6 +72,7 @@ void
 dmz::LuaPluginTimedReset::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

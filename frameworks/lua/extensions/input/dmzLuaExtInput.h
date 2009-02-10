@@ -14,7 +14,7 @@ namespace dmz {
 
    class LuaExtInput;
 
-
+   //! \cond
    class InputObserverLua {
 
       public:
@@ -44,6 +44,7 @@ namespace dmz {
          LuaExtInput &_input;
          int _index;
    };
+   //! \endcond
 
 
    class LuaExtInput :
@@ -52,6 +53,7 @@ namespace dmz {
          public InputObserverUtil {
 
       public:
+         //! \cond
          LuaExtInput (const PluginInfo &Info, Config &local);
          ~LuaExtInput ();
 
@@ -165,6 +167,7 @@ namespace dmz {
 
          HashTableHandleTemplate<InputObserverLua> _observerTable;
          HashTableHandleTemplate<ChannelStruct> _channelTable;
+         //! \endcond
 
       private:
          LuaExtInput ();

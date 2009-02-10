@@ -57,6 +57,7 @@ static const luaL_Reg arrayFunc [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_definitions_lib (lua_State *L) {
 
@@ -69,4 +70,5 @@ dmz::open_lua_kernel_definitions_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 

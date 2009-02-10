@@ -19,7 +19,16 @@
 
 #include <luacpp.h>
 
-// NOTE: Doxygen markup at end of file including Lua event API reference.
+/*!
+
+\class dmz::LuaExtEvent
+\ingroup Lua
+\brief Provides a Lua API the Event Framework.
+\details
+\htmlonly See the <a href="dmzlua.html#dmz.event">Lua Event API</a>.
+\endhtmlonly
+
+*/
 
 using namespace dmz;
 
@@ -1106,14 +1115,4 @@ create_dmzLuaExtEvent (
 
 };
 
-
-/*!
-
-\class dmz::LuaExtEvent
-\ingroup Lua
-\brief Lua extension that provides an interface to the Event Framework.
-\details
-\code
-\endcode
-*/
 

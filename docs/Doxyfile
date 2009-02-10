@@ -236,6 +236,7 @@ PREDEFINED             = DMZ_ARCHIVE_UTIL_LINK_SYMBOL= \
                          DMZ_INPUT_UTIL_LINK_SYMBOL= \
                          DMZ_INPUT_EVENTS_LINK_SYMBOL= \
                          DMZ_KERNEL_LINK_SYMBOL= \
+                         DMZ_LUA_KERNEL_LINK_SYMBOL= \
                          DMZ_OBJECT_UTIL_LINK_SYMBOL= \
                          DMZ_RENDER_ISECT_LINK_SYMBOL= \
                          DMZ_RENDER_UTIL_LINK_SYMBOL= \

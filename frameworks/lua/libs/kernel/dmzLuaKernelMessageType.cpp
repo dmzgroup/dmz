@@ -262,6 +262,7 @@ static const luaL_Reg arrayMembers [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_message_lib (lua_State *L) {
 
@@ -278,8 +279,13 @@ dmz::open_lua_kernel_message_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 
 
+//! \addtogroup Lua
+//! @{
+
+//! Creates a Message object on the Lua stack.
 dmz::Message *
 dmz::lua_create_message (lua_State *L, const Message *Value) {
 
@@ -303,6 +309,7 @@ dmz::lua_create_message (lua_State *L, const Message *Value) {
 }
 
 
+//! Attempts to convert the specified object on the Lua stack to a Message object.
 dmz::Message *
 dmz::lua_to_message (lua_State *L, int narg) {
 
@@ -314,6 +321,7 @@ dmz::lua_to_message (lua_State *L, int narg) {
 }
 
 
+//! Raises and error if the specified object on the Lua stack is not a Message object.
 dmz::Message *
 dmz::lua_check_message (lua_State *L, int narg) {
 
@@ -323,3 +331,4 @@ dmz::lua_check_message (lua_State *L, int narg) {
 
    return result;
 }
+//! @}

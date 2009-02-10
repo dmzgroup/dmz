@@ -13,6 +13,7 @@ namespace dmz {
          public LuaExt {
 
       public:
+         //! \cond
          struct IsectStruct {
 
             RenderModuleIsect *isect;
@@ -50,13 +51,13 @@ namespace dmz {
          virtual void remove_lua_module (LuaModule &module);
 
       protected:
-
          void _init (Config &local);
 
          IsectStruct _isect;
          IsectStruct **_isectPtr;
 
          Log _log;
+         //! \endcond
 
       private:
          LuaExtIsect ();

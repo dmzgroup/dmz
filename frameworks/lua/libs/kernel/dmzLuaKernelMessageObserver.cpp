@@ -312,6 +312,7 @@ static const luaL_Reg arrayMembers [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_message_observer_lib (lua_State *L) {
 
@@ -327,5 +328,6 @@ dmz::open_lua_kernel_message_observer_lib (lua_State *L) {
    lua_pop (L, 2); // pops meta table and dmz.message table.
 
    LUA_END_VALIDATE (L, 0);
+//! \endcond
 }
 

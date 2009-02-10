@@ -25,6 +25,7 @@ namespace dmz {
          public FileCacheAction {
 
       public:
+         //! \cond
          LuaModuleBasic (const PluginInfo &Info, Config &local, Config &global);
          ~LuaModuleBasic ();
 
@@ -153,6 +154,7 @@ namespace dmz {
          Config _global;
 
          Log _log;
+         //! \endcond
 
       private:
          LuaModuleBasic ();

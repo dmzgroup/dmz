@@ -20,12 +20,10 @@ namespace dmz {
    LuaExtObjectObserver *lua_create_object_observer (lua_State *L);
 
    LuaExtObjectObserver *lua_check_object_observer (lua_State *L, int index);
-   //! \endcond
 
    class LuaExtObjectObserver : public PluginInfo, public ObjectObserverUtil {
 
       public:
-         //! \cond
          LuaExtObjectObserver (lua_State *TheState, Config &empty);
          ~LuaExtObjectObserver ();
 

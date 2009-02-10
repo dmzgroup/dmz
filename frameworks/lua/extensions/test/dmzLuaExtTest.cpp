@@ -6,6 +6,17 @@
 
 #include <luacpp.h>
 
+/*!
+         
+\class dmz::LuaExtTest
+\ingroup Lua
+\brief Provides a Lua API for unit tests.
+\details
+\htmlonly See the <a href="dmzlua.html#dmz.test">Lua Test API</a>.
+\endhtmlonly
+         
+*/
+
 using namespace dmz;
 
 namespace {
@@ -84,6 +95,7 @@ static const luaL_Reg arrayFunc[] = {
 };
 
 
+//! \cond
 dmz::LuaExtTest::LuaExtTest (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       LuaExt (Info),
@@ -155,6 +167,7 @@ dmz::LuaExtTest::stop_test () {
    const ExitStatusEnum Status = _failed ? ExitStatusError : ExitStatusNormal;
    _exit.request_exit (Status, "End of unit test.");
 }
+//! \endcond
 
 
 extern "C" {

@@ -13,6 +13,17 @@
 #include <qdb.h>
 static dmz::qdb out;
 
+/*!
+         
+\class dmz::LuaExtIsect
+\ingroup Lua
+\brief Provides a Lua API for the Render Isect Module.
+\details
+\htmlonly See the <a href="dmzlua.html#dmz.isect">Lua Isect API</a>.
+\endhtmlonly
+         
+*/ 
+
 using namespace dmz;
 
 namespace {
@@ -340,6 +351,7 @@ static const luaL_Reg arrayFunc[] = {
 };
 
 
+//! \cond
 dmz::LuaExtIsect::LuaExtIsect (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       LuaExt (Info),
@@ -461,6 +473,7 @@ void
 dmz::LuaExtIsect::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

@@ -1,6 +1,29 @@
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeVersion.h>
 
+/*!
+
+\class dmz::Version
+\ingroup Runtime
+\brief Container object that hold application version information.
+\details Parses a Config object containing application version information and stores
+the values internally. The config XML format:
+\code
+<dmz>
+<version>
+   <name value="Application Name"/>
+   <major value="Major Version Number"/>
+   <minor value="Minor Version Number"/>
+   <bug value="Bug Version Number"/>
+   <build value="Build Number"/>
+   <release value="Release Tag"/>
+   <image value="Image to use in about box"/>
+</version>
+</dmz>
+\endcode
+
+*/
+
 struct dmz::Version::State {
 
    String name;

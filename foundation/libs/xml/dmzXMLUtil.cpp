@@ -174,7 +174,12 @@ dmz::xml_to_config (const String &File, Config &data, Log *log) {
 }
 
 
+/*!
 
+\ingroup Foundation
+\brief converts an XML file to a Version
+
+*/
 dmz::Boolean
 dmz::xml_to_version (const String &File, Version &value, Log *log) {
 

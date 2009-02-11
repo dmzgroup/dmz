@@ -253,7 +253,6 @@ template <class T> class dataConvertTemplate {
       const BaseTypeEnum _Type;
 };
 
-};
 
 
 template <class T> inline
@@ -365,6 +364,7 @@ static dataConvertTemplate<UInt64> uint64Convert (BaseTypeUInt64);
 static dataConvertTemplate<Float32> float32Convert (BaseTypeFloat32);
 static dataConvertTemplate<Float64> float64Convert (BaseTypeFloat64);
 
+};
 
 struct Data::State {
 

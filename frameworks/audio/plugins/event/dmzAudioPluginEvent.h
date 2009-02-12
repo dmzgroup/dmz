@@ -4,8 +4,14 @@
 #include <dmzEventObserverUtil.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeResources.h>
+#include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesHashTableStringTemplate.h>
 
 namespace dmz {
+
+   class AudioModule;
+   class EventType;
 
    class AudioPluginEvent :
          public Plugin,
@@ -23,7 +29,7 @@ namespace dmz {
 
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
-            const Plugin *PluginPtr) {;}
+            const Plugin *PluginPtr);
 
          // Event Observer Interface
          virtual void close_event (
@@ -32,9 +38,36 @@ namespace dmz {
             const EventLocalityEnum Locality);
 
      protected:
+         struct ObjectTypeStruct {
+
+            const Handle Sound;
+
+            HashTableHandleTemplate <ObjectTypeStruct> table;
+
+            ObjectTypeStruct (const Handle TheSound) : Sound (TheSound) {;}
+            ~ObjectTypeStruct () { table.empty (); }
+         };
+
+         struct EventStruct {
+
+            const Handle Sound;
+
+            HashTableHandleTemplate <ObjectTypeStruct> table;
+
+            EventStruct (const Handle TheSound) : Sound (TheSound) {;}
+            ~EventStruct () { table.empty (); }
+         };
+
+         EventStruct *_create_event_struct (const EventType &Type);
+         void _clear ();
          void _init (Config &local);
 
          Log _log;
+         Resources _rc;
+         AudioModule *_audioMod;
+
+         HashTableStringTemplate<Handle> _soundTable;
+         HashTableHandleTemplate<EventStruct> _eventTable;
          //! \endcond
 
       private:

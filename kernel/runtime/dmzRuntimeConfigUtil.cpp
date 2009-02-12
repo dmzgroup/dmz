@@ -183,7 +183,10 @@ dmz::config_to_event_type_set (
 
    Config list;
 
-   if (Source.lookup_all_config (Name + "event-type", list)) {
+   String realName (Name);
+   if (realName) { realName << "."; }
+
+   if (Source.lookup_all_config (realName + "event-type", list)) {
 
       ConfigIterator it;
       Config type;
@@ -326,7 +329,10 @@ dmz::config_to_object_type_set (
 
    Config list;
 
-   if (Source.lookup_all_config (Name + ".object-type", list)) {
+   String realName (Name);
+   if (realName) { realName << "."; }
+
+   if (Source.lookup_all_config (realName + "object-type", list)) {
 
       ConfigIterator it;
       Config type;

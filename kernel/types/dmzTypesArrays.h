@@ -2,6 +2,7 @@
 #define DMZ_TYPES_ARRAYS_DOT_H
 
 #include <dmzTypesArrayTemplate.h>
+#include <dmzTypesBase.h>
 
 //! \file
 //! \brief Contains typedefs for basic array types.
@@ -31,6 +32,8 @@ namespace dmz {
    typedef ArrayTemplate<Float32> ArrayFloat32;
    //! dmz::Float64 array. Defined in dmzTypesArrays.h.
    typedef ArrayTemplate<Float64> ArrayFloat64;
+   //! dmz::Handle array. Defined in dmzTypesArrays.h.
+   typedef ArrayTemplate<Handle> ArrayHandle;
 
 //! @}
 

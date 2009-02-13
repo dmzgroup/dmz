@@ -6,6 +6,13 @@
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
 
+
+namespace qmapcontrol {
+   
+   class MapControl;
+};
+
+
 namespace dmz {
 
    class QtModuleMap {
@@ -17,6 +24,8 @@ namespace dmz {
 
          String get_qt_module_map_name () const;
          Handle get_qt_module_map_handle () const;
+
+         virtual qmapcontrol::MapControl *get_map_control () = 0;
 
          virtual void set_zoom_min_value (const Int32 Value) = 0;
          virtual Int32 get_zoom_min_value () const = 0;

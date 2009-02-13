@@ -13,8 +13,6 @@
 #include <qmapcontrol.h>
 #include <QtGui/QtGui>
 
-#include <QtCore/QtDebug>
-
 
 dmz::QtModuleMapBasic::QtModuleMapBasic (const PluginInfo &Info, Config &local) :
       QWidget (0),
@@ -94,6 +92,10 @@ dmz::QtModuleMapBasic::get_qt_widget () { return this; }
 
 
 // QtModuleMap
+qmapcontrol::MapControl *
+dmz::QtModuleMapBasic::get_map_control () { return _map; }
+
+
 void
 dmz::QtModuleMapBasic::set_zoom_min_value (const Int32 Value) {
 
@@ -177,6 +179,9 @@ dmz::QtModuleMapBasic::_map_view_changed (const QPointF &coordinate, int zoom) {
 
 _log.warn << "coordinate: " << coordinate.x () << " - " << coordinate.y ()
    << "   zoom: " << (Int32)zoom << endl;
+   
+QPoint display (_mapAdapter->coordinateToDisplay (coordinate));
+_log.info << "display: " << (Int32)display.x () << " - " << (Int32)display.y () << endl;
 }
 
 
@@ -304,18 +309,20 @@ dmz::QtModuleMapBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we) {
       QPoint pointOnCanvas (event.get_mouse_x (), event.get_mouse_y ());
       QPoint pointOnScreen (event.get_mouse_screen_x (), event.get_mouse_screen_y ());
 
+_log.warn << "pointOnCanvas: " << (Int32)pointOnCanvas.x () << " - " << (Int32)pointOnCanvas.y () << endl;
+
       Qt::MouseButtons buttons;
 
       if (me) {
 
-//         pointOnCanvas = _canvas->mapFrom (this, me->pos ());
+//         pointOnCanvas = _map->mapFrom (this, me->pos ());
          pointOnScreen = me->globalPos ();
 
          buttons = me->buttons ();
       }
       else if (we) {
 
-//         pointOnCanvas = _canvas->mapFrom (this, we->pos ());
+//         pointOnCanvas = _map->mapFrom (this, we->pos ());
          pointOnScreen = we->globalPos ();
 
          buttons = we->buttons ();
@@ -370,13 +377,13 @@ dmz::QtModuleMapBasic::_init (Config &local) {
 
    qwidget_config_read ("widget", local, this);
 
-   _map = new qmapcontrol::MapControl (frameSize ());//QSize (200, 200));
+   _map = new qmapcontrol::MapControl (frameSize ());
    _map->setMouseTracking (true);
    
    // if (config_to_boolean ("map.cache", local, False)) {
    //    
    //    _map->enablePersistentCache (const QDir& path = QDir::homePath () + "/QMapControl.cache");
-   //    _map->enablePersistentCache ();
+   //   _map->enablePersistentCache ();
    // }
    
    _map->setMouseMode (qmapcontrol::MapControl::None);
@@ -390,17 +397,16 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    String mapPath (config_to_string ("tileMapAdapter.path", local, "/%1/%2/%3.png"));
    Int32 tileSize (config_to_int32 ("tileMapAdapter.tileSize", local, 256));
    
-   // lat: 36.5973550921921
-   // lon: -121.876788139343
-   
    connect(
        _map, SIGNAL (viewChanged (const QPointF &, int)),
-       this, SIGNAL (_map_view_changed (const QPointF &, int)));
+       this, SLOT (_map_view_changed (const QPointF &, int)));
    
     _mapAdapter = new qmapcontrol::TileMapAdapter (
       mapUrl.get_buffer (),
       mapPath.get_buffer (),
-      tileSize);
+      tileSize,
+      _zoomMax,
+      _zoomMin);
 
    _baseLayer = new qmapcontrol::MapLayer ("base", _mapAdapter);
 
@@ -421,6 +427,11 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    set_zoom_min_value (_zoomMin);
    set_zoom_max_value (_zoomMax);
    set_zoom (config_to_float32 ("zoom.default", local, _zoomDefault));
+   
+   Float64 latitude (config_to_float64 ("startCoordinate.latitude", local, 0.0));
+   Float64 longitude (config_to_float64 ("startCoordinate.longitude", local, 0.0));
+   
+   _map->setView (QPointF (longitude, latitude));
 }
 
 

@@ -48,6 +48,8 @@ namespace dmz {
          virtual QWidget *get_qt_widget ();
 
          // QtModuleMap Interface
+         virtual qmapcontrol::MapControl *get_map_control ();
+         
          virtual void set_zoom_min_value (const Int32 Value);
          virtual Int32 get_zoom_min_value () const;
 

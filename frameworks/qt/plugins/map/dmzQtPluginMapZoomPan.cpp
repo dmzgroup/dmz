@@ -11,6 +11,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
+#include <qmapcontrol.h>
 #include <QtGui/QtGui>
 
 
@@ -81,28 +82,18 @@ dmz::QtPluginMapZoomPan::discover_plugin (
 
             _source = (PluginPtr ? PluginPtr->get_plugin_handle () : 0);
 
-            QtWidget *qtWidget (QtWidget::cast (PluginPtr));
+            qmapcontrol::MapControl *map (_mapModule->get_map_control ());
 
-            QWidget *widget (qtWidget ? qtWidget->get_qt_widget () : 0);
-
-            if (widget) {
-
-               widget->installEventFilter (this);
-               setParent (widget);
-            }
-
-//            QGraphicsView *view = _canvasModule->get_map ();
-
-//            if (view) {
-
+            if (map) {
+               
                // connect (
                //    view, SIGNAL (scale_changed (qreal)),
                //    this, SLOT (slot_scale_changed (qreal)));
+               
+               map->installEventFilter (this);
+               setParent (map);
+            }
 
-               // _mapModule->installEventFilter (this);
-               // setParent (view);
-//            }
-            
             _mapModule->set_zoom_min_value (_zoomMin);
             _mapModule->set_zoom_max_value (_zoomMax);
             _mapModule->set_zoom (_zoomDefault);
@@ -118,13 +109,12 @@ dmz::QtPluginMapZoomPan::discover_plugin (
 
       if (_mapModule && (_mapModule == QtModuleMap::cast (PluginPtr))) {
 
-         QtWidget *qtWidget (QtWidget::cast (PluginPtr));
+         qmapcontrol::MapControl *map (_mapModule->get_map_control ());
 
-         QWidget *widget (qtWidget ? qtWidget->get_qt_widget () : 0);
+         if (map) {
 
-         if (widget) {
-
-            widget->removeEventFilter (this);
+            map->removeEventFilter (this);
+            
             hide ();
             setParent (0);
          }
@@ -159,53 +149,45 @@ dmz::QtPluginMapZoomPan::receive_mouse_event (
       const UInt32 Channel,
       const InputEventMouse &Value) {
 
-#if 0
+_log.out << "receive_mouse_event" << endl;
+
    if (_active && _mapModule && (Value.get_source_handle () == _source)) {
 
-      QGraphicsView *view (_canvasModule->get_view ());
-
+      qmapcontrol::MapControl *map (_mapModule->get_map_control ());
+      
       if (Value.is_button_changed (_mouseButton)) {
 
          if (Value.is_button_pressed (_mouseButton)) {
 
             _handScrolling = True;
 
-            if (view) { view->viewport ()->setCursor (Qt::ClosedHandCursor); }
+            if (map) { map->setCursor (Qt::ClosedHandCursor); }
          }
          else {
 
             _handScrolling = False;
 
-            if (view) { view->viewport ()->setCursor (Qt::ArrowCursor); }
+            if (map) { map->setCursor (Qt::ArrowCursor); }
          }
       }
       else if (_handScrolling) {
 
-         _canvasModule->pan_direction (
+         _mapModule->pan_direction (
             Value.get_mouse_delta_x (),
             Value.get_mouse_delta_y ());
       }
       else if (Value.get_scroll_delta_y ()) {
+         
+         if (Value.get_scroll_delta_y () >= 1) {
 
-         if (view) {
+            _ui.zoomInButton->click ();
+         }
+         else {
 
-            QGraphicsView::ViewportAnchor previousAnchor (view->transformationAnchor ());
-            view->setTransformationAnchor (QGraphicsView::AnchorUnderMouse);
-
-            if (Value.get_scroll_delta_y () >= 1) {
-
-               _ui.zoomInButton->click ();
-            }
-            else {
-
-               _ui.zoomOutButton->click ();
-            }
-
-            view->setTransformationAnchor (previousAnchor);
+            _ui.zoomOutButton->click ();
          }
       }
    }
-#endif
 }
 
 
@@ -308,25 +290,22 @@ dmz::QtPluginMapZoomPan::slot_scale_changed (qreal value) {
 
 bool
 dmz::QtPluginMapZoomPan::eventFilter (QObject *obj, QEvent *event) {
-#if 0
+
    bool retVal (False);
 
    if (_mapModule) {
 
-      QtWidget *qtWidget (QtWidget::cast (PluginPtr));
-
-      QWidget *widget (qtWidget ? qtWidget->get_qt_widget () : 0);
-
-//      QGraphicsView *view (_mapModule->get_view ());
-
-      if (widget && (obj == view)) {
+      qmapcontrol::MapControl *map (_mapModule->get_map_control ());
+      
+      if (map && (obj == map)) {
 
          if (event->type() == QEvent::Resize) {
 
-            QRect viewRect (widget->geometry ());
+            QRect viewRect (map->geometry ());
             QRect myRect (geometry ());
 
             myRect.moveTopRight (viewRect.topRight ());
+            myRect.moveTop (myRect.top () + 5);
             myRect.moveRight (myRect.right () - 20);
             setGeometry (myRect);
          }
@@ -335,7 +314,6 @@ dmz::QtPluginMapZoomPan::eventFilter (QObject *obj, QEvent *event) {
 
    // pass the event on to the parent class
    return QWidget::eventFilter (obj, event);
-#endif
 }
 
 

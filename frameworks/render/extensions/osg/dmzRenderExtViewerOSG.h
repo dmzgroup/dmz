@@ -39,6 +39,7 @@ namespace dmz {
          void _init (const Config &Local);
 
          Log _log;
+         String _title;
          RenderModuleCoreOSG *_core;
          InputModule *_channels;
          String _portalName;

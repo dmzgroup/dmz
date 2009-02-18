@@ -24,11 +24,11 @@
          <audio>
             <state
                name="state name"
-               activatefile="audio file name"
-               loopedfile="audio file name"
-               deactivatefile="audio file name"
+               activate-resource="audio resource name"
+               looped-resource="audio resource name"
+               deactivate-resource="audio resource name"
                scalar="scalar attribute name"
-               minscale="minimum scalar value"
+               offset="minimum scalar value"
                scale="scalars scale"
             />
          </audio>
@@ -39,9 +39,9 @@
 \endcode
 
 - \b state: Name of the state that activates the sound.
-- \b activatefile: Audio file to play when the state is set. (Optional)
-- \b loopedfile: Audio file to play continuously while the state is set. (Optional)
-- \b deactivatefile: Audio file to play when the state is unset. (Optional)
+- \b activate-resource: Audio file to play when the state is set. (Optional)
+- \b looped-resource: Audio file to play continuously while the state is set. (Optional)
+- \b deactivate-resource: Audio file to play when the state is unset. (Optional)
 - \b scalar: Name of the objects scalar attribute to used to adjust the looped
 file's pitch. (Optional)
 - \b offset: Minimum value the scalar will have. Defaults to 0.0. (Optional)
@@ -327,6 +327,7 @@ dmz::AudioPluginObject::update_object_state (
 
          if (IsSet && !WasSet) {
 
+
             if (PreviousValue && _audioMod && current->Data.activateHandle) {
 
                init.set (SoundLooped, False);
@@ -335,6 +336,7 @@ dmz::AudioPluginObject::update_object_state (
 
             if (_audioMod && current->Data.loopHandle) {
 
+_log.error << "Looped! Is/Wasnot: " << current->Data.State << endl;
                init.set (SoundLooped, True);
                current->handle =
                   _audioMod->play_sound (current->Data.loopHandle, init, attr);

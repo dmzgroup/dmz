@@ -24,6 +24,8 @@ namespace dmz {
    const char DefaultStateNameDeactivate[] = "Deactivate";
    //! Default name of smoking state.
    const char DefaultStateNameSmoking[] = "Smoking";
+   //! Default name of smoking state.
+   const char DefaultStateNameFire[] = "Fire";
    //! Default name of dust trail state.
    const char DefaultStateNameDustTrail[] = "Dust_Trail";
 

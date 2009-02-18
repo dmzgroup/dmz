@@ -11,14 +11,14 @@ namespace dmz {
 
    class EventModuleCommon;
 
-   class WeaponPluginTimeout :
+   class ObjectPluginTimeout :
          public Plugin,
          public TimeSlice,
          public ObjectObserverUtil {
 
       public:
-         WeaponPluginTimeout (const PluginInfo &Info, Config &local);
-         ~WeaponPluginTimeout ();
+         ObjectPluginTimeout (const PluginInfo &Info, Config &local);
+         ~ObjectPluginTimeout ();
 
          // Plugin Interface
          virtual void update_plugin_state (
@@ -53,9 +53,9 @@ namespace dmz {
          Float64 *_defaultTimeout;
 
       private:
-         WeaponPluginTimeout ();
-         WeaponPluginTimeout (const WeaponPluginTimeout &);
-         WeaponPluginTimeout &operator= (const WeaponPluginTimeout &);
+         ObjectPluginTimeout ();
+         ObjectPluginTimeout (const ObjectPluginTimeout &);
+         ObjectPluginTimeout &operator= (const ObjectPluginTimeout &);
 
    };
 };

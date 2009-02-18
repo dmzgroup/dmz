@@ -6,9 +6,9 @@
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
-#include "dmzWeaponPluginTimeout.h"
+#include "dmzObjectPluginTimeout.h"
 
-dmz::WeaponPluginTimeout::WeaponPluginTimeout (const PluginInfo &Info, Config &local) :
+dmz::ObjectPluginTimeout::ObjectPluginTimeout (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (Info),
       ObjectObserverUtil (Info, local),
@@ -20,7 +20,7 @@ dmz::WeaponPluginTimeout::WeaponPluginTimeout (const PluginInfo &Info, Config &l
 }
 
 
-dmz::WeaponPluginTimeout::~WeaponPluginTimeout () {
+dmz::ObjectPluginTimeout::~ObjectPluginTimeout () {
 
    _timeoutTable.clear ();
    if (_defaultTimeout) { delete _defaultTimeout; _defaultTimeout = 0; }
@@ -30,7 +30,7 @@ dmz::WeaponPluginTimeout::~WeaponPluginTimeout () {
 
 // Plugin Interface
 void
-dmz::WeaponPluginTimeout::update_plugin_state (
+dmz::ObjectPluginTimeout::update_plugin_state (
       const PluginStateEnum State,
       const UInt32 Level) {
 
@@ -50,7 +50,7 @@ dmz::WeaponPluginTimeout::update_plugin_state (
 
 
 void
-dmz::WeaponPluginTimeout::discover_plugin (
+dmz::ObjectPluginTimeout::discover_plugin (
       const PluginDiscoverEnum Mode,
       const Plugin *PluginPtr) {
 
@@ -70,7 +70,7 @@ dmz::WeaponPluginTimeout::discover_plugin (
 
 // TimeSlice Interface
 void
-dmz::WeaponPluginTimeout::update_time_slice (const Float64 DeltaTime) {
+dmz::ObjectPluginTimeout::update_time_slice (const Float64 DeltaTime) {
 
    HashTableHandleIterator it;
    Float64 *ptr = _objTable.get_first (it);
@@ -100,7 +100,7 @@ dmz::WeaponPluginTimeout::update_time_slice (const Float64 DeltaTime) {
 
 // Object Observer Interface
 void
-dmz::WeaponPluginTimeout::create_object (
+dmz::ObjectPluginTimeout::create_object (
       const UUID &Identity,
       const Handle ObjectHandle,
       const ObjectType &Type,
@@ -121,7 +121,7 @@ dmz::WeaponPluginTimeout::create_object (
 
 
 void
-dmz::WeaponPluginTimeout::destroy_object (
+dmz::ObjectPluginTimeout::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
@@ -132,7 +132,7 @@ dmz::WeaponPluginTimeout::destroy_object (
 
 
 dmz::Float64 *
-dmz::WeaponPluginTimeout::_find_timeout (const ObjectType &Type) {
+dmz::ObjectPluginTimeout::_find_timeout (const ObjectType &Type) {
 
    ObjectType current (Type);
 
@@ -177,7 +177,7 @@ dmz::WeaponPluginTimeout::_find_timeout (const ObjectType &Type) {
 }
 
 void
-dmz::WeaponPluginTimeout::_init (Config &local) {
+dmz::ObjectPluginTimeout::_init (Config &local) {
 
    activate_default_object_attribute (ObjectCreateMask | ObjectDestroyMask);
 }
@@ -186,12 +186,12 @@ dmz::WeaponPluginTimeout::_init (Config &local) {
 extern "C" {
 
 DMZ_PLUGIN_FACTORY_LINK_SYMBOL dmz::Plugin *
-create_dmzWeaponPluginTimeout (
+create_dmzObjectPluginTimeout (
       const dmz::PluginInfo &Info,
       dmz::Config &local,
       dmz::Config &global) {
 
-   return new dmz::WeaponPluginTimeout (Info, local);
+   return new dmz::ObjectPluginTimeout (Info, local);
 }
 
 };

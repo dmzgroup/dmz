@@ -39,6 +39,7 @@ in the buffer to determine size and length.
 
 */
 
+//! Converts Int8 to String.
 dmz::String
 dmz::String::number (const char Value) {
 
@@ -47,6 +48,7 @@ dmz::String::number (const char Value) {
 }
 
 
+//! Converts UInt8 to String.
 dmz::String
 dmz::String::number (const unsigned char Value) {
 
@@ -55,6 +57,7 @@ dmz::String::number (const unsigned char Value) {
 }
 
 
+//! Converts Int16 to String.
 dmz::String
 dmz::String::number (const short Value) {
 
@@ -63,6 +66,7 @@ dmz::String::number (const short Value) {
 }
 
 
+//! Converts UInt16 to String.
 dmz::String
 dmz::String::number (const unsigned short Value) {
 
@@ -71,6 +75,7 @@ dmz::String::number (const unsigned short Value) {
 }
 
 
+//! Converts int to String.
 dmz::String
 dmz::String::number (const int Value) {
 
@@ -79,6 +84,7 @@ dmz::String::number (const int Value) {
 }
 
 
+//! Converts unsigned int to String.
 dmz::String
 dmz::String::number (const unsigned int Value) {
 
@@ -87,6 +93,7 @@ dmz::String::number (const unsigned int Value) {
 }
 
 
+//! Converts Int32 int to String.
 dmz::String
 dmz::String::number (const long Value) {
 
@@ -95,6 +102,7 @@ dmz::String::number (const long Value) {
 }
 
 
+//! Converts UInt32 int to String.
 dmz::String
 dmz::String::number (const unsigned long Value) {
 
@@ -103,6 +111,7 @@ dmz::String::number (const unsigned long Value) {
 }
 
 
+//! Converts Int64 int to String.
 dmz::String
 dmz::String::number (const Int64 Value) {
 
@@ -111,6 +120,7 @@ dmz::String::number (const Int64 Value) {
 }
 
 
+//! Converts UInt64 int to String.
 dmz::String
 dmz::String::number (const UInt64 Value) {
 
@@ -119,6 +129,7 @@ dmz::String::number (const UInt64 Value) {
 }
 
 
+//! Converts Float32 int to String.
 dmz::String
 dmz::String::number (const Float32 Value) {
 
@@ -127,6 +138,7 @@ dmz::String::number (const Float32 Value) {
 }
 
 
+//! Converts Float64 int to String.
 dmz::String
 dmz::String::number (const Float64 Value) {
 

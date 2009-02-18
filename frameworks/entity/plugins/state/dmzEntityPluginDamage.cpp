@@ -5,6 +5,7 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectConsts.h>
 #include <dmzObjectModule.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
@@ -107,7 +108,9 @@ dmz::EntityPluginDamage::_init (Config &local) {
 
    _targetHandle = defs.create_named_handle (EventAttributeTargetName);
 
-   defs.lookup_state (DefaultStateNameDead, _deadState);
+   const String StateNames = config_to_string ("state.name", local, DefaultStateNameDead);
+
+   defs.lookup_state (StateNames, _deadState);
 
    _defaultObjectHandle = activate_default_object_attribute (ObjectDestroyMask);
 

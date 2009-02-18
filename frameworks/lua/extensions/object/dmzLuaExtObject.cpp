@@ -22,8 +22,11 @@
 
 \class dmz::LuaExtObject
 \ingroup Lua
-\brief Lua extension that provides an interface to the Object Framework.
+\brief Provides a Lua API for the Object Framework.
 \details
+\htmlonly See the <a href="dmzlua.html#dmz.object">Lua Object API</a>.
+\endhtmlonly
+
 */
 
 using namespace dmz;

@@ -39,6 +39,14 @@ struct dmz::DynamicLibrary::State {
 };
 
 
+/*!
+
+\brief Streams list of loaded DynamicLibraries.
+\param[in] out Stream object used to stream list of DynamicLibraries.
+\details The environment variable "DMZ_DUMP_DYLD" must be set to "true" for this
+function to work.
+
+*/
 void
 dmz::DynamicLibrary::dump_loaded (Stream &out) { dump_dyld (out); }
 

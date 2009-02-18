@@ -11,6 +11,17 @@
 #include <qdb.h>
 static dmz::qdb out;
 
+/*!
+         
+\class dmz::LuaExtPick
+\ingroup Lua
+\brief Provides a Lua API for the Render Pick Module.
+\details
+\htmlonly See the <a href="dmzlua.html#dmz.pick">Lua Pick API</a>.
+\endhtmlonly
+         
+*/
+
 using namespace dmz;
 
 namespace {
@@ -179,6 +190,7 @@ static const luaL_Reg arrayFunc[] = {
 };
 
 
+//! \cond
 dmz::LuaExtPick::LuaExtPick (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       LuaExt (Info),
@@ -273,6 +285,7 @@ void
 dmz::LuaExtPick::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

@@ -30,6 +30,12 @@ and not equal to the Plugin's name.
 \fn dmz::LuaModule::~LuaModule ()
 \brief Destructor.
 
+\fn void dmz::LuaModule::add_lua_path (const String &Path)
+\brief Adds a path to the Lua search path.
+\details Adds a path to the search path used by the Lua runtime to locate and load
+Lua scripts reference by the "require" or "dofile" Lua functions.
+\param[in] Path String containing the path to add to the Lua search path.
+
 \fn void dmz::LuaModule::register_lua_observer (
 const UInt32 CallbackMask,
 LuaObserver &observer)

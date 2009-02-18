@@ -209,6 +209,7 @@ static const luaL_Reg arrayMembers [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_uuid_lib (lua_State *L) {
 
@@ -241,8 +242,13 @@ dmz::open_lua_kernel_uuid_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 
 
+//! \addtogroup Lua
+//! @{
+
+//! Creates a UUID object on the Lua stack.
 dmz::UUID *
 dmz::lua_create_uuid (lua_State *L, const UUID &Value) {
 
@@ -304,6 +310,7 @@ dmz::lua_create_uuid (lua_State *L, const UUID &Value) {
 }
 
 
+//! Attempts to convert the specified object on the Lua stack to a UUID object.
 dmz::UUID *
 dmz::lua_to_uuid (lua_State *L, int narg) {
 
@@ -315,8 +322,10 @@ dmz::lua_to_uuid (lua_State *L, int narg) {
 }
 
 
+//! Raises and error if the specified object on the Lua stack is not a UUID object.
 dmz::UUID *
 dmz::lua_check_uuid (lua_State *L, int narg) {
 
    return uuid_check (L, narg);
 }
+//! @}

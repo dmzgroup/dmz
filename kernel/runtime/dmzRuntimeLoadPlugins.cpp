@@ -10,6 +10,8 @@
 #include <dmzRuntimeTimeSlice.h>
 #include <dmzSystem.h>
 #include <dmzSystemDynamicLibrary.h>
+#include <dmzTypesStringTokenizer.h>
+#include <dmzTypesStringUtil.h>
 
 /*!
 
@@ -32,8 +34,9 @@ specified.
 attribute with the prefix "create_" added to the front if not specified.
 - \b platform Specifies the platform the Plugin supports. Compares the value of the
 attribute to the result of dmz::get_system_name. If the values are equal, the Plugin
-is loaded. If this attribute is not specified, the loader assumes the Plugin is
-suitable for all platforms.
+is loaded. Multiple platforms may be specified. Platform names should be delineated with
+the logical 'or' (i.e., platform="macos|win32"). If this attribute is not specified,
+the loader assumess the Plugin is suitable for all platforms.
 - \b delete { true | false } Specifies whether the Plugin should be deleted by the
 PluginContainer. Will default to true if the attribute is not specified.
 - \b unload { true | false } Specifies whether the DynamicLibrary is unloaded by
@@ -116,6 +119,32 @@ dmz::load_plugins (
 
          Boolean load (True);
 
+         if (load && Platform) {
+
+            StringTokenizer st (Platform, '|');
+
+            Boolean found = False;
+
+            String value;
+
+            while (st.get_next (value)) {
+
+               trim_ascii_white_space (value);
+               if (SystemName == value) { found = True; }
+            }
+
+            if (!found) {
+
+               if (log) {
+
+                  log->info << "Skipping plugin: " << NameValue << " target platform: "
+                     << Platform << endl;
+               }
+
+               load = False;
+            }
+         }
+
          if (load && ReserveTimeSlice) {
 
             const Handle PluginHandle (defs.create_named_handle (PluginName));
@@ -157,17 +186,6 @@ dmz::load_plugins (
 
                log->error << "Plugin name: " << PluginName
                   << " is not unique and can not be loaded" << endl;
-            }
-
-            load = False;
-         }
-
-         if (load && Platform && (SystemName != Platform)) {
-
-            if (log) {
-
-               log->info << "Skipping plugin: " << NameValue << " target platform: "
-                  << Platform << endl;
             }
 
             load = False;

@@ -17,6 +17,7 @@ dmz::RenderExtViewerOSG::RenderExtViewerOSG (
       Plugin (Info),
       TimeSlice (Info),
       _log (Info),
+      _title ("DMZ"),
       _core (0),
       _channels (0),
       _portalName (DefaultPortalNameOSG),
@@ -64,17 +65,21 @@ dmz::RenderExtViewerOSG::update_plugin_state (
 
          _viewer->realize ();
 
-#if defined(__APPLE__) || defined(MACOSX)
-         // WARNING This code does not seem to work under Win32. Fortunately
-         // The OSG window comes up in focus under Win32. For the Mac, this
-         // gives the window focus on startup
          osgViewer::ViewerBase::Windows w;
          _viewer->getWindows (w);
 
          osgViewer::GraphicsWindow *gw = w.front ();
 
-         if (gw) { gw->grabFocus (); }
+         if (gw) {
+
+#if defined(__APPLE__) || defined(MACOSX)
+            // WARNING This call does not seem to work under Win32. Fortunately
+            // The OSG window comes up in focus under Win32. For the Mac, this
+            // gives the window focus on startup
+            gw->grabFocus ();
 #endif
+            gw->setWindowName (_title.get_buffer ());
+         }
       }
    }
 }
@@ -160,6 +165,8 @@ dmz::RenderExtViewerOSG::_init (const Config &Local) {
 
    _portalName = config_to_string ("portal.name", Local, DefaultPortalNameOSG);
 
+   _title = config_to_string ("window-title.value", Local, _title);
+
    const Boolean Fullscreen = config_to_boolean ("window.fullscreen", Local, False);
    const Boolean Centered = config_to_boolean ("window.center", Local, True);
    Int32 windowLeft = config_to_uint32 ("window.left", Local, 100);
@@ -193,6 +200,7 @@ dmz::RenderExtViewerOSG::_init (const Config &Local) {
 
    _log.info << Screen << endl;
 }
+
 
 void
 dmz::RenderExtViewerOSG::__init_centered (

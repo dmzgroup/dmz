@@ -205,6 +205,7 @@ static const luaL_Reg arrayMembers [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_handle_lib (lua_State *L) {
 
@@ -238,8 +239,12 @@ dmz::open_lua_kernel_handle_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 
+//! \addtogroup Lua
+//! @{
 
+//! Creates a Handle on the Lua stack.
 dmz::Handle *
 dmz::lua_create_handle (lua_State *L, const Handle Value) {
 
@@ -304,6 +309,7 @@ dmz::lua_create_handle (lua_State *L, const Handle Value) {
 }
 
 
+//! Attempts to convert the specified object on the Lua stack to a Handle.
 dmz::Handle *
 dmz::lua_to_handle (lua_State *L, int narg) {
 
@@ -311,6 +317,8 @@ dmz::lua_to_handle (lua_State *L, int narg) {
 }
 
 
+//! Raises and error if the specified object on the stack is not a Handle.
 dmz::Handle *
 dmz::lua_check_handle (lua_State *L, int narg) { return handle_check (L, narg); }
 
+//! @}

@@ -14,7 +14,7 @@ dmz::ObjectPluginTimeout::ObjectPluginTimeout (const PluginInfo &Info, Config &l
       ObjectObserverUtil (Info, local),
       _log (Info),
       _eventMod (0),
-      _defaultTimeout (new Float64 (-1.0)) {
+      _defaultTimeout (new TimeoutStruct (False, -1.0)) {
 
    _init (local);
 }
@@ -73,13 +73,13 @@ void
 dmz::ObjectPluginTimeout::update_time_slice (const Float64 DeltaTime) {
 
    HashTableHandleIterator it;
-   Float64 *ptr = _objTable.get_first (it);
+   TimeoutStruct *ptr = _objTable.get_first (it);
 
    while (ptr) {
 
-      *ptr -= DeltaTime;
+      ptr->timeout -= DeltaTime;
 
-      if (*ptr < 0.0) {
+      if (ptr->timeout < 0.0) {
 
          const Handle Object (it.get_hash_key ());
 
@@ -87,7 +87,10 @@ dmz::ObjectPluginTimeout::update_time_slice (const Float64 DeltaTime) {
 
          if (objMod) {
      
-            if (_eventMod) { _eventMod->create_detonation_event (Object, 0); }
+            if (ptr->Detonate && _eventMod) {
+
+               _eventMod->create_detonation_event (Object, 0);
+            }
 
             objMod->destroy_object (Object);
          }
@@ -108,11 +111,11 @@ dmz::ObjectPluginTimeout::create_object (
 
    if (Locality == ObjectLocal) {
 
-      Float64 *timeout = _find_timeout (Type);
+      TimeoutStruct *ts = _find_timeout (Type);
 
-      if (timeout && (*timeout > 0.0)) {
+      if (ts && (ts->timeout > 0.0)) {
 
-         Float64 *ptr = new Float64 (*timeout);
+         TimeoutStruct *ptr = new TimeoutStruct (*ts);
 
          if (ptr && !_objTable.store (ObjectHandle, ptr)) { delete ptr; ptr = 0; }
       }
@@ -125,27 +128,30 @@ dmz::ObjectPluginTimeout::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
-   Float64 *ptr = _objTable.remove (ObjectHandle);
+   TimeoutStruct *ptr = _objTable.remove (ObjectHandle);
 
    if (ptr) { delete ptr; ptr = 0; }
 }
 
 
-dmz::Float64 *
+dmz::ObjectPluginTimeout::TimeoutStruct *
 dmz::ObjectPluginTimeout::_find_timeout (const ObjectType &Type) {
 
    ObjectType current (Type);
 
-   Float64 *result = _timeoutTable.lookup (current.get_handle ());
+   TimeoutStruct *result = _timeoutTable.lookup (current.get_handle ());
 
    while (!result && current) {
 
       const Float64 Timeout =
          config_to_float64 ("timeout.value", current.get_config (), -1.0);
 
+      const Boolean Detonate =
+         config_to_boolean ("timeout.detonate", current.get_config (), False);
+
       if (Timeout > 0.0) {
 
-         result = new Float64 (Timeout);
+         result = new TimeoutStruct (Detonate, Timeout);
 
          if (result && _masterTimeoutTable.store (current.get_handle (), result)) {
 

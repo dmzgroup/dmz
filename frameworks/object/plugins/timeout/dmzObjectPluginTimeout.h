@@ -42,15 +42,29 @@ namespace dmz {
          virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
 
       protected:
-         Float64 *_find_timeout (const ObjectType &Type);
+         struct TimeoutStruct {
+
+            const Boolean Detonate;
+            Float64 timeout;
+
+            TimeoutStruct (const Boolean DoDetonate, const Float64 TheTimeout) :
+                  Detonate (DoDetonate),
+                  timeout (TheTimeout) {;}
+
+            TimeoutStruct (const TimeoutStruct &Value) :
+                  Detonate (Value.Detonate),
+                  timeout (Value.timeout) {;}
+         };
+
+         TimeoutStruct *_find_timeout (const ObjectType &Type);
          void _init (Config &local);
 
          Log _log;
          EventModuleCommon *_eventMod;
-         HashTableHandleTemplate<Float64> _objTable;
-         HashTableHandleTemplate<Float64> _timeoutTable;
-         HashTableHandleTemplate<Float64> _masterTimeoutTable;
-         Float64 *_defaultTimeout;
+         HashTableHandleTemplate<TimeoutStruct> _objTable;
+         HashTableHandleTemplate<TimeoutStruct> _timeoutTable;
+         HashTableHandleTemplate<TimeoutStruct> _masterTimeoutTable;
+         TimeoutStruct *_defaultTimeout;
 
       private:
          ObjectPluginTimeout ();

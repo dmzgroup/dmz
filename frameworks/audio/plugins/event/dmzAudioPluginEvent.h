@@ -104,6 +104,7 @@ namespace dmz {
 
          Handle _defaultEventHandle;
          EventTypeSet _eventTypes;
+         EventTypeSet _ignoredEventTypes;
          HashTableStringTemplate<Handle> _soundTable;
          HashTableHandleTemplate<EventStruct> _eventTable;
          //! \endcond

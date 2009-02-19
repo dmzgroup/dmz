@@ -75,7 +75,7 @@ dmz::AudioPluginEvent::close_event (
       const EventType &Type,
       const EventLocalityEnum Locality) {
 
-   if (_audioMod && _eventMod) {
+   if (!_ignoredEventTypes.contains_exact_type (Type) && _audioMod && _eventMod) {
 
       EventStruct *es = _create_event_struct (Type);
 
@@ -140,6 +140,7 @@ dmz::AudioPluginEvent::close_event (
             _audioMod->play_sound (sound, si, sa);
          }
       }
+      else { _ignoredEventTypes.add_event_type (Type); }
    }
 }
 

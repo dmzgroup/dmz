@@ -336,7 +336,6 @@ dmz::AudioPluginObject::update_object_state (
 
             if (_audioMod && current->Data.loopHandle) {
 
-_log.error << "Looped! Is/Wasnot: " << current->Data.State << endl;
                init.set (SoundLooped, True);
                current->handle =
                   _audioMod->play_sound (current->Data.loopHandle, init, attr);

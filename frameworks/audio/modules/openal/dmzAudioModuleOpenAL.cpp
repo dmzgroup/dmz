@@ -280,6 +280,7 @@ dmz::AudioModuleOpenAL::play_sound (
 
          alSourcei (ss->source, AL_LOOPING, Init.get (SoundLooped) ? AL_TRUE : AL_FALSE);
          alSourcef (ss->source, AL_GAIN, 1.0f);
+         alSourcef (ss->source, AL_ROLLOFF_FACTOR, 0.1);
 
          if (!Init.get (SoundLooped)) {
 
@@ -532,6 +533,8 @@ dmz::AudioModuleOpenAL::_init (Config &local) {
       if (_context) {
 
          alcMakeContextCurrent (_context);
+
+         //alDistanceModel (AL_LINEAR_DISTANCE_CLAMPED);
       }
       else { _log.error << "Unable to create OpenAL Context." << endl; }
    }

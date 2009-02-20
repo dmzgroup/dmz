@@ -35,7 +35,7 @@ dmz::QtPluginMapZoomPan::QtPluginMapZoomPan (
       _scrollDelta (10),
       _zoomMin (0),
       _zoomMax (17),
-      _zoomDefault (6) {
+      _zoomDefault (_zoomMin) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
@@ -94,9 +94,9 @@ dmz::QtPluginMapZoomPan::discover_plugin (
                setParent (map);
             }
 
-            _mapModule->set_zoom_min_value (_zoomMin);
-            _mapModule->set_zoom_max_value (_zoomMax);
-            _mapModule->set_zoom (_zoomDefault);
+           _mapModule->set_zoom_min_value (_zoomMin);
+           _mapModule->set_zoom_max_value (_zoomMax);
+           _mapModule->set_zoom (_zoomDefault);
          }
       }
 

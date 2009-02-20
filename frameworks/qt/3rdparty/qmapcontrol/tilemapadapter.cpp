@@ -132,10 +132,9 @@ namespace qmapcontrol
 		y = yoffset(y);
 	
 		int a[3] = {z, x, y};
-		return QString(serverPath).replace(order[2][0],2, loc.toString(a[order[2][1]]))
-				.replace(order[1][0],2, loc.toString(a[order[1][1]]))
-				.replace(order[0][0],2, loc.toString(a[order[0][1]]));
-	
+      return QString(serverPath).replace(order[2][0],2, loc.toString(a[order[2][1]]))
+            .replace(order[1][0],2, loc.toString(a[order[1][1]]))
+            .replace(order[0][0],2, loc.toString(a[order[0][1]]));
 	}
 
 	QPoint TileMapAdapter::coordinateToDisplay(const QPointF& coordinate) const

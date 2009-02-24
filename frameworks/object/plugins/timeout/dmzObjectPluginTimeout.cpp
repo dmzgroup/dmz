@@ -73,9 +73,9 @@ void
 dmz::ObjectPluginTimeout::update_time_slice (const Float64 DeltaTime) {
 
    HashTableHandleIterator it;
-   TimeoutStruct *ptr = _objTable.get_first (it);
+   TimeoutStruct *ptr (0);
 
-   while (ptr) {
+   while (_objTable.get_next (it, ptr)) {
 
       ptr->timeout -= DeltaTime;
 
@@ -95,8 +95,6 @@ dmz::ObjectPluginTimeout::update_time_slice (const Float64 DeltaTime) {
             objMod->destroy_object (Object);
          }
       }
-
-      ptr = _objTable.get_next (it);
    }
 }
 

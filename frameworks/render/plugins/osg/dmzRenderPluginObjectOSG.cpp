@@ -6,7 +6,6 @@
 #include <dmzRuntimeConfigToPathContainer.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
-#include <dmzRuntimeObjectType.h>
 #include <osgDB/ReadFile>
 
 dmz::RenderPluginObjectOSG::RenderPluginObjectOSG (
@@ -79,7 +78,7 @@ dmz::RenderPluginObjectOSG::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
-   if (_core) {
+   if (!_ignoreType.contains_exact_type (Type) && _core) {
 
       DefStruct *ds (_lookup_def_struct (Type));
 
@@ -98,6 +97,7 @@ dmz::RenderPluginObjectOSG::create_object (
             if (g) { g->addChild (os->model.get ()); }
          }
       }
+      else { _ignoreType.add_object_type (Type); }
    }
 }
 
@@ -165,13 +165,21 @@ dmz::RenderPluginObjectOSG::update_object_scale (
 dmz::RenderPluginObjectOSG::DefStruct *
 dmz::RenderPluginObjectOSG::_lookup_def_struct (const ObjectType &Type) {
 
-   DefStruct *result (_typeTable.lookup (Type.get_handle ()));
+   ObjectType current (Type);
 
-   if (!result) {
+   DefStruct *result (0);
 
-      result = _create_def_struct (Type);
+   while (!result && current) {
 
-      if (result) { _typeTable.store (Type.get_handle (), result); }
+      result = _typeTable.lookup (current.get_handle ());
+
+      if (!result) {
+
+         result = _create_def_struct (current);
+
+         if (result) { _typeTable.store (Type.get_handle (), result); }
+         else { current.become_parent (); }
+      }
    }
 
    return result;
@@ -181,73 +189,66 @@ dmz::RenderPluginObjectOSG::_lookup_def_struct (const ObjectType &Type) {
 dmz::RenderPluginObjectOSG::DefStruct *
 dmz::RenderPluginObjectOSG::_create_def_struct (const ObjectType &Type) {
 
-   DefStruct *result (0);
+   DefStruct *result = _defTable.lookup (Type.get_handle ());
 
-   ObjectType currentType (Type);
+   Config modelList;
 
-   while (!result && currentType) {
+   if (!result && Type.get_config ().lookup_all_config ("render.model", modelList)) {
 
-      Config modelList;
+      result = new DefStruct;
 
-      if (currentType.get_config ().lookup_all_config ("render.model", modelList)) {
+      if (_defTable.store (Type.get_handle (), result)) {
 
-         result = new DefStruct;
+         _typeTable.store (Type.get_handle (), result);
 
-         if (_defTable.store (currentType.get_handle (), result)) {
+         ConfigIterator it;
+         Config model;
 
-            ConfigIterator it;
-            Config model;
+         unsigned int place (1);
 
-            unsigned int place (1);
+         StateStruct *currentState (0);
 
-            StateStruct *currentState (0);
+         while (modelList.get_next_config (it, model)) {
 
-            while (modelList.get_next_config (it, model)) {
+            const String ResourceName (config_to_string ("resource", model));
+            const Boolean NoModel (config_to_boolean ("none", model));
+            Mask state;
+            String stateName;
+            const Boolean StateNameFound (model.lookup_attribute ("state", stateName));
 
-               const String ResourceName (config_to_string ("resource", model));
-               const Boolean NoModel (config_to_boolean ("none", model));
-               Mask state;
-               String stateName;
-               const Boolean StateNameFound (model.lookup_attribute ("state", stateName));
+            if (StateNameFound) { _defs.lookup_state (stateName, state); }
 
-               if (StateNameFound) { _defs.lookup_state (stateName, state); }
+            if (!StateNameFound || state) {
 
-               if (!StateNameFound || state) {
+               ModelStruct *ms = (NoModel ? &_noModel : _load_model (ResourceName));
 
-                  ModelStruct *ms = (NoModel ? &_noModel : _load_model (ResourceName));
+               if (ms) {
 
-                  if (ms) {
+                  unsigned int switchPlace (StateNameFound ? place : 0);
+                  if (StateNameFound) { place++; }
 
-                     unsigned int switchPlace (StateNameFound ? place : 0);
-                     if (StateNameFound) { place++; }
+                  if (((switchPlace + 1) > result->model->getNumChildren ()) ||
+                        !result->model->getChild (switchPlace)) {
 
-                     if (((switchPlace + 1) > result->model->getNumChildren ()) ||
-                           !result->model->getChild (switchPlace)) {
+                     result->model->insertChild (switchPlace, ms->model.get ());
 
-                        result->model->insertChild (switchPlace, ms->model.get ());
+                     if (switchPlace) {
 
-                        if (switchPlace) {
+                        StateStruct *ss (new StateStruct (switchPlace, state));
 
-                           StateStruct *ss (new StateStruct (switchPlace, state));
+                        if (currentState) {
 
-                           if (currentState) {
-
-                              currentState->next = ss;
-                              currentState = ss;
-                           }
-                           else { result->stateMap = currentState = ss; }
+                           currentState->next = ss;
+                           currentState = ss;
                         }
+                        else { result->stateMap = currentState = ss; }
                      }
                   }
                }
             }
          }
-         else { delete result; result = 0; }
       }
-
-      currentType.become_parent ();
-
-      if (!result) { result = _defTable.lookup (currentType.get_handle ()); }
+      else { delete result; result = 0; }
    }
 
    return result;

@@ -432,7 +432,7 @@ dmz::QtPluginCanvasObject::_init (Config &local, Config &global) {
 
    Config pluginList;
 
-   if (local.lookup_all_config ("plugins.plugin", pluginList)) {
+   if (local.lookup_all_config ("plugin-list.plugin", pluginList)) {
 
       RuntimeContext *context (get_plugin_runtime_context ());
 

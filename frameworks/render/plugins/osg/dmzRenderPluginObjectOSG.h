@@ -4,6 +4,7 @@
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeResources.h>
 #include <dmzTypesHashTableStringTemplate.h>
@@ -123,6 +124,7 @@ namespace dmz {
          HashTableHandleTemplate<DefStruct> _defTable;
          HashTableHandleTemplate<DefStruct> _typeTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
+         ObjectTypeSet _ignoreType;
 
          Definitions _defs;
          Resources _rc;

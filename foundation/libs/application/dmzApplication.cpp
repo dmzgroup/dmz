@@ -364,10 +364,10 @@ dmz::Application::load_plugins () {
    Config pluginList;
 
    if (!_state.error &&
-         !_state.global.lookup_all_config ("dmz.plugins.plugin", pluginList)) {
+         !_state.global.lookup_all_config ("dmz.plugin-list.plugin", pluginList)) {
 
       _state.errorMsg.flush ()
-         << "dmz.plugins.plugin not found. No plugins listed for loading";
+         << "dmz.plugin-list.plugin not found. No plugins listed for loading";
 
       _state.log.error << _state.errorMsg << endl;
 

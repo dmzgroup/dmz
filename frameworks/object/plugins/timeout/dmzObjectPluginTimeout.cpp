@@ -26,8 +26,8 @@ will create a detonation event before deleting the object.
 </runtime>
 </dmz>
 \endcode
-*/
 
+*/
 
 //! \cond
 dmz::ObjectPluginTimeout::ObjectPluginTimeout (const PluginInfo &Info, Config &local) :

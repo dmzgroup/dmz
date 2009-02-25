@@ -236,23 +236,23 @@ dmz::RenderModuleCoreOSGBasic::create_dynamic_object (const Handle ObjectHandle)
 
             objMod->lookup_position (ObjectHandle, _defaultHandle, os->pos);
             objMod->lookup_orientation (ObjectHandle, _defaultHandle, os->ori);
+            os->transform->setMatrix (to_osg_matrix (os->ori, os->pos));
+         }
+         else {
 
             os->dirty = True;
             os->next = _dirtyObjects;
             _dirtyObjects = os;
          }
+
+         if (_dynamicObjects.valid ()) {
+
+            _dynamicObjects->addChild (os->transform.get ());
+         }
       }
    }
 
-   if (os) {
-
-      result = os->transform.get ();
-
-      if (_dynamicObjects.valid ()) {
-
-         _dynamicObjects->addChild (result);
-      }
-   }
+   if (os) { result = os->transform.get (); }
 
    return result;
 }

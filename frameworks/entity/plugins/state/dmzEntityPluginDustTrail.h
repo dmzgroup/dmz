@@ -14,6 +14,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginDustTrail (const PluginInfo &Info, Config &local);
          ~EntityPluginDustTrail ();
 
@@ -53,6 +54,7 @@ namespace dmz {
          Handle _defaultObjectHandle;
 
          Mask _dustState;
+         //! \endcond
 
       private:
          EntityPluginDustTrail ();

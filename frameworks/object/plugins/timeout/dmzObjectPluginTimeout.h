@@ -17,6 +17,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          ObjectPluginTimeout (const PluginInfo &Info, Config &local);
          ~ObjectPluginTimeout ();
 
@@ -65,6 +66,7 @@ namespace dmz {
          HashTableHandleTemplate<TimeoutStruct> _timeoutTable;
          HashTableHandleTemplate<TimeoutStruct> _masterTimeoutTable;
          TimeoutStruct *_defaultTimeout;
+         //! \endcond
 
       private:
          ObjectPluginTimeout ();

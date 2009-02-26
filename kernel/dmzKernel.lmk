@@ -20,6 +20,7 @@ lmk.add_files {
    "runtime/dmzRuntimeConfigToStringContainer.h",
    "runtime/dmzRuntimeConfigToVector.h",
    "runtime/dmzRuntimeConfigWrite.h",
+   "runtime/dmzRuntimeContainer.h",
    "runtime/dmzRuntimeData.h",
    "runtime/dmzRuntimeDataBinder.h",
    "runtime/dmzRuntimeDataConverters.h",

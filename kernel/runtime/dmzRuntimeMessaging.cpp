@@ -41,7 +41,7 @@ dmz::Message::Message (const Message &Type) : _context (0) { *this = Type; }
 //! Message type context constructor.
 dmz::Message::Message (MessageContext *context) : _context (0) {
 
-   set_message_type_context (context);
+   set_message_context (context);
 }
 
 
@@ -85,7 +85,7 @@ dmz::Message::~Message () { if (_context) { _context->unref (); _context = 0; } 
 dmz::Message &
 dmz::Message::operator= (const Message &Type) {
 
-   set_message_type_context (Type._context);
+   set_message_context (Type._context);
    return *this;
 }
 
@@ -227,7 +227,7 @@ dmz::Message::get_parent () const {
 
    Message result;
 
-   if (_context) { result.set_message_type_context (_context->parent); }
+   if (_context) { result.set_message_context (_context->parent); }
 
    return result;
 }
@@ -413,7 +413,7 @@ integer messages have been sent.
 
 //! For internal use.
 void
-dmz::Message::set_message_type_context (MessageContext *context) {
+dmz::Message::set_message_context (MessageContext *context) {
 
    if (context != _context) {
 
@@ -426,7 +426,7 @@ dmz::Message::set_message_type_context (MessageContext *context) {
 
 //! For internal use.
 dmz::MessageContext *
-dmz::Message::get_message_type_context () const { return _context; }
+dmz::Message::get_message_context () const { return _context; }
 
 
 /*!
@@ -577,7 +577,7 @@ dmz::MessageObserver::subscribe_to_message (const Message &Type) {
 
       if (_msgObsState.context->key.is_main_thread ()) {
 
-         MessageContext *typeContext (Type.get_message_type_context ());
+         MessageContext *typeContext (Type.get_message_context ());
 
          const Handle ObsHandle (get_message_observer_handle ());
 
@@ -623,7 +623,7 @@ dmz::MessageObserver::unsubscribe_to_message (const Message &Type) {
 
       if (_msgObsState.context->key.is_main_thread ()) {
 
-         MessageContext *typeContext (Type.get_message_type_context ());
+         MessageContext *typeContext (Type.get_message_context ());
 
          const Handle ObsHandle (get_message_observer_handle ());
 

@@ -29,7 +29,7 @@ dmz::RenderExtViewerOSG::RenderExtViewerOSG (
    _viewer = new osgViewer::Viewer;
    _viewer->setThreadingModel (osgViewer::Viewer::SingleThreaded);
    _cameraManipulator = new RenderCameraManipulatorOSG;
-   _eventHandler = new RenderEventHandlerOSG (get_plugin_runtime_context ());
+   _eventHandler = new RenderEventHandlerOSG (get_plugin_runtime_context (), local);
 
    osgViewer::StatsHandler *stats = new osgViewer::StatsHandler;
    stats->setKeyEventTogglesOnScreenStats (osgGA::GUIEventAdapter::KEY_F1);

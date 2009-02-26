@@ -1,4 +1,5 @@
 #include <dmzRuntime.h>
+#include <dmzRuntimeContainer.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeUUID.h>
 #include "dmzRuntimeContext.h"
@@ -135,3 +136,48 @@ dmz::get_runtime_uuid (const PluginInfo &Info) {
    if (context) { result = context->uuid; }
    return result;
 }
+
+
+struct dmz::RuntimeContainer::State {
+   RuntimeContext *context;
+
+   void set_context (RuntimeContext *theContext) {
+
+      if (context != theContext) {
+
+         if (context) { context->unref (); context = 0; }
+         context = theContext;
+         if (context) { context->ref (); }
+      }
+   }
+
+   State (RuntimeContext *theContext) : context (0) { set_context (theContext); }
+   ~State () { set_context (0); }
+};
+
+dmz::RuntimeContainer::RuntimeContainer (RuntimeContext *context) :
+      _state (*(new State (context))) {;}
+
+
+dmz::RuntimeContainer::RuntimeContainer (const PluginInfo &Info) :
+      _state (*(new State (Info.get_context ()))) {;}
+
+
+dmz::RuntimeContainer::~RuntimeContainer () { delete &_state; }
+
+
+void
+dmz::RuntimeContainer::clear () { _state.set_context (0); }
+
+
+void
+dmz::RuntimeContainer::set_context (RuntimeContext *context) {
+
+   _state.set_context (context);
+}
+
+
+dmz::RuntimeContext *
+dmz::RuntimeContainer::get_context () const { return _state.context; }
+
+

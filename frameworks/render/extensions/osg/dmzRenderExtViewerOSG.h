@@ -1,6 +1,7 @@
 #ifndef DMZ_RENDER_EXT_VIEWER_OSG_DOT_H
 #define DMZ_RENDER_EXT_VIEWER_OSG_DOT_H
 
+#include <dmzRuntimeExit.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>

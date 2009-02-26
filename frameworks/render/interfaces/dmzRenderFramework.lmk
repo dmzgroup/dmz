@@ -1,6 +1,7 @@
 lmk.set_name "dmzRenderFramework"
 
 lmk.add_files {
+   "dmzRenderConsts.h",
    "dmzRenderPick.h",
    "dmzRenderModulePick.h",
    "dmzRenderModuleIsect.h",

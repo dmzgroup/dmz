@@ -76,8 +76,8 @@ namespace dmz {
 
          UInt32 send () const { return send (0, 0, 0); }
 
-         void set_message_type_context (MessageContext *context);
-         MessageContext *get_message_type_context () const;
+         void set_message_context (MessageContext *context);
+         MessageContext *get_message_context () const;
 
       protected:
          MessageContext *_context; //!< Internal state.

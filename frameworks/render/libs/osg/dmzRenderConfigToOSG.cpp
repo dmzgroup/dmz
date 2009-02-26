@@ -22,7 +22,7 @@ dmz::config_to_osg_vec4_color (
       config_to_float32 ("r", cd, DefaultValue.x ()),
       config_to_float32 ("g", cd, DefaultValue.y ()),
       config_to_float32 ("b", cd, DefaultValue.z ()),
-      DefaultValue.w ());
+      config_to_float32 ("a", cd, DefaultValue.w ()));
 
    return Result;
 }

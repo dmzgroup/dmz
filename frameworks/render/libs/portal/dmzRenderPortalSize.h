@@ -47,13 +47,13 @@ class DMZ_RENDER_PORTAL_LINK_SYMBOL PortalSizeObserver {
       PortalSizeObserver (const PluginInfo &Info, Config &init);
       virtual ~PortalSizeObserver ();
 
-      void configure (Config &init);
+      void configure_portal (Config &init);
 
       void set_portal_handle (const Handle PortalHandle);
       Handle get_portal_handle () const;
 
-      Int32 get_x () const;
-      Int32 get_y () const;
+      Int32 get_portal_x () const;
+      Int32 get_portal_y () const;
 
       virtual void update_portal_size (
          const Handle PortalHandle,

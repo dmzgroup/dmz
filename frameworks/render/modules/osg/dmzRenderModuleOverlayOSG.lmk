@@ -5,9 +5,12 @@ lmkOSG.set_name "dmzRenderModuleOverlayOSG"
 lmk.set_type "plugin"
 lmk.add_files {"dmzRenderModuleOverlayOSG.cpp",}
 lmk.add_libs {
+   "dmzRenderPortal",
+   "dmzRenderUtilOSG",
    "dmzKernel",
 }
 lmk.add_preqs {
+   "dmzRenderModuleCoreOSG",
    "dmzRenderFramework",
 }
 lmkOSG.add_libs {"osgDB", "osg", "OpenThreads",}

@@ -2,14 +2,25 @@
 #define DMZ_RENDER_MODULE_OVERLAY_OSG_DOT_H
 
 #include <dmzRenderModuleOverlay.h>
+#include <dmzRenderPortalSize.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeResources.h>
+#include <dmzTypesHashTableStringTemplate.h>
+
+#include <osg/Camera>
+#include <osg/Group>
+#include <osg/Switch>
+#include <osg/Image>
 
 namespace dmz {
 
+   class RenderModuleCoreOSG;
+
    class RenderModuleOverlayOSG :
          public Plugin,
-         public RenderModuleOverlay {
+         public RenderModuleOverlay,
+         public PortalSizeObserver {
 
       public:
          RenderModuleOverlayOSG (const PluginInfo &Info, Config &local);
@@ -84,10 +95,35 @@ namespace dmz {
             Float64 &valueX,
             Float64 &valueY);
 
+         // PortalSizeObserver Interface
+         virtual void update_portal_size (
+            const Handle PortalHandle,
+            const Int32 TheX,
+            const Int32 TheY);
+
       protected:
+         struct TextureStruct {
+
+            osg::ref_ptr<osg::Image> img;
+         };
+
+         TextureStruct *_create_texture (const String &Name);
+         void _add_children (osg::ref_ptr<osg::Group> &parent, Config &node);
+         void _add_node (osg::ref_ptr<osg::Group> &parent, Config &node);
+         void _add_group (osg::ref_ptr<osg::Group> &parent, Config &node);
+         void _add_switch (osg::ref_ptr<osg::Group> &parent, Config &node);
+         void _add_transform (osg::ref_ptr<osg::Group> &parent, Config &node);
+         void _add_box (osg::ref_ptr<osg::Group> &parent, Config &node);
+       
          void _init (Config &local);
 
          Log _log;
+         Resources _rc;
+         RenderModuleCoreOSG *_core;
+
+         osg::ref_ptr<osg::Camera> _camera;
+         osg::ref_ptr<osg::Group> _rootNode;
+         HashTableStringTemplate<TextureStruct> _textureTable;
 
       private:
          RenderModuleOverlayOSG ();

@@ -310,7 +310,7 @@ dmz::PortalSizeObserver::~PortalSizeObserver () { delete &_state; }
 
 
 void
-dmz::PortalSizeObserver::configure (Config &init) {
+dmz::PortalSizeObserver::configure_portal (Config &init) {
 
    _state.configure (init);
 }
@@ -331,11 +331,11 @@ dmz::PortalSizeObserver::get_portal_handle () const {
 
 
 dmz::Int32
-dmz::PortalSizeObserver::get_x () const { return _state.x; }
+dmz::PortalSizeObserver::get_portal_x () const { return _state.x; }
 
 
 dmz::Int32
-dmz::PortalSizeObserver::get_y () const { return _state.y; }
+dmz::PortalSizeObserver::get_portal_y () const { return _state.y; }
 
 
 namespace {

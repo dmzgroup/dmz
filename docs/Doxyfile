@@ -239,6 +239,7 @@ PREDEFINED             = DMZ_ARCHIVE_UTIL_LINK_SYMBOL= \
                          DMZ_LUA_KERNEL_LINK_SYMBOL= \
                          DMZ_OBJECT_UTIL_LINK_SYMBOL= \
                          DMZ_RENDER_ISECT_LINK_SYMBOL= \
+                         DMZ_RENDER_PORTAL_LINK_SYMBOL= \
                          DMZ_RENDER_UTIL_LINK_SYMBOL= \
                          DMZ_XML_LINK_SYMBOL=
 EXPAND_AS_DEFINED      = 

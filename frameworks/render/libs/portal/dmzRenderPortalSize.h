@@ -27,8 +27,10 @@ class DMZ_RENDER_PORTAL_LINK_SYMBOL PortalSize {
       void set_size (const Int32 TheX, const Int32 TheY);
 
    protected:
+      //! \cond
       struct State;
       State &_state;
+      //! \endcond
 
    private:
       PortalSize ();
@@ -59,8 +61,10 @@ class DMZ_RENDER_PORTAL_LINK_SYMBOL PortalSizeObserver {
          const Int32 TheY) = 0;
 
    protected:
+      //! \cond
       struct State;
       State &_state;
+      //! \endcond
 
    private:
       PortalSizeObserver ();
@@ -90,8 +94,10 @@ class DMZ_RENDER_PORTAL_LINK_SYMBOL PortalSizeObserverSimple :
       void unbind ();
 
    protected:
+      //! \cond
       struct State;
       State &_state;
+      //! \endcond
 
    private:
       PortalSizeObserverSimple ();

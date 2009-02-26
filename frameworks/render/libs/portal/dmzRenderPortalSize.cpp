@@ -15,12 +15,11 @@ namespace {
 
 Message
 local_configure (
-      const String &ThePrefix,
       RuntimeContext *context,
       Config &init,
       Handle &portal) {
 
-   const String Prefix (ThePrefix ? ThePrefix + "." : String (""));
+   const String Prefix ("portal-size.");
 
    Message result = config_create_message_type (
       Prefix + "message.resize.name",
@@ -50,6 +49,31 @@ local_bind (DataBinder &binder, Handle &portal, Int32 &theX, Int32 &theY) {
 
 };
 
+/*!
+
+\class dmz::PortalSize
+\ingroup Render
+\brief Transmits the current height and width of a portal to PortalSizeObservers.
+\details The PortalSize class sends a message every time the parameter passed into
+set_size differ from the current height and width values. The message type defaults to
+"DMZ_Render_Portal_Resize_Message" and the portal handle defaults to
+dmz::RenderMainPortalName.
+\code
+<dmz>
+<your-namespace>
+<!-- Note: your-namespace can be any value and should be the Config passed in -->
+   <portal-size>
+      <name value="Portal Name"/>
+      <message>
+         <resize name="Message Name"/>
+      </message>
+   <portal-size>
+</your-namespace>
+</dmz>
+\endcode
+
+*/
+
 struct dmz::PortalSize::State {
 
    Message msg;
@@ -62,7 +86,7 @@ struct dmz::PortalSize::State {
 
    void configure (Config &init) {
 
-      msg = local_configure ("", rt.get_context (), init, portal);
+      msg = local_configure (rt.get_context (), init, portal);
    }
 
    State (RuntimeContext *context) :
@@ -73,6 +97,12 @@ struct dmz::PortalSize::State {
          y (0) { local_bind (binder, portal, x, y); }
 };
 
+/*!
+
+\brief Constructor.
+\param[in] context Pointer to the RuntimeContext.
+
+*/
 dmz::PortalSize::PortalSize (RuntimeContext *context) : _state (*(new State (context))) {
 
    Config init;
@@ -80,6 +110,13 @@ dmz::PortalSize::PortalSize (RuntimeContext *context) : _state (*(new State (con
 }
 
 
+/*!
+
+\brief Constructor.
+\param[in] context Pointer to the RuntimeContext.
+\param[in] init Config object used in initialization.
+
+*/
 dmz::PortalSize::PortalSize (RuntimeContext *context, Config &init) :
       _state (*(new State (context))) {
 
@@ -87,6 +124,12 @@ dmz::PortalSize::PortalSize (RuntimeContext *context, Config &init) :
 }
 
 
+/*!
+
+\brief Constructor.
+\param[in] Info Reference to the PluginInfo.
+
+*/
 dmz::PortalSize::PortalSize (const PluginInfo &Info) :
       _state (*(new State (Info.get_context ()))) {
 
@@ -95,6 +138,13 @@ dmz::PortalSize::PortalSize (const PluginInfo &Info) :
 }
 
 
+/*!
+
+\brief Constructor.
+\param[in] Info Reference to the PluginInfo.
+\param[in] init Config object used in initialization.
+
+*/
 dmz::PortalSize::PortalSize (const PluginInfo &Info, Config &init) :
       _state (*(new State (Info.get_context ()))) {
 
@@ -102,9 +152,17 @@ dmz::PortalSize::PortalSize (const PluginInfo &Info, Config &init) :
 }
 
 
+//! Destructor.
 dmz::PortalSize::~PortalSize () { delete &_state; }
 
 
+/*!
+
+\brief Reconfigures the objects settings.
+\details May be called at any time.
+\param[in] init Config object used to configure the object.
+
+*/
 void
 dmz::PortalSize::configure (Config &init) {
 
@@ -112,6 +170,12 @@ dmz::PortalSize::configure (Config &init) {
 }
 
 
+/*!
+
+\brief Sets the portal handle transmitted in the resize message.
+\param[in] PortalHandle Handle of the portal to be transmitted in the resize message.
+
+*/
 void
 dmz::PortalSize::set_portal_handle (const Handle PortalHandle) {
 
@@ -119,10 +183,24 @@ dmz::PortalSize::set_portal_handle (const Handle PortalHandle) {
 }
 
 
+/*!
+
+\brief Gets the portal handle transmitted in the resize message.
+\return Returns the portal handle used when transmitting the resize message.
+*/
 dmz::Handle
 dmz::PortalSize::get_portal_handle () const { return _state.portal; }
 
 
+/*!
+
+\brief Set the current portal size.
+\details If the values are different from the current values, a resize message is
+sent to all PortalSizeObserver objects containing the size and source of the resize.
+\param[in] TheX An Int32 containing the width of the portal.
+\param[in] TheY An Int32 containing the height of the portal.
+
+*/
 void
 dmz::PortalSize::set_size (const Int32 TheX, const Int32 TheY) {
 
@@ -138,6 +216,13 @@ dmz::PortalSize::set_size (const Int32 TheX, const Int32 TheY) {
 }
 
 
+/*!
+
+\class dmz::PortalSizeObserver
+\ingroup Render
+\brief Observers changes in the size of the render portal.
+
+*/
 struct dmz::PortalSizeObserver::State : public MessageObserver {
 
    PortalSizeObserver *obs;
@@ -157,7 +242,7 @@ struct dmz::PortalSizeObserver::State : public MessageObserver {
 
       if (msg) { unsubscribe_to_message (msg); }
 
-      msg = local_configure ("", rt.get_context (), init, targetPortal);
+      msg = local_configure (rt.get_context (), init, targetPortal);
       
       if (msg) { subscribe_to_message (msg); }
    }

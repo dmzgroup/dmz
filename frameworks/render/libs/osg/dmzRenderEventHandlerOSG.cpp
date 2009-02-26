@@ -122,3 +122,9 @@ dmz::RenderEventHandlerOSG::set_input_module_channels (
    _state.mouseEvent.set_source_handle (SourceHandle);
 }
 
+
+void
+dmz::RenderEventHandlerOSG::set_portal_size (const Int32 TheX, const Int32 TheY) {
+
+   _state.size.set_size (TheX, TheY);
+}

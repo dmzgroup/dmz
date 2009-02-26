@@ -79,6 +79,10 @@ dmz::RenderExtViewerOSG::update_plugin_state (
             gw->grabFocus ();
 #endif
             gw->setWindowName (_title.get_buffer ());
+
+            int width (0), height (0), extra (0);
+            gw->getWindowRectangle (extra, extra, width, height);
+            _eventHandler->set_portal_size (width, height);
          }
       }
    }

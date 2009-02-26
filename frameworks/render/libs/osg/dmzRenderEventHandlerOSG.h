@@ -28,6 +28,8 @@ namespace dmz {
                InputModule *module,
                const UInt32 SourceHandle);
 
+         void set_portal_size (const Int32 TheX, const Int32 TheY);
+
       protected:
          struct State;
          State &_state;

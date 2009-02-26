@@ -402,14 +402,15 @@ dmz::Application::start () {
 
    if (!_state.error) {
 
-      _state.startTime = get_time ();
-      _state.frameCount = 0.0;
       _state.container.start_plugins ();
       _state.rt.update_time_slice ();
 
       FileCache *fc (FileCache::get_interface (_state.rt.get_context ()));
 
       if (fc) { fc->process_all_requests (); }
+
+      _state.startTime = get_time ();
+      _state.frameCount = 0.0;
    }
 
    return !_state.error;
@@ -455,12 +456,11 @@ dmz::Application::update_time_slice () {
 dmz::Boolean
 dmz::Application::stop () {
 
+   const Float64 StopTime (get_time ());
+   const Float64 TimeDelta (StopTime - _state.startTime);
+
    _state.rt.update_time_slice ();
    _state.container.stop_plugins ();
-
-   const Float64 StopTime (get_time ());
-
-   const Float64 TimeDelta (StopTime - _state.startTime);
 
    if (!is_zero64 (_state.frameCount) && !is_zero64 (TimeDelta) && !_state.quiet) {
 

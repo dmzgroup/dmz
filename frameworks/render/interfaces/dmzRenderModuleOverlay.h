@@ -10,6 +10,7 @@ namespace dmz {
 
    enum RenderOverlayTypeEnum {
       RenderOverlayUnknown,
+      RenderOverlayNode,
       RenderOverlayGroup,
       RenderOverlaySwitch,
       RenderOverlayTransform,

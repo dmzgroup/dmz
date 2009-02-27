@@ -3,15 +3,21 @@
 
 #include <dmzRenderModuleOverlay.h>
 #include <dmzRenderPortalSize.h>
+#include <dmzRuntimeHandle.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeResources.h>
+#include <dmzTypesBase.h>
+#include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
+#include <dmzTypesVector.h>
 
 #include <osg/Camera>
 #include <osg/Group>
-#include <osg/Switch>
 #include <osg/Image>
+#include <osg/Switch>
+#include <osg/Matrix>
+#include <osg/MatrixTransform>
 
 namespace dmz {
 
@@ -107,7 +113,81 @@ namespace dmz {
             osg::ref_ptr<osg::Image> img;
          };
 
+         struct NodeStruct {
+
+            const RenderOverlayTypeEnum Type;
+            const RuntimeHandle RHandle;
+            const Handle VHandle;
+            osg::ref_ptr<osg::Node> node;
+
+            NodeStruct (RuntimeContext *context, osg::Node *ptr) :
+                  Type (RenderOverlayNode),
+                  RHandle ("OSG Overlay Node", context),
+                  VHandle (RHandle.get_runtime_handle ()) { node = ptr; }
+
+            NodeStruct (
+                  const RenderOverlayTypeEnum TheType,
+                  const String &TypeName,
+                  RuntimeContext *context,
+                  osg::Node *ptr) :
+                  Type (TheType),
+                  RHandle (TypeName, context),
+                  VHandle (RHandle.get_runtime_handle ()) { node = ptr; }
+         };
+
+         struct GroupStruct : public NodeStruct {
+
+            osg::ref_ptr<osg::Group> group;
+
+            GroupStruct (RuntimeContext *context, osg::Group *ptr) :
+                  NodeStruct (RenderOverlayGroup, "OSG Overlay Group", context, ptr) {
+
+               group = ptr;
+            }
+
+            GroupStruct (
+                  const RenderOverlayTypeEnum TheType,
+                  const String &TypeName,
+                  RuntimeContext *context,
+                  osg::Group *ptr) :
+                  NodeStruct (Type, TypeName, context, ptr) { group = ptr; }
+         };
+
+         struct SwitchStruct : public GroupStruct {
+
+            osg::ref_ptr<osg::Switch> switchNode;
+
+            SwitchStruct (RuntimeContext *context, osg::Switch *ptr) :
+                  GroupStruct (RenderOverlaySwitch, "OSG Overlay Switch", context, ptr) {
+
+               switchNode = ptr;
+            }
+         };
+
+         struct TransformStruct : public GroupStruct {
+
+            osg::ref_ptr<osg::MatrixTransform> transform;
+            Vector pos;
+            Vector scale;
+            Float64 rot;
+
+            TransformStruct (RuntimeContext *context, osg::MatrixTransform *ptr) :
+                  GroupStruct (
+                     RenderOverlayTransform,
+                     "OSG Overlay Transform",
+                     context,
+                     ptr),
+                  rot (0.0) { transform = ptr; }
+         };
+
+         void _apply_transform (TransformStruct &ts);
+
          TextureStruct *_create_texture (const String &Name);
+         Boolean _register_node (const String &Name, NodeStruct *ptr);
+         Boolean _register_group (const String &Name, GroupStruct *ptr);
+         Boolean _register_switch (const String &Name, SwitchStruct *ptr);
+         Boolean _register_transform (const String &Name, TransformStruct *ptr);
+
          void _add_children (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_node (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_group (osg::ref_ptr<osg::Group> &parent, Config &node);
@@ -124,6 +204,12 @@ namespace dmz {
          osg::ref_ptr<osg::Camera> _camera;
          osg::ref_ptr<osg::Group> _rootNode;
          HashTableStringTemplate<TextureStruct> _textureTable;
+
+         HashTableStringTemplate<NodeStruct> _nodeTable;
+         HashTableHandleTemplate<String> _nodeNameTable;
+         HashTableHandleTemplate<GroupStruct> _groupTable;
+         HashTableHandleTemplate<SwitchStruct> _switchTable;
+         HashTableHandleTemplate<TransformStruct> _transformTable;
 
       private:
          RenderModuleOverlayOSG ();

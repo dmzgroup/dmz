@@ -71,6 +71,11 @@ dmz::RenderModuleOverlayOSG::update_plugin_state (
          _camera = 0;
          _rootNode = 0;
          _textureTable.empty ();
+         _transformTable.clear ();
+         _switchTable.clear ();
+         _groupTable.clear ();
+         _nodeTable.empty ();
+         _nodeNameTable.empty ();
       }
    }
 }
@@ -98,6 +103,10 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_handle (const String &Name) {
 
    Handle result (0);
 
+   NodeStruct *ns = _nodeTable.lookup (Name);
+
+   if (ns) { result = ns->VHandle; }
+
    return result;
 }
 
@@ -107,6 +116,10 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_name (const Handle Overlay) {
 
    String result;
 
+   String *ptr = _nodeNameTable.lookup (Overlay);
+
+   if (ptr) { result = *ptr; }
+
    return result;
 }
 
@@ -115,6 +128,15 @@ dmz::RenderOverlayTypeEnum
 dmz::RenderModuleOverlayOSG::lookup_overlay_type (const Handle Overlay) {
 
    RenderOverlayTypeEnum result (RenderOverlayUnknown);
+
+   String *ptr = _nodeNameTable.lookup (Overlay);
+
+   if (ptr) {
+
+      NodeStruct *ns = _nodeTable.lookup (*ptr);
+
+      if (ns) { result = ns->Type; }
+   }
 
    return result;
 }
@@ -126,6 +148,30 @@ dmz::RenderModuleOverlayOSG::is_of_overlay_type (
       const RenderOverlayTypeEnum Type) {
 
    Boolean result (False);
+
+   String *ptr = _nodeNameTable.lookup (Overlay);
+
+   if (ptr) {
+
+      NodeStruct *ns = _nodeTable.lookup (*ptr);
+
+      if (ns) {
+
+         if (ns->Type == Type) { result = True;}
+         else {
+
+            if (Type == RenderOverlayNode) { result = True; }
+            else if (Type == RenderOverlayGroup) {
+
+               if ((ns->Type == RenderOverlaySwitch) ||
+                     (ns->Type == RenderOverlayTransform)) {
+
+                  result = True;
+               }
+            }
+         }
+      }
+   }
 
    return result;
 }
@@ -140,6 +186,20 @@ dmz::RenderModuleOverlayOSG::store_overlay_switch_state (
 
    Boolean result (False);
 
+   SwitchStruct *ss = _switchTable.lookup (Overlay);
+
+   if (ss && ss->switchNode.valid ()) {
+
+      const UInt32 UWhich (Which);
+
+      if (UWhich < ss->switchNode->getNumChildren ()) {
+
+         ss->switchNode->setValue (UWhich, SwitchState);
+
+         result = True;
+      }
+   }
+
    return result;
 }
 
@@ -150,6 +210,16 @@ dmz::RenderModuleOverlayOSG::store_overlay_all_switch_state (
       const Boolean SwitchState) {
 
    Boolean result (False);
+
+   SwitchStruct *ss = _switchTable.lookup (Overlay);
+
+   if (ss && ss->switchNode.valid ()) {
+
+      if (SwitchState) { ss->switchNode->setAllChildrenOn (); }
+      else { ss->switchNode->setAllChildrenOff (); }
+
+      result = True;
+   }
 
    return result;
 }
@@ -162,6 +232,20 @@ dmz::RenderModuleOverlayOSG::enable_overlay_single_switch_state (
 
    Boolean result (False);
 
+   SwitchStruct *ss = _switchTable.lookup (Overlay);
+
+   if (ss && ss->switchNode.valid ()) {
+
+      const UInt32 UWhich (Which);
+
+      if (UWhich < ss->switchNode->getNumChildren ()) {
+
+         ss->switchNode->setSingleChildOn (UWhich);
+
+         result = True;
+      }
+   }
+
    return result;
 }
 
@@ -173,6 +257,18 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_switch_state (
 
    Boolean result (False);
 
+   SwitchStruct *ss = _switchTable.lookup (Overlay);
+
+   if (ss && ss->switchNode.valid ()) {
+
+      const UInt32 UWhich (Which);
+
+      if (UWhich < ss->switchNode->getNumChildren ()) {
+
+         result = ss->switchNode->getValue (UWhich);
+      }
+   }
+
    return result;
 }
 
@@ -181,6 +277,13 @@ dmz::Int32
 dmz::RenderModuleOverlayOSG::lookup_overlay_switch_count (const Handle Overlay) {
 
    Int32 result (0);
+
+   SwitchStruct *ss = _switchTable.lookup (Overlay);
+
+   if (ss && ss->switchNode.valid ()) {
+
+      result = (Int32)ss->switchNode->getNumChildren ();
+   }
 
    return result;
 }
@@ -195,6 +298,17 @@ dmz::RenderModuleOverlayOSG::store_overlay_position (
 
    Boolean result (False);
 
+   TransformStruct *ts = _transformTable.lookup (Overlay);
+
+   if (ts) {
+
+      ts->pos.set_xyz (ValueX, ValueY, 0.0);
+
+      _apply_transform (*ts);
+
+      result = True;
+   }
+
    return result;
 }
 
@@ -207,6 +321,16 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_position (
 
    Boolean result (False);
 
+   TransformStruct *ts = _transformTable.lookup (Overlay);
+
+   if (ts) {
+
+      valueX = ts->pos.get_x ();
+      valueY = ts->pos.get_y ();
+
+      result = True;
+   }
+
    return result;
 }
 
@@ -218,6 +342,17 @@ dmz::RenderModuleOverlayOSG::store_overlay_rotation (
 
    Boolean result (False);
 
+   TransformStruct *ts = _transformTable.lookup (Overlay);
+
+   if (ts) {
+
+      ts->rot = Value;
+
+      _apply_transform (*ts);
+
+      result = True;
+   }
+
    return result;
 }
 
@@ -228,6 +363,15 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_rotation (
       Float64 &value) {
 
    Boolean result (False);
+
+   TransformStruct *ts = _transformTable.lookup (Overlay);
+
+   if (ts) {
+
+      value = ts->rot;
+
+      result = True;
+   }
 
    return result;
 }
@@ -241,6 +385,17 @@ dmz::RenderModuleOverlayOSG::store_overlay_scale (
 
    Boolean result (False);
 
+   TransformStruct *ts = _transformTable.lookup (Overlay);
+
+   if (ts) {
+
+      ts->scale.set_xyz (ValueX, ValueY, 0.0);
+
+      _apply_transform (*ts);
+
+      result = True;
+   }
+
    return result;
 }
 
@@ -252,6 +407,16 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_scale (
       Float64 &valueY) {
 
    Boolean result (False);
+
+   TransformStruct *ts = _transformTable.lookup (Overlay);
+
+   if (ts) {
+
+      valueX = ts->scale.get_x ();
+      valueY = ts->scale.get_y ();
+
+      result = True;
+   }
 
    return result;
 }
@@ -271,7 +436,27 @@ dmz::RenderModuleOverlayOSG::update_portal_size (
    }
 }
 
+
 // Protected methods
+void
+dmz::RenderModuleOverlayOSG::_apply_transform (TransformStruct &ts) {
+
+   if (ts.transform.valid ()) {
+
+      osg::Matrix posMat;
+      posMat.makeTranslate (ts.pos.get_x (), ts.pos.get_y (), 0.0);
+
+      osg::Matrix rotMat;
+      rotMat.makeRotate (ts.rot, osg::Vec3d (0.0, 0.0, 1.0));
+
+      osg::Matrix scaleMat;
+      scaleMat.makeScale (ts.scale.get_x (), ts.scale.get_y (), 0.0);
+
+      ts.transform->setMatrix (scaleMat * rotMat * posMat);
+   }
+}
+
+
 dmz::RenderModuleOverlayOSG::TextureStruct *
 dmz::RenderModuleOverlayOSG::_create_texture (const String &Name) {
 
@@ -293,6 +478,67 @@ dmz::RenderModuleOverlayOSG::_create_texture (const String &Name) {
             else if (result) { delete result; result = 0; }
          }
       }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_register_node (const String &Name, NodeStruct *ptr) {
+
+   if (ptr) {
+
+      String *namePtr (new String (Name));
+
+      if (namePtr && !_nodeNameTable.store (ptr->VHandle, namePtr)) {
+
+         delete namePtr; namePtr = 0;
+      }
+   }
+
+   return _nodeTable.store (Name, ptr);
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_register_group (const String &Name, GroupStruct *ptr) {
+
+   Boolean result (_register_node (Name, ptr));
+
+   if (result && ptr) {
+
+      _groupTable.store (ptr->VHandle, ptr);
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_register_switch (const String &Name, SwitchStruct *ptr) {
+
+   Boolean result (_register_group (Name, ptr));
+
+   if (result &&ptr) {
+
+      _switchTable.store (ptr->VHandle, ptr);
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_register_transform (
+      const String &Name,
+      TransformStruct *ptr) {
+
+   Boolean result (_register_group (Name, ptr));
+
+   if (result && ptr) {
+
+      result = _transformTable.store (ptr->VHandle, ptr);
    }
 
    return result;
@@ -339,6 +585,15 @@ dmz::RenderModuleOverlayOSG::_add_group (
 
    osg::ref_ptr<osg::Group> child = new osg::Group;
    parent->addChild (child.get ());
+
+   const String Name = config_to_string ("name", node);
+
+   if (Name) {
+
+      GroupStruct *gs = new GroupStruct (get_plugin_runtime_context (), child.get ());
+      if (!_register_group (Name, gs)) { delete gs; gs = 0; }
+   }
+
    _add_children (child, node);
 }
 
@@ -350,7 +605,15 @@ dmz::RenderModuleOverlayOSG::_add_switch (
 
    osg::ref_ptr<osg::Switch> ptr = new osg::Switch;
    parent->addChild (ptr.get ());
-   
+ 
+   const String Name = config_to_string ("name", node);
+
+   if (Name) {
+
+      SwitchStruct *ss = new SwitchStruct (get_plugin_runtime_context (), ptr.get ());
+      if (!_register_switch (Name, ss)) { delete ss; ss = 0; }
+   }  
+
    osg::ref_ptr<osg::Group> child = ptr.get ();
    _add_children (child, node);
 }
@@ -361,7 +624,26 @@ dmz::RenderModuleOverlayOSG::_add_transform (
       osg::ref_ptr<osg::Group> &parent,
       Config &node) {
 
+   osg::ref_ptr<osg::MatrixTransform> ptr = new osg::MatrixTransform;
+   parent->addChild (ptr.get ());
 
+   const Vector Pos = config_to_vector ("position", node);
+   const Float64 Rot = config_to_float64 ("rotation.value", node);
+   const Vector Scale = config_to_vector ("scale", node, Vector (1.0, 1.0, 1.0));
+
+   osg::Matrix posMat;
+   posMat.makeTranslate (Pos.get_x (), Pos.get_y (), 0.0);
+
+   osg::Matrix rotMat;
+   rotMat.makeRotate (Rot, osg::Vec3d (0.0, 0.0, 1.0));
+
+   osg::Matrix scaleMat;
+   scaleMat.makeScale (Scale.get_x (), Scale.get_y (), 0.0);
+
+   ptr->setMatrix (scaleMat * rotMat * posMat);
+
+   osg::ref_ptr<osg::Group> child = ptr.get ();
+   _add_children (child, node);
 }
 
 

@@ -11,6 +11,60 @@
 #include <osg/Texture2D>
 #include <osgDB/ReadFile>
 
+namespace {
+
+typedef dmz::RenderModuleOverlayOSG::LayoutAxis Layout;
+
+class LayoutAbsolute : public Layout {
+
+   public:
+      LayoutAbsolute (const dmz::Float64 Offset, const dmz::Boolean Flipped);
+      virtual ~LayoutAbsolute () {;}
+
+      virtual dmz::Float64 update (const dmz::Int32 Value);
+
+   protected:
+      const dmz::Float64 _Offset;
+      const dmz::Boolean _Flipped;
+};
+
+LayoutAbsolute::LayoutAbsolute (const dmz::Float64 Offset, const dmz::Boolean Flipped):
+      _Offset (Offset),
+      _Flipped (Flipped) {;}
+
+
+dmz::Float64
+LayoutAbsolute::update (const dmz::Int32 Value) {
+
+   return _Flipped ? dmz::Float64 (Value) - _Offset : _Offset;
+}
+
+
+class LayoutRelative : public Layout {
+
+   public:
+      LayoutRelative (const dmz::Float64 Relative);
+      virtual ~LayoutRelative () {;}
+
+      virtual dmz::Float64 update (const dmz::Int32 Value);
+
+   protected:
+      const dmz::Float64 _Relative;
+};
+
+
+LayoutRelative::LayoutRelative (const dmz::Float64 Relative):
+      _Relative (Relative) {;}
+
+
+dmz::Float64
+LayoutRelative::update (const dmz::Int32 Value) {
+
+   return dmz::Float64(Value) * _Relative;
+}
+
+};
+
 
 dmz::RenderModuleOverlayOSG::RenderModuleOverlayOSG (
       const PluginInfo &Info,
@@ -74,8 +128,9 @@ dmz::RenderModuleOverlayOSG::update_plugin_state (
          _transformTable.clear ();
          _switchTable.clear ();
          _groupTable.clear ();
+         _layoutTable.empty ();
+         _nodeNameTable.clear ();
          _nodeTable.empty ();
-         _nodeNameTable.empty ();
       }
    }
 }
@@ -103,7 +158,7 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_handle (const String &Name) {
 
    Handle result (0);
 
-   NodeStruct *ns = _nodeTable.lookup (Name);
+   NodeStruct *ns = _nodeNameTable.lookup (Name);
 
    if (ns) { result = ns->VHandle; }
 
@@ -116,9 +171,9 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_name (const Handle Overlay) {
 
    String result;
 
-   String *ptr = _nodeNameTable.lookup (Overlay);
+   NodeStruct *ns = _nodeTable.lookup (Overlay);
 
-   if (ptr) { result = *ptr; }
+   if (ns) { result = ns->Name; }
 
    return result;
 }
@@ -129,14 +184,9 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_type (const Handle Overlay) {
 
    RenderOverlayTypeEnum result (RenderOverlayUnknown);
 
-   String *ptr = _nodeNameTable.lookup (Overlay);
+   NodeStruct *ns = _nodeTable.lookup (Overlay);
 
-   if (ptr) {
-
-      NodeStruct *ns = _nodeTable.lookup (*ptr);
-
-      if (ns) { result = ns->Type; }
-   }
+   if (ns) { result = ns->Type; }
 
    return result;
 }
@@ -149,28 +199,18 @@ dmz::RenderModuleOverlayOSG::is_of_overlay_type (
 
    Boolean result (False);
 
-   String *ptr = _nodeNameTable.lookup (Overlay);
+   if ((Type == RenderOverlayNode) && _nodeTable.lookup (Overlay)) { result = True; }
+   else if ((Type == RenderOverlayGroup) && _groupTable.lookup (Overlay)) {
 
-   if (ptr) {
+      result = True;
+   }
+   else if ((Type == RenderOverlaySwitch) && _switchTable.lookup (Overlay)) {
 
-      NodeStruct *ns = _nodeTable.lookup (*ptr);
+      result = True;
+   }
+   else if ((Type == RenderOverlayTransform) && _transformTable.lookup (Overlay)) {
 
-      if (ns) {
-
-         if (ns->Type == Type) { result = True;}
-         else {
-
-            if (Type == RenderOverlayNode) { result = True; }
-            else if (Type == RenderOverlayGroup) {
-
-               if ((ns->Type == RenderOverlaySwitch) ||
-                     (ns->Type == RenderOverlayTransform)) {
-
-                  result = True;
-               }
-            }
-         }
-      }
+      result = True;
    }
 
    return result;
@@ -434,10 +474,27 @@ dmz::RenderModuleOverlayOSG::update_portal_size (
       _camera->setProjectionMatrix (
          osg::Matrix::ortho2D (0.0, Float64 (TheX), 0.0, Float64 (TheY)));
    }
+
+   _update_layout (TheX, TheY);
 }
 
 
 // Protected methods
+void
+dmz::RenderModuleOverlayOSG::_update_layout (const Int32 TheX, const Int32 TheY) {
+
+   HashTableHandleIterator it;
+   LayoutStruct *ls (0);
+
+   while (_layoutTable.get_next (it, ls)) {
+
+      ls->ts.pos.set_xyz (ls->xaxis.update (TheX), ls->yaxis.update (TheY), 0.0);
+
+      _apply_transform (ls->ts);
+   }
+}
+
+
 void
 dmz::RenderModuleOverlayOSG::_apply_transform (TransformStruct &ts) {
 
@@ -454,6 +511,33 @@ dmz::RenderModuleOverlayOSG::_apply_transform (TransformStruct &ts) {
 
       ts.transform->setMatrix (scaleMat * rotMat * posMat);
    }
+}
+
+
+dmz::RenderModuleOverlayOSG::LayoutAxis *
+dmz::RenderModuleOverlayOSG::_create_axis (const String &Prefix, Config &layout) {
+
+   LayoutAxis *result (0);
+
+   const String TypeName = config_to_string (Prefix + ".type", layout);
+   const Float64 Value = config_to_float64 (Prefix + ".value", layout);
+
+   if (TypeName == "relative") {
+
+      result = new LayoutRelative (Value);
+   }
+   else if (TypeName == "absolute") {
+
+      const Boolean Flipped = config_to_boolean (Prefix + ".flip", layout);
+
+      result = new LayoutAbsolute (Value, Flipped);
+   }
+   else {
+
+      _log.error << "Unknown layout axis type: " << TypeName << endl;
+   }
+
+   return result;
 }
 
 
@@ -485,26 +569,27 @@ dmz::RenderModuleOverlayOSG::_create_texture (const String &Name) {
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::_register_node (const String &Name, NodeStruct *ptr) {
+dmz::RenderModuleOverlayOSG::_register_node (NodeStruct *ptr) {
 
-   if (ptr) {
+   Boolean result (False);
 
-      String *namePtr (new String (Name));
+   if (ptr && _nodeTable.store (ptr->VHandle, ptr)) {
 
-      if (namePtr && !_nodeNameTable.store (ptr->VHandle, namePtr)) {
+      result = True;
 
-         delete namePtr; namePtr = 0;
+      if (ptr->Name && !_nodeNameTable.store (ptr->Name, ptr)) {
+
       }
    }
 
-   return _nodeTable.store (Name, ptr);
+   return result;
 }
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::_register_group (const String &Name, GroupStruct *ptr) {
+dmz::RenderModuleOverlayOSG::_register_group (GroupStruct *ptr) {
 
-   Boolean result (_register_node (Name, ptr));
+   Boolean result (_register_node (ptr));
 
    if (result && ptr) {
 
@@ -516,11 +601,11 @@ dmz::RenderModuleOverlayOSG::_register_group (const String &Name, GroupStruct *p
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::_register_switch (const String &Name, SwitchStruct *ptr) {
+dmz::RenderModuleOverlayOSG::_register_switch (SwitchStruct *ptr) {
 
-   Boolean result (_register_group (Name, ptr));
+   Boolean result (_register_group (ptr));
 
-   if (result &&ptr) {
+   if (result && ptr) {
 
       _switchTable.store (ptr->VHandle, ptr);
    }
@@ -530,11 +615,9 @@ dmz::RenderModuleOverlayOSG::_register_switch (const String &Name, SwitchStruct 
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::_register_transform (
-      const String &Name,
-      TransformStruct *ptr) {
+dmz::RenderModuleOverlayOSG::_register_transform (TransformStruct *ptr) {
 
-   Boolean result (_register_group (Name, ptr));
+   Boolean result (_register_group (ptr));
 
    if (result && ptr) {
 
@@ -590,8 +673,10 @@ dmz::RenderModuleOverlayOSG::_add_group (
 
    if (Name) {
 
-      GroupStruct *gs = new GroupStruct (get_plugin_runtime_context (), child.get ());
-      if (!_register_group (Name, gs)) { delete gs; gs = 0; }
+      GroupStruct *gs =
+         new GroupStruct (Name, get_plugin_runtime_context (), child.get ());
+
+      if (!_register_group (gs)) { delete gs; gs = 0; }
    }
 
    _add_children (child, node);
@@ -610,8 +695,10 @@ dmz::RenderModuleOverlayOSG::_add_switch (
 
    if (Name) {
 
-      SwitchStruct *ss = new SwitchStruct (get_plugin_runtime_context (), ptr.get ());
-      if (!_register_switch (Name, ss)) { delete ss; ss = 0; }
+      SwitchStruct *ss =
+         new SwitchStruct (Name, get_plugin_runtime_context (), ptr.get ());
+
+      if (!_register_switch (ss)) { delete ss; ss = 0; }
    }  
 
    osg::ref_ptr<osg::Group> child = ptr.get ();
@@ -641,6 +728,22 @@ dmz::RenderModuleOverlayOSG::_add_transform (
    scaleMat.makeScale (Scale.get_x (), Scale.get_y (), 0.0);
 
    ptr->setMatrix (scaleMat * rotMat * posMat);
+ 
+   const String Name = config_to_string ("name", node);
+
+   if (Name) {
+
+      TransformStruct *ts =
+         new TransformStruct (Name, get_plugin_runtime_context (), ptr.get ());
+
+      if (!_register_transform (ts)) { delete ts; ts = 0; }
+      else if (ts) {
+
+         ts->pos = Pos;
+         ts->rot = Rot;
+         ts->scale = Scale;
+      }
+   }  
 
    osg::ref_ptr<osg::Group> child = ptr.get ();
    _add_children (child, node);
@@ -724,6 +827,48 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
 
 
 void
+dmz::RenderModuleOverlayOSG::_init_layout (Config &local) {
+
+   Config layoutList;
+
+   if (local.lookup_all_config ("layout", layoutList)) {
+
+      ConfigIterator it;
+      Config layout;
+
+      while (layoutList.get_next_config (it, layout)) {
+
+         const String Name = config_to_string ("node", layout);
+
+         NodeStruct *ns = _nodeNameTable.lookup (Name);
+
+         TransformStruct *ts (ns ? _transformTable.lookup (ns->VHandle) : 0);
+
+         if (ts) {
+
+            LayoutAxis *xaxis = _create_axis ("x", layout);
+            LayoutAxis *yaxis = _create_axis ("y", layout);
+
+            if (xaxis && yaxis) {
+
+               LayoutStruct *ls = new LayoutStruct (*xaxis, *yaxis, *ts);
+
+               if (ls && !_layoutTable.store (ts->VHandle, ls)) {
+
+                  delete ls; ls = 0;
+               }
+            }
+         }
+         else {
+
+            _log.error << "Unable to find transform: " << Name << " for layout" << endl;
+         }
+      }
+   }
+}
+
+
+void
 dmz::RenderModuleOverlayOSG::_init (Config &local) {
 
    _camera = new osg::Camera;
@@ -744,6 +889,10 @@ dmz::RenderModuleOverlayOSG::_init (Config &local) {
    _add_children (_rootNode, local);
 
    _camera->addChild (_rootNode.get ());
+
+   _init_layout (local);
+
+   _update_layout (get_portal_x (), get_portal_y ());
 }
 
 

@@ -29,6 +29,20 @@ namespace dmz {
          public PortalSizeObserver {
 
       public:
+         class LayoutAxis {
+
+            public:
+               virtual ~LayoutAxis () {;}
+               virtual Float64 update (const Int32 Value) = 0;
+
+            protected:
+               LayoutAxis () {;}
+
+            private:
+               LayoutAxis (const LayoutAxis &);
+               LayoutAxis &operator= (const LayoutAxis &);
+         };
+
          RenderModuleOverlayOSG (const PluginInfo &Info, Config &local);
          ~RenderModuleOverlayOSG ();
 
@@ -115,21 +129,25 @@ namespace dmz {
 
          struct NodeStruct {
 
+            const String Name;
             const RenderOverlayTypeEnum Type;
             const RuntimeHandle RHandle;
             const Handle VHandle;
             osg::ref_ptr<osg::Node> node;
 
-            NodeStruct (RuntimeContext *context, osg::Node *ptr) :
+            NodeStruct (const String &TheName, RuntimeContext *context, osg::Node *ptr) :
+                  Name (TheName),
                   Type (RenderOverlayNode),
                   RHandle ("OSG Overlay Node", context),
                   VHandle (RHandle.get_runtime_handle ()) { node = ptr; }
 
             NodeStruct (
+                  const String &TheName,
                   const RenderOverlayTypeEnum TheType,
                   const String &TypeName,
                   RuntimeContext *context,
                   osg::Node *ptr) :
+                  Name (TheName),
                   Type (TheType),
                   RHandle (TypeName, context),
                   VHandle (RHandle.get_runtime_handle ()) { node = ptr; }
@@ -139,26 +157,37 @@ namespace dmz {
 
             osg::ref_ptr<osg::Group> group;
 
-            GroupStruct (RuntimeContext *context, osg::Group *ptr) :
-                  NodeStruct (RenderOverlayGroup, "OSG Overlay Group", context, ptr) {
+            GroupStruct (const String &Name, RuntimeContext *context, osg::Group *ptr) :
+                  NodeStruct (
+                     Name,
+                     RenderOverlayGroup,
+                     "OSG Overlay Group",
+                     context,
+                     ptr) {
 
                group = ptr;
             }
 
             GroupStruct (
+                  const String &Name,
                   const RenderOverlayTypeEnum TheType,
                   const String &TypeName,
                   RuntimeContext *context,
                   osg::Group *ptr) :
-                  NodeStruct (Type, TypeName, context, ptr) { group = ptr; }
+                  NodeStruct (Name, Type, TypeName, context, ptr) { group = ptr; }
          };
 
          struct SwitchStruct : public GroupStruct {
 
             osg::ref_ptr<osg::Switch> switchNode;
 
-            SwitchStruct (RuntimeContext *context, osg::Switch *ptr) :
-                  GroupStruct (RenderOverlaySwitch, "OSG Overlay Switch", context, ptr) {
+            SwitchStruct (const String &Name, RuntimeContext *context, osg::Switch *ptr) :
+                  GroupStruct (
+                     Name,
+                     RenderOverlaySwitch,
+                     "OSG Overlay Switch",
+                     context,
+                     ptr) {
 
                switchNode = ptr;
             }
@@ -171,8 +200,12 @@ namespace dmz {
             Vector scale;
             Float64 rot;
 
-            TransformStruct (RuntimeContext *context, osg::MatrixTransform *ptr) :
+            TransformStruct (
+                  const String &Name,
+                  RuntimeContext *context,
+                  osg::MatrixTransform *ptr) :
                   GroupStruct (
+                     Name,
                      RenderOverlayTransform,
                      "OSG Overlay Transform",
                      context,
@@ -180,13 +213,34 @@ namespace dmz {
                   rot (0.0) { transform = ptr; }
          };
 
+         struct LayoutStruct {
+
+            LayoutAxis &xaxis;
+            LayoutAxis &yaxis;
+            TransformStruct &ts;
+
+            LayoutStruct (
+                  LayoutAxis &theXAxis,
+                  LayoutAxis &theYAxis,
+                  TransformStruct &theTS) :
+                  xaxis (theXAxis),
+                  yaxis (theYAxis),
+                  ts (theTS) {;}
+
+            ~LayoutStruct () { delete &xaxis; delete &yaxis; }
+         };
+
+         void _update_layout (const Int32 TheX, const Int32 TheY);
+
          void _apply_transform (TransformStruct &ts);
 
+         LayoutAxis *_create_axis (const String &Prefix, Config &layout);
          TextureStruct *_create_texture (const String &Name);
-         Boolean _register_node (const String &Name, NodeStruct *ptr);
-         Boolean _register_group (const String &Name, GroupStruct *ptr);
-         Boolean _register_switch (const String &Name, SwitchStruct *ptr);
-         Boolean _register_transform (const String &Name, TransformStruct *ptr);
+
+         Boolean _register_node (NodeStruct *ptr);
+         Boolean _register_group (GroupStruct *ptr);
+         Boolean _register_switch (SwitchStruct *ptr);
+         Boolean _register_transform (TransformStruct *ptr);
 
          void _add_children (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_node (osg::ref_ptr<osg::Group> &parent, Config &node);
@@ -194,7 +248,8 @@ namespace dmz {
          void _add_switch (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_transform (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_box (osg::ref_ptr<osg::Group> &parent, Config &node);
-       
+
+         void _init_layout (Config &local);
          void _init (Config &local);
 
          Log _log;
@@ -205,11 +260,12 @@ namespace dmz {
          osg::ref_ptr<osg::Group> _rootNode;
          HashTableStringTemplate<TextureStruct> _textureTable;
 
-         HashTableStringTemplate<NodeStruct> _nodeTable;
-         HashTableHandleTemplate<String> _nodeNameTable;
+         HashTableStringTemplate<NodeStruct> _nodeNameTable;
+         HashTableHandleTemplate<NodeStruct> _nodeTable;
          HashTableHandleTemplate<GroupStruct> _groupTable;
          HashTableHandleTemplate<SwitchStruct> _switchTable;
          HashTableHandleTemplate<TransformStruct> _transformTable;
+         HashTableHandleTemplate<LayoutStruct> _layoutTable;
 
       private:
          RenderModuleOverlayOSG ();

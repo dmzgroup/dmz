@@ -74,7 +74,8 @@ dmz::RenderModuleOverlayOSG::RenderModuleOverlayOSG (
       PortalSizeObserver (Info, local),
       _log (Info),
       _rc (Info),
-      _core (0) {
+      _core (0),
+      _cloneStack (0) {
 
    _rootNode = new osg::Group;
 
@@ -124,12 +125,15 @@ dmz::RenderModuleOverlayOSG::update_plugin_state (
 
          _camera = 0;
          _rootNode = 0;
+         _templateTable.empty ();
+         _colorTable.empty ();
          _textureTable.empty ();
          _transformTable.clear ();
          _switchTable.clear ();
          _groupTable.clear ();
          _layoutTable.empty ();
          _nodeNameTable.clear ();
+         _cloneTable.empty ();
          _nodeTable.empty ();
       }
    }
@@ -161,6 +165,26 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_handle (const String &Name) {
    NodeStruct *ns = _nodeNameTable.lookup (Name);
 
    if (ns) { result = ns->VHandle; }
+
+   return result;
+}
+
+
+dmz::Handle
+dmz::RenderModuleOverlayOSG::lookup_overlay_clone_sub_handle (
+      const Handle CloneHandle,
+      const String &Name) {
+
+   Handle result (0);
+
+   CloneStruct *cs = _cloneTable.lookup (CloneHandle);
+
+   if (cs) {
+
+      NodeStruct *ns = cs->nameTable.lookup (Name);
+
+      result = (ns ? ns->VHandle : 0);
+   }
 
    return result;
 }
@@ -213,6 +237,82 @@ dmz::RenderModuleOverlayOSG::is_of_overlay_type (
       result = True;
    }
 
+   return result;
+}
+
+
+dmz::Handle
+dmz::RenderModuleOverlayOSG::clone_template (const String &Name) {
+
+   Handle result (0);
+
+   Config *def = _templateTable.lookup (Name);
+
+   if (def) {
+
+      osg::ref_ptr<osg::Group> parent = new osg::Group;
+
+      GroupStruct *gs =
+         new GroupStruct ("", get_plugin_runtime_context (), parent.get ());
+
+      if (!_register_group (gs)) { delete gs; gs = 0; }
+      else if (gs) {
+
+         result = gs->VHandle;
+
+         CloneStruct *cs = new CloneStruct;
+
+         if (cs && !_cloneTable.store (gs->VHandle, cs)) { delete cs; cs = 0; }
+
+         if (cs) {
+
+            cs->next = _cloneStack;
+            _cloneStack = cs;
+            _add_children (parent, *def);
+            _cloneStack = cs->next;
+            cs->next = 0;
+         }
+      }
+   }
+
+   return result;
+}
+
+
+// Overlay Group API
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::add_child (const Handle Parent, const Handle Child) {
+
+   Boolean result (False);
+
+   GroupStruct *gs = _groupTable.lookup (Parent);
+   NodeStruct *ns = _nodeTable.lookup (Child);
+
+   if (gs && ns) {
+
+      gs->group->addChild (ns->node.get ());
+
+      result = True;
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::remove_child (const Handle Parent, const Handle Child) {
+
+   Boolean result (False);
+
+   GroupStruct *gs = _groupTable.lookup (Parent);
+   NodeStruct *ns = _nodeTable.lookup (Child);
+
+   if (gs && ns) {
+
+      gs->group->removeChild (ns->node.get ());
+
+      result = True;
+   }
    return result;
 }
 
@@ -577,8 +677,17 @@ dmz::RenderModuleOverlayOSG::_register_node (NodeStruct *ptr) {
 
       result = True;
 
-      if (ptr->Name && !_nodeNameTable.store (ptr->Name, ptr)) {
+      if (ptr->Name) {
 
+         if (_cloneStack) {
+
+            if (!_cloneStack->nameTable.store (ptr->Name, ptr)) {
+
+            }
+         }
+         else if (!_nodeNameTable.store (ptr->Name, ptr)) {
+
+         }
       }
    }
 
@@ -654,6 +763,7 @@ dmz::RenderModuleOverlayOSG::_add_node (osg::ref_ptr<osg::Group> &parent, Config
    else if (TypeName == "switch") { _add_switch (parent, node); }
    else if (TypeName == "transform") { _add_transform (parent, node); }
    else if (TypeName == "box") { _add_box (parent, node); }
+   else if (TypeName == "clone") { _add_clone (parent, node); }
    else {
 
       _log.error << "Unknown overlay node type: " << TypeName << endl;
@@ -692,17 +802,26 @@ dmz::RenderModuleOverlayOSG::_add_switch (
    parent->addChild (ptr.get ());
  
    const String Name = config_to_string ("name", node);
+   const UInt32 Which = config_to_uint32 ("which", node);
+   SwitchStruct *ss = 0;
 
    if (Name) {
 
-      SwitchStruct *ss =
-         new SwitchStruct (Name, get_plugin_runtime_context (), ptr.get ());
+      ss = new SwitchStruct (Name, get_plugin_runtime_context (), ptr.get ());
 
       if (!_register_switch (ss)) { delete ss; ss = 0; }
    }  
 
    osg::ref_ptr<osg::Group> child = ptr.get ();
    _add_children (child, node);
+
+   if (ss && ss->switchNode.valid ()) {
+
+      if (Which < ss->switchNode->getNumChildren ()) {
+
+         ss->switchNode->setSingleChildOn (Which);
+      }
+   }
 }
 
 
@@ -764,13 +883,15 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
 
    const Vector Min = config_to_vector ("min", node);
    const Vector Max = config_to_vector ("max", node, Min + DefaultSize);
-   const Float64 Depth = config_to_float64 ("depth.value", node);
+   const Int32 Depth = config_to_int32 ("depth.value", node);
    const Vector TMin = config_to_vector ("texture.min", node);
    const Vector TMax = config_to_vector ("texture.max", node, Vector (1.0, 1.0, 1.0));
 
    osg::Geode* geode = new osg::Geode ();
    osg::StateSet* stateset = geode->getOrCreateStateSet ();
    stateset->setMode (GL_LIGHTING, osg::StateAttribute::OFF);
+   stateset->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+   stateset->setRenderBinDetails (Depth, "RenderBin");
 
    osg::Geometry* geom = new osg::Geometry;
 
@@ -781,8 +902,20 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
 
    osg::Vec4Array* colors = new osg::Vec4Array;
 
-   colors->push_back (
-      config_to_osg_vec4_color ("color", node, osg::Vec4 (1.0f, 1.0, 1.0f, 1.0f)));
+   osg::Vec4 color (1.0, 1.0, 1.0, 1.0);
+
+   const String ColorName = config_to_string ("color.name", node);
+
+   if (ColorName) {
+
+      osg::Vec4 *ptr = _colorTable.lookup (ColorName);
+
+      if (ptr) { color = *ptr; }
+      else { _log.error << "Unknown color: " << ColorName << endl; }
+   }
+   else { color = config_to_osg_vec4_color ("color", node, color); }
+
+   colors->push_back (color);
 
    geom->setColorArray (colors);
    geom->setColorBinding (osg::Geometry::BIND_OVERALL);
@@ -799,10 +932,10 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
    float maxh = Max.get_y ();
 
    osg::Vec3Array* vertices = new osg::Vec3Array;
-   vertices->push_back (osg::Vec3 (minw, maxh, Depth));
-   vertices->push_back (osg::Vec3 (minw, minh, Depth));
-   vertices->push_back (osg::Vec3 (maxw, minh, Depth));
-   vertices->push_back (osg::Vec3 (maxw, maxh, Depth));
+   vertices->push_back (osg::Vec3 (minw, maxh, 0.0));
+   vertices->push_back (osg::Vec3 (minw, minh, 0.0));
+   vertices->push_back (osg::Vec3 (maxw, minh, 0.0));
+   vertices->push_back (osg::Vec3 (maxw, maxh, 0.0));
    geom->setVertexArray (vertices);
 
    if (ts) {
@@ -823,6 +956,117 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
    geode->addDrawable (geom);
 
    parent->addChild (geode);
+}
+
+
+void
+dmz::RenderModuleOverlayOSG::_add_clone (osg::ref_ptr<osg::Group> &parent, Config &node) {
+
+   osg::ref_ptr<osg::Group> child = new osg::Group;
+   parent->addChild (child.get ());
+
+   const String Name = config_to_string ("name", node);
+   const String Clone = config_to_string ("template", node);
+
+   Config *def = _templateTable.lookup (Clone);
+
+   if (def) {
+
+      GroupStruct *gs =
+         new GroupStruct (Name, get_plugin_runtime_context (), child.get ());
+
+      if (!_register_group (gs)) { delete gs; gs = 0; }
+      else if (gs) {
+
+         CloneStruct *cs = new CloneStruct;
+
+         if (cs && !_cloneTable.store (gs->VHandle, cs)) {
+
+            delete cs; cs = 0;
+         }
+
+         if (cs) {
+
+            cs->next = _cloneStack;
+            _cloneStack = cs;
+            _add_children (child, *def);
+            _cloneStack = cs->next;
+            cs->next = 0;
+         }
+      }
+   }
+   else { _log.error << "Clone failed. Unknown template: " << Clone << endl; }
+}
+
+
+void
+dmz::RenderModuleOverlayOSG::_init_colors (Config &local) {
+
+   Config colorList;
+
+   if (local.lookup_all_config ("color", colorList)) {
+
+      ConfigIterator it;
+      Config def;
+
+      while (colorList.get_next_config (it, def)) {
+
+         const String Name = config_to_string ("name", def);
+
+         if (Name) {
+
+            osg::Vec4 *color = new osg::Vec4 (
+               config_to_osg_vec4_color (def, osg::Vec4 (1.0f, 1.0, 1.0f, 1.0f)));
+
+            if (color && !_colorTable.store (Name, color)) {
+
+               delete color; color = 0;
+
+               _log.error << "Failed to store color named: " << Name
+                  << ". The name is probably already in use." << endl;
+            }
+         }
+         else {
+
+            _log.error << "Unable to store unnamed color." << endl;
+         }
+      }
+   }
+}
+
+
+void
+dmz::RenderModuleOverlayOSG::_init_templates (Config &local) {
+
+   Config templateList;
+
+   if (local.lookup_all_config ("template", templateList)) {
+
+      ConfigIterator it;
+      Config def;
+
+      while (templateList.get_next_config (it, def)) {
+
+         const String Name = config_to_string ("name", def);
+
+         if (Name) {
+
+            Config *ptr = new Config (def);
+
+            if (ptr && !_templateTable.store (Name, ptr)) {
+
+               delete ptr; ptr = 0;
+
+               _log.error << "Failed to store overlay template named: " << Name
+                  << ". The name is probably already in use." << endl;
+            }
+         }
+         else {
+
+            _log.error << "Unable to store unnamed overlay template." << endl;
+         }
+      }
+   }
 }
 
 
@@ -885,6 +1129,9 @@ dmz::RenderModuleOverlayOSG::_init (Config &local) {
    _camera->setClearMask (GL_DEPTH_BUFFER_BIT);
    _camera->setRenderOrder (osg::Camera::POST_RENDER);
    _camera->setAllowEventFocus (false);
+
+   _init_colors (local);
+   _init_templates (local);
 
    _add_children (_rootNode, local);
 

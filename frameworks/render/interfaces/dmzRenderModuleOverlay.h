@@ -28,6 +28,11 @@ namespace dmz {
 
          // RenderModuleOverlay Interface
          virtual Handle lookup_overlay_handle (const String &Name) = 0;
+
+         virtual Handle lookup_overlay_clone_sub_handle (
+            const Handle CloneHandle,
+            const String &Name) = 0;
+
          virtual String lookup_overlay_name (const Handle Overlay) = 0;
          virtual RenderOverlayTypeEnum lookup_overlay_type (const Handle Overlay) = 0;
 
@@ -35,7 +40,11 @@ namespace dmz {
             const Handle Overlay,
             const RenderOverlayTypeEnum Type) = 0;
 
+         virtual Handle clone_template (const String &Name) = 0;
+
          // Overlay Group API
+         virtual Boolean add_child (const Handle Parent, const Handle Child) = 0;
+         virtual Boolean remove_child (const Handle Parent, const Handle Child) = 0;
 
          // Overlay Switch API
          virtual Boolean store_overlay_switch_state (

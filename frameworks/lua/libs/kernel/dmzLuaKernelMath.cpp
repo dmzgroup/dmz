@@ -6,6 +6,9 @@
 
 #include <luacpp.h>
 
+#include <math.h>
+#include <stdlib.h>
+
 using namespace dmz;
 
 namespace {
@@ -84,7 +87,6 @@ math_forward (lua_State *L) {
 }
 
 
-
 static int
 math_backward (lua_State *L) {
 
@@ -92,6 +94,30 @@ math_backward (lua_State *L) {
    return lua_create_vector (L, &Value) ? 1 : 0;
 }
 
+
+static int
+math_get_digit (lua_State *L) {
+
+   int result (0);
+
+   const int Value = luaL_checkint (L, 1);
+   const int Which = luaL_checkint (L, 2);
+
+   if ((Which >=0) && (Which < 32)) {
+
+      int digit = Value;
+
+      const int Shift = pow (10, Which);
+      if (Shift > 0) { digit = digit / Shift; }
+      const div_t Ds = div (digit, 10);
+      digit = Ds.rem;
+      
+      lua_pushinteger (L, digit);
+      result = 1;
+   }
+
+   return result;
+}
 
 
 static const luaL_Reg arrayFunc [] = {
@@ -104,6 +130,7 @@ static const luaL_Reg arrayFunc [] = {
    {"left", math_left},
    {"forward", math_forward},
    {"backward", math_backward},
+   {"get_digit", math_get_digit},
    {NULL, NULL},
 };
 

@@ -3,6 +3,7 @@
 
 #include <dmzRenderModuleOverlay.h>
 #include <dmzRenderPortalSize.h>
+#include <dmzRuntimeConfig.h>
 #include <dmzRuntimeHandle.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
@@ -57,6 +58,11 @@ namespace dmz {
 
          // RenderModuleOverlay Interface
          virtual Handle lookup_overlay_handle (const String &Name);
+
+         virtual Handle lookup_overlay_clone_sub_handle (
+            const Handle CloneHandle,
+            const String &Name);
+
          virtual String lookup_overlay_name (const Handle Overlay);
          virtual RenderOverlayTypeEnum lookup_overlay_type (const Handle Overlay);
 
@@ -64,7 +70,11 @@ namespace dmz {
             const Handle Overlay,
             const RenderOverlayTypeEnum Type);
 
+         virtual Handle clone_template (const String &Name);
+
          // Overlay Group API
+         virtual Boolean add_child (const Handle Parent, const Handle Child);
+         virtual Boolean remove_child (const Handle Parent, const Handle Child);
 
          // Overlay Switch API
          virtual Boolean store_overlay_switch_state (
@@ -213,6 +223,14 @@ namespace dmz {
                   rot (0.0) { transform = ptr; }
          };
 
+         struct CloneStruct {
+
+            CloneStruct *next;
+            HashTableStringTemplate<NodeStruct> nameTable;
+
+            CloneStruct () : next (0) {;}
+         };
+
          struct LayoutStruct {
 
             LayoutAxis &xaxis;
@@ -248,7 +266,10 @@ namespace dmz {
          void _add_switch (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_transform (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_box (osg::ref_ptr<osg::Group> &parent, Config &node);
+         void _add_clone (osg::ref_ptr<osg::Group> &parent, Config &node);
 
+         void _init_colors (Config &local);
+         void _init_templates (Config &local);
          void _init_layout (Config &local);
          void _init (Config &local);
 
@@ -258,13 +279,17 @@ namespace dmz {
 
          osg::ref_ptr<osg::Camera> _camera;
          osg::ref_ptr<osg::Group> _rootNode;
+         CloneStruct *_cloneStack;
          HashTableStringTemplate<TextureStruct> _textureTable;
 
+         HashTableStringTemplate<osg::Vec4> _colorTable;
+         HashTableStringTemplate<Config> _templateTable;
          HashTableStringTemplate<NodeStruct> _nodeNameTable;
          HashTableHandleTemplate<NodeStruct> _nodeTable;
          HashTableHandleTemplate<GroupStruct> _groupTable;
          HashTableHandleTemplate<SwitchStruct> _switchTable;
          HashTableHandleTemplate<TransformStruct> _transformTable;
+         HashTableHandleTemplate<CloneStruct> _cloneTable;
          HashTableHandleTemplate<LayoutStruct> _layoutTable;
 
       private:

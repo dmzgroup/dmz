@@ -399,7 +399,7 @@ scale (lua_State *L) {
       if (set) {
 
          const Float64 TheX = luaL_checknumber (L, 2);
-         const Float64 TheY = luaL_checknumber (L, 3);
+         const Float64 TheY = lua_isnoneornil (L, 3) ? TheX : luaL_checknumber (L, 3);
 
          get = overlay->store_overlay_scale (Node, TheX, TheY);
       }

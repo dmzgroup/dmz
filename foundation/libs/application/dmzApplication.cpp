@@ -403,7 +403,7 @@ dmz::Application::start () {
    if (!_state.error) {
 
       _state.container.start_plugins ();
-      _state.rt.update_time_slice ();
+//      _state.rt.update_time_slice ();
 
       FileCache *fc (FileCache::get_interface (_state.rt.get_context ()));
 
@@ -459,7 +459,7 @@ dmz::Application::stop () {
    const Float64 StopTime (get_time ());
    const Float64 TimeDelta (StopTime - _state.startTime);
 
-   _state.rt.update_time_slice ();
+//   _state.rt.update_time_slice ();
    _state.container.stop_plugins ();
 
    if (!is_zero64 (_state.frameCount) && !is_zero64 (TimeDelta) && !_state.quiet) {

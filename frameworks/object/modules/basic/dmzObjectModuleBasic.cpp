@@ -1434,6 +1434,13 @@ dmz::ObjectModuleBasic::add_to_counter (
 
       CounterStruct *ptr (obj->counterTable.lookup (AttributeHandle));
 
+      // If the counter struct doesn't exist, create it with a call to store_counter
+      if (!ptr) {
+
+         store_counter (ObjectHandle, AttributeHandle, 0);
+         ptr = obj->counterTable.lookup (AttributeHandle);
+      }
+
       if (ptr) {
 
          Int64 newCounter (ptr->counter);

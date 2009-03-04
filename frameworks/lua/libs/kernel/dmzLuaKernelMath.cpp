@@ -107,7 +107,7 @@ math_get_digit (lua_State *L) {
 
       int digit = Value;
 
-      const int Shift = pow (10, Which);
+      const int Shift = (int)pow (10.0, Which);
       if (Shift > 0) { digit = digit / Shift; }
       const div_t Ds = div (digit, 10);
       digit = Ds.rem;

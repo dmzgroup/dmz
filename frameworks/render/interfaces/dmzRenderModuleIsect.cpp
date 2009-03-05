@@ -22,7 +22,7 @@ const String &PluginName)
 the RenderModuleIsect interface of the Plugin is returned.
 \param[in] PluginPtr Pointer to the Plugin to cast.
 \param[in] PluginName String containing the name of the desired RenderModuleIsect
-\return Returns pointer to the RenderModuleIsect. Return NULL if the PluginPtr does not
+\return Returns pointer to the RenderModuleIsect. Returns NULL if the PluginPtr does not
 implement the RenderModuleIsect interface or the \a PluginName is not empty
 and not equal to the Plugin's name.
 

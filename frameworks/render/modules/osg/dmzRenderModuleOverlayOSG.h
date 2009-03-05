@@ -57,70 +57,69 @@ namespace dmz {
             const Plugin *PluginPtr);
 
          // RenderModuleOverlay Interface
-         virtual Handle lookup_overlay_handle (const String &Name);
+         virtual Handle lookup_node_handle (const String &Name);
 
-         virtual Handle lookup_overlay_clone_sub_handle (
+         virtual Handle lookup_node_clone_sub_handle (
             const Handle CloneHandle,
             const String &Name);
 
-         virtual String lookup_overlay_name (const Handle Overlay);
-         virtual RenderOverlayTypeEnum lookup_overlay_type (const Handle Overlay);
+         virtual String lookup_node_name (const Handle Overlay);
+         virtual RenderOverlayTypeEnum lookup_node_type (const Handle Overlay);
 
-         virtual Boolean is_of_overlay_type (
+         virtual Boolean is_of_node_type (
             const Handle Overlay,
             const RenderOverlayTypeEnum Type);
 
          virtual Handle clone_template (const String &Name);
 
          // Overlay Group API
-         virtual Boolean add_child (const Handle Parent, const Handle Child);
-         virtual Boolean remove_child (const Handle Parent, const Handle Child);
+         virtual Boolean add_group_child (const Handle Parent, const Handle Child);
+         virtual Boolean remove_group_child (const Handle Parent, const Handle Child);
+         virtual Int32 lookup_group_child_count (const Handle Overlay);
 
          // Overlay Switch API
-         virtual Boolean store_overlay_switch_state (
+         virtual Boolean store_switch_state (
             const Handle Overlay,
             const Int32 Which,
             const Boolean SwitchState);
 
-         virtual Boolean store_overlay_all_switch_state (
+         virtual Boolean store_all_switch_state (
             const Handle Overlay,
             const Boolean SwitchState);
 
-         virtual Boolean enable_overlay_single_switch_state (
+         virtual Boolean enable_single_switch_state (
             const Handle Overlay,
             const Int32 Which);
 
-         virtual Boolean lookup_overlay_switch_state (
+         virtual Boolean lookup_switch_state (
             const Handle Overlay,
             const Int32 Which);
-
-         virtual Int32 lookup_overlay_switch_count (const Handle Overlay);
 
          // Overlay Transform API
-         virtual Boolean store_overlay_position (
+         virtual Boolean store_transform_position (
             const Handle Overlay,
             const Float64 ValueX,
             const Float64 ValueY);
 
-         virtual Boolean lookup_overlay_position (
+         virtual Boolean lookup_transform_position (
             const Handle Overlay,
             Float64 &valueX,
             Float64 &valueY);
 
-         virtual Boolean store_overlay_rotation (
+         virtual Boolean store_transform_rotation (
             const Handle Overlay,
             const Float64 Value);
 
-         virtual Boolean lookup_overlay_rotation (
+         virtual Boolean lookup_transform_rotation (
             const Handle Overlay,
             Float64 &value);
 
-         virtual Boolean store_overlay_scale (
+         virtual Boolean store_transform_scale (
             const Handle Overlay,
             const Float64 ValueX,
             const Float64 ValueY);
 
-         virtual Boolean lookup_overlay_scale (
+         virtual Boolean lookup_transform_scale (
             const Handle Overlay,
             Float64 &valueX,
             Float64 &valueY);

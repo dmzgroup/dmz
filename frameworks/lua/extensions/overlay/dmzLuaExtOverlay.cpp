@@ -55,7 +55,7 @@ get_node (lua_State *L, RenderModuleOverlay *overlay, int index) {
 
            const String Name = lua_tostring (L, 1);
 
-           result = overlay->lookup_overlay_handle (Name);
+           result = overlay->lookup_node_handle (Name);
         }
      }
   }
@@ -76,7 +76,7 @@ overlay_lookup_handle (lua_State *L) {
 
    if (overlay) {
 
-      lua_create_handle (L, overlay->lookup_overlay_handle (Name));
+      lua_create_handle (L, overlay->lookup_node_handle (Name));
       result = 1;
    }
 
@@ -99,7 +99,7 @@ overlay_lookup_clone_sub_handle (lua_State *L) {
 
    if (Node && overlay) {
 
-      lua_create_handle (L, overlay->lookup_overlay_clone_sub_handle (Node, Name));
+      lua_create_handle (L, overlay->lookup_node_clone_sub_handle (Node, Name));
       result = 1;
    }
 
@@ -121,7 +121,7 @@ overlay_lookup_name (lua_State *L) {
 
    if (Node && overlay) {
 
-      const String Value = overlay->lookup_overlay_name (Node);
+      const String Value = overlay->lookup_node_name (Node);
       lua_pushstring (L, Value.get_buffer ());
       result = 1;
    }
@@ -167,7 +167,7 @@ add_child (lua_State *L) {
 
    if (Parent && Child && overlay) {
 
-      lua_pushboolean (L, overlay->add_child (Parent, Child) ? 1 : 0);
+      lua_pushboolean (L, overlay->add_group_child (Parent, Child) ? 1 : 0);
       result = 1;
    }
 
@@ -190,7 +190,7 @@ remove_child (lua_State *L) {
 
    if (Parent && Child && overlay) {
 
-      lua_pushboolean (L, overlay->remove_child (Parent, Child) ? 1 : 0);
+      lua_pushboolean (L, overlay->remove_group_child (Parent, Child) ? 1 : 0);
       result = 1;
    }
 
@@ -221,14 +221,14 @@ switch_state (lua_State *L) {
 
          const Boolean Value = lua_toboolean (L, 3) ? True : False;
 
-         get = overlay->store_overlay_switch_state (Node, (const UInt32)Which, Value);
+         get = overlay->store_switch_state (Node, (const UInt32)Which, Value);
       }
 
       if (get) {
 
          lua_pushboolean (
             L,
-            overlay->lookup_overlay_switch_state (Node, (const UInt32)Which) ? 1 : 0);
+            overlay->lookup_switch_state (Node, (const UInt32)Which) ? 1 : 0);
 
          result = 1;
       }
@@ -255,7 +255,7 @@ all_switch_state (lua_State *L) {
 
       lua_pushboolean (
          L,
-         overlay->store_overlay_all_switch_state (Node, Value) ? 1 : 0);
+         overlay->store_all_switch_state (Node, Value) ? 1 : 0);
 
       result = 1;
    }
@@ -281,9 +281,7 @@ enable_single_switch_state (lua_State *L) {
 
       lua_pushboolean (
          L,
-         overlay->enable_overlay_single_switch_state (
-            Node,
-            (const UInt32)Which) ? 1 : 0);
+         overlay->enable_single_switch_state (Node, (const UInt32)Which) ? 1 : 0);
 
       result = 1;
    }
@@ -315,14 +313,14 @@ position (lua_State *L) {
          const Float64 TheX = luaL_checknumber (L, 2);
          const Float64 TheY = luaL_checknumber (L, 3);
 
-         get = overlay->store_overlay_position (Node, TheX, TheY);
+         get = overlay->store_transform_position (Node, TheX, TheY);
       }
 
       if (get) {
 
          Float64 theX (0.0), theY (0.0);
 
-         if (overlay->lookup_overlay_position (Node, theX, theY)) {
+         if (overlay->lookup_transform_position (Node, theX, theY)) {
 
             lua_pushnumber (L, theX);
             lua_pushnumber (L, theY);
@@ -358,14 +356,14 @@ rotation (lua_State *L) {
 
          const Float64 Rot = luaL_checknumber (L, 2);
 
-         get = overlay->store_overlay_rotation (Node, Rot);
+         get = overlay->store_transform_rotation (Node, Rot);
       }
 
       if (get) {
 
          Float64 rot (0.0);
 
-         if (overlay->lookup_overlay_rotation (Node, rot)) {
+         if (overlay->lookup_transform_rotation (Node, rot)) {
 
             lua_pushnumber (L, rot);
 
@@ -401,14 +399,14 @@ scale (lua_State *L) {
          const Float64 TheX = luaL_checknumber (L, 2);
          const Float64 TheY = lua_isnoneornil (L, 3) ? TheX : luaL_checknumber (L, 3);
 
-         get = overlay->store_overlay_scale (Node, TheX, TheY);
+         get = overlay->store_transform_scale (Node, TheX, TheY);
       }
 
       if (get) {
 
          Float64 theX (0.0), theY (0.0);
 
-         if (overlay->lookup_overlay_scale (Node, theX, theY)) {
+         if (overlay->lookup_transform_scale (Node, theX, theY)) {
 
             lua_pushnumber (L, theX);
             lua_pushnumber (L, theY);

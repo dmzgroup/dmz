@@ -158,7 +158,7 @@ dmz::RenderModuleOverlayOSG::discover_plugin (
 
 // RenderModuleOverlay Interface
 dmz::Handle
-dmz::RenderModuleOverlayOSG::lookup_overlay_handle (const String &Name) {
+dmz::RenderModuleOverlayOSG::lookup_node_handle (const String &Name) {
 
    Handle result (0);
 
@@ -171,7 +171,7 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_handle (const String &Name) {
 
 
 dmz::Handle
-dmz::RenderModuleOverlayOSG::lookup_overlay_clone_sub_handle (
+dmz::RenderModuleOverlayOSG::lookup_node_clone_sub_handle (
       const Handle CloneHandle,
       const String &Name) {
 
@@ -191,7 +191,7 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_clone_sub_handle (
 
 
 dmz::String
-dmz::RenderModuleOverlayOSG::lookup_overlay_name (const Handle Overlay) {
+dmz::RenderModuleOverlayOSG::lookup_node_name (const Handle Overlay) {
 
    String result;
 
@@ -204,7 +204,7 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_name (const Handle Overlay) {
 
 
 dmz::RenderOverlayTypeEnum
-dmz::RenderModuleOverlayOSG::lookup_overlay_type (const Handle Overlay) {
+dmz::RenderModuleOverlayOSG::lookup_node_type (const Handle Overlay) {
 
    RenderOverlayTypeEnum result (RenderOverlayUnknown);
 
@@ -217,7 +217,7 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_type (const Handle Overlay) {
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::is_of_overlay_type (
+dmz::RenderModuleOverlayOSG::is_of_node_type (
       const Handle Overlay,
       const RenderOverlayTypeEnum Type) {
 
@@ -281,7 +281,7 @@ dmz::RenderModuleOverlayOSG::clone_template (const String &Name) {
 
 // Overlay Group API
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::add_child (const Handle Parent, const Handle Child) {
+dmz::RenderModuleOverlayOSG::add_group_child (const Handle Parent, const Handle Child) {
 
    Boolean result (False);
 
@@ -300,7 +300,9 @@ dmz::RenderModuleOverlayOSG::add_child (const Handle Parent, const Handle Child)
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::remove_child (const Handle Parent, const Handle Child) {
+dmz::RenderModuleOverlayOSG::remove_group_child (
+      const Handle Parent,
+      const Handle Child) {
 
    Boolean result (False);
 
@@ -317,9 +319,25 @@ dmz::RenderModuleOverlayOSG::remove_child (const Handle Parent, const Handle Chi
 }
 
 
+dmz::Int32
+dmz::RenderModuleOverlayOSG::lookup_group_child_count (const Handle Overlay) {
+
+   Int32 result (0);
+
+   GroupStruct *gs = _groupTable.lookup (Overlay);
+
+   if (gs && gs->group.valid ()) {
+
+      result = (Int32)gs->group->getNumChildren ();
+   }
+
+   return result;
+}
+
+
 // Overlay Switch API
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::store_overlay_switch_state (
+dmz::RenderModuleOverlayOSG::store_switch_state (
       const Handle Overlay,
       const Int32 Which,
       const Boolean SwitchState) {
@@ -345,7 +363,7 @@ dmz::RenderModuleOverlayOSG::store_overlay_switch_state (
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::store_overlay_all_switch_state (
+dmz::RenderModuleOverlayOSG::store_all_switch_state (
       const Handle Overlay,
       const Boolean SwitchState) {
 
@@ -366,7 +384,7 @@ dmz::RenderModuleOverlayOSG::store_overlay_all_switch_state (
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::enable_overlay_single_switch_state (
+dmz::RenderModuleOverlayOSG::enable_single_switch_state (
       const Handle Overlay,
       const Int32 Which) {
 
@@ -391,7 +409,7 @@ dmz::RenderModuleOverlayOSG::enable_overlay_single_switch_state (
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::lookup_overlay_switch_state (
+dmz::RenderModuleOverlayOSG::lookup_switch_state (
       const Handle Overlay,
       const Int32 Which) {
 
@@ -413,25 +431,9 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_switch_state (
 }
 
 
-dmz::Int32
-dmz::RenderModuleOverlayOSG::lookup_overlay_switch_count (const Handle Overlay) {
-
-   Int32 result (0);
-
-   SwitchStruct *ss = _switchTable.lookup (Overlay);
-
-   if (ss && ss->switchNode.valid ()) {
-
-      result = (Int32)ss->switchNode->getNumChildren ();
-   }
-
-   return result;
-}
-
-
 // Overlay Transform API
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::store_overlay_position (
+dmz::RenderModuleOverlayOSG::store_transform_position (
       const Handle Overlay,
       const Float64 ValueX,
       const Float64 ValueY) {
@@ -454,7 +456,7 @@ dmz::RenderModuleOverlayOSG::store_overlay_position (
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::lookup_overlay_position (
+dmz::RenderModuleOverlayOSG::lookup_transform_position (
       const Handle Overlay,
       Float64 &valueX,
       Float64 &valueY) {
@@ -476,7 +478,7 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_position (
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::store_overlay_rotation (
+dmz::RenderModuleOverlayOSG::store_transform_rotation (
       const Handle Overlay,
       const Float64 Value) {
 
@@ -498,7 +500,7 @@ dmz::RenderModuleOverlayOSG::store_overlay_rotation (
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::lookup_overlay_rotation (
+dmz::RenderModuleOverlayOSG::lookup_transform_rotation (
       const Handle Overlay,
       Float64 &value) {
 
@@ -518,7 +520,7 @@ dmz::RenderModuleOverlayOSG::lookup_overlay_rotation (
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::store_overlay_scale (
+dmz::RenderModuleOverlayOSG::store_transform_scale (
       const Handle Overlay,
       const Float64 ValueX,
       const Float64 ValueY) {
@@ -541,7 +543,7 @@ dmz::RenderModuleOverlayOSG::store_overlay_scale (
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::lookup_overlay_scale (
+dmz::RenderModuleOverlayOSG::lookup_transform_scale (
       const Handle Overlay,
       Float64 &valueX,
       Float64 &valueY) {

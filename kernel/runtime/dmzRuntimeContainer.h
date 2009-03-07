@@ -21,8 +21,10 @@ namespace dmz {
          RuntimeContext *get_context () const;
 
       protected:
+         //! \cond
          struct State;
-         State &_state; //!< Internal state.
+         State &_state;
+         //! \endcond
 
       private:
          RuntimeContainer ();

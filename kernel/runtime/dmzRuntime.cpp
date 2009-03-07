@@ -138,7 +138,9 @@ dmz::get_runtime_uuid (const PluginInfo &Info) {
 }
 
 
+//! \cond
 struct dmz::RuntimeContainer::State {
+
    RuntimeContext *context;
 
    void set_context (RuntimeContext *theContext) {
@@ -154,22 +156,51 @@ struct dmz::RuntimeContainer::State {
    State (RuntimeContext *theContext) : context (0) { set_context (theContext); }
    ~State () { set_context (0); }
 };
+//! \endcond
 
+
+/*!
+
+\class dmz::RuntimeContainer
+\ingroup Runtime
+\brief Holds a reference to the RuntimeContext.
+\details This class should be use to hold a reference to the RuntimeContext when
+it is need for an extended period of time by a class that does not have access to
+a PluginInfo class or the dmz::Plugin::get_plugin_runtime_context() function.
+
+*/
+
+/*!
+
+\brief Constructor.
+\param[in] context Pointer to the RuntimeContext.
+
+*/
 dmz::RuntimeContainer::RuntimeContainer (RuntimeContext *context) :
       _state (*(new State (context))) {;}
 
 
+/*!
+
+\brief Constructor.
+\details The RuntimeContext is extracted from the PluginInfo.
+\param[in] Info Reference to the PluginInfo..
+
+*/
 dmz::RuntimeContainer::RuntimeContainer (const PluginInfo &Info) :
       _state (*(new State (Info.get_context ()))) {;}
 
 
+//! Destructor.
 dmz::RuntimeContainer::~RuntimeContainer () { delete &_state; }
 
 
+//! Releases the RuntimeContext.
 void
 dmz::RuntimeContainer::clear () { _state.set_context (0); }
 
 
+//! Stores the RuntimeContext.
 void
 dmz::RuntimeContainer::set_context (RuntimeContext *context) {
 
@@ -177,6 +208,7 @@ dmz::RuntimeContainer::set_context (RuntimeContext *context) {
 }
 
 
+//! Gets the RuntimeContext current stored in the class.
 dmz::RuntimeContext *
 dmz::RuntimeContainer::get_context () const { return _state.context; }
 

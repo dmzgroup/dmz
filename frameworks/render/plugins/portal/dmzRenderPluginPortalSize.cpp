@@ -2,6 +2,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+//! \cond
 dmz::RenderPluginPortalSize::RenderPluginPortalSize (
       const PluginInfo &Info,
       Config &local) :
@@ -67,6 +68,7 @@ void
 dmz::RenderPluginPortalSize::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

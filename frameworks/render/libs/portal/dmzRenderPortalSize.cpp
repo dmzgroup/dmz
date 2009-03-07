@@ -40,11 +40,11 @@ local_configure (
 }
 
 void
-local_bind (DataBinder &binder, Handle &portal, Int32 &theX, Int32 &theY) {
+local_bind (DataBinder &binder, Handle &portal, Int32 &valueX, Int32 &valueY) {
 
    binder.bind ("DMZ_Render_Portal_Resize_Portal_Handle", 0, portal);
-   binder.bind ("DMZ_Render_Portal_Resize_Portal_Size", 0, theX);
-   binder.bind ("DMZ_Render_Portal_Resize_Portal_Size", 1, theY);
+   binder.bind ("DMZ_Render_Portal_Resize_Portal_Size", 0, valueX);
+   binder.bind ("DMZ_Render_Portal_Resize_Portal_Size", 1, valueY);
 }
 
 };
@@ -96,6 +96,7 @@ struct dmz::PortalSize::State {
          x (0),
          y (0) { local_bind (binder, portal, x, y); }
 };
+
 
 /*!
 
@@ -197,17 +198,17 @@ dmz::PortalSize::get_portal_handle () const { return _state.portal; }
 \brief Set the current portal size.
 \details If the values are different from the current values, a resize message is
 sent to all PortalSizeObserver objects containing the size and source of the resize.
-\param[in] TheX An Int32 containing the width of the portal.
-\param[in] TheY An Int32 containing the height of the portal.
+\param[in] ValueX An Int32 containing the width of the portal.
+\param[in] ValueY An Int32 containing the height of the portal.
 
 */
 void
-dmz::PortalSize::set_size (const Int32 TheX, const Int32 TheY) {
+dmz::PortalSize::set_size (const Int32 ValueX, const Int32 ValueY) {
 
-   if ((TheX != _state.x) || (TheY != _state.y)) {
+   if ((ValueX != _state.x) || (ValueY != _state.y)) {
 
-      _state.x = TheX;
-      _state.y = TheY;
+      _state.x = ValueX;
+      _state.y = ValueY;
 
       _state.binder.write_data (_state.data);
 
@@ -221,8 +222,12 @@ dmz::PortalSize::set_size (const Int32 TheX, const Int32 TheY) {
 \class dmz::PortalSizeObserver
 \ingroup Render
 \brief Observers changes in the size of the render portal.
+\details Allows variables to be bound to either the X or Y component of the
+portal's size. These bound variable are automatically updated when the portal's
+size changes.
 
 */
+//! \cond
 struct dmz::PortalSizeObserver::State : public MessageObserver {
 
    PortalSizeObserver *obs;
@@ -271,7 +276,15 @@ struct dmz::PortalSizeObserver::State : public MessageObserver {
          x (0),
          y (0) { local_bind (binder, portal, x, y); }
 };
+//! \endcond
 
+
+/*!
+
+\brief Constructor.
+\param[in] context Pointer to the RuntimeContext.
+
+*/
 dmz::PortalSizeObserver::PortalSizeObserver (RuntimeContext *context) :
       _state (*(new State (context))) {
 
@@ -281,6 +294,13 @@ dmz::PortalSizeObserver::PortalSizeObserver (RuntimeContext *context) :
 }
 
 
+/*!
+
+\brief Constructor.
+\param[in] context Pointer to the RuntimeContext.
+\param[in] init Config object used in initialization.
+
+*/
 dmz::PortalSizeObserver::PortalSizeObserver (RuntimeContext *context, Config &init) :
       _state (*(new State (context))) {
 
@@ -289,6 +309,12 @@ dmz::PortalSizeObserver::PortalSizeObserver (RuntimeContext *context, Config &in
 }
 
 
+/*!
+
+\brief Constructor.
+\param[in] Info Reference to the PluginInfo.
+
+*/
 dmz::PortalSizeObserver::PortalSizeObserver (const PluginInfo &Info) :
       _state (*(new State (Info.get_context ()))) {
 
@@ -298,6 +324,13 @@ dmz::PortalSizeObserver::PortalSizeObserver (const PluginInfo &Info) :
 }
 
 
+/*!
+
+\brief Constructor.
+\param[in] Info Reference to the PluginInfo.
+\param[in] init Config object used in initialization.
+
+*/
 dmz::PortalSizeObserver::PortalSizeObserver (const PluginInfo &Info, Config &init) :
       _state (*(new State (Info.get_context ()))) {
 
@@ -306,9 +339,17 @@ dmz::PortalSizeObserver::PortalSizeObserver (const PluginInfo &Info, Config &ini
 }
 
 
+//! Destructor.
 dmz::PortalSizeObserver::~PortalSizeObserver () { delete &_state; }
 
 
+/*!
+
+\brief Reconfigures the objects settings.
+\details May be called at any time.
+\param[in] init Config object used to configure the object.
+
+*/
 void
 dmz::PortalSizeObserver::configure_portal (Config &init) {
 
@@ -316,6 +357,12 @@ dmz::PortalSizeObserver::configure_portal (Config &init) {
 }
 
 
+/*!
+
+\brief Sets the Handle of the portal to observer.
+\param[in] PortalHandle Handle of the portal to observer.
+
+*/
 void
 dmz::PortalSizeObserver::set_portal_handle (const Handle PortalHandle) {
 
@@ -323,6 +370,12 @@ dmz::PortalSizeObserver::set_portal_handle (const Handle PortalHandle) {
 }
 
 
+/*!
+
+\brief Gets the Handle of the portal being observed.
+\return Returns the Handle of the portal being observed.
+
+*/
 dmz::Handle
 dmz::PortalSizeObserver::get_portal_handle () const {
 
@@ -330,14 +383,46 @@ dmz::PortalSizeObserver::get_portal_handle () const {
 }
 
 
+/*!
+
+\brief Gets the X component of the portal's size.
+\return Returns the X component of the portal's size.
+
+*/
 dmz::Int32
 dmz::PortalSizeObserver::get_portal_x () const { return _state.x; }
 
 
+/*!
+
+\brief Gets the Y component of the portal's size.
+\return Returns the Y component of the portal's size.
+
+*/
 dmz::Int32
 dmz::PortalSizeObserver::get_portal_y () const { return _state.y; }
 
 
+/*!
+
+\fn void dmz::PortalSizeObserver::update_portal_size (
+const Handle PortalHandle,
+const Int32 ValueX,
+const Int32 ValueY)
+\brief Pure virtual function that is invoked when the portal size changes.
+\param[in] PortalHandle Handle of the portal that is changing size.
+\param[in] ValueX The X component of the portal's new size.
+\param[in] ValueY The Y component of the portal's new size.
+
+*/
+
+/*!
+
+\class dmz::PortalSizeObserverSimple
+\ingroup Render
+\brief Simple observers changes in the size of the render portal.
+
+*/
 namespace {
 
 struct BindStruct {
@@ -351,6 +436,7 @@ struct BindStruct {
 };
 
 
+//! \cond
 struct dmz::PortalSizeObserverSimple::State {
 
    BindStruct *xlist;
@@ -365,12 +451,26 @@ struct dmz::PortalSizeObserverSimple::State {
    State () : xlist (0), ylist (0) {;}
    ~State () { unbind (); }
 };
+//! \endcond
 
+
+/*!
+
+\brief Constructor.
+\param[in] context Pointer to the RuntimeContext.
+
+*/
 dmz::PortalSizeObserverSimple::PortalSizeObserverSimple (RuntimeContext *context) :
       PortalSizeObserver (context),
       _state (*(new State)) {;}
 
+/*!
 
+\brief Constructor.
+\param[in] context Pointer to the RuntimeContext.
+\param[in] init Config object used in initialization.
+
+*/
 dmz::PortalSizeObserverSimple::PortalSizeObserverSimple (
       RuntimeContext *context,
       Config &init) :
@@ -378,6 +478,12 @@ dmz::PortalSizeObserverSimple::PortalSizeObserverSimple (
       _state (*(new State)) {;}
 
 
+/*!
+
+\brief Constructor.
+\param[in] Info Reference to the PluginInfo.
+
+*/
 dmz::PortalSizeObserverSimple::PortalSizeObserverSimple (const PluginInfo &Info) :
       PortalSizeObserver (Info),
       _state (*(new State)) {
@@ -385,6 +491,13 @@ dmz::PortalSizeObserverSimple::PortalSizeObserverSimple (const PluginInfo &Info)
 }
 
 
+/*!
+
+\brief Constructor.
+\param[in] Info Reference to the PluginInfo.
+\param[in] init Config object used in initialization.
+
+*/
 dmz::PortalSizeObserverSimple::PortalSizeObserverSimple (
       const PluginInfo &Info,
       Config &init) :
@@ -394,41 +507,55 @@ dmz::PortalSizeObserverSimple::PortalSizeObserverSimple (
 }
 
 
+//! Destructor.
 dmz::PortalSizeObserverSimple::~PortalSizeObserverSimple () { delete &_state; }
 
 
 void
 dmz::PortalSizeObserverSimple::update_portal_size (
       const Handle PortalHandle,
-      const Int32 TheX,
-      const Int32 TheY) {
+      const Int32 ValueX,
+      const Int32 ValueY) {
 
    BindStruct *current = _state.xlist;
-   while (current) { current->value = TheX; current = current->next; }
+   while (current) { current->value = ValueX; current = current->next; }
 
    current = _state.ylist;
-   while (current) { current->value = TheY; current = current->next; }
+   while (current) { current->value = ValueY; current = current->next; }
 }
 
 
-void
-dmz::PortalSizeObserverSimple::bind_x (Int32 &theX) {
+/*!
 
-   BindStruct *bs = new BindStruct (theX);
+\brief Binds the value to the X component of the portal's size.
+\param[in] valueX The variable to bind.
+
+*/
+void
+dmz::PortalSizeObserverSimple::bind_x (Int32 &valueX) {
+
+   BindStruct *bs = new BindStruct (valueX);
    bs->next = _state.xlist;
    _state.xlist = bs;
 }
 
 
-void
-dmz::PortalSizeObserverSimple::bind_y (Int32 &theY) {
+/*!
 
-   BindStruct *bs = new BindStruct (theY);
+\brief Binds the value to the Y component of the portal's size.
+\param[in] valueY The variable to bind.
+
+*/
+void
+dmz::PortalSizeObserverSimple::bind_y (Int32 &valueY) {
+
+   BindStruct *bs = new BindStruct (valueY);
    bs->next = _state.ylist;
    _state.ylist = bs;
 }
 
 
+//! Unbinds all bound variables.
 void
 dmz::PortalSizeObserverSimple::unbind () { _state.unbind (); }
 

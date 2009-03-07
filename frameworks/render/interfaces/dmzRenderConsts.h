@@ -3,6 +3,8 @@
 
 namespace dmz {
 
+//! Default name of the main portal.
+//! \ingroup Render
 const char RenderMainPortalName[] = "DMZ_Render_Main_Portal";
 
 };

@@ -7,6 +7,7 @@
 
 namespace dmz {
 
+   //! \cond
    class RenderPluginPortalSize :
          public Plugin,
          public PortalSizeObserver {
@@ -40,6 +41,7 @@ namespace dmz {
          RenderPluginPortalSize &operator= (const RenderPluginPortalSize &);
 
    };
+   //! \endcond
 };
 
 #endif // DMZ_RENDER_PLUGIN_PORTAL_SIZE_DOT_H

@@ -24,7 +24,7 @@ class DMZ_RENDER_PORTAL_LINK_SYMBOL PortalSize {
       void set_portal_handle (const Handle PortalHandle);
       Handle get_portal_handle () const;
 
-      void set_size (const Int32 TheX, const Int32 TheY);
+      void set_size (const Int32 ValueX, const Int32 ValueY);
 
    protected:
       //! \cond
@@ -57,8 +57,8 @@ class DMZ_RENDER_PORTAL_LINK_SYMBOL PortalSizeObserver {
 
       virtual void update_portal_size (
          const Handle PortalHandle,
-         const Int32 TheX,
-         const Int32 TheY) = 0;
+         const Int32 ValueX,
+         const Int32 ValueY) = 0;
 
    protected:
       //! \cond
@@ -85,11 +85,11 @@ class DMZ_RENDER_PORTAL_LINK_SYMBOL PortalSizeObserverSimple :
 
       virtual void update_portal_size (
          const Handle PortalHandle,
-         const Int32 TheX,
-         const Int32 TheY);
+         const Int32 ValueX,
+         const Int32 ValueY);
 
-      void bind_x (Int32 &theX);
-      void bind_y (Int32 &theY);
+      void bind_x (Int32 &valueX);
+      void bind_y (Int32 &valueY);
 
       void unbind ();
 

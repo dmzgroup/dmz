@@ -6,16 +6,15 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableStringTemplate.h>
+#include <dmzTypesMatrix.h>
+#include <dmzTypesVector.h>
 
 #include <osg/ref_ptr>
+#include <osgViewer/Viewer>
 
 namespace osg { class Camera; }
 
-
 namespace dmz {
-
-   class RenderCameraManipulatorOSG;
-
 
    class RenderModulePortalOSG : public Plugin, private RenderModulePortal {
 
@@ -52,9 +51,11 @@ namespace dmz {
 
          String _portalName;
          RenderModuleCoreOSG *_core;
-         osg::ref_ptr<RenderCameraManipulatorOSG> _manipulator;
+         osg::ref_ptr<osgViewer::Viewer> _viewer;
          osg::ref_ptr<osg::Camera> _camera;
          Log _log;
+         Vector _pos;
+         Matrix _ori;
          Float32 _nearClip;
          Float32 _farClip;
          Float32 _fov;

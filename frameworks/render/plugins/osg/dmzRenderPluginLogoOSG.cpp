@@ -1,3 +1,4 @@
+#include <dmzRenderConsts.h>
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginLogoOSG.h"
 #include <dmzRuntimeConfigToTypesBase.h>
@@ -16,6 +17,8 @@
 #include <osg/Texture2D>
 
 #include <osgDB/ReadFile>
+
+#include <osgViewer/Viewer>
 
 
 dmz::RenderPluginLogoOSG::RenderPluginLogoOSG (const PluginInfo &Info, Config &local) :
@@ -68,7 +71,8 @@ dmz::RenderPluginLogoOSG::discover_plugin (
 
          if (_core) {
   
-            _masterCamera = _core->lookup_camera (DefaultPortalNameOSG);
+            osgViewer::Viewer *viewer = _core->lookup_viewer (RenderMainPortalName);
+            _masterCamera = viewer ? viewer->getCamera () : 0;
             _create_logo ();
          }
       }

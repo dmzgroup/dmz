@@ -44,9 +44,7 @@ namespace dmz {
          Log _log;
          RenderModuleCoreOSG *_core;
          InputModule *_channels;
-         String _portalName;
-         osg::ref_ptr<osg::Camera> _camera;
-         osg::ref_ptr<RenderCameraManipulatorOSG> _cameraManipulator;
+         String _viewerName;
          osg::ref_ptr<RenderEventHandlerOSG> _eventHandler;
          osg::ref_ptr<ViewerQOSG> _viewer;
 

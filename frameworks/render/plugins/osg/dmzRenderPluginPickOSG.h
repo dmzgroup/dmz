@@ -5,7 +5,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 
-#include <osg/Camera>
+#include <osgViewer/Viewer>
 
 namespace dmz {
 
@@ -56,8 +56,8 @@ namespace dmz {
 
          Log _log;
          RenderModuleCoreOSG *_core;
-         osg::ref_ptr<osg::Camera> _camera;
-         String _cameraName;
+         osg::ref_ptr<osgViewer::Viewer> _viewer;
+         String _viewerName;
 
       private:
          RenderPluginPickOSG ();

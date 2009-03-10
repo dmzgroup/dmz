@@ -1,5 +1,6 @@
+#include <dmzRenderConsts.h>
 #include "dmzRenderModulePortalOSG.h"
-#include <dmzRenderCameraManipulatorOSG.h>
+#include <dmzRenderUtilOSG.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -17,10 +18,10 @@ dmz::RenderModulePortalOSG::RenderModulePortalOSG (
       const Config &Local) :
       Plugin (Info),
       RenderModulePortal (Info),
-      _portalName (DefaultPortalNameOSG),
+      _portalName (RenderMainPortalName),
       _core (0),
       _log (Info),
-      _manipulator (0),
+      _viewer (0),
       _camera (0),
       _nearClip (0.0),
       _farClip (0.0),
@@ -47,9 +48,10 @@ dmz::RenderModulePortalOSG::discover_plugin (
          _core = RenderModuleCoreOSG::cast (PluginPtr);
          if (_core) {
 
-            _manipulator = _core->lookup_camera_manipulator (_portalName);
+            _viewer = _core->lookup_viewer (_portalName);
 
-            _camera = _core->lookup_camera (_portalName);
+            if (_viewer.valid ()) { _camera = _viewer->getCamera (); }
+
             if (_camera.valid ()) {
 
                _camera->setComputeNearFarMode (
@@ -66,7 +68,7 @@ dmz::RenderModulePortalOSG::discover_plugin (
 
          _core = 0;
          _camera = 0;
-         _manipulator = 0;
+         _viewer = 0;
       }
    }
 }
@@ -84,14 +86,21 @@ dmz::RenderModulePortalOSG::is_master_portal () {
 void
 dmz::RenderModulePortalOSG::set_view (const Vector &Pos, const Matrix &Ori) {
 
-   if (_manipulator.valid ()) { _manipulator->setByVectorAndMatrix (Pos, Ori);}
+   if (_camera.valid ()) {
+
+      _pos = Pos;
+      _ori = Ori;
+     _camera->setViewMatrix (
+        osg::Matrix::translate (to_osg_vector (-Pos)) * to_osg_inverse_matrix (Ori));
+   }
 }
 
 
 void
 dmz::RenderModulePortalOSG::get_view (Vector &pos, Matrix &ori) const {
 
-   if (_manipulator.valid ()) { _manipulator->getVectorAndMatrix (pos, ori); }
+   pos = _pos;
+   ori = _ori;
 }
 
 
@@ -173,7 +182,7 @@ dmz::RenderModulePortalOSG::_init (const Config &Local) {
 void
 dmz::RenderModulePortalOSG::_update_camera () {
 
-   if (_camera.get ()) {
+   if (_camera.valid ()) {
 
       _camera->setProjectionMatrixAsPerspective(
          _fov,

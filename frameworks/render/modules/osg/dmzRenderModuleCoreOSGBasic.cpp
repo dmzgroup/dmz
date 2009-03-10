@@ -2,6 +2,7 @@
 #include <dmzObjectModule.h>
 #include <dmzObjectAttributeMasks.h>
 #include <dmzRenderObjectDataOSG.h>
+#include <dmzRenderUtilOSG.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfigToPathContainer.h>
@@ -51,7 +52,7 @@ dmz::RenderModuleCoreOSGBasic::~RenderModuleCoreOSGBasic () {
 
    _extensions.remove_plugins ();
    _objectTable.empty ();
-   _portalTable.empty ();
+   _viewerTable.empty ();
 
    osg::DeleteHandler *dh (osg::Referenced::getDeleteHandler ());
 
@@ -272,125 +273,43 @@ dmz::RenderModuleCoreOSGBasic::lookup_dynamic_object (const Handle ObjectHandle)
 
 
 dmz::Boolean
-dmz::RenderModuleCoreOSGBasic::add_camera (
-      const String &PortalName,
-      osg::Camera *camera) {
+dmz::RenderModuleCoreOSGBasic::add_viewer (
+      const String &ViewerName,
+      osgViewer::Viewer *viewer) {
 
    Boolean result (False);
 
-   PortalStruct *ps = _get_portal_struct (PortalName);
-   if (ps && camera) {
+   ViewerStruct *vs = new ViewerStruct (ViewerName, viewer);
 
-      if (!(ps->camera.valid ())) {
-
-         ps->camera = camera;
-         result = True;
-      }
-   }
+   if (vs && _viewerTable.store (ViewerName, vs)) { result = True; }
+   else if (vs) { delete vs; vs = 0; }
 
    return result;
 }
 
 
-osg::Camera *
-dmz::RenderModuleCoreOSGBasic::lookup_camera (const String &PortalName) {
+osgViewer::Viewer *
+dmz::RenderModuleCoreOSGBasic::lookup_viewer (const String &ViewerName) {
 
-   osg::Camera *result = 0;
+   ViewerStruct *vs (_viewerTable.lookup (ViewerName));
 
-   PortalStruct *ps = _portalTable.lookup (PortalName);
-   if (ps) {
-
-      result = ps->camera.get ();
-   }
-
-   return result;
+   return vs ? vs->viewer.get () : 0;
 }
 
 
-osg::Camera *
-dmz::RenderModuleCoreOSGBasic::remove_camera (const String &PortalName) {
+osgViewer::Viewer *
+dmz::RenderModuleCoreOSGBasic::remove_viewer (const String &ViewerName) {
 
-   osg::Camera *result = 0;
+   osgViewer::Viewer *result (0);
+   ViewerStruct *vs (_viewerTable.remove (ViewerName));
 
-   PortalStruct *ps = _portalTable.lookup (PortalName);
+   if (vs) {
 
-   if (ps) {
-
-      result = ps->camera.get ();
-      ps->camera = 0;
+      result = vs->viewer.get ();
+      delete vs; vs = 0;
    }
 
    return result;
-}
-
-
-dmz::Boolean
-dmz::RenderModuleCoreOSGBasic::add_camera_manipulator (
-      const String &PortalName,
-      dmz::RenderCameraManipulatorOSG *manipulator) {
-
-   Boolean result(False);
-
-   PortalStruct *ps = _get_portal_struct (PortalName);
-
-   if (ps && manipulator) {
-
-      if (!(ps->cameraManipulator.valid ())) {
-
-         ps->cameraManipulator = manipulator;
-         result = True;
-      }
-   }
-
-   return result;
-}
-
-
-dmz::RenderCameraManipulatorOSG *
-dmz::RenderModuleCoreOSGBasic::lookup_camera_manipulator (const String &PortalName) {
-
-   RenderCameraManipulatorOSG *result = 0;
-
-   PortalStruct *ps = _portalTable.lookup (PortalName);
-
-   if (ps) {
-
-      result = ps->cameraManipulator.get ();
-   }
-
-   return result;
-}
-
-
-dmz::RenderCameraManipulatorOSG *
-dmz::RenderModuleCoreOSGBasic::remove_camera_manipulator (const String &PortalName) {
-
-   RenderCameraManipulatorOSG *result = 0;
-
-   PortalStruct *ps = _portalTable.lookup (PortalName);
-
-   if (ps) {
-
-      result = ps->cameraManipulator.get ();
-      ps->cameraManipulator = 0;
-   }
-
-   return result;
-}
-
-
-dmz::RenderModuleCoreOSGBasic::PortalStruct *
-dmz::RenderModuleCoreOSGBasic::_get_portal_struct (const String &PortalName) {
-
-   PortalStruct *ps = _portalTable.lookup (PortalName);
-
-   if (!ps) {
-
-      ps = new PortalStruct (PortalName);
-      if (!_portalTable.store (PortalName, ps)) { delete ps; ps = 0; }
-   }
-
-   return ps;
 }
 
 

@@ -1,3 +1,4 @@
+#include <dmzRenderConsts.h>
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginPickOSG.h"
 #include <dmzRuntimeConfigToTypesBase.h>
@@ -10,7 +11,8 @@ dmz::RenderPluginPickOSG::RenderPluginPickOSG (const PluginInfo &Info, Config &l
       Plugin (Info),
       RenderPickUtil (Info, local),
       _log (Info),
-      _core (0) {
+      _core (0),
+      _viewerName (RenderMainPortalName) {
 
    _init (local);
 }
@@ -32,14 +34,14 @@ dmz::RenderPluginPickOSG::update_plugin_state (
    }
    else if (State == PluginStateStart) {
 
-      if (!_camera.valid () && _core) {
+      if (!_viewer.valid () && _core) {
 
-         _camera = _core->lookup_camera (_cameraName);
+         _viewer = _core->lookup_viewer (_viewerName);
       }
    }
    else if (State == PluginStateStop) {
 
-      if (_camera.valid ()) { _camera = 0; }
+      if (_viewer.valid ()) { _viewer = 0; }
    }
    else if (State == PluginStateShutdown) {
 
@@ -98,23 +100,8 @@ dmz::RenderPluginPickOSG::source_to_world (
 
    Boolean result (False);
 
-   if (_core && _camera.valid ()) {
+   if (_core && _viewer.valid ()) {
 
-      osgUtil::PickVisitor visitor (
-         _camera->getViewport (),
-         _camera->getProjectionMatrix (),
-         _camera->getViewMatrix (),
-         (float)SourcePosX,
-         (float)SourcePosY);
-
-      osg::ref_ptr<osg::Node> scene = _core->get_isect ();
-
-      if (scene.valid ()) { scene->accept (visitor); }
-
-      if (visitor.hits ()) {
-
-//         osgUtil::IntersectVisitor::LineSegmentHitListMap hits = visitor.getSegHitList ();
-      }
    }
 
    return result;
@@ -136,7 +123,7 @@ dmz::RenderPluginPickOSG::world_to_source (
 void
 dmz::RenderPluginPickOSG::_init (Config &local) {
 
-   _cameraName = config_to_string ("portal.name", local, DefaultPortalNameOSG);
+   _viewerName = config_to_string ("portal.name", local, _viewerName);
 }
 
 

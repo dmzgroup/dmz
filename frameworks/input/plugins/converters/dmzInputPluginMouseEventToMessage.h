@@ -50,12 +50,14 @@ namespace dmz {
          void _get_targets (const String &Name, Config &config, HandleContainer &targets);
 
          ConverterStruct *_create_converter_basic (
+            const Boolean Is2d,
             HashTableStringTemplate<ConverterStruct> &nameTable,
             ConfigIterator &it,
             Config &converterConfig,
             Config &config);
 
          ConverterStruct *_create_converter (
+            const Boolean Is2d,
             HashTableStringTemplate<ConverterStruct> &nameTable,
             ConfigIterator &it,
             Config &converterConfig);

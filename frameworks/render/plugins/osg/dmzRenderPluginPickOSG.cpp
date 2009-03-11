@@ -1,6 +1,8 @@
 #include <dmzRenderConsts.h>
 #include <dmzRenderModuleCoreOSG.h>
+#include <dmzRenderObjectDataOSG.h>
 #include "dmzRenderPluginPickOSG.h"
+#include <dmzRenderUtilOSG.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
@@ -37,11 +39,17 @@ dmz::RenderPluginPickOSG::update_plugin_state (
       if (!_viewer.valid () && _core) {
 
          _viewer = _core->lookup_viewer (_viewerName);
+         if (_viewer.valid ()) {
+
+            osg::Camera *camera = _viewer->getCamera ();
+
+            if (camera) { _viewport = camera->getViewport (); }
+         }
       }
    }
    else if (State == PluginStateStop) {
 
-      if (_viewer.valid ()) { _viewer = 0; }
+      if (_viewer.valid ()) { _viewer = 0; _viewport = 0; }
    }
    else if (State == PluginStateShutdown) {
 
@@ -100,8 +108,55 @@ dmz::RenderPluginPickOSG::source_to_world (
 
    Boolean result (False);
 
-   if (_core && _viewer.valid ()) {
+   if (_core && _viewer.valid () && _viewport.valid ()) {
 
+      const float Height = _viewport->height ();
+
+      osgUtil::LineSegmentIntersector::Intersections isect;
+
+      if (_viewer->computeIntersections (
+            (float)SourcePosX,
+            Height - (float)SourcePosY,
+            isect)) {
+
+         osgUtil::LineSegmentIntersector::Intersections::iterator it = isect.begin ();
+
+         while (!result && (it != isect.end ())) {
+
+            Boolean disabled (False);
+
+            osg::NodePath path = it->nodePath;
+
+            for (osg::NodePath::iterator node = path.begin ();
+                  (node != path.end ()) && !disabled;
+                  node++) {
+
+               if (*node) {
+
+                  osg::Referenced *ref ((*node)->getUserData ());
+
+                  if (ref) {
+
+                     RenderObjectDataOSG *data (
+                        dynamic_cast<RenderObjectDataOSG *> (ref));
+
+                     if (data) {
+
+                        if (!data->do_isect ()) { disabled = True; }
+                        else { objectHandle = data->get_handle (); }
+                     }
+                  }
+               }
+            }
+
+            if (!disabled) {
+
+               worldPosition = to_dmz_vector (it->getWorldIntersectPoint ());
+               result = True;
+            }
+            else { it++; }
+         }
+      }
    }
 
    return result;

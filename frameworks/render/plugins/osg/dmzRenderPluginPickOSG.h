@@ -5,6 +5,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 
+#include <osg/Viewport>
 #include <osgViewer/Viewer>
 
 namespace dmz {
@@ -57,6 +58,7 @@ namespace dmz {
          Log _log;
          RenderModuleCoreOSG *_core;
          osg::ref_ptr<osgViewer::Viewer> _viewer;
+         osg::ref_ptr<osg::Viewport> _viewport;
          String _viewerName;
 
       private:

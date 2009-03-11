@@ -175,22 +175,21 @@ struct InputPluginMouseEventToMessage::AttrStruct {
 struct InputPluginMouseEventToMessage::ConverterStruct {
 
    const String Name;
-   const Boolean Is2d;
    PickPtr &pickMod;
 
-   ConverterStruct (const String TheName, const Boolean Is2dType, PickPtr &ptr) :
+   ConverterStruct (const String TheName, PickPtr &ptr) :
       Name (TheName),
-      Is2d (Is2dType),
       pickMod (ptr) {;}
 
    virtual ConverterStruct *process_results (
       const InputEventMouse &Event,
       const Vector &WorldPosition,
+      const Vector &Normal,
       const Handle ObjectHandle) = 0;
 
    virtual ConverterStruct *process_event (const InputEventMouse &Event) {
 
-      Vector pos;
+      Vector pos, normal;
       Handle obj (0);
 
       ConverterStruct *result (0);
@@ -202,11 +201,10 @@ struct InputPluginMouseEventToMessage::ConverterStruct {
             Event.get_mouse_x (),
             Event.get_mouse_y (),
             pos,
+            normal,
             obj);
 
-         if (Is2d) { pos.set_xyz (pos.get_x (), 0.0, pos.get_y ()); }
-
-         result = process_results (Event, pos, obj);
+         result = process_results (Event, pos, normal, obj);
       }
 
       return result;
@@ -227,6 +225,7 @@ struct ConditionStruct {
    DataBinder binder;
    astruct *attrList;
    Vector position;
+   Vector normal;
    Handle objectHandle;
    ConditionStruct *nextCondition;
    String nextStateName;
@@ -262,9 +261,8 @@ struct ConverterBasicStruct : cstruct {
 
    ConverterBasicStruct (
          const String &Name,
-         const Boolean Is2d,
          PickPtr &ptr) :
-         ConverterStruct (Name, Is2d, ptr),
+         ConverterStruct (Name, ptr),
          list (0) {;}
 
    ~ConverterBasicStruct () { if (list) { delete list; list = 0; } }
@@ -272,6 +270,7 @@ struct ConverterBasicStruct : cstruct {
    virtual cstruct *process_results (
       const InputEventMouse &Event,
       const Vector &WorldPosition,
+      const Vector &Normal,
       const Handle ObjectHandle);
 };
 
@@ -280,6 +279,7 @@ cstruct *
 ConverterBasicStruct::process_results (
       const InputEventMouse &Event,
       const Vector &WorldPosition,
+      const Vector &Normal,
       const Handle ObjectHandle) {
 
    cstruct *result (0);
@@ -333,6 +333,7 @@ ConverterBasicStruct::process_results (
 
             // Set values so the DataBinder can write their values to the data object.
             current->position = WorldPosition;
+            current->normal = Normal;
             current->objectHandle = ObjectHandle;
 
             // Set any values from the Mouse Event that need to be stored in the
@@ -465,6 +466,7 @@ dmz::InputPluginMouseEventToMessage::_create_attributes (
       Config &config,
       DataBinder &binder,
       Vector *position,
+      Vector *normal,
       Handle *object) {
 
    AttrStruct *result (0);
@@ -489,6 +491,10 @@ dmz::InputPluginMouseEventToMessage::_create_attributes (
          if (Type == "position") {
 
             if (position) { binder.bind (Name, Index, *position); }
+         }
+         else if (Type == "normal") {
+
+            if (normal) { binder.bind (Name, Index, *normal); }
          }
          else if (Type == "object") {
 
@@ -538,7 +544,6 @@ dmz::InputPluginMouseEventToMessage::_get_targets (
 
 dmz::InputPluginMouseEventToMessage::ConverterStruct *
 dmz::InputPluginMouseEventToMessage::_create_converter_basic (
-      const Boolean Is2d,
       HashTableStringTemplate<ConverterStruct> &nameTable,
       ConfigIterator &it,
       Config &converterConfig,
@@ -548,7 +553,6 @@ dmz::InputPluginMouseEventToMessage::_create_converter_basic (
 
    ConverterBasicStruct *result (new ConverterBasicStruct (
          Name,
-         Is2d,
          _pickMod));
 
    if (!_table.store (Name, result)) { delete result; result = 0; }
@@ -604,6 +608,7 @@ dmz::InputPluginMouseEventToMessage::_create_converter_basic (
                condition,
                next->binder,
                &(next->position),
+               &(next->normal),
                &(next->objectHandle));
 
             if (!current) { result->list = current = next; }
@@ -614,7 +619,7 @@ dmz::InputPluginMouseEventToMessage::_create_converter_basic (
 
    if (result) {
 
-     _create_converter (Is2d, nameTable, it, converterConfig);
+     _create_converter (nameTable, it, converterConfig);
 
      ConditionStruct *current (result->list);
 
@@ -643,7 +648,6 @@ dmz::InputPluginMouseEventToMessage::_create_converter_basic (
 
 dmz::InputPluginMouseEventToMessage::ConverterStruct *
 dmz::InputPluginMouseEventToMessage::_create_converter (
-      const Boolean Is2d,
       HashTableStringTemplate<ConverterStruct> &nameTable,
       ConfigIterator &it,
       Config &converterConfig) {
@@ -659,7 +663,7 @@ dmz::InputPluginMouseEventToMessage::_create_converter (
 
       if (!Type || Type == "basic") {
 
-         result = _create_converter_basic (Is2d, nameTable, it, converterConfig, config);
+         result = _create_converter_basic (nameTable, it, converterConfig, config);
       }
       else {
 
@@ -679,18 +683,9 @@ dmz::InputPluginMouseEventToMessage::_create_converter (Config &local) {
    Config converterConfig;
    local.lookup_all_config_merged ("converter", converterConfig);
 
-   const String Type = config_to_string ("type", converterConfig, "2d");
-   const String TypeLower = Type.get_lower ();
-
-   Boolean is2d (True);
-
-   if (TypeLower == "2d") { is2d = True; }
-   else if (TypeLower == "3d") { is2d = False; }
-   else if (TypeLower) { _log.error << "Unknown converter type: " << Type << endl; }
-
    HashTableStringTemplate<ConverterStruct> nameTable;
    ConfigIterator it;
-   result = _create_converter (is2d, nameTable, it, converterConfig);
+   result = _create_converter (nameTable, it, converterConfig);
 
    const String StartName (config_to_string ("start", converterConfig));
 

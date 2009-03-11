@@ -34,6 +34,7 @@ namespace dmz {
             const Int32 ScreenPosX,
             const Int32 ScreenPosY,
             Vector &worldPosition,
+            Vector &normal,
             Handle &objectHandle);
 
          virtual Boolean world_to_screen (
@@ -45,6 +46,7 @@ namespace dmz {
             const Int32 SourcePosX,
             const Int32 SourcePosY,
             Vector &worldPosition,
+            Vector &normal,
             Handle &objectHandle);
 
          virtual Boolean world_to_source (

@@ -79,6 +79,7 @@ dmz::RenderPluginPickOSG::screen_to_world (
       const Int32 ScreenPosX,
       const Int32 ScreenPosY,
       Vector &worldPosition,
+      Vector &normal,
       Handle &objectHandle) {
 
    Boolean result (False);
@@ -104,6 +105,7 @@ dmz::RenderPluginPickOSG::source_to_world (
       const Int32 SourcePosX,
       const Int32 SourcePosY,
       Vector &worldPosition,
+      Vector &normal,
       Handle &objectHandle) {
 
    Boolean result (False);
@@ -152,6 +154,7 @@ dmz::RenderPluginPickOSG::source_to_world (
             if (!disabled) {
 
                worldPosition = to_dmz_vector (it->getWorldIntersectPoint ());
+               normal = to_dmz_vector (it->getWorldIntersectNormal ());
                result = True;
             }
             else { it++; }

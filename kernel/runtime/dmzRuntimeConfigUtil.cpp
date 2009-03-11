@@ -584,10 +584,7 @@ dmz::config_to_vector (
 
    Config cd;
 
-   if (Name) {
-
-      Source.lookup_config (Name, cd);
-   }
+   if (Name) { Source.lookup_config (Name, cd); }
    else { cd = Source; }
 
    const Vector Result (
@@ -596,6 +593,38 @@ dmz::config_to_vector (
       config_to_float64 ("z", cd, DefaultValue.get_z ()));
 
    return Result;
+}
+
+
+dmz::VectorComponentEnum
+dmz::config_to_vector_component (
+   const String &Name,
+   const Config &Source,
+   const VectorComponentEnum DefaultValue) {
+
+   VectorComponentEnum result (DefaultValue);
+
+   String str;
+
+   if (local_config_to_string (Name, Source, str)) {
+
+      const String Value = str.get_lower ();
+
+      if ((Value == "x") || (Value == "0") || (Value == "vectorcomponentx")) {
+
+         result = VectorComponentX;
+      }
+      else if ((Value == "y") || (Value == "1") || (Value == "vectorcomponenty")) {
+
+         result = VectorComponentY;
+      }
+      else if ((Value == "z") || (Value == "2") || (Value == "vectorcomponentz")) {
+
+         result = VectorComponentZ;
+      }
+   }
+
+   return result;
 }
 
 
@@ -625,10 +654,7 @@ dmz::config_to_matrix (
 
    Config cd;
 
-   if (Name) {
-
-      Source.lookup_config (Name, cd);
-   }
+   if (Name) { Source.lookup_config (Name, cd); }
    else { cd = Source; }
 
    Float64 inPack[9] = {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0};
@@ -672,6 +698,7 @@ dmz::config_to_base_type_enum (
       const BaseTypeEnum DefaultValue) {
 
    BaseTypeEnum result (BaseTypeUnknown);
+
    String str;
 
    if (local_config_to_string (Name, Source, str)) {

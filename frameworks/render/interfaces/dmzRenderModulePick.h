@@ -29,6 +29,7 @@ namespace dmz {
             const Int32 ScreenPosX,
             const Int32 ScreenPosY,
             Vector &worldPosition,
+            Vector &normal,
             Handle &objectHandle) = 0;
 
          virtual Boolean world_to_screen (
@@ -42,6 +43,7 @@ namespace dmz {
             const Int32 ScreenPosX,
             const Int32 ScreenPosY,
             Vector &worldPosition,
+            Vector &normal,
             Handle &objectHandle) = 0;
 
          virtual Boolean world_to_source (

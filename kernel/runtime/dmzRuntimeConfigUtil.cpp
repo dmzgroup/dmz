@@ -571,7 +571,7 @@ dmz::Vector value = dmz::config_to_vector ("dmz.values.vector", global, DefaultV
 \endcode
 \param[in] Name String containing name of config context to convert.
 \param[in] Source Config containing config context to convert.
-\param[in] DefaultValue Vector containing default value to use if config context is
+\param[in] DefaultValue Vector containing default value to use if the config context is
 not found.
 \return Returns dmz::Vector containing value.
 
@@ -596,6 +596,21 @@ dmz::config_to_vector (
 }
 
 
+/*!
+
+\brief Converts Config to VectorComponentEnum.
+\details Defined in dmzRuntimeConfigToVector.h.
+\code
+const dmz::VectorComponentEnum DefaultValue (VectorComponentX;
+dmz::VectorComponentEnum value = dmz::config_to_vector_component ("dmz.order.x", global, DefaultValue);
+\endcode
+\param[in] Name String containing name of config attribute to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] DefaultValue VectorComponentEnum containing default value to use if the
+attribute is not found.
+\return Returns dmz::VectorComponentEnum containing value.
+
+*/
 dmz::VectorComponentEnum
 dmz::config_to_vector_component (
    const String &Name,

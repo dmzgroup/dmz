@@ -22,11 +22,29 @@ The non-inline functions are defined in dmzRuntimeConfigUtil.cpp.
 \overload
 \sa dmz::config_to_vector(const String &Name, const Config &Source, const Vector &DefaultValue)
 
-\fn dmz::Vector dmz::config_to_vector (const Config &Source, const Vector &Value)
+\fn dmz::Vector dmz::config_to_vector (const Config &Source, const Vector &DefaultValue)
 \brief Converts Config to Vector.
 \details Defined in dmzRuntimeConfigToTypesBase.h.
 \overload
 \sa dmz::config_to_vector(const String &Name, const Config &Source, const Vector &DefaultValue)
+
+\fn dmz::VectorComponentEnum dmz::config_to_vector_component (const Config &Source)
+\brief Converts Config to VectorComponentEnum.
+\details Defined in dmzRuntimeConfigToTypesBase.h.
+\overload
+\sa dmz::config_to_vector_component(const String &Name, const Config &Source, const VectorComponentEnum DefaultValue)
+
+\fn dmz::VectorComponentEnum dmz::config_to_vector_component (const String &Name, const Config &Source)
+\brief Converts Config to VectorComponentEnum.
+\details Defined in dmzRuntimeConfigToTypesBase.h.
+\overload
+\sa dmz::config_to_vector_component(const String &Name, const Config &Source, const VectorComponentEnum DefaultValue)
+
+\fn dmz::VectorComponentEnum dmz::config_to_vector_component (const Config &Source, const VectorComponentEnum DefaultValue)
+\brief Converts Config to VectorComponentEnum.
+\details Defined in dmzRuntimeConfigToTypesBase.h.
+\overload
+\sa dmz::config_to_vector_component(const String &Name, const Config &Source, const VectorComponentEnum DefaultValue)
 
 \fn dmz::Matrix dmz::config_to_matrix (const Config &Source)
 \brief Converts Config to Matrix.

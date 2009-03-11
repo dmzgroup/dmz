@@ -17,7 +17,7 @@ dmz::RuntimeContextMessageContainer::~RuntimeContextMessageContainer () {
 
 //! Creates message type.
 dmz::Message
-dmz::RuntimeContextMessageContainer::create_message_type (
+dmz::RuntimeContextMessageContainer::create_message (
       const String &Name,
       const String &ParentName,
       RuntimeContext *context,
@@ -80,7 +80,7 @@ dmz::RuntimeContextMessaging::RuntimeContextMessaging (
       obsHandleTable (&obsHandleLock),
       obsNameTable (&obsNameLock) {
 
-   globalType = container.create_message_type ("Global_Message", "", context, this);
+   globalType = container.create_message ("Global_Message", "", context, this);
    key.ref ();
 }
 

@@ -49,7 +49,7 @@ static void local_init_state (
    RuntimeContextDefinitions &def,
    Log *log);
 
-static void local_init_message_type (
+static void local_init_message (
    const Config &Init,
    RuntimeContext *context,
    Log *log);
@@ -382,7 +382,7 @@ local_init_state (
 
 
 void
-local_init_message_type (
+local_init_message (
       const Config &Init,
       RuntimeContext *context,
       Log *log) {
@@ -410,7 +410,7 @@ local_init_message_type (
 
             current.lookup_attribute ("parent", parentName);
 
-            Message tmp = container->create_message_type (name, parentName, context, rcm);
+            Message tmp = container->create_message (name, parentName, context, rcm);
 
             const String FoundParentName (tmp.get_parent ().get_name ());
 
@@ -651,7 +651,7 @@ dmz::runtime_init (const Config &Init, RuntimeContext *context, Log *log) {
 
       if (mconfig) {
 
-         local_init_message_type (mconfig, context, log);
+         local_init_message (mconfig, context, log);
       }
       else if (log) { log->debug << "Message type config not found" << endl; }
 
@@ -833,7 +833,7 @@ dmz::Definitions::lookup_named_handle_name (const Handle NamedHandle) const {
 
 //! Gets the global Message.
 dmz::Message
-dmz::Definitions::get_global_message_type () const {
+dmz::Definitions::get_global_message () const {
 
    Message result;
 
@@ -875,7 +875,7 @@ context of the name name already exists.
 
 */
 dmz::Boolean
-dmz::Definitions::create_message_type (const String &Name, Message &type) {
+dmz::Definitions::create_message (const String &Name, Message &type) {
 
    Boolean result (False);
 
@@ -888,7 +888,7 @@ dmz::Definitions::create_message_type (const String &Name, Message &type) {
 
       if (container) {
 
-         type = container->create_message_type (Name, "", _state.context, rcm);
+         type = container->create_message (Name, "", _state.context, rcm);
       }
    }
 
@@ -905,7 +905,7 @@ dmz::Definitions::create_message_type (const String &Name, Message &type) {
 
 */
 dmz::Boolean
-dmz::Definitions::lookup_message_type (const String &Name, Message &type) const {
+dmz::Definitions::lookup_message (const String &Name, Message &type) const {
 
    Boolean result (False);
 
@@ -948,7 +948,7 @@ dmz::Definitions::lookup_message_type (const String &Name, Message &type) const 
 
 */
 dmz::Boolean
-dmz::Definitions::lookup_message_type (const Handle TypeHandle, Message &type) const {
+dmz::Definitions::lookup_message (const Handle TypeHandle, Message &type) const {
 
    Boolean result (False);
 

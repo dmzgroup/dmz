@@ -124,7 +124,7 @@ dmz::Message::set_type (const String &Name, RuntimeContext *context) {
 
    Definitions defs (context);
 
-   return defs.lookup_message_type (Name, *this);
+   return defs.lookup_message (Name, *this);
 }
 
 
@@ -141,7 +141,7 @@ dmz::Message::set_type (const Handle TypeHandle, RuntimeContext *context) {
 
    Definitions defs (context);
 
-   return defs.lookup_message_type (TypeHandle, *this);
+   return defs.lookup_message (TypeHandle, *this);
 }
 
 

@@ -54,7 +54,7 @@ dmz::ExPluginMessageReceive::_init (Config &local) {
    _binder.bind ("time", 0, _time);
 
    _type =
-     config_to_message_type (
+     config_to_message (
         "message.name",
         local,
         get_plugin_runtime_context (),

@@ -71,8 +71,8 @@ dmz::ObjectModuleBasic::ObjectModuleBasic (const PluginInfo &Info) :
 
    Definitions defs (Info, &_log);
 
-   defs.create_message_type (ObjectCreateMessageName, _createObjMsg);
-   defs.create_message_type (ObjectDestroyMessageName, _removeObjMsg);
+   defs.create_message (ObjectCreateMessageName, _createObjMsg);
+   defs.create_message (ObjectDestroyMessageName, _removeObjMsg);
    _defaultHandle = defs.create_named_handle (ObjectAttributeDefaultName);
 }
 

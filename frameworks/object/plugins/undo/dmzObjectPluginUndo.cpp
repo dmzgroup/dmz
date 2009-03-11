@@ -1112,65 +1112,65 @@ dmz::ObjectPluginUndo::_init (Config &local) {
 
    // RuntimeContext *context (get_plugin_runtime_context ());
 
-   _defs.create_message_type ("Object_Plugin_Undo_Create_Object_Message", _createObject);
+   _defs.create_message ("Object_Plugin_Undo_Create_Object_Message", _createObject);
 
-   _defs.create_message_type (
+   _defs.create_message (
       "Object_Plugin_Undo_Activate_Object_Message",
       _activateObject);
 
-   _defs.create_message_type (
+   _defs.create_message (
       "Object_Plugin_Undo_Destroy_Object_Message",
       _destroyObject);
 
-   _defs.create_message_type ("Object_Plugin_Undo_Store_UUID_Message", _storeUUID);
+   _defs.create_message ("Object_Plugin_Undo_Store_UUID_Message", _storeUUID);
 
-   _defs.create_message_type (
+   _defs.create_message (
       "Object_Plugin_Undo_Remove_Attribute_Message",
       _removeAttribute);
 
-   _defs.create_message_type (
+   _defs.create_message (
       "Object_Plugin_Undo_Store_Locality_Message",
       _storeLocality);
 
-   _defs.create_message_type ("Object_Plugin_Undo_Link_Objects_Message", _linkObjects);
+   _defs.create_message ("Object_Plugin_Undo_Link_Objects_Message", _linkObjects);
 
-   _defs.create_message_type (
+   _defs.create_message (
       "Object_Plugin_Undo_Unlink_Objects_Message",
       _unlinkObjects);
 
-   _defs.create_message_type (
+   _defs.create_message (
       "Object_Plugin_Undo_Store_Link_Attribute_Object_Message",
       _storeLinkAttributeObject);
 
-   _defs.create_message_type ("Object_Plugin_Undo_Store_Type_Message", _storeType);
-   _defs.create_message_type ("Object_Plugin_Undo_Store_State_Message", _storeState);
-   _defs.create_message_type ("Object_Plugin_Undo_Store_Flag_Message", _storeFlag);
+   _defs.create_message ("Object_Plugin_Undo_Store_Type_Message", _storeType);
+   _defs.create_message ("Object_Plugin_Undo_Store_State_Message", _storeState);
+   _defs.create_message ("Object_Plugin_Undo_Store_Flag_Message", _storeFlag);
 
-   _defs.create_message_type (
+   _defs.create_message (
       "Object_Plugin_Undo_Store_Time_Stamp_Message",
       _storeTimeStamp);
 
-   _defs.create_message_type (
+   _defs.create_message (
       "Object_Plugin_Undo_Store_Position_Message",
       _storePosition);
 
-   _defs.create_message_type (
+   _defs.create_message (
       "Object_Plugin_Undo_Store_Orientation_Message",
       _storeOrientation);
 
-   _defs.create_message_type (
+   _defs.create_message (
       "Object_Plugin_Undo_Store_Velocity_Message",
       _storeVelocity);
 
-   _defs.create_message_type (
+   _defs.create_message (
       "Object_Plugin_Undo_Store_Acceleration_Message",
       _storeAcceleration);
 
-   _defs.create_message_type ("Object_Plugin_Undo_Store_Scale_Message", _storeScale);
-   _defs.create_message_type ("Object_Plugin_Undo_Store_Vector_Message", _storeVector);
-   _defs.create_message_type ("Object_Plugin_Undo_Store_Scalar_Message", _storeScalar);
-   _defs.create_message_type ("Object_Plugin_Undo_Store_Text_Message", _storeText);
-   _defs.create_message_type ("Object_Plugin_Undo_Store_Data_Message", _storeData);
+   _defs.create_message ("Object_Plugin_Undo_Store_Scale_Message", _storeScale);
+   _defs.create_message ("Object_Plugin_Undo_Store_Vector_Message", _storeVector);
+   _defs.create_message ("Object_Plugin_Undo_Store_Scalar_Message", _storeScalar);
+   _defs.create_message ("Object_Plugin_Undo_Store_Text_Message", _storeText);
+   _defs.create_message ("Object_Plugin_Undo_Store_Data_Message", _storeData);
 
    subscribe_to_message (_createObject);
    subscribe_to_message (_activateObject);

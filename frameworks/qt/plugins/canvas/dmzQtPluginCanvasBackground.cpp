@@ -397,21 +397,21 @@ dmz::QtPluginCanvasBackground::_init (Config &local) {
    
    init_archive (local);
    
-   _cleanupMessage = config_create_message_type (
+   _cleanupMessage = config_create_message (
       "message.name",
       local,
       "CleanupObjectsMessage",
       context,
       &_log);
    
-   _backgroundEditMessage = config_create_message_type (
+   _backgroundEditMessage = config_create_message (
       "message.background.edit",
       local,
       "CanvasBackgroundEditMessage",
       context,
       &_log);
 
-   _undoMessage = config_create_message_type (
+   _undoMessage = config_create_message (
       "message.background.undo",
       local,
       "CanvasBackgroundUndoMessage",

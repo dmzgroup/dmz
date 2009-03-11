@@ -21,7 +21,7 @@ local_configure (
 
    const String Prefix ("portal-size.");
 
-   Message result = config_create_message_type (
+   Message result = config_create_message (
       Prefix + "message.resize.name",
       init,
       "DMZ_Render_Portal_Resize_Message",

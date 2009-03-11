@@ -39,7 +39,7 @@ namespace {
 
          if (container) {
 
-            result = container->create_message_type (
+            result = container->create_message (
                Name,
                "",
                context,

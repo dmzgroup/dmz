@@ -977,7 +977,7 @@ last part of the \a Name variable specifies the attribute name. If the String
 "type.name" is passed in as \a Name, it will try to find a  config context called
 "type" and the attribute "name" stored in the "type" config context.
 \code
-dmz::Message type = dmz::config_to_message_type ("dmz.type.name", global, get_plugin_runtime_context (), &_log);
+dmz::Message type = dmz::config_to_message ("dmz.type.name", global, get_plugin_runtime_context (), &_log);
 \endcode
 \param[in] Name String containing name of the attribute in the config context to convert.
 \param[in] Source Config containing config context to convert.
@@ -988,7 +988,7 @@ dmz::Message if the message type is not found.
 
 */
 dmz::Message
-dmz::config_to_message_type (
+dmz::config_to_message (
       const String &Name,
       const Config &Source,
       RuntimeContext *context,
@@ -1002,7 +1002,7 @@ dmz::config_to_message_type (
 
       Definitions defs (context);
 
-      if (!defs.lookup_message_type (messageTypeName, result)) {
+      if (!defs.lookup_message (messageTypeName, result)) {
 
          if (log) {
 
@@ -1035,7 +1035,7 @@ last part of the \a Name variable specifies the attribute name. If the String
 "type" and the attribute "name" stored in the "type" config context. If the named
 Message does not exist, it is created.
 \code
-dmz::Message type = dmz::config_create_message_type ("dmz.type.name", global, "DefaultMessage", get_plugin_runtime_context (), &_log);
+dmz::Message type = dmz::config_create_message ("dmz.type.name", global, "DefaultMessage", get_plugin_runtime_context (), &_log);
 \endcode
 \param[in] Name String containing name of the attribute in the config context to convert.
 \param[in] Source Config containing config context to convert.
@@ -1049,7 +1049,7 @@ dmz::Message if no message name is specified in either the Config or the
 
 */
 dmz::Message
-dmz::config_create_message_type (
+dmz::config_create_message (
       const String &Name,
       const Config &Source,
       const String &DefaultValue,
@@ -1065,7 +1065,7 @@ dmz::config_create_message_type (
    if (messageName) {
 
       Definitions defs (context);
-      defs.create_message_type (messageName, result);
+      defs.create_message (messageName, result);
    }
 
    return result;

@@ -34,7 +34,7 @@ main (int argc, char *argv[]) {
 
    test.validate (
       "Looking up Message: testType",
-      defs.lookup_message_type (TestTypeName, type));
+      defs.lookup_message (TestTypeName, type));
 
    test.validate (
       "Message name is set to: testType",

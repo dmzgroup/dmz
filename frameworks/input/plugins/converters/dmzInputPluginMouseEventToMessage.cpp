@@ -581,7 +581,7 @@ dmz::InputPluginMouseEventToMessage::_create_converter_basic (
          const ResultConditionEnum ResultCondition (
             local_config_to_result_condition ("result", condition, _log));
 
-         Message message (config_create_message_type (
+         Message message (config_create_message (
             "message",
             condition,
             "",
@@ -740,7 +740,7 @@ dmz::InputPluginMouseEventToMessage::_init (Config &local) {
       _log.error << "No input source defined." << endl;
    }
 
-   _activateMessage = config_create_message_type (
+   _activateMessage = config_create_message (
       "activate.message",
       local,
       "",
@@ -751,7 +751,7 @@ dmz::InputPluginMouseEventToMessage::_init (Config &local) {
       _get_targets ("activate.target", local, _activateTargetTable);
    }
 
-   _deactivateMessage = config_create_message_type (
+   _deactivateMessage = config_create_message (
       "deactivate.message",
       local,
       "",

@@ -119,13 +119,13 @@ namespace dmz {
          MessageObserver &operator= (const MessageObserver &);
    };
 
-   DMZ_KERNEL_LINK_SYMBOL Message config_to_message_type (
+   DMZ_KERNEL_LINK_SYMBOL Message config_to_message (
       const String &Name,
       const Config &Source,
       RuntimeContext *context,
       Log *log = 0);
 
-   DMZ_KERNEL_LINK_SYMBOL Message config_create_message_type (
+   DMZ_KERNEL_LINK_SYMBOL Message config_create_message (
       const String &Name,
       const Config &Source,
       const String &DefaultValue,

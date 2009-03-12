@@ -73,7 +73,7 @@ dmz::RenderModuleOverlayOSG::RenderModuleOverlayOSG (
       RenderModuleOverlay (Info),
       PortalSizeObserver (Info, local),
       _log (Info),
-      _rc (Info),
+      _rc (Info, &_log),
       _core (0),
       _cloneStack (0) {
 

@@ -15,7 +15,7 @@ dmz::RenderPluginObjectOSG::RenderPluginObjectOSG (
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
-      _rc (Info),
+      _rc (Info, &_log),
       _core (0) {
 
    _noModel.model = new osg::Group;
@@ -284,7 +284,6 @@ dmz::RenderPluginObjectOSG::_load_model (const String &ResourceName) {
          }
       }
    }
-   else { _log.error << "Failed finding resource: " << ResourceName << endl; }
 
    return result;
 }

@@ -25,8 +25,8 @@ dmz::RenderPluginLogoOSG::RenderPluginLogoOSG (const PluginInfo &Info, Config &l
       Plugin (Info),
       TimeSlice (Info),
       _log (Info),
-      _core (0),
-      _rc (Info) {
+      _rc (Info, &_log),
+      _core (0) {
 
    _init (local);
 }

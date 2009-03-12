@@ -119,6 +119,8 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         Definitions _defs;
+         Resources _rc;
 
          HashTableStringTemplate<ModelStruct> _modelTable;
          HashTableHandleTemplate<DefStruct> _defTable;
@@ -126,8 +128,6 @@ namespace dmz {
          HashTableHandleTemplate<ObjectStruct> _objectTable;
          ObjectTypeSet _ignoreType;
 
-         Definitions _defs;
-         Resources _rc;
          ModelStruct _noModel;
          RenderModuleCoreOSG *_core;
 

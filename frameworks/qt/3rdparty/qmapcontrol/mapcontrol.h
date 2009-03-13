@@ -74,7 +74,7 @@ namespace qmapcontrol
 				 * @param size the size which the widget should fill with map data
 				 * @param mousemode the way mouseevents are handled
 			 */
-			MapControl ( QSize size, MouseMode mousemode = Panning );
+			MapControl (QSize size, MouseMode mousemode = None, QWidget *parent = 0);
 
 			~MapControl();
 
@@ -213,6 +213,9 @@ namespace qmapcontrol
 			*/
 			void showScale ( bool show );
 
+         QPointF screenToWorldCoordinate (const QPoint &Screen);
+	      QPoint worldCoordinateToScreen (const QPointF &Coordinate);
+
 		private:
 			LayerManager*	layermanager;
 			QPoint screen_middle;	// middle of the widget (half size)
@@ -232,7 +235,7 @@ namespace qmapcontrol
 			QPointF target;	// used for method moveTo()
 			int steps;			// used for method moveTo()
 
-			QPointF clickToWorldCoordinate ( QPoint click );
+	      QPointF clickToWorldCoordinate ( QPoint click );
 			MapControl& operator= ( const MapControl& rhs );
 			MapControl ( const MapControl& old );
 

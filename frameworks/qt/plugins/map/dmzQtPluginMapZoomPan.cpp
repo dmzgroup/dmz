@@ -149,8 +149,6 @@ dmz::QtPluginMapZoomPan::receive_mouse_event (
       const UInt32 Channel,
       const InputEventMouse &Value) {
 
-_log.out << "receive_mouse_event" << endl;
-
    if (_active && _mapModule && (Value.get_source_handle () == _source)) {
 
       qmapcontrol::MapControl *map (_mapModule->get_map_control ());
@@ -173,8 +171,8 @@ _log.out << "receive_mouse_event" << endl;
       else if (_handScrolling) {
 
          _mapModule->pan_direction (
-            Value.get_mouse_delta_x (),
-            Value.get_mouse_delta_y ());
+            -Value.get_mouse_delta_x (),
+            -Value.get_mouse_delta_y ());
       }
       else if (Value.get_scroll_delta_y ()) {
          

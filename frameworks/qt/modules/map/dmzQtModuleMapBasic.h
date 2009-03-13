@@ -15,7 +15,9 @@ namespace qmapcontrol {
    
    class MapControl;
    class MapAdapter;
-   class Layer;
+   class MapLayer;
+   class GeometryLayer;
+   class Geometry;
 };
 
 
@@ -64,10 +66,15 @@ namespace dmz {
          
          virtual void pan_direction (const Int32 Dx, const Int32 Dy);
          
+         virtual QPoint world_to_screen (const QPointF &World) const;
+         virtual QPointF screen_to_world (const QPoint &Screen) const;
+         
       protected slots:
          void _map_view_changed (const QPointF &coordinate, int zoom);
+         void _mouse_event_coordinate (const QMouseEvent *Event, const QPointF Coordinate);
          
       protected:
+         //virtual bool eventFilter (QObject *obj, QEvent *event);
          virtual void resizeEvent (QResizeEvent* event);
          virtual void keyPressEvent (QKeyEvent *event);
          virtual void keyReleaseEvent (QKeyEvent* event);
@@ -92,10 +99,11 @@ namespace dmz {
          String _inputModuleName;
          InputEventKey _keyEvent;
          InputEventMouse _mouseEvent;
-//         HashTableHandleTemplate<QGraphicsItem> _itemTable;
+         HashTableHandleTemplate<qmapcontrol::Geometry> _itemTable;
          qmapcontrol::MapControl *_map;
          qmapcontrol::MapAdapter *_mapAdapter;
-         qmapcontrol::Layer *_baseLayer;
+         qmapcontrol::MapLayer *_baseLayer;
+         qmapcontrol::GeometryLayer *_geomLayer;
          Int32 _zoomMin;
          Int32 _zoomMax;
          Int32 _zoomDefault;

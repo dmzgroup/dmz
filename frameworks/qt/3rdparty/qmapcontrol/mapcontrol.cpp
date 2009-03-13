@@ -26,8 +26,8 @@
 #include "mapcontrol.h"
 namespace qmapcontrol
 {
-	MapControl::MapControl(QSize size, MouseMode mousemode)
-	: size(size), mymousemode(mousemode), scaleVisible(false)
+	MapControl::MapControl(QSize size, MouseMode mousemode, QWidget *parent)
+	: QWidget (parent), size(size), mymousemode(mousemode), scaleVisible(false)
 	{
 		layermanager = new LayerManager(this, size);
 		screen_middle = QPoint(size.width()/2, size.height()/2);
@@ -219,7 +219,6 @@ namespace qmapcontrol
 // 	evnt = me;
 // 	qDebug() << "evnt: " << evnt->x() << ", " << evnt->y() << ", " << evnt->pos();
 
-	
 		layermanager->mouseEvent(evnt);
 	
 		if (layermanager->layers().size()>0)
@@ -277,7 +276,8 @@ namespace qmapcontrol
 		{
 			current_mouse_pos = QPoint(evnt->x(), evnt->y());
 		}
-// 	emit(mouseEventCoordinate(evnt, clickToWorldCoordinate(evnt->pos())));
+		
+      emit(mouseEventCoordinate(evnt, clickToWorldCoordinate(evnt->pos())));
 
 		update();
 // 	emit(mouseEventCoordinate(evnt, clickToWorldCoordinate(evnt->pos())));
@@ -406,6 +406,19 @@ namespace qmapcontrol
 	{
 		scaleVisible = show;
 	}
+	
+	QPointF MapControl::screenToWorldCoordinate (const QPoint &Screen)
+	{
+      return clickToWorldCoordinate (Screen);
+	}
+   
+   QPoint MapControl::worldCoordinateToScreen (const QPointF &Coordinate)
+   {
+
+      QPoint displayToImage = layermanager->layer ()->mapadapter ()->coordinateToDisplay (Coordinate);
+   
+      return (displayToImage + screen_middle - layermanager->getMapmiddle_px ());
+   }
 	
 	void MapControl::resize(const QSize newSize)
 	{

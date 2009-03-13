@@ -24,9 +24,11 @@ dmz::QtModuleMapBasic::QtModuleMapBasic (const PluginInfo &Info, Config &local) 
       _inputModuleName (),
       _keyEvent (),
       _mouseEvent (),
+      _itemTable (),
       _map (0),
       _mapAdapter (0),
       _baseLayer (0),
+      _geomLayer (0),
       _zoomMin (0),
       _zoomMax (17),
       _zoomDefault (_zoomMin) {
@@ -37,6 +39,7 @@ dmz::QtModuleMapBasic::QtModuleMapBasic (const PluginInfo &Info, Config &local) 
 
 dmz::QtModuleMapBasic::~QtModuleMapBasic () {
 
+   _itemTable.empty ();
 }
 
 
@@ -173,16 +176,44 @@ dmz::QtModuleMapBasic::pan_direction (const Int32 Dx, const Int32 Dy) {
 }
 
 
+QPoint
+dmz::QtModuleMapBasic::world_to_screen (const QPointF &Coordinate) const {
+
+   QPoint result;
+   
+   if (_map) {
+      
+      result = _map->worldCoordinateToScreen (Coordinate);
+   }
+   
+   return result;
+}
+
+
+QPointF
+dmz::QtModuleMapBasic::screen_to_world (const QPoint &Point) const {
+
+   QPointF result;
+   
+   if (_map) {
+      
+      result = _map->screenToWorldCoordinate (Point);
+   }
+   
+   return result;
+}
+
+
 // Class Methods
 void
 dmz::QtModuleMapBasic::_map_view_changed (const QPointF &coordinate, int zoom) {
 
-_log.warn << "zoom: " << (Int32)zoom << endl;
-
-_log.warn << "coordinate: " << coordinate.x () << " - " << coordinate.y () << endl;
-   
-QPoint display (_mapAdapter->coordinateToDisplay (coordinate));
-_log.warn << "display: " << (Int32)display.x () << " - " << (Int32)display.y () << endl;
+// _log.warn << "zoom: " << (Int32)zoom << endl;
+// 
+// _log.warn << "coordinate: " << coordinate.x () << " - " << coordinate.y () << endl;
+//    
+// QPoint display (_mapAdapter->coordinateToDisplay (coordinate));
+// _log.warn << "display: " << (Int32)display.x () << " - " << (Int32)display.y () << endl;
 }
 
 
@@ -310,8 +341,6 @@ dmz::QtModuleMapBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we) {
       QPoint pointOnCanvas (event.get_mouse_x (), event.get_mouse_y ());
       QPoint pointOnScreen (event.get_mouse_screen_x (), event.get_mouse_screen_y ());
 
-_log.warn << "pointOnCanvas: " << (Int32)pointOnCanvas.x () << " - " << (Int32)pointOnCanvas.y () << endl;
-
       Qt::MouseButtons buttons;
 
       if (me) {
@@ -360,6 +389,16 @@ _log.warn << "pointOnCanvas: " << (Int32)pointOnCanvas.x () << " - " << (Int32)p
 
 
 void
+dmz::QtModuleMapBasic::_mouse_event_coordinate (
+      const QMouseEvent *Event,
+      const QPointF Coordinate) {
+
+   QMouseEvent *event ((QMouseEvent *)Event);
+   _handle_mouse_event (event, 0);
+}
+
+
+void
 dmz::QtModuleMapBasic::_save_session () {
 
 }
@@ -378,21 +417,25 @@ dmz::QtModuleMapBasic::_init (Config &local) {
 
    qwidget_config_read ("widget", local, this);
 
-   _map = new qmapcontrol::MapControl (frameSize ());
+   _map = new qmapcontrol::MapControl (frameSize (), qmapcontrol::MapControl::None, this);
    
-   connect(
-       _map, SIGNAL (viewChanged (const QPointF &, int)),
-       this, SLOT (_map_view_changed (const QPointF &, int)));
+   connect (
+      _map, SIGNAL (viewChanged (const QPointF &, int)),
+      this, SLOT (_map_view_changed (const QPointF &, int)));
+       
+   connect (
+      _map, SIGNAL (mouseEventCoordinate (const QMouseEvent *, const QPointF)),
+      this, SLOT (_mouse_event_coordinate (const QMouseEvent *, const QPointF)));
    
    _map->setMouseTracking (true);
    
    // if (config_to_boolean ("map.cache", local, False)) {
    //    
    //    _map->enablePersistentCache (const QDir& path = QDir::homePath () + "/QMapControl.cache");
-   // _map->enablePersistentCache ();
+   _map->enablePersistentCache ();
    // }
    
-   _map->setMouseMode (qmapcontrol::MapControl::None);
+   // _map->setMouseMode (qmapcontrol::MapControl::None);
    
    _map->showScale (config_to_boolean ("map.scale", local, True));
 
@@ -412,9 +455,11 @@ dmz::QtModuleMapBasic::_init (Config &local) {
       _zoomMax);
 
    _baseLayer = new qmapcontrol::MapLayer ("base", _mapAdapter);
+   _map->addLayer (_baseLayer);
 
-  _map->addLayer (_baseLayer);
-
+   _geomLayer = new qmapcontrol::GeometryLayer ("geom", _mapAdapter);
+   _map->addLayer (_geomLayer);
+   
    QVBoxLayout *layout (new QVBoxLayout ());
    layout->addWidget (_map);
    layout->setMargin (0);
@@ -435,6 +480,9 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    Float64 longitude (config_to_float64 ("startCoordinate.longitude", local, 0.0));
    
    _map->setView (QPointF (longitude, latitude));
+   
+   qmapcontrol::Point *item = new qmapcontrol::ImagePoint ((qreal)longitude, (qreal)latitude, "images:NA_Node.svg");
+   _geomLayer->addGeometry (item);
 }
 
 

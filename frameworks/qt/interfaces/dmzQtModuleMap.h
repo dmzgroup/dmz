@@ -6,6 +6,8 @@
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
 
+class QPoint;
+class QPointF;
 
 namespace qmapcontrol {
    
@@ -43,6 +45,9 @@ namespace dmz {
          virtual void pan_direction (const Int32 Dx, const Int32 Dy) = 0;
 
          //virtual void center_on (const Handle ObjectHandle) = 0;
+
+         virtual QPoint world_to_screen (const QPointF &World) const = 0;
+         virtual QPointF screen_to_world (const QPoint &Screen) const = 0;
 
       protected:
          QtModuleMap (const PluginInfo &Info);

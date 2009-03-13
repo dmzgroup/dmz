@@ -1,7 +1,7 @@
 #include "dmziPhoneCanvasView.h"
 #include "dmziPhoneModuleCanvasBasic.h"
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigRead.h>
+//#include <dmzRuntimeConfigRead.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
@@ -72,7 +72,6 @@ dmz::iPhoneModuleCanvasBasic::discover_plugin (
 }
 
 
-// iPhoneModuleCanvas Interface
 dmz::Boolean
 dmz::iPhoneModuleCanvasBasic::add_item (const Handle ObjectHandle, UIView *item) {
 

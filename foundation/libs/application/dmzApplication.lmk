@@ -6,6 +6,7 @@ lmk.add_preqs {"dmzFoundation",}
 lmk.add_files {
    "dmzApplication.h",
    "dmzApplicationExport.h",
+   "dmzAppShellExt.h",
    "dmzCommandLine.h",
    "dmzCommandLineConfig.h",
 }

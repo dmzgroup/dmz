@@ -103,7 +103,9 @@ dmz::EntityPluginDeadTimer::_init (Config &local) {
 
    Definitions defs (get_plugin_runtime_context (), &_log);
 
-   defs.lookup_state (DefaultStateNameDead, _deadState);
+   const String StateNames = config_to_string ("state.name", local, DefaultStateNameDead);
+
+   defs.lookup_state (StateNames, _deadState);
 
    _defaultHandle =
       activate_default_object_attribute (ObjectDestroyMask | ObjectStateMask);

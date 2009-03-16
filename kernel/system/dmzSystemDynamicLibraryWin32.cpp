@@ -1,4 +1,5 @@
 #include <dmzSystemDynamicLibrary.h>
+#include "dmzSystemDynamicLibraryTracker.h"
 #include "dmzSystemLocalWin32.h"
 #include <windows.h>
 
@@ -10,6 +11,10 @@ struct dmz::DynamicLibrary::State {
    String error;
    State (const DynamicLibraryModeEnum Mode) : LibMode (Mode), handle (0) {;}
 };
+
+
+void
+dmz::DynamicLibrary::dump_loaded (Stream &out) { dump_dyld (out); }
 
 
 dmz::DynamicLibrary::DynamicLibrary (
@@ -33,7 +38,7 @@ dmz::DynamicLibrary::DynamicLibrary (
       _state.error << get_last_win32_error ();
       _state.name.empty ();
    }
-   else { _state.error.empty (); }
+   else { _state.error.empty (); add_dyld (LibName); }
 }
 
 

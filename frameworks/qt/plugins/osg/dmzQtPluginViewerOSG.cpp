@@ -2,8 +2,8 @@
 #include <dmzRenderEventHandlerOSG.h>
 #include "dmzQtPluginViewerOSG.h"
 #include <dmzInputModule.h>
+#include <dmzRenderConsts.h>
 #include <dmzRenderModuleCoreOSG.h>
-#include <dmzRenderCameraManipulatorOSG.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
@@ -21,28 +21,22 @@ dmz::QtPluginViewerOSG::QtPluginViewerOSG (
       _log (Info),
       _core (0),
       _channels (0),
-      _portalName (DefaultPortalNameOSG),
-      _camera (0),
-      _cameraManipulator (0),
+      _viewerName (RenderMainPortalName),
       _eventHandler (0),
       _viewer (0) {
 
    _viewer = new ViewerQOSG;
    _viewer->setThreadingModel (osgViewer::Viewer::SingleThreaded);
-   _cameraManipulator = new RenderCameraManipulatorOSG;
-   _eventHandler = new RenderEventHandlerOSG (get_plugin_runtime_context ());
+   _eventHandler = new RenderEventHandlerOSG (get_plugin_runtime_context (), local);
 
    osgViewer::StatsHandler *stats = new osgViewer::StatsHandler;
    stats->setKeyEventTogglesOnScreenStats (osgGA::GUIEventAdapter::KEY_F1);
    stats->setKeyEventPrintsOutStats (osgGA::GUIEventAdapter::KEY_F2);
    _viewer->addEventHandler (stats);
-   _viewer->setCameraManipulator (_cameraManipulator.get ());
    _viewer->addEventHandler (_eventHandler.get ());
    _viewer->setKeyEventSetsDone (0);
 
    _init (local);
-
-   _camera = _viewer->getCamera ();
 }
 
 
@@ -78,16 +72,7 @@ dmz::QtPluginViewerOSG::discover_plugin (
 
             osg::ref_ptr<osg::Group> scene = _core->get_scene ();
             if (scene.valid ()) { _viewer->setSceneData (scene.get ()); }
-
-            if (_cameraManipulator.valid ()) {
-
-               _core->add_camera_manipulator (_portalName, _cameraManipulator.get ());
-            }
-
-            if (_camera.valid ()) {
-
-               _core->add_camera (_portalName, _camera.get ());
-            }
+            _core->add_viewer (_viewerName, _viewer.get ());
          }
       }
 
@@ -98,7 +83,7 @@ dmz::QtPluginViewerOSG::discover_plugin (
          if (_channels) {
 
             Definitions defs (get_plugin_runtime_context (), &_log);
-            const Handle SourceHandle = defs.create_named_handle (_portalName);
+            const Handle SourceHandle = defs.create_named_handle (_viewerName);
             _eventHandler->set_input_module_channels (_channels, SourceHandle);
          }
       }
@@ -108,8 +93,7 @@ dmz::QtPluginViewerOSG::discover_plugin (
       if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
 
          _viewer->setCameraManipulator (0);
-         _core->remove_camera (_portalName);
-         _core->remove_camera_manipulator (_portalName);
+         _core->remove_viewer (_viewerName);
          osg::ref_ptr<osg::Group> scene = new osg::Group;
          if (scene.valid ()) { _viewer->setSceneData (scene.get ()); }
          _viewer.release ();
@@ -143,7 +127,7 @@ dmz::QtPluginViewerOSG::get_qt_widget () { return _viewer.get (); }
 void
 dmz::QtPluginViewerOSG::_init (const Config &Local) {
 
-   _portalName = config_to_string ("portal.name", Local, DefaultPortalNameOSG);
+   _viewerName = config_to_string ("portal.name", Local, _viewerName);
 
 #if 0
    Config windowData;

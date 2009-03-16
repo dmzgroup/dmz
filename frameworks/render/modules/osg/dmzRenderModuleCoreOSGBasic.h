@@ -3,7 +3,6 @@
 
 #include <dmzObjectObserverUtil.h>
 #include <dmzRenderModuleCoreOSG.h>
-#include <dmzRenderCameraManipulatorOSG.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimePluginContainer.h>
@@ -12,6 +11,8 @@
 #include <dmzTypesBase.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesMatrix.h>
+#include <dmzTypesVector.h>
 
 #include <osg/Camera>
 #include <osg/Drawable>
@@ -80,35 +81,21 @@ namespace dmz {
          virtual osg::Group *create_dynamic_object (const Handle ObjectHandle);
          virtual osg::Group *lookup_dynamic_object (const Handle ObjectHandle);
 
-         virtual Boolean add_camera (const String &PortalName, osg::Camera *camera);
-         virtual osg::Camera *lookup_camera (const String &PortalName);
-         virtual osg::Camera *remove_camera (const String &PortalName);
-
-         virtual Boolean add_camera_manipulator (
-            const String &PortalName,
-            RenderCameraManipulatorOSG *manipulator);
-
-         virtual RenderCameraManipulatorOSG *lookup_camera_manipulator (
-            const String &PortalName);
-
-         virtual RenderCameraManipulatorOSG *remove_camera_manipulator (
-            const String &PortalName);
+         virtual Boolean add_viewer (const String &ViewerName, osgViewer::Viewer *viewer);
+         virtual osgViewer::Viewer *lookup_viewer (const String &ViewerName);
+         virtual osgViewer::Viewer *remove_viewer (const String &ViewerName);
 
       protected:
-         struct PortalStruct {
+         struct ViewerStruct {
 
             const String Name;
-            osg::ref_ptr<osg::Camera> camera;
-            osg::ref_ptr<RenderCameraManipulatorOSG> cameraManipulator;
+            osg::ref_ptr<osgViewer::Viewer> viewer;
 
-            PortalStruct (const String &TheName) :
-               Name (TheName), camera (0), cameraManipulator (0) {;}
+            ViewerStruct (const String &TheName, osgViewer::Viewer *theViewer) :
+                  Name (TheName),
+                  viewer (theViewer) {;} 
 
-            ~PortalStruct () {
-
-               camera = 0;
-               cameraManipulator = 0;
-            }
+            ~ViewerStruct () { viewer = 0; }
          };
 
          struct ObjectStruct {
@@ -129,7 +116,6 @@ namespace dmz {
          };
 
          void _init (Config &local, Config &global);
-         PortalStruct *_get_portal_struct (const String &Name);
 
          Log _log;
          Handle _defaultHandle;
@@ -139,7 +125,7 @@ namespace dmz {
          osg::ref_ptr<osg::Group> _isect;
          osg::ref_ptr<osg::Group> _staticObjects;
          osg::ref_ptr<osg::Group> _dynamicObjects;
-         HashTableStringTemplate<PortalStruct> _portalTable;
+         HashTableStringTemplate<ViewerStruct> _viewerTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
          ObjectStruct *_dirtyObjects;
    };

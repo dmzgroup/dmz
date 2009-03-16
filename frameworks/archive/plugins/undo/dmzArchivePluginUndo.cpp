@@ -79,7 +79,7 @@ dmz::ArchivePluginUndo::process_archive (
             while (actionList.get_next_config (actionIt, action)) {
 
                const Message Type (
-                  config_create_message_type ("message", action, "", context, &_log));
+                  config_create_message ("message", action, "", context, &_log));
 
                const Handle Target (
                   config_to_named_handle ("target", action, "", context));

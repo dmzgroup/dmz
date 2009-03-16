@@ -336,7 +336,7 @@ dmz::RenderModuleCoreOgreBasic::_init (Config &local, Config &global) {
 
    Config pluginList;
 
-   if (local.lookup_all_config ("plugins.plugin", pluginList)) {
+   if (local.lookup_all_config ("plugin-list.plugin", pluginList)) {
 
       RuntimeContext *context (get_plugin_runtime_context ());
       dmz::load_plugins (context, pluginList, local, global, _extensions, &_log);
@@ -416,7 +416,7 @@ dmz::RenderModuleCoreOgreBasic::_init_root (Config &local) {
    Config cd;
 
    Config pluginList;
-   if (local.lookup_all_config ("plugins.plugin", pluginList)) {
+   if (local.lookup_all_config ("plugin-list.plugin", pluginList)) {
 
       Boolean done (!pluginList.get_first_config (it, cd));
       while (!done)  {

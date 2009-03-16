@@ -7,6 +7,8 @@
 
 namespace dmz {
 
+   class Application;
+
    class QtSplashScreen : public QSplashScreen, protected LogObserver {
 
       public:
@@ -25,7 +27,7 @@ namespace dmz {
          QtSplashScreen &operator= (const QtSplashScreen &);
    };
 
-   QtSplashScreen *create_splash_screen (const String &AppName, RuntimeContext *context);
+   QtSplashScreen *create_splash_screen (const Application &App);
 };
 
 #endif // DMZ_QT_SPLASH_SCREEN_DOT_H

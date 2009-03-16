@@ -1,0 +1,8 @@
+lmk.set_name "dmzEntityPluginDustTrail"
+lmk.set_type "plugin"
+lmk.add_files {"dmzEntityPluginDustTrail.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzObjectFramework",}

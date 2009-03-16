@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "DMZ API Reference"
-PROJECT_NUMBER         = "Year 2"
+PROJECT_NUMBER         = "Year 3"
 OUTPUT_DIRECTORY       = ../../../docs
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
@@ -87,7 +87,8 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ../kernel \
+INPUT                  = ./about \
+                         ../kernel \
                          ../foundation \
                          ../frameworks/archive \
                          ../frameworks/audio \
@@ -236,8 +237,10 @@ PREDEFINED             = DMZ_ARCHIVE_UTIL_LINK_SYMBOL= \
                          DMZ_INPUT_UTIL_LINK_SYMBOL= \
                          DMZ_INPUT_EVENTS_LINK_SYMBOL= \
                          DMZ_KERNEL_LINK_SYMBOL= \
+                         DMZ_LUA_KERNEL_LINK_SYMBOL= \
                          DMZ_OBJECT_UTIL_LINK_SYMBOL= \
                          DMZ_RENDER_ISECT_LINK_SYMBOL= \
+                         DMZ_RENDER_PORTAL_LINK_SYMBOL= \
                          DMZ_RENDER_UTIL_LINK_SYMBOL= \
                          DMZ_XML_LINK_SYMBOL=
 EXPAND_AS_DEFINED      = 
@@ -253,7 +256,7 @@ PERL_PATH              = /usr/bin/perl
 #---------------------------------------------------------------------------
 # Configuration options related to the dot tool   
 #---------------------------------------------------------------------------
-CLASS_DIAGRAMS         = NO
+CLASS_DIAGRAMS         = YES
 MSCGEN_PATH            = /Applications/Doxygen.app/Contents/Resources/
 HIDE_UNDOC_RELATIONS   = YES
 HAVE_DOT               = YES

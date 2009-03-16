@@ -1,3 +1,4 @@
+#include <dmzApplication.h>
 #include "dmzQtSplashScreen.h"
 #include <QtGui/QtGui>
 #include <dmzSystemFile.h>
@@ -5,12 +6,13 @@
 const char LocalSplashPath[] = "./assets/DMZ-Splash.png";
 
 dmz::QtSplashScreen *
-dmz::create_splash_screen (const String &AppName, RuntimeContext *context) {
+dmz::create_splash_screen (const Application &App) {
 
    QtSplashScreen *result (0);
 
    String fileName ("./assets/");
-   fileName << AppName << "-splash.png";
+   fileName << App.get_name () << "-splash.png";
+
    if (!is_valid_path (fileName)) {
 
       if (is_valid_path (LocalSplashPath)) { fileName = LocalSplashPath; }
@@ -20,8 +22,10 @@ dmz::create_splash_screen (const String &AppName, RuntimeContext *context) {
    if (fileName) {
 
       QString file (fileName.get_buffer ());
-      result = new QtSplashScreen (file, context);
+      result = new QtSplashScreen (file, App.get_context ());
    }
+
+   if (result) { result->show (); result->raise (); }
 
    return result;
 }

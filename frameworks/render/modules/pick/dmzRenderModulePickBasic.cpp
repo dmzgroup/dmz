@@ -109,6 +109,7 @@ dmz::RenderModulePickBasic::screen_to_world (
       const Int32 ScreenPosX,
       const Int32 ScreenPosY,
       Vector &worldPosition,
+      Vector &normal,
       Handle &objectHandle) {
 
    Boolean retVal (False);
@@ -122,6 +123,7 @@ dmz::RenderModulePickBasic::screen_to_world (
             ScreenPosX,
             ScreenPosY,
             worldPosition,
+            normal,
             objectHandle);
    }
 
@@ -155,6 +157,7 @@ dmz::RenderModulePickBasic::source_to_world (
       const Int32 SourcePosX,
       const Int32 SourcePosY,
       Vector &worldPosition,
+      Vector &normal,
       Handle &objectHandle) {
 
    Boolean retVal (False);
@@ -168,6 +171,7 @@ dmz::RenderModulePickBasic::source_to_world (
             SourcePosX,
             SourcePosY,
             worldPosition,
+            normal,
             objectHandle);
    }
 

@@ -57,8 +57,8 @@ UndoTest::UndoTest (
       dcs (context),
       undo (context) {
 
-   undoType = config_to_message_type (Name + ".undo", Data, context);
-   redoType = config_to_message_type (Name + ".redo", Data, context);
+   undoType = config_to_message (Name + ".undo", Data, context);
+   redoType = config_to_message (Name + ".redo", Data, context);
 
    subscribe_to_message (undoType);
    subscribe_to_message (redoType);

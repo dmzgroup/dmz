@@ -46,6 +46,7 @@ const Handle Source,
 const Int32 ScreenPosX,
 const Int32 ScreenPosY,
 Vector &worldPosition,
+Vector &normal,
 Handle &objectHandle)
 \brief Converts screen coordinates to world coordinates.
 \note The screen coordinates cover the entire display device and not just the window.
@@ -53,6 +54,7 @@ Handle &objectHandle)
 \param[in] ScreenPosX The X position of the screen coordinate.
 \param[in] ScreenPosY The Y position of the screen coordinate.
 \param[out] worldPosition Vector in which the calculated world coordinates will be stored.
+\param[out] normal Vector in which the calculated world normal will be stored.
 \param[out] objectHandle Handle in which the object handle of any object that may have
 been clicked on in the scene. It will be zero if an object was not clicked on.
 \return Returns dmz::True if the source is known and screen coordinates can be converted
@@ -77,6 +79,7 @@ const Handle Source,
 const Int32 ScreenPosX,
 const Int32 ScreenPosY,
 Vector &worldPosition,
+Vector &normal,
 Handle &objectHandle)
 \brief Converts source coordinates to world coordinates.
 \note The source coordinates cover the display window and not the entire display device.
@@ -84,6 +87,7 @@ Handle &objectHandle)
 \param[in] ScreenPosX The X position of the source coordinate.
 \param[in] ScreenPosY The Y position of the source coordinate.
 \param[out] worldPosition Vector in which the calculated world coordinates will be stored.
+\param[out] normal Vector in which the calculated world normal will be stored.
 \param[out] objectHandle Handle in which the object handle of any object that may have
 been clicked on in the scene. It will be zero if an object was not clicked on.
 \return Returns dmz::True if the source is known and the source coordinates can be

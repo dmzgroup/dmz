@@ -24,6 +24,8 @@ namespace dmz {
    const char DefaultStateNameDeactivate[] = "Deactivate";
    //! Default name of smoking state.
    const char DefaultStateNameSmoking[] = "Smoking";
+   //! Default name of smoking state.
+   const char DefaultStateNameFire[] = "Fire";
    //! Default name of dust trail state.
    const char DefaultStateNameDustTrail[] = "Dust_Trail";
 
@@ -38,10 +40,10 @@ namespace dmz {
          Handle lookup_named_handle (const String &Name) const;
          String lookup_named_handle_name (const Handle NamedHandle) const;
 
-         Message get_global_message_type () const;
-         Boolean create_message_type (const String &Name, Message &type);
-         Boolean lookup_message_type (const String &Name, Message &type) const;
-         Boolean lookup_message_type (const Handle TypeHandle, Message &type) const;
+         Message get_global_message () const;
+         Boolean create_message (const String &Name, Message &type);
+         Boolean lookup_message (const String &Name, Message &type) const;
+         Boolean lookup_message (const Handle TypeHandle, Message &type) const;
 
          EventType get_root_event_type () const;
          Boolean lookup_event_type (const String &Name, EventType &type) const;

@@ -9,6 +9,17 @@
 
 #include <luacpp.h>
 
+/*!
+
+\class dmz::LuaExtAudio
+\ingroup Lua
+\brief Provides a Lua API for the Audio Framework.
+\details
+\htmlonly See the <a href="dmzlua.html#dmz.audio">Lua Audio API</a>.
+\endhtmlonly
+
+*/
+
 using namespace dmz;
 
 namespace {
@@ -241,6 +252,8 @@ static const luaL_Reg arrayFunc[] = {
 
 }
 
+
+//! \cond
 dmz::LuaExtAudio::LuaExtAudio (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       LuaExt (Info),
@@ -356,6 +369,7 @@ void
 dmz::LuaExtAudio::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

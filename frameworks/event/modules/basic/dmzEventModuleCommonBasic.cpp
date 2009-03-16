@@ -4,6 +4,7 @@
 #include <dmzObjectModule.h>
 #include <dmzObjectConsts.h>
 #include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesVector.h>
@@ -117,6 +118,16 @@ dmz::EventModuleCommonBasic::create_open_launch_event (
          _eventMod->store_object_handle (result, _munitionsHandle, MunitionsHandle);
          _eventMod->store_object_handle (result, _targetHandle, TargetHandle);
 
+         _eventMod->store_object_type (
+            result,
+            _munitionsHandle,
+            _objMod->lookup_object_type (MunitionsHandle));
+
+         _eventMod->store_object_type (
+            result,
+            _targetHandle,
+            _objMod->lookup_object_type (TargetHandle));
+
          Vector pos;
          if (_objMod->lookup_position (MunitionsHandle, _defaultObjectHandle, pos)) {
 
@@ -169,6 +180,16 @@ dmz::EventModuleCommonBasic::create_open_detonation_event (
          _eventMod->store_object_handle (result, _munitionsHandle, MunitionsHandle);
          _eventMod->store_object_handle (result, _targetHandle, TargetHandle);
 
+         _eventMod->store_object_type (
+            result,
+            _munitionsHandle,
+            _objMod->lookup_object_type (MunitionsHandle));
+
+         _eventMod->store_object_type (
+            result,
+            _targetHandle,
+            _objMod->lookup_object_type (TargetHandle));
+
          Vector pos;
          if (_objMod->lookup_position (MunitionsHandle, _defaultObjectHandle, pos)) {
 
@@ -215,6 +236,16 @@ dmz::EventModuleCommonBasic::create_open_collision_event (
 
          _eventMod->store_object_handle (result, _sourceHandle, SourceHandle);
          _eventMod->store_object_handle (result, _targetHandle, TargetHandle);
+
+         _eventMod->store_object_type (
+            result,
+            _sourceHandle,
+            _objMod->lookup_object_type (SourceHandle));
+
+         _eventMod->store_object_type (
+            result,
+            _targetHandle,
+            _objMod->lookup_object_type (TargetHandle));
 
          Vector pos;
          if (_objMod->lookup_position (SourceHandle, _defaultObjectHandle, pos)) {

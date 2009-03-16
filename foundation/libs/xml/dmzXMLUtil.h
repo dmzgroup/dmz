@@ -9,10 +9,16 @@ namespace dmz {
    class Config;
    class Log;
    class Stream;
+   class Version;
 
    DMZ_XML_LINK_SYMBOL Boolean xml_to_config (
       const String &File,
       Config &data,
+      Log *log = 0);
+
+   DMZ_XML_LINK_SYMBOL Boolean xml_to_version (
+      const String &File,
+      Version &value,
       Log *log = 0);
 
    DMZ_XML_LINK_SYMBOL void write_xml_header (Stream &stream);

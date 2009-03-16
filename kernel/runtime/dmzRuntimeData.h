@@ -44,6 +44,7 @@ namespace dmz {
          Boolean operator! () const;
          DMZ_BOOLEAN_OPERATOR;
 
+         void set_runtime_context (RuntimeContext *context);
          RuntimeContext *get_runtime_context () const;
 
          void clear ();

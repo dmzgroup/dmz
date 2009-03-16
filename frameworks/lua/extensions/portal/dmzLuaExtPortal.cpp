@@ -11,6 +11,18 @@
 #include <qdb.h>
 static dmz::qdb out;
 
+/*!
+         
+\class dmz::LuaExtPortal
+\ingroup Lua
+\brief Provides a Lua API for the Portals.
+\details
+This API updates both render and audio portals.
+\htmlonly See the <a href="dmzlua.html#dmz.portal">Lua Portal API</a>.
+\endhtmlonly
+         
+*/
+
 using namespace dmz;
 
 namespace {
@@ -78,6 +90,7 @@ static const luaL_Reg arrayFunc[] = {
 };
 
 
+//! \cond
 dmz::LuaExtPortal::LuaExtPortal (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       LuaExt (Info),
@@ -175,6 +188,7 @@ dmz::LuaExtPortal::close_lua_extension (lua_State *L) {
    lua_pushnil (L);
    lua_rawset (L, LUA_REGISTRYINDEX);
 }
+//! \endcond
 
 
 extern "C" {

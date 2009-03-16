@@ -71,8 +71,8 @@ dmz::ObjectModuleBasic::ObjectModuleBasic (const PluginInfo &Info) :
 
    Definitions defs (Info, &_log);
 
-   defs.create_message_type (ObjectCreateMessageName, _createObjMsg);
-   defs.create_message_type (ObjectDestroyMessageName, _removeObjMsg);
+   defs.create_message (ObjectCreateMessageName, _createObjMsg);
+   defs.create_message (ObjectDestroyMessageName, _removeObjMsg);
    _defaultHandle = defs.create_named_handle (ObjectAttributeDefaultName);
 }
 
@@ -1433,6 +1433,13 @@ dmz::ObjectModuleBasic::add_to_counter (
    if (obj && AttributeHandle) {
 
       CounterStruct *ptr (obj->counterTable.lookup (AttributeHandle));
+
+      // If the counter struct doesn't exist, create it with a call to store_counter
+      if (!ptr) {
+
+         store_counter (ObjectHandle, AttributeHandle, 0);
+         ptr = obj->counterTable.lookup (AttributeHandle);
+      }
 
       if (ptr) {
 

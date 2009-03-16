@@ -36,6 +36,8 @@ Used to define the native type of an attribute. @see Data
 // It seems that when an inline class is used, the debug info is associated
 // with the dylib that is loaded first and when it is unloaded the debug symbols are
 // destroyed even if other dylibs are using the debug symbols.
+namespace {
+
 static const dmz::ArrayUInt8 LocalWorkArroundArrayUInt8;
 static const dmz::ArrayUInt16 LocalWorkArroundArrayUInt16;
 static const dmz::ArrayUInt32 LocalWorkArroundArrayUInt32;
@@ -46,6 +48,9 @@ static const dmz::ArrayInt32 LocalWorkArroundArrayInt32;
 static const dmz::ArrayInt64 LocalWorkArroundArrayInt64;
 static const dmz::ArrayFloat32 LocalWorkArroundArrayFloat32;
 static const dmz::ArrayFloat64 LocalWorkArroundArrayFloat64;
+static const dmz::ArrayHandle LocalWorkArroundArrayHandle;
+
+};
 #endif
 
 //! Minimum Int8 Value

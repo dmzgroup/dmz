@@ -881,6 +881,7 @@ static const luaL_Reg arrayMembers [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_config_lib (lua_State *L, Config &global) {
 
@@ -902,8 +903,13 @@ dmz::open_lua_kernel_config_lib (lua_State *L, Config &global) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 
 
+//! \addtogroup Lua
+//! @{
+
+//! Raises an error if the specified object is not a Config object.
 dmz::Config *
 dmz::lua_check_config (lua_State *L, int narg) {
 
@@ -915,6 +921,7 @@ dmz::lua_check_config (lua_State *L, int narg) {
 }
 
 
+//! Checks if the specified object is a Config object.
 dmz::Config *
 dmz::lua_to_config (lua_State *L, int index) {
 
@@ -926,6 +933,7 @@ dmz::lua_to_config (lua_State *L, int index) {
 }
 
 
+//! Creates a Config object on the stack.
 dmz::Config *
 dmz::lua_create_config (lua_State *L, const String &Name) {
 
@@ -948,3 +956,4 @@ dmz::lua_create_config (lua_State *L, const String &Name) {
 
    return result;
 }
+//! @}

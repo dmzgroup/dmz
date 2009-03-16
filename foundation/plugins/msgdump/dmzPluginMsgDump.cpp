@@ -19,7 +19,7 @@ dmz::PluginMsgDump::PluginMsgDump (const PluginInfo &Info, Config &local) :
       MessageObserver (Info),
       _log (Info.get_name (), Info.get_context ()) {
 
-   subscribe_to_message (Definitions (Info).get_global_message_type ());
+   subscribe_to_message (Definitions (Info).get_global_message ());
 }
 
 

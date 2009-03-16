@@ -15,7 +15,7 @@ dmz::RenderPluginLoadModelOSG::RenderPluginLoadModelOSG (
       const Config &Local) :
       Plugin (Info),
       _core (0),
-      _log (Info.get_name (), Info.get_context ()) {
+      _log (Info) {
 
    _init (Local);
 }
@@ -23,8 +23,6 @@ dmz::RenderPluginLoadModelOSG::RenderPluginLoadModelOSG (
 
 dmz::RenderPluginLoadModelOSG::~RenderPluginLoadModelOSG () {
 
-   _fileNameTable.empty ();
-   _positionTable.empty ();
 }
 
 
@@ -43,6 +41,7 @@ dmz::RenderPluginLoadModelOSG::discover_plugin (
             HashTableStringIterator it;
 
             String *currentFileName;
+
             for (currentFileName = _fileNameTable.get_first (it);
                   currentFileName;
                   currentFileName = _fileNameTable.get_next (it)) {
@@ -52,32 +51,13 @@ dmz::RenderPluginLoadModelOSG::discover_plugin (
 
                if (model.valid ()) {
 
-#if 0
-                  // Attach transform to static object tree
-                  osg::Matrix mat = to_osg_matrix (
-                     *_rotationTable.lookup (*currentFileName));
-
-                  mat.translate (
-                     to_osg_vector (*_positionTable.lookup (*currentFileName)));
-
-                  osg::ref_ptr<osg::MatrixTransform> matTransform =
-                     new osg::MatrixTransform (mat);
-                  matTransform->setDataVariance (osg::Object::STATIC);
-                  matTransform->addChild (model.get ());
-#   if 0
-                  osg::ref_ptr<osg::Group> g = new osg::Group;
-                  g->addChild (matTransform.get ());
-
-                  osgUtil::Optimizer opt;
-                  opt.optimize (g.get ());
-
-                  _core->get_static_objects ()->addChild (g.get ());
-#   else
-                  _core->get_static_objects ()->addChild (matTransform.get ());
-#   endif
-#else
+                  osg::BoundingSphere bs = model->computeBound ();
+                  osg::Vec3d c = bs.center ();
                   _core->get_static_objects ()->addChild (model.get ());
-#endif
+               }
+               else {
+
+                  _log.error << "Failed loading: " << *currentFileName << endl;
                }
             }
          }
@@ -110,10 +90,6 @@ dmz::RenderPluginLoadModelOSG::_init (const Config &Local) {
          String modelFileName (config_to_string ("file", cd));
          String modelKeyName (config_to_string ("name", cd));
 
-         Vector *position (
-            new Vector (config_to_vector ("position", cd,  Vector (0.0, 0.0, 0.0))));
-         Vector *rotation (
-            new Vector (config_to_vector ("rotation", cd,  Vector (0.0, 0.0, 0.0))));
          String *namePtr (new String (modelFileName));
 
          if (namePtr) {
@@ -122,28 +98,14 @@ dmz::RenderPluginLoadModelOSG::_init (const Config &Local) {
 
                _log.info << "Loading Model: "
                << config_to_string ("file", cd) << endl;
-
-               Matrix *rotationMatrix = new Matrix (
-                     rotation->get_x (),
-                     rotation->get_y (),
-                     rotation->get_z ());
-               _positionTable.store (modelFileName, position);
-               _rotationTable.store (modelFileName, rotationMatrix);
-               _log.out << *rotationMatrix << endl;
-
-//               delete rotationMatrix;
             }
             else { delete namePtr; namePtr = 0; }
-          }
-//         delete position;
-         delete rotation;
+         }
 
          found = models.get_next_config (it, cd);
       }
    }
-   else {
-      _log.info << "No models listed" << endl;
-   }
+   else { _log.info << "No models listed" << endl; }
 
 }
 

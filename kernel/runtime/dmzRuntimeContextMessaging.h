@@ -22,7 +22,7 @@ namespace dmz {
       public:
          RuntimeContextMessageContainer ();
 
-         Message create_message_type (
+         Message create_message (
             const String &Name,
             const String &ParentName,
             RuntimeContext *context,

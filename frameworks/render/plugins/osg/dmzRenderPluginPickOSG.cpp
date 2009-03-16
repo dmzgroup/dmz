@@ -1,5 +1,8 @@
+#include <dmzRenderConsts.h>
 #include <dmzRenderModuleCoreOSG.h>
+#include <dmzRenderObjectDataOSG.h>
 #include "dmzRenderPluginPickOSG.h"
+#include <dmzRenderUtilOSG.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
@@ -10,7 +13,8 @@ dmz::RenderPluginPickOSG::RenderPluginPickOSG (const PluginInfo &Info, Config &l
       Plugin (Info),
       RenderPickUtil (Info, local),
       _log (Info),
-      _core (0) {
+      _core (0),
+      _viewerName (RenderMainPortalName) {
 
    _init (local);
 }
@@ -32,14 +36,20 @@ dmz::RenderPluginPickOSG::update_plugin_state (
    }
    else if (State == PluginStateStart) {
 
-      if (!_camera.valid () && _core) {
+      if (!_viewer.valid () && _core) {
 
-         _camera = _core->lookup_camera (_cameraName);
+         _viewer = _core->lookup_viewer (_viewerName);
+         if (_viewer.valid ()) {
+
+            osg::Camera *camera = _viewer->getCamera ();
+
+            if (camera) { _viewport = camera->getViewport (); }
+         }
       }
    }
    else if (State == PluginStateStop) {
 
-      if (_camera.valid ()) { _camera = 0; }
+      if (_viewer.valid ()) { _viewer = 0; _viewport = 0; }
    }
    else if (State == PluginStateShutdown) {
 
@@ -69,6 +79,7 @@ dmz::RenderPluginPickOSG::screen_to_world (
       const Int32 ScreenPosX,
       const Int32 ScreenPosY,
       Vector &worldPosition,
+      Vector &normal,
       Handle &objectHandle) {
 
    Boolean result (False);
@@ -94,26 +105,60 @@ dmz::RenderPluginPickOSG::source_to_world (
       const Int32 SourcePosX,
       const Int32 SourcePosY,
       Vector &worldPosition,
+      Vector &normal,
       Handle &objectHandle) {
 
    Boolean result (False);
 
-   if (_core && _camera.valid ()) {
+   if (_core && _viewer.valid () && _viewport.valid ()) {
 
-      osgUtil::PickVisitor visitor (
-         _camera->getViewport (),
-         _camera->getProjectionMatrix (),
-         _camera->getViewMatrix (),
-         (float)SourcePosX,
-         (float)SourcePosY);
+      const float Height = _viewport->height ();
 
-      osg::ref_ptr<osg::Node> scene = _core->get_isect ();
+      osgUtil::LineSegmentIntersector::Intersections isect;
 
-      if (scene.valid ()) { scene->accept (visitor); }
+      if (_viewer->computeIntersections (
+            (float)SourcePosX,
+            Height - (float)SourcePosY,
+            isect)) {
 
-      if (visitor.hits ()) {
+         osgUtil::LineSegmentIntersector::Intersections::iterator it = isect.begin ();
 
-//         osgUtil::IntersectVisitor::LineSegmentHitListMap hits = visitor.getSegHitList ();
+         while (!result && (it != isect.end ())) {
+
+            Boolean disabled (False);
+
+            osg::NodePath path = it->nodePath;
+
+            for (osg::NodePath::iterator node = path.begin ();
+                  (node != path.end ()) && !disabled;
+                  node++) {
+
+               if (*node) {
+
+                  osg::Referenced *ref ((*node)->getUserData ());
+
+                  if (ref) {
+
+                     RenderObjectDataOSG *data (
+                        dynamic_cast<RenderObjectDataOSG *> (ref));
+
+                     if (data) {
+
+                        if (!data->do_isect ()) { disabled = True; }
+                        else { objectHandle = data->get_handle (); }
+                     }
+                  }
+               }
+            }
+
+            if (!disabled) {
+
+               worldPosition = to_dmz_vector (it->getWorldIntersectPoint ());
+               normal = to_dmz_vector (it->getWorldIntersectNormal ());
+               result = True;
+            }
+            else { it++; }
+         }
       }
    }
 
@@ -136,7 +181,7 @@ dmz::RenderPluginPickOSG::world_to_source (
 void
 dmz::RenderPluginPickOSG::_init (Config &local) {
 
-   _cameraName = config_to_string ("portal.name", local, DefaultPortalNameOSG);
+   _viewerName = config_to_string ("portal.name", local, _viewerName);
 }
 
 

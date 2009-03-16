@@ -50,13 +50,13 @@ dmz::PluginUndo::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
 
-   _undoMessage = config_create_message_type (
+   _undoMessage = config_create_message (
       "undo.name",
       local,
       "Plugin_Undo_Message",
       context);
 
-   _redoMessage = config_create_message_type (
+   _redoMessage = config_create_message (
       "redo.name",
       local,
       "Plugin_Redo_Message",

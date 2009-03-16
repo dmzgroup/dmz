@@ -43,10 +43,12 @@ files, manage session data, create the file cache, and manage plugins.
 struct dmz::Application::State {
 
    const String Name;
+   const String NamePrefix;
    const String Domain;
    Runtime rt;
    Time time;
    Log log;
+   Exit exit;
    ExitObserverBasic exitObs;
    FileCacheLocal cache;
    ApplicationStateBasic appState;
@@ -63,9 +65,11 @@ struct dmz::Application::State {
 
    State (const String &TheName, const String &TheDomain) :
          Name (TheName),
+         NamePrefix (TheName.get_upper ()),
          Domain (TheDomain),
          time (rt.get_context ()),
          log (TheName, rt.get_context ()),
+         exit (rt.get_context ()),
          exitObs (rt.get_context ()),
          cache (rt.get_context ()),
          appState (rt.get_context ()),
@@ -98,6 +102,18 @@ dmz::Application::Application (
 dmz::Application::~Application () { delete &_state; }
 
 
+//! Tests if application is still running.
+dmz::Boolean
+dmz::Application::is_running () const { return !_state.exitObs.is_exit_requested (); }
+
+
+//! Requestion the application quit.
+void
+dmz::Application::quit (const String &Reason) {
+
+   _state.exit.request_exit (ExitStatusNormal, Reason);
+}
+
 /*!
 
 \brief Disables all messages that are not errors or warnings.
@@ -106,6 +122,22 @@ dmz::Application::~Application () { delete &_state; }
 */
 void
 dmz::Application::set_quiet (const Boolean Value) { _state.quiet = Value; }
+
+
+/*!
+
+\brief Sets the error state.
+\param[in] ErrorMessage String containing th error message.
+
+*/
+void
+dmz::Application::set_error (const String &ErrorMessage) {
+
+   _state.error = True;
+   _state.errorMsg = ErrorMessage;
+}
+
+
 /*!
 
 \brief Gets error state.
@@ -128,17 +160,38 @@ dmz::Application::get_error () const { return _state.errorMsg; }
 
 /*!
 
+\brief Gets the name of the application.
+\return Returns a string containing the name of the application.
+
+*/
+dmz::String
+dmz::Application::get_name () const { return _state.Name; }
+
+
+/*!
+
+\brief Gets the prefix of the application.
+\return Returns a string containing the prefix of the application.
+\note At this time, the prefix is the application name in all caps.
+
+*/
+dmz::String
+dmz::Application::get_prefix () const { return _state.NamePrefix; }
+
+
+/*!
+
 \brief Gets runtime context.
 \return Returns a pointer to the runtime context.
 
 */
 dmz::RuntimeContext *
-dmz::Application::get_context () { return _state.rt.get_context (); }
+dmz::Application::get_context () const { return _state.rt.get_context (); }
 
 
 //! Gets the root of the config context tree.
 void
-dmz::Application::get_global_config (Config &data) { data = _state.global; }
+dmz::Application::get_global_config (Config &data) const { data = _state.global; }
 
 
 //! Adds config contexts to the root of the config context tree.
@@ -311,10 +364,10 @@ dmz::Application::load_plugins () {
    Config pluginList;
 
    if (!_state.error &&
-         !_state.global.lookup_all_config ("dmz.plugins.plugin", pluginList)) {
+         !_state.global.lookup_all_config ("dmz.plugin-list.plugin", pluginList)) {
 
       _state.errorMsg.flush ()
-         << "dmz.plugins.plugin not found. No plugins listed for loading";
+         << "dmz.plugin-list.plugin not found. No plugins listed for loading";
 
       _state.log.error << _state.errorMsg << endl;
 
@@ -326,7 +379,6 @@ dmz::Application::load_plugins () {
       Config pluginInit;
 
       _state.global.lookup_all_config_merged ("dmz", pluginInit);
-
 
       dmz::load_plugins (
          _state.rt.get_context (),
@@ -350,14 +402,15 @@ dmz::Application::start () {
 
    if (!_state.error) {
 
-      _state.startTime = get_time ();
-      _state.frameCount = 0.0;
       _state.container.start_plugins ();
-      _state.rt.update_time_slice ();
+//      _state.rt.update_time_slice ();
 
       FileCache *fc (FileCache::get_interface (_state.rt.get_context ()));
 
       if (fc) { fc->process_all_requests (); }
+
+      _state.startTime = get_time ();
+      _state.frameCount = 0.0;
    }
 
    return !_state.error;
@@ -403,12 +456,11 @@ dmz::Application::update_time_slice () {
 dmz::Boolean
 dmz::Application::stop () {
 
-   _state.rt.update_time_slice ();
-   _state.container.stop_plugins ();
-
    const Float64 StopTime (get_time ());
-
    const Float64 TimeDelta (StopTime - _state.startTime);
+
+//   _state.rt.update_time_slice ();
+   _state.container.stop_plugins ();
 
    if (!is_zero64 (_state.frameCount) && !is_zero64 (TimeDelta) && !_state.quiet) {
 

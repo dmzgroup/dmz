@@ -8,6 +8,19 @@
 #include <dmzTypesHashTableUInt32Template.h>
 #include <dmzTypesString.h>
 
+/*!
+
+\class dmz::LuaErrorHandler
+\ingroup Lua
+\brief Provides an class interface for Lua error handling.
+\details Used by the dmz::LuaModuleBase to handle errors when encountered in executing
+scripts.
+
+\fn int dmz::LuaErrorHandler::handle_lua_error (lua_State *L)
+\brief Pure virtual function called when a Lua execution error is encountered.
+
+*/
+
 using namespace dmz;
 
 namespace {
@@ -130,7 +143,10 @@ enum_setup (lua_State *L) {
 
 }
 
+//! \addtogroup Lua
+//! @{
 
+//! Opens the DMZ Kernel Lua Libraries in the provided lua_State.
 void
 dmz::open_lua_kernel_libs (Config &global, lua_State *L, RuntimeContext *context) {
 
@@ -172,6 +188,7 @@ dmz::open_lua_kernel_libs (Config &global, lua_State *L, RuntimeContext *context
 }
 
 
+//! Dumps the current Lua call stack stored in the lua_State to the provided Stream.
 void
 dmz::lua_dump_stack (lua_State *L, Stream &s) {
 
@@ -185,6 +202,7 @@ dmz::lua_dump_stack (lua_State *L, Stream &s) {
 }
 
 
+//! Gets the current RuntimeContext stored with the lua_State
 dmz::RuntimeContext *
 dmz::lua_get_runtime_context (lua_State *L) {
 
@@ -206,6 +224,7 @@ dmz::lua_get_runtime_context (lua_State *L) {
 }
 
 
+//! Creates a new namespace within the Lua dmz namespace.
 dmz::Boolean
 dmz::lua_create_dmz_namespace (lua_State *L, const String &Name) {
 
@@ -246,6 +265,7 @@ dmz::lua_create_dmz_namespace (lua_State *L, const String &Name) {
 }
 
 
+//! Determines if the specified Lua user data object on the stack is a explicit type.
 void *
 dmz::lua_is_object (lua_State *L, int index, const char *name) {
 
@@ -271,6 +291,7 @@ dmz::lua_is_object (lua_State *L, int index, const char *name) {
 }
 
 
+//! Registers an error handler to invoke if the executing script encounters an error.
 dmz::Boolean
 dmz::lua_register_error_handler (lua_State *L, LuaErrorHandler *handler) {
 
@@ -292,6 +313,7 @@ dmz::lua_register_error_handler (lua_State *L, LuaErrorHandler *handler) {
 }
 
 
+//! Releases the registered error handler.
 dmz::Boolean
 dmz::lua_release_error_handler (lua_State *L, LuaErrorHandler *handler) {
 
@@ -310,6 +332,7 @@ dmz::lua_release_error_handler (lua_State *L, LuaErrorHandler *handler) {
 }
 
 
+//! Gets the currently registered error handler.
 dmz::LuaErrorHandler *
 dmz::lua_get_error_handler (lua_State *L) {
 
@@ -331,6 +354,7 @@ dmz::lua_get_error_handler (lua_State *L) {
 }
 
 
+//! Default error handler.
 int
 dmz::lua_error_handler (lua_State *L) {
 
@@ -349,6 +373,7 @@ dmz::lua_error_handler (lua_State *L) {
 }
 
 
+//! Creates a new enum with the specified name.
 int
 dmz::lua_create_enum (lua_State *L, const String &Name) {
 
@@ -374,6 +399,7 @@ dmz::lua_create_enum (lua_State *L, const String &Name) {
 }
 
 
+//! Gets the enums name based on the integer value of the enum
 dmz::String
 dmz::lua_lookup_enum_name (lua_State *L, const int Value) {
 
@@ -400,6 +426,7 @@ dmz::lua_lookup_enum_name (lua_State *L, const int Value) {
 }
 
 
+//! Error handler for unknown enum values.
 void
 dmz::lua_enum_error (lua_State *L, int index, const int Value) {
 
@@ -414,6 +441,7 @@ dmz::lua_enum_error (lua_State *L, int index, const int Value) {
 }
 
 
+//! Creates a metatable for the specified object on the stack.
 static inline void
 local_create_mt (lua_State *L, int index) {
 
@@ -432,6 +460,7 @@ local_create_mt (lua_State *L, int index) {
 }
 
 
+//! Makes the specified table on the stack read only.
 void
 dmz::lua_make_readonly (lua_State *L, int index) {
 
@@ -450,6 +479,7 @@ dmz::lua_make_readonly (lua_State *L, int index) {
 }
 
 
+//! Adds a garbage collection function to clean up when a user data object is collected.
 void
 dmz::lua_set_gc (lua_State *L, int index, lua_CFunction fn) {
 
@@ -468,6 +498,7 @@ dmz::lua_set_gc (lua_State *L, int index, lua_CFunction fn) {
 }
 
 
+//! Turns a table into a weak table.
 void
 dmz::lua_set_weak_table (lua_State *L, int index, const String &Mode) {
 
@@ -485,3 +516,4 @@ dmz::lua_set_weak_table (lua_State *L, int index, const String &Mode) {
    LUA_END_VALIDATE (L, 0);
 }
 
+//! @}

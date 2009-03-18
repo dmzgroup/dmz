@@ -38,6 +38,7 @@
 Possible rule types and their default values:\n
 position = 0.25m \n
 velocity = 0.25m/s \n
+zero-velocity = N/A \n
 acceleration = 0.25m/s^2 \n
 vector = 0.25 \n
 orientation = 0.25 radians \n
@@ -727,6 +728,12 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
             AttributeHandle,
             LNVHandle,
             config_to_float64 ("value", cd, 0.25));
+      }
+      else if (Type == "zero-velocity") {
+
+         next = new zeroVelocityTest (
+            LNVHandle,
+            AttributeHandle);
       }
       else if (Type == "velocity") {
 

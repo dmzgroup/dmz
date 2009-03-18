@@ -438,6 +438,9 @@
 		7AA9C9120EB70A4800A97E88 /* dmzObjectModuleGridBasic.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA9C90F0EB70A4800A97E88 /* dmzObjectModuleGridBasic.h */; };
 		7AA9C91A0EB70AFE00A97E88 /* dmzTypesVolume.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA9C9190EB70AFE00A97E88 /* dmzTypesVolume.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D249EF110E5B8B7A00A57803 /* dmzInputPluginMouseEventToMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A20BFA40E52302E00D169ED /* dmzInputPluginMouseEventToMessage.cpp */; };
+		D2847D280F719EC80054448C /* dmzRuntimeContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = D2847D270F719EC80054448C /* dmzRuntimeContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D2847D390F719F080054448C /* dmzRuntimeVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = D2847D370F719F080054448C /* dmzRuntimeVersion.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D2847D3A0F719F080054448C /* dmzRuntimeVersion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D2847D380F719F080054448C /* dmzRuntimeVersion.cpp */; };
 		D2F823740E5B8F2A00B9528C /* dmzInputPluginMouseEventToMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A20BFA50E52302E00D169ED /* dmzInputPluginMouseEventToMessage.h */; };
 /* End PBXBuildFile section */
 
@@ -1957,6 +1960,9 @@
 		7AA9C9100EB70A4800A97E88 /* dmzObjectModuleGridBasic.lmk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dmzObjectModuleGridBasic.lmk; sourceTree = "<group>"; };
 		7AA9C9190EB70AFE00A97E88 /* dmzTypesVolume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzTypesVolume.h; sourceTree = "<group>"; };
 		D249EF010E5B8B2900A57803 /* libdmzInputPluginMouseEventToMessage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdmzInputPluginMouseEventToMessage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2847D270F719EC80054448C /* dmzRuntimeContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeContainer.h; sourceTree = "<group>"; };
+		D2847D370F719F080054448C /* dmzRuntimeVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dmzRuntimeVersion.h; sourceTree = "<group>"; };
+		D2847D380F719F080054448C /* dmzRuntimeVersion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dmzRuntimeVersion.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2409,6 +2415,7 @@
 				7A0147270E118421001813A7 /* dmzRuntimeConfigUtil.cpp */,
 				7A0147280E118421001813A7 /* dmzRuntimeConfigWrite.cpp */,
 				7A0147290E118421001813A7 /* dmzRuntimeConfigWrite.h */,
+				D2847D270F719EC80054448C /* dmzRuntimeContainer.h */,
 				7A01472A0E118421001813A7 /* dmzRuntimeContext.cpp */,
 				7A01472B0E118421001813A7 /* dmzRuntimeContext.h */,
 				7A01472C0E118421001813A7 /* dmzRuntimeContextDefinitions.cpp */,
@@ -2474,6 +2481,8 @@
 				7A0147660E118421001813A7 /* dmzRuntimeUndo.cpp */,
 				7A0147670E118421001813A7 /* dmzRuntimeUndo.h */,
 				7A39BB390E4B8CA50035E12A /* dmzRuntimeUUID.h */,
+				D2847D370F719F080054448C /* dmzRuntimeVersion.h */,
+				D2847D380F719F080054448C /* dmzRuntimeVersion.cpp */,
 			);
 			path = runtime;
 			sourceTree = "<group>";
@@ -3743,6 +3752,8 @@
 				7AA9C91A0EB70AFE00A97E88 /* dmzTypesVolume.h in Headers */,
 				7A4684960EBA5D280034D89B /* dmzTypesSphere.h in Headers */,
 				7A46849A0EBA5D340034D89B /* dmzTypesCylinder.h in Headers */,
+				D2847D280F719EC80054448C /* dmzRuntimeContainer.h in Headers */,
+				D2847D390F719F080054448C /* dmzRuntimeVersion.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4730,6 +4741,7 @@
 				7A11649E0E9A9C0F006302C9 /* dmzRuntimeResources.cpp in Sources */,
 				7A4684950EBA5D280034D89B /* dmzTypesSphere.cpp in Sources */,
 				7A4684990EBA5D340034D89B /* dmzTypesCylinder.cpp in Sources */,
+				D2847D3A0F719F080054448C /* dmzRuntimeVersion.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

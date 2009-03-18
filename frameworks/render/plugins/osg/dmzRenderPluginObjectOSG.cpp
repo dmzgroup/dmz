@@ -8,6 +8,8 @@
 #include <dmzRuntimePluginInfo.h>
 #include <osgDB/ReadFile>
 
+#include <osgFX/Cartoon>
+
 dmz::RenderPluginObjectOSG::RenderPluginObjectOSG (
       const PluginInfo &Info,
       Config &local) :
@@ -271,6 +273,12 @@ dmz::RenderPluginObjectOSG::_load_model (const String &ResourceName) {
          result->model = osgDB::readNodeFile (foundFile.get_buffer ());
 
          if (result->model.valid ()) {
+
+            osg::Node::DescriptionList &list = result->model->getDescriptions ();
+
+            String str ("<dmz><render><resource name=\"");
+            str << ResourceName << "\"/></render></dmz>";
+            list.push_back (str.get_buffer ());
 
             _log.info << "Loaded file: " << foundFile << " (" << ResourceName << ")"
                << endl;

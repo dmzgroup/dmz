@@ -87,6 +87,8 @@ namespace dmz {
             const String &Target,
             const Int32 Start = 0);
 
+         Boolean contains_sub (const String &Sub, const Int32 Start = 0) const;
+
       protected:
          char * _buffer; //!< Character buffer.
          Int32 _length; //!< Number of bytes used in buffer.

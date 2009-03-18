@@ -4,15 +4,23 @@
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeResources.h>
 #include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesHashTableStringTemplate.h>
+#include <dmzTypesVector.h>
+
+#include <osg/NodeVisitor>
 
 namespace dmz {
+
+   class RenderModuleCoreOSG;
 
    class RenderPluginArticulateOSG :
          public Plugin,
          public TimeSlice,
-         public ObjectObserverUtil {
+         public ObjectObserverUtil,
+         public osg::NodeVisitor {
 
       public:
          struct ScalarStruct {
@@ -76,7 +84,40 @@ namespace dmz {
             const Float64 Value,
             const Float64 *PreviousValue);
 
+         // osg::NodeVisitor Interface
+         virtual void apply (osg::Node &node);
+         virtual void apply (osg::Transform &transform);
+
       protected:
+         struct ScalarDefStruct {
+
+            const VectorComponentEnum Axis;
+            const Handle AttrHandle;
+
+            ScalarDefStruct (
+                  const VectorComponentEnum &TheAxis,
+                  const Handle TheAttrHandle) :
+                  Axis (TheAxis),
+                  AttrHandle (TheAttrHandle) {;}
+         };
+
+         struct ResourceStruct {
+
+            HashTableStringTemplate<ScalarDefStruct> scalarMap;
+
+            ResourceStruct () {;}
+
+            ~ResourceStruct () { scalarMap.empty (); }
+         };
+
+         struct ResourceStackStruct {
+
+            ResourceStackStruct *next;
+            ResourceStruct &rc;
+
+            ResourceStackStruct (ResourceStruct &theRc) : next (0), rc (theRc) {;}
+         };
+
          struct AttrStruct {
 
             ScalarStruct *scalarList;
@@ -89,13 +130,48 @@ namespace dmz {
 
             HashTableHandleTemplate<AttrStruct> attr;
             ~ObjectStruct () { attr.empty (); }
+
+            Boolean add_scalar (const Handle Attr, ScalarStruct *ss) {
+
+               Boolean result (False);
+
+               AttrStruct *as = attr.lookup (Attr);
+
+               if (!as) {
+
+                  as = new AttrStruct;
+
+                  if (as && !attr.store (Attr, as)) { delete as; as = 0; }
+               }
+
+               if (as) {
+
+                  ss->next = as->scalarList;
+                  as->scalarList = ss;
+                  result = True;
+               }
+
+               return result;
+            }
          };
+
+         ResourceStruct *_create_rc (const String &Name);
+         Boolean _push_rc (const String Name);
+         void _pop_rc ();
 
          void _init (Config &local);
 
          Log _log;
+         Resources _rc;
+
+         RenderModuleCoreOSG *_core;
+
+         ObjectStruct *_currentObj;
+         ResourceStackStruct *_rcStack;
 
          HashTableHandleTemplate<ObjectStruct> _objTable;
+         HashTableStringTemplate<ResourceStruct> _rcTable;
+         HashTableStringTemplate<ResourceStruct> _rcMasterTable;
 
       private:
          RenderPluginArticulateOSG ();

@@ -1,6 +1,8 @@
 #include <osg/Node>
 #include <osg/NodeVisitor>
 #include <osgDB/ReadFile>
+#include <osgDB/WriteFile>
+// #include <osgFX/Cartoon>
 
 #include <qdb.h>
 
@@ -30,6 +32,15 @@ osgDump::apply (osg::Node &node) {
    if (name) { out << "[" << name << "]"; }
    out << endl;
 
+osg::Node::DescriptionList& list = node.getDescriptions ();
+osg::Node::DescriptionList::iterator it;
+   for (it = list.begin (); it != list.end (); it++) {
+
+out << "Description: " << it->c_str () << endl;
+   }
+
+
+
    offset += 3;
    traverse (node);
    offset -= 3;
@@ -46,6 +57,13 @@ main (int argc, char *argv[]) {
 
          osgDump dump;
          node->accept (dump);
+
+#if 0
+osgFX::Cartoon *r = new osgFX::Cartoon;
+r->setOutlineColor (osg::Vec4 (1.0, 0.0, 0.0, 0.0));
+r->addChild (node.get ());
+osgDB::writeNodeFile (*r, "recognizer.ive");
+#endif
       }
       else { out << "Failed to load: " << argv[1] << endl; }
    }

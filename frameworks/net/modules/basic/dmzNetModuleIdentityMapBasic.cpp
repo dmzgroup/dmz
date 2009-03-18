@@ -37,7 +37,7 @@ dmz::NetModuleIdentityMapBasic::NetModuleIdentityMapBasic (
 
    Definitions defs (Info, &_log);
 
-   if (defs.create_message_type (ObjectDestroyMessageName, _removeObjMsg)) {
+   if (defs.create_message (ObjectDestroyMessageName, _removeObjMsg)) {
 
       subscribe_to_message (_removeObjMsg);
    }

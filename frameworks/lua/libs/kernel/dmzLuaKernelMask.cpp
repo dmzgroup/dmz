@@ -310,6 +310,7 @@ static const luaL_Reg arrayMembers [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_mask_lib (lua_State *L) {
 
@@ -326,8 +327,13 @@ dmz::open_lua_kernel_mask_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 
 
+//! \addtogroup Lua
+//! @{
+
+//! Creates a Mask on the Lua stack.
 dmz::Mask *
 dmz::lua_create_mask (lua_State *L, const Mask *Value) {
 
@@ -351,6 +357,7 @@ dmz::lua_create_mask (lua_State *L, const Mask *Value) {
 }
 
 
+//! Attempts to convert the specified object on the stack to a Mask object.
 dmz::Mask *
 dmz::lua_to_mask (lua_State *L, int narg) {
 
@@ -362,6 +369,7 @@ dmz::lua_to_mask (lua_State *L, int narg) {
 }
 
 
+//! Raises and error if the specified object on the stack is not a Mask object.
 dmz::Mask *
 dmz::lua_check_mask (lua_State *L, int narg) {
 
@@ -371,3 +379,4 @@ dmz::lua_check_mask (lua_State *L, int narg) {
 
    return result;
 }
+//! @}

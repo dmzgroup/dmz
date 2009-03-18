@@ -114,8 +114,16 @@ dmz::NetModuleAttributeMapBasic::to_net_object_type (
 
    Boolean result (False);
 
-   InternalObjectStruct *is (_internalObjectTypeTable.lookup (Type.get_handle ()));
+   InternalObjectStruct *is (0);
+   ObjectType current (Type);
 
+   while (!is && current) {
+
+      is = _internalObjectTypeTable.lookup (current.get_handle ());
+
+      if (!is) { current.become_parent (); }
+   }
+   
    if (is) { array = is->NetType; result = True; }
 
    return result;
@@ -200,7 +208,15 @@ dmz::NetModuleAttributeMapBasic::to_net_event_type (
 
    Boolean result (False);
 
-   InternalEventStruct *is (_internalEventTypeTable.lookup (Type.get_handle ()));
+   InternalEventStruct *is (0);
+   EventType current (Type);
+
+   while (!is && current) {
+
+      is = _internalEventTypeTable.lookup (current.get_handle ());
+
+      if (!is) { current.become_parent (); }
+   }
 
    if (is) { array = is->NetType; result = True; }
 
@@ -668,9 +684,9 @@ dmz::NetModuleAttributeMapBasic::_process_net_event_type (const EventType &Type)
 
    Config typeMap;
 
-   if (Type.get_config ().lookup_config ("net.type", typeMap)) {
+   if (Type.get_config ().lookup_config ("net.enum", typeMap)) {
 
-      const String NetEnum (config_to_string ("enum", typeMap));
+      const String NetEnum (config_to_string ("value", typeMap));
       const Int32 Depth (config_to_int32 ("depth", typeMap));
 
       if (NetEnum) {

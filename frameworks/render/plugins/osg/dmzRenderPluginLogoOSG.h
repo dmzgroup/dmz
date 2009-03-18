@@ -35,13 +35,13 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         Resources _rc;
 
          String _imageResource;
 
          osg::ref_ptr<osg::Camera> _camera;
          osg::ref_ptr<osg::Camera> _masterCamera;
          RenderModuleCoreOSG *_core;
-         Resources _rc;
 
       private:
          RenderPluginLogoOSG ();

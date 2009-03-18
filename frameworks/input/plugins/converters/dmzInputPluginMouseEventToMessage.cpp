@@ -184,11 +184,12 @@ struct InputPluginMouseEventToMessage::ConverterStruct {
    virtual ConverterStruct *process_results (
       const InputEventMouse &Event,
       const Vector &WorldPosition,
+      const Vector &Normal,
       const Handle ObjectHandle) = 0;
 
    virtual ConverterStruct *process_event (const InputEventMouse &Event) {
 
-      Vector pos;
+      Vector pos, normal;
       Handle obj (0);
 
       ConverterStruct *result (0);
@@ -200,11 +201,10 @@ struct InputPluginMouseEventToMessage::ConverterStruct {
             Event.get_mouse_x (),
             Event.get_mouse_y (),
             pos,
+            normal,
             obj);
 
-         pos.set_xyz (pos.get_x (), 0.0, pos.get_y ());
-
-         result = process_results (Event, pos, obj);
+         result = process_results (Event, pos, normal, obj);
       }
 
       return result;
@@ -225,6 +225,7 @@ struct ConditionStruct {
    DataBinder binder;
    astruct *attrList;
    Vector position;
+   Vector normal;
    Handle objectHandle;
    ConditionStruct *nextCondition;
    String nextStateName;
@@ -269,6 +270,7 @@ struct ConverterBasicStruct : cstruct {
    virtual cstruct *process_results (
       const InputEventMouse &Event,
       const Vector &WorldPosition,
+      const Vector &Normal,
       const Handle ObjectHandle);
 };
 
@@ -277,6 +279,7 @@ cstruct *
 ConverterBasicStruct::process_results (
       const InputEventMouse &Event,
       const Vector &WorldPosition,
+      const Vector &Normal,
       const Handle ObjectHandle) {
 
    cstruct *result (0);
@@ -330,6 +333,7 @@ ConverterBasicStruct::process_results (
 
             // Set values so the DataBinder can write their values to the data object.
             current->position = WorldPosition;
+            current->normal = Normal;
             current->objectHandle = ObjectHandle;
 
             // Set any values from the Mouse Event that need to be stored in the
@@ -344,14 +348,8 @@ ConverterBasicStruct::process_results (
 
             const HandleContainer &Targets (current->Targets);
 
-            Handle target = Targets.get_first ();
-
-            while (target) {
-
-               Msg.send (target, dataPtr, 0);
-
-               target = Targets.get_next ();
-            }
+            if (Targets.get_count () > 0) { Msg.send (Targets, dataPtr); }
+            else { Msg.send (dataPtr); }
          }
 
          result = current->nextState;
@@ -468,6 +466,7 @@ dmz::InputPluginMouseEventToMessage::_create_attributes (
       Config &config,
       DataBinder &binder,
       Vector *position,
+      Vector *normal,
       Handle *object) {
 
    AttrStruct *result (0);
@@ -492,6 +491,10 @@ dmz::InputPluginMouseEventToMessage::_create_attributes (
          if (Type == "position") {
 
             if (position) { binder.bind (Name, Index, *position); }
+         }
+         else if (Type == "normal") {
+
+            if (normal) { binder.bind (Name, Index, *normal); }
          }
          else if (Type == "object") {
 
@@ -578,7 +581,7 @@ dmz::InputPluginMouseEventToMessage::_create_converter_basic (
          const ResultConditionEnum ResultCondition (
             local_config_to_result_condition ("result", condition, _log));
 
-         Message message (config_create_message_type (
+         Message message (config_create_message (
             "message",
             condition,
             "",
@@ -605,6 +608,7 @@ dmz::InputPluginMouseEventToMessage::_create_converter_basic (
                condition,
                next->binder,
                &(next->position),
+               &(next->normal),
                &(next->objectHandle));
 
             if (!current) { result->list = current = next; }
@@ -736,7 +740,7 @@ dmz::InputPluginMouseEventToMessage::_init (Config &local) {
       _log.error << "No input source defined." << endl;
    }
 
-   _activateMessage = config_create_message_type (
+   _activateMessage = config_create_message (
       "activate.message",
       local,
       "",
@@ -747,7 +751,7 @@ dmz::InputPluginMouseEventToMessage::_init (Config &local) {
       _get_targets ("activate.target", local, _activateTargetTable);
    }
 
-   _deactivateMessage = config_create_message_type (
+   _deactivateMessage = config_create_message (
       "deactivate.message",
       local,
       "",

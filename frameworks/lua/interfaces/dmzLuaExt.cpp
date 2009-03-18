@@ -22,6 +22,12 @@ the LuaExt interface of the Plugin is returned.
 implement the LuaExt interface or the \a PluginName is not empty
 and not equal to the Plugin's name.
 
+\fn dmz::Handle dmz::LuaExt::get_lua_extension_handle ()
+\brief Gets the Handle of the Lua Extension.
+
+\fn dmz::String dmz::LuaExt::get_lua_extension_name ()
+\brief Gets the name of the Lua Extension.
+
 \fn void dmz::LuaExt::store_lua_module (LuaModule &module)
 \brief Stores the LuaModule in the extension.
 

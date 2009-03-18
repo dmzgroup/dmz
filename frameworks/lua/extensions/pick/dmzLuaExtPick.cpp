@@ -11,6 +11,17 @@
 #include <qdb.h>
 static dmz::qdb out;
 
+/*!
+         
+\class dmz::LuaExtPick
+\ingroup Lua
+\brief Provides a Lua API for the Render Pick Module.
+\details
+\htmlonly See the <a href="dmzlua.html#dmz.pick">Lua Pick API</a>.
+\endhtmlonly
+         
+*/
+
 using namespace dmz;
 
 namespace {
@@ -46,7 +57,7 @@ pick_screen_to_world (lua_State *L) {
 
    if (pick && sourceHandle) {
 
-      Vector worldPosition;
+      Vector worldPosition, normal;
       Handle objectHandle;
 
       if (pick->screen_to_world (
@@ -54,12 +65,14 @@ pick_screen_to_world (lua_State *L) {
                ScreenPosX,
                ScreenPosY,
                worldPosition,
+               normal,
                objectHandle)) {
 
          lua_create_vector (L, &worldPosition);
+         lua_create_vector (L, &normal);
          lua_create_handle (L, objectHandle);
 
-         result = 2;
+         result = 3;
       }
    }
 
@@ -114,7 +127,7 @@ pick_source_to_world (lua_State *L) {
 
    if (pick && sourceHandle) {
 
-      Vector worldPosition;
+      Vector worldPosition, normal;
       Handle objectHandle;
 
       if (pick->source_to_world (
@@ -122,12 +135,14 @@ pick_source_to_world (lua_State *L) {
                SourcePosX,
                SourcePosY,
                worldPosition,
+               normal,
                objectHandle)) {
 
          lua_create_vector (L, &worldPosition);
+         lua_create_vector (L, &normal);
          lua_create_handle (L, objectHandle);
 
-         result = 2;
+         result = 3;
       }
    }
 
@@ -179,6 +194,7 @@ static const luaL_Reg arrayFunc[] = {
 };
 
 
+//! \cond
 dmz::LuaExtPick::LuaExtPick (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       LuaExt (Info),
@@ -273,6 +289,7 @@ void
 dmz::LuaExtPick::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

@@ -13,6 +13,7 @@ namespace dmz {
          public InputObserverUtil {
 
       public:
+         //! \cond
          LuaPluginReset (const PluginInfo &Info, Config &local);
          ~LuaPluginReset ();
 
@@ -60,6 +61,7 @@ namespace dmz {
          LuaModule *_luaMod;
 
          Log _log;
+         //! \endcond
 
       private:
          LuaPluginReset ();

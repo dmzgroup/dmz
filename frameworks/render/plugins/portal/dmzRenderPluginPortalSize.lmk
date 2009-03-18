@@ -1,0 +1,7 @@
+lmk.set_name "dmzRenderPluginPortalSize"
+lmk.set_type "plugin"
+lmk.add_files {"dmzRenderPluginPortalSize.cpp",}
+lmk.add_libs {
+   "dmzRenderPortal",
+   "dmzKernel",
+}

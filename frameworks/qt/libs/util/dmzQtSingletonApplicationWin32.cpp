@@ -22,7 +22,7 @@ class winEventClass : public QWidget {
 
          dmz::Definitions defs (context);
          fileHandle = defs.create_named_handle ("file");
-         defs.create_message_type ("DMZ_Open_File_Message", msg);
+         defs.create_message ("DMZ_Open_File_Message", msg);
       }
 
       bool winEvent (MSG *winMsg, long *value) {

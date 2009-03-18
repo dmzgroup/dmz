@@ -14,6 +14,7 @@ namespace dmz {
          public LuaExt {
 
       public:
+         //! \cond
          LuaExtAudio (const PluginInfo &Info, Config &local);
          ~LuaExtAudio ();
 
@@ -41,6 +42,7 @@ namespace dmz {
 
          AudioModule *_audio;
          AudioModule **_audioPtr;
+         //! \endcond
 
       private:
          LuaExtAudio ();

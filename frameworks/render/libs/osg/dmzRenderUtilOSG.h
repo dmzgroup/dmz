@@ -1,10 +1,12 @@
 #ifndef DMZ_RENDER_UTIL_OSG_DOT_H
 #define DMZ_RENDER_UTIL_OSG_DOT_H
 
-#include <osg/Vec3d>
-#include <osg/Matrixd>
+#include <dmzRenderUtilOSGExport.h>
 #include <dmzTypesVector.h>
 #include <dmzTypesMatrix.h>
+
+#include <osg/Vec3d>
+#include <osg/Matrixd>
 
 namespace dmz {
 
@@ -75,6 +77,8 @@ namespace dmz {
 
       return result;
    }
+
+   DMZ_RENDER_UTIL_OSG_LINK_SYMBOL UInt32 convert_osg_key_to_dmz_key (const UInt32 Key);
 }
 
 #endif // DMZ_RENDER_UTIL_OSG_DOT_H

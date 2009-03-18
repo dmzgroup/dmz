@@ -18,7 +18,8 @@ namespace dmz {
          StringTokenizer (const dmz::String &Value, const char DelimiterValue = ' ');
          ~StringTokenizer () {;}
          void reset ();
-         dmz::String get_next ();
+         Boolean get_next (String &Value);
+         String get_next ();
 
       protected:
          const char _DelimiterValue; //!< Delimiter 8-bit character value.
@@ -51,19 +52,24 @@ inline void
 dmz::StringTokenizer::reset () { _place = 0; }
 
 
-//! Returns next token
-inline dmz::String
-dmz::StringTokenizer::get_next () {
+/*!
 
-   dmz::String result;
-   dmz::Int32 prev (_place);
-   dmz::Boolean done (!_Buffer ? True : False);
+\brief Gets the next token.
+\param[out] value String used to return the next token.
+\return Returns dmz::True if there a token was returned.
+
+*/
+inline dmz::Boolean
+dmz::StringTokenizer::get_next (String &value) {
+
+   Int32 prev (_place);
+   Boolean done (!_Buffer ? True : False);
 
    while (!done) {
 
       if (_place >= _Length) {
 
-         result = _Value.get_sub (prev);
+         value = _Value.get_sub (prev);
          done = True;
       }
       else if (_Buffer[_place] == _DelimiterValue) {
@@ -71,7 +77,7 @@ dmz::StringTokenizer::get_next () {
          if (_place == prev) { _place++; prev = _place; }
          else {
 
-            result = _Value.get_sub (prev, _place - 1);
+            value = _Value.get_sub (prev, _place - 1);
             _place++;
             done = True;
          }
@@ -79,8 +85,14 @@ dmz::StringTokenizer::get_next () {
       else { _place++; }
    }
 
-   return result;
+   return value.get_length () != 0;
 }
+
+
+//! Returns next token. Left in for compatibility. May be used with the other version
+//! of get_next().
+inline dmz::String
+dmz::StringTokenizer::get_next () { String result; get_next (result); return result; }
 
 #endif // DMZ_TYPES_STRING_TOKENIZER_DOT_H
 

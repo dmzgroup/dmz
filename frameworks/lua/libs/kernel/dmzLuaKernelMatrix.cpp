@@ -505,6 +505,7 @@ static const luaL_Reg arrayMembers [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_matrix_lib (lua_State *L) {
 
@@ -521,8 +522,13 @@ dmz::open_lua_kernel_matrix_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 
 
+//! \addtogroup Lua
+//! @{
+
+//! Creates a Matrix object on the Lua stack.
 dmz::Matrix *
 dmz::lua_create_matrix (lua_State *L, const Matrix *Value) {
 
@@ -546,6 +552,7 @@ dmz::lua_create_matrix (lua_State *L, const Matrix *Value) {
 }
 
 
+//! Attempts to convert the specified object on the Lua stack to a Matrix object.
 dmz::Matrix *
 dmz::lua_to_matrix (lua_State *L, int narg) {
 
@@ -557,6 +564,7 @@ dmz::lua_to_matrix (lua_State *L, int narg) {
 }
 
 
+//! Raises and error if the specified object on the Lua stack is not a Matrix object.
 dmz::Matrix *
 dmz::lua_check_matrix (lua_State *L, int narg) {
 
@@ -566,3 +574,4 @@ dmz::lua_check_matrix (lua_State *L, int narg) {
 
    return result;
 }
+//! @}

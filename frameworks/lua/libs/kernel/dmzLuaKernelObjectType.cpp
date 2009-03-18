@@ -279,6 +279,7 @@ static const luaL_Reg arrayMembers [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_object_type_lib (lua_State *L) {
 
@@ -295,8 +296,13 @@ dmz::open_lua_kernel_object_type_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 
 
+//! \addtogroup Lua
+//! @{
+
+//! Creates an ObjectType object on the Lua stack.
 dmz::ObjectType *
 dmz::lua_create_object_type (lua_State *L, const ObjectType *Value) {
 
@@ -320,6 +326,7 @@ dmz::lua_create_object_type (lua_State *L, const ObjectType *Value) {
 }
 
 
+//! Attempts to convert the specified object on the Lua stack to an ObjectType object.
 dmz::ObjectType *
 dmz::lua_to_object_type (lua_State *L, int narg) {
 
@@ -331,6 +338,7 @@ dmz::lua_to_object_type (lua_State *L, int narg) {
 }
 
 
+//! Raises and error if the specified object on the Lua stack is not an ObjectType object.
 dmz::ObjectType *
 dmz::lua_check_object_type (lua_State *L, int narg) {
 
@@ -340,3 +348,4 @@ dmz::lua_check_object_type (lua_State *L, int narg) {
 
    return result;
 }
+//! @}

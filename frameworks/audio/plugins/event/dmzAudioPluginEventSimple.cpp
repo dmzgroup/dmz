@@ -26,9 +26,9 @@ dmz::AudioPluginEventSimple::AudioPluginEventSimple (
       Plugin (Info),
       EventObserverUtil (Info, local),
       _log (Info),
+      _rc (Info, &_log),
       _audioMod (0),
-      _defaultEventHandle (0),
-      _rc (Info) {
+      _defaultEventHandle (0) {
 
    _init (local);
 }
@@ -189,12 +189,6 @@ dmz::AudioPluginEventSimple::_init (Config &local) {
                   _log.error << "Unknown event type: " << EventTypeName << endl;
                }
             }
-         }
-
-         if (!FileName) {
-
-            _log.error << "No audio file specified for event type: "
-               << (EventTypeName ? EventTypeName : "<Unknown Type>") << endl;
          }
 
          if (!EventTypeName) {

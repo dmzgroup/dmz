@@ -15,6 +15,35 @@
 #include <qdb.h>
 static dmz::qdb out;
 
+/*!
+
+\class dmz::LuaModuleBasic
+\ingroup Lua
+\brief Basic implementation of the LuaModule interface.
+\details
+\code
+<dmz>
+<dmzLuaModuleBasic>
+   <path value="Lua script search path"/>
+   <!-- Note extensions work similar to the plugin specification -->
+   <extensions>
+      <plugin name="Name of Lua extension"/>
+   </extensions>
+   <!-- Note script instances work similar to the plugin specification.
+        Everything but the name parameter is optional -->
+   <instance
+      name="Script instance name"
+      unique="Scripts unique runtime name"
+      scope="Scope to use for scripts initialization"
+      platform="Platform supported by this script"
+    /> 
+</dmzLuaModuleBasic>
+</dmz>
+
+\endcode
+
+*/
+
 
 namespace {
 
@@ -59,6 +88,7 @@ local_lua_hook_function (lua_State *L, lua_Debug *ar) {
 };
 
 
+//! \cond
 dmz::LuaModuleBasic::LuaModuleBasic (
       const PluginInfo &Info,
       Config &local,
@@ -1087,6 +1117,7 @@ dmz::LuaModuleBasic::_init (Config &local, Config &global) {
       }
    }
 }
+//! \endcond
 
 
 extern "C" {

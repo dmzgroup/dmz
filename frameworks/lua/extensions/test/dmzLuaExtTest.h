@@ -13,6 +13,7 @@ namespace dmz {
          public LuaExt {
 
       public:
+         //! \cond
          LuaExtTest (const PluginInfo &Info, Config &local);
          ~LuaExtTest () {;}
 
@@ -46,6 +47,7 @@ namespace dmz {
 
          Log _testLog;
          Log _log;
+         //! \endcond
 
       private:
          LuaExtTest ();

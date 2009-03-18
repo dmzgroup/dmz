@@ -209,6 +209,7 @@ static const luaL_Reg arrayMembers[] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_log_lib (lua_State *L) {
 
@@ -225,8 +226,13 @@ dmz::open_lua_kernel_log_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 
 
+//! \addtogroup Lua
+//! @{
+
+//! Attempts to convert the specified object on the stack to a Log.
 dmz::Log *
 dmz::lua_check_log (lua_State *L, int narg) {
 
@@ -238,6 +244,7 @@ dmz::lua_check_log (lua_State *L, int narg) {
 }
 
 
+//! Raises an error if the specified object on the stack is not a Log.
 dmz::Log *
 dmz::lua_to_log (lua_State *L, int index) {
 
@@ -262,4 +269,4 @@ dmz::lua_to_log (lua_State *L, int index) {
 
    return result;
 }
-
+//! @}

@@ -8,6 +8,7 @@ static const dmz::Float64 LocalMinFrequency (0.0001);
 
 //! Constructor.
 dmz::RuntimeContextTime::RuntimeContextTime () :
+      firstUpdate (True),
       currentTime (0.0),
       previousTime (0.0),
       deltaTime (0.0),
@@ -83,16 +84,21 @@ dmz::RuntimeContextTime::update_time_slice () {
 
    const Float64 StartFrameTime (get_time ());
 
-   Float64 realDeltaTime (0.0);
+   Float64 realDeltaTime (targetFrameLength);
 
-   if (currentTimeUpdated) { realDeltaTime = currentTime - previousTime; }
-   else {
+   // First update prevents the first frame from being too large.
+   if (!firstUpdate) {
 
-      realDeltaTime = StartFrameTime - previousRealTime;
-      deltaTime = realDeltaTime * timeFactor;
-      previousTime = currentTime;
-      currentTime += deltaTime;
+      if (currentTimeUpdated) { realDeltaTime = currentTime - previousTime; }
+      else {
+
+         realDeltaTime = StartFrameTime - previousRealTime;
+         deltaTime = realDeltaTime * timeFactor;
+         previousTime = currentTime;
+         currentTime += deltaTime;
+      }
    }
+   else { firstUpdate = False; }
 
    _update_time_slice (StartFrameTime, realDeltaTime);
 

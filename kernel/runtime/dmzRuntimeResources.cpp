@@ -1,10 +1,11 @@
-#include <dmzSystemFile.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfig.h>
 #include "dmzRuntimeContext.h"
 #include "dmzRuntimeContextResources.h"
+#include <dmzRuntimeLog.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeResources.h>
+#include <dmzSystemFile.h>
 
 /*!
 
@@ -21,7 +22,21 @@
 \param[in] context Pointer to the runtime context.
 
 */
-dmz::Resources::Resources (RuntimeContext *context) : _context (0) {
+dmz::Resources::Resources (RuntimeContext *context) : _context (0), _log (0) {
+
+   _context = (context ? context->get_resources_context () : 0);
+   if (_context) { _context->ref (); }
+}
+
+
+/*!
+
+\brief Runtime context Constructor.
+\param[in] context Pointer to the runtime context.
+\param[in] log Pointer to the Log to user for error reporting.
+
+*/
+dmz::Resources::Resources (RuntimeContext *context, Log *log) : _context (0), _log (log) {
 
    _context = (context ? context->get_resources_context () : 0);
    if (_context) { _context->ref (); }
@@ -34,7 +49,22 @@ dmz::Resources::Resources (RuntimeContext *context) : _context (0) {
 \param[in] Info Reference to the PluginInfo.
 
 */
-dmz::Resources::Resources (const PluginInfo &Info) : _context (0) {
+dmz::Resources::Resources (const PluginInfo &Info) : _context (0), _log (0) {
+
+   RuntimeContext *context (Info.get_context ());
+   _context = (context ? context->get_resources_context () : 0);
+   if (_context) { _context->ref (); }
+}
+
+
+/*!
+
+\brief PluginInfo Constructor.
+\param[in] Info Reference to the PluginInfo.
+\param[in] log Pointer to the Log to user for error reporting.
+
+*/
+dmz::Resources::Resources (const PluginInfo &Info, Log *log) : _context (0), _log (log) {
 
    RuntimeContext *context (Info.get_context ());
    _context = (context ? context->get_resources_context () : 0);
@@ -71,7 +101,15 @@ dmz::Resources::find_file (const String &ResourceName) const {
          PathContainer *path = _context->pathTable.lookup (PathName);
          if (path) { searchPath = *path; }
 
-         dmz::find_file (searchPath, FileName, result);
+         if (!dmz::find_file (searchPath, FileName, result) && _log) {
+
+            _log->error << "Unable to find file: " << FileName << " for resource: "
+               << ResourceName << endl;
+         }
+      }
+      else if (_log) {
+
+         _log->error << "Unable to find resource: " << ResourceName << endl;
       }
    }
 
@@ -130,6 +168,10 @@ dmz::Resources::lookup_resource_config (
       Config *rc = _context->rcTable.lookup (ResourceName);
 
       if (rc) { resource = *rc; result = True; }
+      else if (_log) {
+
+         _log->error << "Failed to find resource config: " << ResourceName << endl;
+      }
    }
 
    return result;

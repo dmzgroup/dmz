@@ -69,6 +69,7 @@ dmz::RenderPluginArticulateOSG::~RenderPluginArticulateOSG () {
    _objTable.empty ();
    _rcTable.clear ();
    _rcMasterTable.empty ();
+   _regTable.empty ();
 }
 
 
@@ -146,6 +147,8 @@ dmz::RenderPluginArticulateOSG::create_object (
               if (_objTable.store (ObjectHandle, _currentObj)) { _currentObj = 0; }
               else { delete _currentObj; _currentObj = 0; }
             }
+
+            _currentObj = 0;
          }
       }
    }
@@ -230,11 +233,9 @@ dmz::RenderPluginArticulateOSG::apply (osg::Node &node) {
       Boolean done = False;
       osg::Node::DescriptionList::iterator it = list.begin ();
 
-      while (!done && (it != list.end ())) {
+      while (it != list.end ()) {
 
          if (it->compare (0, 5, "<dmz>") == 0) {
-
-            done = True;
 
             Config data ("global");
 
@@ -246,7 +247,8 @@ dmz::RenderPluginArticulateOSG::apply (osg::Node &node) {
                popRc = _push_rc (ResourceName);
             }
          }
-         else { it++; }
+
+         it++;
       }
    }
 
@@ -282,11 +284,11 @@ dmz::RenderPluginArticulateOSG::apply (osg::Transform &transform) {
             }
          }
       }
-
-      osg::Node &node = transform;
-
-      apply (node);
    }
+
+   osg::Node &node = transform;
+
+   apply (node);
 }
 
 
@@ -327,7 +329,20 @@ dmz::RenderPluginArticulateOSG::_create_rc (const String &Name) {
                      "name",
                      artic,
                      get_plugin_runtime_context ());
+
                   const String NodeName = config_to_string ("node", artic);
+
+                  Mask *sub = _regTable.lookup (AttrHandle);
+
+                  if (!sub) {
+
+                     sub = new Mask;
+
+                     if (sub && !_regTable.store (AttrHandle, sub)) {
+
+                        delete sub; sub = 0;
+                     }
+                  }
 
                   if (Type == "scalar") {
 
@@ -339,6 +354,14 @@ dmz::RenderPluginArticulateOSG::_create_rc (const String &Name) {
                      if (sds && !result->scalarMap.store (NodeName, sds)) {
 
                         delete sds; sds = 0;
+                     }
+                     else if (sds && sub) {
+
+                        if (!sub->contains (ObjectScalarMask)) {
+
+                           (*sub) |= ObjectScalarMask;
+                           activate_object_attribute (AttrHandle, *sub);
+                        }
                      }
                   }
                }

@@ -94,9 +94,13 @@ dmz::RenderPluginObjectOSG::create_object (
 
             os->model->setSingleChildOn (0);
 
-            osg::Group *g (_core->create_dynamic_object (ObjectHandle));
+            osg::Group *group (_core->create_dynamic_object (ObjectHandle));
 
-            if (g) { g->addChild (os->model.get ()); }
+            if (group) {
+
+               group->addChild (
+                  (osg::Node *)os->model->clone (osg::CopyOp::DEEP_COPY_NODES));
+            }
          }
       }
       else { _ignoreType.add_object_type (Type); }

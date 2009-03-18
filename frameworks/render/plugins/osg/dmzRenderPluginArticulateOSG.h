@@ -8,6 +8,7 @@
 #include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
+#include <dmzTypesMask.h>
 #include <dmzTypesVector.h>
 
 #include <osg/NodeVisitor>
@@ -169,6 +170,7 @@ namespace dmz {
          ObjectStruct *_currentObj;
          ResourceStackStruct *_rcStack;
 
+         HashTableHandleTemplate<Mask> _regTable;
          HashTableHandleTemplate<ObjectStruct> _objTable;
          HashTableStringTemplate<ResourceStruct> _rcTable;
          HashTableStringTemplate<ResourceStruct> _rcMasterTable;

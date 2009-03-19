@@ -5,7 +5,9 @@
 #include <dmzObjectConsts.h>
 #include <dmzObjectModule.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToState.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
@@ -17,8 +19,13 @@ dmz::EntityPluginArticulate::EntityPluginArticulate (
       InputObserverUtil (Info, local),
       ObjectObserverUtil (Info, local),
       _log (Info),
+      _defaultAttrHandle (0),
+      _isDead (False),
       _hil (0),
-      _hilAttrHandle (0) {
+      _hilAttrHandle (0),
+      _zero (False),
+      _zeroId (5),
+      _active (0) {
 
    _init (local);
 }
@@ -71,30 +78,56 @@ dmz::EntityPluginArticulate::update_time_slice (const Float64 TimeDelta) {
 
    ObjectModule *objMod (get_object_module ());
 
-   if (_hil && objMod) {
+   if (!_isDead && (_active > 0) && _hil && objMod) {
 
       ComponentStruct *cs (0);
       HashTableUInt32Iterator it;
+
+      Int32 count (0);
 
       while (_compTable.get_next (it, cs)) {
 
          Float64 value (0.0);
          objMod->lookup_scalar (_hil, cs->AttrHandle, value);
-         value += (cs->rate * cs->axis * TimeDelta);
 
-         if (cs->limit) {
+         if (_zero) {
 
-            if (value > cs->max) { value = cs->max; }
-            else if (value < cs->min) { value = cs->min; }
+            if (value < -Pi64) { value += TwoPi64; }
+            else if (value > Pi64) { value -= TwoPi64; }
+
+            const Float64 Center = cs->center;
+
+            if (value < Center) {
+
+               value += (cs->rate * TimeDelta);
+               if (value >= Center) { value = Center; count++; }
+            }
+            else {
+
+               value -= (cs->rate * TimeDelta);
+               if (value <= Center) { value = Center; count++; }
+            }
          }
          else {
 
-            if (value > TwoPi64) { value -= TwoPi64; }
-            else if (value < -TwoPi64) { value += TwoPi64; }
+            value += (cs->rate * cs->axis * TimeDelta);
+
+            if (cs->limit) {
+
+               if (value > cs->max) { value = cs->max; }
+               else if (value < cs->min) { value = cs->min; }
+            }
+            else {
+
+               if (value > TwoPi64) { value -= TwoPi64; }
+               else if (value < -TwoPi64) { value += TwoPi64; }
+            }
          }
 
          objMod->store_scalar (_hil, cs->AttrHandle, value);
       }
+
+      if (_zero && count == _compTable.get_count ()) { _zero = False; }
    }
 }
 
@@ -105,6 +138,7 @@ dmz::EntityPluginArticulate::update_channel_state (
       const Handle Channel,
       const Boolean State) {
 
+   _active += (State ? 1 : -1);
 }
 
 
@@ -115,7 +149,11 @@ dmz::EntityPluginArticulate::receive_axis_event (
 
    ComponentStruct *cs = _compTable.lookup (Value.get_axis_id ());
 
-   if (cs) { cs->axis = Value.get_axis_value (); }
+   if (cs) {
+
+      cs->axis = Value.get_axis_value ();
+      _zero = False;
+   }
 }
 
 
@@ -124,6 +162,10 @@ dmz::EntityPluginArticulate::receive_button_event (
       const Handle Channel,
       const InputEventButton &Value) {
 
+   if ((Value.get_button_id () == _zeroId) && Value.get_button_value ()) {
+
+      _zero = True;
+   }
 }
 
 
@@ -145,6 +187,11 @@ dmz::EntityPluginArticulate::update_object_state (
       const Mask &Value,
       const Mask *PreviousValue) {
 
+   if (ObjectHandle == _hil) {
+
+      if (Value.contains (_dead)) { _isDead = True; }
+      else { _isDead = False; }
+   }
 }
 
 
@@ -159,6 +206,18 @@ dmz::EntityPluginArticulate::update_object_flag (
    if ((AttributeHandle == _hilAttrHandle) && Value) {
 
       _hil = ObjectHandle;
+
+      ObjectModule *objMod (get_object_module ());
+
+      if (objMod) {
+
+         Mask state;
+
+         if (objMod->lookup_state (_hil, _defaultAttrHandle, state)) {
+
+            if (state.contains (_dead)) { _isDead = True; }
+         }
+      }
    }
 }
 
@@ -197,6 +256,7 @@ dmz::EntityPluginArticulate::_init (Config &local) {
             if (cs) {
 
                cs->rate = config_to_float64 ("rate", comp, cs->rate);
+               cs->center = config_to_float64 ("center", comp, cs->center);
                cs->min = config_to_float64 ("min", comp, cs->min);
                cs->max = config_to_float64 ("max", comp, cs->max);
 
@@ -214,16 +274,25 @@ dmz::EntityPluginArticulate::_init (Config &local) {
       }
    }
 
-   activate_default_object_attribute (ObjectDestroyMask);
+   _defaultAttrHandle =
+      activate_default_object_attribute (ObjectDestroyMask | ObjectStateMask);
 
    _hilAttrHandle = activate_object_attribute (
       ObjectAttributeHumanInTheLoopName,
       ObjectFlagMask);
 
+   _zeroId = config_to_uint32 ("zero.id", local, _zeroId);
+
    init_input_channels (
       local,
-      InputEventAxisMask | InputEventChannelStateMask,
+      InputEventAxisMask | InputEventButtonMask | InputEventChannelStateMask,
       &_log);
+
+   _dead = config_to_state (
+      "state.dead.value",
+      local,
+      DefaultStateNameDead,
+      get_plugin_runtime_context ());
 }
 
 

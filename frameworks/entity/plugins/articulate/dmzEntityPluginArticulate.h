@@ -8,6 +8,7 @@
 #include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesConsts.h>
 #include <dmzTypesHashTableUInt32Template.h>
+#include <dmzTypesMask.h>
 
 namespace dmz {
 
@@ -75,6 +76,7 @@ namespace dmz {
             Float64 axis;
             Float64 rate;
             Boolean limit;
+            Float64 center;
             Float64 min;
             Float64 max;
 
@@ -83,6 +85,7 @@ namespace dmz {
                   axis (0.0),
                   rate (Pi64),
                   limit (False),
+                  center (0.0),
                   min (1.0),
                   max (-1.0) {;}
          };
@@ -91,8 +94,14 @@ namespace dmz {
 
          Log _log;
 
+         Handle _defaultAttrHandle;
+         Mask _dead;
+         Boolean _isDead;
          Handle _hil;
          Handle _hilAttrHandle;
+         Boolean _zero;
+         UInt32 _zeroId;
+         Int32 _active;
 
          HashTableUInt32Template<ComponentStruct> _compTable;
 

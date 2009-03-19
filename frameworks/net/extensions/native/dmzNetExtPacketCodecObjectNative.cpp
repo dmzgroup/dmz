@@ -31,7 +31,7 @@
       type="Adapter Type"
       attribute="Attribute Name"
       lnv="True/False"
-      lnv-attribute="Last Network Value Attribute Name"
+      lnv-name="Last Network Value Attribute Name"
    />
    ...
 </local-scope>
@@ -42,7 +42,7 @@ scale, vector, scalar, timestamp, and text. \n \n
 The lnv attribute is boolean. If it is set to true, the last network value will be
 stored. The lnv attribute name is automatically generated. It defaults to false.
 If the lnv attribute is not set, the lnv attribute name may be explicitly set with
-the lnv-attribute attribute. \n \n
+the lnv-name attribute. \n \n
 A counter type adapter may also have the following boolean attributes:
 counter, minimum, maximum, and rollover. These attribute determine whether each value
 is encoded/decode in the packet. They default to true.
@@ -337,7 +337,7 @@ local_create_lnv_handle (dmz::Config &local, dmz::RuntimeContext *context) {
    }
    else {
 
-      result = defs.create_named_handle (config_to_string ("lnv-attribute", local));
+      result = defs.create_named_handle (config_to_string ("lnv-name", local));
    }
 
    return result;
@@ -1202,7 +1202,7 @@ ScalarArray::ScalarArray (dmz::Config &local, dmz::RuntimeContext *context) :
             else {
 
                lnvHandle =
-                  defs.create_named_handle (config_to_string ("lnv-attribute", attr));
+                  defs.create_named_handle (config_to_string ("lnv-name", attr));
             }
 
             ScalarStruct *ss = new ScalarStruct (

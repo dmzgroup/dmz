@@ -26,7 +26,7 @@
          <rule
             type="Rule Type"
             attribute="Attribute Name"
-            lnv-attribute="Last Network Value Attribute Name"
+            lnv-name="Last Network Value Attribute Name"
             value="Delta Value"
          />
          ...
@@ -484,6 +484,7 @@ scalarTest::update_object (
       }
    }
 
+
    return result;
 }
 
@@ -717,7 +718,7 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
 
       const Handle LNVHandle (defs.create_named_handle (
          config_to_string (
-            "lnv-attribute",
+            "lnv-name",
             cd,
             create_last_network_value_name (AttributeName))));
 

@@ -73,6 +73,7 @@ namespace dmz {
          struct ComponentStruct {
 
             const Handle AttrHandle;
+            const Handle RateHandle;
             Float64 axis;
             Float64 rate;
             Boolean limit;
@@ -80,8 +81,9 @@ namespace dmz {
             Float64 min;
             Float64 max;
 
-            ComponentStruct (const Handle TheAttrHandle) :
+            ComponentStruct (const Handle TheAttrHandle, const Handle TheRateHandle) :
                   AttrHandle (TheAttrHandle),
+                  RateHandle (TheRateHandle),
                   axis (0.0),
                   rate (Pi64),
                   limit (False),

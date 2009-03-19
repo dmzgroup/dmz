@@ -88,6 +88,7 @@ dmz::EntityPluginArticulate::update_time_slice (const Float64 TimeDelta) {
       while (_compTable.get_next (it, cs)) {
 
          Float64 value (0.0);
+         Float64 rate (0.0);
          objMod->lookup_scalar (_hil, cs->AttrHandle, value);
 
          if (_zero) {
@@ -98,19 +99,22 @@ dmz::EntityPluginArticulate::update_time_slice (const Float64 TimeDelta) {
             const Float64 Center = cs->center;
 
             if (value < Center) {
-
-               value += (cs->rate * TimeDelta);
-               if (value >= Center) { value = Center; count++; }
+ 
+               rate = cs->rate;
+               value += (rate * TimeDelta);
+               if (value >= Center) { value = Center; count++; rate = 0.0; }
             }
             else {
 
-               value -= (cs->rate * TimeDelta);
-               if (value <= Center) { value = Center; count++; }
+               rate = -cs->rate;
+               value += (rate * TimeDelta);
+               if (value <= Center) { value = Center; count++; rate = 0.0; }
             }
          }
          else {
 
-            value += (cs->rate * cs->axis * TimeDelta);
+            rate = cs->rate * cs->axis;
+            value += (rate * TimeDelta);
 
             if (cs->limit) {
 
@@ -125,6 +129,8 @@ dmz::EntityPluginArticulate::update_time_slice (const Float64 TimeDelta) {
          }
 
          objMod->store_scalar (_hil, cs->AttrHandle, value);
+
+         if (cs->RateHandle) { objMod->store_scalar (_hil, cs->RateHandle, rate); }
       }
 
       if (_zero && count == _compTable.get_count ()) { _zero = False; }
@@ -240,18 +246,22 @@ dmz::EntityPluginArticulate::_init (Config &local) {
 
    if (local.lookup_all_config ("component", compList)) {
 
+      Definitions defs (get_plugin_runtime_context ());
+
       ConfigIterator it;
       Config comp;
 
       while (compList.get_next_config (it, comp)) {
 
          const String Name = config_to_string ("name", comp);
+         const String RateName = config_to_string ("rate-name", comp);
          const UInt32 Id = config_to_uint32 ("id", comp);
 
          if (Name && Id) {
 
             ComponentStruct *cs = new ComponentStruct (
-               activate_object_attribute (Name, ObjectScalarMask));
+               defs.create_named_handle (Name),
+               defs.create_named_handle (RateName));
 
             if (cs) {
 

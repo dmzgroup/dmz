@@ -33,9 +33,12 @@ namespace dmz {
 
       protected:
          void _init (const Config &Local);
+       
+         Log _log;
 
          RenderModuleCoreOSG *_core;
-         Log _log;
+
+         UInt32 _isectMask;
    };
 };
 

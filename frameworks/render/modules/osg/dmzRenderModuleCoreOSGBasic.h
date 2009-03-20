@@ -72,6 +72,9 @@ namespace dmz {
             const Matrix *PreviousValue);
 
          // RenderModuloeCoreOSG Interface
+         virtual UInt32 get_cull_mask ();
+         virtual UInt32 get_isect_mask ();
+
          virtual osg::Group *get_scene ();
          virtual osg::Group *get_overlay ();
          virtual osg::Group *get_isect ();
@@ -118,6 +121,8 @@ namespace dmz {
          void _init (Config &local, Config &global);
 
          Log _log;
+         UInt32 _cullMask;
+         UInt32 _isectMask;
          Handle _defaultHandle;
          PluginContainer _extensions;
          osg::ref_ptr<osg::Group> _scene;

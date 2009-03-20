@@ -155,7 +155,7 @@ dmz::QtPluginRenderPick::source_to_world (
          worldPosition.set (_vectorOrder[1], worldPoint.y ());
          worldPosition.set (_vectorOrder[2], 0.0);
          normal.set_xyz (0.0, 0.0, 0.0);
-         normal.set (_vectorOrder[3], 1.0);
+         normal.set (_vectorOrder[2], 1.0);
 
          objectHandle = _get_object_handle (sourcePoint);
 

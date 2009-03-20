@@ -26,7 +26,7 @@
          <rule
             type="Rule Type"
             attribute="Attribute Name"
-            lnv-attribute="Last Network Value Attribute Name"
+            lnv-name="Last Network Value Attribute Name"
             value="Delta Value"
          />
          ...
@@ -38,6 +38,7 @@
 Possible rule types and their default values:\n
 position = 0.25m \n
 velocity = 0.25m/s \n
+zero-velocity = N/A \n
 acceleration = 0.25m/s^2 \n
 vector = 0.25 \n
 orientation = 0.25 radians \n
@@ -483,6 +484,7 @@ scalarTest::update_object (
       }
    }
 
+
    return result;
 }
 
@@ -716,7 +718,7 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
 
       const Handle LNVHandle (defs.create_named_handle (
          config_to_string (
-            "lnv-attribute",
+            "lnv-name",
             cd,
             create_last_network_value_name (AttributeName))));
 
@@ -727,6 +729,12 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
             AttributeHandle,
             LNVHandle,
             config_to_float64 ("value", cd, 0.25));
+      }
+      else if (Type == "zero-velocity") {
+
+         next = new zeroVelocityTest (
+            LNVHandle,
+            AttributeHandle);
       }
       else if (Type == "velocity") {
 

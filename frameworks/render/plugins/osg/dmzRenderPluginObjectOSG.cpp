@@ -8,6 +8,8 @@
 #include <dmzRuntimePluginInfo.h>
 #include <osgDB/ReadFile>
 
+#include <osgFX/Cartoon>
+
 dmz::RenderPluginObjectOSG::RenderPluginObjectOSG (
       const PluginInfo &Info,
       Config &local) :
@@ -92,9 +94,9 @@ dmz::RenderPluginObjectOSG::create_object (
 
             os->model->setSingleChildOn (0);
 
-            osg::Group *g (_core->create_dynamic_object (ObjectHandle));
+            osg::Group *group (_core->create_dynamic_object (ObjectHandle));
 
-            if (g) { g->addChild (os->model.get ()); }
+            if (group) { group->addChild (os->model); }
          }
       }
       else { _ignoreType.add_object_type (Type); }
@@ -271,6 +273,12 @@ dmz::RenderPluginObjectOSG::_load_model (const String &ResourceName) {
          result->model = osgDB::readNodeFile (foundFile.get_buffer ());
 
          if (result->model.valid ()) {
+
+            osg::Node::DescriptionList &list = result->model->getDescriptions ();
+
+            String str ("<dmz><render><resource name=\"");
+            str << ResourceName << "\"/></render></dmz>";
+            list.push_back (str.get_buffer ());
 
             _log.info << "Loaded file: " << foundFile << " (" << ResourceName << ")"
                << endl;

@@ -12,6 +12,8 @@
 #include <dmzSystemUnmarshal.h>
 #include <dmzTypesArrays.h>
 #include <dmzTypesHandleContainer.h>
+#include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesHashTableUInt32Template.h>
 #include <dmzTypesMask.h>
 #include <dmzTypesMatrix.h>
 #include <dmzTypesUUID.h>
@@ -29,7 +31,7 @@
       type="Adapter Type"
       attribute="Attribute Name"
       lnv="True/False"
-      lnv-attribute="Last Network Value Attribute Name"
+      lnv-name="Last Network Value Attribute Name"
    />
    ...
 </local-scope>
@@ -40,7 +42,7 @@ scale, vector, scalar, timestamp, and text. \n \n
 The lnv attribute is boolean. If it is set to true, the last network value will be
 stored. The lnv attribute name is automatically generated. It defaults to false.
 If the lnv attribute is not set, the lnv attribute name may be explicitly set with
-the lnv-attribute attribute. \n \n
+the lnv-name attribute. \n \n
 A counter type adapter may also have the following boolean attributes:
 counter, minimum, maximum, and rollover. These attribute determine whether each value
 is encoded/decode in the packet. They default to true.
@@ -335,7 +337,7 @@ local_create_lnv_handle (dmz::Config &local, dmz::RuntimeContext *context) {
    }
    else {
 
-      result = defs.create_named_handle (config_to_string ("lnv-attribute", local));
+      result = defs.create_named_handle (config_to_string ("lnv-name", local));
    }
 
    return result;
@@ -1129,6 +1131,175 @@ Scalar::encode (
    if (_LNVHandle) { objMod.store_scalar (ObjectHandle, _LNVHandle, value); }
 }
 
+struct ScalarStruct {
+
+   const dmz::Handle AttrHandle;
+   const dmz::Handle LNVAttrHandle;
+   const dmz::UInt8 NetHandle;
+
+   ScalarStruct (
+         const dmz::Handle TheAttrHandle,
+         const dmz::Handle TheLNVAttrHandle,
+         const dmz::UInt8 TheNetHandle) :
+         AttrHandle (TheAttrHandle),
+         LNVAttrHandle (TheLNVAttrHandle),
+         NetHandle (TheNetHandle) {;}
+};
+
+
+class ScalarArray : public Adapter {
+
+   public:
+      ScalarArray (dmz::Config &local, dmz::RuntimeContext *context);
+      ~ScalarArray ();
+
+      virtual void decode (
+         const dmz::Handle ObjectHandle,
+         dmz::Unmarshal &data,
+         dmz::ObjectModule &objMod);
+
+      virtual void encode (
+         const dmz::Handle ObjectHandle,
+         dmz::ObjectModule &objMod,
+         dmz::Marshal &data);
+
+   protected:
+      dmz::HashTableHandleTemplate<ScalarStruct> _attrTable;
+      dmz::HashTableUInt32Template<ScalarStruct> _netTable;
+};
+
+
+ScalarArray::ScalarArray (dmz::Config &local, dmz::RuntimeContext *context) :
+      Adapter (local, context) {
+
+   dmz::Config attrList;
+
+   if (local.lookup_all_config ("attribute", attrList)) {
+
+      dmz::ConfigIterator it;
+      dmz::Config attr;
+
+      dmz::UInt8 count = 0;
+
+      dmz::Definitions defs (context);
+
+      while (attrList.get_next_config (it, attr)) {
+
+         const dmz::String Name (config_to_string ("name", attr));
+
+         if (Name) {
+
+            dmz::Handle lnvHandle (0);
+
+            const dmz::Boolean DefaultLNV (config_to_boolean ("lnv", attr, dmz::False));
+
+            if (DefaultLNV) {
+
+               dmz::String lnvName = dmz::create_last_network_value_name (Name);
+
+               lnvHandle = defs.create_named_handle (lnvName);
+            }
+            else {
+
+               lnvHandle =
+                  defs.create_named_handle (config_to_string ("lnv-name", attr));
+            }
+
+            ScalarStruct *ss = new ScalarStruct (
+               defs.create_named_handle (Name),
+               lnvHandle,
+               count);
+
+            if (ss && _attrTable.store (ss->AttrHandle, ss)) {
+
+               _netTable.store (ss->NetHandle, ss);
+            }
+            else if (ss) { delete ss; ss = 0; }
+
+            count++;
+         }
+         else {
+
+            dmz::Log log ("dmzNetExtPacketCodecObjectNative", context);
+            log.error << "scalar-array attribute missing name" << dmz::endl;
+         }
+      }
+   }
+}
+
+
+ScalarArray::~ScalarArray () {
+
+   _netTable.clear ();
+   _attrTable.empty ();
+}
+
+
+void
+ScalarArray::decode (
+      const dmz::Handle ObjectHandle,
+      dmz::Unmarshal &data,
+      dmz::ObjectModule &objMod) {
+
+   const dmz::UInt8 Size = data.get_next_uint8 ();
+
+   for (dmz::UInt8 ix = 0; ix < Size; ix++) {
+
+      const dmz::UInt8 NetHandle = data.get_next_uint8 ();
+      const dmz::Float64 Value = data.get_next_float64 ();
+
+      ScalarStruct *ss = _netTable.lookup (NetHandle);
+
+      if (ss) {
+
+         objMod.store_scalar (ObjectHandle, ss->AttrHandle, Value);
+
+         if (ss->LNVAttrHandle) {
+
+            objMod.store_scalar (ObjectHandle, ss->LNVAttrHandle, Value);
+         }
+      }
+   }
+}
+
+
+void
+ScalarArray::encode (
+      const dmz::Handle ObjectHandle,
+      dmz::ObjectModule &objMod,
+      dmz::Marshal &data) {
+
+   const dmz::Int32 SizePlace = data.get_place ();
+   data.set_next_uint8 (0);
+   dmz::UInt8 count = 0;
+
+   dmz::HashTableHandleIterator it;
+   ScalarStruct *ss (0);
+
+   while (_attrTable.get_next (it, ss)) {
+
+      dmz::Float64 value (0.0);
+
+      if (objMod.lookup_scalar (ObjectHandle, ss->AttrHandle, value)) {
+
+         data.set_next_uint8 (ss->NetHandle);
+         data.set_next_float64 (value);
+         count++;
+
+         if (ss->LNVAttrHandle) {
+
+            objMod.store_scalar (ObjectHandle, ss->LNVAttrHandle, value);
+         }
+      }
+   }
+
+   const dmz::Int32 EndPlace = data.get_place ();
+
+   data.set_place (SizePlace);
+   data.set_next_uint8 (count);
+   data.set_place (EndPlace);
+}
+
 
 class Text : public Adapter {
 
@@ -1215,7 +1386,8 @@ dmz::NetExtPacketCodecObjectNative::create_object_adapter (
    else if (Type == "acceleration") { result = new Acceleration (local, context); }
    else if (Type == "scale") { result = new Scale (local, context); }
    else if (Type == "vector") { result = new VectorAttr (local, context); }
-   else if (Type == "scalar") { result = new Scalar(local, context); }
+   else if (Type == "scalar") { result = new Scalar (local, context); }
+   else if (Type == "scalar-array") { result = new ScalarArray (local, context); }
    else if (Type == "timestamp") { result = new TimeStamp (local, context); }
    else if (Type == "text") { result = new Text (local, context); }
    else {

@@ -648,7 +648,7 @@ dmz::RenderModuleOverlayOSG::_create_texture (const String &Name) {
 
    TextureStruct *result (_textureTable.lookup (Name));
 
-   if (!result) {
+   if (Name && !result) {
 
       const String ImageName = _rc.find_file (Name);
 

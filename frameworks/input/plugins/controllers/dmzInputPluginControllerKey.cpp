@@ -143,11 +143,12 @@ dmz::InputPluginControllerKey::receive_key_event (
          }
          else {
 
-            Float32 *value (_scaleTable.lookup (Key));
+            ScaleStruct *ss (_scaleTable.lookup (Key));
 
-            if (value) {
+            if (ss) {
 
-               _scale = *value;
+               if (ss->Sticky) { if (KeyState) { _scale = ss->Scale; } }
+               else { _scale = (KeyState ? ss->Scale : 1.0); }
             }
          }
       }
@@ -238,22 +239,20 @@ dmz::InputPluginControllerKey::_init (Config &local) {
                else if (Type == "scale") {
 
                   const UInt32 Key (config_to_key_value (cd, &_log));
-                  Float32 *scale (_scaleTable.lookup (Key));
+                  ScaleStruct *ss (_scaleTable.lookup (Key));
 
-                  if (!scale) {
+                  if (!ss) {
 
-                      Float32 *value (
-                         new Float32 (config_to_float32 ("value", cd, 1.0f)));
+                     Float32 value = config_to_float32 ("value", cd, 1.0f);
 
-                     if (value) {
+                     if (value < 0.0f) { value = 0.0f; }
+                     else if (value > 1.0f) { value = 1.0f; }
 
-                        if (*value < 0.0f) { *value = 0.0f; }
-                        else if (*value > 1.0f) { *value = 1.0f; }
+                     ss = new ScaleStruct (value, config_to_boolean ("sticky", cd, True));
 
-                        if (!_scaleTable.store (Key, value)) {
+                     if (ss && !_scaleTable.store (Key, ss)) {
 
-                           delete value; value = 0;
-                        }
+                        delete ss; ss = 0;
                      }
                   }
                }
@@ -362,11 +361,11 @@ dmz::InputPluginControllerKey::_add_button (
 void
 dmz::InputPluginControllerKey::_add_scale (const UInt32 Value, const Float32 Scale) {
 
-   Float32 *scalePtr (new Float32 (Scale));
+   ScaleStruct *ss (new ScaleStruct (Scale, True));
 
-   if (scalePtr && !_scaleTable.store (Value, scalePtr)) {
+   if (ss && !_scaleTable.store (Value, ss)) {
 
-      delete scalePtr; scalePtr = 0;
+      delete ss; ss = 0;
    }
 }
 //! \endcond

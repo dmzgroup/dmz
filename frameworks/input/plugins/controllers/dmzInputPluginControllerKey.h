@@ -74,6 +74,16 @@ namespace dmz {
             ~ControllerStruct () { axisTable.empty (); buttonTable.empty (); }
          };
 
+         struct ScaleStruct {
+
+            const Float32 Scale;
+            const Boolean Sticky;
+
+            ScaleStruct (const Float32 TheScale, const Boolean IsSticky) :
+               Scale (TheScale),
+               Sticky (IsSticky) {;}
+         };
+
          void _init (Config &local);
          void _default_setup (Definitions &defs);
 
@@ -97,7 +107,7 @@ namespace dmz {
          HashTableHandleTemplate<ControllerStruct> _controllerTable;
          HashTableUInt32Template<AxisStruct> _axisKeyTable;
          HashTableUInt32Template<InputEventButton> _buttonTable;
-         HashTableUInt32Template<Float32> _scaleTable;
+         HashTableUInt32Template<ScaleStruct> _scaleTable;
          //! \endcond
 
       private:

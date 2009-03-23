@@ -7,6 +7,8 @@
 #include <dmzRuntimeData.h>
 #include <dmzTypesMask.h>
 
+#include <ctype.h>
+
 /*!
 
 \class dmz::InputModuleBasic
@@ -667,8 +669,32 @@ dmz::InputModuleBasic::send_key_event (const InputEventKey &Event) {
 
          InputEventKey *tmp (_keyCache.remove (Event.get_key ()));
 
+         if (!tmp) {
+
+            const UInt32 Key (Event.get_key ());
+
+            if (Key < 256) {
+
+               UInt32 modKey (0);
+
+               const UInt32 Upper = toupper ((char)Key);
+
+               if (Upper != Key) { modKey = Upper; }
+               else {
+
+                  const UInt32 Lower = tolower ((char)Key);
+                  if (Lower != Key) { modKey = Lower; }
+               }
+          
+               if (modKey) { tmp = _keyCache.remove (modKey); }
+            }
+         }
+
          if (tmp) { delete tmp; tmp = 0; }
-         else { cs = 0; } // Key release has already been sent, no need to send again
+         else { // Key release has already been sent, no need to send again
+
+            cs = 0;
+         }
       }
 
       while (cs) {

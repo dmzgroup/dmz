@@ -25,6 +25,7 @@ dmz::InputPluginControllerKey::InputPluginControllerKey (
       InputObserverUtil (Info, local),
       _log (Info.get_name (), Info.get_context ()),
       _scale (1.0f),
+      _lastScale (1.0f),
       _activeChannelCount (0) {
 
    _init (local);
@@ -113,15 +114,22 @@ dmz::InputPluginControllerKey::receive_key_event (
 
       if (axis) {
 
-         KeyStruct &major (axis->positive.Key == Key ? axis->positive : axis->negative);
-         KeyStruct &minor (axis->negative.Key == Key ? axis->positive : axis->negative);
+         KeyStruct &major (
+            axis->positive.keys.lookup (Key) ? axis->positive : axis->negative);
+
+         KeyStruct &minor (
+            axis->negative.keys.lookup (Key) ? axis->positive : axis->negative);
 
          major.pressed = KeyState;
 
-         Float32 axisValue (0.0);
+         Float32 axisValue (0.0f);
 
-         if (KeyState) { axisValue = major.Dir * _scale; }
-         else if (minor.pressed) { axisValue = minor.Dir * _scale; }
+         if (KeyState) { axisValue = major.Dir * _scale; axis->lastValue = major.Dir; }
+         else if (minor.pressed) {
+
+            axisValue = minor.Dir * _scale; axis->lastValue = minor.Dir;
+         }
+         else { axis->lastValue = 0.0f; }
 
          if (axis->axis.update_axis_value (axisValue)) {
 
@@ -147,8 +155,22 @@ dmz::InputPluginControllerKey::receive_key_event (
 
             if (ss) {
 
-               if (ss->Sticky) { if (KeyState) { _scale = ss->Scale; } }
-               else { _scale = (KeyState ? ss->Scale : 1.0); }
+               if (ss->Sticky) {
+
+                  if (KeyState) { _scale = ss->Scale; _lastScale = _scale; }
+               }
+               else { _scale = (KeyState ? ss->Scale : _lastScale); }
+
+               HashTableUInt32Iterator it;
+               AxisStruct *axis (0);
+
+               while (_axisKeyTable.get_next (it, axis)) {
+
+                  if (axis->axis.update_axis_value (axis->lastValue * _scale)) {
+
+                     module->send_axis_event (axis->axis);
+                  }
+               }
             }
          }
       }
@@ -208,9 +230,9 @@ dmz::InputPluginControllerKey::_init (Config &local) {
 
                   const UInt32 NegKey (config_to_key_value ("negative", cd, 0, &_log));
                   const UInt32 PosKey (config_to_key_value ("positive", cd, 0, &_log));
-                  const UInt32 AxisHandle (config_to_uint32 ("id", cd, 1));
+                  const UInt32 AxisId (config_to_uint32 ("id", cd, 1));
 
-                  _add_axis (AxisHandle, NegKey, PosKey, *cs);
+                  _add_axis (AxisId, NegKey, PosKey, *cs);
                }
                else if (Type == "button") {
 
@@ -219,15 +241,15 @@ dmz::InputPluginControllerKey::_init (Config &local) {
 
                   if (!button) {
 
-                     const UInt32 ButtonHandle (config_to_uint32 ("id", cd, 1));
+                     const UInt32 ButtonId (config_to_uint32 ("id", cd, 1));
 
-                     if (!cs->buttonTable.lookup (ButtonHandle)) {
+                     if (!cs->buttonTable.lookup (ButtonId)) {
 
-                        button = new InputEventButton (cs->SourceHandle, ButtonHandle);
+                        button = new InputEventButton (cs->SourceHandle, ButtonId);
 
                         if (button) {
 
-                           if (cs->buttonTable.store (ButtonHandle, button)) {
+                           if (cs->buttonTable.store (ButtonId, button)) {
 
                               _buttonTable.store (Key, button);
                            }
@@ -312,46 +334,44 @@ dmz::InputPluginControllerKey::_default_setup (Definitions &defs) {
 
 void
 dmz::InputPluginControllerKey::_add_axis (
-      const UInt32 Handle,
+      const UInt32 Id,
       const UInt32 Negative,
       const UInt32 Positive,
       ControllerStruct &cs) {
 
-   AxisStruct *axis (cs.axisTable.lookup (Handle));
+   AxisStruct *axis (cs.axisTable.lookup (Id));
 
    if (!axis) {
 
-      AxisStruct *axis (new AxisStruct (Negative, Positive, cs.SourceHandle, Handle));
+      axis = new AxisStruct (cs.SourceHandle, Id);
 
-      if (cs.axisTable.store (Handle, axis)) {
-
-         _axisKeyTable.store (Negative, axis);
-         _axisKeyTable.store (Positive, axis);
-      }
-      else {
-
-         delete axis; axis = 0;
-      }
+      if (axis && !cs.axisTable.store (Id, axis)) { delete axis; axis = 0; }
    }
-   else {
 
+   if (axis) {
+
+      axis->negative.keys.store (Negative, (void *)this);
+      axis->positive.keys.store (Positive, (void *)this);
+
+      _axisKeyTable.store (Negative, axis);
+      _axisKeyTable.store (Positive, axis);
    }
 }
 
 
 void
 dmz::InputPluginControllerKey::_add_button (
-      const UInt32 Handle,
+      const UInt32 Id,
       const UInt32 Value,
       ControllerStruct &cs) {
 
-   InputEventButton *button (cs.buttonTable.lookup (Handle));
+   InputEventButton *button (cs.buttonTable.lookup (Id));
 
    if (!button) {
 
-      button = new InputEventButton (cs.SourceHandle, Handle);
+      button = new InputEventButton (cs.SourceHandle, Id);
 
-      if (button && !cs.buttonTable.store (Handle, button)) { delete button; button = 0; }
+      if (button && !cs.buttonTable.store (Id, button)) { delete button; button = 0; }
    }
 
    if (button) { _buttonTable.store (Value, button); }

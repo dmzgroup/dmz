@@ -58,6 +58,7 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         UInt32 _isectMask;
          RenderModuleCoreOSG *_core;
          osg::ref_ptr<osgViewer::Viewer> _viewer;
          osg::ref_ptr<osg::Viewport> _viewport;

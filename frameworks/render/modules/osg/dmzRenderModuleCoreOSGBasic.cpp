@@ -26,8 +26,9 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
       ObjectObserverUtil (Info, local),
       RenderModuleCoreOSG (Info),
       _log (Info),
-      _cullMask (0x01),
-      _isectMask (0x10),
+      _cullMask (0x001),
+      _isectMask (0x010),
+      _overlayMask (0x100),
       _defaultHandle (0),
       _dirtyObjects (0) {
 
@@ -47,6 +48,8 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
    _isect->addChild (_dynamicObjects.get ());
 
    _init (local, global);
+
+   _overlay->setNodeMask (_overlayMask | _cullMask);
 }
 
 
@@ -202,6 +205,10 @@ dmz::RenderModuleCoreOSGBasic::get_cull_mask () { return _cullMask; }
 
 dmz::UInt32
 dmz::RenderModuleCoreOSGBasic::get_isect_mask () { return _isectMask; }
+
+
+dmz::UInt32
+dmz::RenderModuleCoreOSGBasic::get_overlay_mask () { return _overlayMask; }
 
 
 osg::Group *

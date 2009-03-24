@@ -141,7 +141,7 @@ dmz::EntityPluginGroundSimple::update_time_slice (const Float64 TimeDelta) {
 
             ori = nmat * hm;
 
-            get_ortho (normal, vel, vel);
+            get_orthogonal_component (normal, vel, vel);
          }
       }
 
@@ -538,11 +538,7 @@ dmz::EntityPluginGroundSimple::_move_entity (
 
    mat.transform_vector (vforward);
 
-   heading = vforward.get_angle (Forward);
-
-   const Vector Cross (vforward.cross (Forward));
-
-   if (Cross.get_y () > 0.0) { heading = TwoPi64 - heading; }
+   heading = get_rotation_angle (Forward, vforward);
 
    if (Airborn) {
 
@@ -748,11 +744,7 @@ dmz::EntityPluginGroundSimple::_validate_move (
 
             ori = ori * mat;
 
-            heading = newDir.get_angle (Forward);
-
-            const Vector Cross (newDir.cross (Forward));
-
-            if (Cross.get_y () < 0.0) { heading = TwoPi64 - heading; }
+            heading = get_rotation_angle (Forward, newDir);
          }
       }
 

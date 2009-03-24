@@ -497,19 +497,7 @@ is always positive and therefor does not indicate direction of rotation of the a
 inline dmz::Float64
 dmz::Vector::get_angle (const Vector &Vec) const {
 
-   Float64 result (0.0);
-
-   const Float64 Denominator (magnitude () * Vec.magnitude ());
-
-   if (!is_zero64 (Denominator)) {
-
-      Float64 value (dot (Vec) / Denominator);
-      if (value > 1.0) { value = 1.0; }
-      else if (value < -1.0) { value = -1.0; }
-      result = acos (value);
-   }
-
-   return result;
+   return atan2 (cross (Vec).magnitude (), dot (Vec));
 }
 
 

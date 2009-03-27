@@ -44,6 +44,8 @@ namespace dmz {
 
          virtual Handle clone_template (const String &Name) = 0;
 
+         virtual Boolean destroy_node (const Handle Overlay) = 0;
+
          // Overlay Group API
          virtual Boolean add_group_child (const Handle Parent, const Handle Child) = 0;
          virtual Boolean remove_group_child (const Handle Parent, const Handle Child) = 0;

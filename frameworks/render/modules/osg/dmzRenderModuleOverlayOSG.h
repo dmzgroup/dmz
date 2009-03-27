@@ -20,6 +20,9 @@
 #include <osg/Matrix>
 #include <osg/MatrixTransform>
 
+#include <qdb.h>
+static dmz::qdb out;
+
 namespace dmz {
 
    class RenderModuleCoreOSG;
@@ -71,6 +74,8 @@ namespace dmz {
             const RenderOverlayTypeEnum Type);
 
          virtual Handle clone_template (const String &Name);
+
+         virtual Boolean destroy_node (const Handle Overlay);
 
          // Overlay Group API
          virtual Boolean add_group_child (const Handle Parent, const Handle Child);
@@ -165,6 +170,7 @@ namespace dmz {
          struct GroupStruct : public NodeStruct {
 
             osg::ref_ptr<osg::Group> group;
+            HashTableHandleTemplate<NodeStruct> childTable;
 
             GroupStruct (const String &Name, RuntimeContext *context, osg::Group *ptr) :
                   NodeStruct (
@@ -183,7 +189,7 @@ namespace dmz {
                   const String &TypeName,
                   RuntimeContext *context,
                   osg::Group *ptr) :
-                  NodeStruct (Name, Type, TypeName, context, ptr) { group = ptr; }
+                  NodeStruct (Name, TheType, TypeName, context, ptr) { group = ptr; }
          };
 
          struct SwitchStruct : public GroupStruct {
@@ -230,6 +236,14 @@ namespace dmz {
             CloneStruct () : next (0) {;}
          };
 
+         struct GroupStackStruct {
+
+            GroupStruct &gs;
+            GroupStackStruct *next;
+
+            GroupStackStruct (GroupStruct &TheGs) : gs (TheGs), next (0) {;}
+         };
+
          struct LayoutStruct {
 
             LayoutAxis &xaxis;
@@ -267,6 +281,11 @@ namespace dmz {
          void _add_box (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_clone (osg::ref_ptr<osg::Group> &parent, Config &node);
 
+         Boolean _remove_node (const Handle Overlay);
+         Boolean _remove_group (const Handle Overlay);
+         Boolean _remove_switch (const Handle Overlay);
+         Boolean _remove_transform (const Handle Overlay);
+
          void _init_colors (Config &local);
          void _init_templates (Config &local);
          void _init_layout (Config &local);
@@ -279,6 +298,7 @@ namespace dmz {
          osg::ref_ptr<osg::Camera> _camera;
          osg::ref_ptr<osg::Group> _rootNode;
          CloneStruct *_cloneStack;
+         GroupStackStruct *_groupStack;
          HashTableStringTemplate<TextureStruct> _textureTable;
 
          HashTableStringTemplate<osg::Vec4> _colorTable;

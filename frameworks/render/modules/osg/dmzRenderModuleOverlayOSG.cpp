@@ -75,7 +75,8 @@ dmz::RenderModuleOverlayOSG::RenderModuleOverlayOSG (
       _log (Info),
       _rc (Info, &_log),
       _core (0),
-      _cloneStack (0) {
+      _cloneStack (0),
+      _groupStack (0) {
 
    _rootNode = new osg::Group;
 
@@ -279,6 +280,25 @@ dmz::RenderModuleOverlayOSG::clone_template (const String &Name) {
 }
 
 
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::destroy_node (const Handle Overlay) {
+
+   Boolean result (False);
+
+   NodeStruct *ns = _nodeTable.lookup (Overlay);
+
+   if (ns) {
+
+      if (ns->Type == RenderOverlayTransform) { result = _remove_transform (Overlay); }
+      else if (ns->Type == RenderOverlaySwitch) { result = _remove_switch (Overlay); }
+      else if (ns->Type == RenderOverlayGroup) { result = _remove_group (Overlay); }
+      else { result = _remove_node (Overlay); }
+   }
+
+   return result;
+}
+
+
 // Overlay Group API
 dmz::Boolean
 dmz::RenderModuleOverlayOSG::add_group_child (const Handle Parent, const Handle Child) {
@@ -315,6 +335,7 @@ dmz::RenderModuleOverlayOSG::remove_group_child (
 
       result = True;
    }
+
    return result;
 }
 
@@ -690,6 +711,8 @@ dmz::RenderModuleOverlayOSG::_register_node (NodeStruct *ptr) {
          else if (!_nodeNameTable.store (ptr->Name, ptr)) {
 
          }
+
+         if (_groupStack) { _groupStack->gs.childTable.store (ptr->VHandle, ptr); }
       }
    }
 
@@ -783,15 +806,36 @@ dmz::RenderModuleOverlayOSG::_add_group (
 
    const String Name = config_to_string ("name", node);
 
+   Boolean popStack = False;
+
    if (Name) {
 
       GroupStruct *gs =
          new GroupStruct (Name, get_plugin_runtime_context (), child.get ());
 
       if (!_register_group (gs)) { delete gs; gs = 0; }
+      else if (gs) {
+
+         GroupStackStruct *gss = new GroupStackStruct (*gs);
+
+         if (gss) {
+
+            gss->next = _groupStack;
+            _groupStack = gss;
+            popStack = True;
+         }
+      }
    }
 
    _add_children (child, node);
+
+   if (popStack && _groupStack) {
+
+      GroupStackStruct *gss = _groupStack;
+      _groupStack = _groupStack->next;
+
+      if (gss) { delete gss; gss = 0; }
+   }
 }
 
 
@@ -998,6 +1042,70 @@ dmz::RenderModuleOverlayOSG::_add_clone (osg::ref_ptr<osg::Group> &parent, Confi
       }
    }
    else { _log.error << "Clone failed. Unknown template: " << Clone << endl; }
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_node (const Handle Overlay) {
+
+   Boolean result (False);
+
+   NodeStruct *ns = _nodeTable.remove (Overlay);
+
+   if (ns && ns->node.valid ()) {
+
+      const unsigned int ParentCount = ns->node->getNumParents ();
+
+      if (ParentCount) {
+
+         for (unsigned int ix = 0; ix < ParentCount; ix--) {
+
+            osg::Group *parent = ns->node->getParent (ix);
+
+            if (parent) { parent->removeChild (ns->node.get ()); }
+         }
+      }
+
+      result = True;
+      delete ns; ns = 0;
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_group (const Handle Overlay) {
+
+   GroupStruct *gs = _groupTable.remove (Overlay);
+
+   if (gs) {
+
+      HashTableHandleIterator it;
+      NodeStruct *ns (0);
+
+      while (gs->childTable.get_next (it, ns)) { destroy_node (ns->VHandle); }
+   }
+
+   return (gs != 0) && _remove_node (Overlay);
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_switch (const Handle Overlay) {
+
+   const Boolean Result = (_switchTable.remove (Overlay) != 0);
+
+   return Result && _remove_group (Overlay);
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_transform (const Handle Overlay) {
+
+   const Boolean Result = (_transformTable.remove (Overlay) != 0);
+
+   return Result && _remove_group (Overlay);
 }
 
 

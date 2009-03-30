@@ -118,19 +118,10 @@ dmz::LuaModuleBasic::LuaModuleBasic (
 
 dmz::LuaModuleBasic::~LuaModuleBasic () {
 
-   _stop_lua_plugins ();
-   _close_lua ();
-
    HashTableHandleIterator it;
+   LuaExt *ext (0);
 
-   LuaExt *ext (_extTable.get_first (it));
-
-   while (ext) {
-
-      ext->remove_lua_module (*this);
-
-      ext = _extTable.get_next (it);
-   }
+   while (_extTable.get_next (it, ext)) { ext->remove_lua_module (*this); }
 
    _extTable.clear ();
    _instanceTable.empty ();
@@ -161,7 +152,13 @@ dmz::LuaModuleBasic::update_plugin_state (
       _started = True;
    }
    else if (State == PluginStateStop) { _extensions.stop_plugins (); }
-   else if (State == PluginStateShutdown) { _extensions.shutdown_plugins (); }
+   else if (State == PluginStateShutdown) {
+
+      _stop_lua_plugins ();
+      _close_lua ();
+
+      _extensions.shutdown_plugins ();
+   }
 }
 
 

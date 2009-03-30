@@ -279,6 +279,7 @@ namespace dmz {
          void _add_switch (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_transform (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_box (osg::ref_ptr<osg::Group> &parent, Config &node);
+         void _add_circle (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_clone (osg::ref_ptr<osg::Group> &parent, Config &node);
 
          Boolean _remove_node (const Handle Overlay);

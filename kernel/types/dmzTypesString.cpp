@@ -993,6 +993,20 @@ dmz::String::replace_sub (
 }
 
 
+dmz::Boolean
+dmz::String::contains_sub (const String &Sub, const Int32 Start) const {
+
+   Boolean result (False);
+
+   if (_buffer && Sub._buffer && ((Sub._length + Start) <= _length)) {
+
+      result = (strncmp (&(_buffer[Start]), Sub._buffer, Sub._length) == 0);
+   }
+
+   return result;
+}
+
+
 dmz::String &
 operator<< (dmz::String &str, const dmz::String &Value) {
 

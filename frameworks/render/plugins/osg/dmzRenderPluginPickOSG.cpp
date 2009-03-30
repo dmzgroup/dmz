@@ -14,6 +14,7 @@ dmz::RenderPluginPickOSG::RenderPluginPickOSG (const PluginInfo &Info, Config &l
       RenderPickUtil (Info, local),
       _log (Info),
       _core (0),
+      _isectMask (0),
       _viewerName (RenderMainPortalName) {
 
    _init (local);
@@ -64,11 +65,20 @@ dmz::RenderPluginPickOSG::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_core) { _core = dmz::RenderModuleCoreOSG::cast (PluginPtr); }
+      if (!_core) {
+
+         _core = dmz::RenderModuleCoreOSG::cast (PluginPtr);
+
+         if (_core) { _isectMask = _core->get_isect_mask (); }
+      }
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_core && (_core == dmz::RenderModuleCoreOSG::cast (PluginPtr))) { _core = 0; }
+      if (_core && (_core == dmz::RenderModuleCoreOSG::cast (PluginPtr))) {
+
+         _core = 0;
+         _isectMask = 0;
+      }
    }
 }
 
@@ -119,7 +129,8 @@ dmz::RenderPluginPickOSG::source_to_world (
       if (_viewer->computeIntersections (
             (float)SourcePosX,
             Height - (float)SourcePosY,
-            isect)) {
+            isect,
+            _isectMask)) {
 
          osgUtil::LineSegmentIntersector::Intersections::iterator it = isect.begin ();
 

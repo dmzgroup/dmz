@@ -1,0 +1,10 @@
+lmk.set_name "dmzWeaponPluginLauncher"
+lmk.set_type "plugin"
+lmk.add_files {"dmzWeaponPluginLauncher.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzInputEvents",
+   "dmzInputUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzEventFramework", "dmzObjectFramework", "dmzInputFramework",}

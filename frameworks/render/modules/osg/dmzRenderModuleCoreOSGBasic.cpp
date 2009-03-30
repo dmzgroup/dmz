@@ -26,6 +26,9 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
       ObjectObserverUtil (Info, local),
       RenderModuleCoreOSG (Info),
       _log (Info),
+      _cullMask (0x001),
+      _isectMask (0x010),
+      _overlayMask (0x100),
       _defaultHandle (0),
       _dirtyObjects (0) {
 
@@ -45,6 +48,8 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
    _isect->addChild (_dynamicObjects.get ());
 
    _init (local, global);
+
+   _overlay->setNodeMask (_overlayMask | _cullMask);
 }
 
 
@@ -193,6 +198,18 @@ dmz::RenderModuleCoreOSGBasic::update_object_orientation (
    }
 }
 
+// RenderModuleCoreOSG Interface
+dmz::UInt32
+dmz::RenderModuleCoreOSGBasic::get_cull_mask () { return _cullMask; }
+
+
+dmz::UInt32
+dmz::RenderModuleCoreOSGBasic::get_isect_mask () { return _isectMask; }
+
+
+dmz::UInt32
+dmz::RenderModuleCoreOSGBasic::get_overlay_mask () { return _overlayMask; }
+
 
 osg::Group *
 dmz::RenderModuleCoreOSGBasic::get_scene () { return _scene.get (); }
@@ -281,7 +298,17 @@ dmz::RenderModuleCoreOSGBasic::add_viewer (
 
    ViewerStruct *vs = new ViewerStruct (ViewerName, viewer);
 
-   if (vs && _viewerTable.store (ViewerName, vs)) { result = True; }
+   if (vs && _viewerTable.store (ViewerName, vs)) {
+
+      result = True;
+
+      if (viewer) {
+
+         osg::Camera *camera = viewer->getCamera ();
+
+         if (camera) { camera->setCullMask (_cullMask); }
+      }
+   }
    else if (vs) { delete vs; vs = 0; }
 
    return result;

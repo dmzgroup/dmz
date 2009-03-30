@@ -60,6 +60,36 @@ get_input (lua_State *L) {
 
 
 static int
+input_get_key_value (lua_State *L) {
+
+   LUA_START_VALIDATE (L);
+
+   const String Key = luaL_checkstring (L, 1);
+   const UInt32 Value = string_to_key_value (Key);
+   lua_pushnumber (L, (lua_Number)Value);
+
+   LUA_END_VALIDATE (L, 1);
+
+   return 1;
+}
+
+
+static int
+input_get_key_string (lua_State *L) {
+
+   LUA_START_VALIDATE (L);
+
+   const UInt32 Value = (UInt32)luaL_checknumber (L, 1);
+   const String Key  = key_value_to_string (Value);
+   lua_pushstring (L, Key.get_buffer ());
+
+   LUA_END_VALIDATE (L, 1);
+
+   return 1;
+}
+
+
+static int
 input_has_buttons_changed (lua_State *L) {
 
    LUA_START_VALIDATE (L);
@@ -158,6 +188,8 @@ input_is_button_pressed (lua_State *L) {
 
 
 static const luaL_Reg arrayFunc[] = {
+   {"get_key_value", input_get_key_value},
+   {"get_key_string", input_get_key_string},
    {"has_buttons_changed", input_has_buttons_changed},
    {"is_button_changed", input_is_button_changed},
    {"is_button_pressed", input_is_button_pressed},

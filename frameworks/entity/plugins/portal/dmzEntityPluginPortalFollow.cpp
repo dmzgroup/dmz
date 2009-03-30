@@ -62,6 +62,7 @@ dmz::EntityPluginPortalFollow::discover_plugin (
       
          _renderPortal = 0; 
       }
+
       if (_audioPortal && (_audioPortal == AudioModulePortal::cast (PluginPtr))) { 
       
          _audioPortal = 0; 

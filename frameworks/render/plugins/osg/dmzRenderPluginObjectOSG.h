@@ -107,8 +107,7 @@ namespace dmz {
 
                if (Def.model.valid ()) {
 
-                  osg::CopyOp c;
-                  model = (osg::Switch *)Def.model->clone (c);
+                  model = (osg::Switch *)Def.model->clone (osg::CopyOp::DEEP_COPY_NODES);
                }
             }
          };

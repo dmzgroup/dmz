@@ -113,7 +113,7 @@ dmz::EntityPluginDustTrail::update_object_velocity (
 
    ObjectModule *objMod = get_object_module ();
 
-   if (_hil && objMod) {
+   if ((ObjectHandle == _hil) && objMod) {
 
       Mask state;
 

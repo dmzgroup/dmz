@@ -593,6 +593,19 @@ dmz::Data::operator! () const { return !_state.dataTable.get_count (); }
 
 
 //! Gets RuntimeContext stored in Data object.
+void
+dmz::Data::set_runtime_context (RuntimeContext *context) {
+
+   if (context != _state.context) {
+
+      if (_state.context) { _state.context->unref (); }
+      _state.context = context;
+      if (_state.context) { _state.context->ref (); }
+   }
+}
+
+
+//! Gets RuntimeContext stored in Data object.
 dmz::RuntimeContext *
 dmz::Data::get_runtime_context () const { return _state.context; }
 

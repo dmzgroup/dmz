@@ -134,6 +134,7 @@ dmz::RenderPickUtil::screen_to_world (
       const Int32 ScreenPosX,
       const Int32 ScreenPosY,
       Vector &worldPosition,
+      Vector &normal,
       Handle &objectHandle) {
 
    __state.log.warn << "Base screen_to_world called."
@@ -161,6 +162,7 @@ dmz::RenderPickUtil::source_to_world (
       const Int32 SourcePosX,
       const Int32 SourcePosY,
       Vector &worldPosition,
+      Vector &normal,
       Handle &objectHandle) {
 
    __state.log.warn << "Base source_to_world called."

@@ -36,8 +36,13 @@
 		activeExec = 0;
 	};
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.pbxuser
 		activeBuildConfigurationName = Debug;
 		activeSDKPreference = iphonesimulator2.0;
+=======
+		activeBuildConfigurationName = opt;
+		activeSDKPreference = iphonesimulator2.1;
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.pbxuser
 		activeTarget = 7A8535DA0E12EC30008CEAEB /* build_all */;
 		addToTargets = (
 			7A560BA60E12D6B90049409D /* dmzLuaKernel */,
@@ -117,8 +122,13 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.pbxuser
 			PBXPerProjectTemplateStateSaveDate = 257803114;
 			PBXWorkspaceStateSaveDate = 257803114;
+=======
+			PBXPerProjectTemplateStateSaveDate = 258401410;
+			PBXWorkspaceStateSaveDate = 258401410;
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.pbxuser
 		};
 		perUserProjectItems = {
 			7A09A6180E5E1EE9000CB01C /* PBXTextBookmark */ = 7A09A6180E5E1EE9000CB01C /* PBXTextBookmark */;
@@ -199,7 +209,10 @@
 			7A39BB4B0E4B8CF10035E12A /* PBXTextBookmark */ = 7A39BB4B0E4B8CF10035E12A /* PBXTextBookmark */;
 			7A39BB4C0E4B8CF10035E12A /* PBXTextBookmark */ = 7A39BB4C0E4B8CF10035E12A /* PBXTextBookmark */;
 			7A39BB4E0E4B8CF10035E12A /* PBXTextBookmark */ = 7A39BB4E0E4B8CF10035E12A /* PBXTextBookmark */;
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.pbxuser
 			7A6828F60F5DC36300A2DAEC /* PBXTextBookmark */ = 7A6828F60F5DC36300A2DAEC /* PBXTextBookmark */;
+=======
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.pbxuser
 			7A6F1C040E5CA62C004FB18E /* PBXTextBookmark */ = 7A6F1C040E5CA62C004FB18E /* PBXTextBookmark */;
 			7A6F1C050E5CA62C004FB18E /* PBXTextBookmark */ = 7A6F1C050E5CA62C004FB18E /* PBXTextBookmark */;
 			7A6F1C060E5CA62C004FB18E /* PBXTextBookmark */ = 7A6F1C060E5CA62C004FB18E /* PBXTextBookmark */;
@@ -233,6 +246,13 @@
 			7AA9CA200EB721A000A97E88 /* PBXTextBookmark */ = 7AA9CA200EB721A000A97E88 /* PBXTextBookmark */;
 			7AA9CA220EB721A000A97E88 /* PBXTextBookmark */ = 7AA9CA220EB721A000A97E88 /* PBXTextBookmark */;
 			7AA9CA230EB721A000A97E88 /* PBXTextBookmark */ = 7AA9CA230EB721A000A97E88 /* PBXTextBookmark */;
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.pbxuser
+=======
+			7AD2848F0F66FDBA009F27D4 /* PBXTextBookmark */ = 7AD2848F0F66FDBA009F27D4 /* PBXTextBookmark */;
+			7AD284900F66FDBA009F27D4 /* PBXTextBookmark */ = 7AD284900F66FDBA009F27D4 /* PBXTextBookmark */;
+			7AD284910F66FDBA009F27D4 /* PBXTextBookmark */ = 7AD284910F66FDBA009F27D4 /* PBXTextBookmark */;
+			7AD284920F66FDBA009F27D4 /* PBXTextBookmark */ = 7AD284920F66FDBA009F27D4 /* PBXTextBookmark */;
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.pbxuser
 		};
 		sourceControlManager = 7A0E0D560E117CB600E55011 /* Source Control */;
 		userBuildSettings = {
@@ -382,6 +402,13 @@
 			sepNavIntBoundsRect = "{{0, 0}, {539, 475}}";
 			sepNavSelRange = "{14, 16}";
 			sepNavVisRange = "{0, 122}";
+		};
+	};
+	7A09AFE80E118D16003C5B32 /* dmzPluginUndoDump.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {616, 1428}}";
+			sepNavSelRange = "{1737, 60}";
+			sepNavVisRange = "{1338, 827}";
 		};
 	};
 	7A09AFEF0E118D45003C5B32 /* expat */ = {
@@ -1125,8 +1152,8 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		lineNumber = 11;
-		modificationTime = 247104382.958356;
-		state = 1;
+		modificationTime = 258401882.569903;
+		state = 0;
 	};
 	7A20BFBD0E52306D00D169ED /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -1958,6 +1985,47 @@
 		vrLen = 627;
 		vrLoc = 0;
 	};
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.pbxuser
+=======
+	7AD2848F0F66FDBA009F27D4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A01472B0E118421001813A7 /* dmzRuntimeContext.h */;
+		name = "dmzRuntimeContext.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1092;
+		vrLoc = 0;
+	};
+	7AD284900F66FDBA009F27D4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "warning: unused variable ‘context’";
+		fRef = 7A09AFE80E118D16003C5B32 /* dmzPluginUndoDump.cpp */;
+		rLen = 1;
+		rLoc = 78;
+		rType = 1;
+	};
+	7AD284910F66FDBA009F27D4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A01472B0E118421001813A7 /* dmzRuntimeContext.h */;
+		name = "dmzRuntimeContext.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1092;
+		vrLoc = 0;
+	};
+	7AD284920F66FDBA009F27D4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7A09AFE80E118D16003C5B32 /* dmzPluginUndoDump.cpp */;
+		name = "dmzPluginUndoDump.cpp: 79";
+		rLen = 60;
+		rLoc = 1737;
+		rType = 0;
+		vrLen = 824;
+		vrLoc = 1338;
+	};
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.pbxuser
 	D249EF000E5B8B2900A57803 /* dmzInputPluginMouseEventToMessage */ = {
 		activeExec = 0;
 	};

@@ -26,7 +26,7 @@ dmz::AudioPluginEvent::AudioPluginEvent (const PluginInfo &Info, Config &local) 
       Plugin (Info),
       EventObserverUtil (Info, local),
       _log (Info),
-      _rc (Info),
+      _rc (Info, &_log),
       _defs (Info),
       _audioMod (0),
       _eventMod (0),
@@ -214,10 +214,6 @@ dmz::AudioPluginEvent::_create_sound (const String &Name) {
             _log.error << "Failed to load audio resource: " << Name << " from file: "
                << FileName << endl;
          }
-      }
-      else if (!FileName) {
-
-         _log.error << "Unable to find audio resource: " << Name << endl;
       }
    }
 

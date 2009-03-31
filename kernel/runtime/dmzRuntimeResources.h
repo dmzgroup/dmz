@@ -8,6 +8,7 @@
 namespace dmz {
 
    class Config;
+   class Log;
    class PathContainer;
    class PluginInfo;
    class RuntimeContext;
@@ -17,7 +18,9 @@ namespace dmz {
 
       public:
          Resources (RuntimeContext *context);
+         Resources (RuntimeContext *context, Log *log);
          Resources (const PluginInfo &Info);
+         Resources (const PluginInfo &Info, Log *log);
          ~Resources ();
 
          String find_file (const String &ResourceName) const;
@@ -45,6 +48,7 @@ namespace dmz {
       protected:
          //! \cond
          RuntimeContextResources *_context;
+         Log *_log;
          //! \endcond
 
       private:

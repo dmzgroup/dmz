@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dmz>
-<plugins>
+<plugin-list>
    <plugin name="dmzInputModuleBasic"/>
    <plugin name="dmzArchivePluginInput"/>
    <plugin name="dmzPluginTermExit"/>
    <plugin name="dmzLuaModuleBasic"/>
    <!-- <plugin name="dmzExPluginInput"/> -->
-</plugins>
+</plugin-list>
 <dmzLuaModuleBasic>
    <extensions>
       <plugin name="dmzLuaExtInput"/>

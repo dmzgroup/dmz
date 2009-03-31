@@ -53,6 +53,8 @@ namespace dmz {
    const char ObjectAttributeScalarThrottleName[] = "throttle";
    //! Selected object attribute handle name. Defined in dmzObjectConsts.h.
    const char ObjectAttributeSelectName[] = "Object_Select_Attribute";
+   //! Hidden object attribute handle name. Defined in dmzObjectConsts.h.
+   const char ObjectAttributeHideName[] = "Object_Hide_Attribute";
 
    String create_last_network_value_name (const String &Value);
 };

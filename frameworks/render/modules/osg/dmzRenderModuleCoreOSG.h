@@ -11,7 +11,6 @@ namespace osgViewer { class Viewer; }
 namespace dmz {
 
    const char RenderModuleCoreOSGInterfaceName[] = "RenderModuleCoreOSGInterface";
-   const char DefaultPortalNameOSG[] = "DMZ_Default_Portal_OSG";
 
    class RenderCameraManipulatorOSG;
 
@@ -19,6 +18,10 @@ namespace dmz {
 
       public:
          static RenderModuleCoreOSG *cast (const Plugin *PluginPtr);
+
+         virtual UInt32 get_cull_mask () = 0;
+         virtual UInt32 get_isect_mask () = 0;
+         virtual UInt32 get_overlay_mask () = 0;
 
          virtual osg::Group *get_scene () = 0;
          virtual osg::Group *get_overlay () = 0;
@@ -29,19 +32,12 @@ namespace dmz {
          virtual osg::Group *create_dynamic_object (const Handle ObjectHandle) = 0;
          virtual osg::Group *lookup_dynamic_object (const Handle ObjectHandle) = 0;
 
-         virtual Boolean add_camera (const String &PortalName, osg::Camera *camera) = 0;
-         virtual osg::Camera *lookup_camera (const String &PortalName) = 0;
-         virtual osg::Camera *remove_camera (const String &PortalName) = 0;
+         virtual Boolean add_viewer (
+            const String &ViewerName,
+            osgViewer::Viewer *viewer) = 0;
 
-         virtual Boolean add_camera_manipulator (
-            const String &PortalName,
-            RenderCameraManipulatorOSG *manipulator) = 0;
-
-         virtual RenderCameraManipulatorOSG *lookup_camera_manipulator (
-            const String &PortalName) = 0;
-
-         virtual RenderCameraManipulatorOSG *remove_camera_manipulator (
-            const String &PortalName) = 0;
+         virtual osgViewer::Viewer *lookup_viewer (const String &ViewerName) = 0;
+         virtual osgViewer::Viewer *remove_viewer (const String &ViewerName) = 0;
 
       protected:
          RenderModuleCoreOSG (const PluginInfo &Info);

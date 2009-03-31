@@ -18,8 +18,9 @@ dmz::RenderModuleIsectOSG::RenderModuleIsectOSG (
       const Config &Local) :
       Plugin (Info),
       RenderModuleIsect (Info),
+      _log (Info),
       _core (0),
-      _log (Info.get_name (), Info.get_context ()) {
+      _isectMask (0) {
 
    _init (Local);
 }
@@ -40,6 +41,8 @@ dmz::RenderModuleIsectOSG::discover_plugin (
       if (!_core) {
 
          _core = RenderModuleCoreOSG::cast (PluginPtr);
+
+         if (_core) { _isectMask = _core->get_isect_mask (); }
       }
    }
    else if (Mode == PluginDiscoverRemove) {
@@ -47,6 +50,7 @@ dmz::RenderModuleIsectOSG::discover_plugin (
       if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
 
          _core = 0;
+         _isectMask = 0;
       }
    }
 }
@@ -68,6 +72,7 @@ dmz::RenderModuleIsectOSG::do_isect (
       std::vector<osg::LineSegment*> lsList;// = new osg::LineSegment[TestValues];
 
       osgUtil::IntersectVisitor visitor;
+      visitor.setTraversalMask (_isectMask);
 
       UInt32 testHandle;
       IsectTestTypeEnum testType;
@@ -156,7 +161,11 @@ dmz::RenderModuleIsectOSG::do_isect (
 
                         if (data) {
 
-                           if (!data->do_isect ()) { disabled = True; }
+                           if (!data->do_isect ()) {
+
+                              // Should never reach here now
+                              disabled = True;
+                           }
                            else { objHandle = data->get_handle (); }
                         }
                      }
@@ -274,6 +283,13 @@ dmz::RenderModuleIsectOSG::enable_isect (const Handle ObjectHandle) {
             dynamic_cast<RenderObjectDataOSG *> (g->getUserData ()));
 
          if (data) { result = UInt32 (data->enable_isect ()); }
+
+         if (0 == result) {
+
+            UInt32 mask = g->getNodeMask ();
+            mask |= _isectMask;
+            g->setNodeMask (mask);
+         }
       }
    }
 
@@ -296,6 +312,13 @@ dmz::RenderModuleIsectOSG::disable_isect (const Handle ObjectHandle) {
             dynamic_cast<RenderObjectDataOSG *> (g->getUserData ()));
 
          if (data) { result = UInt32 (data->disable_isect ()); }
+
+         if (1 == result) {
+
+            UInt32 mask = g->getNodeMask ();
+            mask &= (~_isectMask);
+            g->setNodeMask (mask);
+         }
       }
    }
 

@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "DMZ API Reference"
-PROJECT_NUMBER         = "Year 2"
+PROJECT_NUMBER         = "Year 3"
 OUTPUT_DIRECTORY       = ../../../docs
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
@@ -87,7 +87,8 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ../kernel \
+INPUT                  = ./about \
+                         ../kernel \
                          ../foundation \
                          ../frameworks/archive \
                          ../frameworks/audio \
@@ -239,6 +240,7 @@ PREDEFINED             = DMZ_ARCHIVE_UTIL_LINK_SYMBOL= \
                          DMZ_LUA_KERNEL_LINK_SYMBOL= \
                          DMZ_OBJECT_UTIL_LINK_SYMBOL= \
                          DMZ_RENDER_ISECT_LINK_SYMBOL= \
+                         DMZ_RENDER_PORTAL_LINK_SYMBOL= \
                          DMZ_RENDER_UTIL_LINK_SYMBOL= \
                          DMZ_XML_LINK_SYMBOL=
 EXPAND_AS_DEFINED      = 

@@ -571,7 +571,7 @@ dmz::Vector value = dmz::config_to_vector ("dmz.values.vector", global, DefaultV
 \endcode
 \param[in] Name String containing name of config context to convert.
 \param[in] Source Config containing config context to convert.
-\param[in] DefaultValue Vector containing default value to use if config context is
+\param[in] DefaultValue Vector containing default value to use if the config context is
 not found.
 \return Returns dmz::Vector containing value.
 
@@ -584,10 +584,7 @@ dmz::config_to_vector (
 
    Config cd;
 
-   if (Name) {
-
-      Source.lookup_config (Name, cd);
-   }
+   if (Name) { Source.lookup_config (Name, cd); }
    else { cd = Source; }
 
    const Vector Result (
@@ -596,6 +593,53 @@ dmz::config_to_vector (
       config_to_float64 ("z", cd, DefaultValue.get_z ()));
 
    return Result;
+}
+
+
+/*!
+
+\brief Converts Config to VectorComponentEnum.
+\details Defined in dmzRuntimeConfigToVector.h.
+\code
+const dmz::VectorComponentEnum DefaultValue (VectorComponentX;
+dmz::VectorComponentEnum value = dmz::config_to_vector_component ("dmz.order.x", global, DefaultValue);
+\endcode
+\param[in] Name String containing name of config attribute to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] DefaultValue VectorComponentEnum containing default value to use if the
+attribute is not found.
+\return Returns dmz::VectorComponentEnum containing value.
+
+*/
+dmz::VectorComponentEnum
+dmz::config_to_vector_component (
+   const String &Name,
+   const Config &Source,
+   const VectorComponentEnum DefaultValue) {
+
+   VectorComponentEnum result (DefaultValue);
+
+   String str;
+
+   if (local_config_to_string (Name, Source, str)) {
+
+      const String Value = str.get_lower ();
+
+      if ((Value == "x") || (Value == "0") || (Value == "vectorcomponentx")) {
+
+         result = VectorComponentX;
+      }
+      else if ((Value == "y") || (Value == "1") || (Value == "vectorcomponenty")) {
+
+         result = VectorComponentY;
+      }
+      else if ((Value == "z") || (Value == "2") || (Value == "vectorcomponentz")) {
+
+         result = VectorComponentZ;
+      }
+   }
+
+   return result;
 }
 
 
@@ -625,10 +669,7 @@ dmz::config_to_matrix (
 
    Config cd;
 
-   if (Name) {
-
-      Source.lookup_config (Name, cd);
-   }
+   if (Name) { Source.lookup_config (Name, cd); }
    else { cd = Source; }
 
    Float64 inPack[9] = {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0};
@@ -672,6 +713,7 @@ dmz::config_to_base_type_enum (
       const BaseTypeEnum DefaultValue) {
 
    BaseTypeEnum result (BaseTypeUnknown);
+
    String str;
 
    if (local_config_to_string (Name, Source, str)) {
@@ -935,7 +977,7 @@ last part of the \a Name variable specifies the attribute name. If the String
 "type.name" is passed in as \a Name, it will try to find a  config context called
 "type" and the attribute "name" stored in the "type" config context.
 \code
-dmz::Message type = dmz::config_to_message_type ("dmz.type.name", global, get_plugin_runtime_context (), &_log);
+dmz::Message type = dmz::config_to_message ("dmz.type.name", global, get_plugin_runtime_context (), &_log);
 \endcode
 \param[in] Name String containing name of the attribute in the config context to convert.
 \param[in] Source Config containing config context to convert.
@@ -946,7 +988,7 @@ dmz::Message if the message type is not found.
 
 */
 dmz::Message
-dmz::config_to_message_type (
+dmz::config_to_message (
       const String &Name,
       const Config &Source,
       RuntimeContext *context,
@@ -960,7 +1002,7 @@ dmz::config_to_message_type (
 
       Definitions defs (context);
 
-      if (!defs.lookup_message_type (messageTypeName, result)) {
+      if (!defs.lookup_message (messageTypeName, result)) {
 
          if (log) {
 
@@ -993,7 +1035,7 @@ last part of the \a Name variable specifies the attribute name. If the String
 "type" and the attribute "name" stored in the "type" config context. If the named
 Message does not exist, it is created.
 \code
-dmz::Message type = dmz::config_create_message_type ("dmz.type.name", global, "DefaultMessage", get_plugin_runtime_context (), &_log);
+dmz::Message type = dmz::config_create_message ("dmz.type.name", global, "DefaultMessage", get_plugin_runtime_context (), &_log);
 \endcode
 \param[in] Name String containing name of the attribute in the config context to convert.
 \param[in] Source Config containing config context to convert.
@@ -1007,7 +1049,7 @@ dmz::Message if no message name is specified in either the Config or the
 
 */
 dmz::Message
-dmz::config_create_message_type (
+dmz::config_create_message (
       const String &Name,
       const Config &Source,
       const String &DefaultValue,
@@ -1023,7 +1065,7 @@ dmz::config_create_message_type (
    if (messageName) {
 
       Definitions defs (context);
-      defs.create_message_type (messageName, result);
+      defs.create_message (messageName, result);
    }
 
    return result;

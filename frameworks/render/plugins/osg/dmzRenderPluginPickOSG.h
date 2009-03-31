@@ -5,7 +5,8 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 
-#include <osg/Camera>
+#include <osg/Viewport>
+#include <osgViewer/Viewer>
 
 namespace dmz {
 
@@ -33,6 +34,7 @@ namespace dmz {
             const Int32 ScreenPosX,
             const Int32 ScreenPosY,
             Vector &worldPosition,
+            Vector &normal,
             Handle &objectHandle);
 
          virtual Boolean world_to_screen (
@@ -44,6 +46,7 @@ namespace dmz {
             const Int32 SourcePosX,
             const Int32 SourcePosY,
             Vector &worldPosition,
+            Vector &normal,
             Handle &objectHandle);
 
          virtual Boolean world_to_source (
@@ -55,9 +58,11 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         UInt32 _isectMask;
          RenderModuleCoreOSG *_core;
-         osg::ref_ptr<osg::Camera> _camera;
-         String _cameraName;
+         osg::ref_ptr<osgViewer::Viewer> _viewer;
+         osg::ref_ptr<osg::Viewport> _viewport;
+         String _viewerName;
 
       private:
          RenderPluginPickOSG ();

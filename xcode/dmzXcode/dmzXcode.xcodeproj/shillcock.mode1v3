@@ -352,12 +352,15 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
 								<string>29B97314FDCFA39411CA2CEA</string>
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 								<string>7A01471C0E118421001813A7</string>
 								<string>7A09AF8A0E118D16003C5B32</string>
 								<string>7A09AFAA0E118D16003C5B32</string>
 								<string>7A560A8D0E12D1DE0049409D</string>
 								<string>7A560A8F0E12D27A0049409D</string>
 								<string>7A560B590E12D27A0049409D</string>
+=======
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 								<string>19C28FACFE9D520D11CA2CBB</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>1C37FABC05509CD000000102</string>
@@ -365,12 +368,21 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 									<integer>67</integer>
 									<integer>64</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
 							<string>{{0, 459}, {357, 802}}</string>
+=======
+									<integer>41</integer>
+									<integer>40</integer>
+								</array>
+							</array>
+							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
+							<string>{{0, 204}, {357, 802}}</string>
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -405,7 +417,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>dmzRuntimeContext.h</string>
+								<string>dmzPluginUndoDump.cpp</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -413,11 +425,15 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>dmzRuntimeContext.h</string>
+										<string>dmzPluginUndoDump.cpp</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 										<string>7AA6BC530F5DC6F500E251E5</string>
+=======
+										<string>7AD284920F66FDBA009F27D4</string>
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 										<key>history</key>
 										<array>
 											<string>7A39BB340E4B8C910035E12A</string>
@@ -475,7 +491,12 @@
 											<string>7AA9CA1A0EB721A000A97E88</string>
 											<string>7AA9CA1B0EB721A000A97E88</string>
 											<string>7AA9CA1C0EB721A000A97E88</string>
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 											<string>7A6828F60F5DC36300A2DAEC</string>
+=======
+											<string>7AD2848F0F66FDBA009F27D4</string>
+											<string>7AD284900F66FDBA009F27D4</string>
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -534,6 +555,7 @@
 											<string>7AA9CA200EB721A000A97E88</string>
 											<string>7AA9CA220EB721A000A97E88</string>
 											<string>7AA9CA230EB721A000A97E88</string>
+											<string>7AD284910F66FDBA009F27D4</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -591,9 +613,15 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 				<string>7AA6BC460F5DC5EB00E251E5</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
 				<string>7AA6BC470F5DC5EB00E251E5</string>
+=======
+				<string>7AD284930F66FDBA009F27D4</string>
+				<string>1CE0B1FE06471DED0097A5F4</string>
+				<string>7AD284940F66FDBA009F27D4</string>
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -712,7 +740,11 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 	<real>257804021.505606</real>
+=======
+	<real>258407866.05518901</real>
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 	<key>ToolbarDisplayMode</key>
 	<integer>1</integer>
 	<key>ToolbarIsVisible</key>
@@ -728,8 +760,12 @@
 	<key>WindowOrderList</key>
 	<array>
 		<string>7A0E0D6C0E11837200E55011</string>
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 		<string>/Users/shillcock/cm/src/dmz/xcode/dmzXcode/dmzXcode.xcodeproj</string>
 		<string>7AA6BC480F5DC5EB00E251E5</string>
+=======
+		<string>/Users/shillcock/cm2/src/dmz/xcode/dmzXcode/dmzXcode.xcodeproj</string>
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 	</array>
 	<key>WindowString</key>
 	<string>31 717 1056 861 0 0 2560 1578 </string>
@@ -762,7 +798,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {683, 0}}</string>
 								<key>RubberWindowFrame</key>
-								<string>1877 1089 683 485 0 0 2560 1578 </string>
+								<string>1788 1089 683 485 0 0 2560 1578 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -790,7 +826,7 @@
 								<key>Frame</key>
 								<string>{{0, 5}, {683, 439}}</string>
 								<key>RubberWindowFrame</key>
-								<string>1877 1089 683 485 0 0 2560 1578 </string>
+								<string>1788 1089 683 485 0 0 2560 1578 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXBuildResultsModule</string>
@@ -813,14 +849,18 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>7A0E0D6C0E11837200E55011</string>
+<<<<<<< HEAD:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 				<string>7AA6BC4B0F5DC5EB00E251E5</string>
+=======
+				<string>7AD284950F66FDBA009F27D4</string>
+>>>>>>> master:xcode/dmzXcode/dmzXcode.xcodeproj/shillcock.mode1v3
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.buildV3</string>
 			<key>WindowString</key>
-			<string>1877 1089 683 485 0 0 2560 1578 </string>
+			<string>1788 1089 683 485 0 0 2560 1578 </string>
 			<key>WindowToolGUID</key>
 			<string>7A0E0D6C0E11837200E55011</string>
 			<key>WindowToolIsVisible</key>

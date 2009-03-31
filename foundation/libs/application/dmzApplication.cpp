@@ -364,10 +364,10 @@ dmz::Application::load_plugins () {
    Config pluginList;
 
    if (!_state.error &&
-         !_state.global.lookup_all_config ("dmz.plugins.plugin", pluginList)) {
+         !_state.global.lookup_all_config ("dmz.plugin-list.plugin", pluginList)) {
 
       _state.errorMsg.flush ()
-         << "dmz.plugins.plugin not found. No plugins listed for loading";
+         << "dmz.plugin-list.plugin not found. No plugins listed for loading";
 
       _state.log.error << _state.errorMsg << endl;
 
@@ -402,14 +402,15 @@ dmz::Application::start () {
 
    if (!_state.error) {
 
-      _state.startTime = get_time ();
-      _state.frameCount = 0.0;
       _state.container.start_plugins ();
-      _state.rt.update_time_slice ();
+//      _state.rt.update_time_slice ();
 
       FileCache *fc (FileCache::get_interface (_state.rt.get_context ()));
 
       if (fc) { fc->process_all_requests (); }
+
+      _state.startTime = get_time ();
+      _state.frameCount = 0.0;
    }
 
    return !_state.error;
@@ -455,12 +456,11 @@ dmz::Application::update_time_slice () {
 dmz::Boolean
 dmz::Application::stop () {
 
-   _state.rt.update_time_slice ();
-   _state.container.stop_plugins ();
-
    const Float64 StopTime (get_time ());
-
    const Float64 TimeDelta (StopTime - _state.startTime);
+
+//   _state.rt.update_time_slice ();
+   _state.container.stop_plugins ();
 
    if (!is_zero64 (_state.frameCount) && !is_zero64 (TimeDelta) && !_state.quiet) {
 

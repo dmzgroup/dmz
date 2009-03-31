@@ -229,7 +229,7 @@ dmz::QtPluginMenuToMessage::_build_menu (const String &Name, Config &config) {
 
          const String StatusTip (config_to_string ("statusTip", cd, Text));
 
-         Message message (config_create_message_type (
+         Message message (config_create_message (
             "message", cd, "", get_plugin_runtime_context ()));
 
          if (Text && message && _menu && _actionGroup) {
@@ -280,7 +280,7 @@ dmz::QtPluginMenuToMessage::_init (Config &local) {
    _positionAttrHandle = config_to_named_handle (
       "attribute.position.name", local, "position", context);
 
-   _showMessage = config_create_message_type (
+   _showMessage = config_create_message (
       "message.show",
       local,
       "ShowObjectMenuMessage",

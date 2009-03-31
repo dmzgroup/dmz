@@ -8,6 +8,25 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::EntityPluginDustTrail
+\ingroup Entity
+\brief Stets dust trail state for the human-in-the-loop object.
+\details The plugin detects if the human-in-the-loop object is moving and sets the
+dust trail state for the object. Uses dmz::DefaultStateNameDustTrail by default.
+\code
+<dmz>
+<dmzEntityPluginDustTrail>
+   <state name="state name"/>
+</dmzEntityPluginDustTrail>
+</dmz>
+\endcode
+
+*/
+
+
+//! \cond
 dmz::EntityPluginDustTrail::EntityPluginDustTrail (
       const PluginInfo &Info,
       Config &local) :
@@ -126,6 +145,7 @@ dmz::EntityPluginDustTrail::_init (Config &local) {
       ObjectFlagMask);
 }
 
+//! \endcond
 
 extern "C" {
 

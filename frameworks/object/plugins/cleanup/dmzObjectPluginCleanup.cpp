@@ -147,7 +147,7 @@ dmz::ObjectPluginCleanup::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
 
-   _cleanupMessage = config_create_message_type (
+   _cleanupMessage = config_create_message (
       "message.name",
       local,
       "CleanupObjectsMessage",

@@ -79,7 +79,7 @@ dmz::PluginUndoDump::_init (Config &local) {
    RuntimeContext *context (get_plugin_runtime_context ());
 
    Message message;
-  _defs.create_message_type ("DumpUndoStackMessage", message);
+  _defs.create_message ("DumpUndoStackMessage", message);
    subscribe_to_message (message);
 }
 //! \endcond

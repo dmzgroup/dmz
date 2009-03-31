@@ -64,6 +64,7 @@ namespace dmz {
             Config &config,
             DataBinder &binder,
             Vector *position,
+            Vector *normal,
             Handle *object);
 
          ConverterStruct *_create_converter (Config &local);

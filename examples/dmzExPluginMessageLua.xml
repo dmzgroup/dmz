@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dmz>
-<plugins>
+<plugin-list>
    <plugin name="dmzPluginTermExit"/>
    <plugin name="dmzLuaModuleBasic"/>
    <plugin name="dmzLuaPluginTimedReset"/>
 <!--   <plugin name="dmzExPluginMessageSend"/> -->
 <!--   <plugin name="dmzExPluginMessageReceive"/> -->
-</plugins>
+</plugin-list>
 <runtime>
    <time>
       <frequency value="60.0"/>

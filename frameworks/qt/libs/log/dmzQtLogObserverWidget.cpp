@@ -254,7 +254,7 @@ dmz::QtLogObserverWidget::on_logComboBox_activated (int index) {
       //    // 4:
       //    // [E]:
       //    // dmzAppQt:
-      //    // dmz.plugins.plugin not found. No plugins listed for loading
+      //    // dmz.plugin-list.plugin not found. No plugins listed for loading
       //
       //
       //   line = in.readLine ();

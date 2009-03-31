@@ -1,0 +1,8 @@
+lmk.set_name "dmzNetPluginRemoteScalarDR"
+lmk.set_type "plugin"
+lmk.add_files {"dmzNetPluginRemoteScalarDR.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzObjectFramework",}

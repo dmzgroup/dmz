@@ -8,6 +8,28 @@
 #include <dmzRuntimePluginInfo.h>
 #include "dmzObjectPluginTimeout.h"
 
+/*!
+
+\class dmz::ObjectPluginTimeout
+\ingroup Object
+\brief Destroys local objects of specified types after a defined interval.
+\details The plugin uses the timeout field in the object-type definition. If the timeout
+field is defined, all local object of that object type will be destroyed after the
+specified time has elapsed. If the detonate parameter is set to true, the plugin
+will create a detonation event before deleting the object.
+\code
+<dmz>
+<runtime>
+   <object-type name="object name">
+      <timeout value="time is seconds" detonate="true/false"/>
+   </object-type>
+</runtime>
+</dmz>
+\endcode
+
+*/
+
+//! \cond
 dmz::ObjectPluginTimeout::ObjectPluginTimeout (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (Info),
@@ -73,9 +95,9 @@ void
 dmz::ObjectPluginTimeout::update_time_slice (const Float64 DeltaTime) {
 
    HashTableHandleIterator it;
-   TimeoutStruct *ptr = _objTable.get_first (it);
+   TimeoutStruct *ptr (0);
 
-   while (ptr) {
+   while (_objTable.get_next (it, ptr)) {
 
       ptr->timeout -= DeltaTime;
 
@@ -95,8 +117,6 @@ dmz::ObjectPluginTimeout::update_time_slice (const Float64 DeltaTime) {
             objMod->destroy_object (Object);
          }
       }
-
-      ptr = _objTable.get_next (it);
    }
 }
 
@@ -187,6 +207,7 @@ dmz::ObjectPluginTimeout::_init (Config &local) {
 
    activate_default_object_attribute (ObjectCreateMask | ObjectDestroyMask);
 }
+//! \endcond
 
 
 extern "C" {

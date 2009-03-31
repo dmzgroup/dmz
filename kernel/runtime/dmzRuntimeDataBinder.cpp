@@ -1,4 +1,5 @@
 #include <dmzRuntimeConfig.h>
+#include "dmzRuntimeContext.h"
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeDataBinder.h>
 #include <dmzRuntimeDefinitions.h>
@@ -288,19 +289,24 @@ variables are used to store values in the Data object.
 
 struct dmz::DataBinder::State {
 
+   RuntimeContext *context;
    Definitions defs;
    baseStruct *head;
    Log *log;
 
    State (
-         RuntimeContext *context,
+         RuntimeContext *theContext,
          Log *theLog) :
-         defs (context),
+         context (theContext),
+         defs (theContext),
          head (0),
-         log (theLog) {
-   }
+         log (theLog) { if (context) { context->ref (); } }
 
-   ~State () { if (head) { delete head; head = 0; } }
+   ~State () {
+
+      if (head) { delete head; head = 0; }
+      if (context) { context->unref (); context = 0; }
+   }
 };
 
 
@@ -359,6 +365,8 @@ dmz::Boolean
 dmz::DataBinder::write_data (Data &outData) const {
 
    Boolean result (_state.head ? True : False);
+
+   if (_state.context) { outData.set_runtime_context (_state.context); }
 
    baseStruct *bs (_state.head);
 

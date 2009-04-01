@@ -1,0 +1,8 @@
+require "lmkOSG"
+
+lmkOSG.set_name "dmzRenderPluginStaticTerrainOSG"
+lmk.set_type "plugin"
+lmk.add_files {"dmzRenderPluginStaticTerrainOSG.cpp",}
+lmk.add_libs { "dmzKernel", }
+lmk.add_preqs {"dmzRenderFramework", "dmzRenderModuleCoreOSG", "dmzRenderUtilOSG"}
+lmkOSG.add_libs {"osgDB", "osg", "OpenThreads",}

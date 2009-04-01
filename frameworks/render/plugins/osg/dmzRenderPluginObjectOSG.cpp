@@ -6,9 +6,9 @@
 #include <dmzRuntimeConfigToPathContainer.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
-#include <osgDB/ReadFile>
 
-#include <osgFX/Cartoon>
+#include <osgDB/ReadFile>
+#include <osgUtil/Optimizer>
 
 dmz::RenderPluginObjectOSG::RenderPluginObjectOSG (
       const PluginInfo &Info,
@@ -292,6 +292,9 @@ dmz::RenderPluginObjectOSG::_load_model (const String &ResourceName) {
          result->model = osgDB::readNodeFile (foundFile.get_buffer ());
 
          if (result->model.valid ()) {
+
+            osgUtil::Optimizer optimizer;
+            optimizer.optimize(result->model.get());
 
             osg::Node::DescriptionList &list = result->model->getDescriptions ();
 

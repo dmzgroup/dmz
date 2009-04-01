@@ -104,6 +104,30 @@ dmz::EntityPluginDustTrail::update_object_flag (
 
 
 void
+dmz::EntityPluginDustTrail::update_object_state (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Mask &Value,
+      const Mask *PreviousValue) {
+
+   ObjectModule *objMod = get_object_module ();
+
+   if ((ObjectHandle == _hil) && objMod) {
+
+      Vector vel;
+      Mask state (Value);
+
+      objMod->lookup_velocity (_hil, _defaultObjectHandle, vel);
+
+      _update_dust_trail (vel, state);
+
+      objMod->store_state (_hil, _defaultObjectHandle, state);
+   }
+}
+
+
+void
 dmz::EntityPluginDustTrail::update_object_velocity (
       const UUID &Identity,
       const Handle ObjectHandle,
@@ -113,17 +137,28 @@ dmz::EntityPluginDustTrail::update_object_velocity (
 
    ObjectModule *objMod = get_object_module ();
 
-   if (_hil && objMod) {
+   if ((ObjectHandle == _hil) && objMod) {
 
       Mask state;
 
       objMod->lookup_state (_hil, _defaultObjectHandle, state);
 
-      if (Value.magnitude () > 0.1) { state |= _dustState; }
-      else { state.unset (_dustState); }
+      _update_dust_trail (Value, state);
 
       objMod->store_state (_hil, _defaultObjectHandle, state);
    }
+}
+
+
+void
+dmz::EntityPluginDustTrail::_update_dust_trail (const Vector &Velocity, Mask &state) {
+
+   if (Velocity.magnitude () > 0.1) {
+
+      if (state.contains (_airBornState)) { state.unset (_dustState); }
+      else { state |= _dustState; }
+   }
+   else { state.unset (_dustState); }
 }
 
 
@@ -132,13 +167,17 @@ dmz::EntityPluginDustTrail::_init (Config &local) {
 
    Definitions defs (get_plugin_runtime_context (), &_log);
 
-   const String StateName =
-      config_to_string ("state.name", local, DefaultStateNameDustTrail);
+   const String DustStateName =
+      config_to_string ("dust-state.name", local, DefaultStateNameDustTrail);
 
-   defs.lookup_state (StateName, _dustState);
+   const String AirBornStateName =
+      config_to_string ("air-born-state.name", local, DefaultStateNameAirBorn);
 
-   _defaultObjectHandle =
-      activate_default_object_attribute (ObjectDestroyMask | ObjectVelocityMask);
+   defs.lookup_state (DustStateName, _dustState);
+   defs.lookup_state (AirBornStateName, _airBornState);
+
+   _defaultObjectHandle = activate_default_object_attribute (
+      ObjectDestroyMask | ObjectVelocityMask | ObjectStateMask);
 
    _hilHandle = activate_object_attribute (
       ObjectAttributeHumanInTheLoopName,

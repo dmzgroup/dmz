@@ -1,0 +1,13 @@
+require "lmkOSG"
+
+lmkOSG.set_name "dmzRenderPluginParticleEffectsOSG"
+lmk.set_type "plugin"
+lmk.add_files {"dmzRenderPluginParticleEffectsOSG.cpp",}
+lmk.add_libs {
+   "dmzRenderUtilOSG",
+   "dmzObjectUtil",
+   "dmzEventUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzRenderModuleCoreOSG", "dmzObjectFramework", "dmzEventFramework",}
+lmkOSG.add_libs {"osgParticle", "osgUtil", "osg", "OpenThreads",}

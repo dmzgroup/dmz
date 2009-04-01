@@ -9,6 +9,8 @@
 #include <dmzRuntimePluginInfo.h>
 
 #include <osg/Texture2D>
+#include <osg/PolygonMode>
+#include <osg/LineWidth>
 #include <osgDB/ReadFile>
 
 namespace {
@@ -75,7 +77,8 @@ dmz::RenderModuleOverlayOSG::RenderModuleOverlayOSG (
       _log (Info),
       _rc (Info, &_log),
       _core (0),
-      _cloneStack (0) {
+      _cloneStack (0),
+      _groupStack (0) {
 
    _rootNode = new osg::Group;
 
@@ -279,6 +282,25 @@ dmz::RenderModuleOverlayOSG::clone_template (const String &Name) {
 }
 
 
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::destroy_node (const Handle Overlay) {
+
+   Boolean result (False);
+
+   NodeStruct *ns = _nodeTable.lookup (Overlay);
+
+   if (ns) {
+
+      if (ns->Type == RenderOverlayTransform) { result = _remove_transform (Overlay); }
+      else if (ns->Type == RenderOverlaySwitch) { result = _remove_switch (Overlay); }
+      else if (ns->Type == RenderOverlayGroup) { result = _remove_group (Overlay); }
+      else { result = _remove_node (Overlay); }
+   }
+
+   return result;
+}
+
+
 // Overlay Group API
 dmz::Boolean
 dmz::RenderModuleOverlayOSG::add_group_child (const Handle Parent, const Handle Child) {
@@ -315,6 +337,7 @@ dmz::RenderModuleOverlayOSG::remove_group_child (
 
       result = True;
    }
+
    return result;
 }
 
@@ -690,6 +713,8 @@ dmz::RenderModuleOverlayOSG::_register_node (NodeStruct *ptr) {
          else if (!_nodeNameTable.store (ptr->Name, ptr)) {
 
          }
+
+         if (_groupStack) { _groupStack->gs.childTable.store (ptr->VHandle, ptr); }
       }
    }
 
@@ -765,6 +790,7 @@ dmz::RenderModuleOverlayOSG::_add_node (osg::ref_ptr<osg::Group> &parent, Config
    else if (TypeName == "switch") { _add_switch (parent, node); }
    else if (TypeName == "transform") { _add_transform (parent, node); }
    else if (TypeName == "box") { _add_box (parent, node); }
+   else if (TypeName == "circle") { _add_circle (parent, node); }
    else if (TypeName == "clone") { _add_clone (parent, node); }
    else {
 
@@ -783,15 +809,36 @@ dmz::RenderModuleOverlayOSG::_add_group (
 
    const String Name = config_to_string ("name", node);
 
+   Boolean popStack = False;
+
    if (Name) {
 
       GroupStruct *gs =
          new GroupStruct (Name, get_plugin_runtime_context (), child.get ());
 
       if (!_register_group (gs)) { delete gs; gs = 0; }
+      else if (gs) {
+
+         GroupStackStruct *gss = new GroupStackStruct (*gs);
+
+         if (gss) {
+
+            gss->next = _groupStack;
+            _groupStack = gss;
+            popStack = True;
+         }
+      }
    }
 
    _add_children (child, node);
+
+   if (popStack && _groupStack) {
+
+      GroupStackStruct *gss = _groupStack;
+      _groupStack = _groupStack->next;
+
+      if (gss) { delete gss; gss = 0; }
+   }
 }
 
 
@@ -895,6 +942,11 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
    stateset->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
    stateset->setRenderBinDetails (Depth, "RenderBin");
 
+#if 0
+stateset->setAttributeAndModes (new osg::PolygonMode (osg::PolygonMode::FRONT, osg::PolygonMode::LINE));
+stateset->setAttributeAndModes (new osg::LineWidth (5));
+#endif
+
    osg::Geometry* geom = new osg::Geometry;
 
    osg::Vec3Array* normals = new osg::Vec3Array;
@@ -962,6 +1014,79 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
 
 
 void
+dmz::RenderModuleOverlayOSG::_add_circle (
+      osg::ref_ptr<osg::Group> &parent,
+      Config &node) {
+
+   const Vector Center = config_to_vector ("center", node);
+   const Float64 Radius = config_to_float64 ("radius.value", node);
+   const Float64 Width = config_to_float64 ("width.value", node, 1.0);
+   const Int32 Depth = config_to_int32 ("depth.value", node);
+
+   osg::Geode* geode = new osg::Geode ();
+   osg::StateSet* stateset = geode->getOrCreateStateSet ();
+   stateset->setMode (GL_LIGHTING, osg::StateAttribute::OFF);
+   stateset->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+   stateset->setRenderBinDetails (Depth, "RenderBin");
+
+   osg::Geometry* geom = new osg::Geometry;
+
+   osg::Vec3Array* normals = new osg::Vec3Array;
+   normals->push_back (osg::Vec3 (0.0f, 0.0f, 1.0f));
+   geom->setNormalArray (normals);
+   geom->setNormalBinding (osg::Geometry::BIND_OVERALL);
+
+   osg::Vec4Array* colors = new osg::Vec4Array;
+
+   osg::Vec4 color (1.0, 1.0, 1.0, 1.0);
+
+   const String ColorName = config_to_string ("color.name", node);
+
+   if (ColorName) {
+
+      osg::Vec4 *ptr = _colorTable.lookup (ColorName);
+
+      if (ptr) { color = *ptr; }
+      else { _log.error << "Unknown color: " << ColorName << endl; }
+   }
+   else { color = config_to_osg_vec4_color ("color", node, color); }
+
+   colors->push_back (color);
+
+   geom->setColorArray (colors);
+   geom->setColorBinding (osg::Geometry::BIND_OVERALL);
+
+   const Int32 Segments = 64;
+
+   geom->addPrimitiveSet (new osg::DrawArrays (osg::PrimitiveSet::LINE_LOOP, 0, Segments));
+
+   stateset = geom->getOrCreateStateSet ();
+   stateset->setRenderingHint (osg::StateSet::TRANSPARENT_BIN);
+   stateset->setAttributeAndModes (new osg::LineWidth (Width));
+
+   const Float64 X = Center.get_x ();
+   const Float64 Y = Center.get_y ();
+   const Float64 Angle = TwoPi64 / Segments;
+
+   osg::Vec3Array* vertices = new osg::Vec3Array;
+
+   Float64 current (0.0);
+
+   for (Int32 ix = 0; ix < Segments; ix++) {
+
+      vertices->push_back (osg::Vec3 (X + (sin (current) * Radius), Y + (cos (current) * Radius), 0.0));
+
+      current = current + Angle;
+   }
+
+   geom->setVertexArray (vertices);
+
+   geode->addDrawable (geom);
+
+   parent->addChild (geode);
+}
+
+void
 dmz::RenderModuleOverlayOSG::_add_clone (osg::ref_ptr<osg::Group> &parent, Config &node) {
 
    osg::ref_ptr<osg::Group> child = new osg::Group;
@@ -998,6 +1123,70 @@ dmz::RenderModuleOverlayOSG::_add_clone (osg::ref_ptr<osg::Group> &parent, Confi
       }
    }
    else { _log.error << "Clone failed. Unknown template: " << Clone << endl; }
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_node (const Handle Overlay) {
+
+   Boolean result (False);
+
+   NodeStruct *ns = _nodeTable.remove (Overlay);
+
+   if (ns && ns->node.valid ()) {
+
+      const unsigned int ParentCount = ns->node->getNumParents ();
+
+      if (ParentCount) {
+
+         for (unsigned int ix = 0; ix < ParentCount; ix--) {
+
+            osg::Group *parent = ns->node->getParent (ix);
+
+            if (parent) { parent->removeChild (ns->node.get ()); }
+         }
+      }
+
+      result = True;
+      delete ns; ns = 0;
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_group (const Handle Overlay) {
+
+   GroupStruct *gs = _groupTable.remove (Overlay);
+
+   if (gs) {
+
+      HashTableHandleIterator it;
+      NodeStruct *ns (0);
+
+      while (gs->childTable.get_next (it, ns)) { destroy_node (ns->VHandle); }
+   }
+
+   return (gs != 0) && _remove_node (Overlay);
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_switch (const Handle Overlay) {
+
+   const Boolean Result = (_switchTable.remove (Overlay) != 0);
+
+   return Result && _remove_group (Overlay);
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_transform (const Handle Overlay) {
+
+   const Boolean Result = (_transformTable.remove (Overlay) != 0);
+
+   return Result && _remove_group (Overlay);
 }
 
 

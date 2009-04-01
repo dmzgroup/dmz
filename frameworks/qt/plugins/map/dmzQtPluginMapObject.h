@@ -8,26 +8,13 @@
 #include <dmzRuntimePluginContainer.h>
 #include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableHandleTemplate.h>
+#include <qmapcontrol.h>
 #include <QtGui/QGraphicsItem>
 
 
 namespace dmz {
 
-   class QtModuleCanvas;
-
-   class QtMapObject : public QGraphicsItem {
-
-      public:
-         QtMapObject (QGraphicsItem *parent = 0);
-         ~QtMapObject ();
-
-         virtual QRectF boundingRect () const;
-
-         virtual void paint (
-            QPainter *painter,
-            const QStyleOptionGraphicsItem *option,
-            QWidget *widget);
-   };
+   class QtModuleMap;
 
    class QtPluginMapObject :
       public Plugin,
@@ -93,7 +80,7 @@ namespace dmz {
          struct ObjectStruct {
 
             const Handle ObjHandle;
-            QtMapObject *item;
+            qmapcontrol::Point *item;
             Float32 posX;
             Float32 posY;
             Float32 scaleX;
@@ -102,7 +89,7 @@ namespace dmz {
 
             ObjectStruct (const Handle TheHandle) :
                ObjHandle (TheHandle),
-               item (new QtMapObject ()),
+               item (0),
                posX (0.0f),
                posY (0.0f),
                scaleX (1.0f),
@@ -124,8 +111,8 @@ namespace dmz {
          Log _log;
          Definitions _defs;
          PluginContainer _extensions;
-         QtModuleCanvas *_canvasModule;
-         String _canvasModuleName;
+         QtModuleMap *_mapModule;
+         String _mapModuleName;
          Handle _defaultAttributeHandle;
          Handle _linkAttributeHandle;
          HashTableHandleTemplate<ObjectStruct> _objectTable;

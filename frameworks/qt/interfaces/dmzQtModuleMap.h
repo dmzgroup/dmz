@@ -12,6 +12,7 @@ class QPointF;
 namespace qmapcontrol {
    
    class MapControl;
+   class Geometry;
 };
 
 
@@ -28,6 +29,10 @@ namespace dmz {
          Handle get_qt_module_map_handle () const;
 
          virtual qmapcontrol::MapControl *get_map_control () = 0;
+         
+         virtual Boolean add_item (const Handle ObjectHandle, qmapcontrol::Geometry *item) = 0;
+         virtual qmapcontrol::Geometry *lookup_item (const Handle ObjectHandle) = 0;
+         virtual qmapcontrol::Geometry *remove_item (const Handle ObjectHandle) = 0;
 
          virtual void set_zoom_min_value (const Int32 Value) = 0;
          virtual Int32 get_zoom_min_value () const = 0;

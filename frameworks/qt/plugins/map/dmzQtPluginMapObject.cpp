@@ -1,8 +1,7 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectModule.h>
 #include "dmzQtPluginMapObject.h"
-#include <dmzQtModuleCanvas.h>
-#include <dmzQtModuleMainWindow.h>
+#include <dmzQtModuleMap.h>
 #include <dmzQtUtil.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
@@ -20,74 +19,6 @@
 #include <QtSvg/QtSvg>
 
 
-dmz::QtMapObject::QtMapObject (QGraphicsItem *parent) :
-      QGraphicsItem (parent) {
-
-   setFlag (ItemIsSelectable, true);
-   setHandlesChildEvents (true);
-}
-
-
-dmz::QtMapObject::~QtMapObject () {;}
-
-
-QRectF
-dmz::QtMapObject::boundingRect () const {
-
-   return childrenBoundingRect ();
-}
-
-
-void
-dmz::QtMapObject::paint (
-      QPainter *painter,
-      const QStyleOptionGraphicsItem *option,
-      QWidget *widget) {
-
-   if (option->state & QStyle::State_Selected) {
-
-      const qreal pad = 0.5;
-      const qreal penWidth = 0;
-
-      const QColor fgcolor = option->palette.windowText().color();
-
-      const QColor bgcolor ( // ensure good contrast against fgcolor
-          fgcolor.red()   > 127 ? 0 : 255,
-          fgcolor.green() > 127 ? 0 : 255,
-          fgcolor.blue()  > 127 ? 0 : 255);
-
-      painter->setPen (QPen (bgcolor, penWidth, Qt::SolidLine));
-      painter->setBrush (Qt::NoBrush);
-      painter->drawRect (boundingRect ().adjusted (-pad, -pad, pad, pad));
-
-      painter->setPen (QPen (option->palette.windowText(), 0, Qt::DashLine));
-      painter->setBrush (Qt::NoBrush);
-      painter->drawRect (boundingRect ().adjusted (-pad, -pad, pad, pad));
-   }
-
-   // QColor color (Qt::black);
-   // color.setAlphaF (0.25);
-   // painter->setBrush (color);
-   // painter->drawRect (boundingRect ());
-}
-
-
-void
-dmz::QtPluginMapObject::ObjectStruct::update () {
-
-   if (item) {
-
-      QTransform trans;
-
-      trans.translate (posX, posY);
-      trans.rotateRadians (heading);
-      if (scaleX && scaleY) { trans.scale (scaleX, scaleY); }
-
-      item->setTransform (trans);
-   }
-}
-
-
 dmz::QtPluginMapObject::QtPluginMapObject (
       const PluginInfo &Info,
       Config &local,
@@ -99,8 +30,8 @@ dmz::QtPluginMapObject::QtPluginMapObject (
       _defs (Info, &_log),
       _extensions (),
       _defaultAttributeHandle (0),
-      _canvasModule (0),
-      _canvasModuleName (),
+      _mapModule (0),
+      _mapModuleName (),
       _objectTable (),
       _updateTable () {
 
@@ -146,9 +77,9 @@ dmz::QtPluginMapObject::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_canvasModule) {
+      if (!_mapModule) {
 
-         _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+         _mapModule = QtModuleMap::cast (PluginPtr, _mapModuleName);
       }
 
       _extensions.discover_external_plugin (PluginPtr);
@@ -157,10 +88,10 @@ dmz::QtPluginMapObject::discover_plugin (
 
       _extensions.remove_external_plugin (PluginPtr);
 
-      if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
+      if (_mapModule && (_mapModule == QtModuleMap::cast (PluginPtr))) {
 
          _objectTable.empty ();
-         _canvasModule = 0;
+         _mapModule = 0;
       }
    }
 }
@@ -175,7 +106,7 @@ dmz::QtPluginMapObject::update_time_slice (const Float64 TimeDelta) {
       ObjectStruct *os (_updateTable.get_first (it));
       while (os) {
 
-         os->update ();
+//         os->update ();
          os = _updateTable.get_next (it);
       }
 
@@ -192,6 +123,8 @@ dmz::QtPluginMapObject::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
+_log.warn << "create_object: " << Type.get_name () << endl;
+
    Config data;
    ObjectType currentType (Type);
 
@@ -202,12 +135,12 @@ dmz::QtPluginMapObject::create_object (
 
       ObjectStruct *os (new ObjectStruct (ObjectHandle));
 
-      os->item->setData (QtMapObjectNameIndex, name.get_buffer ());
+//      os->item->setData (QtMapObjectNameIndex, name.get_buffer ());
 
       ObjectModule *objMod (get_object_module ());
 
       if (objMod) {
-
+         
          Vector pos;
          Matrix ori;
 
@@ -217,12 +150,15 @@ dmz::QtPluginMapObject::create_object (
          os->posX = pos.get_x ();
          os->posY = pos.get_z ();
          os->heading = get_heading (ori);
-         os->update ();
+//         os->update ();
+
+         os->item = new qmapcontrol::ImagePoint (pos.get_x (), pos.get_z (), "images:NA_Node.svg");
+//         _geomLayer->addGeometry (item);
       }
 
       _objectTable.store (os->ObjHandle, os);
 
-      if (_canvasModule) { _canvasModule->add_item (os->ObjHandle, os->item); }
+      if (_mapModule) { _mapModule->add_item (os->ObjHandle, os->item); }
    }
 }
 
@@ -237,7 +173,7 @@ dmz::QtPluginMapObject::destroy_object (
    if (os) {
 
       _updateTable.remove (ObjectHandle);
-      if (_canvasModule) { _canvasModule->remove_item (ObjectHandle); }
+//      if (_mapModule) { _mapModule->remove_item (ObjectHandle); }
       delete os; os = 0;
    }
 }
@@ -252,10 +188,10 @@ dmz::QtPluginMapObject::link_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-   if (_canvasModule) {
+   if (_mapModule) {
 
       if (AttributeHandle == _linkAttributeHandle) {
-
+/*
          QGraphicsItem *superItem (_canvasModule->lookup_item (SuperHandle));
          QGraphicsItem *subItem (_canvasModule->lookup_item (SubHandle));
 
@@ -267,6 +203,7 @@ dmz::QtPluginMapObject::link_objects (
             if (group) { superItem->setGroup (group); }
             else { superItem->setParentItem (subItem); }
          }
+*/
       }
    }
 }
@@ -281,10 +218,10 @@ dmz::QtPluginMapObject::unlink_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-   if (_canvasModule) {
+   if (_mapModule) {
 
       if (AttributeHandle == _linkAttributeHandle) {
-
+/*
          QGraphicsItem *superItem (_canvasModule->lookup_item (SuperHandle));
          QGraphicsItem *subItem (_canvasModule->lookup_item (SubHandle));
 
@@ -296,6 +233,7 @@ dmz::QtPluginMapObject::unlink_objects (
             if (group) { superItem->setGroup (0); }
             else { superItem->setParentItem (0); }
          }
+*/
       }
    }
 }
@@ -427,11 +365,11 @@ dmz::QtPluginMapObject::_find_config_from_type (
 void
 dmz::QtPluginMapObject::_init (Config &local, Config &global) {
 
-   _canvasModuleName = config_to_string ("module.canvas.name", local);
+   _mapModuleName = config_to_string ("module.canvas.name", local);
 
    Config pluginList;
 
-   if (local.lookup_all_config ("plugins.plugin", pluginList)) {
+   if (local.lookup_all_config ("plugin-list.plugin", pluginList)) {
 
       RuntimeContext *context (get_plugin_runtime_context ());
 
@@ -447,37 +385,9 @@ dmz::QtPluginMapObject::_init (Config &local, Config &global) {
       ObjectPositionMask |
       ObjectOrientationMask);
 
-   _linkAttributeHandle = activate_object_attribute (
-      ObjectAttributeLayerLinkName,
-      ObjectLinkMask | ObjectUnlinkMask);
-
-#if 0
-   Config preLoadList;
-
-   if (local.lookup_all_config ("preload", preLoadList)) {
-
-      Config data;
-      ConfigIterator it;
-
-      Boolean done (!preLoadList.get_first_config (it, data));
-
-      while (!done) {
-
-         ObjectType objType;
-         Mask objState;
-
-         if (_defs.lookup_object_type (config_to_string ("type", data), objType)) {
-
-            _defs.lookup_state (config_to_string ("state", data), objState);
-
-            _log.info << "Pre-Loading object of type: " << objType.get_name () << endl;
-            _get_model_struct (objType, objState);
-         }
-
-         done = !preLoadList.get_next_config (it, data);
-      }
-   }
-#endif
+//   _linkAttributeHandle = activate_object_attribute (
+//      ObjectAttributeLayerLinkName,
+//      ObjectLinkMask | ObjectUnlinkMask);
 }
 
 

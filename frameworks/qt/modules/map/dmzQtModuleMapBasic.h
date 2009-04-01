@@ -13,7 +13,6 @@
 
 namespace qmapcontrol {
    
-   class MapControl;
    class MapAdapter;
    class MapLayer;
    class GeometryLayer;
@@ -51,6 +50,10 @@ namespace dmz {
 
          // QtModuleMap Interface
          virtual qmapcontrol::MapControl *get_map_control ();
+         
+         virtual Boolean add_item (const Handle ObjectHandle, qmapcontrol::Geometry *item);
+         virtual qmapcontrol::Geometry *lookup_item (const Handle ObjectHandle);
+         virtual qmapcontrol::Geometry *remove_item (const Handle ObjectHandle);
          
          virtual void set_zoom_min_value (const Int32 Value);
          virtual Int32 get_zoom_min_value () const;

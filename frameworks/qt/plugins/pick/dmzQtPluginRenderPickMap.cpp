@@ -2,6 +2,7 @@
 #include <dmzQtModuleMap.h>
 #include "dmzQtPluginRenderPickMap.h"
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesVector.h>
@@ -19,6 +20,11 @@ dmz::QtPluginRenderPickMap::QtPluginRenderPickMap (
       _mapModuleName (),
       _objectModule (0),
       _objectModuleName () {
+
+   // Initialize array
+   _vectorOrder[0] = VectorComponentX;
+   _vectorOrder[1] = VectorComponentY;
+   _vectorOrder[2] = VectorComponentZ;
 
    _init (local);
 }
@@ -68,6 +74,7 @@ dmz::QtPluginRenderPickMap::screen_to_world (
       const Int32 ScreenPosX,
       const Int32 ScreenPosY,
       Vector &worldPosition,
+      Vector &normal,
       Handle &objectHandle) {
 
    Boolean retVal (False);
@@ -81,7 +88,11 @@ dmz::QtPluginRenderPickMap::screen_to_world (
          QPoint sourcePoint (map->mapFromGlobal (QPoint (ScreenPosX, ScreenPosY)));
           
          retVal = source_to_world (
-             sourcePoint.x (), sourcePoint.y (), worldPosition, objectHandle);
+            sourcePoint.x (),
+            sourcePoint.y (),
+            worldPosition,
+            normal,
+            objectHandle);
       }
    }
 
@@ -127,6 +138,7 @@ dmz::QtPluginRenderPickMap::source_to_world (
       const Int32 SourcePosX,
       const Int32 SourcePosY,
       Vector &worldPosition,
+      Vector &normal,
       Handle &objectHandle) {
 
    Boolean retVal (False);
@@ -136,15 +148,16 @@ dmz::QtPluginRenderPickMap::source_to_world (
       QPoint sourcePoint (SourcePosX, SourcePosY);
       QPointF worldPoint (_mapModule->screen_to_world (sourcePoint));
       
-      worldPosition.set_x (worldPoint.x ());
-      worldPosition.set_y (worldPoint.y ());
+      worldPosition.set (_vectorOrder[0], worldPoint.x ());
+      worldPosition.set (_vectorOrder[1], worldPoint.y ());
+      worldPosition.set (_vectorOrder[2], 0.0);
+      normal.set_xyz (0.0, 0.0, 0.0);
+      normal.set (_vectorOrder[2], 1.0);
+
       
       objectHandle = _get_object_handle (sourcePoint);
       
       retVal = True;
-      
-      Int32 sx, sy;
-      world_to_source (worldPosition, sx, sy);
    }
 
    return retVal;
@@ -219,6 +232,10 @@ dmz::QtPluginRenderPickMap::_init (Config &local) {
 
    _mapModuleName = config_to_string ("module.canvas.name", local);
    _objectModuleName = config_to_string ("module.object.name", local);
+
+   _vectorOrder[0] = config_to_vector_component ("order.x", local, _vectorOrder [0]);
+   _vectorOrder[1] = config_to_vector_component ("order.y", local, _vectorOrder [1]);
+   _vectorOrder[2] = config_to_vector_component ("order.z", local, _vectorOrder [2]);
 }
 
 

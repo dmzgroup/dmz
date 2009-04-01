@@ -39,7 +39,7 @@ dmz::QtModuleMapBasic::QtModuleMapBasic (const PluginInfo &Info, Config &local) 
 
 dmz::QtModuleMapBasic::~QtModuleMapBasic () {
 
-   _itemTable.empty ();
+   _itemTable.clear ();
 }
 
 
@@ -63,6 +63,8 @@ dmz::QtModuleMapBasic::update_plugin_state (
    }
    else if (State == PluginStateShutdown) {
 
+      // if (_baseLayer) { _baseLayer->clearGeometries (); }
+      // if (_geomLayer) { _geomLayer->clearGeometries (); }
    }
 }
 
@@ -97,6 +99,47 @@ dmz::QtModuleMapBasic::get_qt_widget () { return this; }
 // QtModuleMap
 qmapcontrol::MapControl *
 dmz::QtModuleMapBasic::get_map_control () { return _map; }
+
+
+dmz::Boolean
+dmz::QtModuleMapBasic::add_item (const Handle ObjectHandle, qmapcontrol::Geometry *item) {
+   
+   Boolean retVal (False);
+
+   if (item && _geomLayer) {
+
+      retVal = _itemTable.store (ObjectHandle, item);
+
+      if (retVal) {
+
+         _geomLayer->addGeometry (item);
+      }
+   }
+
+   return retVal;
+}
+
+
+qmapcontrol::Geometry *
+dmz::QtModuleMapBasic::lookup_item (const Handle ObjectHandle) {
+
+   qmapcontrol::Geometry *item (_itemTable.lookup (ObjectHandle));
+   return item;
+}
+
+
+qmapcontrol::Geometry *
+dmz::QtModuleMapBasic::remove_item (const Handle ObjectHandle) {
+
+   qmapcontrol::Geometry *item (_itemTable.remove (ObjectHandle));
+
+   if (item && _geomLayer) {
+
+      _geomLayer->removeGeometry (item);
+   }
+
+   return item;
+}
 
 
 void
@@ -222,7 +265,7 @@ dmz::QtModuleMapBasic::resizeEvent (QResizeEvent *event) {
 
    if (_map && event) {
       
-      _map->resize (event->size () - QSize (1,1));
+      _map->resize (event->size () - QSize (1, 1));
    }
    
    _handle_mouse_event (0, 0);
@@ -481,8 +524,8 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    
    _map->setView (QPointF (longitude, latitude));
    
-   qmapcontrol::Point *item = new qmapcontrol::ImagePoint ((qreal)longitude, (qreal)latitude, "images:NA_Node.svg");
-   _geomLayer->addGeometry (item);
+qmapcontrol::Point *item = new qmapcontrol::ImagePoint ((qreal)longitude, (qreal)latitude, "images:NA_Node.svg");
+_geomLayer->addGeometry (item);
 }
 
 

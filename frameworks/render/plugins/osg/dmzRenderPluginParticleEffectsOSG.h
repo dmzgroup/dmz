@@ -136,6 +136,7 @@ namespace dmz {
          ObjectDefStruct *_create_object_def (const ObjectType &Type);
          ParticleStateFactory *_create_smoke_state_factory (Config &fx);
          ParticleStateFactory *_create_fire_state_factory (Config &fx);
+         ParticleStateFactory *_create_dust_state_factory (Config &fx);
 
          void _init (Config &local);
 

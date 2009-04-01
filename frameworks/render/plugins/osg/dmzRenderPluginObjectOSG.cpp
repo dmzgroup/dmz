@@ -18,7 +18,8 @@ dmz::RenderPluginObjectOSG::RenderPluginObjectOSG (
       _log (Info),
       _defs (Info, &_log),
       _rc (Info, &_log),
-      _core (0) {
+      _core (0),
+      _cullMask (0) {
 
    _noModel.model = new osg::Group;
    _init (local);
@@ -63,11 +64,18 @@ dmz::RenderPluginObjectOSG::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_core) { _core = RenderModuleCoreOSG::cast (PluginPtr); }
+      if (!_core) { _core = RenderModuleCoreOSG::cast (PluginPtr);
+
+         if (_core) { _cullMask = _core->get_cull_mask (); }
+      }
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) { _core = 0; }
+      if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
+
+         _core = 0;
+         _cullMask = 0;
+      }
    }
 }
 
@@ -150,6 +158,17 @@ dmz::RenderPluginObjectOSG::update_object_flag (
       const Boolean Value,
       const Boolean *PreviousValue) {
 
+   ObjectStruct *os (_objectTable.lookup (ObjectHandle));
+
+   if (os && os->model.valid ()) {
+
+      UInt32 mask = os->model->getNodeMask ();
+
+      if (Value) { mask &= (~_cullMask); }
+      else { mask |= _cullMask; }
+
+      os->model->setNodeMask (mask);
+   }
 }
 
 
@@ -304,6 +323,11 @@ dmz::RenderPluginObjectOSG::_init (Config &local) {
       ObjectCreateMask |
       ObjectDestroyMask |
       ObjectStateMask);
+
+   activate_object_attribute (
+      config_to_string ("hide-object-flag.name", local, ObjectAttributeHideName),
+      ObjectFlagMask);
+
 }
 
 

@@ -66,7 +66,9 @@ SmokeStateFactory::create_effect () {
 
       osgParticle::rangev4 cr (
          osg::Vec4 (0.1, 0.1, 0.1, 1.0), osg::Vec4 (0.0, 0.0, 0.0, 0.1));
+
       particle.setColorRange (cr);
+
       result->setDefaultParticleTemplate (particle);
    }
 
@@ -88,6 +90,7 @@ class FireStateFactory : public ParticleStateFactory {
       const dmz::String _TextureName;
       const osg::Vec3 _Offset;
 };
+
 
 FireStateFactory::FireStateFactory (
       const dmz::Mask &State,
@@ -117,6 +120,71 @@ FireStateFactory::create_effect () {
    return result;
 }
 
+
+class DustStateFactory : public ParticleStateFactory {
+
+   public:
+      DustStateFactory (
+         const dmz::Mask &State,
+         const dmz::String &TextureName,
+         const osg::Vec3 Offset);
+
+      virtual osgParticle::ParticleEffect *create_effect ();
+
+   protected:
+      const dmz::String _TextureName;
+      const osg::Vec3 _Offset;
+};
+
+DustStateFactory::DustStateFactory (
+      const dmz::Mask &State,
+      const dmz::String &TextureName,
+      const osg::Vec3 Offset) :
+      ParticleStateFactory (State),
+      _TextureName (TextureName),
+      _Offset (Offset) {;}
+
+
+osgParticle::ParticleEffect *
+DustStateFactory::create_effect () {
+
+   osgParticle::SmokeEffect *result (
+      new osgParticle::SmokeEffect (_Offset, 1.0, 1.0));
+
+   if (result) {
+
+      if (_TextureName) { result->setTextureFileName (_TextureName.get_buffer ()); }
+      result->setUseLocalParticleSystem (false);
+
+      osgParticle::FluidProgram *program = dynamic_cast<osgParticle::FluidProgram *> (
+         result->getProgram ());
+
+      if (program) { program->setAcceleration (osg::Vec3 (0.0, 0.0, 0.0)); }
+
+      const osgParticle::Particle &OrigParticle = result->getDefaultParticleTemplate ();
+
+      osgParticle::Particle particle (OrigParticle);
+
+      particle.setLifeTime (10.0);
+
+      osgParticle::rangev4 cr (
+         osg::Vec4 (0.54, 0.45, 0.38, 1.0), osg::Vec4 (0.56, 0.5, 0.42, 1.0));
+
+      particle.setColorRange (cr);
+
+      osgParticle::rangef sr (3.0, 60.0);
+      particle.setSizeRange (sr);
+
+      osgParticle::rangef ar (0.4, 0.0);
+
+      particle.setAlphaRange (ar);
+
+      result->setDefaultParticleTemplate (particle);
+   }
+
+   return result;
+}
+
 };
 
 
@@ -128,7 +196,11 @@ dmz::RenderPluginParticleEffectsOSG::ParticleStateStruct::enable (
 
       osgParticle::Emitter *em = effect->getEmitter ();
 
-      if (em) { em->setEnabled (Enable); }
+      if (em) {
+
+         em->setEnabled (Enable);
+         em->setEndless (true);
+      }
    }
 }
 
@@ -403,6 +475,10 @@ dmz::RenderPluginParticleEffectsOSG::_create_object_def (const ObjectType &Type)
 
                   if (Name == "smoking") { factory = _create_smoke_state_factory (fx); }
                   else if (Name == "fire") { factory = _create_fire_state_factory (fx); }
+                  else if (Name == "dust-trail") {
+
+                     factory = _create_dust_state_factory (fx);
+                  }
                   else {
 
                      _log.error << "Unknown object state particle effect type: "
@@ -476,6 +552,35 @@ dmz::RenderPluginParticleEffectsOSG::_create_fire_state_factory (Config &fx) {
 
    return result;
 }
+
+
+dmz::RenderPluginParticleEffectsOSG::ParticleStateFactory *
+dmz::RenderPluginParticleEffectsOSG::_create_dust_state_factory (Config &fx) {
+
+   ParticleStateFactory *result (0);
+
+   const String StateName =
+      config_to_string ("state.name", fx, DefaultStateNameDustTrail);
+
+   Mask state;
+
+   if (_defs.lookup_state (StateName, state)) {
+
+      const String Resource = config_to_string ("texture.resource", fx, "dust-trail");
+      const String Texture = Resource ? _rc.find_file (Resource) : String ();
+      const osg::Vec3 Offset (
+         config_to_osg_vec3 ("offset", fx, osg::Vec3 (0.0, 0.0, 3.0)));
+
+      result = new DustStateFactory (state, Texture, Offset);
+   }
+   else {
+
+      _log.error << "Unknown dust state name: " << StateName << endl;
+   }
+
+   return result;
+}
+
 
 void
 dmz::RenderPluginParticleEffectsOSG::_init (Config &local) {

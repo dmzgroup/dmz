@@ -37,6 +37,13 @@ namespace dmz {
             const Boolean Value,
             const Boolean *PreviousValue);
 
+         virtual void update_object_state (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Mask &Value,
+            const Mask *PreviousValue);
+
          virtual void update_object_velocity (
             const UUID &Identity,
             const Handle ObjectHandle,
@@ -45,6 +52,7 @@ namespace dmz {
             const Vector *PreviousValue);
 
       protected:
+         void _update_dust_trail (const Vector &Velocity, Mask &state);
          void _init (Config &local);
 
          Log _log;
@@ -54,6 +62,7 @@ namespace dmz {
          Handle _defaultObjectHandle;
 
          Mask _dustState;
+         Mask _airBornState;
          //! \endcond
 
       private:

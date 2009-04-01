@@ -185,6 +185,7 @@ namespace dmz {
          IsectParameters _isectParameters;
 
          Mask _deadState;
+         Mask _airBornState;
          Boolean _isDead;
 
          Int32 _active;

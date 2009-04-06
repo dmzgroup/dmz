@@ -4,7 +4,6 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeRTTI.h>
 #include <dmzTypesBase.h>
-#include <dmzRenderIsect.h>
 
 namespace dmz {
 
@@ -14,6 +13,7 @@ namespace dmz {
 
    class IsectParameters;
    class IsectResult;
+   class IsectResultContainer;
    class IsectTestContainer;
    class Isect;
    class Vector;

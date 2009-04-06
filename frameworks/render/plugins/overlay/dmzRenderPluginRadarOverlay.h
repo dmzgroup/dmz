@@ -13,6 +13,7 @@
 namespace dmz {
 
    class RenderModuleOverlay;
+   class RenderModulePortal;
 
    class RenderPluginRadarOverlay :
          public Plugin,
@@ -98,25 +99,35 @@ namespace dmz {
          struct ObjectDefStruct {
 
             const String CloneName;
+            const String SwitchName;
             const String XFormName;
 
             ObjectDefStruct (
                   const String &TheCloneName,
+                  const String &TheSwitchName,
                   const String &TheXFormName) :
                   CloneName (TheCloneName),
+                  SwitchName (TheSwitchName),
                   XFormName (TheXFormName) {;}
          };
 
          struct ObjectStruct {
 
+            Handle model;
             Handle switchHandle;
             Handle xformHandle;
 
             Vector pos;
+            Boolean visible;
 
-            ObjectStruct () : switchHandle (0), xformHandle (0) {;}
+            ObjectStruct () :
+                  model (0),
+                  switchHandle (0),
+                  xformHandle (0),
+                  visible (False) {;}
          };
 
+         void _set_visiblity (const Boolean Value, ObjectStruct &os);
          ObjectDefStruct *_lookup_def (const ObjectType &Type);
          ObjectDefStruct *_create_def (const ObjectType &Type);
          void _init (Config &local);
@@ -124,10 +135,15 @@ namespace dmz {
          Log _log;
 
          RenderModuleOverlay *_overlay;
+         RenderModulePortal *_portal;
 
+         String _rootName;
+         Handle _root;
+         Handle _defaultAttrHandle;
          Handle _hilAttrHandle;
          Handle _hil;
          Float64 _radius;
+         Float64 _scale;
 
          HashTableHandleTemplate<ObjectDefStruct> _defTable;
          HashTableHandleTemplate<ObjectDefStruct> _defMasterTable;

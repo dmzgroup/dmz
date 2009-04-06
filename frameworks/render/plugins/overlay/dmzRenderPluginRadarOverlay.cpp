@@ -1,11 +1,16 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectConsts.h>
+#include <dmzObjectModule.h>
 #include <dmzRenderModuleOverlay.h>
+#include <dmzRenderModulePortal.h>
 #include "dmzRenderPluginRadarOverlay.h"
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzTypesMath.h>
+#include <dmzTypesMatrix.h>
+#include <dmzTypesVector.h>
 
 dmz::RenderPluginRadarOverlay::RenderPluginRadarOverlay (
       const PluginInfo &Info,
@@ -16,9 +21,14 @@ dmz::RenderPluginRadarOverlay::RenderPluginRadarOverlay (
       ObjectObserverUtil (Info, local),
       _log (Info),
       _overlay (0),
+      _portal (0),
+      _rootName ("radar"),
+      _root (0),
+      _defaultAttrHandle (0),
       _hilAttrHandle (0),
       _hil (0),
-      _radius (0.0) {
+      _radius (64.0),
+      _scale (0.064) {
 
    _init (local);
 }
@@ -26,7 +36,7 @@ dmz::RenderPluginRadarOverlay::RenderPluginRadarOverlay (
 
 dmz::RenderPluginRadarOverlay::~RenderPluginRadarOverlay () {
 
-   _defTable.empty ();
+   _defTable.clear ();
    _defMasterTable.empty ();
    _objTable.empty ();
 }
@@ -60,14 +70,27 @@ dmz::RenderPluginRadarOverlay::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_overlay) { _overlay = RenderModuleOverlay::cast (PluginPtr); }
+      if (!_overlay) {
+
+         _overlay = RenderModuleOverlay::cast (PluginPtr);
+
+         if (_overlay) {
+
+            _root = _overlay->lookup_node_handle (_rootName);
+         }
+      }
+
+      if (!_portal) { _portal = RenderModulePortal::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
       if (_overlay && (_overlay == RenderModuleOverlay::cast (PluginPtr))) {
 
          _overlay = 0;
+         _root = 0;
       }
+
+      if (_portal && (_portal == RenderModulePortal::cast (PluginPtr))) { _portal = 0; }
    }
 }
 
@@ -76,13 +99,64 @@ dmz::RenderPluginRadarOverlay::discover_plugin (
 void
 dmz::RenderPluginRadarOverlay::update_time_slice (const Float64 TimeDelta) {
 
+   if (_overlay && _root && _hil) {
 
+      Vector hilPos;
+      Matrix hilOri;
+
+      ObjectModule *objMod (get_object_module ());
+
+      if (objMod) {
+
+         objMod->lookup_position (_hil, _defaultAttrHandle, hilPos);
+
+         if (_portal) {
+
+            Vector vec;
+            _portal->get_view (vec, hilOri);
+         }
+         else { objMod->lookup_orientation (_hil, _defaultAttrHandle, hilOri); }
+      }
+
+      HashTableHandleIterator it;
+      ObjectStruct *os (0);
+
+      while (_objTable.get_next (it, os)) {
+
+         if (it.get_hash_key () == _hil) { _set_visiblity (False, *os); }
+         else {
+
+            Vector pos = (os->pos - hilPos) * _scale;
+            pos.set_y (0.0);
+
+            if (pos.magnitude () <= _radius) {
+
+               _set_visiblity (True, *os);
+            }
+            else {
+
+               _set_visiblity (False, *os);
+            }
+
+            _overlay->store_transform_position (
+               os->xformHandle,
+               pos.get_x (),
+               -pos.get_z ());
+         }
+      }
+
+      Float64 heading = get_heading (hilOri);
+
+      _overlay->store_transform_rotation (_root, heading);
+   }
 }
 
 
 // Input Observer Interface
 void
-dmz::RenderPluginRadarOverlay::update_channel_state (const Handle Channel, const Boolean State) {
+dmz::RenderPluginRadarOverlay::update_channel_state (
+      const Handle Channel,
+      const Boolean State) {
 
 }
 
@@ -144,7 +218,7 @@ dmz::RenderPluginRadarOverlay::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
-   if (_overlay && !_ignoreTypes.contains_type (Type)) {
+   if (_overlay && _root && !_ignoreTypes.contains_type (Type)) {
 
       ObjectDefStruct *ods = _lookup_def (Type);
 
@@ -154,19 +228,32 @@ dmz::RenderPluginRadarOverlay::create_object (
 
          if (os) {
 
-            os->switchHandle = _overlay->clone_template (ods->CloneName);
+            os->model = _overlay->clone_template (ods->CloneName);
 
-            if (os->switchHandle) {
+            if (os->model) {
+
+               os->switchHandle = _overlay->lookup_node_clone_sub_handle (
+                  os->model,
+                  ods->SwitchName);
 
                os->xformHandle = _overlay->lookup_node_clone_sub_handle (
-                  os->switchHandle,
+                  os->model,
                   ods->XFormName);
 
-               if (os->xformHandle) {
+               if (os->switchHandle && os->xformHandle) {
 
                   if (!_objTable.store (ObjectHandle, os)) { delete os; os = 0; }
+                  else {
+
+                     _overlay->store_all_switch_state (os->switchHandle, False);
+                     _overlay->add_group_child (_root, os->model);
+                  }
                }
-               else { delete os; os = 0; }
+               else {
+
+                  _overlay->destroy_node (os->model);
+                  delete os; os = 0;
+               }
             }
             else { delete os; os = 0; }
          }
@@ -181,6 +268,14 @@ dmz::RenderPluginRadarOverlay::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
+   ObjectStruct *os (_objTable.remove (ObjectHandle));
+
+   if (os) {
+
+      if (_overlay) { _overlay->destroy_node (os->switchHandle); }
+
+      delete os; os = 0;
+   }
 }
 
 
@@ -225,6 +320,20 @@ dmz::RenderPluginRadarOverlay::update_object_position (
 }
 
 
+void
+dmz::RenderPluginRadarOverlay::_set_visiblity (const Boolean Value, ObjectStruct &os) {
+
+   if (_overlay) {
+
+      if (Value != os.visible) {
+
+         _overlay->store_all_switch_state (os.switchHandle, Value);
+         os.visible = Value;
+      }
+   }
+}
+
+
 dmz::RenderPluginRadarOverlay::ObjectDefStruct *
 dmz::RenderPluginRadarOverlay::_lookup_def (const ObjectType &Type) {
 
@@ -256,10 +365,11 @@ dmz::RenderPluginRadarOverlay::_create_def (const ObjectType &Type) {
 
          Config data;
 
-         if (Type.get_config ().lookup_config ("render.overlay", data)) {
+         if (current.get_config ().lookup_config ("render.overlay", data)) {
 
             result = new ObjectDefStruct (
                config_to_string ("name", data),
+               config_to_string ("switch.name", data, "switch"),
                config_to_string ("transform.name", data, "transform"));
 
             if (result) {
@@ -289,12 +399,17 @@ dmz::RenderPluginRadarOverlay::_create_def (const ObjectType &Type) {
 void
 dmz::RenderPluginRadarOverlay::_init (Config &local) {
 
-   activate_default_object_attribute (
+   _rootName = config_to_string ("root.name", local, _rootName);
+
+   _defaultAttrHandle = activate_default_object_attribute (
       ObjectCreateMask | ObjectDestroyMask | ObjectPositionMask);
 
    _hilAttrHandle = activate_object_attribute (
       ObjectAttributeHumanInTheLoopName,
       ObjectFlagMask);
+
+   _radius = config_to_float64 ("radius.value", local, _radius);
+   _scale = config_to_float64 ("radius.scale", local, _scale);
 }
 
 

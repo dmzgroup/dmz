@@ -277,7 +277,7 @@ overlay_all_switch_state (lua_State *L) {
 
       lua_pushboolean (
          L,
-         overlay->store_all_switch_state (Node, Value) ? 1 : 0);
+         overlay->store_switch_state_all (Node, Value) ? 1 : 0);
 
       result = 1;
    }
@@ -289,7 +289,7 @@ overlay_all_switch_state (lua_State *L) {
 
 
 static int
-overlay_enable_single_switch_state (lua_State *L) {
+overlay_enable_switch_state_single (lua_State *L) {
 
    LUA_START_VALIDATE (L);
 
@@ -303,7 +303,7 @@ overlay_enable_single_switch_state (lua_State *L) {
 
       lua_pushboolean (
          L,
-         overlay->enable_single_switch_state (Node, (const UInt32)Which) ? 1 : 0);
+         overlay->enable_switch_state_single (Node, (const UInt32)Which) ? 1 : 0);
 
       result = 1;
    }
@@ -453,8 +453,8 @@ static const luaL_Reg arrayFunc[] = {
    {"add_child", overlay_add_child},
    {"remove_child", overlay_remove_child},
    {"switch_state", overlay_switch_state},
-   {"all_switch_state", overlay_all_switch_state},
-   {"enable_single_switch_state", overlay_enable_single_switch_state},
+   {"switch_state_all", overlay_all_switch_state},
+   {"enable_switch_state_single", overlay_enable_switch_state_single},
    {"position", overlay_position},
    {"rotation", overlay_rotation},
    {"scale", overlay_scale},

@@ -101,7 +101,7 @@ dmz::EntityPluginOverlayDead::update_object_state (
 
          if (_overlaySwitch) {
 
-            _overlay->enable_single_switch_state (_overlaySwitch, 1);
+            _overlay->enable_switch_state_single (_overlaySwitch, 1);
          }
 
          if (_overlayScale) {
@@ -116,7 +116,7 @@ dmz::EntityPluginOverlayDead::update_object_state (
 
          if (_overlaySwitch) {
 
-            _overlay->enable_single_switch_state (_overlaySwitch, 0);
+            _overlay->enable_switch_state_single (_overlaySwitch, 0);
          }
       }
    }

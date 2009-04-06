@@ -58,11 +58,11 @@ namespace dmz {
             const Int32 Which,
             const Boolean SwitchState) = 0;
 
-         virtual Boolean store_all_switch_state (
+         virtual Boolean store_switch_state_all (
             const Handle Overlay,
             const Boolean SwitchState) = 0;
 
-         virtual Boolean enable_single_switch_state (
+         virtual Boolean enable_switch_state_single (
             const Handle Overlay,
             const Int32 Which) = 0;
 

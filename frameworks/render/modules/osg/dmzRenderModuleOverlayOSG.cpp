@@ -386,7 +386,7 @@ dmz::RenderModuleOverlayOSG::store_switch_state (
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::store_all_switch_state (
+dmz::RenderModuleOverlayOSG::store_switch_state_all (
       const Handle Overlay,
       const Boolean SwitchState) {
 
@@ -407,7 +407,7 @@ dmz::RenderModuleOverlayOSG::store_all_switch_state (
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::enable_single_switch_state (
+dmz::RenderModuleOverlayOSG::enable_switch_state_single (
       const Handle Overlay,
       const Int32 Which) {
 

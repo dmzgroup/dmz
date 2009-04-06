@@ -245,7 +245,7 @@ dmz::RenderPluginRadarOverlay::create_object (
                   if (!_objTable.store (ObjectHandle, os)) { delete os; os = 0; }
                   else {
 
-                     _overlay->store_all_switch_state (os->switchHandle, False);
+                     _overlay->store_switch_state_all (os->switchHandle, False);
                      _overlay->add_group_child (_root, os->model);
                   }
                }
@@ -327,7 +327,7 @@ dmz::RenderPluginRadarOverlay::_set_visiblity (const Boolean Value, ObjectStruct
 
       if (Value != os.visible) {
 
-         _overlay->store_all_switch_state (os.switchHandle, Value);
+         _overlay->store_switch_state_all (os.switchHandle, Value);
          os.visible = Value;
       }
    }

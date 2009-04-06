@@ -12,7 +12,8 @@ dmz::RenderPluginDisableObjectIsect::RenderPluginDisableObjectIsect (
       Config &local) :
       Plugin (Info),
       ObjectObserverUtil (Info, local),
-      _log (Info) {
+      _log (Info),
+      _isect (0) {
 
    _init (local);
 }

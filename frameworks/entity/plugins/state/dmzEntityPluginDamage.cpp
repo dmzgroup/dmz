@@ -1,3 +1,4 @@
+#include <dmzEntityConsts.h>
 #include "dmzEntityPluginDamage.h"
 #include <dmzEventCallbackMasks.h>
 #include <dmzEventConsts.h>
@@ -29,7 +30,8 @@ dmz::EntityPluginDamage::EntityPluginDamage (const PluginInfo &Info, Config &loc
       _log (Info),
       _hil (0),
       _hilHandle (0),
-      _defaultObjectHandle (0),
+      _defaultObjectAttrHandle (0),
+      _healthAttrHandle (0),
       _targetHandle (0) {
 
    _init (local);
@@ -86,13 +88,30 @@ dmz::EntityPluginDamage::close_event (
 
                if (objMod) {
 
-                  Mask state;
+                  Float64 health (0);
 
-                  objMod->lookup_state (_hil, _defaultObjectHandle, state);
+                  Boolean dead = True;
 
-                  state |= _deadState;
+                  if (objMod->lookup_scalar (_hil, _healthAttrHandle, health)) {
 
-                  objMod->store_state (_hil, _defaultObjectHandle, state);
+                     health -= 25.0;
+
+                     if (health <= 0.0) { health = 0.0; }
+                     else { dead = False; }
+
+                     objMod->store_scalar (_hil, _healthAttrHandle, health);
+                  }
+
+                  if (dead) {
+
+                     Mask state;
+
+                     objMod->lookup_state (_hil, _defaultObjectAttrHandle, state);
+
+                     state |= _deadState;
+
+                     objMod->store_state (_hil, _defaultObjectAttrHandle, state);
+                  }
                }
             }
          }
@@ -106,13 +125,15 @@ dmz::EntityPluginDamage::_init (Config &local) {
 
    Definitions defs (get_plugin_runtime_context (), &_log);
 
+   _healthAttrHandle = defs.create_named_handle (EntityHealthValueName);
+
    _targetHandle = defs.create_named_handle (EventAttributeTargetName);
 
    const String StateNames = config_to_string ("state.name", local, DefaultStateNameDead);
 
    defs.lookup_state (StateNames, _deadState);
 
-   _defaultObjectHandle = activate_default_object_attribute (ObjectDestroyMask);
+   _defaultObjectAttrHandle = activate_default_object_attribute (ObjectDestroyMask);
 
    _hilHandle = activate_object_attribute (
       ObjectAttributeHumanInTheLoopName,

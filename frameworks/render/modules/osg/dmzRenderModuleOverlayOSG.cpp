@@ -851,7 +851,7 @@ dmz::RenderModuleOverlayOSG::_add_switch (
    parent->addChild (ptr.get ());
  
    const String Name = config_to_string ("name", node);
-   const UInt32 Which = config_to_uint32 ("which", node);
+   const Int32 Which = config_to_int32 ("which", node);
    SwitchStruct *ss = 0;
 
    if (Name) {
@@ -866,7 +866,11 @@ dmz::RenderModuleOverlayOSG::_add_switch (
 
    if (ss && ss->switchNode.valid ()) {
 
-      if (Which < ss->switchNode->getNumChildren ()) {
+      if (Which < 0) {
+
+         ss->switchNode->setAllChildrenOff ();
+      }
+      else if (Which < ss->switchNode->getNumChildren ()) {
 
          ss->switchNode->setSingleChildOn (Which);
       }
@@ -941,11 +945,6 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
    stateset->setMode (GL_LIGHTING, osg::StateAttribute::OFF);
    stateset->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
    stateset->setRenderBinDetails (Depth, "RenderBin");
-
-#if 0
-stateset->setAttributeAndModes (new osg::PolygonMode (osg::PolygonMode::FRONT, osg::PolygonMode::LINE));
-stateset->setAttributeAndModes (new osg::LineWidth (5));
-#endif
 
    osg::Geometry* geom = new osg::Geometry;
 

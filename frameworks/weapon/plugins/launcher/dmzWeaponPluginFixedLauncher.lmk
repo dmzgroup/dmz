@@ -2,6 +2,7 @@ lmk.set_name "dmzWeaponPluginFixedLauncher"
 lmk.set_type "plugin"
 lmk.add_files {"dmzWeaponPluginFixedLauncher.cpp",}
 lmk.add_libs {
+   "dmzWeaponUtil",
    "dmzObjectUtil",
    "dmzInputEvents",
    "dmzInputUtil",

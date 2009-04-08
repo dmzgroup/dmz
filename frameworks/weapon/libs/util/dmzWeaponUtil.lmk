@@ -11,7 +11,7 @@ lmk.add_files {
 }
 
 lmk.add_libs {"dmzKernel",}
-lmk.add_preqs {"dmzObjectFramework",}
+lmk.add_preqs {"dmzWeaponFramework", "dmzEventFramework", "dmzObjectFramework",}
 
 lmk.add_vars ({
    localDefines = "$(lmk.defineFlag)DMZ_WEAPON_UTIL_EXPORT"

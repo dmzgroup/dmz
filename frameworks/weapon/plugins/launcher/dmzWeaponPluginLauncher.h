@@ -13,6 +13,7 @@
 #include <dmzTypesMask.h>
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
+#include <dmzWeaponAmmoUtil.h>
 
 namespace dmz {
 
@@ -131,6 +132,7 @@ namespace dmz {
 
          Log _log;
          Time _time;
+         WeaponAmmoUtil _ammo;
 
          HashTableHandleTemplate<LaunchStruct> _launchTable;
          HashTableHandleTemplate<ComponentStruct> _componentTable;
@@ -141,13 +143,12 @@ namespace dmz {
          Mask _deadState;
 
          Boolean _hilActive;
-         Handle _hilHandle;
+         Handle _hilAttrHandle;
          Handle _hil;
 
          Handle _defaultHandle;
          Handle _sourceEventHandle;
 
-         ObjectType _ammoType;
          UInt32 _launchButton;
          //! \endcond
 

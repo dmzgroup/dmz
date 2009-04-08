@@ -1,0 +1,19 @@
+lmk.set_name "dmzWeaponUtil"
+lmk.set_type "shared"
+
+lmk.add_files {
+   "dmzWeaponAmmoUtil.h",
+   "dmzWeaponUtilExport.h",
+}
+
+lmk.add_files {
+   "dmzWeaponAmmoUtil.cpp",
+}
+
+lmk.add_libs {"dmzKernel",}
+lmk.add_preqs {"dmzObjectFramework",}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_WEAPON_UTIL_EXPORT"
+}, { win32 = true })
+

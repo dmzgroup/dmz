@@ -125,7 +125,7 @@ dmz::EntityPluginDamage::_init (Config &local) {
 
    Definitions defs (get_plugin_runtime_context (), &_log);
 
-   _healthAttrHandle = defs.create_named_handle (EntityHealthValueName);
+   _healthAttrHandle = defs.create_named_handle (EntityAttributeHealthName);
 
    _targetHandle = defs.create_named_handle (EventAttributeTargetName);
 

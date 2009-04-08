@@ -96,7 +96,7 @@ dmz::EntityPluginRestoreHealth::_init (Config &local) {
 
    defs.lookup_state (DefaultStateNameDead, _dead);
 
-   _healthAttrHandle = defs.create_named_handle (EntityHealthValueName);
+   _healthAttrHandle = defs.create_named_handle (EntityAttributeHealthName);
 
    _defaultAttrHandle = activate_default_object_attribute (ObjectStateMask);
 

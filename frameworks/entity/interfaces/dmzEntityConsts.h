@@ -18,7 +18,7 @@ namespace dmz {
 //! @{
 
    //! \brief Name of entity health object attribute. Defined in dmzEntityConsts.h.
-   const char EntityHealthValueName[] = "Entity_Health_Value";
+   const char EntityAttributeHealthName[] = "Entity_Health_Value";
 //! @}
 };
 

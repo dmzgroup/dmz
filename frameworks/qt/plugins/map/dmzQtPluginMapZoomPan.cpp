@@ -304,7 +304,7 @@ dmz::QtPluginMapZoomPan::eventFilter (QObject *obj, QEvent *event) {
 
             myRect.moveTopRight (viewRect.topRight ());
             myRect.moveTop (myRect.top () + 5);
-            myRect.moveRight (myRect.right () - 20);
+            myRect.moveRight (myRect.right () - 5);
             setGeometry (myRect);
          }
       }

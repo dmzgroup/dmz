@@ -13,7 +13,9 @@ namespace dmz {
       public:
          QtCanvasScene (QObject *parent = 0);
          ~QtCanvasScene ();
-
+         
+         void enableGrid (const bool Value);
+         
       protected:
          virtual void drawBackground (QPainter *painter, const QRectF &rect);
          virtual void mouseMoveEvent (QGraphicsSceneMouseEvent *event);

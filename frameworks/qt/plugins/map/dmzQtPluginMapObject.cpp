@@ -18,6 +18,21 @@
 #include <QtGui/QtGui>
 #include <QtSvg/QtSvg>
 
+void
+dmz::QtPluginMapObject::ObjectStruct::update () {
+
+   if (item) {
+
+      // QTransform trans;
+      // 
+      // trans.translate (posX, posY);
+      // trans.rotateRadians (heading);
+      // if (scaleX && scaleY) { trans.scale (scaleX, scaleY); }
+      // 
+      // item->setTransform (trans);
+   }
+}
+
 
 dmz::QtPluginMapObject::QtPluginMapObject (
       const PluginInfo &Info,
@@ -153,6 +168,7 @@ _log.warn << "create_object: " << Type.get_name () << endl;
 //         os->update ();
 
          os->item = new qmapcontrol::ImagePoint (pos.get_x (), pos.get_z (), "images:NA_Node.svg");
+         os->item->setBaselevel (10);
 //         _geomLayer->addGeometry (item);
       }
 

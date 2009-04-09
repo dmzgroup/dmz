@@ -1,0 +1,8 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginCanvasMap"
+lmk.set_type "plugin"
+lmk.add_files ({"dmzQtPluginCanvasMap.h"},{src="moc"})
+lmk.add_files {"dmzQtPluginCanvasMap.cpp",}
+lmk.add_preqs {"dmzQtFramework",}
+lmk.add_libs {"QMapControl","dmzQtUtil","dmzKernel",}
+lmkQt.add_libs {"QtCore","QtGui",}

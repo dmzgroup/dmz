@@ -50,8 +50,6 @@ dmz::QtModuleCanvasBasic::update_plugin_state (
 
    if (State == PluginStateStart) {
 
-//      if (_canvas) { _canvas->centerOn (QPoint (0,0)); }
-      
       _load_session ();
       setFocus (Qt::ActiveWindowFocusReason);
    }
@@ -252,8 +250,10 @@ dmz::QtModuleCanvasBasic::get_qt_widget () { return this; }
 
 void
 dmz::QtModuleCanvasBasic::resizeEvent (QResizeEvent *event) {
-
+   
    _handle_mouse_event (0, 0);
+   
+//   if (event) { event->ignore (); }
 }
 
 
@@ -456,9 +456,24 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
    const Int32 MaxY = config_to_int32 ("scene.max.y", local, 100000);
 
    _scene.setSceneRect (QRectF (MinX, MinY, MaxX - MinX, MaxY - MinY));
-   //_scene.setItemIndexMethod (QGraphicsScene::NoIndex);
+
+   const Int32 IndexMethod (config_to_int32 ("scene.itemIndexMethod", local, 0));
+   
+   if (IndexMethod == QGraphicsScene::NoIndex) {
+      
+      _scene.setItemIndexMethod (QGraphicsScene::NoIndex);
+   }
+   
+   _scene.enableGrid (config_to_boolean ("scene.background.grid", local, True));
 
    _canvas = new QtCanvasView (this);
+   
+   if (config_to_boolean ("scene.background.transparent", local, False)) {
+      
+      _scene.enableGrid (False);
+      _canvas->setStyleSheet ("background: transparent");
+   }
+
    _canvas->setTransformationAnchor (QGraphicsView::AnchorViewCenter);
    _canvas->setResizeAnchor (QGraphicsView::AnchorViewCenter);
 
@@ -482,8 +497,10 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
    //_canvas->setBackgroundBrush (QPixmap ("/assets/images/background1.png"));
 
    QVBoxLayout *layout (new QVBoxLayout ());
+   layout->setSpacing (0);
+   layout->setContentsMargins (0, 0, 0, 0);
    layout->addWidget (_canvas);
-
+   
    setLayout (layout);
    setMouseTracking (true);
    _inputModuleName = config_to_string ("module.input.name", local);

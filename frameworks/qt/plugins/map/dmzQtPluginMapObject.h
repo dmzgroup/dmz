@@ -15,6 +15,22 @@
 namespace dmz {
 
    class QtModuleMap;
+   
+#if 0   
+   class QtMapObject : public QGraphicsItem {
+
+      public:
+         QtCanvasObject (QGraphicsItem *parent = 0);
+         ~QtCanvasObject ();
+
+         virtual QRectF boundingRect () const;
+
+         virtual void paint (
+            QPainter *painter,
+            const QStyleOptionGraphicsItem *option,
+            QWidget *widget);
+   };
+#endif
 
    class QtPluginMapObject :
       public Plugin,

@@ -16,6 +16,13 @@ dmz::QtCanvasScene::~QtCanvasScene () {
 
 
 void
+dmz::QtCanvasScene::enableGrid (const bool Value) {
+   
+   _drawGrid = Value;
+}
+
+
+void
 dmz::QtCanvasScene::drawBackground (QPainter *painter, const QRectF &rect) {
 
    if (_drawGrid) {

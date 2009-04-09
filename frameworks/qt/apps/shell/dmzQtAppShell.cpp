@@ -380,7 +380,9 @@ main (int argc, char *argv[]) {
 
    String launchFile;
 
+#if defined (_WIN32)
    if ((argc > 1) && argv[1]) { launchFile = argv[1]; }
+#endif
 
 #if defined(__APPLE__) || defined(MACOSX) || defined (_WIN32)
    QtSingletonApplication qtApp (

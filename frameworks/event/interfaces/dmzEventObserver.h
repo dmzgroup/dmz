@@ -28,6 +28,7 @@ namespace dmz {
 
          static Boolean is_valid (const Handle ObserverHandle, RuntimeContext *context);
 
+         String get_event_observer_name ();
          Handle get_event_observer_handle ();
 
          virtual void store_event_module (const String &Name, EventModule &module) = 0;
@@ -90,6 +91,10 @@ dmz::EventObserver::~EventObserver () {
 
    remove_rtti_interface (EventObserverInterfaceName, __Info);
 }
+
+
+inline dmz::String
+dmz::EventObserver::get_event_observer_name () { return __Info.get_name (); }
 
 
 inline dmz::Handle

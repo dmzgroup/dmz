@@ -85,9 +85,13 @@ dmz::EntityPluginAutoRestoreHealth::update_time_slice (const Float64 TimeDelta) 
             Float64 health (0.0);
 
             objMod->lookup_scalar (current->ObjectHandle, _healthAttrHandle, health);
-            health += _healthIncrease;
-            if (health > _maxHealth) { health = _maxHealth; }
-            objMod->store_scalar (current->ObjectHandle, _healthAttrHandle, health);
+
+            if (health < _maxHealth) {
+
+               health += _healthIncrease;
+               if (health > _maxHealth) { health = _maxHealth; }
+               objMod->store_scalar (current->ObjectHandle, _healthAttrHandle, health);
+            }
          }
       }
    }

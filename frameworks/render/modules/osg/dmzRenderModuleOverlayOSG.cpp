@@ -7,6 +7,7 @@
 #include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzTypesConsts.h>
 
 #include <osg/Texture2D>
 #include <osg/PolygonMode>
@@ -877,6 +878,12 @@ dmz::RenderModuleOverlayOSG::_add_switch (
    }
 }
 
+namespace {
+
+static const dmz::Float64 SixPi64 = dmz::Pi64 * 6.0;
+static const dmz::Float64 SevenPi64 = dmz::Pi64 * 7.0;
+
+}
 
 void
 dmz::RenderModuleOverlayOSG::_add_transform (
@@ -887,14 +894,20 @@ dmz::RenderModuleOverlayOSG::_add_transform (
    parent->addChild (ptr.get ());
 
    const Vector Pos = config_to_vector ("position", node);
-   const Float64 Rot = config_to_float64 ("rotation.value", node);
+   Float64 rot  = config_to_float64 ("rotation.value", node, SevenPi64);
+
+   if (rot > SixPi64) {
+
+      rot = to_radians (config_to_float64 ("rotation.degrees", node, 0.0));
+   }
+
    const Vector Scale = config_to_vector ("scale", node, Vector (1.0, 1.0, 1.0));
 
    osg::Matrix posMat;
    posMat.makeTranslate (Pos.get_x (), Pos.get_y (), 0.0);
 
    osg::Matrix rotMat;
-   rotMat.makeRotate (Rot, osg::Vec3d (0.0, 0.0, 1.0));
+   rotMat.makeRotate (rot, osg::Vec3d (0.0, 0.0, 1.0));
 
    osg::Matrix scaleMat;
    scaleMat.makeScale (Scale.get_x (), Scale.get_y (), 0.0);
@@ -912,7 +925,7 @@ dmz::RenderModuleOverlayOSG::_add_transform (
       else if (ts) {
 
          ts->pos = Pos;
-         ts->rot = Rot;
+         ts->rot = rot;
          ts->scale = Scale;
       }
    }  

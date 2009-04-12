@@ -118,6 +118,9 @@ dmz::RenderPluginRadarOverlay::update_time_slice (const Float64 TimeDelta) {
          else { objMod->lookup_orientation (_hil, _defaultAttrHandle, hilOri); }
       }
 
+      const Float64 Heading = get_heading (hilOri);
+      const Matrix XForm (Vector (0.0, 1.0, 0.0), Heading);
+
       HashTableHandleIterator it;
       ObjectStruct *os (0);
 
@@ -128,15 +131,10 @@ dmz::RenderPluginRadarOverlay::update_time_slice (const Float64 TimeDelta) {
 
             Vector pos = (os->pos - hilPos) * _scale;
             pos.set_y (0.0);
+            XForm.transform_vector (pos);
 
-            if (pos.magnitude () <= _radius) {
-
-               _set_visiblity (True, *os);
-            }
-            else {
-
-               _set_visiblity (False, *os);
-            }
+            if (pos.magnitude () <= _radius) { _set_visiblity (True, *os); }
+            else { _set_visiblity (False, *os); }
 
             _overlay->store_transform_position (
                os->xformHandle,
@@ -145,9 +143,7 @@ dmz::RenderPluginRadarOverlay::update_time_slice (const Float64 TimeDelta) {
          }
       }
 
-      Float64 heading = get_heading (hilOri);
-
-      _overlay->store_transform_rotation (_root, heading);
+//      _overlay->store_transform_rotation (_root, heading);
    }
 }
 

@@ -871,7 +871,7 @@ dmz::RenderModuleOverlayOSG::_add_switch (
 
          ss->switchNode->setAllChildrenOff ();
       }
-      else if (Which < ss->switchNode->getNumChildren ()) {
+      else if (UInt32 (Which) < ss->switchNode->getNumChildren ()) {
 
          ss->switchNode->setSingleChildOn (Which);
       }

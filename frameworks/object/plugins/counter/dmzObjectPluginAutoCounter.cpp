@@ -141,7 +141,7 @@ dmz::ObjectPluginAutoCounter::_init (Config &local) {
    }
 
    _rate = config_to_float64 ("counter.rate", local, _rate);
-   _increase = config_to_float64 ("counter.increase", local, _increase);
+   _increase = config_to_int64 ("counter.increase", local, _increase);
 }
 
 

@@ -249,8 +249,8 @@ dmz::EntityPluginFreeFly::_init (Config &local) {
       ObjectAttributeHumanInTheLoopName,
       ObjectFlagMask);
 
-   _move.moveSpeed = config_to_uint32 ("movement.speed", local, _move.moveSpeed);
-   _move.turnRate = config_to_uint32 ("movement.turn-rate", local, _move.turnRate);
+   _move.moveSpeed = config_to_float64 ("movement.speed", local, _move.moveSpeed);
+   _move.turnRate = config_to_float64 ("movement.turn-rate", local, _move.turnRate);
 
    init_input_channels (
       local,

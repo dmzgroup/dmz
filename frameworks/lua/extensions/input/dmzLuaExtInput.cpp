@@ -127,7 +127,7 @@ input_is_button_changed (lua_State *L) {
    LUA_START_VALIDATE (L);
 
    Boolean result (False);
-   const int ButtonNumber (luaL_checknumber (L, 1));
+   const int ButtonNumber (luaL_checkint (L, 1));
 
    luaL_checktype (L, 2, LUA_TTABLE);
 
@@ -163,7 +163,7 @@ input_is_button_pressed (lua_State *L) {
    LUA_START_VALIDATE (L);
 
    Boolean result (False);
-   const int ButtonNumber (luaL_checknumber (L, 1));
+   const int ButtonNumber (luaL_checkint (L, 1));
 
    luaL_checktype (L, 2, LUA_TTABLE);
 

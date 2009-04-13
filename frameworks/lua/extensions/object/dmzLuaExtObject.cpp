@@ -827,8 +827,12 @@ object_counter (lua_State *L) {
 
          if (objMod->store_counter (objHandle, attrHandle, Value)) {
 
-            lua_pushvalue (L, 3);
-            result = 1;
+            Int64 value (0);
+            if (objMod->lookup_counter (objHandle, attrHandle, value)) {
+
+               lua_pushnumber (L, (lua_Number (value)));
+               result = 1;
+            }
          }
       }
       else {

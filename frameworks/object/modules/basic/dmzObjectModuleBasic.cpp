@@ -1479,7 +1479,10 @@ dmz::ObjectModuleBasic::add_to_counter (
             else { newCounter += Value; }
          }
 
-         result = store_counter (ObjectHandle, AttributeHandle, newCounter);
+         if (store_counter (ObjectHandle, AttributeHandle, newCounter)) {
+
+            result = ptr->counter;
+         }
       }
    }
 

@@ -28,8 +28,8 @@ dmz::EntityPluginDeadTimer::EntityPluginDeadTimer (
       ObjectObserverUtil (Info, local),
       _log (Info),
       _hil (0),
-      _hilHandle (0),
-      _defaultHandle (0) {
+      _hilAttrHandle (0),
+      _defaultAttrHandle (0) {
 
    stop_time_slice ();
 
@@ -51,9 +51,9 @@ dmz::EntityPluginDeadTimer::update_time_slice (const Float64 TimeDelta) {
    if (objMod && _hil) {
 
       Mask state;
-      objMod->lookup_state (_hil, _defaultHandle, state);
+      objMod->lookup_state (_hil, _defaultAttrHandle, state);
       state.unset (_deadState);
-      objMod->store_state (_hil, _defaultHandle, state);
+      objMod->store_state (_hil, _defaultAttrHandle, state);
    }
 }
 
@@ -75,7 +75,7 @@ dmz::EntityPluginDeadTimer::update_object_state (
       const Mask &Value,
       const Mask *PreviousValue) {
 
-   if (_deadState && (AttributeHandle == _defaultHandle) && (ObjectHandle == _hil)) {
+   if (_deadState && (AttributeHandle == _defaultAttrHandle) && (ObjectHandle == _hil)) {
 
       const Boolean IsDead (Value.contains (_deadState));
       const Boolean WasDead (
@@ -94,7 +94,7 @@ dmz::EntityPluginDeadTimer::update_object_flag (
       const Boolean Value,
       const Boolean *PreviousValue) {
 
-   if (Value && (AttributeHandle == _hilHandle)) { _hil = ObjectHandle; }
+   if (Value && (AttributeHandle == _hilAttrHandle)) { _hil = ObjectHandle; }
 }
 
 
@@ -107,10 +107,10 @@ dmz::EntityPluginDeadTimer::_init (Config &local) {
 
    defs.lookup_state (StateNames, _deadState);
 
-   _defaultHandle =
+   _defaultAttrHandle =
       activate_default_object_attribute (ObjectDestroyMask | ObjectStateMask);
 
-   _hilHandle = activate_object_attribute (
+   _hilAttrHandle = activate_object_attribute (
       ObjectAttributeHumanInTheLoopName,
       ObjectFlagMask);
 

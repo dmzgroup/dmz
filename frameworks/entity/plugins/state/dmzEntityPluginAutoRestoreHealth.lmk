@@ -1,0 +1,8 @@
+lmk.set_name "dmzEntityPluginAutoRestoreHealth"
+lmk.set_type "plugin"
+lmk.add_files {"dmzEntityPluginAutoRestoreHealth.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzEntityFramework", "dmzObjectFramework",}

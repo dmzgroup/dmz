@@ -112,7 +112,7 @@ const Boolean SwitchState)
 \param[in] SwitchState Boolean indicating the switch state.
 \return Returns True if the switch state was successfully set.
 
-\fn dmz::Boolean dmz::RenderModuleOverlay::store_all_switch_state (
+\fn dmz::Boolean dmz::RenderModuleOverlay::store_switch_state_all (
 const Handle Overlay,
 const Boolean SwitchState)
 \brief Sets all children of the switch to the same specified state.
@@ -120,7 +120,7 @@ const Boolean SwitchState)
 \param[in] SwitchState Boolean indicating the switch state.
 \return Returns True if the switch state was successfully set.
 
-\fn dmz::Boolean dmz::RenderModuleOverlay::enable_single_switch_state (
+\fn dmz::Boolean dmz::RenderModuleOverlay::enable_switch_state_single (
 const Handle Overlay,
 const Int32 Which)
 \brief Enables a single child and disables all others.

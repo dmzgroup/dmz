@@ -49,13 +49,13 @@ dmz::WeaponPluginLauncher::WeaponPluginLauncher (
       ObjectObserverUtil (Info, local),
       _log (Info),
       _time (Info),
+      _ammo (Info, local, &_log),
       _transform (0),
       _delay (0.5),
       _hilActive (True),
-      _hilHandle (0),
+      _hilAttrHandle (0),
       _hil (0),
       _defaultHandle (0),
-      _sourceEventHandle (0),
       _launchButton (2) {
 
    _init (local);
@@ -244,7 +244,7 @@ dmz::WeaponPluginLauncher::update_object_flag (
       const Boolean Value,
       const Boolean *PreviousValue) {
 
-   if ((AttributeHandle == _hilHandle) && Value) {
+   if (Value) {
 
       _hil = ObjectHandle;
 
@@ -257,6 +257,7 @@ dmz::WeaponPluginLauncher::update_object_flag (
          else { _hilActive = True; }
       }
    }
+   else if (ObjectHandle == _hil) { _hil = 0; }
 }
 
 
@@ -301,9 +302,9 @@ dmz::WeaponPluginLauncher::_create_munition (const Handle SourceHandle) {
 
    if ((SourceHandle == _hil) && !_hilActive) { active = False; }
 
-   if (active && _ammoType && SourceHandle && objMod) {
+   if (active && objMod) {
 
-      const Handle AmmoHandle = objMod->create_object (_ammoType, ObjectLocal);
+      const Handle AmmoHandle = _ammo.create_munition (SourceHandle, *objMod);
 
       if (AmmoHandle) {
 
@@ -339,8 +340,6 @@ dmz::WeaponPluginLauncher::_create_munition (const Handle SourceHandle) {
          objMod->store_position (AmmoHandle, _defaultHandle, pos);
          objMod->store_velocity (AmmoHandle, _defaultHandle, vel);
 
-         objMod->link_objects (_sourceEventHandle, SourceHandle, AmmoHandle);
-
          objMod->activate_object (AmmoHandle);
       }
    }
@@ -354,12 +353,10 @@ dmz::WeaponPluginLauncher::_init (Config &local) {
 
    Definitions defs (context, &_log);
 
-   _sourceEventHandle = defs.create_named_handle (EventAttributeSourceName);
-
    _defaultHandle = activate_default_object_attribute (
       ObjectStateMask);
 
-   _hilHandle = activate_object_attribute (
+   _hilAttrHandle = activate_object_attribute (
       ObjectAttributeHumanInTheLoopName,
       ObjectFlagMask);
 
@@ -368,13 +365,6 @@ dmz::WeaponPluginLauncher::_init (Config &local) {
       local,
       DefaultStateNameDead,
       context);
-
-   _ammoType = config_to_object_type ("munitions.object-type.name", local, context);
-
-   if (!_ammoType) {
-
-      _log.error << "No munitions type defined. Will be unable to fire weapon." << endl;
-   }
 
    _delay = config_to_float64 ("delay.value", local, _delay);
 

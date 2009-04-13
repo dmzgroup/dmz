@@ -51,7 +51,8 @@ namespace dmz {
 
          Handle _hil;
          Handle _hilHandle;
-         Handle _defaultObjectHandle;
+         Handle _defaultObjectAttrHandle;
+         Handle _healthAttrHandle;
          Handle _targetHandle;
 
          Mask _deadState;

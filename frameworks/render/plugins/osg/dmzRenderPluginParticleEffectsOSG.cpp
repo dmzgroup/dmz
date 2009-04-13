@@ -149,7 +149,7 @@ osgParticle::ParticleEffect *
 DustStateFactory::create_effect () {
 
    osgParticle::SmokeEffect *result (
-      new osgParticle::SmokeEffect (_Offset, 1.0, 1.0));
+      new osgParticle::SmokeEffect (_Offset, 10.0, 1.0));
 
    if (result) {
 
@@ -165,18 +165,17 @@ DustStateFactory::create_effect () {
 
       osgParticle::Particle particle (OrigParticle);
 
-      particle.setLifeTime (10.0);
+      particle.setLifeTime (5.0);
 
       osgParticle::rangev4 cr (
          osg::Vec4 (0.54, 0.45, 0.38, 1.0), osg::Vec4 (0.56, 0.5, 0.42, 1.0));
 
       particle.setColorRange (cr);
 
-      osgParticle::rangef sr (3.0, 60.0);
+      osgParticle::rangef sr (0.3, 6.0);
       particle.setSizeRange (sr);
 
       osgParticle::rangef ar (0.4, 0.0);
-
       particle.setAlphaRange (ar);
 
       result->setDefaultParticleTemplate (particle);

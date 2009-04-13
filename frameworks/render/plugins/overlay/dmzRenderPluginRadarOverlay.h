@@ -144,6 +144,8 @@ namespace dmz {
          Handle _hil;
          Float64 _radius;
          Float64 _scale;
+         Float64 _scaleRate;
+         Int32 _scaleCount;
 
          HashTableHandleTemplate<ObjectDefStruct> _defTable;
          HashTableHandleTemplate<ObjectDefStruct> _defMasterTable;

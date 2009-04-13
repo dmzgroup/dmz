@@ -1,3 +1,5 @@
+#include <dmzInputEventMasks.h>
+#include <dmzInputEventKey.h>
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectConsts.h>
 #include <dmzObjectModule.h>
@@ -28,7 +30,9 @@ dmz::RenderPluginRadarOverlay::RenderPluginRadarOverlay (
       _hilAttrHandle (0),
       _hil (0),
       _radius (64.0),
-      _scale (0.064) {
+      _scale (0.064),
+      _scaleRate (0.1),
+      _scaleCount (0) {
 
    _init (local);
 }
@@ -100,6 +104,9 @@ void
 dmz::RenderPluginRadarOverlay::update_time_slice (const Float64 TimeDelta) {
 
    if (_overlay && _root && _hil) {
+
+      if (_scaleCount > 0) { _scale += _scaleRate * TimeDelta; }
+      else if (_scaleCount < 0) { _scale -= _scaleRate * TimeDelta; }
 
       Vector hilPos;
       Matrix hilOri;
@@ -186,6 +193,16 @@ dmz::RenderPluginRadarOverlay::receive_key_event (
       const Handle Channel,
       const InputEventKey &Value) {
 
+   const UInt32 Key = Value.get_key ();
+
+   if ((Key == '-') || (Key == '_')) {
+
+      _scaleCount += (Value.get_key_state () ? 1 : -1);
+   }
+   else if ((Key == '+') || (Key == '=')) {
+
+      _scaleCount += (Value.get_key_state () ? -1 : 1);
+   }
 }
 
 
@@ -394,6 +411,8 @@ dmz::RenderPluginRadarOverlay::_create_def (const ObjectType &Type) {
 
 void
 dmz::RenderPluginRadarOverlay::_init (Config &local) {
+
+   init_input_channels (local, InputEventKeyMask);
 
    _rootName = config_to_string ("root.name", local, _rootName);
 

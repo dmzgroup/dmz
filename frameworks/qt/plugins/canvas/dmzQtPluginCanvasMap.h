@@ -41,6 +41,9 @@ namespace dmz {
 
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();
+         
+      protected slots:
+            void slot_scale_changed (qreal);
 
       protected:
          virtual void resizeEvent (QResizeEvent* event);

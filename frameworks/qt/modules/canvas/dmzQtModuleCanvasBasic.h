@@ -69,6 +69,9 @@ namespace dmz {
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();
 
+      signals:
+            void center_changed (const QPointF &Pos);
+
       protected:
          virtual void resizeEvent (QResizeEvent* event);
          virtual void keyPressEvent (QKeyEvent *event);

@@ -252,8 +252,6 @@ void
 dmz::QtModuleCanvasBasic::resizeEvent (QResizeEvent *event) {
    
    _handle_mouse_event (0, 0);
-   
-//   if (event) { event->ignore (); }
 }
 
 

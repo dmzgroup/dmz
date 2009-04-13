@@ -64,6 +64,7 @@ dmz::QtCanvasView::pan_direction (const int Dx, const int Dy) {
 void
 dmz::QtCanvasView::drawBackground (QPainter *painter, const QRectF &rect) {
 
+   qDebug ("drawBackground");
    QGraphicsView::drawBackground(painter, rect);
 
 #if 0
@@ -109,6 +110,7 @@ dmz::QtCanvasView::paintEvent (QPaintEvent *event) {
 //      QPaintEvent newEvent (event->region ().boundingRect ());
 //      QGraphicsView::paintEvent (&newEvent);
 
+qDebug ("paintEvent");
       QGraphicsView::paintEvent (event);
    }
 }

@@ -263,7 +263,7 @@ void
 dmz::QtPluginCanvasZoomPan::on_zoomSlider_valueChanged (int value) {
 
    if (_canvasModule) {
-
+      
       const Float32 ZoomMin (_canvasModule->get_zoom_min_value ());
       const Float32 ZoomMax (_canvasModule->get_zoom_max_value ());
       const Float32 ZoomRange (ZoomMax - ZoomMin);
@@ -358,6 +358,14 @@ dmz::QtPluginCanvasZoomPan::_init (Config &local) {
    _mouseButton = config_to_uint32 ("mouseButton.value", local, _mouseButton);
 
    _scrollDelta = config_to_uint32 ("scrollDelta.value", local, _scrollDelta);
+
+   Int32 slidderMin = config_to_int32 ("slidder.min", local, 0);
+   Int32 slidderMax = config_to_int32 ("slidder.max", local, 100);
+   
+   if (slidderMin < slidderMax) {
+      
+      _ui.zoomSlider->setRange (slidderMin, slidderMax);
+   }
 
    _zoomMin = config_to_float32 ("zoom.min", local, _zoomMin);
    _zoomMax = config_to_float32 ("zoom.max", local, _zoomMax);

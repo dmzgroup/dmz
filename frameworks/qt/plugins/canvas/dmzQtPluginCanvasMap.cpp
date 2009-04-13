@@ -68,6 +68,15 @@ dmz::QtPluginCanvasMap::discover_plugin (
 
          if (_canvasModule) {
 
+            QGraphicsView *view = _canvasModule->get_view ();
+
+            if (view) {
+
+               connect (
+                  view, SIGNAL (scale_changed (qreal)),
+                  this, SLOT (slot_scale_changed (qreal)));
+            }
+            
             // QGraphicsView *view (_canvasModule->get_view ());
             // 
             // if (view) {
@@ -107,18 +116,32 @@ dmz::QtPluginCanvasMap::get_qt_widget () { return this; }
 
 
 void
+dmz::QtPluginCanvasMap::slot_scale_changed (qreal value) {
+
+   if (_map) {
+
+_log.warn << "slot_scale_changed: " << value << endl;
+      // const Float32 ZoomMin (_canvasModule->get_zoom_min_value ());
+      // const Float32 ZoomMax (_canvasModule->get_zoom_max_value ());
+      // const Float32 ZoomRange (ZoomMax - ZoomMin);
+      // const Float32 SliderRange (_ui.zoomSlider->maximum () - _ui.zoomSlider->minimum ());
+      // const Float32 SliderValue ((value - ZoomMin) / ZoomRange);
+      // 
+      // _ui.zoomSlider->setValue (SliderValue * SliderRange);
+      
+      _map->setZoom (value);
+   }
+}
+
+
+void
 dmz::QtPluginCanvasMap::resizeEvent (QResizeEvent *event) {
 
    if (event) {
       
-      // if (_map) { _map->resize (event->size () - QSize (1, 1)); }
-      // if (_canvasWidget) { _canvasWidget->resize (event->size ()); }
-      // 
-      // if (_canvasModule) {
-      // 
-      //    QGraphicsView *view (_canvasModule->get_view ());
-      //    if (view) { view->resize (event->size ()); } 
-      // }
+      if (_map) { _map->resize (event->size () - QSize (1, 1)); }
+      
+      if (_canvasWidget) { _canvasWidget->resize (event->size ()); }
       
       event->ignore ();
    }

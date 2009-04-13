@@ -35,6 +35,7 @@ namespace dmz {
 
       signals:
          void scale_changed (qreal);
+         void view_changed (const QPointF &Center);
 
       protected:
          virtual void drawBackground (QPainter *painter, const QRectF &rect);

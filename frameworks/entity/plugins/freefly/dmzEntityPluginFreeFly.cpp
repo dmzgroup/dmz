@@ -128,14 +128,17 @@ dmz::EntityPluginFreeFly::update_time_slice (const Float64 TimeDelta) {
 
       dir = Forward;
       Vector slide (Right);
+      Vector ymove (Up);
 
       ori.transform_vector (dir);
       ori.transform_vector (slide);
+      ori.transform_vector (ymove);
 
       const Vector OldPos (pos);
 
       pos -= (dir * (_move.speedAxis * TimeDelta));
       pos += (slide * (_move.strafeAxis * TimeDelta));
+      pos += (ymove * (_move.ymoveAxis * TimeDelta));
 
       if (!is_zero64 (TimeDelta)) { vel = (pos - OldPos) * (1 /  TimeDelta); }
 
@@ -200,6 +203,7 @@ dmz::EntityPluginFreeFly::receive_axis_event (
       case 1: { _move.turnAxis = AxisValue * _move.turnRate; break; }
       case 6: { _move.strafeAxis = AxisValue * _move.moveSpeed; break; }
       case 7: { _move.pitchAxis = AxisValue * _move.turnRate; break; }
+      case 8: { _move.ymoveAxis = AxisValue * _move.moveSpeed; break; }
    }
 }
 

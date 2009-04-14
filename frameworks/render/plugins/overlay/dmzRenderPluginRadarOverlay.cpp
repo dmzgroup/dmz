@@ -31,7 +31,9 @@ dmz::RenderPluginRadarOverlay::RenderPluginRadarOverlay (
       _hil (0),
       _radius (64.0),
       _scale (0.064),
-      _scaleRate (0.1),
+      _scaleMin (0.0001),
+      _scaleMax (1.0e100),
+      _scaleRate (1.0),
       _scaleCount (0) {
 
    _init (local);
@@ -107,6 +109,9 @@ dmz::RenderPluginRadarOverlay::update_time_slice (const Float64 TimeDelta) {
 
       if (_scaleCount > 0) { _scale += _scaleRate * TimeDelta; }
       else if (_scaleCount < 0) { _scale -= _scaleRate * TimeDelta; }
+
+      if (_scale < _scaleMin) { _scale = _scaleMin; }
+      else if (_scale > _scaleMax) { _scale = _scaleMax; }
 
       Vector hilPos;
       Matrix hilOri;
@@ -424,7 +429,10 @@ dmz::RenderPluginRadarOverlay::_init (Config &local) {
       ObjectFlagMask);
 
    _radius = config_to_float64 ("radius.value", local, _radius);
-   _scale = config_to_float64 ("radius.scale", local, _scale);
+   _scale = config_to_float64 ("scale.value", local, _scale);
+   _scaleMin = config_to_float64 ("scale.min", local, _scaleMin);
+   _scaleMax = config_to_float64 ("scale.max", local, _scaleMax);
+   _scaleRate = config_to_float64 ("scale.rate", local, _scaleRate);
 }
 
 

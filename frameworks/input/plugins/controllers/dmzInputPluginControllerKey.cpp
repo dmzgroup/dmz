@@ -310,6 +310,8 @@ dmz::InputPluginControllerKey::_default_setup (Definitions &defs) {
          _add_axis (6, 'a', 'd', *cs);
          _add_axis (6, 'A', 'D', *cs);
          _add_axis (7, KeyUpArrow, KeyDownArrow, *cs);
+         _add_axis (8, 'z', 'q', *cs);
+         _add_axis (8, 'Z', 'Q', *cs);
 
          _add_button (1, ' ', *cs);
          _add_button (2, ',', *cs);

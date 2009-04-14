@@ -144,6 +144,8 @@ namespace dmz {
          Handle _hil;
          Float64 _radius;
          Float64 _scale;
+         Float64 _scaleMin;
+         Float64 _scaleMax;
          Float64 _scaleRate;
          Int32 _scaleCount;
 

@@ -58,11 +58,13 @@ function update_time_slice (self, time)
          ori = hm * pm
          
          dir = ori:transform (Forward)
+         local ymove = ori:transform (Up)
          local slide = ori:transform (Right)
          
          local OldPos = pos
          
          pos = pos - (dir * (self.speed * time))
+         pos = pos + (ymove * (self.ymove * time))
          pos = pos + (slide * (self.strafe * time))
          
          if not dmz.math.is_zero (time) then vel = (pos - OldPos) * (1 / time) end
@@ -96,6 +98,7 @@ function receive_input_event (self, event)
       elseif event.axis.which == 1 then self.turn = value * self.turnRate
       elseif event.axis.which == 6 then self.strafe = value * self.moveSpeed
       elseif event.axis.which == 7 then self.pitch = value * self.turnRate
+      elseif event.axis.which == 8 then self.ymove = value * self.moveSpeed
       end
    end
 end
@@ -106,7 +109,7 @@ function start (self)
 
    self.obs:init_channels (
       self.config,
-      dmz.input.Axis + dmz.input.ChannelState,
+      dmz.input.Axis + dmz.input.Button + dmz.input.ChannelState,
       receive_input_event,
       self);
 
@@ -135,6 +138,7 @@ function new (config, name)
       strafe = 0.0,
       turn = 0.0,
       pitch = 0.0,
+      ymove = 0.0,
       config = config,
    }
       

@@ -2,6 +2,7 @@
 #include "dmzLuaKernelPrivate.h"
 #include <dmzLuaKernelValidate.h>
 #include <dmzTypesConsts.h>
+#include <dmzTypesMath.h>
 #include <dmzTypesVector.h>
 
 #include <luacpp.h>
@@ -120,6 +121,23 @@ math_get_digit (lua_State *L) {
 }
 
 
+static int
+math_heading (lua_State *L) {
+
+   int result (0);
+
+   Matrix *mat = lua_check_matrix (L, 1);
+
+   if (mat) {
+
+      lua_pushnumber (L, get_heading (*mat));
+      result = 1;
+   }
+
+   return result;
+}
+
+
 static const luaL_Reg arrayFunc [] = {
    {"is_zero", math_is_zero},
    {"to_degrees", math_to_degrees},
@@ -131,6 +149,7 @@ static const luaL_Reg arrayFunc [] = {
    {"forward", math_forward},
    {"backward", math_backward},
    {"get_digit", math_get_digit},
+   {"heading", math_heading},
    {NULL, NULL},
 };
 

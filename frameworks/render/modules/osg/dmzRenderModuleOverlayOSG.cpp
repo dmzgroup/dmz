@@ -135,6 +135,7 @@ dmz::RenderModuleOverlayOSG::update_plugin_state (
          _transformTable.clear ();
          _switchTable.clear ();
          _groupTable.clear ();
+         _textTable.clear ();
          _layoutTable.empty ();
          _nodeNameTable.clear ();
          _cloneTable.empty ();
@@ -240,6 +241,10 @@ dmz::RenderModuleOverlayOSG::is_of_node_type (
 
       result = True;
    }
+   else if ((Type == RenderOverlayText) && _textTable.lookup (Overlay)) {
+
+      result = True;
+   }
 
    return result;
 }
@@ -295,8 +300,45 @@ dmz::RenderModuleOverlayOSG::destroy_node (const Handle Overlay) {
       if (ns->Type == RenderOverlayTransform) { result = _remove_transform (Overlay); }
       else if (ns->Type == RenderOverlaySwitch) { result = _remove_switch (Overlay); }
       else if (ns->Type == RenderOverlayGroup) { result = _remove_group (Overlay); }
+      else if (ns->Type == RenderOverlayText) { result = _remove_text (Overlay); }
       else { result = _remove_node (Overlay); }
    }
+
+   return result;
+}
+
+// Overlay Text API
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::store_text (const Handle Overlay, const String &Value) {
+
+   Boolean result (False);
+
+   TextStruct *ts (_textTable.lookup (Overlay));
+
+   if (ts && ts->text.valid ()) {
+
+      ts->text->setText (Value.get_buffer ());
+      ts->value = Value;
+      result = True;
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::lookup_text (const Handle Overlay, String &value) {
+
+   Boolean result (False);
+
+   TextStruct *ts (_textTable.lookup (Overlay));
+
+   if (ts) {
+
+      value = ts->value;
+      result = True;
+   }
+
 
    return result;
 }
@@ -694,6 +736,26 @@ dmz::RenderModuleOverlayOSG::_create_texture (const String &Name) {
 }
 
 
+osg::Vec4
+dmz::RenderModuleOverlayOSG::_config_to_color (Config &data) {
+
+   osg::Vec4 result (1.0, 1.0, 1.0, 1.0);
+
+   const String ColorName = config_to_string ("color.name", data);
+
+   if (ColorName) {
+
+      osg::Vec4 *ptr = _colorTable.lookup (ColorName);
+
+      if (ptr) { result = *ptr; }
+      else { _log.error << "Unknown color: " << ColorName << endl; }
+   }
+   else { result = config_to_osg_vec4_color ("color", data, result); }
+
+   return result;
+}
+
+
 dmz::Boolean
 dmz::RenderModuleOverlayOSG::_register_node (NodeStruct *ptr) {
 
@@ -717,6 +779,20 @@ dmz::RenderModuleOverlayOSG::_register_node (NodeStruct *ptr) {
 
          if (_groupStack) { _groupStack->gs.childTable.store (ptr->VHandle, ptr); }
       }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_register_text (TextStruct *ptr) {
+
+   Boolean result (_register_node (ptr));
+
+   if (result && ptr) {
+
+      _textTable.store (ptr->VHandle, ptr);
    }
 
    return result;
@@ -788,6 +864,7 @@ dmz::RenderModuleOverlayOSG::_add_node (osg::ref_ptr<osg::Group> &parent, Config
    const String TypeName = config_to_string ("type", node);
 
    if (TypeName == "group") { _add_group (parent, node); }
+   else if (TypeName == "text") { _add_text (parent, node); }
    else if (TypeName == "switch") { _add_switch (parent, node); }
    else if (TypeName == "transform") { _add_transform (parent, node); }
    else if (TypeName == "box") { _add_box (parent, node); }
@@ -798,6 +875,62 @@ dmz::RenderModuleOverlayOSG::_add_node (osg::ref_ptr<osg::Group> &parent, Config
       _log.error << "Unknown overlay node type: " << TypeName << endl;
    }
 }
+
+
+void
+dmz::RenderModuleOverlayOSG::_add_text (
+      osg::ref_ptr<osg::Group> &parent,
+      Config &node) {
+
+   osg::ref_ptr<osg::Geode> child = new osg::Geode;
+   osg::ref_ptr<osgText::Text> textNode = new osgText::Text;
+
+   if (child.valid () && textNode.valid ()) {
+
+      const String Name = config_to_string ("name", node);
+      const Int32 Depth = config_to_int32 ("depth.value", node);
+      const String Text = config_to_string ("text.value", node, "");
+      const String FontResource = config_to_string ("font.resource", node);
+      const Vector Pos = config_to_vector ("position", node);
+
+      osg::StateSet* stateset = child->getOrCreateStateSet ();
+      stateset->setMode (GL_LIGHTING, osg::StateAttribute::OFF);
+      stateset->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+      stateset->setRenderBinDetails (Depth, "RenderBin");
+
+      if (FontResource) {
+
+         const String FontName = _rc.find_file (FontResource);
+
+         if (FontName) { textNode->setFont (FontName.get_buffer ()); }
+      }
+
+      textNode->setAxisAlignment (osgText::TextBase::XY_PLANE);
+      textNode->setBackdropType (osgText::Text::NONE);
+      textNode->setText (Text.get_buffer ());
+      textNode->setPosition (osg::Vec3 (Pos.get_x (), Pos.get_y (), 0.0));
+      textNode->setColor (_config_to_color (node));
+
+      textNode->setCharacterSize (
+         config_to_float32 ("height.value", node, textNode->getCharacterHeight ()));
+
+      parent->addChild (child.get ());
+      child->addDrawable (textNode.get ());
+
+      if (Name) {
+
+         TextStruct *ts = new TextStruct (
+            Name,
+            Text,
+            get_plugin_runtime_context (),
+            child.get (),
+            textNode.get ());
+
+         if (ts && !_register_text (ts)) { delete ts; ts = 0; }
+      }
+   }
+}
+
 
 
 void
@@ -968,20 +1101,7 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
 
    osg::Vec4Array* colors = new osg::Vec4Array;
 
-   osg::Vec4 color (1.0, 1.0, 1.0, 1.0);
-
-   const String ColorName = config_to_string ("color.name", node);
-
-   if (ColorName) {
-
-      osg::Vec4 *ptr = _colorTable.lookup (ColorName);
-
-      if (ptr) { color = *ptr; }
-      else { _log.error << "Unknown color: " << ColorName << endl; }
-   }
-   else { color = config_to_osg_vec4_color ("color", node, color); }
-
-   colors->push_back (color);
+   colors->push_back (_config_to_color (node));
 
    geom->setColorArray (colors);
    geom->setColorBinding (osg::Geometry::BIND_OVERALL);
@@ -1164,6 +1284,15 @@ dmz::RenderModuleOverlayOSG::_remove_node (const Handle Overlay) {
    }
 
    return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_text (const Handle Overlay) {
+
+   const Boolean Result = (_textTable.remove (Overlay) != 0);
+
+   return Result && _remove_node (Overlay);
 }
 
 

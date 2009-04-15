@@ -13,6 +13,7 @@ namespace dmz {
    enum RenderOverlayTypeEnum {
       RenderOverlayUnknown, //!< Unknown node type.
       RenderOverlayNode, //!< Basic node.
+      RenderOverlayText, //!< Text node.
       RenderOverlayGroup, //!< Group node.
       RenderOverlaySwitch, //!< Switch node.
       RenderOverlayTransform, //!< Transform node.
@@ -45,6 +46,10 @@ namespace dmz {
          virtual Handle clone_template (const String &Name) = 0;
 
          virtual Boolean destroy_node (const Handle Overlay) = 0;
+
+         // Overlay Text API
+         virtual Boolean store_text (const Handle Overlay, const String &Value) = 0;
+         virtual Boolean lookup_text (const Handle Overlay, String &value) = 0;
 
          // Overlay Group API
          virtual Boolean add_group_child (const Handle Parent, const Handle Child) = 0;

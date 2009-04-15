@@ -50,6 +50,20 @@ namespace dmz {
                LayoutAxis &operator= (const LayoutAxis &);
          };
 
+         class ScaleAxis {
+
+            public:
+               virtual ~ScaleAxis () {;}
+               virtual Float64 update (const Int32 Value) = 0;
+
+            protected:
+               ScaleAxis () {;}
+
+            private:
+               ScaleAxis (const ScaleAxis &);
+               ScaleAxis &operator= (const ScaleAxis &);
+         };
+
          RenderModuleOverlayOSG (const PluginInfo &Info, Config &local);
          ~RenderModuleOverlayOSG ();
 
@@ -293,11 +307,28 @@ namespace dmz {
             ~LayoutStruct () { delete &xaxis; delete &yaxis; }
          };
 
+         struct ScaleStruct {
+
+            ScaleAxis *xaxis;
+            ScaleAxis *yaxis;
+            TransformStruct &ts;
+
+            ScaleStruct (
+                  ScaleAxis *theXAxis,
+                  ScaleAxis *theYAxis,
+                  TransformStruct &theTS) :
+                  xaxis (theXAxis),
+                  yaxis (theYAxis),
+                  ts (theTS) {;}
+         };
+
          void _update_layout (const Int32 TheX, const Int32 TheY);
+         void _update_auto_scale (const Int32 TheX, const Int32 TheY);
 
          void _apply_transform (TransformStruct &ts);
 
-         LayoutAxis *_create_axis (const String &Prefix, Config &layout);
+         LayoutAxis *_create_layout_axis (const String &Prefix, Config &layout);
+         ScaleAxis *_create_scale_axis (const String &Prefix, Config &data);
          TextureStruct *_create_texture (const String &Name);
 
          osg::Vec4 _config_to_color (Config &data);
@@ -327,6 +358,7 @@ namespace dmz {
          void _init_colors (Config &local);
          void _init_templates (Config &local);
          void _init_layout (Config &local);
+         void _init_auto_scale (Config &local);
          void _init (Config &local);
 
          Log _log;
@@ -349,6 +381,7 @@ namespace dmz {
          HashTableHandleTemplate<TransformStruct> _transformTable;
          HashTableHandleTemplate<CloneStruct> _cloneTable;
          HashTableHandleTemplate<LayoutStruct> _layoutTable;
+         HashTableHandleTemplate<ScaleStruct> _scaleTable;
 
       private:
          RenderModuleOverlayOSG ();

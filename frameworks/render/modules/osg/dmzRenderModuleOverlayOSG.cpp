@@ -16,9 +16,10 @@
 
 namespace {
 
-typedef dmz::RenderModuleOverlayOSG::LayoutAxis Layout;
+typedef dmz::RenderModuleOverlayOSG::LayoutAxis LayoutAxis;
+typedef dmz::RenderModuleOverlayOSG::ScaleAxis ScaleAxis;
 
-class LayoutAbsolute : public Layout {
+class LayoutAbsolute : public LayoutAxis {
 
    public:
       LayoutAbsolute (const dmz::Float64 Offset, const dmz::Boolean Flipped);
@@ -43,7 +44,7 @@ LayoutAbsolute::update (const dmz::Int32 Value) {
 }
 
 
-class LayoutRelative : public Layout {
+class LayoutRelative : public LayoutAxis {
 
    public:
       LayoutRelative (const dmz::Float64 Relative);
@@ -65,6 +66,90 @@ LayoutRelative::update (const dmz::Int32 Value) {
 
    return dmz::Float64(Value) * _Relative;
 }
+
+
+class ScaleAxisSimple : public ScaleAxis {
+
+   public:
+      ScaleAxisSimple (
+         const dmz::Float64 Size,
+         const dmz::Float64 Ratio,
+         const dmz::Float64 Offset);
+
+      virtual dmz::Float64 update (const dmz::Int32 Value);
+
+      void set_max (const dmz::Float64 Value);
+      void set_min (const dmz::Float64 Value);
+
+   protected:
+      const dmz::Float64 _Size;
+      const dmz::Float64 _Ratio;
+      const dmz::Float64 _Offset;
+      dmz::Boolean _hasMax;
+      dmz::Float64 _max;
+      dmz::Boolean _hasMin;
+      dmz::Float64 _min;
+};
+
+
+ScaleAxisSimple::ScaleAxisSimple (
+      const dmz::Float64 Size,
+      const dmz::Float64 Ratio,
+      const dmz::Float64 Offset) :
+      _Size (dmz::is_zero64 (Size) ? 1.0 : Size),
+      _Ratio (Ratio),
+      _Offset (Offset),
+      _hasMax (dmz::False),
+      _max (0.0),
+      _hasMin (dmz::False),
+      _min (0.0) {;}
+
+
+dmz::Float64
+ScaleAxisSimple::update (const dmz::Int32 Value) {
+
+   dmz::Float64 size = (dmz::Float64 (Value) * _Ratio) - _Offset;
+
+   if (_hasMax && (_max < size)) { size = _max; }
+   if (_hasMin && (_min > size)) { size = _min; }
+
+   return size / _Size;
+}
+
+
+void
+ScaleAxisSimple::set_max (const dmz::Float64 Value) {
+
+   _hasMax = dmz::True;
+   _max = Value;
+}
+
+
+void
+ScaleAxisSimple::set_min (const dmz::Float64 Value) {
+
+   _hasMin = dmz::True;
+   _min = Value;
+}
+
+
+class ScaleAxisFixed : public ScaleAxis {
+
+   public:
+      ScaleAxisFixed (const dmz::Float64 Scale);
+
+      virtual dmz::Float64 update (const dmz::Int32 Value);
+
+   protected:
+      const dmz::Float64 _Scale;
+};
+
+
+ScaleAxisFixed::ScaleAxisFixed (const dmz::Float64 Scale) : _Scale (Scale) {;}
+
+
+dmz::Float64
+ScaleAxisFixed::update (const dmz::Int32 Value) { return _Scale; }
 
 };
 
@@ -644,6 +729,7 @@ dmz::RenderModuleOverlayOSG::update_portal_size (
    }
 
    _update_layout (TheX, TheY);
+   _update_auto_scale (TheX, TheY);
 }
 
 
@@ -659,6 +745,38 @@ dmz::RenderModuleOverlayOSG::_update_layout (const Int32 TheX, const Int32 TheY)
       ls->ts.pos.set_xyz (ls->xaxis.update (TheX), ls->yaxis.update (TheY), 0.0);
 
       _apply_transform (ls->ts);
+   }
+}
+
+
+void
+dmz::RenderModuleOverlayOSG::_update_auto_scale (const Int32 TheX, const Int32 TheY) {
+
+   HashTableHandleIterator it;
+   ScaleStruct *ss (0);
+
+   while (_scaleTable.get_next (it, ss)) {
+
+      Float64 ix = 1.0;
+      Float64 jy = 1.0;
+
+      if (ss->xaxis) {
+
+         ix = ss->xaxis->update (TheX);
+
+         if (!ss->yaxis) { jy = ix; }
+      }
+
+      if (ss->yaxis) {
+
+         jy = ss->yaxis->update (TheY);
+
+         if (!ss->xaxis) { ix = jy; }
+      }
+
+      ss->ts.scale.set_xyz (ix, jy, 0.0);
+
+      _apply_transform (ss->ts);
    }
 }
 
@@ -683,7 +801,7 @@ dmz::RenderModuleOverlayOSG::_apply_transform (TransformStruct &ts) {
 
 
 dmz::RenderModuleOverlayOSG::LayoutAxis *
-dmz::RenderModuleOverlayOSG::_create_axis (const String &Prefix, Config &layout) {
+dmz::RenderModuleOverlayOSG::_create_layout_axis (const String &Prefix, Config &layout) {
 
    LayoutAxis *result (0);
 
@@ -703,6 +821,55 @@ dmz::RenderModuleOverlayOSG::_create_axis (const String &Prefix, Config &layout)
    else {
 
       _log.error << "Unknown layout axis type: " << TypeName << endl;
+   }
+
+   return result;
+}
+
+
+dmz::RenderModuleOverlayOSG::ScaleAxis *
+dmz::RenderModuleOverlayOSG::_create_scale_axis (const String &Prefix, Config &data) {
+
+   ScaleAxis *result (0);
+
+   Config axis;
+
+   if (data.lookup_config (Prefix, axis)) {
+
+      const String TypeName = config_to_string ("type", axis, "simple");
+
+      if (TypeName == "simple") {
+
+         ScaleAxisSimple *sas = new ScaleAxisSimple (
+            config_to_float64 ("size", axis, 1.0),
+            config_to_float64 ("ratio", axis, 1.0),
+            config_to_float64 ("offset", axis, 1.0));
+
+         if (sas) {
+
+            String value;
+
+            if (axis.lookup_attribute ("min", value)) {
+
+               sas->set_min (string_to_float64 (value));
+            }
+
+            if (axis.lookup_attribute ("max", value)) {
+
+               sas->set_max (string_to_float64 (value));
+            }
+
+            result = sas;
+         }
+      }
+      else if (TypeName == "fixed") {
+
+         result = new ScaleAxisFixed (config_to_float64 ("value", axis, 1.0));
+      }
+      else {
+
+         _log.error << "Unknown auto scale axis type: " << TypeName << endl;
+      }
    }
 
    return result;
@@ -889,9 +1056,19 @@ dmz::RenderModuleOverlayOSG::_add_text (
 
       const String Name = config_to_string ("name", node);
       const Int32 Depth = config_to_int32 ("depth.value", node);
-      const String Text = config_to_string ("text.value", node, "");
       const String FontResource = config_to_string ("font.resource", node);
       const Vector Pos = config_to_vector ("position", node);
+
+      String text;
+      Config data;
+
+      if (node.lookup_config ("text", data)) {
+
+         if (!data.lookup_attribute ("value", text)) {
+
+            data.get_value (text);
+         }
+      }
 
       osg::StateSet* stateset = child->getOrCreateStateSet ();
       stateset->setMode (GL_LIGHTING, osg::StateAttribute::OFF);
@@ -907,7 +1084,7 @@ dmz::RenderModuleOverlayOSG::_add_text (
 
       textNode->setAxisAlignment (osgText::TextBase::XY_PLANE);
       textNode->setBackdropType (osgText::Text::NONE);
-      textNode->setText (Text.get_buffer ());
+      if (text) { textNode->setText (text.get_buffer ()); }
       textNode->setPosition (osg::Vec3 (Pos.get_x (), Pos.get_y (), 0.0));
       textNode->setColor (_config_to_color (node));
 
@@ -921,7 +1098,7 @@ dmz::RenderModuleOverlayOSG::_add_text (
 
          TextStruct *ts = new TextStruct (
             Name,
-            Text,
+            text,
             get_plugin_runtime_context (),
             child.get (),
             textNode.get ());
@@ -1422,8 +1599,8 @@ dmz::RenderModuleOverlayOSG::_init_layout (Config &local) {
 
          if (ts) {
 
-            LayoutAxis *xaxis = _create_axis ("x", layout);
-            LayoutAxis *yaxis = _create_axis ("y", layout);
+            LayoutAxis *xaxis = _create_layout_axis ("x", layout);
+            LayoutAxis *yaxis = _create_layout_axis ("y", layout);
 
             if (xaxis && yaxis) {
 
@@ -1438,6 +1615,46 @@ dmz::RenderModuleOverlayOSG::_init_layout (Config &local) {
          else {
 
             _log.error << "Unable to find transform: " << Name << " for layout" << endl;
+         }
+      }
+   }
+}
+
+
+void
+dmz::RenderModuleOverlayOSG::_init_auto_scale (Config &local) {
+
+   Config scaleList;
+
+   if (local.lookup_all_config ("auto-scale", scaleList)) {
+
+      ConfigIterator it;
+      Config scaleData;
+
+      while (scaleList.get_next_config (it, scaleData)) {
+
+         const String Name = config_to_string ("node", scaleData);
+
+         NodeStruct *ns = _nodeNameTable.lookup (Name);
+
+         TransformStruct *ts (ns ? _transformTable.lookup (ns->VHandle) : 0);
+
+         if (ts) {
+
+            ScaleStruct *ss = new ScaleStruct (
+               _create_scale_axis ("x", scaleData),
+               _create_scale_axis ("y", scaleData),
+               *ts);
+
+            if (ss && !_scaleTable.store (ts->VHandle, ss)) {
+
+               delete ss; ss = 0;
+            }
+         }
+         else {
+
+            _log.error << "Unable to find transform: " << Name << " for auto scale"
+               << endl;
          }
       }
    }
@@ -1472,6 +1689,10 @@ dmz::RenderModuleOverlayOSG::_init (Config &local) {
    _init_layout (local);
 
    _update_layout (get_portal_x (), get_portal_y ());
+
+   _init_auto_scale (local);
+
+   _update_auto_scale (get_portal_x (), get_portal_y ());
 }
 
 

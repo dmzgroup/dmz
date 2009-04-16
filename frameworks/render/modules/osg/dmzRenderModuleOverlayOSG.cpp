@@ -47,24 +47,61 @@ LayoutAbsolute::update (const dmz::Int32 Value) {
 class LayoutRelative : public LayoutAxis {
 
    public:
-      LayoutRelative (const dmz::Float64 Relative);
+      LayoutRelative (const dmz::Float64 Relative, const dmz::Float64 Offset);
       virtual ~LayoutRelative () {;}
 
       virtual dmz::Float64 update (const dmz::Int32 Value);
 
+      void set_max (const dmz::Float64 Value);
+      void set_min (const dmz::Float64 Value);
+
    protected:
       const dmz::Float64 _Relative;
+      const dmz::Float64 _Offset;
+      dmz::Boolean _hasMax;
+      dmz::Float64 _max;
+      dmz::Boolean _hasMin;
+      dmz::Float64 _min;
 };
 
 
-LayoutRelative::LayoutRelative (const dmz::Float64 Relative):
-      _Relative (Relative) {;}
+LayoutRelative::LayoutRelative (
+      const dmz::Float64 Relative,
+      const dmz::Float64 Offset):
+      _Relative (Relative),
+      _Offset (Offset),
+      _hasMax (dmz::False),
+      _max (0.0),
+      _hasMin (dmz::False),
+      _min (0.0) {;}
 
 
 dmz::Float64
 LayoutRelative::update (const dmz::Int32 Value) {
 
-   return dmz::Float64(Value) * _Relative;
+   dmz::Float64 result = (dmz::Float64(Value) * _Relative) - _Offset;
+
+   if (_hasMax && (result > _max)) { result = _max; }
+
+   if (_hasMin && (result < _min)) { result = _min; }
+
+   return result;
+}
+
+
+void
+LayoutRelative::set_max (const dmz::Float64 Value) {
+
+   _hasMax = dmz::True;
+   _max = Value;
+}
+
+
+void
+LayoutRelative::set_min (const dmz::Float64 Value) {
+
+   _hasMin = dmz::True;
+   _min = Value;
 }
 
 
@@ -805,22 +842,47 @@ dmz::RenderModuleOverlayOSG::_create_layout_axis (const String &Prefix, Config &
 
    LayoutAxis *result (0);
 
-   const String TypeName = config_to_string (Prefix + ".type", layout);
-   const Float64 Value = config_to_float64 (Prefix + ".value", layout);
+   Config axis;
 
-   if (TypeName == "relative") {
+   if (layout.lookup_config (Prefix, axis)) {
 
-      result = new LayoutRelative (Value);
-   }
-   else if (TypeName == "absolute") {
+      const String TypeName = config_to_string ("type", axis);
+      const Float64 Value = config_to_float64 ("value", axis);
 
-      const Boolean Flipped = config_to_boolean (Prefix + ".flip", layout);
+      if (TypeName == "relative") {
 
-      result = new LayoutAbsolute (Value, Flipped);
-   }
-   else {
+         const Float64 Offset = config_to_float64 ("offset", axis);
 
-      _log.error << "Unknown layout axis type: " << TypeName << endl;
+         LayoutRelative *lr = new LayoutRelative (Value, Offset);
+
+         if (lr) {
+
+            String value;
+
+            if (axis.lookup_attribute ("min", value)) {
+
+               lr->set_min (string_to_float64 (value));
+            }
+
+            if (axis.lookup_attribute ("max", value)) {
+
+               lr->set_max (string_to_float64 (value));
+            }
+
+            result = lr;
+         }
+      }
+      else if (TypeName == "absolute") {
+
+         const Boolean Flipped = config_to_boolean ("flip", axis);
+
+         result = new LayoutAbsolute (Value, Flipped);
+      }
+      else {
+
+         _log.error << "Unknown layout axis type: " << TypeName << " for axis: "
+            << Prefix << endl;
+      }
    }
 
    return result;
@@ -1610,6 +1672,16 @@ dmz::RenderModuleOverlayOSG::_init_layout (Config &local) {
 
                   delete ls; ls = 0;
                }
+            }
+
+            if (!xaxis) {
+
+               _log.error << "Layout X axis not defined for node: " << Name << endl;
+            }
+
+            if (!yaxis) {
+
+               _log.error << "Layout Y axis not defined for node: " << Name << endl;
             }
          }
          else {

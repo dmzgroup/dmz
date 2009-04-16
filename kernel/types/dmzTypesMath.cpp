@@ -48,9 +48,9 @@ dmz::get_heading (const Matrix &Ori) {
 
    mat.transform_vector (vForward);
 
-   heading = vForward.get_angle (Forward);
+   heading = Forward.get_angle (vForward);
 
-   const Vector Cross (vForward.cross (Forward));
+   const Vector Cross (Forward.cross (vForward));
 
    if (Cross.get_y () < 0.0) { heading = TwoPi64 - heading; }
 

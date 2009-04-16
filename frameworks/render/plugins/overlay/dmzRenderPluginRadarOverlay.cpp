@@ -147,7 +147,7 @@ dmz::RenderPluginRadarOverlay::update_time_slice (const Float64 TimeDelta) {
       }
 
       const Float64 Heading = get_heading (hilOri);
-      const Matrix XForm (Vector (0.0, 1.0, 0.0), Heading);
+      const Matrix XForm (Vector (0.0, 1.0, 0.0), -Heading);
 
       HashTableHandleIterator it;
       ObjectStruct *os (0);

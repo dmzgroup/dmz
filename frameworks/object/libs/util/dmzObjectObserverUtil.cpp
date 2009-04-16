@@ -225,6 +225,13 @@ dmz::ObjectObserverUtil::activate_default_object_attribute (const Mask &Attribut
 }
 
 
+dmz::Handle
+dmz::ObjectObserverUtil::activate_hil_object_attribute () {
+
+   return activate_object_attribute (ObjectAttributeHumanInTheLoopName, ObjectFlagMask);
+}
+
+
 /*!
 
 \brief Deactivates callbacks for specific object attribute updates.

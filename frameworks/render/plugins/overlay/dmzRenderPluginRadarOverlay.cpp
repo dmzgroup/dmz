@@ -7,7 +7,9 @@
 #include <dmzRenderModulePortal.h>
 #include "dmzRenderPluginRadarOverlay.h"
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeData.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesMath.h>
@@ -29,12 +31,15 @@ dmz::RenderPluginRadarOverlay::RenderPluginRadarOverlay (
       _defaultAttrHandle (0),
       _hilAttrHandle (0),
       _hil (0),
+      _rangeHandle (0),
       _radius (64.0),
-      _scale (0.064),
-      _scaleMin (0.0001),
-      _scaleMax (1.0e100),
-      _scaleRate (1.0),
-      _scaleCount (0) {
+      _range (0.064),
+      _startRange (0.064),
+      _lastRange (0.0),
+      _rangeMin (0.0001),
+      _rangeMax (1.0e100),
+      _rangeRate (1000.0),
+      _rangeCount (0) {
 
    _init (local);
 }
@@ -107,11 +112,22 @@ dmz::RenderPluginRadarOverlay::update_time_slice (const Float64 TimeDelta) {
 
    if (_overlay && _root && _hil) {
 
-      if (_scaleCount > 0) { _scale += _scaleRate * TimeDelta; }
-      else if (_scaleCount < 0) { _scale -= _scaleRate * TimeDelta; }
+      if (_rangeCount > 0) { _range += _rangeRate * TimeDelta; }
+      else if (_rangeCount < 0) { _range -= _rangeRate * TimeDelta; }
 
-      if (_scale < _scaleMin) { _scale = _scaleMin; }
-      else if (_scale > _scaleMax) { _scale = _scaleMax; }
+      if (_range < _rangeMin) { _range = _rangeMin; }
+      else if (_range > _rangeMax) { _range = _rangeMax; }
+
+      const Float64 scale = _radius / (is_zero64 (_range) ? 1.0 : _range);
+
+      if (!is_zero64 (_range - _lastRange)) {
+
+         _lastRange = _range;
+
+         Data data;
+         data.store_float64 (_rangeHandle, 0, _range);
+         _rangeMsg.send (&data);
+      }
 
       Vector hilPos;
       Matrix hilOri;
@@ -141,7 +157,7 @@ dmz::RenderPluginRadarOverlay::update_time_slice (const Float64 TimeDelta) {
          if (it.get_hash_key () == _hil) { _set_visiblity (False, *os); }
          else {
 
-            Vector pos = (os->pos - hilPos) * _scale;
+            Vector pos = (os->pos - hilPos) * scale;
             pos.set_y (0.0);
             XForm.transform_vector (pos);
 
@@ -202,11 +218,15 @@ dmz::RenderPluginRadarOverlay::receive_key_event (
 
    if ((Key == '-') || (Key == '_')) {
 
-      _scaleCount += (Value.get_key_state () ? 1 : -1);
+      _rangeCount += (Value.get_key_state () ? -1 : 1);
    }
    else if ((Key == '+') || (Key == '=')) {
 
-      _scaleCount += (Value.get_key_state () ? -1 : 1);
+      _rangeCount += (Value.get_key_state () ? 1 : -1);
+   }
+   else if ((Key == 'r') && Value.get_key_state ()) {
+
+      _range = _startRange;
    }
 }
 
@@ -419,6 +439,19 @@ dmz::RenderPluginRadarOverlay::_init (Config &local) {
 
    init_input_channels (local, InputEventKeyMask);
 
+   _rangeMsg = config_create_message (
+      "range.message.name",
+      local,
+      "DMZ_Overlay_Radar_Range_Message",
+      get_plugin_runtime_context (),
+      &_log);
+
+   _rangeHandle = config_to_named_handle (
+      "range.handle.name",
+      local,
+      "DMZ_Overlay_Radar_Range",
+      get_plugin_runtime_context ());
+
    _rootName = config_to_string ("root.name", local, _rootName);
 
    _defaultAttrHandle = activate_default_object_attribute (
@@ -429,10 +462,10 @@ dmz::RenderPluginRadarOverlay::_init (Config &local) {
       ObjectFlagMask);
 
    _radius = config_to_float64 ("radius.value", local, _radius);
-   _scale = config_to_float64 ("scale.value", local, _scale);
-   _scaleMin = config_to_float64 ("scale.min", local, _scaleMin);
-   _scaleMax = config_to_float64 ("scale.max", local, _scaleMax);
-   _scaleRate = config_to_float64 ("scale.rate", local, _scaleRate);
+   _startRange = _range = config_to_float64 ("range.value", local, _range);
+   _rangeMin = config_to_float64 ("range.min", local, _rangeMin);
+   _rangeMax = config_to_float64 ("range.max", local, _rangeMax);
+   _rangeRate = config_to_float64 ("range.rate", local, _rangeRate);
 }
 
 

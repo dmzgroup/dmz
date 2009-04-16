@@ -4,6 +4,7 @@
 #include <dmzInputObserverUtil.h>
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
@@ -137,17 +138,22 @@ namespace dmz {
          RenderModuleOverlay *_overlay;
          RenderModulePortal *_portal;
 
+         Message _rangeMsg;
+
          String _rootName;
          Handle _root;
          Handle _defaultAttrHandle;
          Handle _hilAttrHandle;
          Handle _hil;
+         Handle _rangeHandle;
          Float64 _radius;
-         Float64 _scale;
-         Float64 _scaleMin;
-         Float64 _scaleMax;
-         Float64 _scaleRate;
-         Int32 _scaleCount;
+         Float64 _range;
+         Float64 _startRange;
+         Float64 _lastRange;
+         Float64 _rangeMin;
+         Float64 _rangeMax;
+         Float64 _rangeRate;
+         Int32 _rangeCount;
 
          HashTableHandleTemplate<ObjectDefStruct> _defTable;
          HashTableHandleTemplate<ObjectDefStruct> _defMasterTable;

@@ -53,7 +53,6 @@ namespace dmz {
          DataConverterHandle (const DataConverterHandle &);
          DataConverterHandle &operator= (const DataConverterHandle &);
    };
-
 };
 
 #endif // DMZ_RUNTIME_DATA_CONVERTERS_DOT_H

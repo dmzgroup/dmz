@@ -16,6 +16,41 @@
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::RenderPluginRadarOverlay
+\ingroup Render
+\brief Creates a radar HUD overlay.
+\details
+\code
+<dmz>
+<dmzRenderPluginRadarOverlay>
+   <range>
+      <message name="Range Update Message Name"/>
+		<handle name="Data Attribute Name"/>
+   </range>
+   <root name="Overlay Radar Root Name"/>
+   <radius value="Radar Radius in Pixels"/>
+   <range
+      value="Radar Range in Meters"
+      min="Minimum Range"
+      max="Maximum Range"
+      rate="Rate the range can change"
+   />
+</dmzRenderPluginRadarOverlay>
+<runtime>
+   <object-type>
+      <render>
+         <overlay name="Overlay Template Name"/>
+      </render>
+   </object-type>
+</runtime>
+</dmz>
+\endcode
+
+*/
+
+//! \cond
 dmz::RenderPluginRadarOverlay::RenderPluginRadarOverlay (
       const PluginInfo &Info,
       Config &local) :
@@ -467,6 +502,7 @@ dmz::RenderPluginRadarOverlay::_init (Config &local) {
    _rangeMax = config_to_float64 ("range.max", local, _rangeMax);
    _rangeRate = config_to_float64 ("range.rate", local, _rangeRate);
 }
+//! \endcond
 
 
 extern "C" {

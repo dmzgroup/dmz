@@ -13,6 +13,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginRestoreHealth (const PluginInfo &Info, Config &local);
          ~EntityPluginRestoreHealth ();
 
@@ -44,6 +45,7 @@ namespace dmz {
          Mask _dead;
 
          Float64 _health;
+         //! \endcond
 
       private:
          EntityPluginRestoreHealth ();

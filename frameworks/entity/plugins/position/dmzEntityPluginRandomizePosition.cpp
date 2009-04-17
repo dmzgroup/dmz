@@ -12,6 +12,26 @@
 
 #include <stdlib.h>
 
+/*!
+
+\class dmz::EntityPluginRandomizePosition
+\ingroup Entity
+\brief Randomly places the human-in-the-loop object with in a circle with specified
+center and radius at start up time.
+\details
+\code
+<dmz>
+<dmzEntityPluginRandomizePosition>
+   <center x="x value" y="y value" z="z value"/>
+   <radius value="Radius of circle in meters"/>
+   <heading value="heading in radians"/>
+   <heading degree="heading in degrees"/>
+</dmzEntityPluginRandomizePosition>
+</dmz>
+\endcode
+*/
+
+//! \cond
 dmz::EntityPluginRandomizePosition::EntityPluginRandomizePosition (
       const PluginInfo &Info,
       Config &local) :
@@ -130,6 +150,7 @@ dmz::EntityPluginRandomizePosition::_init (Config &local) {
       _heading = to_radians (config_to_float64 ("heading.degrees", local));
    }
 }
+//! \endcond
 
 
 extern "C" {

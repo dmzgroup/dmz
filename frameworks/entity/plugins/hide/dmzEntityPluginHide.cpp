@@ -7,6 +7,27 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginHide
+\ingroup Entity
+\brief Toggles the human-in-the-loop object's visible flag based on the state of Input Channels.
+\details
+When the specified Input Channels are active, the hide flag is set to dmz::True.
+\code
+<dmz>
+<dmzEntityPluginHide>
+   <hide name="Hide Flag Attribute Name"/>
+   <input>
+      <channel name="Name of Channel"/>
+   </input>
+</dmzEntityPluginHide>
+</dmz>
+\endcode
+
+*/
+
+//! \cond
 dmz::EntityPluginHide::EntityPluginHide (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       InputObserverUtil (Info, local),
@@ -110,6 +131,7 @@ dmz::EntityPluginHide::_init (Config &local) {
 
    activate_object_attribute (ObjectAttributeHumanInTheLoopName, ObjectFlagMask);
 }
+//! \endcond
 
 
 extern "C" {

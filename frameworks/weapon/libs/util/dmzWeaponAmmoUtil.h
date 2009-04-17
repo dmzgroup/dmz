@@ -26,8 +26,10 @@ class DMZ_WEAPON_UTIL_LINK_SYMBOL WeaponAmmoUtil {
       Handle create_munition (const Handle SourceHandle, ObjectModule &objMod);
 
    protected:
+      //! \cond
       struct State;
       State &_state;
+      //! \endcond
 };
 
 };

@@ -8,6 +8,28 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::NetPluginRemoteScalarDR
+\ingroup Network
+\brief Performs linear dead-reckoning on remote object's scalar attributes.
+\details
+\code
+<dmz>
+<dmzNetPluginRemoteScalarDR>
+   <attribute
+      name="Scalar Attribute Name"
+      rate="Rate Attribute Name"
+      lnv-name="[Optional]Last Network Value of Scalar Attribute Name"
+      time-stamp="[Optional]Time Stamp Attribute Name"
+   />
+</dmzNetPluginRemoteScalarDR>
+</dmz>
+\endcode
+
+*/
+
+//! \cond
 dmz::NetPluginRemoteScalarDR::NetPluginRemoteScalarDR (
       const PluginInfo &Info,
       Config &local) :
@@ -205,6 +227,7 @@ dmz::NetPluginRemoteScalarDR::_init (Config &local) {
       }
    }
 }
+//! \endcond
 
 
 extern "C" {

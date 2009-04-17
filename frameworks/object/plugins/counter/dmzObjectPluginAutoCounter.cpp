@@ -5,6 +5,27 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::ObjectPluginAutoCounter
+\ingroup Object
+\brief Automatically increments/decrements a counter at a given rate
+\details
+\code
+<dmz>
+<dmzObjectPluginAutoCounter>
+   <counter
+      attribute="Counter Attribute Name"
+      rate="Rate of increase"
+      increase="Size of increase"
+   />
+</dmzObjectPluginAutoCounter>
+</dmz>
+\endcode
+
+*/
+
+//! \cond
 dmz::ObjectPluginAutoCounter::ObjectPluginAutoCounter (
       const PluginInfo &Info,
       Config &local) :
@@ -143,6 +164,7 @@ dmz::ObjectPluginAutoCounter::_init (Config &local) {
    _rate = config_to_float64 ("counter.rate", local, _rate);
    _increase = config_to_int64 ("counter.increase", local, _increase);
 }
+//! \endcond
 
 
 extern "C" {

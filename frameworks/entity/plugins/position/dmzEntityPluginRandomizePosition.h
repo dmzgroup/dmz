@@ -15,6 +15,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginRandomizePosition (const PluginInfo &Info, Config &local);
          ~EntityPluginRandomizePosition ();
 
@@ -46,6 +47,7 @@ namespace dmz {
          Vector _center;
          Float64 _radius;
          Float64 _heading;
+         //! \endcond
 
       private:
          EntityPluginRandomizePosition ();

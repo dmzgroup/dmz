@@ -23,6 +23,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          RenderPluginRadarOverlay (const PluginInfo &Info, Config &local);
          ~RenderPluginRadarOverlay ();
 
@@ -159,6 +160,7 @@ namespace dmz {
          HashTableHandleTemplate<ObjectDefStruct> _defMasterTable;
          HashTableHandleTemplate<ObjectStruct> _objTable;
          ObjectTypeSet _ignoreTypes;
+         //! \endcond
 
       private:
          RenderPluginRadarOverlay ();

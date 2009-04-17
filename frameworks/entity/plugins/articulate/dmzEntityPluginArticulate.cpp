@@ -11,6 +11,31 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginArticulate
+\ingroup Entity
+\brief Sets the values of an entity's articulated parts such as turrets and cannons.
+\details
+\code
+<dmz>
+<dmzEntityPluginArticulate>
+   <zero id="Button id that resets all components to their default value"/>
+   <component
+      id="Controller axis id to use to update the component"
+      name="Component Attribute Name"
+      rate="Rate component can move"
+      name-rate="[Optional]Component Rate Attribute Name"
+      center="[Optional]Component default value"
+      min="[Optional]Minimum component value"
+      max="[Optional]Maximum component value"
+   />
+</dmzEntityPluginArticulate>
+</dmz>
+\endcode
+*/
+
+//! \cond
 dmz::EntityPluginArticulate::EntityPluginArticulate (
       const PluginInfo &Info,
       Config &local) :
@@ -304,6 +329,7 @@ dmz::EntityPluginArticulate::_init (Config &local) {
       DefaultStateNameDead,
       get_plugin_runtime_context ());
 }
+//! \endcond
 
 
 extern "C" {

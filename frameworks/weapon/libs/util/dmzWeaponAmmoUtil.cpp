@@ -9,6 +9,26 @@
 #include <dmzWeaponAmmoUtil.h>
 #include <dmzWeaponConsts.h>
 
+/*!
+
+\class dmz::WeaponAmmoUtil
+\ingroup Weapon
+\brief Creates a new munitions object and links it to the source object.
+\details
+\code
+<dmz>
+<init-scope>
+   <munitions id="Weapon Attribute id" attribute="[Optional]Weapon Attribute Name">
+      <object-type name="Munition Object Type"/>
+      <event attribute="[Optional]Link name"/>
+   </munitions>
+</init-scope>
+</dmz>
+\endcode
+
+*/
+
+//! \cond
 struct dmz::WeaponAmmoUtil::State {
 
    Int32 id;
@@ -47,27 +67,76 @@ dmz::WeaponAmmoUtil::State::State (RuntimeContext *context, Config &local, Log *
       EventAttributeSourceName,
       context);
 }
+//! \endcond
 
 
+/*!
+
+\brief Constructor
+\param[in] Info PluginInfo object.
+\param[in] local Config object used to initialize the class.
+\param[in] log Log pointer used for error reporting.
+
+*/
 dmz::WeaponAmmoUtil::WeaponAmmoUtil (const PluginInfo &Info, Config &local, Log *log) :
       _state (*(new State (Info.get_context (), local, log))) {;}
 
 
+/*!
+
+\brief Constructor
+\param[in] Info PluginInfo object.
+\param[in] local Config object used to initialize the class.
+
+*/
 dmz::WeaponAmmoUtil::WeaponAmmoUtil (const PluginInfo &Info, Config &local) :
       _state (*(new State (Info.get_context (), local, 0))) {;}
 
 
+/*!
+
+\brief Constructor
+\param[in] context RuntimeContext pointer.
+\param[in] local Config object used to initialize the class.
+\param[in] log Log pointer used for error reporting.
+
+*/
 dmz::WeaponAmmoUtil::WeaponAmmoUtil (RuntimeContext *context, Config &local, Log *log) :
       _state (*(new State (context, local, log))) {;}
 
 
+/*!
+
+\brief Constructor
+\param[in] context RuntimeContext pointer.
+\param[in] local Config object used to initialize the class.
+
+*/
 dmz::WeaponAmmoUtil::WeaponAmmoUtil (RuntimeContext *context, Config &local) :
       _state (*(new State (context, local, 0))) {;}
 
 
+//! Destructor
 dmz::WeaponAmmoUtil::~WeaponAmmoUtil () { delete &_state; }
 
 
+/*!
+
+\brief Creates a munition.
+\details Creates a munition object if the source object's weapon counter is greater than
+zero. If the source object does not have a weapon counter, the munition is create.
+The source object is also checked for for a munition type from the alternate object
+type attribute. If an alternate object type is not defined, the default object type
+is used as the munition type. The create munition object is created but not activate
+in the ObjectModule.
+\param[in] SourceHandle Handle of the source of the munition.
+\param[in] objMod Reference to the ObjectModule used to create the munition object.
+\return Returns the Handle of the create munition object.
+\sa
+dmz::ObjectModule::create_object()
+dmz::ObjectModule::activate_object()
+
+*/
 dmz::Handle
 dmz::WeaponAmmoUtil::create_munition (const Handle SourceHandle, ObjectModule &objMod) {
 

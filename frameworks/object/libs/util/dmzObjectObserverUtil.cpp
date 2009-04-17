@@ -225,6 +225,16 @@ dmz::ObjectObserverUtil::activate_default_object_attribute (const Mask &Attribut
 }
 
 
+/*!
+
+\brief Activates callback for human-in-the-loop object flag attribute  updates.
+\details
+\return Returns the human-in-the-loop attribute handle.
+\sa
+ObjectModule
+dmz::ObjectObserver::update_object_flag()
+
+*/
 dmz::Handle
 dmz::ObjectObserverUtil::activate_hil_object_attribute () {
 

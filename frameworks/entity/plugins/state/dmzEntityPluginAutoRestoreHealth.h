@@ -15,6 +15,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginAutoRestoreHealth (const PluginInfo &Info, Config &local);
          ~EntityPluginAutoRestoreHealth ();
 
@@ -62,6 +63,7 @@ namespace dmz {
          Float64 _healthIncrease;
 
          Handle _healthAttrHandle;
+         //! \endcond
 
       private:
          EntityPluginAutoRestoreHealth ();

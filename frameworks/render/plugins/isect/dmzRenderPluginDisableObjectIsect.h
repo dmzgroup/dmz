@@ -15,6 +15,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          RenderPluginDisableObjectIsect (const PluginInfo &Info, Config &local);
          ~RenderPluginDisableObjectIsect ();
 
@@ -42,6 +43,7 @@ namespace dmz {
          RenderModuleIsect *_isect;
 
          HashTableHandleTemplate<Boolean> _isectTable;
+         //! \endcond
 
       private:
          RenderPluginDisableObjectIsect ();

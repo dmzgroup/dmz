@@ -22,6 +22,13 @@ namespace dmz {
 };
 
 
+/*!
+
+\brief Creates weapon attribute name.
+\param[in] Which Indicates which weapon attribute.
+\return Returns a String containing the weapon attribute name.
+
+*/
 inline dmz::String
 dmz::create_weapon_attribute_name (const Int32 Which) {
 

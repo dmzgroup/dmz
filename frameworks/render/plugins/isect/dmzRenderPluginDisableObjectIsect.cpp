@@ -7,6 +7,27 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::RenderPluginDisableObjectIsect
+\ingroup Render
+\brief Automatically disables the intersection for specified object types.
+\details
+\code
+<dmz>
+<runtime>
+   <object-type>
+      <render>
+         <isect disable="Boolean"/>
+      </render>
+   </object-type>
+</runtime>
+</dmz>
+\endcode
+
+*/
+
+//! \cond
 dmz::RenderPluginDisableObjectIsect::RenderPluginDisableObjectIsect (
       const PluginInfo &Info,
       Config &local) :
@@ -119,6 +140,7 @@ dmz::RenderPluginDisableObjectIsect::_init (Config &local) {
 
    activate_default_object_attribute (ObjectCreateMask);
 }
+//! \endcond
 
 
 extern "C" {

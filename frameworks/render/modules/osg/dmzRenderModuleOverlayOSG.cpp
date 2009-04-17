@@ -1564,7 +1564,18 @@ dmz::RenderModuleOverlayOSG::_remove_switch (const Handle Overlay) {
 dmz::Boolean
 dmz::RenderModuleOverlayOSG::_remove_transform (const Handle Overlay) {
 
-   const Boolean Result = (_transformTable.remove (Overlay) != 0);
+   TransformStruct *ts = _transformTable.remove (Overlay);
+
+   const Boolean Result = (ts ? True : False);
+
+   if (ts) {
+
+      LayoutStruct *ls = _layoutTable.remove (ts->VHandle);
+      if (ls) { delete ls; ls = 0; }
+
+      ScaleStruct *ss = _scaleTable.remove (ts->VHandle);
+      if (ss) { delete ss; ss = 0; }
+   }
 
    return Result && _remove_group (Overlay);
 }

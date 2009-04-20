@@ -354,6 +354,27 @@ Float64 &value)
 \param[in] value Float64 containing the scalar.
 \return Returns dmz::True if the attribute was found.
 
+\fn dmz::Boolean dmz::EventModule::store_counter (
+const Handle EventHandle,
+const Handle AttributeHandle,
+const Int64 Value)
+\brief Stores up a counter stored with the event.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Int64 containing the counter.
+\return Returns dmz::True if the attribute was successfully updated.
+
+\fn dmz::Boolean dmz::EventModule::lookup_counter (
+const Handle EventHandle,
+const Handle AttributeHandle,
+Int64 &value)
+\brief Looks up a counter stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] value Int64 containing the scalar.
+\return Returns dmz::True if the attribute was found.
+
+
 \fn dmz::Boolean dmz::EventModule::store_text (
 const Handle EventHandle,
 const Handle AttributeHandle,

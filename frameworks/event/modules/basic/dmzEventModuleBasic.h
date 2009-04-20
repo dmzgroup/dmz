@@ -178,6 +178,16 @@ namespace dmz {
             const Handle AttributeHandle,
             Float64 &value);
 
+         virtual Boolean store_counter (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            const Int64 Value);
+
+         virtual Boolean lookup_counter (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            Int64 &value);
+
          virtual Boolean store_text (
             const Handle EventHandle,
             const Handle AttributeHandle,
@@ -220,6 +230,7 @@ namespace dmz {
             HashTableHandleTemplate<Vector> scaleTable;
             HashTableHandleTemplate<Vector> vectorTable;
             HashTableHandleTemplate<Float64> scalarTable;
+            HashTableHandleTemplate<Int64> counterTable;
             HashTableHandleTemplate<String> textTable;
             HashTableHandleTemplate<Data> dataTable;
 
@@ -258,6 +269,7 @@ namespace dmz {
                scaleTable.empty ();
                vectorTable.empty ();
                scalarTable.empty ();
+               counterTable.empty ();
                textTable.empty ();
                dataTable.empty ();
             }

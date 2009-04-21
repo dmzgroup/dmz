@@ -25,6 +25,8 @@ namespace dmz {
 
          Handle activate_default_object_attribute (const Mask &AttributeMask);
 
+         Handle activate_hil_object_attribute ();
+
          void deactivate_object_attribute (
             const String &AttributeTypeName,
             const Mask &AttributeMask);

@@ -993,6 +993,15 @@ dmz::String::replace_sub (
 }
 
 
+
+/*!
+
+\brief Tests if String contains substring at the specified string position.
+\param[in] Sub Substring to be found.
+\param[in] Start Index in buffer where look for substring.
+\return Returns dmz::True if the substring is found at the index..
+
+*/
 dmz::Boolean
 dmz::String::contains_sub (const String &Sub, const Int32 Start) const {
 

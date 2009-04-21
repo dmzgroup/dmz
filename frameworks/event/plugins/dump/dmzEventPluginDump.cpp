@@ -223,6 +223,16 @@ dmz::EventPluginDump::store_event_scalar (
 
 
 void
+dmz::EventPluginDump::store_event_counter (
+      const Handle EventHandle,
+      const Handle AttributeHandle,
+      const Int64 Value) {
+
+   _log.out << _get_attr_name (AttributeHandle) << "Counter: " << Value << endl;
+}
+
+
+void
 dmz::EventPluginDump::store_event_text (
       const Handle EventHandle,
       const Handle AttributeHandle,

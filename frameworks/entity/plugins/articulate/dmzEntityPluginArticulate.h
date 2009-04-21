@@ -19,6 +19,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginArticulate (const PluginInfo &Info, Config &local);
          ~EntityPluginArticulate ();
 
@@ -106,6 +107,7 @@ namespace dmz {
          Int32 _active;
 
          HashTableUInt32Template<ComponentStruct> _compTable;
+         //! \endcond
 
       private:
          EntityPluginArticulate ();

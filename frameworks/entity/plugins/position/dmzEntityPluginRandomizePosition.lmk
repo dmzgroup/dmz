@@ -1,0 +1,9 @@
+lmk.set_name "dmzEntityPluginRandomizePosition"
+lmk.set_type "plugin"
+lmk.add_files {"dmzEntityPluginRandomizePosition.cpp",}
+lmk.add_libs {
+   "dmzRenderIsect",
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzRenderFramework", "dmzObjectFramework",}

@@ -15,6 +15,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          ObjectPluginAutoCounter (const PluginInfo &Info, Config &local);
          ~ObjectPluginAutoCounter ();
 
@@ -60,6 +61,7 @@ namespace dmz {
          Handle _counterAttrHandle;
 
          HashTableHandleTemplate<CounterStruct> _objTable;
+         //! \endcond
 
       private:
          ObjectPluginAutoCounter ();

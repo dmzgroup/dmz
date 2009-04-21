@@ -176,6 +176,42 @@ overlay_destroy_node (lua_State *L) {
    return result;
 }
 
+
+static int
+overlay_text (lua_State *L) {
+
+   LUA_START_VALIDATE (L);
+
+   int result (0);
+
+   RenderModuleOverlay *overlay (get_overlay (L));
+   const Handle Node (get_node (L, overlay, 1));
+
+   if (lua_isnoneornil (L, 2)) {
+
+      String value;
+
+      if (overlay->lookup_text (Node, value)) {
+
+         if (value) { lua_pushstring (L, value.get_buffer ()); result = 1; }
+      }
+   }
+   else {
+
+      const String Value = luaL_checkstring (L, 2);
+
+      if (overlay->store_text (Node, Value)) {
+
+         if (Value) { lua_pushstring (L, Value.get_buffer ()); result = 1; }
+      }
+   }
+
+   LUA_END_VALIDATE (L, result);
+
+   return result;
+}
+
+
 static int
 overlay_add_child (lua_State *L) {
 
@@ -450,6 +486,7 @@ static const luaL_Reg arrayFunc[] = {
    {"lookup_name", overlay_lookup_name},
    {"clone_template", overlay_clone_template},
    {"destroy_node", overlay_destroy_node},
+   {"text", overlay_text},
    {"add_child", overlay_add_child},
    {"remove_child", overlay_remove_child},
    {"switch_state", overlay_switch_state},

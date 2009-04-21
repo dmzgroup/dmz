@@ -98,6 +98,11 @@ namespace dmz {
             const Handle AttributeHandle,
             const Float64 Value);
 
+         virtual void store_event_counter (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            const Int64 Value);
+
          virtual void store_event_text (
             const Handle EventHandle,
             const Handle AttributeHandle,

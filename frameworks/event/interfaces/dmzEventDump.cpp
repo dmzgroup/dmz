@@ -125,6 +125,15 @@ const Float64 Value)
 \param[in] AttributeHandle Attribute handle.
 \param[in] Value A generic scalar value.
 
+\fn void dmz::EventDump::store_event_counter (
+const Handle EventHandle,
+const Handle AttributeHandle,
+const Int64 Value)
+\brief Stores a counter.
+\param[in] EventHandle Event's unique runtime handle.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value A generic counter value.
+
 \fn void dmz::EventDump::store_event_text (
 const Handle EventHandle,
 const Handle AttributeHandle,

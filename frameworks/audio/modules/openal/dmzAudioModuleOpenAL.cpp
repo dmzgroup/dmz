@@ -280,7 +280,7 @@ dmz::AudioModuleOpenAL::play_sound (
 
          alSourcei (ss->source, AL_LOOPING, Init.get (SoundLooped) ? AL_TRUE : AL_FALSE);
          alSourcef (ss->source, AL_GAIN, 1.0f);
-         alSourcef (ss->source, AL_ROLLOFF_FACTOR, 0.1);
+         alSourcef (ss->source, AL_ROLLOFF_FACTOR, 0.1f);
 
          if (!Init.get (SoundLooped)) {
 

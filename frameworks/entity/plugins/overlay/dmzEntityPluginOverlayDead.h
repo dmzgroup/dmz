@@ -17,6 +17,7 @@ namespace dmz {
          public PortalSizeObserver {
 
       public:
+         //! \cond
          EntityPluginOverlayDead (const PluginInfo &Info, Config &local);
          ~EntityPluginOverlayDead ();
 
@@ -64,6 +65,7 @@ namespace dmz {
          String _overlayScaleName;
          Handle _overlayScale;
          Mask _deadState;
+         //! \endcond
 
       private:
          EntityPluginOverlayDead ();

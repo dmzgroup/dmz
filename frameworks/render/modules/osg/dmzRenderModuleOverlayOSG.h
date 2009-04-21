@@ -14,11 +14,14 @@
 #include <dmzTypesVector.h>
 
 #include <osg/Camera>
+#include <osg/Geode>
 #include <osg/Group>
 #include <osg/Image>
 #include <osg/Switch>
 #include <osg/Matrix>
 #include <osg/MatrixTransform>
+
+#include <osgText/Text>
 
 #include <qdb.h>
 static dmz::qdb out;
@@ -45,6 +48,20 @@ namespace dmz {
             private:
                LayoutAxis (const LayoutAxis &);
                LayoutAxis &operator= (const LayoutAxis &);
+         };
+
+         class ScaleAxis {
+
+            public:
+               virtual ~ScaleAxis () {;}
+               virtual Float64 update (const Int32 Value) = 0;
+
+            protected:
+               ScaleAxis () {;}
+
+            private:
+               ScaleAxis (const ScaleAxis &);
+               ScaleAxis &operator= (const ScaleAxis &);
          };
 
          RenderModuleOverlayOSG (const PluginInfo &Info, Config &local);
@@ -76,6 +93,10 @@ namespace dmz {
          virtual Handle clone_template (const String &Name);
 
          virtual Boolean destroy_node (const Handle Overlay);
+
+         // Overlay Text API
+         virtual Boolean store_text (const Handle Overlay, const String &Value);
+         virtual Boolean lookup_text (const Handle Overlay, String &value);
 
          // Overlay Group API
          virtual Boolean add_group_child (const Handle Parent, const Handle Child);
@@ -165,6 +186,31 @@ namespace dmz {
                   Type (TheType),
                   RHandle (TypeName, context),
                   VHandle (RHandle.get_runtime_handle ()) { node = ptr; }
+         };
+
+         struct TextStruct : public NodeStruct {
+
+            osg::ref_ptr<osg::Geode> geode;
+            osg::ref_ptr<osgText::Text> text;
+            String value;
+
+            TextStruct (
+                  const String &Name,
+                  const String &Text,
+                  RuntimeContext *context,
+                  osg::Geode *geodePtr,
+                  osgText::Text *textPtr) :
+                  NodeStruct (
+                     Name,
+                     RenderOverlayText,
+                     "OSG Overlay Text",
+                     context,
+                     geodePtr),
+                  value (Text) {
+
+               geode = geodePtr;
+               text = textPtr;
+            }
          };
 
          struct GroupStruct : public NodeStruct {
@@ -261,20 +307,41 @@ namespace dmz {
             ~LayoutStruct () { delete &xaxis; delete &yaxis; }
          };
 
+         struct ScaleStruct {
+
+            ScaleAxis *xaxis;
+            ScaleAxis *yaxis;
+            TransformStruct &ts;
+
+            ScaleStruct (
+                  ScaleAxis *theXAxis,
+                  ScaleAxis *theYAxis,
+                  TransformStruct &theTS) :
+                  xaxis (theXAxis),
+                  yaxis (theYAxis),
+                  ts (theTS) {;}
+         };
+
          void _update_layout (const Int32 TheX, const Int32 TheY);
+         void _update_auto_scale (const Int32 TheX, const Int32 TheY);
 
          void _apply_transform (TransformStruct &ts);
 
-         LayoutAxis *_create_axis (const String &Prefix, Config &layout);
+         LayoutAxis *_create_layout_axis (const String &Prefix, Config &layout);
+         ScaleAxis *_create_scale_axis (const String &Prefix, Config &data);
          TextureStruct *_create_texture (const String &Name);
 
+         osg::Vec4 _config_to_color (Config &data);
+
          Boolean _register_node (NodeStruct *ptr);
+         Boolean _register_text (TextStruct *ptr);
          Boolean _register_group (GroupStruct *ptr);
          Boolean _register_switch (SwitchStruct *ptr);
          Boolean _register_transform (TransformStruct *ptr);
 
          void _add_children (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_node (osg::ref_ptr<osg::Group> &parent, Config &node);
+         void _add_text (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_group (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_switch (osg::ref_ptr<osg::Group> &parent, Config &node);
          void _add_transform (osg::ref_ptr<osg::Group> &parent, Config &node);
@@ -283,6 +350,7 @@ namespace dmz {
          void _add_clone (osg::ref_ptr<osg::Group> &parent, Config &node);
 
          Boolean _remove_node (const Handle Overlay);
+         Boolean _remove_text (const Handle Overlay);
          Boolean _remove_group (const Handle Overlay);
          Boolean _remove_switch (const Handle Overlay);
          Boolean _remove_transform (const Handle Overlay);
@@ -290,6 +358,7 @@ namespace dmz {
          void _init_colors (Config &local);
          void _init_templates (Config &local);
          void _init_layout (Config &local);
+         void _init_auto_scale (Config &local);
          void _init (Config &local);
 
          Log _log;
@@ -306,11 +375,13 @@ namespace dmz {
          HashTableStringTemplate<Config> _templateTable;
          HashTableStringTemplate<NodeStruct> _nodeNameTable;
          HashTableHandleTemplate<NodeStruct> _nodeTable;
+         HashTableHandleTemplate<TextStruct> _textTable;
          HashTableHandleTemplate<GroupStruct> _groupTable;
          HashTableHandleTemplate<SwitchStruct> _switchTable;
          HashTableHandleTemplate<TransformStruct> _transformTable;
          HashTableHandleTemplate<CloneStruct> _cloneTable;
          HashTableHandleTemplate<LayoutStruct> _layoutTable;
+         HashTableHandleTemplate<ScaleStruct> _scaleTable;
 
       private:
          RenderModuleOverlayOSG ();

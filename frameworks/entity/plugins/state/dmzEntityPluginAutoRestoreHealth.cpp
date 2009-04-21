@@ -6,6 +6,23 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginAutoRestoreHealth
+\ingroup Entity
+\brief Automatically restores the human-in-the-loop's health attribute over time.
+\details
+\code
+<dmz>
+<dmzEntityPluginAutoRestoreHealth>
+   <health rate="rate of heal" max="max health value" increase="value to restore"/>
+</dmzEntityPluginAutoRestoreHealth>
+</dmz>
+\endcode
+
+*/
+
+//! \cond
 dmz::EntityPluginAutoRestoreHealth::EntityPluginAutoRestoreHealth (
       const PluginInfo &Info,
       Config &local) :
@@ -150,6 +167,7 @@ dmz::EntityPluginAutoRestoreHealth::_init (Config &local) {
    _maxHealth = config_to_float64 ("health.max", local, _maxHealth);
    _healthIncrease = config_to_float64 ("health.increase", local, _healthIncrease);
 }
+//! \endcond
 
 
 extern "C" {

@@ -3,7 +3,7 @@
 #include <dmzTypesVector.h>
 
 
-//! Experimental function. Not for public use at this time.
+//! Experimental function. Not for general use at this time.
 void
 dmz::get_orthogonal_component (
       const Vector &Normal,
@@ -31,7 +31,7 @@ dmz::get_orthogonal_component (
 }
 
 
-//! Experimental function. Not for public use at this time.
+//! Experimental function. Not for general use at this time.
 dmz::Float64
 dmz::get_heading (const Matrix &Ori) {
 
@@ -48,9 +48,9 @@ dmz::get_heading (const Matrix &Ori) {
 
    mat.transform_vector (vForward);
 
-   heading = vForward.get_angle (Forward);
+   heading = Forward.get_angle (vForward);
 
-   const Vector Cross (vForward.cross (Forward));
+   const Vector Cross (Forward.cross (vForward));
 
    if (Cross.get_y () < 0.0) { heading = TwoPi64 - heading; }
 
@@ -58,6 +58,7 @@ dmz::get_heading (const Matrix &Ori) {
 }
 
 
+//! Experimental function. Not for general use at this time.
 dmz::Float64
 dmz::get_rotation_angle (const Vector &V1, const Vector &V2) {
 

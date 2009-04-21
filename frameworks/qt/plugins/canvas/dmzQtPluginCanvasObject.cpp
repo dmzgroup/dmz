@@ -81,7 +81,7 @@ dmz::QtPluginCanvasObject::ObjectStruct::update () {
       QTransform trans;
 
       trans.translate (posX, posY);
-      trans.rotateRadians (heading);
+      trans.rotateRadians (-heading);
       if (scaleX && scaleY) { trans.scale (scaleX, scaleY); }
 
       item->setTransform (trans);

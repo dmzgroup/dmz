@@ -7,6 +7,26 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginOverlayDead
+\ingroup Entity
+\brief Toggles dead state overlay.
+\details
+\code
+<dmz>
+<dmzEntityPluginOverlayDead>
+   <overlay>
+      <switch name="Name of overlay switch"/>
+      <scale name="Name of overlay transform"/>
+   </overlay>
+</dmzEntityPluginOverlayDead>
+</dmz>
+\endcode
+
+*/
+
+//! \cond
 dmz::EntityPluginOverlayDead::EntityPluginOverlayDead (
       const PluginInfo &Info,
       Config &local) :
@@ -171,6 +191,7 @@ dmz::EntityPluginOverlayDead::_init (Config &local) {
 
    _overlayScaleName = config_to_string ("overlay.scale.name", local, _overlayScaleName);
 }
+//! \endcond
 
 
 extern "C" {

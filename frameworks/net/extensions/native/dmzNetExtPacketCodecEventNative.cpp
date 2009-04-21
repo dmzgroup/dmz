@@ -882,6 +882,46 @@ Scalar::encode (
 }
 
 
+class Counter : public Adapter {
+
+   public:
+      Counter (dmz::Config &local, dmz::RuntimeContext *context) :
+            Adapter (local, context) {;}
+
+      virtual void decode (
+         const dmz::Handle EventHandle,
+         dmz::Unmarshal &data,
+         dmz::EventModule &eventMod);
+
+      virtual void encode (
+         const dmz::Handle EventHandle,
+         dmz::EventModule &eventMod,
+         dmz::Marshal &data);
+};
+
+
+void
+Counter::decode (
+      const dmz::Handle EventHandle,
+      dmz::Unmarshal &data,
+      dmz::EventModule &eventMod) {
+
+   const dmz::Int64 Value (data.get_next_int64 ());
+   eventMod.store_counter (EventHandle, _AttributeHandle, Value);
+}
+
+
+void
+Counter::encode (
+      const dmz::Handle EventHandle,
+      dmz::EventModule &eventMod,
+      dmz::Marshal &data) {
+
+   dmz::Int64 value (0);
+   eventMod.lookup_counter (EventHandle, _AttributeHandle, value);
+   data.set_next_int64 (value);
+}
+
 class Text : public Adapter {
 
    public:
@@ -961,6 +1001,7 @@ dmz::NetExtPacketCodecEventNative::create_event_adapter (
    else if (Type == "scale") { result = new Scale (local, context); }
    else if (Type == "vector") { result = new VectorAttr (local, context); }
    else if (Type == "scalar") { result = new Scalar(local, context); }
+   else if (Type == "counter") { result = new Counter(local, context); }
    else if (Type == "timestamp") { result = new TimeStamp (local, context); }
    else if (Type == "text") { result = new Text (local, context); }
    else {

@@ -8,6 +8,24 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginRestoreHealth
+\ingroup Entity
+\brief Restores the human-in-the-loop health when the object unsets the dead state.
+\details
+\code
+<dmz>
+<dmzEntityPluginRestoreHealth>
+   <health value="Value to set restored health"/>
+</dmzEntityPluginRestoreHealth>
+health.value
+</dmz>
+\endcode
+
+*/
+
+//! \cond
 dmz::EntityPluginRestoreHealth::EntityPluginRestoreHealth (
       const PluginInfo &Info,
       Config &local) :
@@ -102,6 +120,7 @@ dmz::EntityPluginRestoreHealth::_init (Config &local) {
 
    _health = config_to_float64 ("health.value", local, _health);
 }
+//! \endcond
 
 
 extern "C" {

@@ -1,22 +1,23 @@
-#ifndef DMZ_ENTITY_PLUGIN_HIDE_DOT_H
-#define DMZ_ENTITY_PLUGIN_HIDE_DOT_H
+#ifndef DMZ_ENTITY_PLUGIN_RANDOMIZE_POSITION_DOT_H
+#define DMZ_ENTITY_PLUGIN_RANDOMIZE_POSITION_DOT_H
 
-#include <dmzInputObserverUtil.h>
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzTypesVector.h>
 
 namespace dmz {
 
-   class EntityPluginHide :
+   class RenderModuleIsect;
+
+   class EntityPluginRandomizePosition :
          public Plugin,
-         public InputObserverUtil,
          public ObjectObserverUtil {
 
       public:
          //! \cond
-         EntityPluginHide (const PluginInfo &Info, Config &local);
-         ~EntityPluginHide ();
+         EntityPluginRandomizePosition (const PluginInfo &Info, Config &local);
+         ~EntityPluginRandomizePosition ();
 
          // Plugin Interface
          virtual void update_plugin_state (
@@ -27,9 +28,6 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
-         // Input Observer Interface
-         virtual void update_channel_state (const Handle Channel, const Boolean State);
-
          // Object Observer Interface
          virtual void update_object_flag (
             const UUID &Identity,
@@ -39,22 +37,24 @@ namespace dmz {
             const Boolean *PreviousValue);
 
       protected:
-         void _update ();
          void _init (Config &local);
 
          Log _log;
 
-         Int32 _active;
-         Handle _hil;
-         Handle _hideHandle;
+         RenderModuleIsect *_isect;
+
+         Handle _defaultAttrHandle;
+         Vector _center;
+         Float64 _radius;
+         Float64 _heading;
          //! \endcond
 
       private:
-         EntityPluginHide ();
-         EntityPluginHide (const EntityPluginHide &);
-         EntityPluginHide &operator= (const EntityPluginHide &);
+         EntityPluginRandomizePosition ();
+         EntityPluginRandomizePosition (const EntityPluginRandomizePosition &);
+         EntityPluginRandomizePosition &operator= (const EntityPluginRandomizePosition &);
 
    };
 };
 
-#endif // DMZ_ENTITY_PLUGIN_HIDE_DOT_H
+#endif // DMZ_ENTITY_PLUGIN_RANDOMIZE_POSITION_DOT_H

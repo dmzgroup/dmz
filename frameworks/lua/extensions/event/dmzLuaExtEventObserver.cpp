@@ -323,11 +323,14 @@ dmz::LuaExtEventObserver::create_event (
 
    const int Handler (obs_setup_cb (L, *this, Type, EventCreateFunc));
 
-   lua_create_handle (L, EventHandle);
-   lua_create_event_type (L, &Type);
-   lua_pushinteger (L, lua_event_locality_to_int (L, Locality));
+   if (Handler) {
 
-   obs_do_cb (L, *this, 3, Handler, Type, EventCreateMask);
+      lua_create_handle (L, EventHandle);
+      lua_create_event_type (L, &Type);
+      lua_pushinteger (L, lua_event_locality_to_int (L, Locality));
+
+      obs_do_cb (L, *this, 3, Handler, Type, EventCreateMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -343,11 +346,14 @@ dmz::LuaExtEventObserver::close_event (
 
    const int Handler (obs_setup_cb (L, *this, Type, EventCloseFunc));
 
-   lua_create_handle (L, EventHandle);
-   lua_create_event_type (L, &Type);
-   lua_pushinteger (L, lua_event_locality_to_int (L, Locality));
+   if (Handler) {
 
-   obs_do_cb (L, *this, 3, Handler, Type, EventCloseMask);
+      lua_create_handle (L, EventHandle);
+      lua_create_event_type (L, &Type);
+      lua_pushinteger (L, lua_event_locality_to_int (L, Locality));
+
+      obs_do_cb (L, *this, 3, Handler, Type, EventCloseMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }

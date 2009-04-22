@@ -43,14 +43,14 @@ supports the input observer interface.
 \brief Gets input observers name.
 \return Returns input observer name.
 
-\fn void dmz::InputObserver::store_input_module_channels (
+\fn void dmz::InputObserver::store_input_module (
 const String &Name,
 InputModule &module)
 \brief Stores input channels module in observer.
 \param[in] Name String containing name of module.
 \param[in] module InputModule reference.
 
-\fn void dmz::InputObserver::remove_input_module_channels (
+\fn void dmz::InputObserver::remove_input_module (
 const String &Name,
 InputModule &module)
 \brief Removes input channels module from observer.

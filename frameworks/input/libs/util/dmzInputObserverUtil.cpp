@@ -6,17 +6,18 @@
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesMask.h>
 
 namespace {
 
-struct channelStruct {
+struct ChannelStruct {
 
    const dmz::Handle Channel;
    dmz::Mask mask;
 
-   channelStruct (dmz::Handle TheHandle) : Channel (TheHandle) {;}
+   ChannelStruct (dmz::Handle TheHandle) : Channel (TheHandle) {;}
 };
 
 };
@@ -37,7 +38,7 @@ struct dmz::InputObserverUtil::State {
    Log log;
    Definitions defs;
    InputModule *module;
-   HashTableHandleTemplate <channelStruct> handleTable;
+   HashTableHandleTemplate <ChannelStruct> channelTable;
    Mask errorMask;
 
    State (
@@ -54,16 +55,16 @@ struct dmz::InputObserverUtil::State {
       }
    }
 
-   ~State () { handleTable.empty (); }
+   ~State () { channelTable.empty (); }
 
-   channelStruct *add_channel (const Handle Channel, const Mask &EventMask) {
+   ChannelStruct *add_channel (const Handle Channel, const Mask &EventMask) {
 
-      channelStruct *cs (handleTable.lookup (Channel));
+      ChannelStruct *cs (channelTable.lookup (Channel));
 
       if (!cs) {
 
-         cs = new channelStruct (Channel);
-         if (!handleTable.store (Channel, cs)) { delete cs; cs = 0; }
+         cs = new ChannelStruct (Channel);
+         if (!channelTable.store (Channel, cs)) { delete cs; cs = 0; }
       }
 
       if (cs) { cs->mask |= EventMask; }
@@ -71,7 +72,7 @@ struct dmz::InputObserverUtil::State {
       return cs;
    }
 
-   void register_obs (channelStruct &cs, InputObserver &obs) {
+   void register_obs (ChannelStruct &cs, InputObserver &obs) {
 
       if (cs.Channel && module) {
 
@@ -79,7 +80,7 @@ struct dmz::InputObserverUtil::State {
       }
    }
 
-   void release_obs (const Mask &EventMask, channelStruct &cs, InputObserver &obs) {
+   void release_obs (const Mask &EventMask, ChannelStruct &cs, InputObserver &obs) {
 
       if (cs.Channel && module) {
 
@@ -87,6 +88,20 @@ struct dmz::InputObserverUtil::State {
       }
 
       cs.mask.unset (EventMask);
+   }
+
+   void release_all (InputObserver &obs) {
+
+      if (module) {
+
+         HashTableHandleIterator it;
+         ChannelStruct *cs (0);
+
+         while (channelTable.get_next (it, cs)) {
+
+            module->release_input_observer (cs->Channel, cs->mask, obs);
+         }
+      }
    }
 };
 
@@ -190,7 +205,7 @@ dmz::InputObserverUtil::activate_input_channel (
       const Handle Channel,
       const Mask &EventMask) {
 
-   channelStruct *cs (__state.add_channel (Channel, EventMask));
+   ChannelStruct *cs (__state.add_channel (Channel, EventMask));
    if (cs) { __state.register_obs (*cs, *this); }
 }
 
@@ -262,7 +277,7 @@ dmz::InputObserverUtil::deactivate_input_channel (
       const Handle Channel,
       const Mask &EventMask) {
 
-  channelStruct *cs (__state.handleTable.lookup (Channel));
+  ChannelStruct *cs (__state.channelTable.lookup (Channel));
 
   if (cs) { __state.release_obs (EventMask, *cs, *this); }
 }
@@ -282,13 +297,30 @@ dmz::InputObserverUtil::deactivate_default_input_channel (const Mask &EventMask)
 }
 
 
-//! Returns pointer to InputModule observer is currently registered with.
-dmz::InputModule *
-dmz::InputObserverUtil::get_input_module_channels () { return __state.module; }
+void
+dmz::InputObserverUtil::deactivate_all_input_channels () { __state.release_all (*this); }
 
 
 void
-dmz::InputObserverUtil::store_input_module_channels (
+dmz::InputObserverUtil::get_channels (HandleContainer &channels) {
+
+   HashTableHandleIterator it;
+   ChannelStruct *cs (0);
+
+   while (__state.channelTable.get_next (it, cs)) {
+
+      channels.add_handle (cs->Channel);
+   }
+}
+
+
+//! Returns pointer to InputModule observer is currently registered with.
+dmz::InputModule *
+dmz::InputObserverUtil::get_input_module () { return __state.module; }
+
+
+void
+dmz::InputObserverUtil::store_input_module (
       const String &Name,
       InputModule &module) {
 
@@ -300,12 +332,12 @@ dmz::InputObserverUtil::store_input_module_channels (
 
          HashTableHandleIterator it;
 
-         channelStruct *cs (__state.handleTable.get_first (it));
+         ChannelStruct *cs (__state.channelTable.get_first (it));
 
          while (cs) {
 
             __state.register_obs (*cs, *this);
-            cs = __state.handleTable.get_next (it);
+            cs = __state.channelTable.get_next (it);
          }
 
          _store_input_module (module);
@@ -315,7 +347,7 @@ dmz::InputObserverUtil::store_input_module_channels (
 
 
 void
-dmz::InputObserverUtil::remove_input_module_channels (
+dmz::InputObserverUtil::remove_input_module (
       const String &Name,
       InputModule &module) {
 

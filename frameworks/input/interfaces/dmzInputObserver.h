@@ -32,11 +32,11 @@ namespace dmz {
          Handle get_input_observer_handle ();
          String get_input_observer_name ();
 
-         virtual void store_input_module_channels (
+         virtual void store_input_module (
             const String &Name,
             InputModule &module) = 0;
 
-         virtual void remove_input_module_channels (
+         virtual void remove_input_module (
             const String &Name,
             InputModule &module) = 0;
 

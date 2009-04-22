@@ -119,7 +119,7 @@ dmz::InputModuleBasic::~InputModuleBasic () {
 
       if (InputObserver::is_valid (os->ObsHandle, context)) {
 
-         os->obs.remove_input_module_channels (_PluginInfoData.get_name (), *this);
+         os->obs.remove_input_module (_PluginInfoData.get_name (), *this);
       }
 
       os  = _obsTable.get_next (it);
@@ -144,13 +144,13 @@ dmz::InputModuleBasic::discover_plugin (
 
       InputObserver *obs (InputObserver::cast (PluginPtr));
 
-      if (obs) { obs->store_input_module_channels (_PluginInfoData.get_name (), *this); }
+      if (obs) { obs->store_input_module (_PluginInfoData.get_name (), *this); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
       InputObserver *obs (InputObserver::cast (PluginPtr));
 
-      if (obs) { obs->remove_input_module_channels (_PluginInfoData.get_name (), *this); }
+      if (obs) { obs->remove_input_module (_PluginInfoData.get_name (), *this); }
    }
 }
 

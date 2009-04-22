@@ -185,7 +185,6 @@ obs_register (lua_State *L) {
    int result (0);
 
    optr obs (obs_check (L, 1));
-   Handle defaultHandle (0);
    Handle *handle (0);
    if (!lua_isnil (L, 2)) { handle = lua_check_handle (L, 2); }
 
@@ -378,11 +377,14 @@ dmz::LuaExtObjectObserver::create_object (
 
    const int Handler (obs_setup_cb (L, *this, DefaultHandle, ObjectCreateFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_object_type (L, &Type);
-   lua_pushinteger (L, lua_locality_to_int (L, Locality));
+   if (Handler) {
 
-   obs_do_cb (L, *this, 3, Handler, DefaultHandle, ObjectCreateMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_object_type (L, &Type);
+      lua_pushinteger (L, lua_locality_to_int (L, Locality));
+
+      obs_do_cb (L, *this, 3, Handler, DefaultHandle, ObjectCreateMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -399,9 +401,12 @@ dmz::LuaExtObjectObserver::destroy_object (
 
    const int Handler (obs_setup_cb (L, *this,  DefaultHandle, ObjectDestroyFunc));
 
-   lua_create_handle (L, ObjectHandle);
+   if (Handler) {
 
-   obs_do_cb (L, *this, 1, Handler, DefaultHandle, ObjectDestroyMask);
+      lua_create_handle (L, ObjectHandle);
+
+      obs_do_cb (L, *this, 1, Handler, DefaultHandle, ObjectDestroyMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -419,11 +424,14 @@ dmz::LuaExtObjectObserver::update_object_uuid (
 
    const int Handler (obs_setup_cb (L, *this, DefaultHandle, ObjectUUIDFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_uuid (L, Identity);
-   lua_create_uuid (L, PrevIdentity);
+   if (Handler) {
 
-   obs_do_cb (L, *this, 3, Handler, DefaultHandle, ObjectUUIDMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_uuid (L, Identity);
+      lua_create_uuid (L, PrevIdentity);
+
+      obs_do_cb (L, *this, 3, Handler, DefaultHandle, ObjectUUIDMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -441,11 +449,14 @@ dmz::LuaExtObjectObserver::remove_object_attribute (
    const int Handler (
       obs_setup_cb (L, *this, AttributeHandle, ObjectRemoveAttributeFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_mask (L, &AttrMask);
+   if (Handler) {
 
-   obs_do_cb (L, *this, 3, Handler, AttributeHandle, ObjectRemoveAttributeMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_mask (L, &AttrMask);
+
+      obs_do_cb (L, *this, 3, Handler, AttributeHandle, ObjectRemoveAttributeMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -464,11 +475,14 @@ dmz::LuaExtObjectObserver::update_object_locality (
 
    const int Handler (obs_setup_cb (L, *this, DefaultHandle, ObjectLocalityFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_pushinteger (L, lua_locality_to_int (L, Locality));
-   lua_pushinteger (L, lua_locality_to_int (L, PrevLocality));
+   if (Handler) {
 
-   obs_do_cb (L, *this, 3, Handler, DefaultHandle, ObjectLocalityMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_pushinteger (L, lua_locality_to_int (L, Locality));
+      lua_pushinteger (L, lua_locality_to_int (L, PrevLocality));
+
+      obs_do_cb (L, *this, 3, Handler, DefaultHandle, ObjectLocalityMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -487,12 +501,15 @@ dmz::LuaExtObjectObserver::link_objects (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectLinkFunc));
 
-   lua_create_handle (L, LinkHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_handle (L, SuperHandle);
-   lua_create_handle (L, SubHandle);
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectLinkMask);
+      lua_create_handle (L, LinkHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_handle (L, SuperHandle);
+      lua_create_handle (L, SubHandle);
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectLinkMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -511,12 +528,15 @@ dmz::LuaExtObjectObserver::unlink_objects (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectUnlinkFunc));
 
-   lua_create_handle (L, LinkHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_handle (L, SuperHandle);
-   lua_create_handle (L, SubHandle);
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectUnlinkMask);
+      lua_create_handle (L, LinkHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_handle (L, SuperHandle);
+      lua_create_handle (L, SubHandle);
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectUnlinkMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -539,14 +559,17 @@ dmz::LuaExtObjectObserver::update_link_attribute_object (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectLinkAttributeFunc));
 
-   lua_create_handle (L, LinkHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_handle (L, SuperHandle);
-   lua_create_handle (L, SubHandle);
-   lua_create_handle (L, AttributeObjectHandle);
-   lua_create_handle (L, PrevAttributeObjectHandle);
+   if (Handler) {
 
-   obs_do_cb (L, *this, 6, Handler, AttributeHandle, ObjectLinkAttributeMask);
+      lua_create_handle (L, LinkHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_handle (L, SuperHandle);
+      lua_create_handle (L, SubHandle);
+      lua_create_handle (L, AttributeObjectHandle);
+      lua_create_handle (L, PrevAttributeObjectHandle);
+
+      obs_do_cb (L, *this, 6, Handler, AttributeHandle, ObjectLinkAttributeMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -564,13 +587,16 @@ dmz::LuaExtObjectObserver::update_object_counter (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectCounterFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_pushnumber (L, (lua_Number)Value);
-   if (PreviousValue) { lua_pushnumber (L, (lua_Number)(*PreviousValue)); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectCounterMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_pushnumber (L, (lua_Number)Value);
+      if (PreviousValue) { lua_pushnumber (L, (lua_Number)(*PreviousValue)); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectCounterMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -588,13 +614,16 @@ dmz::LuaExtObjectObserver::update_object_counter_minimum (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectCounterMinFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_pushnumber (L, (lua_Number)Value);
-   if (PreviousValue) { lua_pushnumber (L, (lua_Number)(*PreviousValue)); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectMinCounterMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_pushnumber (L, (lua_Number)Value);
+      if (PreviousValue) { lua_pushnumber (L, (lua_Number)(*PreviousValue)); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectMinCounterMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -612,13 +641,16 @@ dmz::LuaExtObjectObserver::update_object_counter_maximum (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectCounterMaxFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_pushnumber (L, (lua_Number)Value);
-   if (PreviousValue) { lua_pushnumber (L, (lua_Number)(*PreviousValue)); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectMaxCounterMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_pushnumber (L, (lua_Number)Value);
+      if (PreviousValue) { lua_pushnumber (L, (lua_Number)(*PreviousValue)); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectMaxCounterMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -636,13 +668,16 @@ dmz::LuaExtObjectObserver::update_object_alternate_type (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectAltTypeFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_object_type (L, &Value);
-   if (PreviousValue) { lua_create_object_type (L, PreviousValue); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectAltTypeMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_object_type (L, &Value);
+      if (PreviousValue) { lua_create_object_type (L, PreviousValue); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectAltTypeMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -660,13 +695,16 @@ dmz::LuaExtObjectObserver::update_object_state (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectStateFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_mask (L, &Value);
-   if (PreviousValue) { lua_create_mask (L, PreviousValue); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectStateMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_mask (L, &Value);
+      if (PreviousValue) { lua_create_mask (L, PreviousValue); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectStateMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -684,13 +722,16 @@ dmz::LuaExtObjectObserver::update_object_flag (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectFlagFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_pushboolean (L, Value);
-   if (PreviousValue) { lua_pushboolean (L, *PreviousValue); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectFlagMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_pushboolean (L, Value);
+      if (PreviousValue) { lua_pushboolean (L, *PreviousValue); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectFlagMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -708,13 +749,16 @@ dmz::LuaExtObjectObserver::update_object_time_stamp (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectTimeStampFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_pushnumber (L, Value);
-   if (PreviousValue) { lua_pushnumber (L, *PreviousValue); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectTimeStampMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_pushnumber (L, Value);
+      if (PreviousValue) { lua_pushnumber (L, *PreviousValue); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectTimeStampMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -732,13 +776,16 @@ dmz::LuaExtObjectObserver::update_object_position (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectPositionFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_vector (L, &Value);
-   if (PreviousValue) { lua_create_vector (L, PreviousValue); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectPositionMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_vector (L, &Value);
+      if (PreviousValue) { lua_create_vector (L, PreviousValue); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectPositionMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -756,13 +803,16 @@ dmz::LuaExtObjectObserver::update_object_orientation (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectOrientationFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_matrix (L, &Value);
-   if (PreviousValue) { lua_create_matrix (L, PreviousValue); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectOrientationMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_matrix (L, &Value);
+      if (PreviousValue) { lua_create_matrix (L, PreviousValue); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectOrientationMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -780,13 +830,16 @@ dmz::LuaExtObjectObserver::update_object_velocity (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectVelocityFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_vector (L, &Value);
-   if (PreviousValue) { lua_create_vector (L, PreviousValue); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectVelocityMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_vector (L, &Value);
+      if (PreviousValue) { lua_create_vector (L, PreviousValue); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectVelocityMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -804,13 +857,16 @@ dmz::LuaExtObjectObserver::update_object_acceleration (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectAccelerationFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_vector (L, &Value);
-   if (PreviousValue) { lua_create_vector (L, PreviousValue); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectAccelerationMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_vector (L, &Value);
+      if (PreviousValue) { lua_create_vector (L, PreviousValue); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectAccelerationMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -828,13 +884,16 @@ dmz::LuaExtObjectObserver::update_object_scale (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectScaleFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_vector (L, &Value);
-   if (PreviousValue) { lua_create_vector (L, PreviousValue); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectScaleMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_vector (L, &Value);
+      if (PreviousValue) { lua_create_vector (L, PreviousValue); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectScaleMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -852,13 +911,16 @@ dmz::LuaExtObjectObserver::update_object_vector (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectVectorFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_vector (L, &Value);
-   if (PreviousValue) { lua_create_vector (L, PreviousValue); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectVectorMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_vector (L, &Value);
+      if (PreviousValue) { lua_create_vector (L, PreviousValue); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectVectorMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -876,13 +938,16 @@ dmz::LuaExtObjectObserver::update_object_scalar (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectScalarFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_pushnumber (L, Value);
-   if (PreviousValue) { lua_pushnumber (L, *PreviousValue); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectScalarMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_pushnumber (L, Value);
+      if (PreviousValue) { lua_pushnumber (L, *PreviousValue); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectScalarMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -900,13 +965,16 @@ dmz::LuaExtObjectObserver::update_object_text (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectTextFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_pushstring (L, Value.get_buffer ());
-   if (PreviousValue) { lua_pushstring (L, PreviousValue->get_buffer ()); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectTextMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_pushstring (L, Value.get_buffer ());
+      if (PreviousValue) { lua_pushstring (L, PreviousValue->get_buffer ()); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectTextMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }
@@ -924,13 +992,16 @@ dmz::LuaExtObjectObserver::update_object_data (
 
    const int Handler (obs_setup_cb (L, *this, AttributeHandle, ObjectDataFunc));
 
-   lua_create_handle (L, ObjectHandle);
-   lua_create_handle (L, AttributeHandle);
-   lua_create_data (L, &Value);
-   if (PreviousValue) { lua_create_data (L, PreviousValue); }
-   else { lua_pushnil (L); }
+   if (Handler) {
 
-   obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectDataMask);
+      lua_create_handle (L, ObjectHandle);
+      lua_create_handle (L, AttributeHandle);
+      lua_create_data (L, &Value);
+      if (PreviousValue) { lua_create_data (L, PreviousValue); }
+      else { lua_pushnil (L); }
+
+      obs_do_cb (L, *this, 4, Handler, AttributeHandle, ObjectDataMask);
+   }
 
    LUA_END_VALIDATE (L, 0);
 }

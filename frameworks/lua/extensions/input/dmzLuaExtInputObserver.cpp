@@ -348,23 +348,28 @@ obs_register (lua_State *L) {
    int result (0);
 
    optr obs (obs_check (L, 1));
+   Config *init = lua_to_config (L, 2);
    Handle *channelPtr (0);
-   if (!lua_isnil (L, 2)) { channelPtr = lua_check_handle (L, 2); }
+   if (!init && !lua_isnil (L, 2)) { channelPtr = lua_check_handle (L, 2); }
 
-   if (!channelPtr) {
+   HandleContainer channelList;
 
-      channelPtr = lua_create_handle (
-         L,
+   if (channelPtr) { channelList.add_handle (*channelPtr); }
+   else if (init) {
+
+      config_to_input_channels (*init, lua_get_runtime_context (L), channelList);
+   }
+   else {
+
+      channelList.add_handle (
          Definitions (
             lua_get_runtime_context (L)).create_named_handle (InputChannelDefaultName));
-
-      lua_replace (L, 2);
    }
 
    luaL_checktype (L, 3, LUA_TTABLE);
    int data = (lua_isnoneornil (L, 4) ? 3 : 4);
 
-   if (obs && channelPtr) {
+   if (obs) {
 
       Mask cb;
 
@@ -378,22 +383,38 @@ obs_register (lua_State *L) {
 
       Mask unreg (InputEventAllMask);
       unreg ^= cb;
-      obs->deactivate_input_channel (*channelPtr, unreg);
 
       lua_rawgeti (L, LUA_REGISTRYINDEX, obs->get_index ()); // get observer index table
       const int CBTable (lua_gettop (L));
 
-      lua_create_handle (L, *channelPtr); // Push callback handle
-      lua_createtable (L, 2, 0); // create table for callback and data tables
-      const int Table (lua_gettop (L));
-      lua_pushvalue (L, 3); // push callback table
-      lua_rawseti (L, Table, 1); // store callback table
-      lua_pushvalue (L, data); // push either callback or data table if it exists
-      lua_rawseti (L, Table, 2); // store data table
-      lua_rawset (L, CBTable); // store table of callback and data tables
+      Handle channel = channelList.get_first ();
+
+      while (channel) {
+
+         obs->deactivate_input_channel (channel, unreg);
+
+         lua_create_handle (L, channel); // Push callback handle
+         lua_createtable (L, 2, 0); // create table for callback and data tables
+         const int Table (lua_gettop (L));
+         lua_pushvalue (L, 3); // push callback table
+         lua_rawseti (L, Table, 1); // store callback table
+         lua_pushvalue (L, data); // push either callback or data table if it exists
+         lua_rawseti (L, Table, 2); // store data table
+         lua_rawset (L, CBTable); // store table of callback and data tables
+
+         channel = channelList.get_next ();
+      }
+
       lua_pop (L, 1); // pop observer index table.
 
-      obs->activate_input_channel (*channelPtr, cb);
+      channel = channelList.get_first ();
+
+      while (channel) {
+
+         obs->activate_input_channel (channel, cb);
+
+         channel = channelList.get_next ();
+      }
    }
 
    LUA_END_VALIDATE (L, result);

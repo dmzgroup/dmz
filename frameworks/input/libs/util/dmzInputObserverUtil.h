@@ -10,6 +10,11 @@ namespace dmz {
    class HandleContainer;
    class Log;
 
+   void DMZ_INPUT_UTIL_LINK_SYMBOL config_to_input_channels (
+      const Config &Source,
+      RuntimeContext *context,
+      HandleContainer &channels);
+
    class DMZ_INPUT_UTIL_LINK_SYMBOL InputObserverUtil : public InputObserver {
 
       public:

@@ -105,7 +105,7 @@ function start (self)
    self.handle = self.timeSlice:create (update_time_slice, self, self.name)
 
    self.obs:register (
-      nil,
+      self.config,
       {
          update_channel_state = update_channel_state,
          receive_axis_event = receive_axis_event,

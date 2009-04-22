@@ -4,6 +4,7 @@
 #include <dmzInputObserverUtil.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeContainer.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzTypesHandleContainer.h>
@@ -22,6 +23,39 @@ struct ChannelStruct {
 
 };
 
+
+void
+dmz::config_to_input_channels (
+      const Config &Source,
+      RuntimeContext *context,
+      HandleContainer &channels) {
+
+   Definitions defs (context);
+
+   Config channelList;
+
+   if (Source.lookup_all_config ("input.channel", channelList)) {
+
+      ConfigIterator it;
+      Config cd;
+
+      while (channelList.get_next_config (it, cd)) {
+
+         const String ChannelName (config_to_string ("name", cd));
+
+         if (ChannelName) {
+
+            channels.add_handle (defs.create_named_handle (ChannelName));
+         }
+      }
+   }
+   else {
+
+      channels.add_handle (defs.create_named_handle (InputChannelDefaultName));
+   }
+}
+
+
 /*!
 
 \class dmz::InputObserverUtil
@@ -35,6 +69,7 @@ observers.
 struct dmz::InputObserverUtil::State {
 
    const String InputModuleName;
+   RuntimeContainer rt;
    Log log;
    Definitions defs;
    InputModule *module;
@@ -45,13 +80,14 @@ struct dmz::InputObserverUtil::State {
          const PluginInfo &Info,
          const Config &Data) :
          InputModuleName (config_to_string ("module.input.name", Data)),
+         rt (Info),
          log (Info.get_name () + ".InputObserverUtil", Info.get_context ()),
          defs (Info, &log),
          module (0) {
 
       if (InputModuleName) {
 
-         log.info << "Looking for input observer: " << InputModuleName << endl;
+         log.info << "Looking for input module: " << InputModuleName << endl;
       }
    }
 
@@ -159,35 +195,28 @@ dmz::InputObserverUtil::init_input_channels (
       const Mask &EventMask,
       Log *log) {
 
-   Config channels;
+   HandleContainer channels;
 
-   if (Init.lookup_all_config ("input.channel", channels)) {
+   config_to_input_channels (Init, __state.rt.get_context (), channels);
 
-      ConfigIterator it;
+   Handle channel = channels.get_first ();
 
-      Config cd;
+   while (channel) {
 
-      Boolean found (channels.get_first_config (it, cd));
+      activate_input_channel (channel, EventMask);
 
-      while (found) {
+      if (log) {
 
-         const String ChannelName (config_to_string ("name", cd));
+         const String Name = __state.defs.lookup_named_handle_name (channel);
 
-         if (ChannelName) {
+         if (Name == InputChannelDefaultName) {
 
-            activate_input_channel (ChannelName, EventMask);
-
-            if (log) { log->info << "Activating input channel: " << ChannelName << endl; }
+            log->info << "Activating default input channel." << endl;
          }
-
-         found = channels.get_next_config (it, cd);
+         else { log->info << "Activating input channel: " << Name << endl; }
       }
-   }
-   else {
 
-      activate_default_input_channel (EventMask);
-
-      if (log) { log->info << "Activating default input channel" << endl; }
+      channel = channels.get_next ();
    }
 }
 

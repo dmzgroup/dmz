@@ -27,11 +27,11 @@ namespace dmz {
          // TimeSlice Interface
          virtual void update_time_slice (const Float64 DeltaTime);
 
-         virtual void store_input_module_channels (
+         virtual void store_input_module (
             const String &Name,
             InputModule &module);
 
-         virtual void remove_input_module_channels (
+         virtual void remove_input_module (
             const String &Name,
             InputModule &module);
 

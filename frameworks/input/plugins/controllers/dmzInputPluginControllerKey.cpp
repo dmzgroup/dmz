@@ -52,7 +52,7 @@ dmz::InputPluginControllerKey::update_channel_state (
 
    if (_activeChannelCount == 0) {
 
-      InputModule *module (get_input_module_channels ());
+      InputModule *module (get_input_module ());
 
       if (module) {
 
@@ -103,7 +103,7 @@ dmz::InputPluginControllerKey::receive_key_event (
       const UInt32 Channel,
       const InputEventKey &Value) {
 
-   InputModule *module (get_input_module_channels ());
+   InputModule *module (get_input_module ());
 
    if (module) {
 

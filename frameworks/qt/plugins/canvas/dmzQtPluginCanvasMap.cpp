@@ -8,6 +8,7 @@
 #include <qmapcontrol.h>
 #include <QtGui/QtGui>
 
+#include <QtCore/QDebug>
 
 dmz::QtPluginCanvasMap::QtPluginCanvasMap (const PluginInfo &Info, Config &local) :
       QWidget (0),
@@ -74,6 +75,10 @@ dmz::QtPluginCanvasMap::discover_plugin (
             if (view) {
 
                connect (
+                  view, SIGNAL (center_changed (const QPointF &)),
+                  this, SLOT (slot_center_changed (const QPointF &)));
+
+               connect (
                   view, SIGNAL (scale_changed (qreal)),
                   this, SLOT (slot_scale_changed (qreal)));
             }
@@ -117,11 +122,22 @@ dmz::QtPluginCanvasMap::get_qt_widget () { return this; }
 
 
 void
+dmz::QtPluginCanvasMap::slot_center_changed (const QPointF &Pos) {
+
+   if (_map) {
+
+qWarning () << "slot_center_changed: " << Pos;
+      _map->setView (QPointF (Pos.x (), -Pos.y ()));
+   }
+}
+
+
+void
 dmz::QtPluginCanvasMap::slot_scale_changed (qreal value) {
 
    if (_map) {
 
-_log.warn << "slot_scale_changed: " << value << endl;
+_log.warn << "slot_scale_changed: " << (Int32)value << endl;
       // const Float32 ZoomMin (_canvasModule->get_zoom_min_value ());
       // const Float32 ZoomMax (_canvasModule->get_zoom_max_value ());
       // const Float32 ZoomRange (ZoomMax - ZoomMin);
@@ -130,10 +146,11 @@ _log.warn << "slot_scale_changed: " << value << endl;
       // 
       // _ui.zoomSlider->setValue (SliderValue * SliderRange);
       
-      _map->setZoom (value);
+      _map->setZoom ((int)value);
    }
 }
 
+static QPoint screenMiddle;
 
 void
 dmz::QtPluginCanvasMap::resizeEvent (QResizeEvent *event) {
@@ -143,7 +160,23 @@ dmz::QtPluginCanvasMap::resizeEvent (QResizeEvent *event) {
       if (_map) { _map->resize (event->size () - QSize (1, 1)); }
       
       if (_canvasWidget) { _canvasWidget->resize (event->size ()); }
+
+//----------------------------------------------------------------------------------------
+      QPointF currCoord = _map->currentCoordinate ();
+      QPoint screenCoord = _map->worldCoordinateToScreen (currCoord);
+      qWarning () << "cc: " << currCoord;
+      qWarning () << "sc: " << screenCoord;
       
+      screenMiddle = QPoint (event->size ().width () / 2, event->size ().height () / 2);
+qWarning () << "sm: " << screenMiddle;
+      
+      Coordinate coord (0, 0);
+      
+      Point centerPoint = latlong_to_pixelxy (coord, _map->currentZoom ());
+      
+_log.warn << "cp: " << centerPoint.x << " " << centerPoint.y << endl;
+
+//----------------------------------------------------------------------------------------
       event->ignore ();
    }
 }

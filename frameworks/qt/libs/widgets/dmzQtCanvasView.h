@@ -35,7 +35,7 @@ namespace dmz {
 
       signals:
          void scale_changed (qreal);
-         void view_changed (const QPointF &Center);
+         void center_changed (const QPointF &);
 
       protected:
          virtual void drawBackground (QPainter *painter, const QRectF &rect);
@@ -49,6 +49,8 @@ namespace dmz {
          virtual void mouseReleaseEvent (QMouseEvent *event);
          virtual void mouseMoveEvent (QMouseEvent *event);
 
+         void _updated ();
+         
          QPointF _lastDragPos;
 
       private:

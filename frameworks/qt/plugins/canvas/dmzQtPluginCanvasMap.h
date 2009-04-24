@@ -43,6 +43,7 @@ namespace dmz {
          virtual QWidget *get_qt_widget ();
          
       protected slots:
+            void slot_center_changed (const QPointF &Pos);
             void slot_scale_changed (qreal);
 
       protected:

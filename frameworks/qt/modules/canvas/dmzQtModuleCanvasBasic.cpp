@@ -50,12 +50,10 @@ dmz::QtModuleCanvasBasic::update_plugin_state (
 
    if (State == PluginStateStart) {
 
-      _load_session ();
       setFocus (Qt::ActiveWindowFocusReason);
    }
    else if (State == PluginStateStop) {
 
-      _save_session ();
    }
 }
 
@@ -239,6 +237,7 @@ dmz::QtModuleCanvasBasic::center_on (const Handle ObjectHandle) {
    if (_canvas && ObjectHandle) {
 
       _canvas->centerOn (_itemTable.lookup (ObjectHandle));
+      _canvas->set_scale (_canvas->get_scale ());
    }
 }
 
@@ -411,35 +410,6 @@ dmz::QtModuleCanvasBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we)
          _inputModule->send_mouse_event (_mouseEvent);
       }
    }
-}
-
-
-void
-dmz::QtModuleCanvasBasic::_save_session () {
-
-   // String data;
-   //
-   // Config session (get_plugin_name ());
-   //
-   // if (_canvas) {
-   //
-   //    session.add_config (qgraphicsview_to_config ("canvasView", *_canvas));
-   // }
-   //
-   // set_session_config (get_plugin_runtime_context (), session);
-}
-
-
-void
-dmz::QtModuleCanvasBasic::_load_session () {
-
-   // Config session (get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
-   //
-   // if (_canvas) {
-   //
-   //    qgraphicsview_config_read ("canvasView", session, *_canvas);
-   //    _canvas->set_scale (_canvas->get_scale ());
-   // }
 }
 
 

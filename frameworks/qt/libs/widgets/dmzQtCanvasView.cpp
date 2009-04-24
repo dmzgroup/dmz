@@ -44,6 +44,7 @@ dmz::QtCanvasView::set_scale (const qreal Value) {
    setMatrix (transform);
 
    emit scale_changed (scaleValue);
+   _updated ();
 }
 
 
@@ -55,8 +56,9 @@ dmz::QtCanvasView::pan_direction (const int Dx, const int Dy) {
 
    if (hBar && vBar) {
 
-      hBar->setValue (hBar->value() - Dx);
-      vBar->setValue (vBar->value() - Dy);
+      hBar->setValue (hBar->value () - Dx);
+      vBar->setValue (vBar->value () - Dy);
+      _updated ();
    }
 }
 
@@ -64,7 +66,6 @@ dmz::QtCanvasView::pan_direction (const int Dx, const int Dy) {
 void
 dmz::QtCanvasView::drawBackground (QPainter *painter, const QRectF &rect) {
 
-   qDebug ("drawBackground");
    QGraphicsView::drawBackground(painter, rect);
 
 #if 0
@@ -110,7 +111,6 @@ dmz::QtCanvasView::paintEvent (QPaintEvent *event) {
 //      QPaintEvent newEvent (event->region ().boundingRect ());
 //      QGraphicsView::paintEvent (&newEvent);
 
-qDebug ("paintEvent");
       QGraphicsView::paintEvent (event);
    }
 }
@@ -215,5 +215,15 @@ dmz::QtCanvasView::mouseMoveEvent (QMouseEvent *event) {
       QGraphicsView::mouseMoveEvent (event);
       event->ignore ();
    }
+}
+
+
+void
+dmz::QtCanvasView::_updated () {
+
+   QPoint vpCenter (viewport ()->rect ().center ());
+   QPointF center (mapToScene (vpCenter));
+   
+   emit center_changed (center);
 }
 

@@ -6,15 +6,12 @@
 #include <dmzTypesString.h>
 #include <dmzTypesVector.h>
 #include <math.h>
+#include <QtCore/QtGlobal>
 
 // From http://msdn2.microsoft.com/en-us/library/bb259689.aspx
 
-#define MAX(a,b) (((a) > (b)) ? (a) : (b))
-#define MIN(a,b) (((a) < (b)) ? (a) : (b))
-#define CLIP(X, min, max) MIN(MAX(min, X), max)
-
-static const dmz::Int32 MinLevelOfDetail = 2;
-static const dmz::Int32 MaxLevelOfDetail = 18;
+static const dmz::Int32 MinLevelOfDetail = 0;
+static const dmz::Int32 MaxLevelOfDetail = 17;
 static const dmz::Float64 EarthRadius = 6378137.0;
 static const dmz::Float64 MinLatitude = -85.05112878;
 static const dmz::Float64 MaxLatitude = 85.05112878;
@@ -101,7 +98,7 @@ dmz::map_size_pixels (Int32 levelOfDetail) {
 inline dmz::Float64
 dmz::ground_resolution (Float64 latitude, Int32 levelOfDetail) {
    
-   latitude = CLIP (latitude, MinLatitude, MaxLatitude);
+   latitude = qBound (MinLatitude, latitude, MaxLatitude);
    return cos (latitude * Pi64 / 180.0) * 2.0 * Pi64 * EarthRadius / (Float64)map_size_pixels (levelOfDetail);
 }
 
@@ -146,8 +143,8 @@ dmz::pixelxy_to_latLon (const Point &PixelXY, Int32 levelOfDetail) {
 
    Coordinate coord (fmod ((PixelXY.x - 0.5) / TheMapSize * 360.0, 360.0) - 180.0, y);
 	
-   coord.latitude = CLIP (coord.latitude, MinLatitude, MaxLatitude);
-   coord.longitude = CLIP (coord.longitude, MinLongitude, MaxLongitude);
+   coord.latitude = qBound (MinLatitude, coord.latitude, MaxLatitude);
+   coord.longitude = qBound (MinLatitude, coord.longitude, MaxLongitude);
 
    return (coord);
 }
@@ -157,8 +154,8 @@ dmz::pixelxy_to_latLon (const Point &PixelXY, Int32 levelOfDetail) {
 inline dmz::Point
 dmz::latlong_to_pixelxy (const Coordinate Coord, Int32 levelOfDetail) {
    
-   const Float64 TheLatitude = CLIP (Coord.latitude, MinLatitude, MaxLatitude);
-   const Float64 TheLongitude = CLIP (Coord.longitude, MinLongitude, MaxLongitude);
+   const Float64 TheLatitude = qBound (MinLatitude, Coord.latitude, MaxLatitude);
+   const Float64 TheLongitude = qBound ( MinLongitude, Coord.longitude,MaxLongitude);
 
    Float64 x = (TheLongitude + 180.0) / 360.0; 
    Float64 sinLatitude = sin (TheLatitude * Pi64 / 180.0);
@@ -167,8 +164,8 @@ dmz::latlong_to_pixelxy (const Coordinate Coord, Int32 levelOfDetail) {
    const Int32 TheMapSize = map_size_pixels (levelOfDetail);
    
    Point pixelXY (
-      CLIP (x * TheMapSize + 0.5, 0.0, TheMapSize - 1.0),
-      CLIP (y * TheMapSize + 0.5, 0.0, TheMapSize - 1.0));
+      qBound (0.0, x * TheMapSize + 0.5, TheMapSize - 1.0),
+      qBound (0.0, y * TheMapSize + 0.5, TheMapSize - 1.0));
    
    return (pixelXY);
 }

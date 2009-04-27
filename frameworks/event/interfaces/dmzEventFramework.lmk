@@ -4,5 +4,6 @@ lmk.add_files {
    "dmzEventDump.h",
    "dmzEventModule.h",
    "dmzEventModuleCommon.h",
+   "dmzEventModuleService.h",
    "dmzEventObserver.h",
 }

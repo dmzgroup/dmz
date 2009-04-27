@@ -110,6 +110,23 @@ dmz::EventPluginDump::end_dump_event (const Handle EventHandle) {
 
 
 void
+dmz::EventPluginDump::store_event_handle (
+      const Handle EventHandle,
+      const Handle AttributeHandle,
+      const Handle Value) {
+
+   String txt ("[");
+   const String HandleName = _get_attr_name (Value);
+   if (HandleName) { txt << HandleName << "]"; }
+   else { txt.flush (); }
+   
+
+   _log.out << _get_attr_name (AttributeHandle) << "Handle" << txt << ": " << Value
+      << endl;
+}
+
+
+void
 dmz::EventPluginDump::store_event_object_handle (
       const Handle EventHandle,
       const Handle AttributeHandle,
@@ -260,8 +277,7 @@ dmz::EventPluginDump::_get_attr_name (const Handle AttributeHandle) {
    if (AttributeHandle != _defaultHandle) {
 
       result = _defs.lookup_named_handle_name (AttributeHandle);
-      if (!result) { result = "<Unknown Attribute>"; }
-      result << ":";
+      if (result) { result << ":"; }
    }
 
    return result;

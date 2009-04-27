@@ -23,30 +23,33 @@ namespace dmz {
          // EventModuleService Interface
          virtual Handle create_open_service_request_event (
             const Handle Source,
-            const Handle Target) = 0;
+            const Handle Target,
+            const EventLocalityEnum Locality) = 0;
 
          virtual Handle create_open_resupply_offer_event (
             const Handle Source,
-            const Handle Target) = 0;
+            const Handle Target,
+            const EventLocalityEnum Locality) = 0;
 
          virtual Handle create_open_resupply_received_event (
             const Handle Source,
-            const Handle Target) = 0;
+            const Handle Target,
+            const EventLocalityEnum Locality) = 0;
 
          virtual Boolean close_service_event (const Handle EventHandle) = 0;
 
          virtual Handle add_supplies_to_event (
             const Handle EventHandle,
             const ObjectType &Type,
-            const Int64 Quantity) = 0;
+            const UInt32 Quantity) = 0;
 
-         virtual Int64 lookup_supply_count (const Handle EventHandle) = 0;
+         virtual UInt32 lookup_supply_count (const Handle EventHandle) = 0;
 
-         virtual Boolean lookup_supply (
+         virtual Handle lookup_supply (
             const Handle EventHandle,
-            const Int64 Which,
+            const UInt32 Which,
             ObjectType &type,
-            Int64 &quantity) = 0;
+            UInt32 &quantity) = 0;
 
       protected:
          EventModuleService (const PluginInfo &Info);

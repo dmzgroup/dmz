@@ -3,6 +3,7 @@
 #include <dmzInputModule.h>
 #include <dmzInputObserverUtil.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeContainer.h>
 #include <dmzRuntimeDefinitions.h>
@@ -23,36 +24,31 @@ struct ChannelStruct {
 
 };
 
+/*!
 
-void
+\brief Converts a Config to a HandleContainer of input channel Handle values.
+\ingroup Input
+\param[in] Source Config contain config context to convert.
+\param[in] context Pointer to the runtime context.
+\return Returns a HandleContainer of the input channel Handle values.
+\sa config_to_handle_container()
+
+*/
+dmz::HandleContainer
 dmz::config_to_input_channels (
       const Config &Source,
-      RuntimeContext *context,
-      HandleContainer &channels) {
+      RuntimeContext *context) {
 
-   Definitions defs (context);
+   HandleContainer result = config_to_handle_container ("input.channel", Source, context);
 
-   Config channelList;
+   if (result.get_count () == 0) {
 
-   if (Source.lookup_all_config ("input.channel", channelList)) {
+      Definitions defs (context);
 
-      ConfigIterator it;
-      Config cd;
-
-      while (channelList.get_next_config (it, cd)) {
-
-         const String ChannelName (config_to_string ("name", cd));
-
-         if (ChannelName) {
-
-            channels.add_handle (defs.create_named_handle (ChannelName));
-         }
-      }
+      result.add_handle (defs.create_named_handle (InputChannelDefaultName));
    }
-   else {
 
-      channels.add_handle (defs.create_named_handle (InputChannelDefaultName));
-   }
+   return result;
 }
 
 
@@ -195,9 +191,7 @@ dmz::InputObserverUtil::init_input_channels (
       const Mask &EventMask,
       Log *log) {
 
-   HandleContainer channels;
-
-   config_to_input_channels (Init, __state.rt.get_context (), channels);
+   HandleContainer channels = config_to_input_channels (Init, __state.rt.get_context ());
 
    Handle channel = channels.get_first ();
 
@@ -326,10 +320,17 @@ dmz::InputObserverUtil::deactivate_default_input_channel (const Mask &EventMask)
 }
 
 
+//! Deactivates all subscribed input channels.
 void
 dmz::InputObserverUtil::deactivate_all_input_channels () { __state.release_all (*this); }
 
 
+/*!
+
+\brief Gets the handles of all subscribed input channels.
+\param[out] channels HandleContainer used to return the input channel Handle values.
+
+*/
 void
 dmz::InputObserverUtil::get_channels (HandleContainer &channels) {
 

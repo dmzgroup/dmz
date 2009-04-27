@@ -17,6 +17,7 @@ namespace dmz {
          public EventModuleService {
 
       public:
+         //! \cond
          EventModuleServiceBasic (const PluginInfo &Info, Config &local);
          ~EventModuleServiceBasic ();
 
@@ -86,6 +87,7 @@ namespace dmz {
          Handle _sourceHandle;
          Handle _targetHandle;
          Handle _countHandle;
+         //! \endcond
 
       private:
          EventModuleServiceBasic ();

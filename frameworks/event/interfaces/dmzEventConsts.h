@@ -40,6 +40,7 @@ namespace dmz {
 
    //! Event supplies count attribute handle name.
    const char EventAttributeSuppliesCountName[] = "Event_Supplies_Count_Attribute";
+   //! Event supplies attribute handle root.
    const char EventAttributeSuppliesRoot[] = "Event_Service_Supplies_";
 
    //! Launch event name.

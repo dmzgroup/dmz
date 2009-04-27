@@ -6,6 +6,32 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EventModuleServiceBasic
+\ingroup Event
+\brief Basic EventModuleService implementation.
+\details
+\code
+<dmz>
+<plugin-list>
+   <plugin name="dmzEventModuleServiceBasic" scope="service-events"/>
+</plugin-list>
+<service-events>
+   <event-request name="[Optional] ervice Request Event Name"/>
+   <event-offer name="[Optional]Service Offer Supplies Event Name"/>
+   <event-received name="[Optional]Service Received Supplies Event Name"/>
+   <source-attribute name="[Optional]Event Source Object Attribute Name"/>
+   <target-attribute name="[Optional]Event Target Object Attribute Name"/>
+   <supplies-count-attribute name="[Optional]Event Supplies Count Attribute Name"/>
+</service-events>
+</dmz>
+\endcode
+\sa EventModuleService
+
+*/
+
+//! \cond
 dmz::EventModuleServiceBasic::EventModuleServiceBasic (
       const PluginInfo &Info,
       Config &local) :
@@ -266,6 +292,7 @@ dmz::EventModuleServiceBasic::_init (Config &local) {
       EventAttributeSuppliesCountName,
       context);
 }
+//! \endcond
 
 
 extern "C" {

@@ -27,6 +27,14 @@
 </service-events>
 </dmz>
 \endcode
+The Config attribute "event-request.name" defaults to dmz::EventServiceRequestName.\n
+The Config attribute "event-offer.name" defaults to dmz::EventServiceResupplyOfferName.\n
+The Config attribute "event-received.name" defaults to dmz::EventServiceResupplyReceivedName.\n
+The Config attribute "source-attribute.name" defaults to dmz::EventAttributeSourceName.\n
+The Config attribute "target-attribute.name" defaults to dmz::EventAttributeTargetName.\n
+The Config attribute "supplies-count-attribute.name" defaults to dmz::EventAttributeSuppliesCountName.\n
+The root used in the attribute for supplies is dmz::EventAttributeSuppliesRoot with the
+index appended to the end. For example, the supplies at index "1" would be "Event_Service_Supplies_1". The index starts a zero.\n
 \sa EventModuleService
 
 */

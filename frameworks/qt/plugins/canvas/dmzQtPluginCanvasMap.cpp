@@ -10,9 +10,29 @@
 
 #include <QtCore/QDebug>
 
+//static QList<dmz::Float64> localResolutions;
+
+static const dmz::Int32 BaseZoom (15);
+
+   
+dmz::Float64
+local_level_to_scale (const dmz::Int32 Value) {
+
+   return (1.0 / pow (2, BaseZoom - Value));
+}
+
+
+dmz::Int32
+local_scale_to_level (const dmz::Float64 Value) {
+
+   return (BaseZoom - log2 (1.0 / Value));
+}
+
+
 dmz::QtPluginCanvasMap::QtPluginCanvasMap (const PluginInfo &Info, Config &local) :
       QWidget (0),
       Plugin (Info),
+      TimeSlice (Info),
       QtWidget (Info),
       _log (Info),
       _layout (0),
@@ -40,10 +60,6 @@ dmz::QtPluginCanvasMap::update_plugin_state (
 
    if (State == PluginStateInit) {
 
-      // if (_canvasWidget) {
-      //    
-      //    _canvasWidget->setParent (this);
-      // }
    }
    else if (State == PluginStateStart) {
 
@@ -74,21 +90,14 @@ dmz::QtPluginCanvasMap::discover_plugin (
 
             if (view) {
 
-               connect (
-                  view, SIGNAL (center_changed (const QPointF &)),
-                  this, SLOT (slot_center_changed (const QPointF &)));
+              // connect (
+              //    view, SIGNAL (pan_changed (const QPoint &)),
+              //    this, SLOT (_slot_pan_changed (const QPoint &)));
 
-               connect (
-                  view, SIGNAL (scale_changed (qreal)),
-                  this, SLOT (slot_scale_changed (qreal)));
+              connect (
+                 view, SIGNAL (scale_changed (qreal)),
+                 this, SLOT (_slot_scale_changed (qreal)));
             }
-            
-            // QGraphicsView *view (_canvasModule->get_view ());
-            // 
-            // if (view) {
-            //  
-            //    _canvasWidget = view;
-            // }
             
             QtWidget *w = QtWidget::cast (PluginPtr);
             
@@ -103,7 +112,6 @@ dmz::QtPluginCanvasMap::discover_plugin (
             }
          }
       }
-      
    }
    else if (Mode == PluginDiscoverRemove) {
 
@@ -115,6 +123,65 @@ dmz::QtPluginCanvasMap::discover_plugin (
    }
 }
 
+static QPoint lastPoint;
+QGraphicsPixmapItem *gItem = 0; 
+
+// TimeSlice Interface
+void
+dmz::QtPluginCanvasMap::update_time_slice (const Float64 TimeDelta) {
+
+   if (_canvasModule) {
+      
+//      QPointF center (_canvasModule->get_center ());
+      
+         QGraphicsView *view = _canvasModule->get_view ();
+
+         if (view) {
+
+            QPoint sourcePoint = view->mapFromScene (QPointF (0.0, 0.0));
+            sourcePoint += QPoint (1, 2);
+            
+            if (lastPoint != sourcePoint) {
+
+               lastPoint = sourcePoint;
+            
+               QPointF worldPos = _map->screenToWorldCoordinate (sourcePoint);
+
+//qDebug () << sourcePoint;
+//qDebug () << worldPos;
+
+//               _map->setView (-worldPos);
+
+//<!-- <startCoordinate latitude="36.5973550921921" longitude="-121.876788139343"/> -->
+
+//sourcePoint = _map->worldCoordinateToScreen (QPointF (-121.876788139343, 36.5973550921921));
+sourcePoint = _map->worldCoordinateToScreen (QPointF (0, 0));
+qDebug () << sourcePoint;
+
+QPoint screenPoint (_map->mapToGlobal (sourcePoint));
+qDebug () << screenPoint;
+
+sourcePoint = view->mapFromGlobal (screenPoint);
+qDebug () << sourcePoint;
+
+worldPos = view->mapToScene (sourcePoint);
+qDebug () << worldPos;
+
+if (!gItem) {
+   
+   QGraphicsScene *scene = _canvasModule->get_scene ();
+
+   gItem = scene->addPixmap (QPixmap ("images:NA_Node.svg"));
+   gItem->setFlag (QGraphicsItem::ItemIgnoresTransformations, true);
+   gItem->setPos (worldPos);
+}
+
+qDebug () << "-----------------------------------------------";
+            }
+         }
+   }
+}
+
 
 // QtWidget Interface
 QWidget *
@@ -122,35 +189,25 @@ dmz::QtPluginCanvasMap::get_qt_widget () { return this; }
 
 
 void
-dmz::QtPluginCanvasMap::slot_center_changed (const QPointF &Pos) {
+dmz::QtPluginCanvasMap::_slot_pan_changed (const QPoint &Value) {
 
    if (_map) {
 
-qWarning () << "slot_center_changed: " << Pos;
-      _map->setView (QPointF (Pos.x (), -Pos.y ()));
+//      _map->scroll (-Value);
    }
 }
 
 
 void
-dmz::QtPluginCanvasMap::slot_scale_changed (qreal value) {
+dmz::QtPluginCanvasMap::_slot_scale_changed (qreal value) {
 
    if (_map) {
-
-_log.warn << "slot_scale_changed: " << (Int32)value << endl;
-      // const Float32 ZoomMin (_canvasModule->get_zoom_min_value ());
-      // const Float32 ZoomMax (_canvasModule->get_zoom_max_value ());
-      // const Float32 ZoomRange (ZoomMax - ZoomMin);
-      // const Float32 SliderRange (_ui.zoomSlider->maximum () - _ui.zoomSlider->minimum ());
-      // const Float32 SliderValue ((value - ZoomMin) / ZoomRange);
-      // 
-      // _ui.zoomSlider->setValue (SliderValue * SliderRange);
       
-      _map->setZoom ((int)value);
+      _map->setZoom (local_scale_to_level (value));
    }
 }
 
-static QPoint screenMiddle;
+//static QPoint screenMiddle;
 
 void
 dmz::QtPluginCanvasMap::resizeEvent (QResizeEvent *event) {
@@ -162,20 +219,19 @@ dmz::QtPluginCanvasMap::resizeEvent (QResizeEvent *event) {
       if (_canvasWidget) { _canvasWidget->resize (event->size ()); }
 
 //----------------------------------------------------------------------------------------
-      QPointF currCoord = _map->currentCoordinate ();
-      QPoint screenCoord = _map->worldCoordinateToScreen (currCoord);
-      qWarning () << "cc: " << currCoord;
-      qWarning () << "sc: " << screenCoord;
-      
-      screenMiddle = QPoint (event->size ().width () / 2, event->size ().height () / 2);
-qWarning () << "sm: " << screenMiddle;
-      
-      Coordinate coord (0, 0);
-      
-      Point centerPoint = latlong_to_pixelxy (coord, _map->currentZoom ());
-      
-_log.warn << "cp: " << centerPoint.x << " " << centerPoint.y << endl;
-
+//       QPointF currCoord = _map->currentCoordinate ();
+//       QPoint screenCoord = _map->worldCoordinateToScreen (currCoord);
+//       qWarning () << "cc: " << currCoord;
+//       qWarning () << "sc: " << screenCoord;
+//       
+//       screenMiddle = QPoint (event->size ().width () / 2, event->size ().height () / 2);
+// qWarning () << "sm: " << screenMiddle;
+//       
+//       Coordinate coord (0, 0);
+//       
+//       Point centerPoint = latlong_to_pixelxy (coord, _map->currentZoom ());
+//       
+// _log.warn << "cp: " << centerPoint.x << " " << centerPoint.y << endl;
 //----------------------------------------------------------------------------------------
       event->ignore ();
    }
@@ -196,7 +252,7 @@ dmz::QtPluginCanvasMap::_init (Config &local) {
    
    _map = new qmapcontrol::MapControl (frameSize (), qmapcontrol::MapControl::None, this);
    
-   _map->showScale (config_to_boolean ("map.scale", local, True));
+   _map->showScale (config_to_boolean ("map.showScale", local, True));
    
    _mapAdapter = new qmapcontrol::TileMapAdapter (
       mapUrl.get_buffer (),
@@ -214,6 +270,25 @@ dmz::QtPluginCanvasMap::_init (Config &local) {
    _layout->addWidget (_map);
    
    setLayout (_layout);
+   
+   // if (config_to_boolean ("map.cache", local, False)) {
+   //    
+   //    _map->enablePersistentCache (const QDir& path = QDir::homePath () + "/QMapControl.cache");
+   // }
+_map->enablePersistentCache ();
+   
+   // Float64 latitude (config_to_float64 ("startCoordinate.latitude", local, 0.0));
+   // Float64 longitude (config_to_float64 ("startCoordinate.longitude", local, 0.0));
+   // 
+   // _map->setView (QPointF (longitude, latitude));
+   
+   
+qmapcontrol::GeometryLayer *geomLayer = new qmapcontrol::GeometryLayer ("geom", _mapAdapter);
+_map->addLayer (geomLayer);
+
+//qmapcontrol::Point *item = new qmapcontrol::ImagePoint (-121.876788139343, 36.5973550921921, "images:NA_Node.svg");
+qmapcontrol::Point *item = new qmapcontrol::ImagePoint (0.0, 0.0, "images:NA_Node.svg");
+geomLayer->addGeometry (item);
 }
 
 

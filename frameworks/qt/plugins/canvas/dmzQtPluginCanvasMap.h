@@ -1,9 +1,11 @@
 #ifndef DMZ_QT_PLUGIN_CANVAS_MAP_DOT_H
 #define DMZ_QT_PLUGIN_CANVAS_MAP_DOT_H
 
+
 #include <dmzQtWidget.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <QtGui/QWidget>
 
 
@@ -22,6 +24,7 @@ namespace dmz {
    class QtPluginCanvasMap :
          public QWidget,
          public Plugin,
+         public TimeSlice,
          public QtWidget {
             
    Q_OBJECT
@@ -39,12 +42,15 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
+         
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();
          
       protected slots:
-            void slot_center_changed (const QPointF &Pos);
-            void slot_scale_changed (qreal);
+         void _slot_pan_changed (const QPoint &);
+         void _slot_scale_changed (qreal);
 
       protected:
          virtual void resizeEvent (QResizeEvent* event);

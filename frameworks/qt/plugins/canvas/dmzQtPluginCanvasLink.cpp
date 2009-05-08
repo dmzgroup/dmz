@@ -13,6 +13,8 @@
 #include <dmzTypesUUID.h>
 #include <QtGui/QtGui>
 
+#include <QtCore/QDebug>
+
 
 dmz::QtCanvasLink::QtCanvasLink (
       const Handle LinkHandle,
@@ -69,14 +71,16 @@ dmz::QtCanvasLink::paint (
    if (option->state & QStyle::State_Selected) {
 
       QPen p (pen ());
-      p.setWidthF (p.width () * 1.25);
+      p.setWidthF (p.width () * 1.25 * (1.0 / option->levelOfDetail));
       p.setStyle (Qt::DashLine);
 
       painter->setPen (p);
    }
    else {
 
-      painter->setPen (pen ());
+      QPen p (pen ());
+      p.setWidth (p.width () * (1.0 / option->levelOfDetail));
+      painter->setPen (p);
    }
 
    painter->drawLine (line ());

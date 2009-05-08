@@ -8,6 +8,7 @@
 class QGraphicsItem;
 class QGraphicsScene;
 class QGraphicsView;
+class QPointF;
 
 
 namespace dmz {
@@ -32,7 +33,7 @@ namespace dmz {
 
          virtual QGraphicsScene *get_scene () = 0;
          virtual QGraphicsView *get_view () = 0;
-
+         
          virtual Boolean add_item (const Handle ObjectHandle, QGraphicsItem *item) = 0;
          virtual QGraphicsItem *lookup_item (const Handle ObjectHandle) = 0;
          virtual QGraphicsItem *remove_item (const Handle ObjectHandle) = 0;
@@ -56,7 +57,9 @@ namespace dmz {
          virtual void pan_direction (const Int32 Dx, const Int32 Dy) = 0;
 
          virtual void center_on (const Handle ObjectHandle) = 0;
-         // virtual void center_on (const Vector &Value) = 0;
+//         virtual void center_on (const QPointF &Value) = 0;
+         
+         virtual QPointF get_center () const = 0;
 
 #if 0
          virtual void enable_dragging () = 0;

@@ -13,6 +13,9 @@ namespace dmz {
    const char ObjectAttributeLayerLinkName[] = "Layer_Link";
 
    const char ObjectAttributeNodeLinkName[] = "Node_Link";
+   
+   const char ObjectAttributeCanvasCenterName[] = "Canvas_Center";
+   const char ObjectAttributeCanvasZoomName[] = "Canvas_Zoom";
 };
 
 

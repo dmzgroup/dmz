@@ -65,7 +65,10 @@ namespace dmz {
          virtual void pan_direction (const Int32 Dx, const Int32 Dy);
 
          virtual void center_on (const Handle ObjectHandle);
-
+//         virtual void center_on (const QPointF &Value);
+         
+         virtual QPointF get_center () const;
+         
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();
 

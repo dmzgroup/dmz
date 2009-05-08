@@ -30,9 +30,9 @@ namespace dmz {
    };
 
    class QtPluginCanvasObject :
-      public Plugin,
-      public TimeSlice,
-      public ObjectObserverUtil {
+         public Plugin,
+         public TimeSlice,
+         public ObjectObserverUtil {
 
       public:
          QtPluginCanvasObject (const PluginInfo &Info, Config &local, Config &global);
@@ -130,6 +130,8 @@ namespace dmz {
          Handle _linkAttributeHandle;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
          HashTableHandleTemplate<ObjectStruct> _updateTable;
+         Boolean _zoomChanged;
+         Float64 _zoom;
 
       private:
          QtPluginCanvasObject ();

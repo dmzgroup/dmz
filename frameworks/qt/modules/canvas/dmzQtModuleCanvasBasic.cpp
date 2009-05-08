@@ -13,6 +13,8 @@
 #include <QtGui/QtGui>
 #include <QtOpenGL/QtOpenGL>
 
+#include <QtCore/QDebug>
+
 
 dmz::QtModuleCanvasBasic::QtModuleCanvasBasic (const PluginInfo &Info, Config &local) :
       QWidget (0),
@@ -242,6 +244,23 @@ dmz::QtModuleCanvasBasic::center_on (const Handle ObjectHandle) {
 }
 
 
+QPointF
+dmz::QtModuleCanvasBasic::get_center () const {
+
+   QPointF retVal (0, 0);
+   
+   if (_canvas) {
+      
+      // QRect vpRect (_canvas->viewport ()->rect ());
+      QRect vpRect (_canvas->rect ());
+      
+      retVal = _canvas->mapToScene (vpRect.center ());
+   }
+   
+   return retVal;
+}
+
+
 // QtWidget Interface
 QWidget *
 dmz::QtModuleCanvasBasic::get_qt_widget () { return this; }
@@ -444,6 +463,9 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
 
    _canvas->setTransformationAnchor (QGraphicsView::AnchorViewCenter);
    _canvas->setResizeAnchor (QGraphicsView::AnchorViewCenter);
+   
+//   _canvas->setResizeAnchor (QGraphicsView::NoAnchor);
+//   _canvas->setTransformationAnchor (QGraphicsView::NoAnchor);
 
    const Boolean ScrollBars = config_to_boolean ("scrollbars.value", local, False);
 

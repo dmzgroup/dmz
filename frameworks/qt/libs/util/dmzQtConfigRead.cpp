@@ -511,7 +511,7 @@ dmz::qgraphicsview_config_read (
          view->setMatrix (mat);
       }
 
-      QPointF center (config_to_qpointf ("center", cd, QPointF (1, 1)));
+      QPointF center (config_to_qpointf ("center", cd, QPointF (0, 0)));
       view->centerOn (center);
    }
 }

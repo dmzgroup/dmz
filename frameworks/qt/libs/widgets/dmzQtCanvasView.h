@@ -34,11 +34,12 @@ namespace dmz {
          void pan_direction (const int Dx, const int Dy);
 
       signals:
+         void pan_changed (const QPoint &);
          void scale_changed (qreal);
-         void center_changed (const QPointF &);
 
       protected:
          virtual void drawBackground (QPainter *painter, const QRectF &rect);
+         virtual void drawForeground (QPainter *painter, const QRectF &rect);
          virtual void paintEvent (QPaintEvent *event);
          //virtual void resizeEvent (QResizeEvent *event);
          virtual void keyPressEvent (QKeyEvent *event);

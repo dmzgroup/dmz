@@ -25,6 +25,8 @@ dmz::QtCanvasScene::enableGrid (const bool Value) {
 void
 dmz::QtCanvasScene::drawBackground (QPainter *painter, const QRectF &rect) {
 
+   painter->drawRect (sceneRect ());
+   
    if (_drawGrid) {
 
       painter->fillRect (sceneRect (), QBrush (QColor (230, 240, 255)));

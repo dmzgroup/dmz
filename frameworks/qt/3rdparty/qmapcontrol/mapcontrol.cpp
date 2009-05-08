@@ -425,7 +425,8 @@ namespace qmapcontrol
 		this->size = newSize;
 		screen_middle = QPoint(newSize.width()/2, newSize.height()/2);
 	
-		this->setMaximumSize(newSize.width()+1, newSize.height()+1);
+//		this->setMaximumSize(newSize.width()+1, newSize.height()+1);
+		this->setMaximumSize(newSize.width(), newSize.height());
 		layermanager->resize(newSize);
 	}
 }

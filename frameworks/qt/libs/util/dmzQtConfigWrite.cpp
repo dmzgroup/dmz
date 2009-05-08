@@ -105,9 +105,8 @@ dmz::qgraphicsview_to_config (const String &Name, const QGraphicsView &Value) {
 
    result.add_config (qmatrix_to_config ("matrix", Value.matrix ()));
 
-   QSize vpSize (Value.viewport ()->size ());
-   QPoint center (vpSize.width () / 2, vpSize.height () / 2);
-   result.add_config (qpointf_to_config ("center", Value.mapToScene (center)));
+   QRect vpRect (Value.viewport ()->rect ());
+   result.add_config (qpointf_to_config ("center", Value.mapToScene (vpRect.center ())));
 
    return result;
 }

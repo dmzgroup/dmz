@@ -15,31 +15,23 @@
 #include <QtCore/QDebug>
 
 
-/*
-RESOLUTIONS: [
-       1.40625,
-       0.703125,
-       0.3515625,
-       0.17578125,
-       0.087890625,
-       0.0439453125,
-       0.02197265625,
-       0.010986328125,
-       0.0054931640625,
-       0.00274658203125,
-       0.001373291015625,
-       0.0006866455078125,
-       0.00034332275390625,
-       0.000171661376953125,
-       0.0000858306884765625,
-       0.00004291534423828125,
-       0.00002145767211914062,
-       0.00001072883605957031,
-       0.00000536441802978515,
-       0.00000268220901489257
-   ],
-*/
+static const dmz::Int32 BaseZoom (15);
 
+   
+dmz::Float64
+local_level_to_scale (const dmz::Int32 Value) {
+
+   return (1.0 / pow (2, BaseZoom - Value));
+}
+
+
+dmz::Int32
+local_scale_to_level (const dmz::Float64 Value) {
+
+   return (BaseZoom - log2 (1.0 / Value));
+}
+
+   
 dmz::QtPluginCanvasZoomPanMap::QtPluginCanvasZoomPanMap (
       const PluginInfo &Info,
       Config &local) :
@@ -118,10 +110,10 @@ dmz::QtPluginCanvasZoomPanMap::discover_plugin (
                setParent (view);
             }
 
-            _canvasModule->set_zoom_min_value (1<<_zoomMin);
-            _canvasModule->set_zoom_max_value (1<<_zoomMax);
+            _canvasModule->set_zoom_min_value (local_level_to_scale (_zoomMin));
+            _canvasModule->set_zoom_max_value (local_level_to_scale (_zoomMax));
             _canvasModule->set_zoom_step_value (_zoomStep);
-            _canvasModule->set_zoom (1<<_zoomDefault);
+            _canvasModule->set_zoom (local_level_to_scale (_zoomDefault));
          }
       }
 
@@ -209,11 +201,11 @@ dmz::QtPluginCanvasZoomPanMap::receive_mouse_event (
          //    _ui.zoomOutButton->click ();
          // }
 
-         QGraphicsView *view (_canvasModule->get_view ());
-         QSize vpSize (view->viewport ()->size ());
-         QPoint center (vpSize.width () / 2, vpSize.height () / 2);
-qWarning () << "world center: " << center;
-qWarning () << "scene center: " << view->mapToScene (center);
+//          QGraphicsView *view (_canvasModule->get_view ());
+//          QSize vpSize (view->viewport ()->size ());
+//          QPoint center (vpSize.width () / 2, vpSize.height () / 2);
+// qWarning () << "world center: " << center;
+// qWarning () << "scene center: " << view->mapToScene (center);
 
 //_log.warn << "center: " << center.x () << " " << center.y () << endl;
 //         result.add_config (qpointf_to_config ("center", Value.mapToScene (center)));
@@ -269,6 +261,7 @@ dmz::QtPluginCanvasZoomPanMap::on_zoomAllButton_clicked () {
    if (_canvasModule) {
 
 //      _canvasModule->zoom_extents ();
+      _canvasModule->set_zoom (local_level_to_scale (_zoomMin));
    }
 }
 
@@ -287,13 +280,23 @@ dmz::QtPluginCanvasZoomPanMap::on_zoomOutButton_clicked () {
 }
 
 
+
+
+
 void
 dmz::QtPluginCanvasZoomPanMap::on_zoomSlider_valueChanged (int value) {
 
    if (_canvasModule) {
       
+      Float64 l2s (local_level_to_scale (value));
+      Int32 s2l (local_scale_to_level (l2s));
+   
+      _log.error << "--------------- on_zoomSlider_valueChanged ----------------------------" << endl;
+      _log.warn << (Int32)value << " --> " << l2s << " --> " << s2l << endl;
+      _log.error << "-------------------------------------------" << endl;
+      
       _ignoreScaleChange = True;
-      _canvasModule->set_zoom (1<<value); // power (2, value)
+      _canvasModule->set_zoom (local_level_to_scale (value));
       _ignoreScaleChange = False;
    }
 }
@@ -304,7 +307,13 @@ dmz::QtPluginCanvasZoomPanMap::slot_scale_changed (qreal value) {
 
    if (_canvasModule && !_ignoreScaleChange) {
 
-      _ui.zoomSlider->setValue (log2 (value));
+// FIXME
+      _log.error << "--------------- slot_scale_changed ----------------------------" << endl;
+      Int32 s2l (local_scale_to_level (value));
+      _log.warn << value << " --> " << s2l << endl;
+      _log.error << "-------------------------------------------" << endl;
+      
+      _ui.zoomSlider->setValue (local_scale_to_level (value));
    }
 }
 

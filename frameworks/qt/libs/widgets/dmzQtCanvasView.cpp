@@ -2,8 +2,6 @@
 #include <math.h>
 #include <QtGui/QtGui>
 
-#include <QtCore/QDebug>
-
 
 dmz::QtCanvasView::QtCanvasView (QWidget *parent) :
       QGraphicsView (parent),
@@ -34,17 +32,17 @@ dmz::QtCanvasView::get_scale () const {
 void
 dmz::QtCanvasView::set_scale (const qreal Value) {
 
-   qreal scaleValue (Value ? Value : 1.0f);
+   if (Value) {
+      
+      QMatrix transform (matrix ());
 
-   QMatrix transform (matrix ());
+      transform.reset ();
+      transform.scale (Value, Value);
 
-   transform.reset ();
-   transform.scale (scaleValue, scaleValue);
+      setMatrix (transform);
 
-   setMatrix (transform);
-
-   emit scale_changed (scaleValue);
-   _updated ();
+      emit scale_changed (Value);
+   }
 }
 
 
@@ -58,7 +56,8 @@ dmz::QtCanvasView::pan_direction (const int Dx, const int Dy) {
 
       hBar->setValue (hBar->value () - Dx);
       vBar->setValue (vBar->value () - Dy);
-      _updated ();
+      
+      emit (pan_changed (QPoint (Dx, Dy)));
    }
 }
 
@@ -66,7 +65,7 @@ dmz::QtCanvasView::pan_direction (const int Dx, const int Dy) {
 void
 dmz::QtCanvasView::drawBackground (QPainter *painter, const QRectF &rect) {
 
-   QGraphicsView::drawBackground(painter, rect);
+   QGraphicsView::drawBackground (painter, rect);
 
 #if 0
    painter->save();
@@ -100,6 +99,21 @@ dmz::QtCanvasView::drawBackground (QPainter *painter, const QRectF &rect) {
 
    painter->restore();
 #endif
+}
+
+
+void
+dmz::QtCanvasView::drawForeground (QPainter *painter, const QRectF &rect) {
+
+   painter->save();
+   painter->setPen(Qt::red);
+   
+   painter->drawLine (0, -1000, 0, 1000);
+   painter->drawLine (-1000, 0, 1000, 0);
+
+   painter->restore();
+
+//   QGraphicsView::drawForeground (painter, rect);
 }
 
 
@@ -215,15 +229,5 @@ dmz::QtCanvasView::mouseMoveEvent (QMouseEvent *event) {
       QGraphicsView::mouseMoveEvent (event);
       event->ignore ();
    }
-}
-
-
-void
-dmz::QtCanvasView::_updated () {
-
-   QPoint vpCenter (viewport ()->rect ().center ());
-   QPointF center (mapToScene (vpCenter));
-   
-   emit center_changed (center);
 }
 

@@ -26,6 +26,8 @@ dmz::QtCanvasObject::QtCanvasObject (QGraphicsItem *parent) :
 
    setFlag (ItemIsSelectable, true);
    setHandlesChildEvents (true);
+   
+//setFlag (ItemIgnoresTransformations, true);
 }
 
 
@@ -82,12 +84,41 @@ dmz::QtPluginCanvasObject::ObjectStruct::update () {
 
       trans.translate (posX, posY);
       trans.rotateRadians (-heading);
-      if (scaleX && scaleY) { trans.scale (scaleX, scaleY); }
+//      if (scaleX && scaleY) { trans.scale (scaleX, scaleY); }
 
       item->setTransform (trans);
    }
 }
 
+/*
+void
+dmz::QtPluginCanvasObject::ObjectStruct::updateScale (const Float64 Value) {
+
+   if (item && constantScale) {
+
+      Float64 currentScale = 1.0 / Value * item->size ();
+      
+      if (currentScale > maxSize) { currentScale = maxSize; }
+      
+      QMatrix currentTransform = item->matrix ();
+      
+      currentTransform.reset ();
+      currentTransform.scale (currentScale, currentScale);
+      
+      item->setMatrix (currentTransform);
+      
+      QPointF itemCenter = item->sceneBoundingRect ().center ();
+      
+      QTransform trans;
+
+      trans.translate (posX, posY);
+      trans.rotateRadians (-heading);
+      if (scaleX && scaleY) { trans.scale (scaleX, scaleY); }
+
+      item->setTransform (trans);
+   }
+}
+*/
 
 dmz::QtPluginCanvasObject::QtPluginCanvasObject (
       const PluginInfo &Info,
@@ -103,7 +134,9 @@ dmz::QtPluginCanvasObject::QtPluginCanvasObject (
       _canvasModule (0),
       _canvasModuleName (),
       _objectTable (),
-      _updateTable () {
+      _updateTable (),
+      _zoomChanged (False),
+      _zoom (1.0) {
 
    _init (local, global);
 }
@@ -208,7 +241,7 @@ dmz::QtPluginCanvasObject::create_object (
       ObjectModule *objMod (get_object_module ());
 
       if (objMod) {
-
+         
          Vector pos;
          Matrix ori;
 

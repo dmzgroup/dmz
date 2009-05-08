@@ -1122,14 +1122,14 @@ dmz::HandleContainer value = dmz::config_to_handle_container ("dmz.handle", glob
 The Config for the above example would be formatted as follows:
 \code
 <dmz>
-   <handle value="dmzToolPluginFoo"/>
-   <handle value="dmzToolPluginBar"/>
+   <handle name="dmzToolPluginFoo"/>
+   <handle name="dmzToolPluginBar"/>
 </dmz>
 \endcode
 \param[in] Name String containing name of config context to convert.
 \param[in] Source Config containing config context to convert.
 \param[in] context Pointer to the runtime context.
-\return Returns dmz::HandleContainer of the String values.
+\return Returns dmz::HandleContainer of the named Handle values.
 
 */
 dmz::HandleContainer
@@ -1151,7 +1151,7 @@ dmz::config_to_handle_container (
 
    while (nameList.get_next_config (it, name)) {
 
-      result.add_handle (defs.create_named_handle (config_to_string ("value", name)));
+      result.add_handle (defs.create_named_handle (config_to_string ("name", name)));
    }
 
    return result;

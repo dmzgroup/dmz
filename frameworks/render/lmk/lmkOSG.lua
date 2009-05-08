@@ -1,15 +1,19 @@
 require "lmkbuild"
 
 local ipairs = ipairs
+local pairs = pairs
 local print = print
 local sys = lmkbuild.system ()
 local resolve = lmkbuild.resolve
 local lmk = lmk
+local type = type
 
 module (...)
 
-function set_name (name)
-   lmk.set_name (name, { DMZ_USE_OSG = true, })
+function get_flags (flags) return lmk.merge_tables ({DMZ_USE_OSG = true, }, flags) end
+
+function set_name (name, flags)
+   lmk.set_name (name, get_flags (flags))
 end
 
 function add_libs (list)

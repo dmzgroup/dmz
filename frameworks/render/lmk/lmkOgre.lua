@@ -7,8 +7,10 @@ local lmk = lmk
 
 module (...)
 
-function set_name (name)
-   lmk.set_name (name, { DMZ_USE_OGRE = true, })
+function get_flags (flags) return lmk.merge_tables ({DMZ_USE_OGRE = true, }, flags) end
+
+function set_name (name, flags)
+   lmk.set_name (name, get_flags (flags))
 end
 
 function add_libs ()

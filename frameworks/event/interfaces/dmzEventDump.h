@@ -24,6 +24,11 @@ namespace dmz {
 
          virtual void end_dump_event (const Handle EventHandle) = 0;
 
+         virtual void store_event_handle (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            const Handle Value) = 0;
+
          virtual void store_event_object_handle (
             const Handle EventHandle,
             const Handle AttributeHandle,

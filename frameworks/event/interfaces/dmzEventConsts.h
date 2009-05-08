@@ -24,9 +24,9 @@ namespace dmz {
    };
 
    //! \cond
-   const UInt32 EventCallbackCreateEvent    = 0x00000001;
-   const UInt32 EventCallbackCloseEvent      = 0x00000002;
-   const UInt32 EventCallbackAll           = 0xFFFFFFFF;
+   const UInt32 EventCallbackCreateEvent = 0x01;
+   const UInt32 EventCallbackCloseEvent  = 0x02;
+   const UInt32 EventCallbackAll         = 0xFFFFFFFF;
    //! \endcond
 
    //! Event default attribute handle name.
@@ -38,12 +38,25 @@ namespace dmz {
    //! Event munitions attribute handle name.
    const char EventAttributeMunitionsName[] = "Event_Munitions_Attribute";
 
+   //! Event supplies count attribute handle name.
+   const char EventAttributeSuppliesCountName[] = "Event_Supplies_Count_Attribute";
+   //! Event supplies attribute handle root.
+   const char EventAttributeSuppliesRoot[] = "Event_Service_Supplies_";
+
    //! Launch event name.
    const char EventLaunchName[]     = "Event_Launch";
    //! Detonation event name.
    const char EventDetonationName[] = "Event_Detonation";
    //! Collision event name.
    const char EventCollisionName[]  = "Event_Collision";
+
+   //! Service request event name.
+   const char EventServiceRequestName[] = "Event_Service_Request";
+   //! Service resupply offer event name.
+   const char EventServiceResupplyOfferName[] = "Event_Service_Resupply_Offer";
+   //! Service resupply received event name.
+   const char EventServiceResupplyReceivedName[] = "Event_Service_Resupply_Received";
+
 //! @}
 };
 

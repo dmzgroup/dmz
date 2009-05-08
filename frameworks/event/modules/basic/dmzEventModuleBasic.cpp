@@ -296,6 +296,16 @@ dmz::EventModuleBasic::dump_event (const Handle EventHandle, EventDump &dump) {
       HashTableHandleIterator it;
 
       {
+         Handle *ptr = event->handleTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_handle (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->handleTable.get_next (it);
+         }
+      }
+
+      {
          Handle *ptr = event->objectTable.get_first (it);
 
          while (ptr) {
@@ -541,6 +551,55 @@ dmz::EventModuleBasic::lookup_locality (const Handle EventHandle) {
    EventStruct *event (_lookup_event (EventHandle));
 
    if (event) { result = event->locality; }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::EventModuleBasic::store_handle (
+      const Handle EventHandle,
+      const Handle AttributeHandle,
+      const Handle Value) {
+
+   Boolean result (False);
+
+   EventStruct *event (_lookup_event (EventHandle));
+
+   if (event && !event->closed) {
+
+      Handle *valuePtr (event->handleTable.lookup (AttributeHandle));
+
+      if (valuePtr) { *valuePtr = Value; result = True; }
+      else {
+
+         valuePtr = new Handle (Value);
+
+         if (event->handleTable.store (AttributeHandle, valuePtr)) { result = True; }
+         else { delete valuePtr; valuePtr = 0; }
+      }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::EventModuleBasic::lookup_handle (
+      const Handle EventHandle,
+      const Handle AttributeHandle,
+      Handle &value) {
+
+   Boolean result (False);
+
+   EventStruct *event (_lookup_event (EventHandle));
+
+   if (event) {
+
+      Handle *ptr (event->handleTable.lookup (AttributeHandle));
+
+      if (ptr) { value = *ptr; result = True; }
+   }
 
    return result;
 }

@@ -68,6 +68,16 @@ namespace dmz {
 
          virtual EventLocalityEnum lookup_locality (const Handle EventHandle);
 
+         virtual Boolean store_handle (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            const Handle Value);
+
+         virtual Boolean lookup_handle (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            Handle &value);
+
          virtual Boolean store_object_handle (
             const Handle EventHandle,
             const Handle AttributeHandle,
@@ -219,6 +229,7 @@ namespace dmz {
             EventType type;
             EventLocalityEnum locality;
 
+            HashTableHandleTemplate<Handle> handleTable;
             HashTableHandleTemplate<Handle> objectTable;
             HashTableHandleTemplate<ObjectType> typeTable;
             HashTableHandleTemplate<Mask> stateTable;
@@ -258,6 +269,7 @@ namespace dmz {
                closed = False;
                closeTime = 0.0;
                locality = EventLocalityUnknown;
+               handleTable.empty ();
                objectTable.empty ();
                typeTable.empty ();
                stateTable.empty ();

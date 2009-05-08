@@ -132,6 +132,27 @@ EventType &value)
 \return Returns dmz::EventLocal if event is local. Returns dmz::EventRemote if event
 is remote. Returns dmz::ObjectLocalityUnknown if the event's handle is unknown.
 
+\fn dmz::Boolean dmz::EventModule::store_handle (
+const Handle EventHandle,
+const Handle AttributeHandle,
+const Handle Value)
+\brief Stores a Handle with the event.
+\details This attribute is used to associate Handle values with events.
+\param[in] EventHandle dmz::Handle of event.
+\param[in] AttributeHandle Attribute handle.
+\param[in] Value Handle.
+\return Returns dmz::True if the attribute was successfully updated.
+
+\fn dmz::Boolean dmz::EventModule::lookup_handle (
+const Handle EventHandle,
+const Handle AttributeHandle,
+Handle &value)
+\brief Looks up a Handle stored with the event.
+\param[in] EventHandle dmz::Handle of the event.
+\param[in] AttributeHandle Attribute handle.
+\param[out] value Handle.
+\return Returns dmz::True if the attribute was found.
+
 \fn dmz::Boolean dmz::EventModule::store_object_handle (
 const Handle EventHandle,
 const Handle AttributeHandle,

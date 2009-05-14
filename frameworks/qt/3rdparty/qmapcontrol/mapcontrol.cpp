@@ -182,10 +182,10 @@ namespace qmapcontrol
 		
 		
 	
-		painter.drawLine(screen_middle.x(), screen_middle.y()-100,
-							  screen_middle.x(), screen_middle.y()+100); // |
-		painter.drawLine(screen_middle.x()-100, screen_middle.y(),
-							  screen_middle.x()+100, screen_middle.y()); // -
+		painter.drawLine(screen_middle.x(), screen_middle.y()-10,
+							  screen_middle.x(), screen_middle.y()+10); // |
+		painter.drawLine(screen_middle.x()-10, screen_middle.y(),
+							  screen_middle.x()+10, screen_middle.y()); // -
 	
 // 	int cross_x = int(layermanager->getMapmiddle_px().x())%256;
 // 	int cross_y = int(layermanager->getMapmiddle_px().y())%256;

@@ -524,8 +524,8 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    
    _map->setView (QPointF (longitude, latitude));
    
-qmapcontrol::Point *item = new qmapcontrol::ImagePoint ((qreal)longitude, (qreal)latitude, "images:NA_Node.svg");
-_geomLayer->addGeometry (item);
+// qmapcontrol::Point *item = new qmapcontrol::ImagePoint ((qreal)longitude, (qreal)latitude, "images:NA_Node.svg");
+// _geomLayer->addGeometry (item);
 }
 
 

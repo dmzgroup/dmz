@@ -352,6 +352,14 @@ dmz::QtPluginMapZoomPan::_init (Config &local) {
 
    _scrollDelta = config_to_uint32 ("scrollDelta.value", local, _scrollDelta);
 
+   Int32 slidderMin = config_to_int32 ("slidder.min", local, _ui.zoomSlider->minimum ());
+   Int32 slidderMax = config_to_int32 ("slidder.max", local, _ui.zoomSlider->maximum ());
+   
+   if (slidderMin < slidderMax) {
+      
+      _ui.zoomSlider->setRange (slidderMin, slidderMax);
+   }
+   
    _zoomMin = config_to_float32 ("zoom.min", local, _zoomMin);
    _zoomMax = config_to_float32 ("zoom.max", local, _zoomMax);
    _zoomDefault = config_to_float32 ("zoom.default", local, _zoomDefault);

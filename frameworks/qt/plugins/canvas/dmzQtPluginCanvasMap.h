@@ -9,17 +9,12 @@
 #include <QtGui/QWidget>
 
 
-namespace qmapcontrol {
-
-   class MapControl;
-   class MapAdapter;
-   class MapLayer;
-};
-
 
 namespace dmz {
 
    class QtModuleCanvas;
+   class QtModuleMap;
+
 
    class QtPluginCanvasMap :
          public QWidget,
@@ -49,8 +44,8 @@ namespace dmz {
          virtual QWidget *get_qt_widget ();
          
       protected slots:
-         void _slot_pan_changed (const QPoint &);
-         void _slot_scale_changed (qreal);
+         // void _slot_pan_changed (const QPoint &);
+         // void _slot_scale_changed (qreal);
 
       protected:
          virtual void resizeEvent (QResizeEvent* event);
@@ -58,11 +53,11 @@ namespace dmz {
 
          Log _log;
          QLayout *_layout;
+         QtModuleMap *_mapModule;
+         String _mapModuleName;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
-         qmapcontrol::MapControl *_map;
-         qmapcontrol::MapAdapter *_mapAdapter;
-         qmapcontrol::MapLayer *_baseLayer;
+         QWidget *_mapWidget;
          QWidget *_canvasWidget;
          
       private:

@@ -605,7 +605,7 @@ dmz::QtPluginCanvasLayerModel::create_object (
    ObjectType layerType;
    _defs.lookup_object_type ("canvas_layer", layerType);
 
-   if (Type.is_of_type (layerType) && _canvasModule) {
+   if (Type.is_of_type (layerType)) {
 
       ObjectType rootLayerType;
       _defs.lookup_object_type ("root_layer", rootLayerType);
@@ -616,7 +616,7 @@ dmz::QtPluginCanvasLayerModel::create_object (
 
          _log.debug << "Found Root Layer: " << _rootLayerHandle << endl;
       }
-      else {
+      else if (_canvasModule) {
 
          String name (Type.get_name ());
          name << "." << ObjectHandle;

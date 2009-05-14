@@ -167,13 +167,25 @@ qDebug () << sourcePoint;
 worldPos = view->mapToScene (sourcePoint);
 qDebug () << worldPos;
 
+
+sourcePoint = view->mapFromScene (0.0, 0.0);
+qDebug () << sourcePoint;
+sourcePoint = view->mapToGlobal (sourcePoint);
+qDebug () << sourcePoint;
+
 if (!gItem) {
    
    QGraphicsScene *scene = _canvasModule->get_scene ();
 
    gItem = scene->addPixmap (QPixmap ("images:NA_Node.svg"));
    gItem->setFlag (QGraphicsItem::ItemIgnoresTransformations, true);
-   gItem->setPos (worldPos);
+   gItem->setOffset (-10, -10);
+//   gItem->setPos (worldPos);
+   gItem->setPos (QPointF (0.0, 0.0));
+   
+   
+   qDebug () << "view: " << view->geometry ();
+   qDebug () << " map: " << _map->geometry ();
 }
 
 qDebug () << "-----------------------------------------------";

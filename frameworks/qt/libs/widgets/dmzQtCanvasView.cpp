@@ -108,8 +108,8 @@ dmz::QtCanvasView::drawForeground (QPainter *painter, const QRectF &rect) {
    painter->save();
    painter->setPen(Qt::red);
    
-   painter->drawLine (0, -1000, 0, 1000);
-   painter->drawLine (-1000, 0, 1000, 0);
+   painter->drawLine (0, -100000, 0, 100000);
+   painter->drawLine (-100000, 0, 100000, 0);
 
    painter->restore();
 

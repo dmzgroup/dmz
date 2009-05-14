@@ -192,6 +192,7 @@ dmz::QtPluginCanvasZoomPanMap::receive_mouse_event (
       }
       else if (Value.get_scroll_delta_y ()) {
 
+view->centerOn (0.0, 0.0);
          // if (Value.get_scroll_delta_y () >= 1) {
          // 
          //    _ui.zoomInButton->click ();

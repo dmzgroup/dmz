@@ -48,6 +48,10 @@ namespace dmz {
          // void _slot_scale_changed (qreal);
 
       protected:
+         virtual bool eventFilter (QObject *obj, QEvent *event);
+         
+         virtual void mousePressEvent (QMouseEvent *event);
+         
          virtual void resizeEvent (QResizeEvent* event);
          void _init (Config &local);
 

@@ -40,6 +40,9 @@ dmz::QtPluginMapZoomPan::QtPluginMapZoomPan (
    setObjectName (get_plugin_name ().get_buffer ());
 
    _ui.setupUi (this);
+   
+   //setPalette(Qt::transparent);
+   setAttribute(Qt::WA_TransparentForMouseEvents);
 
    _init (local);
 }

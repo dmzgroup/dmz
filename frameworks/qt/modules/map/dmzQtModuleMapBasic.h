@@ -77,7 +77,7 @@ namespace dmz {
          void _mouse_event_coordinate (const QMouseEvent *Event, const QPointF Coordinate);
          
       protected:
-         //virtual bool eventFilter (QObject *obj, QEvent *event);
+         // virtual bool eventFilter (QObject *obj, QEvent *event);
          virtual void resizeEvent (QResizeEvent* event);
          virtual void keyPressEvent (QKeyEvent *event);
          virtual void keyReleaseEvent (QKeyEvent* event);

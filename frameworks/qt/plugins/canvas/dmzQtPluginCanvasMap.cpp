@@ -7,6 +7,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <QtGui/QtGui>
+#include <QtCore/QtCore>
 
 #include <QtCore/QDebug>
 
@@ -41,6 +42,10 @@ dmz::QtPluginCanvasMap::QtPluginCanvasMap (const PluginInfo &Info, Config &local
       _canvasModuleName (),
       _canvasWidget (0),
       _mapWidget (0) {
+
+   // setAttribute (Qt::WA_TransparentForMouseEvents);
+   // setAttribute(Qt::WA_NoSystemBackground);
+   // setFocusPolicy(Qt::NoFocus);
 
    _init (local);
 }
@@ -79,26 +84,40 @@ dmz::QtPluginCanvasMap::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      // if (!_canvasModule) {
-      // 
-      //    _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
-      // 
-      //    if (_canvasModule) {
-      // 
-      //       QtWidget *w = QtWidget::cast (PluginPtr);
-      //       
-      //       if (w) {
-      //       
-      //          _canvasWidget = w->get_qt_widget ();
-      //       
-      //          if (_canvasWidget) {
-      //          
-      //             _canvasWidget->setParent (this);
-      //             _layout->addWidget (_canvasWidget);
-      //          }
-      //       }
-      //    }
-      // }
+      if (!_canvasModule) {
+      
+         _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+      
+         if (_canvasModule) {
+            
+            QGraphicsView *view = _canvasModule->get_view ();
+
+            if (view) {
+
+               view->setAttribute (Qt::WA_TransparentForMouseEvents);
+            }
+            
+      
+            QtWidget *w = QtWidget::cast (PluginPtr);
+            
+            if (w) {
+            
+               _canvasWidget = w->get_qt_widget ();
+            
+               if (_canvasWidget && _mapWidget) {
+               
+                  _canvasWidget->setParent (this);
+                  
+//                  _canvasWidget->setAttribute (Qt::WA_TransparentForMouseEvents);
+//                  _canvasWidget->setAutoFillBackground (False);
+                  
+                  _canvasWidget->installEventFilter (this);
+                  
+//                  _layout->addWidget (_canvasWidget);
+               }
+            }
+         }
+      }
 
       if (!_mapModule) {
 
@@ -125,12 +144,14 @@ dmz::QtPluginCanvasMap::discover_plugin (
 
       if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
 
+         _canvasWidget->setParent (0);
          _canvasWidget = 0;
          _canvasModule = 0;
       }
       
       if (_mapModule && (_mapModule == QtModuleMap::cast (PluginPtr))) {
 
+         _mapWidget->setParent (0);
          _mapWidget = 0;
          _mapModule = 0;
       }
@@ -177,14 +198,115 @@ dmz::QtPluginCanvasMap::get_qt_widget () { return this; }
 // }
 
 
+bool
+dmz::QtPluginCanvasMap::eventFilter (QObject *o, QEvent *e) {
+
+   bool retVal (False);
+   
+   if ((o == _canvasWidget) && _mapWidget) {
+      
+      QApplication::sendEvent (_mapWidget, e);
+      retVal = True;
+
+//      QMouseEvent event(QEvent::MouseButtonPress, pos, 0, 0, 0);
+
+#if 0
+      switch (e->type ()) {
+         
+qDebug () <<  e;
+
+         // case QEvent::Resize: {
+         //     
+         //    const QResizeEvent *re = (QResizeEvent *)e;
+         // }
+         
+         case QEvent::MouseButtonPress:
+         
+            QApplication::sendEvent (_mapWidget, e);
+//            _mapWidget->mousePressEvent ((QMouseEvent *)e);
+            break;
+              
+         case QEvent::MouseButtonRelease:
+            _mapWidget->mouseReleaseEvent ((QMouseEvent *)e);
+            break;
+              
+         case QEvent::MouseButtonDblClick:
+            _mapWidget->mouseDoubleClickEvent ((QMouseEvent *)e);
+            break;
+              
+         case QEvent::MouseMove:
+            _mapWidget->mouseMoveEvent ((QMouseEvent *)e);
+            break;
+              
+         case QEvent::KeyPress:
+            _mapWidget->keyPressEvent ((QKeyEvent *)e);
+            break;
+         
+         case QEvent::KeyRelease:
+            _mapWidget->keyReleaseEvent ((QKeyEvent *)e);
+            break;
+         
+         case QEvent::Wheel:
+            _mapWidget->wheelEvent ((QWheelEvent *)e);
+            break;
+         
+         default:
+            retVal = QWidget::eventFilter (o, e);
+            break;
+      }
+#endif
+
+//      _mapWidget->eventFilter (o, e);
+//      retVal = True;
+   }
+   else {
+      
+      retVal = QWidget::eventFilter (o, e);
+   }
+   
+   return retVal;
+
+   // if (_mapModule) {
+   // 
+   //    qmapcontrol::MapControl *map (_mapModule->get_map_control ());
+   //    
+   //    if (map && (obj == map)) {
+   // 
+   //       if (event->type() == QEvent::Resize) {
+   // 
+   //          QRect viewRect (map->geometry ());
+   //          QRect myRect (geometry ());
+   // 
+   //          myRect.moveTopRight (viewRect.topRight ());
+   //          myRect.moveTop (myRect.top () + 5);
+   //          myRect.moveRight (myRect.right () - 5);
+   //          setGeometry (myRect);
+   //       }
+   //    }
+   // }
+
+   // pass the event on to the parent class
+//   return QWidget::eventFilter (obj, event);
+}
+
+
+void
+dmz::QtPluginCanvasMap::mousePressEvent (QMouseEvent *event) {
+
+_log.warn << "mousePressEvent: " << endl;
+//   _handle_mouse_event (event, 0);
+event->ignore ();
+}
+
+
 void
 dmz::QtPluginCanvasMap::resizeEvent (QResizeEvent *event) {
 
    if (event) {
 
-      if (_mapWidget) { _mapWidget->resize (event->size ()); }
-      
-//      if (_canvasWidget) { _canvasWidget->resize (event->size ()); }
+//      if (_mapWidget) { _mapWidget->resize (event->size ()); }
+
+      if (_canvasWidget) { _canvasWidget->resize (event->size ()); }
 
       event->ignore ();
    }
@@ -200,7 +322,6 @@ dmz::QtPluginCanvasMap::_init (Config &local) {
    _layout = new QVBoxLayout (this);
    _layout->setSpacing (0);
    _layout->setContentsMargins (0, 0, 0, 0);
-//   _layout->addWidget ();
    
    setLayout (_layout);
 }

@@ -35,6 +35,10 @@ dmz::QtModuleCanvasBasic::QtModuleCanvasBasic (const PluginInfo &Info, Config &l
       _zoomDefault (1.0f) {
 
    _init (local);
+   
+   // setAttribute (Qt::WA_TransparentForMouseEvents);
+   // setAttribute(Qt::WA_NoSystemBackground);
+   // setFocusPolicy(Qt::NoFocus);
 }
 
 
@@ -290,7 +294,10 @@ dmz::QtModuleCanvasBasic::keyReleaseEvent (QKeyEvent *event) {
 void
 dmz::QtModuleCanvasBasic::mousePressEvent (QMouseEvent *event) {
 
-   _handle_mouse_event (event, 0);
+_log.warn << "mousePressEvent: " << endl;
+
+//   _handle_mouse_event (event, 0);
+event->ignore ();
 }
 
 

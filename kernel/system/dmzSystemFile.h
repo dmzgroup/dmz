@@ -25,8 +25,10 @@ namespace dmz {
          Boolean get_next (String &path) const;
 
       protected:
+         //! \cond
          struct State;
-         State &_state; //!< Internal state.
+         State &_state;
+         //! \endcond
 
       private:
    };
@@ -39,8 +41,10 @@ namespace dmz {
          Boolean is_valid () const;
 
       protected:
-         const String _Dir; //!< String containing the revious working directory.
-         Boolean _valid; //!< Set to dmz::True if directory push was successful.
+         //! \cond
+         const String _Dir;
+         Boolean _valid;
+         //! \endcond
 
       private:
          PushDirectory ();

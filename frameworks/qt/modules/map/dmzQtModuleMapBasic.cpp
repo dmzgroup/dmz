@@ -24,6 +24,7 @@ dmz::QtModuleMapBasic::QtModuleMapBasic (const PluginInfo &Info, Config &local) 
       _inputModuleName (),
       _keyEvent (),
       _mouseEvent (),
+      _ignoreEvents (False),
       _itemTable (),
       _map (0),
       _mapAdapter (0),
@@ -351,58 +352,88 @@ qDebug () <<  e;
 void
 dmz::QtModuleMapBasic::resizeEvent (QResizeEvent *event) {
 
-_log.warn << "resizeEvent: " << endl;
-
-   if (_map && event) {
+   if (event) {
       
-      _map->resize (event->size () - QSize (1, 1));
+      if (_ignoreEvents) {
+
+         event->ignore ();
+      }
+      else {
+
+         if (_map && event) {
+
+            _map->resize (event->size () - QSize (1, 1));
+         }
+
+         _handle_mouse_event (0, 0);
+      }
    }
-   
-   _handle_mouse_event (0, 0);
 }
 
 
 void
 dmz::QtModuleMapBasic::keyPressEvent (QKeyEvent *event) {
 
-   if (event) { _handle_key_event (*event, True); }
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_key_event (*event, True); }
+   }
 }
 
 
 void
 dmz::QtModuleMapBasic::keyReleaseEvent (QKeyEvent *event) {
 
-   if (event) { _handle_key_event (*event, False); }
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_key_event (*event, False); }
+   }
 }
 
 
 void
 dmz::QtModuleMapBasic::mousePressEvent (QMouseEvent *event) {
 
-_log.warn << "mousePressEvent: " << endl;
-
-   _handle_mouse_event (event, 0);
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_mouse_event (event, 0); }
+   }
 }
 
 
 void
 dmz::QtModuleMapBasic::mouseReleaseEvent (QMouseEvent *event) {
 
-   _handle_mouse_event (event, 0);
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_mouse_event (event, 0); }
+   }
 }
 
 
 void
 dmz::QtModuleMapBasic::mouseMoveEvent (QMouseEvent *event) {
 
-   _handle_mouse_event (event, 0);
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_mouse_event (event, 0); }
+   }
 }
 
 
 void
 dmz::QtModuleMapBasic::wheelEvent (QWheelEvent *event) {
 
-   _handle_mouse_event (0, event);
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_mouse_event (0, event); }
+   }
 }
 
 
@@ -470,6 +501,8 @@ void
 dmz::QtModuleMapBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we) {
 
    if (_inputModule && _map) {
+
+//_log.warn << "_handle_mouse_event" << endl;
 
       InputEventMouse event (_mouseEvent);
 

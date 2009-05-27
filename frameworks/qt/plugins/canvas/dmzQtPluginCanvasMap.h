@@ -50,7 +50,7 @@ namespace dmz {
       protected:
          virtual bool eventFilter (QObject *obj, QEvent *event);
          
-         virtual void mousePressEvent (QMouseEvent *event);
+//         virtual void mousePressEvent (QMouseEvent *event);
          
          virtual void resizeEvent (QResizeEvent* event);
          void _init (Config &local);
@@ -61,6 +61,7 @@ namespace dmz {
          String _mapModuleName;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
+         String _mapZoomName;
          QWidget *_mapWidget;
          QWidget *_canvasWidget;
          

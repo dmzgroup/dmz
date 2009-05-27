@@ -41,8 +41,10 @@ dmz::QtPluginMapZoomPan::QtPluginMapZoomPan (
 
    _ui.setupUi (this);
    
-   //setPalette(Qt::transparent);
-   setAttribute(Qt::WA_TransparentForMouseEvents);
+//   setAttribute (Qt::WA_TransparentForMouseEvents);
+//   setAttribute(Qt::WA_NoSystemBackground);
+// setAttribute(Qt::WA_PaintOnScreen);
+//   setFocusPolicy(Qt::NoFocus);
 
    _init (local);
 }
@@ -93,13 +95,13 @@ dmz::QtPluginMapZoomPan::discover_plugin (
                //    view, SIGNAL (scale_changed (qreal)),
                //    this, SLOT (slot_scale_changed (qreal)));
                
+               setParent (map->parentWidget ());
                map->installEventFilter (this);
-               setParent (map);
             }
 
-           _mapModule->set_zoom_min_value (_zoomMin);
-           _mapModule->set_zoom_max_value (_zoomMax);
-           _mapModule->set_zoom (_zoomDefault);
+            _mapModule->set_zoom_min_value (_zoomMin);
+            _mapModule->set_zoom_max_value (_zoomMax);
+            _mapModule->set_zoom (_zoomDefault);
          }
       }
 

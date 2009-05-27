@@ -28,6 +28,7 @@ dmz::QtModuleCanvasBasic::QtModuleCanvasBasic (const PluginInfo &Info, Config &l
       _canvas (0),
       _keyEvent (),
       _mouseEvent (),
+      _ignoreEvents (False),
       _itemTable (),
       _zoomMin (0.01f),
       _zoomMax (10.0f),
@@ -273,52 +274,77 @@ dmz::QtModuleCanvasBasic::get_qt_widget () { return this; }
 void
 dmz::QtModuleCanvasBasic::resizeEvent (QResizeEvent *event) {
    
-   _handle_mouse_event (0, 0);
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_mouse_event (0, 0); }
+   }
 }
 
 
 void
 dmz::QtModuleCanvasBasic::keyPressEvent (QKeyEvent *event) {
 
-   if (event) { _handle_key_event (*event, True); }
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_key_event (*event, True); }
+   }
 }
 
 
 void
 dmz::QtModuleCanvasBasic::keyReleaseEvent (QKeyEvent *event) {
 
-   if (event) { _handle_key_event (*event, False); }
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_key_event (*event, False); }
+   }
 }
 
 
 void
 dmz::QtModuleCanvasBasic::mousePressEvent (QMouseEvent *event) {
 
-_log.warn << "mousePressEvent: " << endl;
-
-//   _handle_mouse_event (event, 0);
-event->ignore ();
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_mouse_event (event, 0); }
+   }
 }
 
 
 void
 dmz::QtModuleCanvasBasic::mouseReleaseEvent (QMouseEvent *event) {
 
-   _handle_mouse_event (event, 0);
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_mouse_event (event, 0); }
+   }
 }
 
 
 void
 dmz::QtModuleCanvasBasic::mouseMoveEvent (QMouseEvent *event) {
 
-   _handle_mouse_event (event, 0);
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_mouse_event (event, 0); }
+   }
 }
 
 
 void
 dmz::QtModuleCanvasBasic::wheelEvent (QWheelEvent *event) {
 
-   _handle_mouse_event (0, event);
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else { _handle_mouse_event (0, event); }
+   }
 }
 
 
@@ -386,6 +412,8 @@ void
 dmz::QtModuleCanvasBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we) {
 
    if (_inputModule && _canvas) {
+
+_log.warn << "_handle_mouse_event" << endl;
 
       InputEventMouse event (_mouseEvent);
 
@@ -466,6 +494,13 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
       
       _scene.enableGrid (False);
       _canvas->setStyleSheet ("background: transparent");
+      _canvas->setAttribute(Qt::WA_NoSystemBackground);
+      _canvas->setAttribute (Qt::WA_TransparentForMouseEvents);
+      _canvas->setMouseTracking (false);
+   }
+   else {
+      
+      _canvas->setMouseTracking (true);
    }
 
    _canvas->setTransformationAnchor (QGraphicsView::AnchorViewCenter);
@@ -482,7 +517,7 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
       _canvas->setVerticalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
    }
 
-   _canvas->setMouseTracking (true);
+   //_canvas->setMouseTracking (true);
    //_canvas->setDragMode (QGraphicsView::ScrollHandDrag);
 
    setObjectName (get_plugin_name ().get_buffer ());
@@ -557,6 +592,8 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
       set_zoom_max_value (config_to_float32 ("canvas.zoom.max", local, _zoomMax));
       set_zoom_step_value (config_to_float32 ("canvas.zoom.step", local, _zoomStep));
       set_zoom (config_to_float32 ("canvas.zoom.default", local, _zoomDefault));
+      
+      _ignoreEvents = config_to_boolean ("canvas.ignoreevents", local, _ignoreEvents);
    }
 }
 

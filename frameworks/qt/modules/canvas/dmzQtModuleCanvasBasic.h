@@ -96,6 +96,7 @@ namespace dmz {
          QtCanvasView *_canvas;
          InputEventKey _keyEvent;
          InputEventMouse _mouseEvent;
+         Boolean _ignoreEvents;
          HashTableHandleTemplate<QGraphicsItem> _itemTable;
          Float32 _zoomMin;
          Float32 _zoomMax;

@@ -639,7 +639,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
 
       group = new QtCanvasObjectGroup (parent);
       
-group->setFlag (QGraphicsItem::ItemIgnoresTransformations, true);
+//group->setFlag (QGraphicsItem::ItemIgnoresTransformations, true);
 
       QGraphicsItem *item (0);
 
@@ -656,18 +656,18 @@ group->setFlag (QGraphicsItem::ItemIgnoresTransformations, true);
 
             item = _create_image_item (os, group, cd);
             item->setData (QtCanvasObjectHandleIndex, (quint64)os.ObjHandle);
-item->setFlag (QGraphicsItem::ItemIgnoresTransformations, false);
+//item->setFlag (QGraphicsItem::ItemIgnoresTransformations, false);
          }
          else if (DataName == "text") {
 
             item =  _create_text_item (os, group, cd);
             item->setData (QtCanvasObjectHandleIndex, (quint64)os.ObjHandle);
-item->setFlag (QGraphicsItem::ItemIgnoresTransformations, false);
+//item->setFlag (QGraphicsItem::ItemIgnoresTransformations, false);
          }
          else if (DataName == "group") {
 
             item = _create_item (os, group, cd);
-item->setFlag (QGraphicsItem::ItemIgnoresTransformations, true);
+//item->setFlag (QGraphicsItem::ItemIgnoresTransformations, true);
          }
 
          if (item) {

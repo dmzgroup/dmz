@@ -102,6 +102,7 @@ namespace dmz {
          String _inputModuleName;
          InputEventKey _keyEvent;
          InputEventMouse _mouseEvent;
+         Boolean _ignoreEvents;
          HashTableHandleTemplate<qmapcontrol::Geometry> _itemTable;
          qmapcontrol::MapControl *_map;
          qmapcontrol::MapAdapter *_mapAdapter;

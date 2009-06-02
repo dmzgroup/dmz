@@ -87,6 +87,7 @@ namespace dmz {
             Float64 turnRate;
             Float64 speedAxis;
             Float64 strafeAxis;
+            Float64 ymoveAxis;
             Float64 turnAxis;
             Float64 pitchAxis;
 
@@ -98,6 +99,7 @@ namespace dmz {
                   turnRate (1.0),
                   speedAxis (0.0),
                   strafeAxis (0.0),
+                  ymoveAxis (0.0),
                   turnAxis (0.0),
                   pitchAxis (0.0),
                   yawAngle (0.0),

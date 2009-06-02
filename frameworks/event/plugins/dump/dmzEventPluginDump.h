@@ -43,6 +43,11 @@ namespace dmz {
 
          virtual void end_dump_event (const Handle EventHandle);
 
+         virtual void store_event_handle (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            const Handle Value);
+
          virtual void store_event_object_handle (
             const Handle EventHandle,
             const Handle AttributeHandle,
@@ -97,6 +102,11 @@ namespace dmz {
             const Handle EventHandle,
             const Handle AttributeHandle,
             const Float64 Value);
+
+         virtual void store_event_counter (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            const Int64 Value);
 
          virtual void store_event_text (
             const Handle EventHandle,

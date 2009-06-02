@@ -6,6 +6,7 @@
 
 namespace dmz {
 
+   class IsectResultContainer;
    class RenderModuleIsect;
    class Vector;
 

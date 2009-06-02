@@ -81,6 +81,23 @@ const RenderOverlayTypeEnum Type)
 \param[in] Name String containing the name of the template to clone.
 \return Returns the Handle of the cloned overlay. Returns zero if the clone fails.
 
+\fn dmz::Boolean dmz::RenderModuleOverlay::destroy_node (const Handle Overlay)
+\brief Destroys the node and all children.
+\param[in] Overlay Handle of the node to destroy.
+\return Returns dmz::True if the node was destroyed.
+
+\fn dmz::Boolean dmz::RenderModuleOverlay::store_text (const Handle Overlay, const String &Value)
+\brief Sets the text value of the text node.
+\param[in] Overlay Handle of text node
+\param[in] Value String containing the new text value.
+\return Returns dmz::True if the text value was successfully set.
+
+\fn dmz::Boolean dmz::RenderModuleOverlay::lookup_text (const Handle Overlay, String &value)
+\brief Gets the text value of the text node.
+\param[in] Overlay Handle of text node
+\param[out] value String used to return the current text value.
+\return Returns dmz::True if the text value was successfully found.
+
 \fn dmz::Boolean dmz::RenderModuleOverlay::add_group_child (
 const Handle Parent,
 const Handle Child)
@@ -99,7 +116,7 @@ const Handle Child)
 
 \fn dmz::Int32 dmz::RenderModuleOverlay::lookup_group_child_count (const Handle Overlay)
 \brief Returns number of children in a group node.
-\param[in] Overlay handle of group node
+\param[in] Overlay Handle of group node
 \return Returns the number of children contained in the group node.
 
 \fn dmz::Boolean dmz::RenderModuleOverlay::store_switch_state (
@@ -112,7 +129,7 @@ const Boolean SwitchState)
 \param[in] SwitchState Boolean indicating the switch state.
 \return Returns True if the switch state was successfully set.
 
-\fn dmz::Boolean dmz::RenderModuleOverlay::store_all_switch_state (
+\fn dmz::Boolean dmz::RenderModuleOverlay::store_switch_state_all (
 const Handle Overlay,
 const Boolean SwitchState)
 \brief Sets all children of the switch to the same specified state.
@@ -120,7 +137,7 @@ const Boolean SwitchState)
 \param[in] SwitchState Boolean indicating the switch state.
 \return Returns True if the switch state was successfully set.
 
-\fn dmz::Boolean dmz::RenderModuleOverlay::enable_single_switch_state (
+\fn dmz::Boolean dmz::RenderModuleOverlay::enable_switch_state_single (
 const Handle Overlay,
 const Int32 Which)
 \brief Enables a single child and disables all others.

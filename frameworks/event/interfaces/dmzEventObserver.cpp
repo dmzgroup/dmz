@@ -32,8 +32,12 @@ event observer interface.
 \fn dmz::EventObserver::~EventObserver ()
 \brief Destructor.
 
+\fn dmz::String dmz::EventObserver::get_event_observer_name ()
+\brief Gets event observer's name.
+\return Returns unique runtime handle.
+
 \fn dmz::Handle dmz::EventObserver::get_event_observer_handle ()
-\brief Gets event observers unique runtime handle.
+\brief Gets event observer's unique runtime handle.
 \return Returns unique runtime handle.
 
 \fn void dmz::EventObserver::store_event_module (const String &Name, EventModule &module)

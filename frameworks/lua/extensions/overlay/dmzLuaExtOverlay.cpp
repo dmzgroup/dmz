@@ -133,7 +133,7 @@ overlay_lookup_name (lua_State *L) {
 
 
 static int
-clone_template (lua_State *L) {
+overlay_clone_template (lua_State *L) {
 
    LUA_START_VALIDATE (L);
 
@@ -155,7 +155,65 @@ clone_template (lua_State *L) {
 
 
 static int
-add_child (lua_State *L) {
+overlay_destroy_node (lua_State *L) {
+
+   LUA_START_VALIDATE (L);
+
+   int result (0);
+
+   RenderModuleOverlay *overlay (get_overlay (L));
+   const Handle Node (get_node (L, overlay, 1));
+
+   if (Node && overlay) {
+
+      const Boolean Value = overlay->destroy_node (Node);
+      lua_pushboolean (L, Value ? 1 : 0);
+      result = 1;
+   }
+
+   LUA_END_VALIDATE (L, result);
+
+   return result;
+}
+
+
+static int
+overlay_text (lua_State *L) {
+
+   LUA_START_VALIDATE (L);
+
+   int result (0);
+
+   RenderModuleOverlay *overlay (get_overlay (L));
+   const Handle Node (get_node (L, overlay, 1));
+
+   if (lua_isnoneornil (L, 2)) {
+
+      String value;
+
+      if (overlay->lookup_text (Node, value)) {
+
+         if (value) { lua_pushstring (L, value.get_buffer ()); result = 1; }
+      }
+   }
+   else {
+
+      const String Value = luaL_checkstring (L, 2);
+
+      if (overlay->store_text (Node, Value)) {
+
+         if (Value) { lua_pushstring (L, Value.get_buffer ()); result = 1; }
+      }
+   }
+
+   LUA_END_VALIDATE (L, result);
+
+   return result;
+}
+
+
+static int
+overlay_add_child (lua_State *L) {
 
    LUA_START_VALIDATE (L);
 
@@ -178,7 +236,7 @@ add_child (lua_State *L) {
 
 
 static int
-remove_child (lua_State *L) {
+overlay_remove_child (lua_State *L) {
 
    LUA_START_VALIDATE (L);
 
@@ -201,7 +259,7 @@ remove_child (lua_State *L) {
 
 
 static int
-switch_state (lua_State *L) {
+overlay_switch_state (lua_State *L) {
 
    LUA_START_VALIDATE (L);
 
@@ -241,7 +299,7 @@ switch_state (lua_State *L) {
 
 
 static int
-all_switch_state (lua_State *L) {
+overlay_all_switch_state (lua_State *L) {
 
    LUA_START_VALIDATE (L);
 
@@ -255,7 +313,7 @@ all_switch_state (lua_State *L) {
 
       lua_pushboolean (
          L,
-         overlay->store_all_switch_state (Node, Value) ? 1 : 0);
+         overlay->store_switch_state_all (Node, Value) ? 1 : 0);
 
       result = 1;
    }
@@ -267,7 +325,7 @@ all_switch_state (lua_State *L) {
 
 
 static int
-enable_single_switch_state (lua_State *L) {
+overlay_enable_switch_state_single (lua_State *L) {
 
    LUA_START_VALIDATE (L);
 
@@ -281,7 +339,7 @@ enable_single_switch_state (lua_State *L) {
 
       lua_pushboolean (
          L,
-         overlay->enable_single_switch_state (Node, (const UInt32)Which) ? 1 : 0);
+         overlay->enable_switch_state_single (Node, (const UInt32)Which) ? 1 : 0);
 
       result = 1;
    }
@@ -293,7 +351,7 @@ enable_single_switch_state (lua_State *L) {
 
 
 static int
-position (lua_State *L) {
+overlay_position (lua_State *L) {
 
    LUA_START_VALIDATE (L);
 
@@ -337,7 +395,7 @@ position (lua_State *L) {
 
 
 static int
-rotation (lua_State *L) {
+overlay_rotation (lua_State *L) {
 
    LUA_START_VALIDATE (L);
 
@@ -379,7 +437,7 @@ rotation (lua_State *L) {
 
 
 static int
-scale (lua_State *L) {
+overlay_scale (lua_State *L) {
 
    LUA_START_VALIDATE (L);
 
@@ -426,15 +484,17 @@ static const luaL_Reg arrayFunc[] = {
    {"lookup_handle", overlay_lookup_handle},
    {"lookup_clone_sub_handle", overlay_lookup_clone_sub_handle},
    {"lookup_name", overlay_lookup_name},
-   {"clone_template", clone_template},
-   {"add_child", add_child},
-   {"remove_child", remove_child},
-   {"switch_state", switch_state},
-   {"all_switch_state", all_switch_state},
-   {"enable_single_switch_state", enable_single_switch_state},
-   {"position", position},
-   {"rotation", rotation},
-   {"scale", scale},
+   {"clone_template", overlay_clone_template},
+   {"destroy_node", overlay_destroy_node},
+   {"text", overlay_text},
+   {"add_child", overlay_add_child},
+   {"remove_child", overlay_remove_child},
+   {"switch_state", overlay_switch_state},
+   {"switch_state_all", overlay_all_switch_state},
+   {"enable_switch_state_single", overlay_enable_switch_state_single},
+   {"position", overlay_position},
+   {"rotation", overlay_rotation},
+   {"scale", overlay_scale},
    {NULL, NULL},
 };
 
@@ -519,7 +579,8 @@ dmz::LuaExtOverlay::open_lua_extension (lua_State *L) {
    LUA_START_VALIDATE (L);
 
    lua_pushlightuserdata (L, (void *)&OverlayKey);
-   _overlayPtr = (RenderModuleOverlay **)lua_newuserdata (L, sizeof (RenderModuleOverlay *));
+   _overlayPtr =
+      (RenderModuleOverlay **)lua_newuserdata (L, sizeof (RenderModuleOverlay *));
 
    if (_overlayPtr) {
 

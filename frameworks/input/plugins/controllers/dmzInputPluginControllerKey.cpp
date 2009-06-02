@@ -52,7 +52,7 @@ dmz::InputPluginControllerKey::update_channel_state (
 
    if (_activeChannelCount == 0) {
 
-      InputModule *module (get_input_module_channels ());
+      InputModule *module (get_input_module ());
 
       if (module) {
 
@@ -103,7 +103,7 @@ dmz::InputPluginControllerKey::receive_key_event (
       const UInt32 Channel,
       const InputEventKey &Value) {
 
-   InputModule *module (get_input_module_channels ());
+   InputModule *module (get_input_module ());
 
    if (module) {
 
@@ -310,6 +310,8 @@ dmz::InputPluginControllerKey::_default_setup (Definitions &defs) {
          _add_axis (6, 'a', 'd', *cs);
          _add_axis (6, 'A', 'D', *cs);
          _add_axis (7, KeyUpArrow, KeyDownArrow, *cs);
+         _add_axis (8, 'z', 'q', *cs);
+         _add_axis (8, 'Z', 'Q', *cs);
 
          _add_button (1, ' ', *cs);
          _add_button (2, ',', *cs);

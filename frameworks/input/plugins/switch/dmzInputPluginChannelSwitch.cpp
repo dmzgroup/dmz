@@ -70,7 +70,7 @@ dmz::InputPluginChannelSwitch::receive_key_event (
 
       if (_current) {
 
-         InputModule *input (get_input_module_channels ());
+         InputModule *input (get_input_module ());
 
          if (input) {
 

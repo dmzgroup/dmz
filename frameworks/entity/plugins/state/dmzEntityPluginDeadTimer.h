@@ -53,8 +53,8 @@ namespace dmz {
          Log _log;
 
          Handle _hil;
-         Handle _hilHandle;
-         Handle _defaultHandle;
+         Handle _hilAttrHandle;
+         Handle _defaultAttrHandle;
 
          Mask _deadState;
          //! \endcond

@@ -68,6 +68,16 @@ namespace dmz {
 
          virtual EventLocalityEnum lookup_locality (const Handle EventHandle);
 
+         virtual Boolean store_handle (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            const Handle Value);
+
+         virtual Boolean lookup_handle (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            Handle &value);
+
          virtual Boolean store_object_handle (
             const Handle EventHandle,
             const Handle AttributeHandle,
@@ -178,6 +188,16 @@ namespace dmz {
             const Handle AttributeHandle,
             Float64 &value);
 
+         virtual Boolean store_counter (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            const Int64 Value);
+
+         virtual Boolean lookup_counter (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            Int64 &value);
+
          virtual Boolean store_text (
             const Handle EventHandle,
             const Handle AttributeHandle,
@@ -209,6 +229,7 @@ namespace dmz {
             EventType type;
             EventLocalityEnum locality;
 
+            HashTableHandleTemplate<Handle> handleTable;
             HashTableHandleTemplate<Handle> objectTable;
             HashTableHandleTemplate<ObjectType> typeTable;
             HashTableHandleTemplate<Mask> stateTable;
@@ -220,6 +241,7 @@ namespace dmz {
             HashTableHandleTemplate<Vector> scaleTable;
             HashTableHandleTemplate<Vector> vectorTable;
             HashTableHandleTemplate<Float64> scalarTable;
+            HashTableHandleTemplate<Int64> counterTable;
             HashTableHandleTemplate<String> textTable;
             HashTableHandleTemplate<Data> dataTable;
 
@@ -247,6 +269,7 @@ namespace dmz {
                closed = False;
                closeTime = 0.0;
                locality = EventLocalityUnknown;
+               handleTable.empty ();
                objectTable.empty ();
                typeTable.empty ();
                stateTable.empty ();
@@ -258,6 +281,7 @@ namespace dmz {
                scaleTable.empty ();
                vectorTable.empty ();
                scalarTable.empty ();
+               counterTable.empty ();
                textTable.empty ();
                dataTable.empty ();
             }

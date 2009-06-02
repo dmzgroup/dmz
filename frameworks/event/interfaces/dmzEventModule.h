@@ -57,6 +57,16 @@ namespace dmz {
 
          virtual EventLocalityEnum lookup_locality (const Handle EventHandle) = 0;
 
+         virtual Boolean store_handle (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            const Handle Value) = 0;
+
+         virtual Boolean lookup_handle (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            Handle &value) = 0;
+
          virtual Boolean store_object_handle (
             const Handle EventHandle,
             const Handle AttributeHandle,
@@ -166,6 +176,16 @@ namespace dmz {
             const Handle EventHandle,
             const Handle AttributeHandle,
             Float64 &value) = 0;
+
+         virtual Boolean store_counter (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            const Int64 Value) = 0;
+
+         virtual Boolean lookup_counter (
+            const Handle EventHandle,
+            const Handle AttributeHandle,
+            Int64 &value) = 0;
 
          virtual Boolean store_text (
             const Handle EventHandle,

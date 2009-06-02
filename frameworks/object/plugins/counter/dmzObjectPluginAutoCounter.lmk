@@ -1,0 +1,8 @@
+lmk.set_name "dmzObjectPluginAutoCounter"
+lmk.set_type "plugin"
+lmk.add_files {"dmzObjectPluginAutoCounter.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzObjectFramework",}

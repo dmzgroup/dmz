@@ -380,7 +380,20 @@ main (int argc, char *argv[]) {
 
    String launchFile;
 
+#if defined(__APPLE__) || defined(MACOSX)
+   if ((argc > 1) && argv[1]) {
+
+      launchFile = argv[1];
+
+      if (launchFile.contains_sub ("-psn_")) {
+
+         if ((argc > 2) && argv[2]) { launchFile = argv[2]; }
+         else { launchFile.flush (); }
+      }
+   }
+#else
    if ((argc > 1) && argv[1]) { launchFile = argv[1]; }
+#endif
 
 #if defined(__APPLE__) || defined(MACOSX) || defined (_WIN32)
    QtSingletonApplication qtApp (
@@ -395,9 +408,13 @@ main (int argc, char *argv[]) {
       return 0; // Application is already running so just bail out now -rb
    }
 
+   QApplication::sendPostedEvents (0, -1);
+   QApplication::processEvents ();
+
    if (!qtApp.get_requested_file ().isEmpty ()) {
 
-     launchFile = qPrintable (qtApp.get_requested_file ());
+      launchFile = qPrintable (qtApp.get_requested_file ());
+app.log.error << launchFile << endl;
    }
 #else
    QApplication qtApp (argc, argv);

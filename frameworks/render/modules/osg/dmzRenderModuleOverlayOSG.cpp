@@ -7,15 +7,19 @@
 #include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzTypesConsts.h>
 
 #include <osg/Texture2D>
+#include <osg/PolygonMode>
+#include <osg/LineWidth>
 #include <osgDB/ReadFile>
 
 namespace {
 
-typedef dmz::RenderModuleOverlayOSG::LayoutAxis Layout;
+typedef dmz::RenderModuleOverlayOSG::LayoutAxis LayoutAxis;
+typedef dmz::RenderModuleOverlayOSG::ScaleAxis ScaleAxis;
 
-class LayoutAbsolute : public Layout {
+class LayoutAbsolute : public LayoutAxis {
 
    public:
       LayoutAbsolute (const dmz::Float64 Offset, const dmz::Boolean Flipped);
@@ -40,28 +44,149 @@ LayoutAbsolute::update (const dmz::Int32 Value) {
 }
 
 
-class LayoutRelative : public Layout {
+class LayoutRelative : public LayoutAxis {
 
    public:
-      LayoutRelative (const dmz::Float64 Relative);
+      LayoutRelative (const dmz::Float64 Relative, const dmz::Float64 Offset);
       virtual ~LayoutRelative () {;}
 
       virtual dmz::Float64 update (const dmz::Int32 Value);
 
+      void set_max (const dmz::Float64 Value);
+      void set_min (const dmz::Float64 Value);
+
    protected:
       const dmz::Float64 _Relative;
+      const dmz::Float64 _Offset;
+      dmz::Boolean _hasMax;
+      dmz::Float64 _max;
+      dmz::Boolean _hasMin;
+      dmz::Float64 _min;
 };
 
 
-LayoutRelative::LayoutRelative (const dmz::Float64 Relative):
-      _Relative (Relative) {;}
+LayoutRelative::LayoutRelative (
+      const dmz::Float64 Relative,
+      const dmz::Float64 Offset):
+      _Relative (Relative),
+      _Offset (Offset),
+      _hasMax (dmz::False),
+      _max (0.0),
+      _hasMin (dmz::False),
+      _min (0.0) {;}
 
 
 dmz::Float64
 LayoutRelative::update (const dmz::Int32 Value) {
 
-   return dmz::Float64(Value) * _Relative;
+   dmz::Float64 result = (dmz::Float64(Value) * _Relative) - _Offset;
+
+   if (_hasMax && (result > _max)) { result = _max; }
+
+   if (_hasMin && (result < _min)) { result = _min; }
+
+   return result;
 }
+
+
+void
+LayoutRelative::set_max (const dmz::Float64 Value) {
+
+   _hasMax = dmz::True;
+   _max = Value;
+}
+
+
+void
+LayoutRelative::set_min (const dmz::Float64 Value) {
+
+   _hasMin = dmz::True;
+   _min = Value;
+}
+
+
+class ScaleAxisSimple : public ScaleAxis {
+
+   public:
+      ScaleAxisSimple (
+         const dmz::Float64 Size,
+         const dmz::Float64 Ratio,
+         const dmz::Float64 Offset);
+
+      virtual dmz::Float64 update (const dmz::Int32 Value);
+
+      void set_max (const dmz::Float64 Value);
+      void set_min (const dmz::Float64 Value);
+
+   protected:
+      const dmz::Float64 _Size;
+      const dmz::Float64 _Ratio;
+      const dmz::Float64 _Offset;
+      dmz::Boolean _hasMax;
+      dmz::Float64 _max;
+      dmz::Boolean _hasMin;
+      dmz::Float64 _min;
+};
+
+
+ScaleAxisSimple::ScaleAxisSimple (
+      const dmz::Float64 Size,
+      const dmz::Float64 Ratio,
+      const dmz::Float64 Offset) :
+      _Size (dmz::is_zero64 (Size) ? 1.0 : Size),
+      _Ratio (Ratio),
+      _Offset (Offset),
+      _hasMax (dmz::False),
+      _max (0.0),
+      _hasMin (dmz::False),
+      _min (0.0) {;}
+
+
+dmz::Float64
+ScaleAxisSimple::update (const dmz::Int32 Value) {
+
+   dmz::Float64 size = (dmz::Float64 (Value) * _Ratio) - _Offset;
+
+   if (_hasMax && (_max < size)) { size = _max; }
+   if (_hasMin && (_min > size)) { size = _min; }
+
+   return size / _Size;
+}
+
+
+void
+ScaleAxisSimple::set_max (const dmz::Float64 Value) {
+
+   _hasMax = dmz::True;
+   _max = Value;
+}
+
+
+void
+ScaleAxisSimple::set_min (const dmz::Float64 Value) {
+
+   _hasMin = dmz::True;
+   _min = Value;
+}
+
+
+class ScaleAxisFixed : public ScaleAxis {
+
+   public:
+      ScaleAxisFixed (const dmz::Float64 Scale);
+
+      virtual dmz::Float64 update (const dmz::Int32 Value);
+
+   protected:
+      const dmz::Float64 _Scale;
+};
+
+
+ScaleAxisFixed::ScaleAxisFixed (const dmz::Float64 Scale) : _Scale (Scale) {;}
+
+
+dmz::Float64
+ScaleAxisFixed::update (const dmz::Int32 Value) { return _Scale; }
 
 };
 
@@ -75,7 +200,8 @@ dmz::RenderModuleOverlayOSG::RenderModuleOverlayOSG (
       _log (Info),
       _rc (Info, &_log),
       _core (0),
-      _cloneStack (0) {
+      _cloneStack (0),
+      _groupStack (0) {
 
    _rootNode = new osg::Group;
 
@@ -131,6 +257,7 @@ dmz::RenderModuleOverlayOSG::update_plugin_state (
          _transformTable.clear ();
          _switchTable.clear ();
          _groupTable.clear ();
+         _textTable.clear ();
          _layoutTable.empty ();
          _nodeNameTable.clear ();
          _cloneTable.empty ();
@@ -236,6 +363,10 @@ dmz::RenderModuleOverlayOSG::is_of_node_type (
 
       result = True;
    }
+   else if ((Type == RenderOverlayText) && _textTable.lookup (Overlay)) {
+
+      result = True;
+   }
 
    return result;
 }
@@ -279,6 +410,62 @@ dmz::RenderModuleOverlayOSG::clone_template (const String &Name) {
 }
 
 
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::destroy_node (const Handle Overlay) {
+
+   Boolean result (False);
+
+   NodeStruct *ns = _nodeTable.lookup (Overlay);
+
+   if (ns) {
+
+      if (ns->Type == RenderOverlayTransform) { result = _remove_transform (Overlay); }
+      else if (ns->Type == RenderOverlaySwitch) { result = _remove_switch (Overlay); }
+      else if (ns->Type == RenderOverlayGroup) { result = _remove_group (Overlay); }
+      else if (ns->Type == RenderOverlayText) { result = _remove_text (Overlay); }
+      else { result = _remove_node (Overlay); }
+   }
+
+   return result;
+}
+
+// Overlay Text API
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::store_text (const Handle Overlay, const String &Value) {
+
+   Boolean result (False);
+
+   TextStruct *ts (_textTable.lookup (Overlay));
+
+   if (ts && ts->text.valid ()) {
+
+      ts->text->setText (Value.get_buffer ());
+      ts->value = Value;
+      result = True;
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::lookup_text (const Handle Overlay, String &value) {
+
+   Boolean result (False);
+
+   TextStruct *ts (_textTable.lookup (Overlay));
+
+   if (ts) {
+
+      value = ts->value;
+      result = True;
+   }
+
+
+   return result;
+}
+
+
 // Overlay Group API
 dmz::Boolean
 dmz::RenderModuleOverlayOSG::add_group_child (const Handle Parent, const Handle Child) {
@@ -315,6 +502,7 @@ dmz::RenderModuleOverlayOSG::remove_group_child (
 
       result = True;
    }
+
    return result;
 }
 
@@ -363,7 +551,7 @@ dmz::RenderModuleOverlayOSG::store_switch_state (
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::store_all_switch_state (
+dmz::RenderModuleOverlayOSG::store_switch_state_all (
       const Handle Overlay,
       const Boolean SwitchState) {
 
@@ -384,7 +572,7 @@ dmz::RenderModuleOverlayOSG::store_all_switch_state (
 
 
 dmz::Boolean
-dmz::RenderModuleOverlayOSG::enable_single_switch_state (
+dmz::RenderModuleOverlayOSG::enable_switch_state_single (
       const Handle Overlay,
       const Int32 Which) {
 
@@ -578,6 +766,7 @@ dmz::RenderModuleOverlayOSG::update_portal_size (
    }
 
    _update_layout (TheX, TheY);
+   _update_auto_scale (TheX, TheY);
 }
 
 
@@ -593,6 +782,38 @@ dmz::RenderModuleOverlayOSG::_update_layout (const Int32 TheX, const Int32 TheY)
       ls->ts.pos.set_xyz (ls->xaxis.update (TheX), ls->yaxis.update (TheY), 0.0);
 
       _apply_transform (ls->ts);
+   }
+}
+
+
+void
+dmz::RenderModuleOverlayOSG::_update_auto_scale (const Int32 TheX, const Int32 TheY) {
+
+   HashTableHandleIterator it;
+   ScaleStruct *ss (0);
+
+   while (_scaleTable.get_next (it, ss)) {
+
+      Float64 ix = 1.0;
+      Float64 jy = 1.0;
+
+      if (ss->xaxis) {
+
+         ix = ss->xaxis->update (TheX);
+
+         if (!ss->yaxis) { jy = ix; }
+      }
+
+      if (ss->yaxis) {
+
+         jy = ss->yaxis->update (TheY);
+
+         if (!ss->xaxis) { ix = jy; }
+      }
+
+      ss->ts.scale.set_xyz (ix, jy, 0.0);
+
+      _apply_transform (ss->ts);
    }
 }
 
@@ -617,26 +838,100 @@ dmz::RenderModuleOverlayOSG::_apply_transform (TransformStruct &ts) {
 
 
 dmz::RenderModuleOverlayOSG::LayoutAxis *
-dmz::RenderModuleOverlayOSG::_create_axis (const String &Prefix, Config &layout) {
+dmz::RenderModuleOverlayOSG::_create_layout_axis (const String &Prefix, Config &layout) {
 
    LayoutAxis *result (0);
 
-   const String TypeName = config_to_string (Prefix + ".type", layout);
-   const Float64 Value = config_to_float64 (Prefix + ".value", layout);
+   Config axis;
 
-   if (TypeName == "relative") {
+   if (layout.lookup_config (Prefix, axis)) {
 
-      result = new LayoutRelative (Value);
+      const String TypeName = config_to_string ("type", axis);
+      const Float64 Value = config_to_float64 ("value", axis);
+
+      if (TypeName == "relative") {
+
+         const Float64 Offset = config_to_float64 ("offset", axis);
+
+         LayoutRelative *lr = new LayoutRelative (Value, Offset);
+
+         if (lr) {
+
+            String value;
+
+            if (axis.lookup_attribute ("min", value)) {
+
+               lr->set_min (string_to_float64 (value));
+            }
+
+            if (axis.lookup_attribute ("max", value)) {
+
+               lr->set_max (string_to_float64 (value));
+            }
+
+            result = lr;
+         }
+      }
+      else if (TypeName == "absolute") {
+
+         const Boolean Flipped = config_to_boolean ("flip", axis);
+
+         result = new LayoutAbsolute (Value, Flipped);
+      }
+      else {
+
+         _log.error << "Unknown layout axis type: " << TypeName << " for axis: "
+            << Prefix << endl;
+      }
    }
-   else if (TypeName == "absolute") {
 
-      const Boolean Flipped = config_to_boolean (Prefix + ".flip", layout);
+   return result;
+}
 
-      result = new LayoutAbsolute (Value, Flipped);
-   }
-   else {
 
-      _log.error << "Unknown layout axis type: " << TypeName << endl;
+dmz::RenderModuleOverlayOSG::ScaleAxis *
+dmz::RenderModuleOverlayOSG::_create_scale_axis (const String &Prefix, Config &data) {
+
+   ScaleAxis *result (0);
+
+   Config axis;
+
+   if (data.lookup_config (Prefix, axis)) {
+
+      const String TypeName = config_to_string ("type", axis, "simple");
+
+      if (TypeName == "simple") {
+
+         ScaleAxisSimple *sas = new ScaleAxisSimple (
+            config_to_float64 ("size", axis, 1.0),
+            config_to_float64 ("ratio", axis, 1.0),
+            config_to_float64 ("offset", axis, 1.0));
+
+         if (sas) {
+
+            String value;
+
+            if (axis.lookup_attribute ("min", value)) {
+
+               sas->set_min (string_to_float64 (value));
+            }
+
+            if (axis.lookup_attribute ("max", value)) {
+
+               sas->set_max (string_to_float64 (value));
+            }
+
+            result = sas;
+         }
+      }
+      else if (TypeName == "fixed") {
+
+         result = new ScaleAxisFixed (config_to_float64 ("value", axis, 1.0));
+      }
+      else {
+
+         _log.error << "Unknown auto scale axis type: " << TypeName << endl;
+      }
    }
 
    return result;
@@ -670,6 +965,26 @@ dmz::RenderModuleOverlayOSG::_create_texture (const String &Name) {
 }
 
 
+osg::Vec4
+dmz::RenderModuleOverlayOSG::_config_to_color (Config &data) {
+
+   osg::Vec4 result (1.0, 1.0, 1.0, 1.0);
+
+   const String ColorName = config_to_string ("color.name", data);
+
+   if (ColorName) {
+
+      osg::Vec4 *ptr = _colorTable.lookup (ColorName);
+
+      if (ptr) { result = *ptr; }
+      else { _log.error << "Unknown color: " << ColorName << endl; }
+   }
+   else { result = config_to_osg_vec4_color ("color", data, result); }
+
+   return result;
+}
+
+
 dmz::Boolean
 dmz::RenderModuleOverlayOSG::_register_node (NodeStruct *ptr) {
 
@@ -690,7 +1005,23 @@ dmz::RenderModuleOverlayOSG::_register_node (NodeStruct *ptr) {
          else if (!_nodeNameTable.store (ptr->Name, ptr)) {
 
          }
+
+         if (_groupStack) { _groupStack->gs.childTable.store (ptr->VHandle, ptr); }
       }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_register_text (TextStruct *ptr) {
+
+   Boolean result (_register_node (ptr));
+
+   if (result && ptr) {
+
+      _textTable.store (ptr->VHandle, ptr);
    }
 
    return result;
@@ -762,15 +1093,83 @@ dmz::RenderModuleOverlayOSG::_add_node (osg::ref_ptr<osg::Group> &parent, Config
    const String TypeName = config_to_string ("type", node);
 
    if (TypeName == "group") { _add_group (parent, node); }
+   else if (TypeName == "text") { _add_text (parent, node); }
    else if (TypeName == "switch") { _add_switch (parent, node); }
    else if (TypeName == "transform") { _add_transform (parent, node); }
    else if (TypeName == "box") { _add_box (parent, node); }
+   else if (TypeName == "circle") { _add_circle (parent, node); }
    else if (TypeName == "clone") { _add_clone (parent, node); }
    else {
 
       _log.error << "Unknown overlay node type: " << TypeName << endl;
    }
 }
+
+
+void
+dmz::RenderModuleOverlayOSG::_add_text (
+      osg::ref_ptr<osg::Group> &parent,
+      Config &node) {
+
+   osg::ref_ptr<osg::Geode> child = new osg::Geode;
+   osg::ref_ptr<osgText::Text> textNode = new osgText::Text;
+
+   if (child.valid () && textNode.valid ()) {
+
+      const String Name = config_to_string ("name", node);
+      const Int32 Depth = config_to_int32 ("depth.value", node);
+      const String FontResource = config_to_string ("font.resource", node);
+      const Vector Pos = config_to_vector ("position", node);
+
+      String text;
+      Config data;
+
+      if (node.lookup_config ("text", data)) {
+
+         if (!data.lookup_attribute ("value", text)) {
+
+            data.get_value (text);
+         }
+      }
+
+      osg::StateSet* stateset = child->getOrCreateStateSet ();
+      stateset->setMode (GL_LIGHTING, osg::StateAttribute::OFF);
+      stateset->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+      stateset->setRenderBinDetails (Depth, "RenderBin");
+
+      if (FontResource) {
+
+         const String FontName = _rc.find_file (FontResource);
+
+         if (FontName) { textNode->setFont (FontName.get_buffer ()); }
+      }
+
+      textNode->setAxisAlignment (osgText::TextBase::XY_PLANE);
+      textNode->setBackdropType (osgText::Text::NONE);
+      if (text) { textNode->setText (text.get_buffer ()); }
+      textNode->setPosition (osg::Vec3 (Pos.get_x (), Pos.get_y (), 0.0));
+      textNode->setColor (_config_to_color (node));
+
+      textNode->setCharacterSize (
+         config_to_float32 ("height.value", node, textNode->getCharacterHeight ()));
+
+      parent->addChild (child.get ());
+      child->addDrawable (textNode.get ());
+
+      if (Name) {
+
+         TextStruct *ts = new TextStruct (
+            Name,
+            text,
+            get_plugin_runtime_context (),
+            child.get (),
+            textNode.get ());
+
+         if (ts && !_register_text (ts)) { delete ts; ts = 0; }
+      }
+   }
+}
+
 
 
 void
@@ -783,15 +1182,36 @@ dmz::RenderModuleOverlayOSG::_add_group (
 
    const String Name = config_to_string ("name", node);
 
+   Boolean popStack = False;
+
    if (Name) {
 
       GroupStruct *gs =
          new GroupStruct (Name, get_plugin_runtime_context (), child.get ());
 
       if (!_register_group (gs)) { delete gs; gs = 0; }
+      else if (gs) {
+
+         GroupStackStruct *gss = new GroupStackStruct (*gs);
+
+         if (gss) {
+
+            gss->next = _groupStack;
+            _groupStack = gss;
+            popStack = True;
+         }
+      }
    }
 
    _add_children (child, node);
+
+   if (popStack && _groupStack) {
+
+      GroupStackStruct *gss = _groupStack;
+      _groupStack = _groupStack->next;
+
+      if (gss) { delete gss; gss = 0; }
+   }
 }
 
 
@@ -804,7 +1224,7 @@ dmz::RenderModuleOverlayOSG::_add_switch (
    parent->addChild (ptr.get ());
  
    const String Name = config_to_string ("name", node);
-   const UInt32 Which = config_to_uint32 ("which", node);
+   const Int32 Which = config_to_int32 ("which", node);
    SwitchStruct *ss = 0;
 
    if (Name) {
@@ -819,13 +1239,23 @@ dmz::RenderModuleOverlayOSG::_add_switch (
 
    if (ss && ss->switchNode.valid ()) {
 
-      if (Which < ss->switchNode->getNumChildren ()) {
+      if (Which < 0) {
+
+         ss->switchNode->setAllChildrenOff ();
+      }
+      else if (UInt32 (Which) < ss->switchNode->getNumChildren ()) {
 
          ss->switchNode->setSingleChildOn (Which);
       }
    }
 }
 
+namespace {
+
+static const dmz::Float64 SixPi64 = dmz::Pi64 * 6.0;
+static const dmz::Float64 SevenPi64 = dmz::Pi64 * 7.0;
+
+}
 
 void
 dmz::RenderModuleOverlayOSG::_add_transform (
@@ -836,14 +1266,20 @@ dmz::RenderModuleOverlayOSG::_add_transform (
    parent->addChild (ptr.get ());
 
    const Vector Pos = config_to_vector ("position", node);
-   const Float64 Rot = config_to_float64 ("rotation.value", node);
+   Float64 rot  = config_to_float64 ("rotation.value", node, SevenPi64);
+
+   if (rot > SixPi64) {
+
+      rot = to_radians (config_to_float64 ("rotation.degrees", node, 0.0));
+   }
+
    const Vector Scale = config_to_vector ("scale", node, Vector (1.0, 1.0, 1.0));
 
    osg::Matrix posMat;
    posMat.makeTranslate (Pos.get_x (), Pos.get_y (), 0.0);
 
    osg::Matrix rotMat;
-   rotMat.makeRotate (Rot, osg::Vec3d (0.0, 0.0, 1.0));
+   rotMat.makeRotate (rot, osg::Vec3d (0.0, 0.0, 1.0));
 
    osg::Matrix scaleMat;
    scaleMat.makeScale (Scale.get_x (), Scale.get_y (), 0.0);
@@ -861,7 +1297,7 @@ dmz::RenderModuleOverlayOSG::_add_transform (
       else if (ts) {
 
          ts->pos = Pos;
-         ts->rot = Rot;
+         ts->rot = rot;
          ts->scale = Scale;
       }
    }  
@@ -904,20 +1340,7 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
 
    osg::Vec4Array* colors = new osg::Vec4Array;
 
-   osg::Vec4 color (1.0, 1.0, 1.0, 1.0);
-
-   const String ColorName = config_to_string ("color.name", node);
-
-   if (ColorName) {
-
-      osg::Vec4 *ptr = _colorTable.lookup (ColorName);
-
-      if (ptr) { color = *ptr; }
-      else { _log.error << "Unknown color: " << ColorName << endl; }
-   }
-   else { color = config_to_osg_vec4_color ("color", node, color); }
-
-   colors->push_back (color);
+   colors->push_back (_config_to_color (node));
 
    geom->setColorArray (colors);
    geom->setColorBinding (osg::Geometry::BIND_OVERALL);
@@ -962,6 +1385,79 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
 
 
 void
+dmz::RenderModuleOverlayOSG::_add_circle (
+      osg::ref_ptr<osg::Group> &parent,
+      Config &node) {
+
+   const Vector Center = config_to_vector ("center", node);
+   const Float64 Radius = config_to_float64 ("radius.value", node);
+   const Float64 Width = config_to_float64 ("width.value", node, 1.0);
+   const Int32 Depth = config_to_int32 ("depth.value", node);
+
+   osg::Geode* geode = new osg::Geode ();
+   osg::StateSet* stateset = geode->getOrCreateStateSet ();
+   stateset->setMode (GL_LIGHTING, osg::StateAttribute::OFF);
+   stateset->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+   stateset->setRenderBinDetails (Depth, "RenderBin");
+
+   osg::Geometry* geom = new osg::Geometry;
+
+   osg::Vec3Array* normals = new osg::Vec3Array;
+   normals->push_back (osg::Vec3 (0.0f, 0.0f, 1.0f));
+   geom->setNormalArray (normals);
+   geom->setNormalBinding (osg::Geometry::BIND_OVERALL);
+
+   osg::Vec4Array* colors = new osg::Vec4Array;
+
+   osg::Vec4 color (1.0, 1.0, 1.0, 1.0);
+
+   const String ColorName = config_to_string ("color.name", node);
+
+   if (ColorName) {
+
+      osg::Vec4 *ptr = _colorTable.lookup (ColorName);
+
+      if (ptr) { color = *ptr; }
+      else { _log.error << "Unknown color: " << ColorName << endl; }
+   }
+   else { color = config_to_osg_vec4_color ("color", node, color); }
+
+   colors->push_back (color);
+
+   geom->setColorArray (colors);
+   geom->setColorBinding (osg::Geometry::BIND_OVERALL);
+
+   const Int32 Segments = 64;
+
+   geom->addPrimitiveSet (new osg::DrawArrays (osg::PrimitiveSet::LINE_LOOP, 0, Segments));
+
+   stateset = geom->getOrCreateStateSet ();
+   stateset->setRenderingHint (osg::StateSet::TRANSPARENT_BIN);
+   stateset->setAttributeAndModes (new osg::LineWidth (Width));
+
+   const Float64 X = Center.get_x ();
+   const Float64 Y = Center.get_y ();
+   const Float64 Angle = TwoPi64 / Segments;
+
+   osg::Vec3Array* vertices = new osg::Vec3Array;
+
+   Float64 current (0.0);
+
+   for (Int32 ix = 0; ix < Segments; ix++) {
+
+      vertices->push_back (osg::Vec3 (X + (sin (current) * Radius), Y + (cos (current) * Radius), 0.0));
+
+      current = current + Angle;
+   }
+
+   geom->setVertexArray (vertices);
+
+   geode->addDrawable (geom);
+
+   parent->addChild (geode);
+}
+
+void
 dmz::RenderModuleOverlayOSG::_add_clone (osg::ref_ptr<osg::Group> &parent, Config &node) {
 
    osg::ref_ptr<osg::Group> child = new osg::Group;
@@ -998,6 +1494,90 @@ dmz::RenderModuleOverlayOSG::_add_clone (osg::ref_ptr<osg::Group> &parent, Confi
       }
    }
    else { _log.error << "Clone failed. Unknown template: " << Clone << endl; }
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_node (const Handle Overlay) {
+
+   Boolean result (False);
+
+   NodeStruct *ns = _nodeTable.remove (Overlay);
+
+   if (ns && ns->node.valid ()) {
+
+      const unsigned int ParentCount = ns->node->getNumParents ();
+
+      if (ParentCount) {
+
+         for (unsigned int ix = 0; ix < ParentCount; ix--) {
+
+            osg::Group *parent = ns->node->getParent (ix);
+
+            if (parent) { parent->removeChild (ns->node.get ()); }
+         }
+      }
+
+      result = True;
+      delete ns; ns = 0;
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_text (const Handle Overlay) {
+
+   const Boolean Result = (_textTable.remove (Overlay) != 0);
+
+   return Result && _remove_node (Overlay);
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_group (const Handle Overlay) {
+
+   GroupStruct *gs = _groupTable.remove (Overlay);
+
+   if (gs) {
+
+      HashTableHandleIterator it;
+      NodeStruct *ns (0);
+
+      while (gs->childTable.get_next (it, ns)) { destroy_node (ns->VHandle); }
+   }
+
+   return (gs != 0) && _remove_node (Overlay);
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_switch (const Handle Overlay) {
+
+   const Boolean Result = (_switchTable.remove (Overlay) != 0);
+
+   return Result && _remove_group (Overlay);
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::_remove_transform (const Handle Overlay) {
+
+   TransformStruct *ts = _transformTable.remove (Overlay);
+
+   const Boolean Result = (ts ? True : False);
+
+   if (ts) {
+
+      LayoutStruct *ls = _layoutTable.remove (ts->VHandle);
+      if (ls) { delete ls; ls = 0; }
+
+      ScaleStruct *ss = _scaleTable.remove (ts->VHandle);
+      if (ss) { delete ss; ss = 0; }
+   }
+
+   return Result && _remove_group (Overlay);
 }
 
 
@@ -1092,8 +1672,8 @@ dmz::RenderModuleOverlayOSG::_init_layout (Config &local) {
 
          if (ts) {
 
-            LayoutAxis *xaxis = _create_axis ("x", layout);
-            LayoutAxis *yaxis = _create_axis ("y", layout);
+            LayoutAxis *xaxis = _create_layout_axis ("x", layout);
+            LayoutAxis *yaxis = _create_layout_axis ("y", layout);
 
             if (xaxis && yaxis) {
 
@@ -1104,10 +1684,60 @@ dmz::RenderModuleOverlayOSG::_init_layout (Config &local) {
                   delete ls; ls = 0;
                }
             }
+
+            if (!xaxis) {
+
+               _log.error << "Layout X axis not defined for node: " << Name << endl;
+            }
+
+            if (!yaxis) {
+
+               _log.error << "Layout Y axis not defined for node: " << Name << endl;
+            }
          }
          else {
 
             _log.error << "Unable to find transform: " << Name << " for layout" << endl;
+         }
+      }
+   }
+}
+
+
+void
+dmz::RenderModuleOverlayOSG::_init_auto_scale (Config &local) {
+
+   Config scaleList;
+
+   if (local.lookup_all_config ("auto-scale", scaleList)) {
+
+      ConfigIterator it;
+      Config scaleData;
+
+      while (scaleList.get_next_config (it, scaleData)) {
+
+         const String Name = config_to_string ("node", scaleData);
+
+         NodeStruct *ns = _nodeNameTable.lookup (Name);
+
+         TransformStruct *ts (ns ? _transformTable.lookup (ns->VHandle) : 0);
+
+         if (ts) {
+
+            ScaleStruct *ss = new ScaleStruct (
+               _create_scale_axis ("x", scaleData),
+               _create_scale_axis ("y", scaleData),
+               *ts);
+
+            if (ss && !_scaleTable.store (ts->VHandle, ss)) {
+
+               delete ss; ss = 0;
+            }
+         }
+         else {
+
+            _log.error << "Unable to find transform: " << Name << " for auto scale"
+               << endl;
          }
       }
    }
@@ -1142,6 +1772,10 @@ dmz::RenderModuleOverlayOSG::_init (Config &local) {
    _init_layout (local);
 
    _update_layout (get_portal_x (), get_portal_y ());
+
+   _init_auto_scale (local);
+
+   _update_auto_scale (get_portal_x (), get_portal_y ());
 }
 
 

@@ -1059,6 +1059,9 @@ dmz::LuaExtEvent::open_lua_extension (lua_State *LuaState) {
    lua_create_mask (L, &EventCloseMask);
    lua_setfield (L, Table, "CloseMask");
 
+   lua_create_handle (L, defs.create_named_handle (EventAttributeDefaultName));
+   lua_setfield (L, Table, "DefaultHandle");
+
    lua_create_handle (L, defs.create_named_handle (EventAttributeSourceName));
    lua_setfield (L, Table, "SourceHandle");
 

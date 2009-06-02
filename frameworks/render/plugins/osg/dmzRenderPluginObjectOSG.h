@@ -121,6 +121,8 @@ namespace dmz {
          Definitions _defs;
          Resources _rc;
 
+         RenderModuleCoreOSG *_core;
+
          HashTableStringTemplate<ModelStruct> _modelTable;
          HashTableHandleTemplate<DefStruct> _defTable;
          HashTableHandleTemplate<DefStruct> _typeTable;
@@ -128,7 +130,7 @@ namespace dmz {
          ObjectTypeSet _ignoreType;
 
          ModelStruct _noModel;
-         RenderModuleCoreOSG *_core;
+         UInt32 _cullMask;
 
       private:
          RenderPluginObjectOSG ();

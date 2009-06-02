@@ -3,10 +3,12 @@
 
 #include <dmzInputObserver.h>
 #include <dmzInputUtilExport.h>
+#include <dmzTypesHandleContainer.h>
 
 namespace dmz {
 
    class Config;
+   class HandleContainer;
    class Log;
 
    class DMZ_INPUT_UTIL_LINK_SYMBOL InputObserverUtil : public InputObserver {
@@ -23,16 +25,19 @@ namespace dmz {
          Handle activate_default_input_channel (const Mask &EventMask);
 
          void deactivate_input_channel (const String &ChannelName, const Mask &EventMask);
-         void deactivate_input_channel (const Handle Handle, const Mask &EventMask);
+         void deactivate_input_channel (const Handle Channel, const Mask &EventMask);
          void deactivate_default_input_channel (const Mask &EventMask);
+         void deactivate_all_input_channels ();
 
-         InputModule *get_input_module_channels ();
+         void get_channels (HandleContainer &channels);
 
-         virtual void store_input_module_channels (
+         InputModule *get_input_module ();
+
+         virtual void store_input_module (
             const String &Name,
             InputModule &module);
 
-         virtual void remove_input_module_channels (
+         virtual void remove_input_module (
             const String &Name,
             InputModule &module);
 
@@ -77,6 +82,10 @@ namespace dmz {
          InputObserverUtil &operator= (const InputObserverUtil &);
          State &__state;
    };
+
+   DMZ_INPUT_UTIL_LINK_SYMBOL HandleContainer config_to_input_channels (
+      const Config &Source,
+      RuntimeContext *context);
 };
 
 #endif // DMZ_INPUT_OBSERVER_UTIL_DOT_H

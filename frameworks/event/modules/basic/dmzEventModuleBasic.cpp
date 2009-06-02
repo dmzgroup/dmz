@@ -296,6 +296,16 @@ dmz::EventModuleBasic::dump_event (const Handle EventHandle, EventDump &dump) {
       HashTableHandleIterator it;
 
       {
+         Handle *ptr = event->handleTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_handle (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->handleTable.get_next (it);
+         }
+      }
+
+      {
          Handle *ptr = event->objectTable.get_first (it);
 
          while (ptr) {
@@ -402,6 +412,16 @@ dmz::EventModuleBasic::dump_event (const Handle EventHandle, EventDump &dump) {
 
             dump.store_event_scalar (event->handle, it.get_hash_key (), *ptr);
             ptr = event->scalarTable.get_next (it);
+         }
+      }
+
+      {
+         Int64 *ptr = event->counterTable.get_first (it);
+
+         while (ptr) {
+
+            dump.store_event_counter (event->handle, it.get_hash_key (), *ptr);
+            ptr = event->counterTable.get_next (it);
          }
       }
 
@@ -531,6 +551,55 @@ dmz::EventModuleBasic::lookup_locality (const Handle EventHandle) {
    EventStruct *event (_lookup_event (EventHandle));
 
    if (event) { result = event->locality; }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::EventModuleBasic::store_handle (
+      const Handle EventHandle,
+      const Handle AttributeHandle,
+      const Handle Value) {
+
+   Boolean result (False);
+
+   EventStruct *event (_lookup_event (EventHandle));
+
+   if (event && !event->closed) {
+
+      Handle *valuePtr (event->handleTable.lookup (AttributeHandle));
+
+      if (valuePtr) { *valuePtr = Value; result = True; }
+      else {
+
+         valuePtr = new Handle (Value);
+
+         if (event->handleTable.store (AttributeHandle, valuePtr)) { result = True; }
+         else { delete valuePtr; valuePtr = 0; }
+      }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::EventModuleBasic::lookup_handle (
+      const Handle EventHandle,
+      const Handle AttributeHandle,
+      Handle &value) {
+
+   Boolean result (False);
+
+   EventStruct *event (_lookup_event (EventHandle));
+
+   if (event) {
+
+      Handle *ptr (event->handleTable.lookup (AttributeHandle));
+
+      if (ptr) { value = *ptr; result = True; }
+   }
 
    return result;
 }
@@ -1070,6 +1139,55 @@ dmz::EventModuleBasic::lookup_scalar (
    if (event) {
 
       Float64 *ptr (event->scalarTable.lookup (AttributeHandle));
+
+      if (ptr) { value = *ptr; result = True; }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::EventModuleBasic::store_counter (
+      const Handle EventHandle,
+      const Handle AttributeHandle,
+      const Int64 Value) {
+
+   Boolean result (False);
+
+   EventStruct *event (_lookup_event (EventHandle));
+
+   if (event && !event->closed) {
+
+      Int64 *valuePtr (event->counterTable.lookup (AttributeHandle));
+
+      if (valuePtr) { *valuePtr = Value; result = True; }
+      else {
+
+         valuePtr = new Int64 (Value);
+
+         if (event->counterTable.store (AttributeHandle, valuePtr)) { result = True; }
+         else { delete valuePtr; valuePtr = 0; }
+      }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::EventModuleBasic::lookup_counter (
+      const Handle EventHandle,
+      const Handle AttributeHandle,
+      Int64 &value) {
+
+   Boolean result (False);
+
+   EventStruct *event (_lookup_event (EventHandle));
+
+   if (event) {
+
+      Int64 *ptr (event->counterTable.lookup (AttributeHandle));
 
       if (ptr) { value = *ptr; result = True; }
    }

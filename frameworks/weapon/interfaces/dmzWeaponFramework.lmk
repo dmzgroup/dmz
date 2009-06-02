@@ -1,0 +1,4 @@
+lmk.set_name "dmzWeaponFramework"
+lmk.add_files {
+   "dmzWeaponConsts.h",
+}

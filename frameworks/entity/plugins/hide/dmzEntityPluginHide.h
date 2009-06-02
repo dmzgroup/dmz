@@ -14,6 +14,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginHide (const PluginInfo &Info, Config &local);
          ~EntityPluginHide ();
 
@@ -46,6 +47,7 @@ namespace dmz {
          Int32 _active;
          Handle _hil;
          Handle _hideHandle;
+         //! \endcond
 
       private:
          EntityPluginHide ();

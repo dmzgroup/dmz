@@ -15,6 +15,7 @@
 #include <osg/LightSource>
 #include <osg/Referenced>
 #include <osgDB/Registry>
+#include <osgUtil/Optimizer>
 
 
 dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
@@ -71,7 +72,15 @@ dmz::RenderModuleCoreOSGBasic::update_plugin_state (
       const PluginStateEnum State,
       const UInt32 Level) {
 
-   if (State == PluginStateStart) {
+   if (State == PluginStateInit) {
+
+      if (_staticObjects.valid ()) {
+
+         osgUtil::Optimizer optimizer;
+         optimizer.optimize(_staticObjects.get());
+      }
+   }
+   else if (State == PluginStateStart) {
 
       _extensions.start_plugins ();
    }

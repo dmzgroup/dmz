@@ -3,23 +3,54 @@
 #include <dmzInputModule.h>
 #include <dmzInputObserverUtil.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeContainer.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesMask.h>
 
 namespace {
 
-struct channelStruct {
+struct ChannelStruct {
 
    const dmz::Handle Channel;
    dmz::Mask mask;
 
-   channelStruct (dmz::Handle TheHandle) : Channel (TheHandle) {;}
+   ChannelStruct (dmz::Handle TheHandle) : Channel (TheHandle) {;}
 };
 
 };
+
+/*!
+
+\brief Converts a Config to a HandleContainer of input channel Handle values.
+\ingroup Input
+\param[in] Source Config contain config context to convert.
+\param[in] context Pointer to the runtime context.
+\return Returns a HandleContainer of the input channel Handle values.
+\sa config_to_handle_container()
+
+*/
+dmz::HandleContainer
+dmz::config_to_input_channels (
+      const Config &Source,
+      RuntimeContext *context) {
+
+   HandleContainer result = config_to_handle_container ("input.channel", Source, context);
+
+   if (result.get_count () == 0) {
+
+      Definitions defs (context);
+
+      result.add_handle (defs.create_named_handle (InputChannelDefaultName));
+   }
+
+   return result;
+}
+
 
 /*!
 
@@ -34,36 +65,38 @@ observers.
 struct dmz::InputObserverUtil::State {
 
    const String InputModuleName;
+   RuntimeContainer rt;
    Log log;
    Definitions defs;
    InputModule *module;
-   HashTableHandleTemplate <channelStruct> handleTable;
+   HashTableHandleTemplate <ChannelStruct> channelTable;
    Mask errorMask;
 
    State (
          const PluginInfo &Info,
          const Config &Data) :
          InputModuleName (config_to_string ("module.input.name", Data)),
+         rt (Info),
          log (Info.get_name () + ".InputObserverUtil", Info.get_context ()),
          defs (Info, &log),
          module (0) {
 
       if (InputModuleName) {
 
-         log.info << "Looking for input observer: " << InputModuleName << endl;
+         log.info << "Looking for input module: " << InputModuleName << endl;
       }
    }
 
-   ~State () { handleTable.empty (); }
+   ~State () { channelTable.empty (); }
 
-   channelStruct *add_channel (const Handle Channel, const Mask &EventMask) {
+   ChannelStruct *add_channel (const Handle Channel, const Mask &EventMask) {
 
-      channelStruct *cs (handleTable.lookup (Channel));
+      ChannelStruct *cs (channelTable.lookup (Channel));
 
       if (!cs) {
 
-         cs = new channelStruct (Channel);
-         if (!handleTable.store (Channel, cs)) { delete cs; cs = 0; }
+         cs = new ChannelStruct (Channel);
+         if (!channelTable.store (Channel, cs)) { delete cs; cs = 0; }
       }
 
       if (cs) { cs->mask |= EventMask; }
@@ -71,7 +104,7 @@ struct dmz::InputObserverUtil::State {
       return cs;
    }
 
-   void register_obs (channelStruct &cs, InputObserver &obs) {
+   void register_obs (ChannelStruct &cs, InputObserver &obs) {
 
       if (cs.Channel && module) {
 
@@ -79,7 +112,7 @@ struct dmz::InputObserverUtil::State {
       }
    }
 
-   void release_obs (const Mask &EventMask, channelStruct &cs, InputObserver &obs) {
+   void release_obs (const Mask &EventMask, ChannelStruct &cs, InputObserver &obs) {
 
       if (cs.Channel && module) {
 
@@ -87,6 +120,20 @@ struct dmz::InputObserverUtil::State {
       }
 
       cs.mask.unset (EventMask);
+   }
+
+   void release_all (InputObserver &obs) {
+
+      if (module) {
+
+         HashTableHandleIterator it;
+         ChannelStruct *cs (0);
+
+         while (channelTable.get_next (it, cs)) {
+
+            module->release_input_observer (cs->Channel, cs->mask, obs);
+         }
+      }
    }
 };
 
@@ -144,35 +191,26 @@ dmz::InputObserverUtil::init_input_channels (
       const Mask &EventMask,
       Log *log) {
 
-   Config channels;
+   HandleContainer channels = config_to_input_channels (Init, __state.rt.get_context ());
 
-   if (Init.lookup_all_config ("input.channel", channels)) {
+   Handle channel = channels.get_first ();
 
-      ConfigIterator it;
+   while (channel) {
 
-      Config cd;
+      activate_input_channel (channel, EventMask);
 
-      Boolean found (channels.get_first_config (it, cd));
+      if (log) {
 
-      while (found) {
+         const String Name = __state.defs.lookup_named_handle_name (channel);
 
-         const String ChannelName (config_to_string ("name", cd));
+         if (Name == InputChannelDefaultName) {
 
-         if (ChannelName) {
-
-            activate_input_channel (ChannelName, EventMask);
-
-            if (log) { log->info << "Activating input channel: " << ChannelName << endl; }
+            log->info << "Activating default input channel." << endl;
          }
-
-         found = channels.get_next_config (it, cd);
+         else { log->info << "Activating input channel: " << Name << endl; }
       }
-   }
-   else {
 
-      activate_default_input_channel (EventMask);
-
-      if (log) { log->info << "Activating default input channel" << endl; }
+      channel = channels.get_next ();
    }
 }
 
@@ -190,7 +228,7 @@ dmz::InputObserverUtil::activate_input_channel (
       const Handle Channel,
       const Mask &EventMask) {
 
-   channelStruct *cs (__state.add_channel (Channel, EventMask));
+   ChannelStruct *cs (__state.add_channel (Channel, EventMask));
    if (cs) { __state.register_obs (*cs, *this); }
 }
 
@@ -262,7 +300,7 @@ dmz::InputObserverUtil::deactivate_input_channel (
       const Handle Channel,
       const Mask &EventMask) {
 
-  channelStruct *cs (__state.handleTable.lookup (Channel));
+  ChannelStruct *cs (__state.channelTable.lookup (Channel));
 
   if (cs) { __state.release_obs (EventMask, *cs, *this); }
 }
@@ -282,13 +320,37 @@ dmz::InputObserverUtil::deactivate_default_input_channel (const Mask &EventMask)
 }
 
 
+//! Deactivates all subscribed input channels.
+void
+dmz::InputObserverUtil::deactivate_all_input_channels () { __state.release_all (*this); }
+
+
+/*!
+
+\brief Gets the handles of all subscribed input channels.
+\param[out] channels HandleContainer used to return the input channel Handle values.
+
+*/
+void
+dmz::InputObserverUtil::get_channels (HandleContainer &channels) {
+
+   HashTableHandleIterator it;
+   ChannelStruct *cs (0);
+
+   while (__state.channelTable.get_next (it, cs)) {
+
+      channels.add_handle (cs->Channel);
+   }
+}
+
+
 //! Returns pointer to InputModule observer is currently registered with.
 dmz::InputModule *
-dmz::InputObserverUtil::get_input_module_channels () { return __state.module; }
+dmz::InputObserverUtil::get_input_module () { return __state.module; }
 
 
 void
-dmz::InputObserverUtil::store_input_module_channels (
+dmz::InputObserverUtil::store_input_module (
       const String &Name,
       InputModule &module) {
 
@@ -300,12 +362,12 @@ dmz::InputObserverUtil::store_input_module_channels (
 
          HashTableHandleIterator it;
 
-         channelStruct *cs (__state.handleTable.get_first (it));
+         ChannelStruct *cs (__state.channelTable.get_first (it));
 
          while (cs) {
 
             __state.register_obs (*cs, *this);
-            cs = __state.handleTable.get_next (it);
+            cs = __state.channelTable.get_next (it);
          }
 
          _store_input_module (module);
@@ -315,7 +377,7 @@ dmz::InputObserverUtil::store_input_module_channels (
 
 
 void
-dmz::InputObserverUtil::remove_input_module_channels (
+dmz::InputObserverUtil::remove_input_module (
       const String &Name,
       InputModule &module) {
 

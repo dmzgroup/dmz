@@ -28,6 +28,8 @@ namespace dmz {
    const char DefaultStateNameFire[] = "Fire";
    //! Default name of dust trail state.
    const char DefaultStateNameDustTrail[] = "Dust_Trail";
+   //! Default name of air born state.
+   const char DefaultStateNameAirBorn[] = "Air_Born";
 
    class DMZ_KERNEL_LINK_SYMBOL Definitions {
 

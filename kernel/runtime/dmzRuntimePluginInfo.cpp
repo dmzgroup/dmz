@@ -42,7 +42,7 @@ struct dmz::PluginInfo::State {
          const PluginDeleteModeEnum TheDeleteMode,
          RuntimeContext *theContext) :
          _handlePtr (TheName ? 0 : new RuntimeHandle ("Plugin", theContext)),
-         Name (TheName),
+         Name (TheName ? TheName : "Unnamed Component"),
          PluginHandle (_handlePtr ?
             _handlePtr->get_runtime_handle () :
             Definitions (theContext).create_named_handle (TheName)),

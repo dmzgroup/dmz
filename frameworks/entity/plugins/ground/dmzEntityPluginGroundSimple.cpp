@@ -94,10 +94,12 @@ dmz::EntityPluginGroundSimple::update_time_slice (const Float64 TimeDelta) {
 
       Vector pos, vel;
       Matrix ori;
+      Mask state;
 
       objMod->lookup_position (_hil, _defaultHandle, pos);
       objMod->lookup_velocity (_hil, _defaultHandle, vel);
       objMod->lookup_orientation (_hil, _defaultHandle, ori);
+      objMod->lookup_state (_hil, _defaultHandle, state);
 
       const Vector OldPos (pos);
       const Matrix OldOri (ori);
@@ -116,6 +118,9 @@ dmz::EntityPluginGroundSimple::update_time_slice (const Float64 TimeDelta) {
 
          if (Diff > Drop) { airborn = True; }
       }
+
+      if (airborn) { state |= _airBornState; }
+      else { state.unset (_airBornState); }
 
       if (_eventMod && _wasAirborn && !airborn) {
 
@@ -141,13 +146,14 @@ dmz::EntityPluginGroundSimple::update_time_slice (const Float64 TimeDelta) {
 
             ori = nmat * hm;
 
-            get_ortho (normal, vel, vel);
+            get_orthogonal_component (normal, vel, vel);
          }
       }
 
       objMod->store_position (_hil, _defaultHandle, pos);
       objMod->store_velocity (_hil, _defaultHandle, vel);
       objMod->store_orientation (_hil, _defaultHandle, ori);
+      objMod->store_state (_hil, _defaultHandle, state);
 
       Float64 target (_move.throttle + 0.3);
 
@@ -538,11 +544,7 @@ dmz::EntityPluginGroundSimple::_move_entity (
 
    mat.transform_vector (vforward);
 
-   heading = vforward.get_angle (Forward);
-
-   const Vector Cross (vforward.cross (Forward));
-
-   if (Cross.get_y () > 0.0) { heading = TwoPi64 - heading; }
+   heading = get_rotation_angle (Forward, vforward);
 
    if (Airborn) {
 
@@ -748,11 +750,7 @@ dmz::EntityPluginGroundSimple::_validate_move (
 
             ori = ori * mat;
 
-            heading = newDir.get_angle (Forward);
-
-            const Vector Cross (newDir.cross (Forward));
-
-            if (Cross.get_y () < 0.0) { heading = TwoPi64 - heading; }
+            heading = get_rotation_angle (Forward, newDir);
          }
       }
 
@@ -805,6 +803,7 @@ dmz::EntityPluginGroundSimple::_init (Config &local) {
    Definitions defs (get_plugin_runtime_context (), &_log);
 
    defs.lookup_state (DefaultStateNameDead, _deadState);
+   defs.lookup_state (DefaultStateNameAirBorn, _airBornState);
 
    _defaultHandle = activate_default_object_attribute (ObjectStateMask);
 

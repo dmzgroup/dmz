@@ -58,11 +58,13 @@ function update_time_slice (self, time)
          ori = hm * pm
          
          dir = ori:transform (Forward)
+         local ymove = ori:transform (Up)
          local slide = ori:transform (Right)
          
          local OldPos = pos
          
          pos = pos - (dir * (self.speed * time))
+         pos = pos + (ymove * (self.ymove * time))
          pos = pos + (slide * (self.strafe * time))
          
          if not dmz.math.is_zero (time) then vel = (pos - OldPos) * (1 / time) end
@@ -75,28 +77,26 @@ function update_time_slice (self, time)
 end
 
 
-function receive_input_event (self, event)
+local function update_channel_state (self, channel, state)
+   if state then  self.active = self.active + 1
+   else self.active = self.active - 1 end
 
-   if event.state then 
-      if event.state.active then  self.active = self.active + 1
-      else self.active = self.active - 1 end
-
-      if self.active == 1 then self.timeSlice:start (self.handle)
-      elseif self.active == 0 then self.timeSlice:stop (self.handle)
-      end
+   if self.active == 1 then self.timeSlice:start (self.handle)
+   elseif self.active == 0 then self.timeSlice:stop (self.handle)
    end
+end
 
-   if event.axis then
-      local value = 0
-      if not dmz.math.is_zero (event.axis.value, 0.1) then
-         value = event.axis.value * math.abs (event.axis.value)
-      end
-      
-      if event.axis.which == 2 then self.speed = value * self.moveSpeed
-      elseif event.axis.which == 1 then self.turn = value * self.turnRate
-      elseif event.axis.which == 6 then self.strafe = value * self.moveSpeed
-      elseif event.axis.which == 7 then self.pitch = value * self.turnRate
-      end
+local function receive_axis_event (self, channel, axis)
+   local value = 0
+   if not dmz.math.is_zero (axis.value, 0.1) then
+      value = axis.value * math.abs (axis.value)
+   end
+   
+   if axis.which == 2 then self.speed = value * self.moveSpeed
+   elseif axis.which == 1 then self.turn = value * self.turnRate
+   elseif axis.which == 6 then self.strafe = value * self.moveSpeed
+   elseif axis.which == 7 then self.pitch = value * self.turnRate
+   elseif axis.which == 8 then self.ymove = value * self.moveSpeed
    end
 end
 
@@ -104,10 +104,12 @@ end
 function start (self)
    self.handle = self.timeSlice:create (update_time_slice, self, self.name)
 
-   self.obs:init_channels (
+   self.obs:register (
       self.config,
-      dmz.input.Axis + dmz.input.ChannelState,
-      receive_input_event,
+      {
+         update_channel_state = update_channel_state,
+         receive_axis_event = receive_axis_event,
+      },
       self);
 
    if self.handle and self.active == 0 then self.timeSlice:stop (self.handle) end
@@ -135,6 +137,7 @@ function new (config, name)
       strafe = 0.0,
       turn = 0.0,
       pitch = 0.0,
+      ymove = 0.0,
       config = config,
    }
       

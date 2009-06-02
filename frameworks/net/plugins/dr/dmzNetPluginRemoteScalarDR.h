@@ -17,6 +17,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          NetPluginRemoteScalarDR (const PluginInfo &Info, Config &local);
          ~NetPluginRemoteScalarDR ();
 
@@ -88,6 +89,7 @@ namespace dmz {
          HandleContainer _ignoreObjects;
          HashTableHandleTemplate<RateStruct> _rateTable;
          HashTableHandleTemplate<ObjectStruct> _objTable;
+         //! \endcond
 
       private:
          NetPluginRemoteScalarDR ();

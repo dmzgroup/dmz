@@ -1,11 +1,4 @@
-require "lmkQt"
-lmkQt.set_name ("dmzQtAppShell")
-lmk.set_type ("exe")
-lmk.add_files {"dmzQtAppShell.cpp",}
-lmk.add_libs {"dmzQtLogObserver", "dmzQtUtil", "dmzApplication", "dmzXML", "dmzKernel",}
-lmk.add_preqs {"dmzFoundation",}
-lmkQt.add_libs {"QtCore", "QtGui"}
-lmk.add_vars ({localLibPaths = "-framework CoreFoundation"},{macos = true})
-lmk.add_vars ({
-   localLibPaths="/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"},
-{win32=true, opt=true})
+require "qtshell"
+
+qtshell.set_up ("dmzQtAppShell")
+

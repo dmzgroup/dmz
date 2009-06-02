@@ -125,7 +125,7 @@ dmz::InputPluginKeyEventToMessage::_create_targets (
       const Handle Source (config_to_named_handle ("source", target, context));
       const Handle Target (config_to_named_handle ("name", target, context));
       const Message Msg (
-         config_create_message_type ("message", target, "", context));
+         config_create_message ("message", target, "", context));
       const Boolean Pressed (config_to_boolean ("pressed", target, True));
 
       if (Msg) {

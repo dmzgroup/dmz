@@ -30,9 +30,9 @@ the appropriate codec to encode the packet.
       <event-type name="Event Type Name"/>
       ...
    </packet>
-   <plugins>
+   <plugin-list>
       <plugin name="Net Extention Name"/>
-   </plugins>
+   </plugin-list>
 </local-scope>
 \endcode
 Possible type attribute values: const, id, and size.\n
@@ -470,7 +470,7 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
    Config pluginList;
 
-   if (local.lookup_all_config ("plugins.plugin", pluginList)) {
+   if (local.lookup_all_config ("plugin-list.plugin", pluginList)) {
 
       RuntimeContext *context (get_plugin_runtime_context ());
 

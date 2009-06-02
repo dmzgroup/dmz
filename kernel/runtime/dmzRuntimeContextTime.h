@@ -114,6 +114,8 @@ namespace dmz {
          Boolean stop_time_slice (TimeSliceStruct &timeSlice);
          Boolean remove_time_slice (TimeSliceStruct &timeSlice);
 
+         Boolean firstUpdate;
+
          Float64 currentTime; //!< Current frame time.
          Float64 previousTime; //!< Previous frame time.
          Float64 deltaTime; //!< Delta frame time.

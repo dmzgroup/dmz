@@ -19,6 +19,7 @@ namespace dmz {
 
       public:
          Exit (RuntimeContext *context);
+         Exit (const PluginInfo &Info);
          ~Exit ();
 
          void request_exit (const ExitStatusEnum Status, const String &ExitReason);

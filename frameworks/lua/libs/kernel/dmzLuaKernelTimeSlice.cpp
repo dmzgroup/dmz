@@ -667,6 +667,7 @@ static const luaL_Reg arrayMembers [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_time_slice_lib (lua_State *L) {
 
@@ -702,4 +703,5 @@ dmz::open_lua_kernel_time_slice_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 

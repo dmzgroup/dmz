@@ -1,0 +1,8 @@
+lmk.set_name "dmzObjectPluginTimeout"
+lmk.set_type "plugin"
+lmk.add_files {"dmzObjectPluginTimeout.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzEventFramework", "dmzObjectFramework",}

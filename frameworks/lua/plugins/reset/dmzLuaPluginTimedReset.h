@@ -14,6 +14,7 @@ namespace dmz {
          public TimeSlice {
 
       public:
+         //! \cond
          LuaPluginTimedReset (const PluginInfo &Info, Config &local);
          ~LuaPluginTimedReset ();
 
@@ -35,6 +36,7 @@ namespace dmz {
          LuaModule *_luaMod;
 
          Log _log;
+         //! \endcond
 
       private:
          LuaPluginTimedReset ();

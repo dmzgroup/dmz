@@ -7,10 +7,6 @@
 
 namespace dmz {
 
-   //! \cond
-   const char RenderModulePortalInterfaceName[] = "RenderModulePortalInterface";
-   //! \endcond
-
    class Matrix;
    class Vector;
 
@@ -45,24 +41,19 @@ namespace dmz {
       private:
          const PluginInfo &__Info;
    };
+
+   //! \cond
+   const char RenderModulePortalInterfaceName[] = "RenderModulePortalInterface";
+   //! \endcond
 };
 
 
 inline dmz::String
-dmz::RenderModulePortal::get_render_portal_name () {
+dmz::RenderModulePortal::get_render_portal_name () { return __Info.get_name (); }
 
-   String result;
-
-   return result;
-}
 
 inline dmz::UInt32
-dmz::RenderModulePortal::get_render_portal_handle () {
-
-   UInt32 result (0);
-
-   return result;
-}
+dmz::RenderModulePortal::get_render_portal_handle () { return __Info.get_handle (); }
 
 
 inline dmz::RenderModulePortal *

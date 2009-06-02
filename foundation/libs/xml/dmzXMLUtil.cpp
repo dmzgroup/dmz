@@ -1,6 +1,7 @@
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeVersion.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStream.h>
 #include <dmzTypesStringUtil.h>
@@ -122,6 +123,41 @@ local_write_config (
 /*!
 
 \ingroup Foundation
+\brief Converts an XML String to a config context tree.
+\details Defined in dmzXMLUtil.h.
+\param[in] Value String containing the XML  to parse.
+\param[out] data Config object to store parsed XML data.
+\param[in] log Pointer to Log for streaming log messages.
+\return Returns dmz::True if the XML was successfully parsed.
+\sa dmz::Config \n dmz::ConfigContext
+
+*/
+dmz::Boolean
+dmz::xml_string_to_config (const String &Value, Config &data, Log *log) {
+
+   XMLParser parser;
+   XMLInterpreterConfig interpreter (data);
+   parser.set_interpreter (&interpreter);
+   Boolean error (False);
+
+   if (!parser.parse_buffer (Value.get_buffer (), Value.get_length (), True)) {
+
+      error = True;
+
+      if (log) {
+
+         log->error << "Error parsing: " << endl << "\t"
+            << Value << endl << "\t" << parser.get_error () << endl;
+      }
+   }
+
+   return !error;
+}
+
+
+/*!
+
+\ingroup Foundation
 \brief Converts an XML file to a config context tree.
 \details Defined in dmzXMLUtil.h.
 \param[in] File String containing name of XML file to parse.
@@ -170,6 +206,28 @@ dmz::xml_to_config (const String &File, Config &data, Log *log) {
    }
 
    return !error;
+}
+
+
+/*!
+
+\ingroup Foundation
+\brief converts an XML file to a Version
+
+*/
+dmz::Boolean
+dmz::xml_to_version (const String &File, Version &value, Log *log) {
+
+   Config data ("global");
+   Boolean result = xml_to_config (File, data, log);
+
+   if (result) {
+
+      Version tmp (data); 
+      value = tmp;
+   }
+
+   return result;
 }
 
 

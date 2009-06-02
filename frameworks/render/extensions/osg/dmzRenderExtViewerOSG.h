@@ -1,6 +1,7 @@
 #ifndef DMZ_RENDER_EXT_VIEWER_OSG_DOT_H
 #define DMZ_RENDER_EXT_VIEWER_OSG_DOT_H
 
+#include <dmzRuntimeExit.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
@@ -16,7 +17,6 @@ namespace dmz {
    class RenderModuleCoreOSG;
    class RenderCameraManipulatorOSG;
    class RenderEventHandlerOSG;
-
 
    class RenderExtViewerOSG : public Plugin, public TimeSlice {
 
@@ -40,21 +40,27 @@ namespace dmz {
          void _init (const Config &Local);
 
          Log _log;
+         String _title;
          RenderModuleCoreOSG *_core;
          InputModule *_channels;
-         String _portalName;
-         osg::ref_ptr<osg::Camera> _camera;
-         osg::ref_ptr<RenderCameraManipulatorOSG> _cameraManipulator;
+         String _viewerName;
          osg::ref_ptr<RenderEventHandlerOSG> _eventHandler;
          osg::ref_ptr<osgViewer::Viewer> _viewer;
 
       private:
+         void __init_centered (
+            const UInt32 Screen,
+            const UInt32 WindowWidth,
+            const UInt32 WindowHeight,
+            Int32 &windowLeft,
+            Int32 &windowTop);
+
          void __init_viewer_window (
-               UInt32 windowLeft,
-               UInt32 windowTop,
-               UInt32 windowWidth,
-               UInt32 windowHeight,
-               UInt32 screen);
+               const Int32 WindowLeft,
+               const Int32 WindowTop,
+               const UInt32 WindowWidth,
+               const UInt32 WindowHeight,
+               const UInt32 Screen);
 
          void __init_viewer_fullscreen (UInt32 screen);
    };

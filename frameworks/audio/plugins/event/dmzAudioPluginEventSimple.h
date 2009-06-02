@@ -48,11 +48,11 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         Resources _rc;
          AudioModule *_audioMod;
          Handle _defaultEventHandle;
 
          HashTableHandleTemplate<EventStruct> _eventTable;
-         Resources _rc;
          //! \endcond
 
       private:

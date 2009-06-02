@@ -2110,4 +2110,14 @@ b = [[
 ]],
 },
 }, -- dmz.audio
+{
+t = "dmz.test",
+{
+t = "dmz.test.start",
+},{
+t = "dmz.test.validate",
+},{
+t = "dmz.test.stop",
+},
+}, -- dmz.test
 } -- main table

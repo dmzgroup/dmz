@@ -8,6 +8,8 @@
 #   endif
 #endif
 
+#include "dmzSystemDynamicLibraryTracker.h"
+
 
 /*!
 
@@ -35,6 +37,18 @@ struct dmz::DynamicLibrary::State {
    String error;
    State (const DynamicLibraryModeEnum Mode) : LibMode (Mode), handle (0) {;}
 };
+
+
+/*!
+
+\brief Streams list of loaded DynamicLibraries.
+\param[in] out Stream object used to stream list of DynamicLibraries.
+\details The environment variable "DMZ_DUMP_DYLD" must be set to "true" for this
+function to work.
+
+*/
+void
+dmz::DynamicLibrary::dump_loaded (Stream &out) { dump_dyld (out); }
 
 
 /*!
@@ -144,7 +158,7 @@ dmz::DynamicLibrary::DynamicLibrary (
 
       if (error) { _state.error << error; _state.name.empty (); }
    }
-   else { _state.error.empty (); }
+   else { _state.error.empty (); add_dyld (LibName); }
 }
 
 

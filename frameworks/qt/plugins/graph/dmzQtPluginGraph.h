@@ -1,16 +1,18 @@
-#ifndef DMZ_QT_PLUGIN_HISTOGRAM_DOT_H
-#define DMZ_QT_PLUGIN_HISTOGRAM_DOT_H
+#ifndef DMZ_QT_PLUGIN_GRAPH_DOT_H
+#define DMZ_QT_PLUGIN_GRAPH_DOT_H
 
 #include <dmzObjectObserverUtil.h>
 #include <dmzQtWidget.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableUInt32Template.h>
 
 #include <QtGui/QBrush>
 #include <QtGui/QGraphicsLineItem>
+#include <QtGui/QGraphicsPathItem>
 #include <QtGui/QGraphicsRectItem>
 #include <QtGui/QGraphicsScene>
 #include <QtGui/QGraphicsTextItem>
@@ -19,14 +21,15 @@
 
 namespace dmz {
 
-   class QtPluginHistogram :
+   class QtPluginGraph :
          public Plugin,
+         public TimeSlice,
          public ObjectObserverUtil,
          public QtWidget {
 
       public:
-         QtPluginHistogram (const PluginInfo &Info, Config &local);
-         ~QtPluginHistogram ();
+         QtPluginGraph (const PluginInfo &Info, Config &local);
+         ~QtPluginGraph ();
 
          // Plugin Interface
          virtual void update_plugin_state (
@@ -36,6 +39,9 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
+
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 TimeDelta);
 
          // Object Observer Interface
          virtual void create_object (
@@ -78,15 +84,19 @@ namespace dmz {
             const Int32 Id;
             Int32 count;
             Float32 offset;
+            Float32 height;
             QGraphicsRectItem *bar;
             QGraphicsTextItem *text;
+            QGraphicsTextItem *countText;
 
             BarStruct (const Int32 TheId) :
                Id (TheId),
                count (0),
                offset (0.0),
+               height (0.0),
                bar (0),
-               text (0) {;}
+               text (0),
+               countText (0) {;}
          };
 
          struct ObjectStruct {
@@ -101,6 +111,7 @@ namespace dmz {
          BarStruct *_lookup_bar (const Int32 Count);
          void _remove_bar (BarStruct &bar);
          void _update_bar (BarStruct &bar);
+         void _update_power_law (const BarStruct *LastBar, const Float64 EndOfXAxis);
          void _update_graph ();
          void _init (Config &local);
 
@@ -110,9 +121,15 @@ namespace dmz {
          QGraphicsLineItem *_xAxis;
          QGraphicsLineItem *_yAxis;
          QGraphicsTextItem **_yLabels;
+         QGraphicsPathItem *_powerLawPath;
+         QGraphicsTextItem *_powerLabel;
 
          QBrush _barFill;
          QPen _barStroke;
+         QPen _powerStroke;
+
+         Boolean _graphDirty;
+         Boolean _showPowerLaw;
 
          Int32 _maxCount;
          Int32 _totalCount;
@@ -123,17 +140,18 @@ namespace dmz {
          Float32 _barHeight;
          Float32 _spaceWidth;
          Int32 _yDivisions;
+         Int32 _steps;
 
          HashTableUInt32Template<BarStruct> _barTable;
          HashTableUInt32Template<ObjectStruct> _objTable;
          ObjectTypeSet _typeSet;
 
       private:
-         QtPluginHistogram ();
-         QtPluginHistogram (const QtPluginHistogram &);
-         QtPluginHistogram &operator= (const QtPluginHistogram &);
+         QtPluginGraph ();
+         QtPluginGraph (const QtPluginGraph &);
+         QtPluginGraph &operator= (const QtPluginGraph &);
 
    };
 };
 
-#endif // DMZ_QT_PLUGIN_HISTOGRAM_DOT_H
+#endif // DMZ_QT_PLUGIN_GRAPH_DOT_H

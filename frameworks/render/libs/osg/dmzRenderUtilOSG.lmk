@@ -9,24 +9,27 @@ lmk.add_preqs {
 }
 
 lmk.add_libs {
+   "dmzRenderPortal",
    "dmzInputEvents",
    "dmzKernel",
 }
 
 lmk.add_files {
    "dmzRenderEventHandlerOSG.h",
-   "dmzRenderCameraManipulatorOSG.h",
    "dmzRenderObjectDataOSG.h",
    "dmzRenderUtilOSG.h",
    "dmzRenderUtilOSGExport.h",
+   "dmzRenderConfigToOSG.h",
 }
 
 lmk.add_files {
    "dmzRenderObjectDataOSG.cpp",
    "dmzRenderEventHandlerOSG.cpp",
+   "dmzRenderConfigToOSG.cpp",
+   "dmzRenderUtilOSG.cpp",
 }
 
-lmkOSG.add_libs {"osg", "osgGA", "osgViewer",}
+lmkOSG.add_libs {"osg", "osgGA", "osgViewer", "OpenThreads"}
 
 lmk.add_vars ({
    localDefines = "$(lmk.defineFlag)DMZ_RENDER_UTIL_OSG_EXPORT",

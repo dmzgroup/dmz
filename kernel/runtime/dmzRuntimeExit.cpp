@@ -39,7 +39,7 @@ namespace {
 
          if (container) {
 
-            result = container->create_message_type (
+            result = container->create_message (
                Name,
                "",
                context,
@@ -127,6 +127,13 @@ struct dmz::Exit::State {
 
 */
 dmz::Exit::Exit (RuntimeContext *context) : _state (*(new State (context))) {;}
+
+
+/*!
+\brief Constructor
+\param[in] Info Reference to the PluginInfo.
+*/
+dmz::Exit::Exit (const PluginInfo &Info) : _state (*(new State (Info.get_context ()))) {;}
 
 
 //! Destructor.

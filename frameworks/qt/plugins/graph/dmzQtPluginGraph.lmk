@@ -1,7 +1,7 @@
 require "lmkQt"
-lmkQt.set_name "dmzQtPluginHistogram"
+lmkQt.set_name "dmzQtPluginGraph"
 lmk.set_type "plugin"
-lmk.add_files {"dmzQtPluginHistogram.cpp",}
+lmk.add_files {"dmzQtPluginGraph.cpp",}
 lmk.add_libs {
    "dmzObjectUtil",
    "dmzKernel",

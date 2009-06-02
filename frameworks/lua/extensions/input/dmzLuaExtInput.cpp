@@ -19,6 +19,18 @@
 #include <qdb.h>
 static dmz::qdb out;
 
+/*!
+         
+\class dmz::LuaExtInput
+\ingroup Lua
+\brief Provides a Lua API for the Input Framework.
+\details
+\htmlonly See the <a href="dmzlua.html#dmz.input">Lua Input API</a>.
+\endhtmlonly
+         
+*/       
+
+
 using namespace dmz;
 
 namespace {
@@ -44,6 +56,36 @@ get_input (lua_State *L) {
    LUA_END_VALIDATE (L, 0);
 
    return result;
+}
+
+
+static int
+input_get_key_value (lua_State *L) {
+
+   LUA_START_VALIDATE (L);
+
+   const String Key = luaL_checkstring (L, 1);
+   const UInt32 Value = string_to_key_value (Key);
+   lua_pushnumber (L, (lua_Number)Value);
+
+   LUA_END_VALIDATE (L, 1);
+
+   return 1;
+}
+
+
+static int
+input_get_key_string (lua_State *L) {
+
+   LUA_START_VALIDATE (L);
+
+   const UInt32 Value = (UInt32)luaL_checknumber (L, 1);
+   const String Key  = key_value_to_string (Value);
+   lua_pushstring (L, Key.get_buffer ());
+
+   LUA_END_VALIDATE (L, 1);
+
+   return 1;
 }
 
 
@@ -146,6 +188,8 @@ input_is_button_pressed (lua_State *L) {
 
 
 static const luaL_Reg arrayFunc[] = {
+   {"get_key_value", input_get_key_value},
+   {"get_key_string", input_get_key_string},
    {"has_buttons_changed", input_has_buttons_changed},
    {"is_button_changed", input_is_button_changed},
    {"is_button_pressed", input_is_button_pressed},
@@ -644,6 +688,7 @@ static const luaL_Reg obsArrayMembers [] = {
 };
 
 
+//! \cond
 dmz::InputObserverLua::InputObserverLua (LuaExtInput &input) :
       _handle (input.get_plugin_name (), input.get_plugin_runtime_context ()),
       _input (input),
@@ -1516,6 +1561,7 @@ void
 dmz::LuaExtInput::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

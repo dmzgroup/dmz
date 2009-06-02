@@ -20,12 +20,10 @@ namespace dmz {
    LuaExtEventObserver *lua_create_event_observer (lua_State *L);
 
    LuaExtEventObserver *lua_check_event_observer (lua_State *L, int index);
-   //! \endcond
 
    class LuaExtEventObserver : public PluginInfo, public EventObserverUtil {
 
       public:
-         //! \cond
          LuaExtEventObserver (lua_State *TheState, Config &empty);
          ~LuaExtEventObserver ();
 

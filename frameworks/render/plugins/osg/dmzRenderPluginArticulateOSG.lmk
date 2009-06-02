@@ -1,0 +1,12 @@
+require "lmkOSG"
+
+lmkOSG.set_name "dmzRenderPluginArticulateOSG"
+lmk.set_type "plugin"
+lmk.add_files {"dmzRenderPluginArticulateOSG.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzXML",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzRenderModuleCoreOSG", "dmzObjectFramework",}
+lmkOSG.add_libs {"osgSim", "osgDB", "osgUtil", "osg", "OpenThreads",}

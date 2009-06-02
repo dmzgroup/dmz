@@ -1,0 +1,19 @@
+lmk.set_name "dmzRenderPortal"
+lmk.set_type "shared"
+
+lmk.add_files {
+   "dmzRenderPortalExport.h",
+   "dmzRenderPortalSize.h",
+}
+
+lmk.add_files {
+   "dmzRenderPortalSize.cpp",
+}
+
+lmk.add_libs {"dmzKernel",}
+lmk.add_preqs {"dmzRenderFramework"}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_RENDER_PORTAL_EXPORT"
+}, { win32 = true })
+

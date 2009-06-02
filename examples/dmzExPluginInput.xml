@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dmz>
-<plugins>
+<plugin-list>
    <plugin name="dmzInputModuleBasic"/>
    <plugin name="dmzArchivePluginInput"/>
    <plugin name="dmzPluginTermExit"/>
    <plugin name="dmzExPluginInput"/>
-</plugins>
+</plugin-list>
 <dmzArchivePluginInput>
    <input key="a" value="1" delay="1"/>
    <input key="a" value="0" delay="0.1"/>

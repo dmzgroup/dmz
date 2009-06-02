@@ -34,7 +34,7 @@ main (int argc, char *argv[]) {
 
    test.validate (
       "Looking up Message: testType",
-      defs.lookup_message_type (TestTypeName, type));
+      defs.lookup_message (TestTypeName, type));
 
    test.validate (
       "Message name is set to: testType",
@@ -62,26 +62,26 @@ main (int argc, char *argv[]) {
    Message nullMessage;
    test.validate (
       "Default constructor",
-      !nullMessage.get_message_type_context ());
+      !nullMessage.get_message_context ());
 
    // standard constructors
    Message testMessageName ("testType", context);
    test.validate (
       "Constructor with \"Name\" and \"RuntimeContext\" supplied.",
-      testMessageName.get_message_type_context () &&
+      testMessageName.get_message_context () &&
       !(strcmp (testMessageName.get_name ().get_buffer (), "testType")));
    Message testMessageHandle (testMessageName.get_handle (), context);
 
    test.validate (
       "Constructor with \"Handle\" and \"RuntimeContext\" supplied.",
-      testMessageHandle.get_message_type_context () &&
+      testMessageHandle.get_message_context () &&
       !(strcmp (testMessageHandle.get_name ().get_buffer (), "testType")) &&
       (testMessageHandle == testMessageName));
 
-   Message testMessage (testMessageHandle.get_message_type_context ());
+   Message testMessage (testMessageHandle.get_message_context ());
    test.validate (
       "Constructor with \"MessageContext\" supplied.",
-      testMessage.get_message_type_context () &&
+      testMessage.get_message_context () &&
       !(strcmp (testMessage.get_name ().get_buffer (), "testType")) &&
       (testMessage == testMessageName) &&
       (testMessage == testMessageHandle));
@@ -90,7 +90,7 @@ main (int argc, char *argv[]) {
    Message copyOfTestMessage (testMessage);
    test.validate (
       "Copy Constructor.",
-      copyOfTestMessage.get_message_type_context () &&
+      copyOfTestMessage.get_message_context () &&
       !(strcmp (copyOfTestMessage.get_name ().get_buffer (), "testType")) &&
       (copyOfTestMessage == testMessage) &&
       (copyOfTestMessage == testMessageName) &&

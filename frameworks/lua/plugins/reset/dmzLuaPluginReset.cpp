@@ -4,6 +4,24 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::LuaPluginReset
+\ingroup Lua
+\brief Resets the Lua runtime.
+\details Resets the Lua runtime when a specified key is pressed. The default key is 'R'.
+\code
+<dmz>
+<dmzLuaPluginReset>
+   <key value="Key Value"/>
+</dmzLuaPluginReset>
+</dmz>
+\endcode
+
+*/
+
+
+//! \cond
 dmz::LuaPluginReset::LuaPluginReset (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       InputObserverUtil (Info, local),
@@ -69,6 +87,7 @@ dmz::LuaPluginReset::_init (Config &local) {
       InputEventButtonMask | InputEventKeyMask,
       &_log);
 }
+//! \endcond
 
 
 extern "C" {

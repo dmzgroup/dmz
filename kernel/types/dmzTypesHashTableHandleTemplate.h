@@ -54,7 +54,9 @@ functions thread safe.
          T *get_first (HashTableHandleIterator &it) const;
          T *get_last (HashTableHandleIterator &it) const;
          T *get_next (HashTableHandleIterator &it) const;
+         Boolean get_next (HashTableHandleIterator &it, T *&ptr) const;
          T *get_prev (HashTableHandleIterator &it) const;
+         Boolean get_prev (HashTableHandleIterator &it, T *&ptr) const;
 
          T *lookup (const Handle &Key) const;
          Boolean store (const Handle &Key, T *data);
@@ -406,6 +408,29 @@ dmz::HashTableHandleTemplate<T>::get_next (HashTableHandleIterator &it) const {
 
 /*!
 
+\brief Gets next element stored in the table.
+\param[in] it Iterator used to traverse the table.
+\param[out] ptr Reference to the pointer used to return the next element in the table.
+Will be NULL if all the elements have been iterated over.
+\return Returns dmz::True if a valid pointer is returned. It will return dmz::False if all
+elements have been iterated over.
+
+*/
+template <class T> inline dmz::Boolean
+dmz::HashTableHandleTemplate<T>::get_next (
+      HashTableHandleIterator &it,
+      T *&ptr) const {
+
+   __lock ();
+   ptr = (T *)__table.get_next (it);
+   __unlock ();
+
+   return ptr != 0;
+}
+
+
+/*!
+
 \brief Gets previous element stored in the table.
 \param[in] it Iterator used to traverse the table.
 \return Returns pointer to the previous element in the table. Will return NULL if all
@@ -420,6 +445,29 @@ dmz::HashTableHandleTemplate<T>::get_prev (HashTableHandleIterator &it) const {
    __unlock ();
 
    return result;
+}
+
+
+/*!
+
+\brief Gets previous element stored in the table.
+\param[in] it Iterator used to traverse the table.
+\param[out] ptr Reference to the pointer used to return the previous element in the table.
+Will be NULL if all the elements have been iterated over.
+\return Returns dmz::True if a valid pointer is returned. It will return dmz::False if all
+elements have been iterated over.
+
+*/
+template <class T> inline dmz::Boolean
+dmz::HashTableHandleTemplate<T>::get_prev (
+      HashTableHandleIterator &it,
+      T *&ptr) const {
+
+   __lock ();
+   ptr = (T *)__table.get_next (it, True);
+   __unlock ();
+
+   return ptr != 0;
 }
 
 

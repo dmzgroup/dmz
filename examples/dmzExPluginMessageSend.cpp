@@ -46,7 +46,7 @@ void
 dmz::ExPluginMessageSend::_init (Config &local) {
 
    _type =
-      config_to_message_type (
+      config_to_message (
          "message.name",
          local,
          get_plugin_runtime_context (),

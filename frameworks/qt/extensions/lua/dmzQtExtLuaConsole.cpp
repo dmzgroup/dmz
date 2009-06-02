@@ -535,7 +535,7 @@ dmz::QtExtLuaConsole::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
 
-   _showMsg = config_create_message_type (
+   _showMsg = config_create_message (
       "show.name",
       local,
       "DMZ_Show_Lua_Console",

@@ -62,6 +62,7 @@ dmz::EntityPluginPortalFollow::discover_plugin (
       
          _renderPortal = 0; 
       }
+
       if (_audioPortal && (_audioPortal == AudioModulePortal::cast (PluginPtr))) { 
       
          _audioPortal = 0; 
@@ -220,18 +221,11 @@ dmz::EntityPluginPortalFollow::_init (Config &local) {
 
    Config cameraParams;
 
-   if (local.lookup_all_config ("offset", cameraParams)) {
+   if (local.lookup_config ("offset", cameraParams)) {
 
-      ConfigIterator it;
-      Config cd;
+      foundOffset = True;
 
-      Boolean found (cameraParams.get_first_config (it, cd));
-
-      if (found)  {
-
-         _offset = config_to_vector (cd, _offset);
-         foundOffset = True;
-      }
+      _offset = config_to_vector (cameraParams, _offset);
    }
 
    init_input_channels (local, InputEventChannelStateMask, &_log);

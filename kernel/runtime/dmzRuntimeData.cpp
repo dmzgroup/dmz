@@ -253,7 +253,6 @@ template <class T> class dataConvertTemplate {
       const BaseTypeEnum _Type;
 };
 
-};
 
 
 template <class T> inline
@@ -365,6 +364,7 @@ static dataConvertTemplate<UInt64> uint64Convert (BaseTypeUInt64);
 static dataConvertTemplate<Float32> float32Convert (BaseTypeFloat32);
 static dataConvertTemplate<Float64> float64Convert (BaseTypeFloat64);
 
+};
 
 struct Data::State {
 
@@ -590,6 +590,19 @@ dmz::Data::operator!= (const Data &Value) const { return !(*this == Value); }
 */
 dmz::Boolean
 dmz::Data::operator! () const { return !_state.dataTable.get_count (); }
+
+
+//! Gets RuntimeContext stored in Data object.
+void
+dmz::Data::set_runtime_context (RuntimeContext *context) {
+
+   if (context != _state.context) {
+
+      if (_state.context) { _state.context->unref (); }
+      _state.context = context;
+      if (_state.context) { _state.context->ref (); }
+   }
+}
 
 
 //! Gets RuntimeContext stored in Data object.

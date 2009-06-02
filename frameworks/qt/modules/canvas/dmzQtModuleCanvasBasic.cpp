@@ -448,6 +448,8 @@ dmz::QtModuleCanvasBasic::_load_session () {
 void
 dmz::QtModuleCanvasBasic::_init (Config &local) {
 
+   qwidget_config_read ("widget", local, this);
+
    const Int32 MinX = config_to_int32 ("scene.min.x", local, -50000);
    const Int32 MinY = config_to_int32 ("scene.min.y", local, -50000);
    const Int32 MaxX = config_to_int32 ("scene.max.x", local, 100000);

@@ -17,7 +17,7 @@ dmz::RuntimeContextMessageContainer::~RuntimeContextMessageContainer () {
 
 //! Creates message type.
 dmz::Message
-dmz::RuntimeContextMessageContainer::create_message_type (
+dmz::RuntimeContextMessageContainer::create_message (
       const String &Name,
       const String &ParentName,
       RuntimeContext *context,
@@ -35,7 +35,7 @@ dmz::RuntimeContextMessageContainer::create_message_type (
 
          Message *parent (messageNameTable.lookup (ParentName));
 
-         if (parent) { parentContext = parent->get_message_type_context (); }
+         if (parent) { parentContext = parent->get_message_context (); }
       }
 
       MessageContext *mtc =
@@ -80,7 +80,7 @@ dmz::RuntimeContextMessaging::RuntimeContextMessaging (
       obsHandleTable (&obsHandleLock),
       obsNameTable (&obsNameLock) {
 
-   globalType = container.create_message_type ("Global_Message", "", context, this);
+   globalType = container.create_message ("Global_Message", "", context, this);
    key.ref ();
 }
 
@@ -129,6 +129,7 @@ local_send (
 
 dmz::UInt32
 dmz::RuntimeContextMessaging::send (
+      const Boolean IncrementCount,
       const Message &Type,
       const Handle ObserverHandle,
       const Data *InData,
@@ -140,16 +141,19 @@ dmz::RuntimeContextMessaging::send (
 
    if (self->key.is_main_thread ()) {
 
-      MessageContext *type (Type.get_message_type_context ());
+      MessageContext *type (Type.get_message_context ());
       MessageContext *startType (type);
 
       if (type) {
 
          if (Type != globalType) {
 
-            self->messageCount++;
+            if (IncrementCount) {
 
-            if (messageCount <= 1) { self->messageCount = 2; }
+               self->messageCount++;
+
+               if (messageCount <= 1) { self->messageCount = 2; }
+            }
 
             result = messageCount;
 
@@ -178,7 +182,7 @@ dmz::RuntimeContextMessaging::send (
             }
          }
 
-         MessageContext *gcontext (globalType.get_message_type_context ());
+         MessageContext *gcontext (globalType.get_message_context ());
 
          if (gcontext) {
 
@@ -186,7 +190,7 @@ dmz::RuntimeContextMessaging::send (
          }
       }
    }
-   else if (Type.get_message_type_context ()) {
+   else if (Type.get_message_context ()) {
 
       MessageStruct *ms (new MessageStruct (Type, ObserverHandle, InData));
 

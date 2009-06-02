@@ -3,6 +3,7 @@ require "lmkbuild"
 local ipairs = ipairs
 local print = print
 local sys = lmkbuild.system ()
+local resolve = lmkbuild.resolve
 local lmk = lmk
 
 module (...)
@@ -27,13 +28,17 @@ function add_libs (list)
          localLibPaths = paths,
       }
    else
+      local libDebug = ""
+      if sys == "win32" then
+         local buildMode = resolve ("$(lmk.buildMode)")
+         if buildMode == "debug" then libDebug = resolve ("$(DMZ_OSG_DEBUG)") end
+      end
       local libs = nil
       for ix, element in ipairs (list) do
          if libs then libs = libs .. " "
          else libs = ""
          end
-         libs = libs .. "$(lmk.libPrefix)" .. element ..
-            "$(DMZ_OSG_DEBUG)$(lmk.libSuffix)"
+         libs = libs .. "$(lmk.libPrefix)" .. element .. libDebug .. "$(lmk.libSuffix)"
       end
       lmk.add_vars {
          localIncludes = "$(lmk.includePathFlag)$(DMZ_OSG_INCLUDE_PATH)",

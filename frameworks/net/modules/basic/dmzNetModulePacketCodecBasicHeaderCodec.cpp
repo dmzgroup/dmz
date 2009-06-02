@@ -47,7 +47,6 @@ namespace {
 
       protected:
    };
-};
 
 
 template <class T> inline
@@ -135,6 +134,7 @@ sizeElement<T>::write_element (const UInt32 PacketID, Marshal &data) {
    return True;
 }
 
+};
 
 //! \cond
 void

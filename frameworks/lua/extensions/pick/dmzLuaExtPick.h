@@ -14,6 +14,7 @@ namespace dmz {
          public LuaExt {
 
       public:
+         //! \cond
          LuaExtPick (const PluginInfo &Info, Config &local);
          ~LuaExtPick ();
 
@@ -40,6 +41,7 @@ namespace dmz {
          RenderModulePick **_pickPtr;
 
          Log _log;
+         //! \endcond
 
       private:
          LuaExtPick ();

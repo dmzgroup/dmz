@@ -38,12 +38,11 @@ namespace dmz {
       protected:
          struct KeyStruct {
 
-            const UInt32 Key;
             const Float32 Dir;
+            HashTableUInt32 keys;
             Boolean pressed;
 
-            KeyStruct (const UInt32 TheKey, const Float32 TheDir) :
-                  Key (TheKey),
+            KeyStruct (const Float32 TheDir) :
                   Dir (TheDir),
                   pressed (False) {;}
          };
@@ -52,15 +51,15 @@ namespace dmz {
 
             KeyStruct negative;
             KeyStruct positive;
+            Float32 lastValue;
             InputEventAxis axis;
 
             AxisStruct (
-                  const UInt32 NegKey,
-                  const UInt32 PosKey,
                   const UInt32 Controller,
                   const UInt32 Axis) :
-                  negative (NegKey, -1.0),
-                  positive (PosKey, 1.0),
+                  negative (-1.0),
+                  positive (1.0),
+                  lastValue (0.0),
                   axis (Controller, Axis) {;}
          };
 
@@ -72,6 +71,16 @@ namespace dmz {
 
             ControllerStruct (const Handle &TheSource) : SourceHandle (TheSource) {;}
             ~ControllerStruct () { axisTable.empty (); buttonTable.empty (); }
+         };
+
+         struct ScaleStruct {
+
+            const Float32 Scale;
+            const Boolean Sticky;
+
+            ScaleStruct (const Float32 TheScale, const Boolean IsSticky) :
+               Scale (TheScale),
+               Sticky (IsSticky) {;}
          };
 
          void _init (Config &local);
@@ -92,12 +101,13 @@ namespace dmz {
 
          Log _log;
          Float32 _scale;
+         Float32 _lastScale;
          Int32 _activeChannelCount;
 
          HashTableHandleTemplate<ControllerStruct> _controllerTable;
          HashTableUInt32Template<AxisStruct> _axisKeyTable;
          HashTableUInt32Template<InputEventButton> _buttonTable;
-         HashTableUInt32Template<Float32> _scaleTable;
+         HashTableUInt32Template<ScaleStruct> _scaleTable;
          //! \endcond
 
       private:

@@ -7,6 +7,7 @@ namespace dmz {
 
    class Config;
 
+//! \cond
    void open_lua_kernel_config_lib (lua_State *L, Config &global);
    void open_lua_kernel_data_lib (lua_State *L);
    void open_lua_kernel_definitions_lib (lua_State *L);
@@ -27,6 +28,7 @@ namespace dmz {
    void open_lua_kernel_undo_lib (lua_State *L);
    void open_lua_kernel_uuid_lib (lua_State *L);
    void open_lua_kernel_vector_lib (lua_State *L);
+//! \endcond
 };
 
 #endif //  DMZ_LUA_KERNEL_PRIVATE_DOT_H

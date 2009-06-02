@@ -249,6 +249,7 @@ static const luaL_Reg arrayMembers[] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_sphere_lib (lua_State *L) {
 
@@ -265,8 +266,13 @@ dmz::open_lua_kernel_sphere_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 
 
+//! \addtogroup Lua
+//! @{
+
+//! Creates a Sphere object on the Lua stack.
 dmz::Sphere *
 dmz::lua_create_sphere (lua_State *L, const Sphere &Value) {
 
@@ -294,6 +300,7 @@ dmz::lua_create_sphere (lua_State *L, const Sphere &Value) {
 }
 
 
+//! Attempts to convert the specified object on the Lua stack to a Sphere object.
 dmz::Sphere *
 dmz::lua_to_sphere (lua_State *L, int narg) {
 
@@ -305,8 +312,10 @@ dmz::lua_to_sphere (lua_State *L, int narg) {
 }
 
 
+//! Raises and error if the specified object on the Lua stack is not a Sphere object.
 dmz::Sphere *
 dmz::lua_check_sphere (lua_State *L, int narg) {
 
    return sphere_check (L, narg);
 }
+//! @}

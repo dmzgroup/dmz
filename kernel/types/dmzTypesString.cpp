@@ -39,6 +39,114 @@ in the buffer to determine size and length.
 
 */
 
+//! Converts Int8 to String.
+dmz::String
+dmz::String::number (const char Value) {
+
+   String result;
+   return result << (Int32)Value;
+}
+
+
+//! Converts UInt8 to String.
+dmz::String
+dmz::String::number (const unsigned char Value) {
+
+   String result;
+   return result << (UInt32)Value;
+}
+
+
+//! Converts Int16 to String.
+dmz::String
+dmz::String::number (const short Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+//! Converts UInt16 to String.
+dmz::String
+dmz::String::number (const unsigned short Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+//! Converts int to String.
+dmz::String
+dmz::String::number (const int Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+//! Converts unsigned int to String.
+dmz::String
+dmz::String::number (const unsigned int Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+//! Converts Int32 int to String.
+dmz::String
+dmz::String::number (const long Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+//! Converts UInt32 int to String.
+dmz::String
+dmz::String::number (const unsigned long Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+//! Converts Int64 int to String.
+dmz::String
+dmz::String::number (const Int64 Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+//! Converts UInt64 int to String.
+dmz::String
+dmz::String::number (const UInt64 Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+//! Converts Float32 int to String.
+dmz::String
+dmz::String::number (const Float32 Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+//! Converts Float64 int to String.
+dmz::String
+dmz::String::number (const Float64 Value) {
+
+   String result;
+   return result << Value;
+}
+
+
 /*!
 
 \brief Base constructor.
@@ -882,6 +990,20 @@ dmz::String::replace_sub (
    }
 
    return count ? count + replace_sub (Sub, Target) : 0;
+}
+
+
+dmz::Boolean
+dmz::String::contains_sub (const String &Sub, const Int32 Start) const {
+
+   Boolean result (False);
+
+   if (_buffer && Sub._buffer && ((Sub._length + Start) <= _length)) {
+
+      result = (strncmp (&(_buffer[Start]), Sub._buffer, Sub._length) == 0);
+   }
+
+   return result;
 }
 
 

@@ -8,11 +8,13 @@
 
 namespace dmz {
 
+   class PluginInfo;
    class RuntimeContext;
 
    class DMZ_KERNEL_LINK_SYMBOL DataConverterString {
 
       public:
+         DataConverterString (const PluginInfo &Info);
          DataConverterString (RuntimeContext *context);
          ~DataConverterString ();
 
@@ -34,6 +36,7 @@ namespace dmz {
    class DMZ_KERNEL_LINK_SYMBOL DataConverterHandle {
 
       public:
+         DataConverterHandle (const PluginInfo &Info);
          DataConverterHandle (RuntimeContext *context);
          ~DataConverterHandle ();
 

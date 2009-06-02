@@ -1,13 +1,18 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzQtConfigRead.h>
-#include "dmzQtPluginHistogram.h"
+#include "dmzQtPluginGraph.h"
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
-dmz::QtPluginHistogram::QtPluginHistogram (const PluginInfo &Info, Config &local) :
+#include <QtGui/QPainterPath>
+
+#include <math.h>
+
+dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       Plugin (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       QtWidget (Info),
       _log (Info),
@@ -16,6 +21,10 @@ dmz::QtPluginHistogram::QtPluginHistogram (const PluginInfo &Info, Config &local
       _xAxis (0),
       _yAxis (0),
       _yLabels (0),
+      _powerLawPath (0),
+      _powerLabel (0),
+      _graphDirty (False),
+      _showPowerLaw (False),
       _maxCount (0),
       _totalCount (0),
       _maxBarCount (0),
@@ -23,13 +32,14 @@ dmz::QtPluginHistogram::QtPluginHistogram (const PluginInfo &Info, Config &local
       _barWidth (20.0f),
       _barHeight (130.0f),
       _spaceWidth (5.0f),
-      _yDivisions (4) {
+      _yDivisions (4),
+      _steps (1) {
 
    _init (local);
 }
 
 
-dmz::QtPluginHistogram::~QtPluginHistogram () {
+dmz::QtPluginGraph::~QtPluginGraph () {
 
    delete []_yLabels; _yLabels = 0;
    _objTable.empty ();
@@ -39,16 +49,30 @@ dmz::QtPluginHistogram::~QtPluginHistogram () {
 
 // Plugin Interface
 void
-dmz::QtPluginHistogram::update_plugin_state (
+dmz::QtPluginGraph::update_plugin_state (
       const PluginStateEnum State,
       const UInt32 Level) {
 
    if (State == PluginStateInit) {
 
-      _xAxis = new QGraphicsLineItem (0.0f, 0.0f, _barWidth + _spaceWidth, 0.0);
+      QColor white (1.0f, 1.0f, 1.0f, 1.0f);
+      QPen pen (white);
+      QGraphicsLineItem *spacer = new QGraphicsLineItem (0.0f, 0.0f, -40.0f, 0.0f);
+      spacer->setPen (pen);
+      spacer->setZValue (-1.0f);
+      _scene->addItem (spacer);
+
+      spacer = new QGraphicsLineItem (0.0f, -_barHeight, 0.0f, -(_barHeight + 20.0f));
+      spacer->setPen (pen);
+      spacer->setZValue (-1.0f);
+      _scene->addItem (spacer);
+
+      _xAxis = new QGraphicsLineItem (0.0f, 0.0f, _barWidth + _spaceWidth, 0.0f);
+      _xAxis->setZValue (1.0);
       _scene->addItem (_xAxis);
 
       _yAxis = new QGraphicsLineItem (0.0f, 0.0f, 0.0f, -_barHeight);
+      _yAxis->setZValue (1.0);
       _scene->addItem (_yAxis);
    }
    else if (State == PluginStateStart) {
@@ -64,7 +88,7 @@ dmz::QtPluginHistogram::update_plugin_state (
 
 
 void
-dmz::QtPluginHistogram::discover_plugin (
+dmz::QtPluginGraph::discover_plugin (
       const PluginDiscoverEnum Mode,
       const Plugin *PluginPtr) {
 
@@ -77,9 +101,17 @@ dmz::QtPluginHistogram::discover_plugin (
 }
 
 
+// TimeSlice Interface
+void
+dmz::QtPluginGraph::update_time_slice (const Float64 TimeDelta) {
+
+   if (_graphDirty) { _update_graph (); _graphDirty = False; }
+}
+
+
 // Object Observer Interface
 void
-dmz::QtPluginHistogram::create_object (
+dmz::QtPluginGraph::create_object (
       const UUID &Identity,
       const Handle ObjectHandle,
       const ObjectType &Type,
@@ -98,7 +130,7 @@ dmz::QtPluginHistogram::create_object (
          if (os->bar) {
 
             os->bar->count++;
-            _update_graph ();
+            _graphDirty = True;
          }
       }
       else { delete os; os = 0; }
@@ -107,7 +139,7 @@ dmz::QtPluginHistogram::create_object (
 
 
 void
-dmz::QtPluginHistogram::destroy_object (
+dmz::QtPluginGraph::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
@@ -120,7 +152,7 @@ dmz::QtPluginHistogram::destroy_object (
       if (os->bar) {
 
          os->bar->count--;
-         _update_graph ();
+         _graphDirty = True;
       }
 
       delete os; os = 0;
@@ -129,7 +161,7 @@ dmz::QtPluginHistogram::destroy_object (
 
 
 void
-dmz::QtPluginHistogram::link_objects (
+dmz::QtPluginGraph::link_objects (
       const Handle LinkHandle,
       const Handle AttributeHandle,
       const UUID &SuperIdentity,
@@ -143,12 +175,12 @@ dmz::QtPluginHistogram::link_objects (
    if (super) { _update_object_count (1, *super); }
    if (sub) { _update_object_count (1, *sub); }
 
-   _update_graph ();
+   _graphDirty = True;
 }
 
 
 void
-dmz::QtPluginHistogram::unlink_objects (
+dmz::QtPluginGraph::unlink_objects (
       const Handle LinkHandle,
       const Handle AttributeHandle,
       const UUID &SuperIdentity,
@@ -162,42 +194,51 @@ dmz::QtPluginHistogram::unlink_objects (
    if (super) { _update_object_count (-1, *super); }
    if (sub) { _update_object_count (-1, *sub); }
 
-   _update_graph ();
+   _graphDirty = True;
 }
 
 
 void
-dmz::QtPluginHistogram::update_object_counter (
+dmz::QtPluginGraph::update_object_counter (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
       const Int64 Value,
       const Int64 *PreviousValue) {
 
-   _update_graph ();
+   ObjectStruct *os (_objTable.lookup (ObjectHandle));
+
+   if (os) {
+
+      const Int32 Diff (Value - (PreviousValue ? *PreviousValue : 0));
+
+      _update_object_count (Diff, *os);
+
+      _graphDirty = True;
+   }
 }
 
 
 // QtWidget Interface
 QWidget *
-dmz::QtPluginHistogram::get_qt_widget () { return _view; }
+dmz::QtPluginGraph::get_qt_widget () { return _view; }
 
 
 void
-dmz::QtPluginHistogram::_update_object_count (const Int32 Value, ObjectStruct &obj) {
+dmz::QtPluginGraph::_update_object_count (const Int32 Value, ObjectStruct &obj) {
 
    obj.count += Value;
 
    if (obj.bar) { obj.bar->count--; }
 
-   obj.bar = _lookup_bar (obj.count);
+   obj.bar = _lookup_bar (obj.count - (obj.count % _steps));
 
    if (obj.bar) { obj.bar->count++; }
 }
 
 
-dmz::QtPluginHistogram::BarStruct *
-dmz::QtPluginHistogram::_lookup_bar (const Int32 Count) {
+dmz::QtPluginGraph::BarStruct *
+dmz::QtPluginGraph::_lookup_bar (const Int32 Count) {
 
    BarStruct *result (0);
 
@@ -217,7 +258,7 @@ dmz::QtPluginHistogram::_lookup_bar (const Int32 Count) {
 
 
 void
-dmz::QtPluginHistogram::_remove_bar (BarStruct &bar) {
+dmz::QtPluginGraph::_remove_bar (BarStruct &bar) {
 
    if (bar.bar) {
 
@@ -230,19 +271,26 @@ dmz::QtPluginHistogram::_remove_bar (BarStruct &bar) {
       if (_scene) { _scene->removeItem (bar.text); }
       delete (bar.text); bar.text = 0;
    }
+
+   if (bar.countText) {
+
+      if (_scene) { _scene->removeItem (bar.countText); }
+      delete (bar.countText); bar.countText = 0;
+   }
+
 }
 
 
 void
-dmz::QtPluginHistogram::_update_bar (BarStruct &bar) {
+dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
+
+   // Note: _totalCount was _maxBarCount
+   bar.height = ((_totalCount > 0) ?
+      -(_barHeight * ((Float32)bar.count / (Float32)_totalCount)) : 0.0f);
 
    if (bar.bar) {
 
-      const Float32 Height = ((_maxBarCount > 0) ?
-         -(_barHeight * ((Float32)bar.count / (Float32)_maxBarCount)) :
-         0.0);
-
-      bar.bar->setRect (bar.offset, 0.0, _barWidth, Height);
+      bar.bar->setRect (bar.offset, 0.0f, _barWidth, bar.height);
    }
 
    if (bar.text) {
@@ -252,11 +300,153 @@ dmz::QtPluginHistogram::_update_bar (BarStruct &bar) {
          bar.offset + ((_barWidth * 0.5) - (rect.width () * 0.5)),
          5.0);
    }
+
+   if (bar.countText) {
+
+      QRectF rect = bar.countText->boundingRect ();
+      bar.countText->setPlainText (QString::number (bar.count));
+      bar.countText->setPos (
+         bar.offset + ((_barWidth * 0.5) - (rect.width () * 0.5)),
+         bar.height - rect.height ());
+   }
+}
+
+static inline dmz::Float64
+local_power (const dmz::Float64 P, const dmz::Float64 Q, const dmz::Float64 X) {
+
+   return (X <= 0.0 ? P : P * pow (X, Q));
 }
 
 
 void
-dmz::QtPluginHistogram::_update_graph () {
+dmz::QtPluginGraph::_update_power_law (
+      const BarStruct *LastBar,
+      const Float64 EndOfXAxis) {
+
+   Boolean foundFirstBar (False);
+   Float32 offset = _spaceWidth;
+
+   Float64 p (0.0);
+   Float64 q (0.0);
+   Float64 nonZeroCount (0.0);
+   Float64 x (0.0);
+   Float64 y (0.0);
+   Float64 sumX (0.0);
+   Float64 sumY (0.0);
+   Float64 sumXY (0.0);
+   Float64 sumX2 (0.0);
+
+   HashTableUInt32Iterator it;
+   BarStruct *bar (_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
+
+   while (bar) {
+
+      if (!foundFirstBar && bar->count) { foundFirstBar = True; }
+
+      if (foundFirstBar) {
+
+         if (bar->Id == 0) { x = 1.0; }
+         else { x = log (Float64 (bar->Id)); }
+
+         if (bar->height < 0.0f) {
+
+            y = log (-bar->height);
+            sumY += y;
+            sumX += x;
+            sumXY += x * y;
+            sumX2 += x * x;
+            nonZeroCount++;
+         }
+      }
+
+      if (LastBar == bar) { bar = 0; }
+      else {
+
+         bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
+      }
+   }
+
+   if (nonZeroCount > 0.0) {
+
+      q = ((nonZeroCount * sumXY) - (sumX * sumY)) /
+            ((nonZeroCount * sumX2) - (sumX * sumX));
+
+      p = exp ((sumY - (q * sumX)) / nonZeroCount);
+   }
+
+   foundFirstBar = false;
+   QPainterPath path;
+
+   bar = (_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
+
+   const Float32 Offset (_barWidth * 0.5f);
+
+   while (bar) {
+
+      if (!foundFirstBar && bar->count) {
+
+         path.moveTo (bar->offset + Offset, -local_power (p, q, bar->Id));
+         foundFirstBar = True;
+      }
+      else if (foundFirstBar) {
+
+         path.lineTo (bar->offset + Offset, -local_power (p, q, bar->Id));
+      }
+      
+      if (LastBar == bar) { bar = 0; }
+      else {
+
+         bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
+      }
+   }
+
+   if (path.elementCount () > 1) {
+
+      if (!_powerLawPath) {
+
+         _powerLawPath = new QGraphicsPathItem;
+         _powerLawPath->setPen (_powerStroke);
+         _powerLawPath->setZValue (2.0);
+         if (_scene) { _scene->addItem (_powerLawPath); }
+      }
+
+      if (_powerLawPath) {
+
+         _powerLawPath->setPath (path);
+      }
+
+      if (!_powerLabel) {
+
+         _powerLabel = new QGraphicsTextItem;
+         _powerLabel->setPos (260.0, -_barHeight);
+         if (_scene) { _scene->addItem (_powerLabel); }
+      }
+
+      if (_powerLabel) {
+
+         _powerLabel->setPlainText (
+            QString::fromAscii ("Exponent = ") + QString::number (q));
+      }
+   }
+   else if (_scene) {
+
+      if (_powerLawPath) {
+
+         _scene->removeItem (_powerLawPath);
+         delete _powerLawPath; _powerLawPath = 0;
+      }
+
+      if (_powerLabel) {
+
+         _scene->removeItem (_powerLabel);
+         delete _powerLabel; _powerLabel = 0;
+      }
+   }
+}
+
+
+void
+dmz::QtPluginGraph::_update_graph () {
 
    HashTableUInt32Iterator it;
 
@@ -288,25 +478,37 @@ dmz::QtPluginHistogram::_update_graph () {
 
       if (foundFirstBar) {
 
-         if (!bar->bar) {
+         if ((bar->Id % _steps) == 0) {
 
-            bar->bar = new QGraphicsRectItem;
-            bar->bar->setPen (_barStroke);
-            bar->bar->setBrush (_barFill);
-            if (_scene) { _scene->addItem (bar->bar); }
+            if (!bar->bar) {
+
+               bar->bar = new QGraphicsRectItem;
+               bar->bar->setPen (_barStroke);
+               bar->bar->setBrush (_barFill);
+               bar->bar->setZValue (0.0f);
+               if (_scene) { _scene->addItem (bar->bar); }
+            }
+
+            if (!bar->text) {
+
+               bar->text = new QGraphicsTextItem (QString::number (bar->Id));
+               bar->text->setZValue (0.0f);
+               if (_scene) { _scene->addItem (bar->text); }
+            }
+
+            if (!bar->countText) {
+
+               bar->countText = new QGraphicsTextItem (QString::number (bar->count));
+               bar->countText->setZValue (0.0f);
+               if (_scene) { _scene->addItem (bar->countText); }
+            }
+
+            bar->offset = offset;
+
+            _update_bar (*bar);
+
+            offset += (_barWidth + _spaceWidth);
          }
-
-         if (!bar->text) {
-
-            bar->text = new QGraphicsTextItem (QString::number (bar->Id));
-            if (_scene) { _scene->addItem (bar->text); }
-         }
-
-         bar->offset = offset;
-
-         _update_bar (*bar);
-
-         offset += (_barWidth + _spaceWidth);
       }
       else { _remove_bar (*bar); }
 
@@ -319,12 +521,10 @@ dmz::QtPluginHistogram::_update_graph () {
 
    if (_xAxis) { _xAxis->setLine (0.0f, 0.0f, offset, 0.0f); }
 
-
+#if 0
    for (Int32 ix = 0; ix < _yDivisions; ix++) {
 
       const QString Value (
-         // QString::number ((_maxBarCount * (ix + 1)) / _yDivisions) +
-         // QString (" " ) +
          ((_totalCount > 0) ?
             QString::number (
                Int32 ((Float32)(_maxBarCount * (ix + 1)) * 100.0f /
@@ -340,20 +540,23 @@ dmz::QtPluginHistogram::_update_graph () {
          (-_barHeight * ((Float32)(ix + 1)) / (Float32)_yDivisions) -
             (rect.height () * 0.5f));
    }
+#endif
+
+   if (_showPowerLaw) { _update_power_law (lastBar, offset); }
+
+   if (_scene) { _scene->setSceneRect (_scene->itemsBoundingRect ()); }
 }
 
 
 void
-dmz::QtPluginHistogram::_init (Config &local) {
+dmz::QtPluginGraph::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
    Definitions defs (context);
 
    _scene = new QGraphicsScene;
    _view = new QGraphicsView (_scene);
-   //_view->setAlignment (Qt::AlignLeft | Qt::AlignBottom);
-   //_view->resize (400, 300);
-   //_view->show ();
+   _view->setAlignment (Qt::AlignLeft); // | Qt::AlignBottom);
 
    _typeSet = config_to_object_type_set ("set", local, context);
 
@@ -404,10 +607,16 @@ dmz::QtPluginHistogram::_init (Config &local) {
 
    _maxCount = config_to_int32 ("start.value", local, _maxCount);
 
+   _showPowerLaw = config_to_boolean ("power-law.show", local, _showPowerLaw);
+   _powerStroke = config_to_qpen ("power-law.stroke", local, _powerStroke);
    _barStroke = config_to_qpen ("bar.stroke", local, _barStroke);
    _barFill = config_to_qbrush ("bar.fill", local, _barFill);
+   _barWidth = config_to_int32 ("bar.width", local, _barWidth);
+   _barHeight = config_to_int32 ("bar.height", local, _barHeight);
+   _spaceWidth = config_to_int32 ("bar.space", local, _spaceWidth);
+   _steps = config_to_int32 ("bar.steps", local, _steps);
 
-   _yDivisions = config_to_int32 ("divisions.value", local, _yDivisions);
+   _yDivisions = config_to_int32 ("bar.divisions", local, _yDivisions);
 
    _yLabels = new QGraphicsTextItem*[_yDivisions];
 
@@ -419,6 +628,7 @@ dmz::QtPluginHistogram::_init (Config &local) {
 
       _yLabels[ix]->setPlainText (
          QString::number (100 * (ix +1) / _yDivisions) + QString ("%"));
+      _yLabels[ix]->setZValue (1.0f);
 
       QRectF rect = _yLabels[ix]->boundingRect ();
 
@@ -427,6 +637,7 @@ dmz::QtPluginHistogram::_init (Config &local) {
       _scene->addItem (_yLabels[ix]);
 
       QGraphicsLineItem *line = new QGraphicsLineItem (-4.0, Offset, 0.0f, Offset);
+      line->setZValue (1.0f);
 
       _scene->addItem (line);
    }
@@ -436,12 +647,12 @@ dmz::QtPluginHistogram::_init (Config &local) {
 extern "C" {
 
 DMZ_PLUGIN_FACTORY_LINK_SYMBOL dmz::Plugin *
-create_dmzQtPluginHistogram (
+create_dmzQtPluginGraph (
       const dmz::PluginInfo &Info,
       dmz::Config &local,
       dmz::Config &global) {
 
-   return new dmz::QtPluginHistogram (Info, local);
+   return new dmz::QtPluginGraph (Info, local);
 }
 
 };

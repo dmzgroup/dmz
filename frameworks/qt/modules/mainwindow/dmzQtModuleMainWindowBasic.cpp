@@ -11,11 +11,18 @@
 #include <dmzRuntimeSession.h>
 #include <QtGui/QtGui>
 
+namespace {
+
+static const int LocalSessionVersion = 5;
+
+};
+
 void
 dmz::QtModuleMainWindowBasic::DockWidgetStruct::show (MainWindowStruct &window) {
 
    if (widget && window.main && !dock) {
 
+      widget->show ();
       dock = new QDockWidget (title ? title.get_buffer () : "");
       QLayout *layout (dock->layout ());
       dock->setObjectName (name.get_buffer ());
@@ -126,8 +133,6 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
    _ui.stackedWidget->addWidget (widget);
 
    _init (local);
-
-   setCorner (Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 }
 
 
@@ -424,8 +429,10 @@ dmz::QtModuleMainWindowBasic::_save_session () {
 
    Config session (get_plugin_name ());
 
-   session.add_config (qbytearray_to_config ("geometry", saveGeometry ()));
-   session.add_config (qbytearray_to_config ("state", saveState (1)));
+   session.add_config (
+      qbytearray_to_config ("geometry", saveGeometry ()));
+
+   session.add_config (qbytearray_to_config ("state", saveState (LocalSessionVersion)));
 
    set_session_config (get_plugin_runtime_context (), session);
 }
@@ -440,8 +447,10 @@ dmz::QtModuleMainWindowBasic::_load_session () {
    QByteArray geometry (config_to_qbytearray ("geometry", session, saveGeometry ()));
    restoreGeometry (geometry);
 
-   QByteArray stateData (config_to_qbytearray ("state", session, saveState (1)));
-   restoreState (stateData, 1);
+   QByteArray stateData (
+      config_to_qbytearray ("state", session, saveState (LocalSessionVersion)));
+
+   restoreState (stateData, LocalSessionVersion);
 }
 
 
@@ -586,6 +595,33 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
    set_qwidget_stylesheet ("stylesheet", local, this);
 
    if (config_to_boolean ("hide.value", local, False)) { hide (); }
+
+
+//   setCorner (Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+
+   setCorner (
+      Qt::TopRightCorner,
+      config_to_boolean ("corners.top.right", local, False) ?
+         Qt::TopDockWidgetArea :
+         Qt::RightDockWidgetArea);
+
+   setCorner (
+      Qt::TopLeftCorner,
+      config_to_boolean ("corners.top.left", local, False) ?
+         Qt::TopDockWidgetArea :
+         Qt::LeftDockWidgetArea);
+
+   setCorner (
+      Qt::BottomRightCorner,
+      config_to_boolean ("corners.bottom.right", local, False) ?
+         Qt::BottomDockWidgetArea :
+         Qt::RightDockWidgetArea);
+
+   setCorner (
+      Qt::BottomLeftCorner,
+      config_to_boolean ("corners.bottom.left", local, False) ?
+         Qt::BottomDockWidgetArea :
+         Qt::LeftDockWidgetArea);
 }
 
 

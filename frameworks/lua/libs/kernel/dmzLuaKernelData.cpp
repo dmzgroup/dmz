@@ -348,6 +348,7 @@ static const luaL_Reg arrayMembers [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_data_lib (lua_State *L) {
 
@@ -364,8 +365,12 @@ dmz::open_lua_kernel_data_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 
+//! \addtogroup Lua
+//! @{
 
+//! Creates a Data object on the Lua stack.
 dmz::Data *
 dmz::lua_create_data (lua_State *L, const Data *Value) {
 
@@ -389,6 +394,7 @@ dmz::lua_create_data (lua_State *L, const Data *Value) {
 }
 
 
+//! Attempts to convert specified object on the stack to a Data object.
 dmz::Data *
 dmz::lua_to_data (lua_State *L, int narg) {
 
@@ -400,6 +406,7 @@ dmz::lua_to_data (lua_State *L, int narg) {
 }
 
 
+//! Raises an error if the specified object on the stack is no a Data object.
 dmz::Data *
 dmz::lua_check_data (lua_State *L, int narg) {
 
@@ -409,3 +416,4 @@ dmz::lua_check_data (lua_State *L, int narg) {
 
    return result;
 }
+//! @}

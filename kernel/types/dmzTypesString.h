@@ -16,6 +16,18 @@ namespace dmz {
    class DMZ_KERNEL_LINK_SYMBOL String {
 
       public:
+         static String number (const char Value);
+         static String number (const unsigned char Value);
+         static String number (const short Value);
+         static String number (const unsigned short Value);
+         static String number (const int Value);
+         static String number (const unsigned int Value);
+         static String number (const long Value);
+         static String number (const unsigned long Value);
+         static String number (const Int64 Value);
+         static String number (const UInt64 Value);
+         static String number (const Float32 Value);
+         static String number (const Float64 Value);
 
          String ();
          String (const String &Str);
@@ -74,6 +86,8 @@ namespace dmz {
             const String &Sub,
             const String &Target,
             const Int32 Start = 0);
+
+         Boolean contains_sub (const String &Sub, const Int32 Start = 0) const;
 
       protected:
          char * _buffer; //!< Character buffer.

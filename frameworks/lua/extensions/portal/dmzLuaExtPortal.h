@@ -16,6 +16,7 @@ namespace dmz {
          public LuaExt {
 
       public:
+         //! \cond
          LuaExtPortal (const PluginInfo &Info, Config &local);
          ~LuaExtPortal () {;}
 
@@ -42,6 +43,7 @@ namespace dmz {
          RenderModulePortal *_renderMaster;
 
          Log _log;
+         //! \endcond
 
       private:
          LuaExtPortal ();

@@ -571,6 +571,7 @@ static const luaL_Reg arrayMembers [] = {
 };
 
 
+//! \cond
 void
 dmz::open_lua_kernel_vector_lib (lua_State *L) {
 
@@ -587,7 +588,13 @@ dmz::open_lua_kernel_vector_lib (lua_State *L) {
 
    LUA_END_VALIDATE (L, 0);
 }
+//! \endcond
 
+
+//! \addtogroup Lua
+//! @{
+
+//! Creates a Vector object on the Lua stack.
 dmz::Vector *
 dmz::lua_create_vector (lua_State *L, const Vector *Value) {
 
@@ -611,6 +618,7 @@ dmz::lua_create_vector (lua_State *L, const Vector *Value) {
 }
 
 
+//! Attempts to convert the specified object on the Lua stack to a Vector object.
 dmz::Vector *
 dmz::lua_to_vector (lua_State *L, int narg) {
 
@@ -622,6 +630,7 @@ dmz::lua_to_vector (lua_State *L, int narg) {
 }
 
 
+//! Raises and error if the specified object on the Lua stack is not a Vector object.
 dmz::Vector *
 dmz::lua_check_vector (lua_State *L, int narg) {
 
@@ -631,3 +640,4 @@ dmz::lua_check_vector (lua_State *L, int narg) {
 
    return result;
 }
+//! @}

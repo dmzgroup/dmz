@@ -126,8 +126,9 @@ namespace dmz {
          PluginContainer _extensions;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
-         Handle _defaultAttributeHandle;
-         Handle _linkAttributeHandle;
+         Handle _defaultAttrHandle;
+         Handle _positionAttrHandle;
+         Handle _linkAttrHandle;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
          HashTableHandleTemplate<ObjectStruct> _updateTable;
          Boolean _zoomChanged;

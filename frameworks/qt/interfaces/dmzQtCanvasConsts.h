@@ -16,6 +16,8 @@ namespace dmz {
    
    const char ObjectAttributeCanvasCenterName[] = "Canvas_Center";
    const char ObjectAttributeCanvasZoomName[] = "Canvas_Zoom";
+   
+   const char ObjectAttributeAltPositionName[] = "Alt_Pos";
 };
 
 

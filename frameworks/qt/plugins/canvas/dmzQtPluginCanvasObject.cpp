@@ -130,7 +130,9 @@ dmz::QtPluginCanvasObject::QtPluginCanvasObject (
       _log (Info),
       _defs (Info, &_log),
       _extensions (),
-      _defaultAttributeHandle (0),
+      _defaultAttrHandle (0),
+      _positionAttrHandle (0),
+      _linkAttrHandle (0),
       _canvasModule (0),
       _canvasModuleName (),
       _objectTable (),
@@ -245,8 +247,8 @@ dmz::QtPluginCanvasObject::create_object (
          Vector pos;
          Matrix ori;
 
-         objMod->lookup_position (ObjectHandle, _defaultAttributeHandle, pos);
-         objMod->lookup_orientation (ObjectHandle, _defaultAttributeHandle, ori);
+         objMod->lookup_position (ObjectHandle, _positionAttrHandle, pos);
+         objMod->lookup_orientation (ObjectHandle, _defaultAttrHandle, ori);
 
          os->posX = pos.get_x ();
          os->posY = pos.get_z ();
@@ -288,7 +290,7 @@ dmz::QtPluginCanvasObject::link_objects (
 
    if (_canvasModule) {
 
-      if (AttributeHandle == _linkAttributeHandle) {
+      if (AttributeHandle == _linkAttrHandle) {
 
          QGraphicsItem *superItem (_canvasModule->lookup_item (SuperHandle));
          QGraphicsItem *subItem (_canvasModule->lookup_item (SubHandle));
@@ -317,7 +319,7 @@ dmz::QtPluginCanvasObject::unlink_objects (
 
    if (_canvasModule) {
 
-      if (AttributeHandle == _linkAttributeHandle) {
+      if (AttributeHandle == _linkAttrHandle) {
 
          QGraphicsItem *superItem (_canvasModule->lookup_item (SuperHandle));
          QGraphicsItem *subItem (_canvasModule->lookup_item (SubHandle));
@@ -343,8 +345,8 @@ dmz::QtPluginCanvasObject::update_object_position (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   if (AttributeHandle == _defaultAttributeHandle) {
-
+   if (AttributeHandle == _positionAttrHandle) {
+      
       ObjectStruct *os (_objectTable.lookup (ObjectHandle));
 
       if (os) {
@@ -369,7 +371,7 @@ dmz::QtPluginCanvasObject::update_object_orientation (
       const Matrix &Value,
       const Matrix *PreviousValue) {
 
-   if (AttributeHandle == _defaultAttributeHandle) {
+   if (AttributeHandle == _defaultAttrHandle) {
 
       ObjectStruct *os (_objectTable.lookup (ObjectHandle));
 
@@ -475,16 +477,22 @@ dmz::QtPluginCanvasObject::_init (Config &local, Config &global) {
       }
    }
 
-   _defaultAttributeHandle = activate_default_object_attribute (
+   _defaultAttrHandle = activate_default_object_attribute (
       ObjectCreateMask |
       ObjectDestroyMask |
-      ObjectPositionMask |
       ObjectOrientationMask);
 
-   _linkAttributeHandle = activate_object_attribute (
+   const String PosAttrName (
+      config_to_string ("attribute.position.name", local, ObjectAttributeDefaultName));
+   
+   _positionAttrHandle = activate_object_attribute (
+      PosAttrName,
+      ObjectPositionMask);
+
+   _linkAttrHandle = activate_object_attribute (
       ObjectAttributeLayerLinkName,
       ObjectLinkMask | ObjectUnlinkMask);
-
+   
 #if 0
    Config preLoadList;
 

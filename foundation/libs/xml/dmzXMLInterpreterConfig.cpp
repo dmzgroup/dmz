@@ -12,6 +12,16 @@ namespace {
 
       ValueStruct (const dmz::String &TheValue) : Value (TheValue), next (0) {;}
       ~ValueStruct () { if (next) { delete next; next = 0; } }
+      // ~ValueStruct () {
+      //    
+      //    while (next) {
+      //       
+      //       ValueStruct *del = next;
+      //       next = next->next;
+      //       delete del;
+      //       del = 0;
+      //    } 
+      // }
    };
 
    struct DataStruct {

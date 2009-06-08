@@ -11,7 +11,16 @@ namespace {
       ValueStruct *next;
 
       ValueStruct (const dmz::String &TheValue) : Value (TheValue), next (0) {;}
-      ~ValueStruct () { if (next) { delete next; next = 0; } }
+      ~ValueStruct () {
+
+         while (next) {
+
+            ValueStruct *tmp = next;
+            next = next->next;
+            tmp->next = 0;
+            delete tmp; tmp = 0;
+         }
+      }
    };
 
    struct DataStruct {
@@ -107,7 +116,6 @@ struct dmz::XMLInterpreterConfig::State {
 
             stack->data.append_value (value, inCDATA);
          }
-
       }
 
       value.flush ();

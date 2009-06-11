@@ -3,7 +3,16 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
 
+\class dmz::PluginExit
+\ingroup Foundation
+\brief Makes an exit request after one application loop.
+
+*/
+
+
+//! \cond
 dmz::PluginExit::PluginExit (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (Info),
@@ -65,6 +74,7 @@ void
 dmz::PluginExit::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

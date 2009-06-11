@@ -12,6 +12,7 @@ namespace dmz {
          public TimeSlice {
 
       public:
+         //! \cond
          PluginExit (const PluginInfo &Info, Config &local);
          ~PluginExit ();
 
@@ -31,6 +32,7 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         //! \endcond
 
       private:
          PluginExit ();

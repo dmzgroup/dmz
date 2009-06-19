@@ -20,6 +20,6 @@ function setup ()
    else
    end
    if libs then lmk.add_vars { localLibs = libs, } end
-   if libPaths then lmk.add_vars { localLibPaths = libPathss, } end
+   if libPaths then lmk.add_vars { localLibPaths = libPaths, } end
    if includePaths then lmk.add_vars { localIncludes = includePaths, } end
 end

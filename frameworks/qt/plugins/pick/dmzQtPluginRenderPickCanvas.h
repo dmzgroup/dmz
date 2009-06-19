@@ -11,8 +11,9 @@ class QPoint;
 
 namespace dmz {
 
-   class QtModuleCanvas;
    class ObjectModule;
+   class QtModuleCanvas;
+   class RenderModulePickConvert;
 
 
    class QtPluginRenderPickCanvas :
@@ -66,6 +67,9 @@ namespace dmz {
          String _canvasModuleName;
          ObjectModule *_objectModule;
          String _objectModuleName;
+         RenderModulePickConvert *_pickConvertModule;
+         Boolean _discoverPickConvert;
+         String _pickConvertModuleName;
          VectorComponentEnum _vectorOrder[3];
 
       private:

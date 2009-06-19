@@ -3,6 +3,7 @@
 #include "dmzQtModuleMapBasic.h"
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzQtUtil.h>
+#include <dmzRenderModulePick.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfigToNamedHandle.h>
@@ -17,9 +18,12 @@
 dmz::QtModuleMapBasic::QtModuleMapBasic (const PluginInfo &Info, Config &local) :
       QWidget (0),
       Plugin (Info),
+      RenderModulePickConvert (Info),
       QtWidget (Info),
       QtModuleMap (Info),
       _log (Info),
+      _pickModule (0),
+      _pickModuleName (),
       _inputModule (0),
       _inputModuleName (),
       _keyEvent (),
@@ -81,6 +85,11 @@ dmz::QtModuleMapBasic::discover_plugin (
 
          _inputModule = InputModule::cast (PluginPtr, _inputModuleName);
       }
+      
+      if (!_pickModule) {
+
+         _pickModule = RenderModulePick::cast (PluginPtr, _pickModuleName);
+      }
    }
    else if (Mode == PluginDiscoverRemove) {
 
@@ -88,7 +97,50 @@ dmz::QtModuleMapBasic::discover_plugin (
 
          _inputModule = 0;
       }
+      
+      if (_pickModule && (_pickModule == RenderModulePick::cast (PluginPtr))) {
+
+         _pickModule = 0;
+      }
    }
+}
+
+
+// RenderModulePickConvert
+dmz::Boolean
+dmz::QtModuleMapBasic::source_to_world (
+      const Int32 ScreenPosX,
+      const Int32 ScreenPosY,
+      Vector &worldPosition,
+      Vector &normal,
+      Handle &objectHandle) {
+
+   Boolean retVal (False);
+
+   if (_pickModule) {
+      
+      retVal = _pickModule->source_to_world (
+         get_plugin_handle (), ScreenPosX, ScreenPosY, worldPosition, normal, objectHandle);
+   }
+
+   return retVal;
+}
+
+dmz::Boolean
+dmz::QtModuleMapBasic::world_to_source (
+      const Vector &WorldPosition,
+      Int32 &screenPosX,
+      Int32 &screenPosY) {
+
+   Boolean retVal (False);
+
+   if (_pickModule) {
+      
+      retVal = _pickModule->world_to_source (
+         get_plugin_handle (), WorldPosition, screenPosX, screenPosY);
+   }
+
+   return retVal;   
 }
 
 
@@ -246,6 +298,7 @@ dmz::QtModuleMapBasic::screen_to_world (const QPoint &Point) const {
    
    return result;
 }
+
 
 
 // Class Methods
@@ -582,6 +635,8 @@ void
 dmz::QtModuleMapBasic::_init (Config &local) {
 
    setObjectName (get_plugin_name ().get_buffer ());
+
+   _pickModuleName = config_to_string ("module.pick.name", local);
 
    qwidget_config_read ("widget", local, this);
 

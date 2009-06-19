@@ -413,8 +413,6 @@ dmz::QtModuleCanvasBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we)
 
    if (_inputModule && _canvas) {
 
-_log.warn << "_handle_mouse_event" << endl;
-
       InputEventMouse event (_mouseEvent);
 
       QPoint pointOnCanvas (event.get_mouse_x (), event.get_mouse_y ());
@@ -494,14 +492,14 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
       
       _scene.enableGrid (False);
       _canvas->setStyleSheet ("background: transparent");
-      _canvas->setAttribute(Qt::WA_NoSystemBackground);
-      _canvas->setAttribute (Qt::WA_TransparentForMouseEvents);
-      _canvas->setMouseTracking (false);
+//      _canvas->setAttribute(Qt::WA_NoSystemBackground);
+//      _canvas->setAttribute (Qt::WA_TransparentForMouseEvents);
+//      _canvas->setMouseTracking (false);
    }
-   else {
+//   else {
       
       _canvas->setMouseTracking (true);
-   }
+//   }
 
    _canvas->setTransformationAnchor (QGraphicsView::AnchorViewCenter);
    _canvas->setResizeAnchor (QGraphicsView::AnchorViewCenter);

@@ -154,9 +154,8 @@ dmz::QtPluginRenderPickMap::source_to_world (
       normal.set_xyz (0.0, 0.0, 0.0);
       normal.set (_vectorOrder[2], 1.0);
 
-      
       objectHandle = _get_object_handle (sourcePoint);
-      
+
       retVal = True;
    }
 
@@ -174,12 +173,15 @@ dmz::QtPluginRenderPickMap::world_to_source (
 
    if (_mapModule) {
 
-      QPointF worldPoint (WorldPosition.get_x (), WorldPosition.get_y ());
+      QPointF worldPoint (
+         WorldPosition.get (_vectorOrder[0]),
+         WorldPosition.get (_vectorOrder[1]));
+         
       QPoint sourcePoint (_mapModule->world_to_screen (worldPoint));
       
       sourcePosX = sourcePoint.x ();
       sourcePosY = sourcePoint.y ();
-      
+
       retVal = True;
    }
 

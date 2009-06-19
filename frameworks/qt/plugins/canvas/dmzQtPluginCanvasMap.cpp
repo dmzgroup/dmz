@@ -219,6 +219,7 @@ dmz::QtPluginCanvasMap::get_qt_widget () { return this; }
 // }
 
 
+#if 0
 bool
 dmz::QtPluginCanvasMap::eventFilter (QObject *o, QEvent *e) {
 
@@ -309,6 +310,7 @@ qDebug () <<  e;
    // pass the event on to the parent class
 //   return QWidget::eventFilter (obj, event);
 }
+#endif
 
 
 // void
@@ -339,7 +341,7 @@ dmz::QtPluginCanvasMap::_init (Config &local) {
 
    _canvasModuleName = config_to_string ("canvas.name", local);
    _mapModuleName = config_to_string ("map.name", local);
-   _mapZoomName = config_to_string ("zoom.name", local);
+   _mapZoomName = config_to_string ("zoom.name", local, _mapZoomName);
 
    _layout = new QVBoxLayout (this);
    _layout->setSpacing (0);

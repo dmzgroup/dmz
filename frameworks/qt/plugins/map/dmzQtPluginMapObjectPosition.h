@@ -5,12 +5,14 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzTypesVector.h>
 
 
 namespace dmz {
 
    class RenderModulePick;
-
+   class QtModuleCanvas;
+   
    class QtPluginMapObjectPosition :
          public Plugin,
          public ObjectObserverUtil {
@@ -37,17 +39,19 @@ namespace dmz {
             const Vector *PreviousValue);
 
       protected:
-         Boolean _map_to_canvas (const Vector &Source, Vector &dest);
+         Boolean _world_to_canvas (const Vector &WorldPos, Vector &canvasPos);
          void _init (Config &local);
 
          Log _log;
+         QtModuleCanvas *_canvasModule;
+         String _canvasModuleName;
          RenderModulePick *_pickModule;
          String _pickModuleName;
          Handle _defaultAttrHandle;
          Handle _positionAttrHandle;
          Handle _sourceCanvas;
-         Handle _sourceMap;
          ObjectTypeSet _typeSet;
+         VectorComponentEnum _vectorOrder[3];
 
       private:
          QtPluginMapObjectPosition ();

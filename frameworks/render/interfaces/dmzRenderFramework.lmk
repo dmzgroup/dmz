@@ -4,6 +4,7 @@ lmk.add_files {
    "dmzRenderConsts.h",
    "dmzRenderPick.h",
    "dmzRenderModulePick.h",
+   "dmzRenderModulePickConvert.h",
    "dmzRenderModuleIsect.h",
    "dmzRenderModuleOverlay.h",
    "dmzRenderModulePortal.h",

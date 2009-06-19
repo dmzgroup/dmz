@@ -5,6 +5,7 @@
 #include <dmzInputEventMouse.h>
 #include <dmzQtModuleMap.h>
 #include <dmzQtWidget.h>
+#include <dmzRenderModulePickConvert.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
@@ -23,10 +24,12 @@ namespace qmapcontrol {
 namespace dmz {
 
    class InputModule;
+   class RenderModulePick;
 
    class QtModuleMapBasic :
          public QWidget,
          public Plugin,
+         public RenderModulePickConvert,
          public QtWidget,
          public QtModuleMap {
             
@@ -44,6 +47,19 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
+
+         // RenderModulePickConvert Interface
+         virtual Boolean source_to_world (
+            const Int32 ScreenPosX,
+            const Int32 ScreenPosY,
+            Vector &worldPosition,
+            Vector &normal,
+            Handle &objectHandle);
+
+         virtual Boolean world_to_source (
+            const Vector &WorldPosition,
+            Int32 &screenPosX,
+            Int32 &screenPosY);
 
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();
@@ -98,6 +114,8 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         RenderModulePick *_pickModule;
+         String _pickModuleName;
          InputModule *_inputModule;
          String _inputModuleName;
          InputEventKey _keyEvent;

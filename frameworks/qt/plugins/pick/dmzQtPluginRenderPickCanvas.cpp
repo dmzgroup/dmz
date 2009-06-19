@@ -1,6 +1,7 @@
 #include <dmzObjectModule.h>
 #include <dmzQtModuleCanvas.h>
 #include "dmzQtPluginRenderPickCanvas.h"
+#include <dmzRenderModulePickConvert.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -18,7 +19,10 @@ dmz::QtPluginRenderPickCanvas::QtPluginRenderPickCanvas (
       _canvasModule (0),
       _canvasModuleName (),
       _objectModule (0),
-      _objectModuleName () {
+      _objectModuleName (),
+      _discoverPickConvert (False),
+      _pickConvertModule (0),
+      _pickConvertModuleName () {
 
    // Initialize array
    _vectorOrder[0] = VectorComponentX;
@@ -51,6 +55,11 @@ dmz::QtPluginRenderPickCanvas::discover_plugin (
 
          _objectModule = ObjectModule::cast (PluginPtr, _objectModuleName);
       }
+
+      if (_discoverPickConvert && !_pickConvertModule) {
+
+         _pickConvertModule = RenderModulePickConvert::cast (PluginPtr, _pickConvertModuleName);
+      }
    }
    else if (Mode == PluginDiscoverRemove) {
 
@@ -62,6 +71,11 @@ dmz::QtPluginRenderPickCanvas::discover_plugin (
       if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
 
          _objectModule = 0;
+      }
+
+      if (_pickConvertModule && (_pickConvertModule == RenderModulePickConvert::cast (PluginPtr))) {
+
+         _pickConvertModule = 0;
       }
    }
 }
@@ -147,17 +161,28 @@ dmz::QtPluginRenderPickCanvas::source_to_world (
       QGraphicsView *view (_canvasModule->get_view ());
 
       if (view) {
-
+         
          QPoint sourcePoint (SourcePosX, SourcePosY);
-         QPointF worldPoint (view->mapToScene (sourcePoint));
-
-         worldPosition.set (_vectorOrder[0], worldPoint.x ());
-         worldPosition.set (_vectorOrder[1], worldPoint.y ());
-         worldPosition.set (_vectorOrder[2], 0.0);
-         normal.set_xyz (0.0, 0.0, 0.0);
-         normal.set (_vectorOrder[2], 1.0);
-
+         
          objectHandle = _get_object_handle (sourcePoint);
+
+_log.warn << "source_to_world: " << objectHandle << endl;
+
+         if (_pickConvertModule) {
+
+            _pickConvertModule->source_to_world (
+               SourcePosX, SourcePosY, worldPosition, normal, objectHandle);
+         }
+         else {
+
+            QPointF worldPoint (view->mapToScene (sourcePoint));
+
+            worldPosition.set (_vectorOrder[0], worldPoint.x ());
+            worldPosition.set (_vectorOrder[1], worldPoint.y ());
+            worldPosition.set (_vectorOrder[2], 0.0);
+            normal.set_xyz (0.0, 0.0, 0.0);
+            normal.set (_vectorOrder[2], 1.0);
+         }
 
          retVal = True;
       }
@@ -180,12 +205,22 @@ dmz::QtPluginRenderPickCanvas::world_to_source (
       QGraphicsView *view (_canvasModule->get_view ());
 
       if (view) {
+         
+         if (_pickConvertModule) {
+            
+            _pickConvertModule->world_to_source (WorldPosition, sourcePosX, sourcePosY);
+         }
+         else {
+            
+            QPointF worldPoint (
+               WorldPosition.get (_vectorOrder[0]),
+               WorldPosition.get (_vectorOrder[1]));
 
-         QPointF worldPoint (WorldPosition.get_x (), WorldPosition.get_y ());
-         QPoint sourcePoint (view->mapFromScene (worldPoint));
+            QPoint sourcePoint (view->mapFromScene (worldPoint));
 
-         sourcePosX = sourcePoint.x ();
-         sourcePosY = sourcePoint.y ();
+            sourcePosX = sourcePoint.x ();
+            sourcePosY = sourcePoint.y ();
+         }
 
          retVal = True;
       }
@@ -240,6 +275,8 @@ dmz::QtPluginRenderPickCanvas::_init (Config &local) {
 
    _canvasModuleName = config_to_string ("module.canvas.name", local);
    _objectModuleName = config_to_string ("module.object.name", local);
+   _pickConvertModuleName = config_to_string ("module.pickConvert.name", local);
+   _discoverPickConvert = config_to_boolean ("discover.pickConvert", local, _discoverPickConvert);
 
    _vectorOrder[0] = config_to_vector_component ("order.x", local, _vectorOrder [0]);
    _vectorOrder[1] = config_to_vector_component ("order.y", local, _vectorOrder [1]);

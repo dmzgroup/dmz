@@ -11,6 +11,6 @@ lmk.add_files {
    "dmzQtModuleMapBasic.cpp",
 }
 
-lmk.add_preqs {"dmzQtFramework", "dmzInputFramework",}
+lmk.add_preqs {"dmzQtFramework", "dmzRenderFramework", "dmzInputFramework",}
 lmk.add_libs {"QMapControl", "dmzQtUtil", "dmzInputEvents", "dmzKernel",}
 lmkQt.add_libs {"QtCore", "QtGui", "QtNetwork",}

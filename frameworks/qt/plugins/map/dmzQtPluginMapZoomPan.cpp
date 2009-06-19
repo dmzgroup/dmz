@@ -91,9 +91,9 @@ dmz::QtPluginMapZoomPan::discover_plugin (
 
             if (map) {
                
-               // connect (
-               //    view, SIGNAL (scale_changed (qreal)),
-               //    this, SLOT (slot_scale_changed (qreal)));
+               connect (
+                  map, SIGNAL (zoomChanged (int)),
+                  this, SLOT (slot_zoom_changed (int)));
                
                setParent (map->parentWidget ());
                map->installEventFilter (this);
@@ -276,7 +276,7 @@ dmz::QtPluginMapZoomPan::on_zoomSlider_valueChanged (int value) {
 
 
 void
-dmz::QtPluginMapZoomPan::slot_scale_changed (qreal value) {
+dmz::QtPluginMapZoomPan::slot_zoom_changed (int value) {
 
    if (_mapModule && !_ignoreScaleChange) {
 

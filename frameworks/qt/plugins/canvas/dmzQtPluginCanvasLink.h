@@ -140,7 +140,7 @@ namespace dmz {
          Definitions _defs;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
-         Handle _defaultAttrHandle;
+         Handle _positionAttrHandle;
          ObjectType _linkAttrObjectType;
          HashTableHandle _linkAttrTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;

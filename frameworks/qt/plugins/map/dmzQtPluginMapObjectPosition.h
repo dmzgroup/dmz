@@ -6,16 +6,22 @@
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesVector.h>
+#include <qmapcontrol.h>
+#include <QtGui/QWidget>
 
 
 namespace dmz {
 
    class RenderModulePick;
    class QtModuleCanvas;
+   class QtModuleMap;
    
    class QtPluginMapObjectPosition :
+         public QWidget,
          public Plugin,
          public ObjectObserverUtil {
+            
+      Q_OBJECT
 
       public:
          QtPluginMapObjectPosition (const PluginInfo &Info, Config &local);
@@ -38,13 +44,19 @@ namespace dmz {
             const Vector &Value,
             const Vector *PreviousValue);
 
+      protected slots:
+         void slot_zoom_changed (int zoom);
+
       protected:
          Boolean _world_to_canvas (const Vector &WorldPos, Vector &canvasPos);
+         Boolean _update_object (const Handle ObjectHandle, const Vector &WorldPos);
          void _init (Config &local);
 
          Log _log;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
+         QtModuleMap *_mapModule;
+         String _mapModuleName;
          RenderModulePick *_pickModule;
          String _pickModuleName;
          Handle _defaultAttrHandle;

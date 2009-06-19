@@ -1,7 +1,8 @@
 require "lmkQt"
 lmkQt.set_name "dmzQtPluginMapObjectPosition"
 lmk.set_type "plugin"
+lmk.add_files ({"dmzQtPluginMapObjectPosition.h",},{src = "moc"})
 lmk.add_files {"dmzQtPluginMapObjectPosition.cpp",}
 lmk.add_libs {"dmzObjectUtil","dmzKernel",}
-lmk.add_preqs {"dmzQtFramework","dmzRenderFramework","dmzObjectFramework",}
+lmk.add_preqs {"dmzQtFramework","QMapControl","dmzRenderFramework","dmzObjectFramework",}
 lmkQt.add_libs {"QtCore", "QtGui",}

@@ -95,7 +95,7 @@ dmz::QtPluginCanvasLink::QtPluginCanvasLink (
       _log (Info),
       _appState (Info),
       _defs (Info, &_log),
-      _defaultAttrHandle (0),
+      _positionAttrHandle (0),
       _linkAttrObjectType (),
       _canvasModule (0),
       _canvasModuleName (),
@@ -264,17 +264,20 @@ dmz::QtPluginCanvasLink::update_object_position (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   NodeStruct *node (_nodeTable.lookup (ObjectHandle));
+   if (AttributeHandle == _positionAttrHandle) {
+      
+      NodeStruct *node (_nodeTable.lookup (ObjectHandle));
 
-   if (node) {
+      if (node) {
 
-      HashTableHandleIterator it;
-      QtCanvasLink *item (node->edgeTable.get_first (it));
+         HashTableHandleIterator it;
+         QtCanvasLink *item (node->edgeTable.get_first (it));
 
-      while (item) {
+         while (item) {
 
-         item->update (ObjectHandle, Value);
-         item = node->edgeTable.get_next (it);
+            item->update (ObjectHandle, Value);
+            item = node->edgeTable.get_next (it);
+         }
       }
    }
 }
@@ -331,7 +334,7 @@ dmz::QtPluginCanvasLink::_store_edge (
       if (objectModule) {
 
          Vector pos;
-         objectModule->lookup_position (ObjectHandle, _defaultAttrHandle, pos);
+         objectModule->lookup_position (ObjectHandle, _positionAttrHandle, pos);
 
          item->update (ObjectHandle, pos);
       }
@@ -364,7 +367,12 @@ dmz::QtPluginCanvasLink::_init (Config &local) {
 
    _canvasModuleName = config_to_string ("module.canvas.name", local);
 
-   _defaultAttrHandle = activate_default_object_attribute (ObjectPositionMask);
+   const String PosAttrName (
+      config_to_string ("attribute.position.name", local, ObjectAttributeDefaultName));
+   
+   _positionAttrHandle = activate_object_attribute (
+      PosAttrName,
+      ObjectPositionMask);
 
    Handle attrHandle = activate_object_attribute (
      ObjectAttributeNodeLinkName,

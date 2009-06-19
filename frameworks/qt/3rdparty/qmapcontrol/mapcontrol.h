@@ -280,6 +280,12 @@ namespace qmapcontrol
 				* @param zoom The current zoom
 			*/
 			void viewChanged ( const QPointF &coordinate, int zoom );
+			
+			//! This signal is emitted, after the zoom have changed
+			/*!
+				* @param zoom The current zoom
+			*/
+         void zoomChanged ( int zoom );
 
 		public slots:
 			//! zooms in one step

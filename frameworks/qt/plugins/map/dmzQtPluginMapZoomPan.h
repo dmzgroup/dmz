@@ -68,7 +68,7 @@ namespace dmz {
          void on_zoomOutButton_clicked ();
          void on_zoomSlider_valueChanged (int);
 
-         void slot_scale_changed (qreal);
+         void slot_zoom_changed (int);
 
       protected:
          virtual bool eventFilter (QObject *obj, QEvent *event);

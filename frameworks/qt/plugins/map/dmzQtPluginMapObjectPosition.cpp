@@ -1,6 +1,7 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectModule.h>
 #include <dmzQtModuleCanvas.h>
+#include <dmzQtModuleMap.h>
 #include "dmzQtPluginMapObjectPosition.h"
 #include <dmzRenderModulePick.h>
 #include <dmzRuntimeConfigToTypesBase.h>
@@ -9,16 +10,20 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesVector.h>
 #include <QtGui/QtGui>
 
 
 dmz::QtPluginMapObjectPosition::QtPluginMapObjectPosition (const PluginInfo &Info, Config &local) :
+      QWidget (0),
       Plugin (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
       _canvasModule (0),
       _canvasModuleName (),
+      _mapModule (0),
+      _mapModuleName (),
       _pickModule (0),
       _pickModuleName (),
       _defaultAttrHandle (0),
@@ -73,6 +78,23 @@ dmz::QtPluginMapObjectPosition::discover_plugin (
          _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
       }
 
+      if (!_mapModule) {
+
+         _mapModule = QtModuleMap::cast (PluginPtr, _mapModuleName);
+
+         if (_mapModule) {
+
+            qmapcontrol::MapControl *map (_mapModule->get_map_control ());
+
+            if (map) {
+               
+               connect (
+                  map, SIGNAL (zoomChanged (int)),
+                  this, SLOT (slot_zoom_changed (int)));
+            }
+         }
+      }
+      
       if (!_pickModule) {
 
          _pickModule = RenderModulePick::cast (PluginPtr, _pickModuleName);
@@ -83,6 +105,11 @@ dmz::QtPluginMapObjectPosition::discover_plugin (
       if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
 
          _canvasModule = 0;
+      }
+
+      if (_mapModule && (_mapModule == QtModuleMap::cast (PluginPtr))) {
+
+         _mapModule = 0;
       }
 
       if (_pickModule && (_pickModule == RenderModulePick::cast (PluginPtr))) {
@@ -105,25 +132,34 @@ dmz::QtPluginMapObjectPosition::update_object_position (
 
    if (AttributeHandle == _defaultAttrHandle) {
       
+      _update_object (ObjectHandle, Value);
+   }
+}
+
+
+void
+dmz::QtPluginMapObjectPosition::slot_zoom_changed (int zoom) {
+
+   if (_canvasModule && _mapModule) {
+      
       ObjectModule *objMod (get_object_module ());
       
       if (objMod) {
          
-         ObjectType type (objMod->lookup_object_type (ObjectHandle));
-         
-         if (_typeSet.contains_type (type)) {
-            
-_log.error << ObjectHandle << " - " << type.get_name () << " - " << Value << endl;
+         HandleContainer container;
 
-            Vector canvasPos;
+         objMod->get_object_handles (container);
+
+         Handle object = container.get_first ();
+
+         while (object) {
+
+            Vector pos;
+            objMod->lookup_position (object, _defaultAttrHandle, pos);
             
-            if (_world_to_canvas (Value, canvasPos)) {
-               
-               _log.warn << "   map: " << Value << endl;
-               _log.warn << "canvas: " << canvasPos << endl;
-               
-               objMod->store_position (ObjectHandle, _positionAttrHandle, canvasPos);
-            }
+            _update_object (object, pos);
+            
+            object = container.get_next ();
          }
       }
    }
@@ -145,8 +181,6 @@ dmz::QtPluginMapObjectPosition::_world_to_canvas (const Vector &WorldPos, Vector
          
          if (_pickModule->world_to_source (_sourceCanvas, WorldPos, sourceX, sourceY)) {
             
-_log.warn << "source pos: " << sourceX << " - " << sourceY << endl;
-
             QPoint sourcePoint (sourceX, sourceY);
 
             QPointF worldPoint (view->mapToScene (sourcePoint));
@@ -164,6 +198,36 @@ _log.warn << "source pos: " << sourceX << " - " << sourceY << endl;
 }
 
 
+dmz::Boolean
+dmz::QtPluginMapObjectPosition::_update_object (
+      const Handle ObjectHandle,
+      const Vector &WorldPos) {
+
+   Boolean retVal (False);
+
+   ObjectModule *objMod (get_object_module ());
+   
+   if (objMod) {
+      
+      ObjectType type (objMod->lookup_object_type (ObjectHandle));
+      
+      if (_typeSet.contains_type (type)) {
+         
+         Vector canvasPos;
+         
+         if (_world_to_canvas (WorldPos, canvasPos)) {
+            
+            objMod->store_position (ObjectHandle, _positionAttrHandle, canvasPos);
+            
+            retVal = True;
+         }
+      }
+   }
+   
+   return retVal;
+}
+
+
 void
 dmz::QtPluginMapObjectPosition::_init (Config &local) {
 
@@ -171,6 +235,7 @@ dmz::QtPluginMapObjectPosition::_init (Config &local) {
    Definitions defs (context);
    
    _canvasModuleName = config_to_string ("module.canvas.name", local);
+   _mapModuleName = config_to_string ("module.map.name", local);
    _pickModuleName = config_to_string ("module.pick.name", local);
 
    _defaultAttrHandle = activate_default_object_attribute (ObjectPositionMask);

@@ -307,16 +307,19 @@ namespace qmapcontrol
 	{
 		layermanager->zoomIn();
 		update();
+      emit zoomChanged (currentZoom ());
 	}
 	void MapControl::zoomOut()
 	{
 		layermanager->zoomOut();
 		update();
+      emit zoomChanged (currentZoom ());
 	}
 	void MapControl::setZoom(int zoomlevel)
 	{
 		layermanager->setZoom(zoomlevel);
 		update();
+		emit zoomChanged (currentZoom ());
 	}
 	int MapControl::currentZoom() const
 	{

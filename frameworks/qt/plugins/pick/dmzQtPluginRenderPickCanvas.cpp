@@ -164,10 +164,6 @@ dmz::QtPluginRenderPickCanvas::source_to_world (
          
          QPoint sourcePoint (SourcePosX, SourcePosY);
          
-         objectHandle = _get_object_handle (sourcePoint);
-
-_log.warn << "source_to_world: " << objectHandle << endl;
-
          if (_pickConvertModule) {
 
             _pickConvertModule->source_to_world (
@@ -183,6 +179,8 @@ _log.warn << "source_to_world: " << objectHandle << endl;
             normal.set_xyz (0.0, 0.0, 0.0);
             normal.set (_vectorOrder[2], 1.0);
          }
+         
+         objectHandle = _get_object_handle (sourcePoint);
 
          retVal = True;
       }

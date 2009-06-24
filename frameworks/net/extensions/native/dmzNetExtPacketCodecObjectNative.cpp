@@ -38,7 +38,7 @@
 \endcode
 Possible types are:
 link, superlink, counter, state, flag, position, orientation, velocity, acceleration,
-scale, vector, scalar, timestamp, and text. \n \n
+scale, vector, scalar, time-stamp, write-stamp, and text. \n \n
 The lnv attribute is boolean. If it is set to true, the last network value will be
 stored. The lnv attribute name is automatically generated. It defaults to false.
 If the lnv attribute is not set, the lnv attribute name may be explicitly set with
@@ -811,6 +811,63 @@ TimeStamp::encode (
 }
 
 
+class WriteStamp : public Adapter {
+
+   public:
+      WriteStamp (dmz::Config &local, dmz::RuntimeContext *context);
+
+      virtual void decode (
+         const dmz::Handle ObjectHandle,
+         dmz::Unmarshal &data,
+         dmz::ObjectModule &objMod);
+
+      virtual void encode (
+         const dmz::Handle ObjectHandle,
+         dmz::ObjectModule &objMod,
+         dmz::Marshal &data);
+
+   protected:
+      const dmz::Boolean _Realtime;
+      dmz::Time _time;
+};
+
+
+WriteStamp::WriteStamp (dmz::Config &local, dmz::RuntimeContext *context) :
+      Adapter (local, context),
+      _Realtime (dmz::config_to_boolean ("realtime", local, dmz::True)),
+      _time (context) {;}
+
+
+void
+WriteStamp::decode (
+      const dmz::Handle ObjectHandle,
+      dmz::Unmarshal &data,
+      dmz::ObjectModule &objMod) {
+
+   const dmz::Float64 Value (
+      _Realtime ? data.get_next_float64 () : _time.get_frame_time ());
+
+   objMod.store_time_stamp (ObjectHandle, _AttributeHandle, Value);
+
+   if (_LNVHandle) { objMod.store_time_stamp (ObjectHandle, _LNVHandle, Value); }
+}
+
+
+void
+WriteStamp::encode (
+      const dmz::Handle ObjectHandle,
+      dmz::ObjectModule &objMod,
+      dmz::Marshal &data) {
+
+   dmz::Float64 value (dmz::get_time ());
+   data.set_next_float64 (value);
+
+   objMod.store_time_stamp (ObjectHandle, _AttributeHandle, value);
+
+   if (_LNVHandle) { objMod.store_time_stamp (ObjectHandle, _LNVHandle, value); }
+}
+
+
 class Position : public Adapter {
 
    public:
@@ -1388,7 +1445,8 @@ dmz::NetExtPacketCodecObjectNative::create_object_adapter (
    else if (Type == "vector") { result = new VectorAttr (local, context); }
    else if (Type == "scalar") { result = new Scalar (local, context); }
    else if (Type == "scalar-array") { result = new ScalarArray (local, context); }
-   else if (Type == "timestamp") { result = new TimeStamp (local, context); }
+   else if (Type == "time-stamp") { result = new TimeStamp (local, context); }
+   else if (Type == "write-stamp") { result = new WriteStamp (local, context); }
    else if (Type == "text") { result = new Text (local, context); }
    else {
 

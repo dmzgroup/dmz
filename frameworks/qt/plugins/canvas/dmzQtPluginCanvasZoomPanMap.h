@@ -12,7 +12,7 @@
 namespace dmz {
 
    class QtModuleCanvas;
-   class QtModuleMainWindow;
+   class QtModuleMap;
 
 
    class QtPluginCanvasZoomPanMap :
@@ -68,13 +68,13 @@ namespace dmz {
          void on_zoomOutButton_clicked ();
          void on_zoomSlider_valueChanged (int);
 
-         void slot_scale_changed (qreal);
+         void slot_zoom_changed (int);
 
       protected:
          virtual bool eventFilter (QObject *obj, QEvent *event);
-         
-         void _location_coord (Float64 lat, Float64 lon, Int32 zoom);
-         
+
+         void _save_session ();
+         void _load_session ();
          void _init (Config &local);
 
          Log _log;
@@ -82,18 +82,18 @@ namespace dmz {
          Ui::zoomPanForm _ui;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
-         QtModuleMainWindow *_mainWindowModule;
-         String _mainWindowModuleName;
+         QtModuleMap *_mapModule;
+         String _mapModuleName;
          Handle _source;
          Int32 _active;
          Int32 _mouseButton;
          Boolean _ignoreScaleChange;
          Boolean _handScrolling;
          UInt32 _scrollDelta;
-         Int32 _zoomMin;
-         Int32 _zoomMax;
-         Int32 _zoomStep;
-         Int32 _zoomDefault;
+         Float32 _zoomMin;
+         Float32 _zoomMax;
+         Float32 _zoomStep;
+         Float32 _zoomDefault;
 
       private:
          QtPluginCanvasZoomPanMap ();

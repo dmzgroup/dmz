@@ -249,6 +249,17 @@ dmz::QtModuleCanvasBasic::center_on (const Handle ObjectHandle) {
 }
 
 
+void
+dmz::QtModuleCanvasBasic::center_on (const QPointF &Value) {
+
+   if (_canvas) {
+
+      _canvas->centerOn (Value);
+      _canvas->set_scale (_canvas->get_scale ());
+   }
+}
+
+
 QPointF
 dmz::QtModuleCanvasBasic::get_center () const {
 

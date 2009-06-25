@@ -4,6 +4,6 @@ lmk.set_type "plugin"
 lmk.add_files {"dmzQtPluginCanvasZoomPanMap.ui",}
 lmk.add_files ({"dmzQtPluginCanvasZoomPanMap.h",},{src = "moc"})
 lmk.add_files {"dmzQtPluginCanvasZoomPanMap.cpp",}
-lmk.add_libs {"dmzKernel","dmzInputEvents","dmzInputUtil","dmzQtUtil"}
+lmk.add_libs {"dmzKernel","dmzInputEvents","dmzInputUtil","dmzQtUtil","QMapControl",}
 lmk.add_preqs {"dmzInputFramework","dmzQtFramework",}
 lmkQt.add_libs {"QtCore","QtGui",}

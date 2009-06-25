@@ -12,23 +12,6 @@
 #include <QtCore/QDebug>
 
 
-static const dmz::Int32 BaseZoom (15);
-
-   
-dmz::Float64
-local_level_to_scale (const dmz::Int32 Value) {
-
-   return (1.0 / pow (2, BaseZoom - Value));
-}
-
-
-dmz::Int32
-local_scale_to_level (const dmz::Float64 Value) {
-
-   return (BaseZoom - log2 (1.0 / Value));
-}
-
-
 dmz::QtPluginCanvasMap::QtPluginCanvasMap (const PluginInfo &Info, Config &local) :
       QWidget (0),
       Plugin (Info),
@@ -40,7 +23,6 @@ dmz::QtPluginCanvasMap::QtPluginCanvasMap (const PluginInfo &Info, Config &local
       _mapModuleName (),
       _canvasModule (0),
       _canvasModuleName (),
-      _mapZoomName ("dmzQtPluginMapZoomPan"),
       _canvasWidget (0),
       _mapWidget (0) {
 
@@ -61,19 +43,10 @@ dmz::QtPluginCanvasMap::update_plugin_state (
 
    if (State == PluginStateInit) {
 
-      if (_canvasWidget && _mapWidget) {
-
-         _canvasWidget->setParent (_mapWidget);
-         
-         QWidget *widget = _mapWidget->findChild<QWidget *>(_mapZoomName.get_buffer ());
-         
-         if (widget) {
-            
-            _log.debug << "Found Map Zoom Widget: " << _mapZoomName << endl;
-            
-            widget->setParent (_canvasWidget);
-         }
-      }
+      // if (_canvasWidget && _mapWidget) {
+      // 
+      //   _canvasWidget->setParent (_mapWidget);
+      // }
    }
    else if (State == PluginStateStart) {
 
@@ -100,14 +73,6 @@ dmz::QtPluginCanvasMap::discover_plugin (
       
          if (_canvasModule) {
             
-            // QGraphicsView *view = _canvasModule->get_view ();
-            // 
-            // if (view) {
-            // 
-            //    view->setAttribute (Qt::WA_TransparentForMouseEvents);
-            // }
-            
-      
             QtWidget *w = QtWidget::cast (PluginPtr);
             
             if (w && !_canvasWidget) {
@@ -116,24 +81,8 @@ dmz::QtPluginCanvasMap::discover_plugin (
             
                if (_canvasWidget) {
                
-                  _log.debug << "Found Canvas: " << _canvasModuleName << endl;
-               
-                  // if (_mapWidget) {
-                  //    
-                  //    _canvasWidget->setParent (_mapWidget);
-                  // }
-                  // else {
-                  //    
-                  //    _log.warn << "Map not discovered yet: " << _mapModuleName << endl;
-                  // }
-                  
-                  // _canvasWidget->setAttribute (Qt::WA_TransparentForMouseEvents);
-                  // _canvasWidget->setAutoFillBackground (False);
-//                  _canvasWidget->hide ();
-                  
-//                  _canvasWidget->installEventFilter (this);
-                  
-//                  _layout->addWidget (_canvasWidget);
+                  _log.info << "Found Canvas: " << _canvasModuleName << endl;
+                  _canvasWidget->setParent (this);
                }
             }
          }
@@ -153,7 +102,7 @@ dmz::QtPluginCanvasMap::discover_plugin (
             
                if (_mapWidget) {
                
-                  _log.debug << "Found Map: " << _mapModuleName << endl;
+                  _log.info << "Found Map: " << _mapModuleName << endl;
                   _mapWidget->setParent (this);
                   _layout->addWidget (_mapWidget);
                }
@@ -219,109 +168,6 @@ dmz::QtPluginCanvasMap::get_qt_widget () { return this; }
 // }
 
 
-#if 0
-bool
-dmz::QtPluginCanvasMap::eventFilter (QObject *o, QEvent *e) {
-
-   bool retVal (False);
-   
-   if (0 && (o == _canvasWidget) && _mapWidget) {
-      
-     QApplication::sendEvent (_mapWidget, e);
-     retVal = True;
-
-//      QMouseEvent event(QEvent::MouseButtonPress, pos, 0, 0, 0);
-
-#if 0
-      switch (e->type ()) {
-         
-qDebug () <<  e;
-
-         // case QEvent::Resize: {
-         //     
-         //    const QResizeEvent *re = (QResizeEvent *)e;
-         // }
-         
-         case QEvent::MouseButtonPress:
-         
-            QApplication::sendEvent (_mapWidget, e);
-//            _mapWidget->mousePressEvent ((QMouseEvent *)e);
-            break;
-              
-         case QEvent::MouseButtonRelease:
-            _mapWidget->mouseReleaseEvent ((QMouseEvent *)e);
-            break;
-              
-         case QEvent::MouseButtonDblClick:
-            _mapWidget->mouseDoubleClickEvent ((QMouseEvent *)e);
-            break;
-              
-         case QEvent::MouseMove:
-            _mapWidget->mouseMoveEvent ((QMouseEvent *)e);
-            break;
-              
-         case QEvent::KeyPress:
-            _mapWidget->keyPressEvent ((QKeyEvent *)e);
-            break;
-         
-         case QEvent::KeyRelease:
-            _mapWidget->keyReleaseEvent ((QKeyEvent *)e);
-            break;
-         
-         case QEvent::Wheel:
-            _mapWidget->wheelEvent ((QWheelEvent *)e);
-            break;
-         
-         default:
-            retVal = QWidget::eventFilter (o, e);
-            break;
-      }
-#endif
-
-//      _mapWidget->eventFilter (o, e);
-//      retVal = True;
-   }
-   else {
-      
-      retVal = QWidget::eventFilter (o, e);
-   }
-   
-   return retVal;
-
-   // if (_mapModule) {
-   // 
-   //    qmapcontrol::MapControl *map (_mapModule->get_map_control ());
-   //    
-   //    if (map && (obj == map)) {
-   // 
-   //       if (event->type() == QEvent::Resize) {
-   // 
-   //          QRect viewRect (map->geometry ());
-   //          QRect myRect (geometry ());
-   // 
-   //          myRect.moveTopRight (viewRect.topRight ());
-   //          myRect.moveTop (myRect.top () + 5);
-   //          myRect.moveRight (myRect.right () - 5);
-   //          setGeometry (myRect);
-   //       }
-   //    }
-   // }
-
-   // pass the event on to the parent class
-//   return QWidget::eventFilter (obj, event);
-}
-#endif
-
-
-// void
-// dmz::QtPluginCanvasMap::mousePressEvent (QMouseEvent *event) {
-// 
-// _log.warn << "mousePressEvent: " << endl;
-// //   _handle_mouse_event (event, 0);
-// event->ignore ();
-// }
-
-
 void
 dmz::QtPluginCanvasMap::resizeEvent (QResizeEvent *event) {
 
@@ -341,7 +187,6 @@ dmz::QtPluginCanvasMap::_init (Config &local) {
 
    _canvasModuleName = config_to_string ("canvas.name", local);
    _mapModuleName = config_to_string ("map.name", local);
-   _mapZoomName = config_to_string ("zoom.name", local, _mapZoomName);
 
    _layout = new QVBoxLayout (this);
    _layout->setSpacing (0);

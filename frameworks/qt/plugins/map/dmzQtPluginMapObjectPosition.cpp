@@ -146,6 +146,8 @@ dmz::QtPluginMapObjectPosition::slot_zoom_changed (int zoom) {
       
       if (objMod) {
          
+//         _canvasModule->center_on (QPointF (0.0, 0.0));
+         
          HandleContainer container;
 
          objMod->get_object_handles (container);

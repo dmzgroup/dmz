@@ -108,6 +108,7 @@ RECURSIVE              = YES
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = */.svn/* \
+                         */.git/* \
                          *.hash.* \
                          */kernel/runtime/dmzRuntimeContext* \
                          */kernel/runtime/dmzRuntimeConfigContext* \

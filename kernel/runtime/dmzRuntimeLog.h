@@ -10,7 +10,7 @@ namespace dmz {
    class PluginInfo;
 
    enum LogLevelEnum {
-      LogLevelNever = -1, //!< Level never. Print noting.
+      LogLevelNever = -1, //!< Level never. Print nothing.
       LogLevelDebug, //!< Print to debug level.
       LogLevelInfo, //!< Print to info level.
       LogLevelWarn, //!< Print to warn level.

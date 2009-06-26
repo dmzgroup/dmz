@@ -1,0 +1,6 @@
+lmk.set_name "dmzPluginExit"
+lmk.set_type "plugin"
+lmk.add_files {"dmzPluginExit.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+}

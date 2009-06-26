@@ -640,7 +640,7 @@ dmz::QtModuleMapBasic::_init (Config &local) {
 
    qwidget_config_read ("widget", local, this);
 
-   _map = new qmapcontrol::MapControl (frameSize (), qmapcontrol::MapControl::None, this);
+   _map = new qmapcontrol::MapControl (frameSize (), qmapcontrol::MapControl::None);
    
    connect (
       _map, SIGNAL (viewChanged (const QPointF &, int)),
@@ -652,7 +652,7 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    
    _map->setMouseTracking (true);
    
-   // if (config_to_boolean ("map.cache", local, False)) {
+   // if (config_to_boolean ("map.cache", local, True)) {
    //    
    //    _map->enablePersistentCache (const QDir& path = QDir::homePath () + "/QMapControl.cache");
    _map->enablePersistentCache ();
@@ -676,6 +676,20 @@ dmz::QtModuleMapBasic::_init (Config &local) {
       tileSize,
       _zoomMin,
       _zoomMax);
+
+   // http://172.20.90.188/cgi-bin/tilecache.cgi/?LAYERS=dystopia
+   //    &FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1
+   //    &REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage
+   //    &SRS=EPSG%3A4326
+   //    &BBOX=0.087890625,0.17578125,0.17578125,0.263671875
+   //    &WIDTH=256
+   //    &HEIGHT=256
+
+   // _mapAdapter = new qmapcontrol::WMSMapAdapter (
+   //    "172.20.90.188",
+   //    "/tilecache/tilecache.py/?LAYERS=dystopia&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A4326",
+   //    // "/tilecache/tilecache.py/?LAYERS=osm&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A900913",
+   //    tileSize);
 
    _baseLayer = new qmapcontrol::MapLayer ("base", _mapAdapter);
    _map->addLayer (_baseLayer);
@@ -703,9 +717,6 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    Float64 longitude (config_to_float64 ("startCoordinate.longitude", local, 0.0));
    
    _map->setView (QPointF (longitude, latitude));
-   
-// qmapcontrol::Point *item = new qmapcontrol::ImagePoint ((qreal)longitude, (qreal)latitude, "images:NA_Node.svg");
-// _geomLayer->addGeometry (item);
 }
 
 

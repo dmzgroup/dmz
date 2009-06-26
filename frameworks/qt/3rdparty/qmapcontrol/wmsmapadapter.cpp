@@ -94,10 +94,10 @@ namespace qmapcontrol
 	}
 	QString WMSMapAdapter::query(int i, int j, int /*z*/) const
 	{
-		return getQ(-180+i*coord_per_x_tile,
-						 90-(j+1)*coord_per_y_tile,
-						-180+i*coord_per_x_tile+coord_per_x_tile,
-						 90-(j+1)*coord_per_y_tile+coord_per_y_tile);
+      return getQ(-180+i*coord_per_x_tile,
+                   90-(j+1)*coord_per_y_tile,
+                  -180+i*coord_per_x_tile+coord_per_x_tile,
+                   90-(j+1)*coord_per_y_tile+coord_per_y_tile);
 	}
 	QString WMSMapAdapter::getQ(qreal ux, qreal uy, qreal ox, qreal oy) const
 	{

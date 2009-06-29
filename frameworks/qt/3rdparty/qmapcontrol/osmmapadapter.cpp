@@ -26,18 +26,13 @@
 #include "osmmapadapter.h"
 namespace qmapcontrol
 {
-	OSMMapAdapter::OSMMapAdapter()
-// 	: TileMapAdapter("192.168.8.1", "/img/img_cache.php/%1/%2/%3.png", 256, 0, 17)
-//	: TileMapAdapter("tile.openstreetmap.org", "/%1/%2/%3.png", 256, 0, 17)
-//http://tiles.cloudmade.com/APIKEY/2/256/!z!/!x!/!y!.png
-      : TileMapAdapter("tile.cloudmade.com", "/b999cacc40c7586fbdd6407362411e4d/2/256/%1/%2/%3.png", 256, 0, 17)
-//      : TileMapAdapter("tile.cloudmade.com", "/b999cacc40c7586fbdd6407362411e4d/2/64/%1/%2/%3.png", 64, 0, 17)
-//	: TileMapAdapter("mt2.google.com", "/mt?n=404&x=%2&y=%3&zoom=%1", 256, 17, 0)
-//	: TileMapAdapter("172.20.90.188", "/cgi-bin/tilecache.cgi/1.0.0/osm/%1/%2/%3.png", 256, 0, 17)
-	{
-	}
+    OSMMapAdapter::OSMMapAdapter()
+        : TileMapAdapter("tile.openstreetmap.org", "/%1/%2/%3.png", 256, 0, 17)
+        // : TileMapAdapter("192.168.8.1", "/img/img_cache.php/%1/%2/%3.png", 256, 0, 17)
+    {
+    }
 
-	OSMMapAdapter::~OSMMapAdapter()
-	{
-	}
+    OSMMapAdapter::~OSMMapAdapter()
+    {
+    }
 }

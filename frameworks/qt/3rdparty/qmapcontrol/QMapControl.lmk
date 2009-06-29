@@ -4,6 +4,7 @@ lmk.set_type "shared"
 lmk.add_files {
    "circlepoint.h",
    "curve.h",
+   "fixedimageoverlay.h",
    "geometry.h",
    "geometrylayer.h",
    "googlemapadapter.h",
@@ -49,6 +50,7 @@ lmk.add_files ({
 lmk.add_files {
    "circlepoint.cpp",
    "curve.cpp",
+   "fixedimageoverlay.cpp",
    "geometry.cpp",
    "geometrylayer.cpp",
    "googlemapadapter.cpp",

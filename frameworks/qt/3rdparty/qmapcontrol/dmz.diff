@@ -1,0 +1,269 @@
+Index: layermanager.h
+===================================================================
+--- layermanager.h	(revision 28)
++++ layermanager.h	(working copy)
+@@ -26,9 +26,10 @@
+ #ifndef LAYERMANAGER_H
+ #define LAYERMANAGER_H
+ 
+-#include <QObject>
+-#include <QMap>
+-#include <QListIterator>
++#include <QtCore/QObject>
++#include <QtCore/QMap>
++#include <QtCore/QMutex>
++#include <QtCore/QListIterator>
+ #include "layer.h"
+ #include "mapadapter.h"
+ #include "mapcontrol.h"
+Index: mapcontrol.cpp
+===================================================================
+--- mapcontrol.cpp	(revision 28)
++++ mapcontrol.cpp	(working copy)
+@@ -23,7 +23,9 @@
+ *
+ */
+ 
++#include <QtCore/QTimer>
+ #include "mapcontrol.h"
++
+ namespace qmapcontrol
+ {
+     MapControl::MapControl(QSize size, MouseMode mousemode)
+@@ -303,16 +305,19 @@
+     {
+         layermanager->zoomIn();
+         update();
++        emit zoomChanged (currentZoom ());
+     }
+     void MapControl::zoomOut()
+     {
+         layermanager->zoomOut();
+         update();
++        emit zoomChanged (currentZoom ());
+     }
+     void MapControl::setZoom(int zoomlevel)
+     {
+         layermanager->setZoom(zoomlevel);
+         update();
++        emit zoomChanged (currentZoom ());
+     }
+     int MapControl::currentZoom() const
+     {
+@@ -402,7 +407,19 @@
+     {
+         scaleVisible = show;
+     }
++    
++   QPointF MapControl::screenToWorldCoordinate (const QPoint &Screen)
++   {
++       return clickToWorldCoordinate (Screen);
++   }
+ 
++   QPoint MapControl::worldCoordinateToScreen (const QPointF &Coordinate)
++   {
++      QPoint displayToImage = layermanager->layer ()->mapadapter ()->coordinateToDisplay (Coordinate);
++
++      return (displayToImage + screen_middle - layermanager->getMapmiddle_px ());
++   }
++
+     void MapControl::resize(const QSize newSize)
+     {
+         this->size = newSize;
+Index: mapnetwork.cpp
+===================================================================
+--- mapnetwork.cpp	(revision 28)
++++ mapnetwork.cpp	(working copy)
+@@ -24,7 +24,8 @@
+ */
+ 
+ #include "mapnetwork.h"
+-#include <QWaitCondition>
++#include <QtCore/QWaitCondition>
++
+ namespace qmapcontrol
+ {
+     MapNetwork::MapNetwork(ImageManager* parent)
+Index: point.h
+===================================================================
+--- point.h	(revision 28)
++++ point.h	(working copy)
+@@ -25,7 +25,7 @@
+ 
+ #ifndef POINT_H
+ #define POINT_H
+-#include <QWidget>
++#include <QtGui/QWidget>
+ 
+ #include "geometry.h"
+ 
+Index: geometry.h
+===================================================================
+--- geometry.h	(revision 28)
++++ geometry.h	(working copy)
+@@ -25,9 +25,9 @@
+ 
+ #ifndef GEOMETRY_H
+ #define GEOMETRY_H
+-#include <QObject>
+-#include <QPainter>
+-#include <QDebug>
++#include <QtCore/QObject>
++#include <QtGui/QPainter>
++#include <QtCore/QDebug>
+ #include "mapadapter.h"
+ 
+ namespace qmapcontrol
+Index: layermanager.cpp
+===================================================================
+--- layermanager.cpp	(revision 28)
++++ layermanager.cpp	(working copy)
+@@ -23,7 +23,9 @@
+ *
+ */
+ 
++#include <QtCore/QCoreApplication>
+ #include "layermanager.h"
++
+ namespace qmapcontrol
+ {
+     LayerManager::LayerManager(MapControl* mapcontrol, QSize size)
+Index: layer.h
+===================================================================
+--- layer.h	(revision 28)
++++ layer.h	(working copy)
+@@ -26,10 +26,10 @@
+ #ifndef LAYER_H
+ #define LAYER_H
+ 
+-#include <QObject>
+-#include <QDebug>
+-#include <QPainter>
+-#include <QMouseEvent>
++#include <QtCore/QObject>
++#include <QtCore/QDebug>
++#include <QtGui/QPainter>
++#include <QtGui/QMouseEvent>
+ 
+ #include "mapadapter.h"
+ #include "layermanager.h"
+Index: imagemanager.h
+===================================================================
+--- imagemanager.h	(revision 28)
++++ imagemanager.h	(working copy)
+@@ -26,13 +26,13 @@
+ #ifndef IMAGEMANAGER_H
+ #define IMAGEMANAGER_H
+ 
+-#include <QObject>
+-#include <QPixmapCache>
+-#include <QDebug>
+-#include <QMutex>
+-#include <QFile>
+-#include <QBuffer>
+-#include <QDir>
++#include <QtCore/QObject>
++#include <QtGui/QPixmapCache>
++#include <QtCore/QDebug>
++#include <QtCore/QMutex>
++#include <QtCore/QFile>
++#include <QtCore/QBuffer>
++#include <QtCore/QDir>
+ #include "mapnetwork.h"
+ 
+ namespace qmapcontrol
+Index: gps_position.h
+===================================================================
+--- gps_position.h	(revision 28)
++++ gps_position.h	(working copy)
+@@ -26,7 +26,7 @@
+ #ifndef GPS_POSITION_H
+ #define GPS_POSITION_H
+ 
+-#include <QString>
++#include <QtCore/QString>
+ 
+ namespace qmapcontrol
+ {
+Index: mapcontrol.h
+===================================================================
+--- mapcontrol.h	(revision 28)
++++ mapcontrol.h	(working copy)
+@@ -26,7 +26,7 @@
+ #ifndef MAPCONTROL_H
+ #define MAPCONTROL_H
+ 
+-#include <QtGui>
++#include <QtGui/QWidget>
+ 
+ #include "layermanager.h"
+ #include "layer.h"
+@@ -213,6 +213,10 @@
+          * @param show true if the scale should be displayed
+          */
+         void showScale ( bool show );
++        
++        //DMZ
++        QPointF screenToWorldCoordinate (const QPoint &Screen);
++        QPoint worldCoordinateToScreen (const QPointF &Coordinate);
+ 
+     private:
+         LayerManager* layermanager;
+@@ -277,6 +281,13 @@
+          * @param zoom The current zoom
+          */
+         void viewChanged ( const QPointF &coordinate, int zoom );
++        
++        //DMZ
++        //! This signal is emitted, after the zoom have changes
++         /*!
++          * @param zoom The current zoom
++          */
++        void zoomChanged ( int zoom );
+ 
+     public slots:
+         //! zooms in one step
+Index: mapadapter.h
+===================================================================
+--- mapadapter.h	(revision 28)
++++ mapadapter.h	(working copy)
+@@ -26,12 +26,12 @@
+ #ifndef MAPADAPTER_H
+ #define MAPADAPTER_H
+ 
+-#include <QObject>
+-#include <QSize>
+-#include <QPoint>
+-#include <QPointF>
+-#include <QLocale>
+-#include <QDebug>
++#include <QtCore/QObject>
++#include <QtCore/QSize>
++#include <QtCore/QPoint>
++#include <QtCore/QPointF>
++#include <QtCore/QLocale>
++#include <QtCore/QDebug>
+ #include <cmath>
+ 
+ namespace qmapcontrol
+Index: mapnetwork.h
+===================================================================
+--- mapnetwork.h	(revision 28)
++++ mapnetwork.h	(working copy)
+@@ -26,11 +26,11 @@
+ #ifndef MAPNETWORK_H
+ #define MAPNETWORK_H
+ 
+-#include <QObject>
+-#include <QDebug>
+-#include <QHttp>
+-#include <QVector>
+-#include <QPixmap>
++#include <QtCore/QObject>
++#include <QtCore/QDebug>
++#include <QtNetwork/QHttp>
++#include <QtCore/QVector>
++#include <QtGui/QPixmap>
+ #include "imagemanager.h"
+ /**
+         @author Kai Winter <kaiwinter@gmx.de>

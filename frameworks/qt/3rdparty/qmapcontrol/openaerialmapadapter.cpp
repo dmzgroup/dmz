@@ -3,7 +3,7 @@
 * This file is part of QMapControl,
 * an open-source cross-platform map widget
 *
-* Copyright (C) 2007 - 2008 Kai Winter
+* Copyright (C) 2007 - 2009 Kai Winter
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU Lesser General Public License as published by
@@ -23,29 +23,15 @@
 *
 */
 
-#ifndef GOOGLEMAPADAPTER_H
-#define GOOGLEMAPADAPTER_H
-
-#include "tilemapadapter.h"
-
+#include "openaerialmapadapter.h"
 namespace qmapcontrol
 {
-    //! MapAdapter for Google
-    /*!
-     * This is a conveniece class, which extends and configures a TileMapAdapter
-     *	@author Kai Winter <kaiwinter@gmx.de>
-     */
-    class GoogleMapAdapter : public TileMapAdapter
+    OpenAerialMapAdapter::OpenAerialMapAdapter()
+        : TileMapAdapter("tile.openaerialmap.org", "/tiles/1.0.0/openaerialmap-900913/%1/%2/%3.png", 256, 0, 17)
     {
-        Q_OBJECT
+    }
 
-    public:
-        //! constructor
-        /*!
-         * This construct a Google Adapter
-         */
-        GoogleMapAdapter();
-        virtual ~GoogleMapAdapter();
-    };
+    OpenAerialMapAdapter::~OpenAerialMapAdapter()
+    {
+    }
 }
-#endif

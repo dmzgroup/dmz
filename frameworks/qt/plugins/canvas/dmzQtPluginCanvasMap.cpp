@@ -1,4 +1,3 @@
-#include <dmzQtMapUtil.h>
 #include <dmzQtModuleCanvas.h>
 #include <dmzQtModuleMap.h>
 #include "dmzQtPluginCanvasMap.h"

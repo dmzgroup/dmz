@@ -25,7 +25,7 @@
 
 #ifndef MAPCONTROL_H
 #define MAPCONTROL_H
-
+#include <qmapcontrolexport.h>
 #include <QtGui/QWidget>
 
 #include "layermanager.h"
@@ -50,7 +50,7 @@ namespace qmapcontrol
      *
      * @author Kai Winter <kaiwinter@gmx.de>
      */
-    class MapControl : public QWidget
+    class QMAPCONTROL_LINK_SYMBOL MapControl : public QWidget
     {
         Q_OBJECT
 
@@ -217,36 +217,7 @@ namespace qmapcontrol
         //DMZ
         QPointF screenToWorldCoordinate (const QPoint &Screen);
         QPoint worldCoordinateToScreen (const QPointF &Coordinate);
-
-    private:
-        LayerManager* layermanager;
-        QPoint screen_middle; // middle of the widget (half size)
-
-        QPoint pre_click_px; // used for scrolling (MouseMode Panning)
-        QPoint current_mouse_pos; // used for scrolling and dragging (MouseMode Panning/Dragging)
-
-        QSize size; // size of the widget
-
-        bool mousepressed;
-        MouseMode mymousemode;
-        bool scaleVisible;
-
-        bool m_loadingFlag;
-
-        QMutex moveMutex; // used for method moveTo()
-        QPointF target; // used for method moveTo()
-        int steps; // used for method moveTo()
-
-        QPointF clickToWorldCoordinate ( QPoint click );
-        MapControl& operator= ( const MapControl& rhs );
-        MapControl ( const MapControl& old );
-
-    protected:
-        void paintEvent ( QPaintEvent* evnt );
-        void mousePressEvent ( QMouseEvent* evnt );
-        void mouseReleaseEvent ( QMouseEvent* evnt );
-        void mouseMoveEvent ( QMouseEvent* evnt );
-
+        
     signals:
         // void mouseEvent(const QMouseEvent* evnt);
 
@@ -288,6 +259,35 @@ namespace qmapcontrol
           * @param zoom The current zoom
           */
         void zoomChanged ( int zoom );
+
+    private:
+        LayerManager* layermanager;
+        QPoint screen_middle; // middle of the widget (half size)
+
+        QPoint pre_click_px; // used for scrolling (MouseMode Panning)
+        QPoint current_mouse_pos; // used for scrolling and dragging (MouseMode Panning/Dragging)
+
+        QSize size; // size of the widget
+
+        bool mousepressed;
+        MouseMode mymousemode;
+        bool scaleVisible;
+
+        bool m_loadingFlag;
+
+        QMutex moveMutex; // used for method moveTo()
+        QPointF target; // used for method moveTo()
+        int steps; // used for method moveTo()
+
+        QPointF clickToWorldCoordinate ( QPoint click );
+        MapControl& operator= ( const MapControl& rhs );
+        MapControl ( const MapControl& old );
+
+    protected:
+        void paintEvent ( QPaintEvent* evnt );
+        void mousePressEvent ( QMouseEvent* evnt );
+        void mouseReleaseEvent ( QMouseEvent* evnt );
+        void mouseMoveEvent ( QMouseEvent* evnt );
 
     public slots:
         //! zooms in one step

@@ -25,7 +25,7 @@
 
 #ifndef IMAGEMANAGER_H
 #define IMAGEMANAGER_H
-
+#include <qmapcontrolexport.h>
 #include <QtCore/QObject>
 #include <QtGui/QPixmapCache>
 #include <QtCore/QDebug>
@@ -41,7 +41,7 @@ namespace qmapcontrol
     /**
     @author Kai Winter <kaiwinter@gmx.de>
      */
-    class ImageManager : public QObject
+    class QMAPCONTROL_LINK_SYMBOL ImageManager : public QObject
     {
         Q_OBJECT;
 

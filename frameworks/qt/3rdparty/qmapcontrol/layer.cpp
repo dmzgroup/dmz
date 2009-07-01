@@ -254,7 +254,7 @@ namespace qmapcontrol
             if (mapAdapter->isValid(i, j, mapAdapter->currentZoom()))
                 ImageManager::instance()->prefetchImage(mapAdapter->host(), mapAdapter->query(i, j, mapAdapter->currentZoom()));
         }
-        int i = left;
+        i = left;
         for (int j=upper+1; j<=lower-1; j++)
         {
             if (mapAdapter->isValid(i, j, mapAdapter->currentZoom()))

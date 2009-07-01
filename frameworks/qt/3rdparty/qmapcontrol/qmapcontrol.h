@@ -13,3 +13,5 @@
 #include "yahoomapadapter.h"
 #include "googlemapadapter.h"
 #include "googlesatmapadapter.h"
+#include "openaerialmapadapter.h"
+#include "fixedimageoverlay.h"

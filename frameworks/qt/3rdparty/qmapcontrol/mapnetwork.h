@@ -25,7 +25,7 @@
 
 #ifndef MAPNETWORK_H
 #define MAPNETWORK_H
-
+#include <qmapcontrolexport.h>
 #include <QtCore/QObject>
 #include <QtCore/QDebug>
 #include <QtNetwork/QHttp>
@@ -38,7 +38,7 @@
 namespace qmapcontrol
 {
     class ImageManager;
-    class MapNetwork : QObject
+    class QMAPCONTROL_LINK_SYMBOL MapNetwork : QObject
     {
         Q_OBJECT
 

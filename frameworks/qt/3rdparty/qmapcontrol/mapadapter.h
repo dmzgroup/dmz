@@ -25,7 +25,7 @@
 
 #ifndef MAPADAPTER_H
 #define MAPADAPTER_H
-
+#include <qmapcontrolexport.h>
 #include <QtCore/QObject>
 #include <QtCore/QSize>
 #include <QtCore/QPoint>
@@ -51,7 +51,7 @@ namespace qmapcontrol
      *
      *	@author Kai Winter <kaiwinter@gmx.de>
      */
-    class MapAdapter : public QObject
+    class QMAPCONTROL_LINK_SYMBOL MapAdapter : public QObject
     {
         friend class Layer;
 

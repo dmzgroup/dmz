@@ -345,7 +345,7 @@ dmz::RenderPluginRadarOverlay::destroy_object (
 
    if (os) {
 
-      if (_overlay) { _overlay->destroy_node (os->switchHandle); }
+      if (_overlay) { _overlay->destroy_node (os->model); }
 
       delete os; os = 0;
    }

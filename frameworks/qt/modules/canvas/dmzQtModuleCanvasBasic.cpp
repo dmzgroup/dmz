@@ -36,10 +36,6 @@ dmz::QtModuleCanvasBasic::QtModuleCanvasBasic (const PluginInfo &Info, Config &l
       _zoomDefault (1.0f) {
 
    _init (local);
-   
-   // setAttribute (Qt::WA_TransparentForMouseEvents);
-   // setAttribute(Qt::WA_NoSystemBackground);
-   // setFocusPolicy(Qt::NoFocus);
 }
 
 
@@ -267,9 +263,7 @@ dmz::QtModuleCanvasBasic::get_center () const {
    
    if (_canvas) {
       
-      // QRect vpRect (_canvas->viewport ()->rect ());
       QRect vpRect (_canvas->rect ());
-      
       retVal = _canvas->mapToScene (vpRect.center ());
    }
    
@@ -498,26 +492,21 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
    _scene.enableGrid (config_to_boolean ("scene.background.grid", local, True));
 
    _canvas = new QtCanvasView (this);
+   _canvas->setMouseTracking (true);
    
    if (config_to_boolean ("scene.background.transparent", local, False)) {
       
       _scene.enableGrid (False);
-      _canvas->setStyleSheet ("background: transparent");
-//      _canvas->setAttribute(Qt::WA_NoSystemBackground);
-//      _canvas->setAttribute (Qt::WA_TransparentForMouseEvents);
-//      _canvas->setMouseTracking (false);
-   }
-//   else {
       
-      _canvas->setMouseTracking (true);
-//   }
+      QPalette palette = _canvas->palette();
+      palette.setBrush (QPalette::Base, Qt::transparent);
+      _canvas->setPalette (palette);
+      _canvas->setAttribute (Qt::WA_OpaquePaintEvent, false);
+   }
 
    _canvas->setTransformationAnchor (QGraphicsView::AnchorViewCenter);
    _canvas->setResizeAnchor (QGraphicsView::AnchorViewCenter);
    
-//   _canvas->setResizeAnchor (QGraphicsView::NoAnchor);
-//   _canvas->setTransformationAnchor (QGraphicsView::NoAnchor);
-
    const Boolean ScrollBars = config_to_boolean ("scrollbars.value", local, False);
 
    if (!ScrollBars) {
@@ -526,16 +515,11 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
       _canvas->setVerticalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
    }
 
-   //_canvas->setMouseTracking (true);
-   //_canvas->setDragMode (QGraphicsView::ScrollHandDrag);
-
    setObjectName (get_plugin_name ().get_buffer ());
    _scene.setObjectName (objectName () + "Scene");
    _canvas->setObjectName (objectName () + "View");
 
    _canvas->setScene (&_scene);
-
-   //_canvas->setBackgroundBrush (QPixmap ("/assets/images/background1.png"));
 
    QVBoxLayout *layout (new QVBoxLayout ());
    layout->setSpacing (0);

@@ -38,10 +38,9 @@ namespace dmz {
          void scale_changed (qreal);
 
       protected:
-         virtual void drawBackground (QPainter *painter, const QRectF &rect);
-         virtual void drawForeground (QPainter *painter, const QRectF &rect);
-         virtual void paintEvent (QPaintEvent *event);
-         //virtual void resizeEvent (QResizeEvent *event);
+         // virtual void drawBackground (QPainter *painter, const QRectF &rect);
+         // virtual void drawForeground (QPainter *painter, const QRectF &rect);
+         // virtual void paintEvent (QPaintEvent *event);
          virtual void keyPressEvent (QKeyEvent *event);
          virtual void keyReleaseEvent (QKeyEvent *event);
          virtual void wheelEvent (QWheelEvent *event);

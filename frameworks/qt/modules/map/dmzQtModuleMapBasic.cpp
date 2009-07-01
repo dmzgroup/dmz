@@ -303,106 +303,6 @@ dmz::QtModuleMapBasic::screen_to_world (const QPoint &Point) const {
 
 // Class Methods
 void
-dmz::QtModuleMapBasic::_map_view_changed (const QPointF &coordinate, int zoom) {
-
-// _log.warn << "zoom: " << (Int32)zoom << endl;
-// 
-// _log.warn << "coordinate: " << coordinate.x () << " - " << coordinate.y () << endl;
-//    
-// QPoint display (_mapAdapter->coordinateToDisplay (coordinate));
-// _log.warn << "display: " << (Int32)display.x () << " - " << (Int32)display.y () << endl;
-}
-
-
-#if 0
-bool
-dmz::QtModuleMapBasic::eventFilter (QObject *o, QEvent *e) {
-
-   bool retVal (False);
-   
-   if (o == this) {
-      
-      retVal = True;
-      
-      switch (e->type ()) {
-         
-qDebug () <<  e;
-
-         // case QEvent::Resize: {
-         //     
-         //    const QResizeEvent *re = (QResizeEvent *)e;
-         // }
-         
-         case QEvent::MouseButtonPress:
-            mousePressEvent ((QMouseEvent *)e);
-            break;
-              
-         case QEvent::MouseButtonRelease:
-            mouseReleaseEvent ((QMouseEvent *)e);
-            break;
-              
-         case QEvent::MouseButtonDblClick:
-            mouseDoubleClickEvent ((QMouseEvent *)e);
-            break;
-              
-         case QEvent::MouseMove:
-            mouseMoveEvent ((QMouseEvent *)e);
-            break;
-              
-         case QEvent::KeyPress:
-            keyPressEvent ((QKeyEvent *)e);
-            break;
-         
-         case QEvent::KeyRelease:
-            keyReleaseEvent ((QKeyEvent *)e);
-            break;
-         
-         case QEvent::Wheel:
-            wheelEvent ((QWheelEvent *)e);
-            break;
-         
-         default:
-            retVal = QWidget::eventFilter (o, e);
-            break;
-      }
-
-
-//      _mapWidget->eventFilter (o, e);
-//      retVal = True;
-   }
-   else {
-      
-      retVal = QWidget::eventFilter (o, e);
-   }
-   
-   return retVal;
-
-   // if (_mapModule) {
-   // 
-   //    qmapcontrol::MapControl *map (_mapModule->get_map_control ());
-   //    
-   //    if (map && (obj == map)) {
-   // 
-   //       if (event->type() == QEvent::Resize) {
-   // 
-   //          QRect viewRect (map->geometry ());
-   //          QRect myRect (geometry ());
-   // 
-   //          myRect.moveTopRight (viewRect.topRight ());
-   //          myRect.moveTop (myRect.top () + 5);
-   //          myRect.moveRight (myRect.right () - 5);
-   //          setGeometry (myRect);
-   //       }
-   //    }
-   // }
-
-   // pass the event on to the parent class
-//   return QWidget::eventFilter (obj, event);
-}
-#endif
-
-
-void
 dmz::QtModuleMapBasic::resizeEvent (QResizeEvent *event) {
 
    if (event) {
@@ -415,7 +315,8 @@ dmz::QtModuleMapBasic::resizeEvent (QResizeEvent *event) {
 
          if (_map && event) {
 
-            _map->resize (event->size () - QSize (1, 1));
+//            _map->resize (event->size () - QSize (1, 1));
+            _map->resize (event->size ());
          }
 
          _handle_mouse_event (0, 0);
@@ -555,8 +456,6 @@ dmz::QtModuleMapBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we) {
 
    if (_inputModule && _map) {
 
-//_log.warn << "_handle_mouse_event" << endl;
-
       InputEventMouse event (_mouseEvent);
 
       QPoint pointOnCanvas (event.get_mouse_x (), event.get_mouse_y ());
@@ -642,10 +541,6 @@ dmz::QtModuleMapBasic::_init (Config &local) {
 
    _map = new qmapcontrol::MapControl (frameSize (), qmapcontrol::MapControl::None);
    
-   connect (
-      _map, SIGNAL (viewChanged (const QPointF &, int)),
-      this, SLOT (_map_view_changed (const QPointF &, int)));
-       
    connect (
       _map, SIGNAL (mouseEventCoordinate (const QMouseEvent *, const QPointF)),
       this, SLOT (_mouse_event_coordinate (const QMouseEvent *, const QPointF)));

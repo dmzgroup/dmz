@@ -62,99 +62,72 @@ dmz::QtCanvasView::pan_direction (const int Dx, const int Dy) {
 }
 
 
-void
-dmz::QtCanvasView::drawBackground (QPainter *painter, const QRectF &rect) {
-
-   QGraphicsView::drawBackground (painter, rect);
-
-#if 0
-   painter->save();
-   painter->setPen(Qt::gray);
-   painter->setOpacity(0.2);
-
-   const QRectF r = sceneRect();
-//   qreal spacing = gridSpacing().width();
-   qreal spacing = 50;
-
-   //FIXME We should probably only draw those lines that intercept rect
-
-   //vertical lines
-   qreal x = r.left() + spacing;
-   while (x < r.right()) {
-      QLineF line(QPointF(x, r.top()), QPointF(x, r.bottom()));
-      painter->drawLine(line);
-      x += spacing;
-   }
-
-//   spacing = gridSpacing().height();
-   spacing = 50;
-
-   //horizontal lines
-   qreal y = r.top() + spacing;
-   while (y < r.bottom()) {
-      QLineF line(QPointF(r.left(), y), QPointF(r.right(), y));
-      painter->drawLine(line);
-      y += spacing;
-   }
-
-   painter->restore();
-#endif
-}
-
-
-void
-dmz::QtCanvasView::drawForeground (QPainter *painter, const QRectF &rect) {
-
-   painter->save();
-   painter->setPen(Qt::red);
-   
-   painter->drawLine (0, -100000, 0, 100000);
-   painter->drawLine (-100000, 0, 100000, 0);
-
-   painter->restore();
-
-//   QGraphicsView::drawForeground (painter, rect);
-}
+// void
+// dmz::QtCanvasView::drawBackground (QPainter *painter, const QRectF &rect) {
+// 
+//    QGraphicsView::drawBackground (painter, rect);
+// 
+// #if 0
+//    painter->save();
+//    painter->setPen(Qt::gray);
+//    painter->setOpacity(0.2);
+// 
+//    const QRectF r = sceneRect();
+// //   qreal spacing = gridSpacing().width();
+//    qreal spacing = 50;
+// 
+//    //FIXME We should probably only draw those lines that intercept rect
+// 
+//    //vertical lines
+//    qreal x = r.left() + spacing;
+//    while (x < r.right()) {
+//       QLineF line(QPointF(x, r.top()), QPointF(x, r.bottom()));
+//       painter->drawLine(line);
+//       x += spacing;
+//    }
+// 
+// //   spacing = gridSpacing().height();
+//    spacing = 50;
+// 
+//    //horizontal lines
+//    qreal y = r.top() + spacing;
+//    while (y < r.bottom()) {
+//       QLineF line(QPointF(r.left(), y), QPointF(r.right(), y));
+//       painter->drawLine(line);
+//       y += spacing;
+//    }
+// 
+//    painter->restore();
+// #endif
+// }
 
 
-void
-dmz::QtCanvasView::paintEvent (QPaintEvent *event) {
+// void
+// dmz::QtCanvasView::drawForeground (QPainter *painter, const QRectF &rect) {
+// 
+//    painter->save();
+//    painter->setPen(Qt::red);
+//    
+//    painter->drawLine (0, -100000, 0, 100000);
+//    painter->drawLine (-100000, 0, 100000, 0);
+// 
+//    painter->restore();
+// 
+// //   QGraphicsView::drawForeground (painter, rect);
+// }
 
-   if (event) {
 
-//      QPaintEvent newEvent (event->region ().boundingRect ());
-//      QGraphicsView::paintEvent (&newEvent);
-
-      QGraphicsView::paintEvent (event);
-   }
-}
-
-
-#if 0
-void
-dmz::QtCanvasView::resizeEvent (QResizeEvent *event) {
-
-   if (event) {
-
-      QSize old = event->oldSize ();
-      QSize current = event->size ();
-      QPointF corner = mapToScene (0, 0);
-      QPointF newCorner = mapToScene (current.width (), current.height ());
-      QPointF oldCorner = mapToScene (old.width (), old.height());
-
-      qWarning () << corner << " " << newCorner << " " << oldCorner;
-
-      QPointF center = corner + (oldCorner * 0.5);
-
-      centerOn (center);
-      qWarning () << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-";
-      qDebug () << event->size ();
-      qDebug () << " scale: " << get_scale ();
-      qDebug () << " vertical: " << verticalScrollBar ()->value ();
-      qDebug () << " horizontal: " << horizontalScrollBar ()->value ();
-   }
-}
-#endif
+// void
+// dmz::QtCanvasView::paintEvent (QPaintEvent *event) {
+// 
+//    if (event) {
+// 
+// //      QPaintEvent newEvent (event->region ().boundingRect ());
+// //      QGraphicsView::paintEvent (&newEvent);
+// 
+//       QGraphicsView::paintEvent (event);
+//    }
+// }
 
 
 void

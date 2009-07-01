@@ -43,10 +43,6 @@ dmz::QtPluginCanvasMap::update_plugin_state (
 
    if (State == PluginStateInit) {
 
-      // if (_canvasWidget && _mapWidget) {
-      // 
-      //   _canvasWidget->setParent (_mapWidget);
-      // }
    }
    else if (State == PluginStateStart) {
 
@@ -146,26 +142,6 @@ dmz::QtPluginCanvasMap::update_time_slice (const Float64 TimeDelta) {
 // QtWidget Interface
 QWidget *
 dmz::QtPluginCanvasMap::get_qt_widget () { return this; }
-
-
-// void
-// dmz::QtPluginCanvasMap::_slot_pan_changed (const QPoint &Value) {
-// 
-//    if (_map) {
-// 
-// //      _map->scroll (-Value);
-//    }
-// }
-// 
-// 
-// void
-// dmz::QtPluginCanvasMap::_slot_scale_changed (qreal value) {
-// 
-//    if (_map) {
-//       
-//       _map->setZoom (local_scale_to_level (value));
-//    }
-// }
 
 
 void

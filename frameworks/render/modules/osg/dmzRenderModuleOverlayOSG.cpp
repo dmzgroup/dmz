@@ -1438,7 +1438,8 @@ dmz::RenderModuleOverlayOSG::_add_circle (
 
    const Int32 Segments = 64;
 
-   geom->addPrimitiveSet (new osg::DrawArrays (osg::PrimitiveSet::LINE_LOOP, 0, Segments));
+   geom->addPrimitiveSet (
+      new osg::DrawArrays (osg::PrimitiveSet::LINE_LOOP, 0, Segments));
 
    stateset = geom->getOrCreateStateSet ();
    stateset->setRenderingHint (osg::StateSet::TRANSPARENT_BIN);
@@ -1454,7 +1455,8 @@ dmz::RenderModuleOverlayOSG::_add_circle (
 
    for (Int32 ix = 0; ix < Segments; ix++) {
 
-      vertices->push_back (osg::Vec3 (X + (sin (current) * Radius), Y + (cos (current) * Radius), 0.0));
+      vertices->push_back (
+         osg::Vec3 (X + (sin (current) * Radius), Y + (cos (current) * Radius), 0.0));
 
       current = current + Angle;
    }
@@ -1465,6 +1467,7 @@ dmz::RenderModuleOverlayOSG::_add_circle (
 
    parent->addChild (geode);
 }
+
 
 void
 dmz::RenderModuleOverlayOSG::_add_clone (osg::ref_ptr<osg::Group> &parent, Config &node) {

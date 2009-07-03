@@ -32,6 +32,7 @@ namespace dmz {
 
          String get_name () const;
          String get_prefix () const;
+         String get_domain () const;
 
          RuntimeContext *get_context () const;
          void get_global_config (Config &data) const;

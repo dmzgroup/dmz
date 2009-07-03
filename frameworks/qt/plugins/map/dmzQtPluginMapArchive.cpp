@@ -4,6 +4,7 @@
 #include <dmzQtModuleMap.h>
 #include "dmzQtPluginMapArchive.h"
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigWrite.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <qmapcontrol.h>
@@ -65,8 +66,13 @@ dmz::QtPluginMapArchive::create_archive (
          qmapcontrol::MapControl *map (_mapModule->get_map_control ());
 
          if (map) {
+            
+            Config result ("mapControl");
+
+            result.add_config (qpointf_to_config ("center", map->currentCoordinate ()));
+            result.add_config (int32_to_config ("zoom", map->currentZoom ()));
          
-//            local.add_config (qgraphicsview_to_config ("canvasView", *canvas));
+            local.add_config (result);
          }
       }
    }
@@ -87,8 +93,14 @@ dmz::QtPluginMapArchive::process_archive (
 
          if (map) {
             
-//            qgraphicsview_config_read ("canvasView", local, canvas);
-//            map->set_scale (canvas->get_scale ());
+            Config cd;
+            local.lookup_config ("mapControl", cd);
+            
+            QPointF center (config_to_qpointf ("center", cd, map->currentCoordinate ()));
+            map->setView (center);
+            
+            Int32 zoom (config_to_int32 ("zoom.value", cd, map->currentZoom ()));
+            map->setZoom (zoom);
          }
       }
    }

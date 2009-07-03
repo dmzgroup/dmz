@@ -254,7 +254,7 @@ dmz::QtPluginCanvasZoomPanMap::on_panUpButton_clicked () {
    
    if (_mapModule) {
 
-      _mapModule->pan_direction (0, _scrollDelta);
+      _mapModule->pan_direction (0, -_scrollDelta);
    }
 }
 

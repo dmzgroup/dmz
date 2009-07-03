@@ -127,6 +127,7 @@ namespace dmz {
          Int32 _zoomMin;
          Int32 _zoomMax;
          Int32 _zoomDefault;
+         String _cacheDir;
 
       private:
          QtModuleMapBasic ();

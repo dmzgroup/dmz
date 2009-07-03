@@ -29,7 +29,7 @@ namespace {
 static dmz::Log *appLog (0);
 
 const char OrganizationName[] = "dmz";
-const char OrganizationDomain[] = "dmzgroup.org";
+const char OrganizationDomain[] = "dmzdev.org";
 
 static const String LocalInitPrefix ("dmz_init_");
 

@@ -181,6 +181,16 @@ dmz::Application::get_prefix () const { return _state.NamePrefix; }
 
 /*!
 
+\brief Gets the domain of the application.
+\return Returns a string containing the domain of the application.
+
+*/
+dmz::String
+dmz::Application::get_domain () const { return _state.Domain; }
+
+
+/*!
+
 \brief Gets runtime context.
 \return Returns a pointer to the runtime context.
 

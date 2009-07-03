@@ -11,6 +11,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
+#include <dmzSystemFile.h>
 #include <qmapcontrol.h>
 #include <QtGui/QtGui>
 
@@ -36,7 +37,8 @@ dmz::QtModuleMapBasic::QtModuleMapBasic (const PluginInfo &Info, Config &local) 
       _geomLayer (0),
       _zoomMin (0),
       _zoomMax (17),
-      _zoomDefault (_zoomMin) {
+      _zoomDefault (_zoomMin),
+      _cacheDir () {
 
    _init (local);
 }
@@ -546,12 +548,31 @@ dmz::QtModuleMapBasic::_init (Config &local) {
       this, SLOT (_mouse_event_coordinate (const QMouseEvent *, const QPointF)));
    
    _map->setMouseTracking (true);
+
+   _cacheDir = get_home_directory ();
    
-   // if (config_to_boolean ("map.cache", local, True)) {
-   //    
-   //    _map->enablePersistentCache (const QDir& path = QDir::homePath () + "/QMapControl.cache");
-   _map->enablePersistentCache ();
-   // }
+   if (is_valid_path (_cacheDir)) {
+      
+#if defined (_WIN32)
+      _cacheDir << "/Local Settings/Application Data/";
+#elif defined (__APPLE__) || defined (MACOSX)
+      _cacheDir << "/Library/Caches/";
+#else
+      _cacheDir << "/.";
+#endif
+
+      _cacheDir << "dmz/QMapControl";
+   }
+   else {
+      
+      _cacheDir = "";
+   }
+   
+   if (config_to_boolean ("map.cache", local, True) && _cacheDir) {
+
+      _log.info << "Persistent cache: " << _cacheDir << endl;
+      _map->enablePersistentCache (QString (_cacheDir.get_buffer ()));
+   }
    
    // _map->setMouseMode (qmapcontrol::MapControl::None);
    

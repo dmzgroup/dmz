@@ -186,6 +186,8 @@ namespace dmz {
                   Type (TheType),
                   RHandle (TypeName, context),
                   VHandle (RHandle.get_runtime_handle ()) { node = ptr; }
+
+            virtual ~NodeStruct () {;}
          };
 
          struct TextStruct : public NodeStruct {
@@ -211,6 +213,8 @@ namespace dmz {
                geode = geodePtr;
                text = textPtr;
             }
+
+            virtual ~TextStruct () {;}
          };
 
          struct GroupStruct : public NodeStruct {
@@ -236,6 +240,8 @@ namespace dmz {
                   RuntimeContext *context,
                   osg::Group *ptr) :
                   NodeStruct (Name, TheType, TypeName, context, ptr) { group = ptr; }
+
+            virtual ~GroupStruct () {;}
          };
 
          struct SwitchStruct : public GroupStruct {
@@ -252,6 +258,8 @@ namespace dmz {
 
                switchNode = ptr;
             }
+
+            virtual ~SwitchStruct () {;}
          };
 
          struct TransformStruct : public GroupStruct {
@@ -272,6 +280,8 @@ namespace dmz {
                      context,
                      ptr),
                   rot (0.0) { transform = ptr; }
+
+            virtual ~TransformStruct () {;}
          };
 
          struct CloneStruct {
@@ -280,6 +290,7 @@ namespace dmz {
             HashTableStringTemplate<NodeStruct> nameTable;
 
             CloneStruct () : next (0) {;}
+            ~CloneStruct () { nameTable.clear (); }
          };
 
          struct GroupStackStruct {

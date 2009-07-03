@@ -426,6 +426,16 @@ dmz::RenderModuleOverlayOSG::destroy_node (const Handle Overlay) {
       else { result = _remove_node (Overlay); }
    }
 
+   CloneStruct *cs = _cloneTable.remove (Overlay);
+
+   if (cs) {
+
+      HashTableStringIterator it;
+      NodeStruct *child = 0;
+      while (cs->nameTable.get_next (it, child)) { destroy_node (child->VHandle); }
+      delete cs; cs = 0;
+   }
+
    return result;
 }
 
@@ -1169,7 +1179,6 @@ dmz::RenderModuleOverlayOSG::_add_text (
       }
    }
 }
-
 
 
 void

@@ -152,6 +152,9 @@ dmz::RenderExtViewerOSG::update_time_slice (const Float64 TimeDelta) {
 void
 dmz::RenderExtViewerOSG::_init (const Config &Local) {
 
+   osg::DisplaySettings *ds = osg::DisplaySettings::instance ();
+   if (ds) { ds->setNumMultiSamples (config_to_int32 ("aa.samples", Local, 0)); }
+
    _viewerName = config_to_string ("portal.name", Local, _viewerName);
 
    _title = config_to_string ("window-title.value", Local, _title);

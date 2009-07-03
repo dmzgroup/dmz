@@ -130,7 +130,7 @@ dmz::RenderPluginLightingOSG::_init_light (const Int32 MaxLights, Config &light)
 
          if (light.lookup_config ("direction", attr)) {
 
-            const Vector Value = config_to_vector (attr);
+            const Vector Value = config_to_vector (attr).normalize ();
 
             ptrLight->light->setDirection (osg::Vec3 (
                Value.get_x (), 
@@ -141,8 +141,7 @@ dmz::RenderPluginLightingOSG::_init_light (const Int32 MaxLights, Config &light)
          if (light.lookup_config ("ambient", attr)) {
 
             const osg::Vec4 Value = config_to_osg_vec4_color (
-               "ambient", 
-               light, 
+               attr,
                osg::Vec4 (0.0, 0.0, 0.0, 1.0));
 
             ptrLight->light->setAmbient (Value);
@@ -151,8 +150,7 @@ dmz::RenderPluginLightingOSG::_init_light (const Int32 MaxLights, Config &light)
          if (light.lookup_config ("specular", attr)) {
 
             const osg::Vec4 Value = config_to_osg_vec4_color (
-               "specular", 
-               light, 
+               attr,
                osg::Vec4 (0.0, 0.0, 0.0, 1.0));
 
             ptrLight->light->setSpecular (Value);
@@ -161,8 +159,7 @@ dmz::RenderPluginLightingOSG::_init_light (const Int32 MaxLights, Config &light)
          if (light.lookup_config ("diffuse", attr)) {
 
             const osg::Vec4 Value = config_to_osg_vec4_color (
-               "diffuse", 
-               light, 
+               attr,
                osg::Vec4 (0.0, 0.0, 0.0, 1.0));
 
             ptrLight->light->setDiffuse (Value);

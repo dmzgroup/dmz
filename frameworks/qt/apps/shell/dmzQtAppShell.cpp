@@ -475,6 +475,8 @@ app.log.error << launchFile << endl;
          app.save_session ();
       }
 
+      DynamicLibrary::dump_loaded (app.log.info);
+
       while (qtLogObs.isVisible ()) {
 
          // wait for log window to close
@@ -491,8 +493,6 @@ app.log.error << launchFile << endl;
       local_starup_error (errorMsg);
    }
 #endif
-
-   DynamicLibrary::dump_loaded (app.log.info);
 
    qtApp.quit ();
 

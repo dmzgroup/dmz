@@ -191,7 +191,7 @@ overlay_text (lua_State *L) {
 
       String value;
 
-      if (overlay->lookup_text (Node, value)) {
+      if (overlay && overlay->lookup_text (Node, value)) {
 
          if (value) { lua_pushstring (L, value.get_buffer ()); result = 1; }
       }
@@ -200,7 +200,7 @@ overlay_text (lua_State *L) {
 
       const String Value = luaL_checkstring (L, 2);
 
-      if (overlay->store_text (Node, Value)) {
+      if (overlay && overlay->store_text (Node, Value)) {
 
          if (Value) { lua_pushstring (L, Value.get_buffer ()); result = 1; }
       }

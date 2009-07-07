@@ -160,7 +160,7 @@ dmz::xml_string_to_config (const String &Value, Config &data, Log *log) {
 \ingroup Foundation
 \brief Converts an XML file to a config context tree.
 \details Defined in dmzXMLUtil.h.
-\param[in] File String containing name of XML file to parse.
+\param[in] FileName String containing name of XML file to parse.
 \param[out] data Config object to store parsed XML data.
 \param[in] log Pointer to Log for streaming log messages.
 \return Returns dmz::True if the XML file was successfully parsed.
@@ -168,14 +168,14 @@ dmz::xml_string_to_config (const String &Value, Config &data, Log *log) {
 
 */
 dmz::Boolean
-dmz::xml_to_config (const String &File, Config &data, Log *log) {
+dmz::xml_to_config (const String &FileName, Config &data, Log *log) {
 
    XMLParser parser;
    XMLInterpreterConfig interpreter (data);
    parser.set_interpreter (&interpreter);
    Boolean error (False);
 
-   FILE *file = open_file (File, "rb");
+   FILE *file = open_file (FileName, "rb");
 
    if (file) {
 
@@ -192,7 +192,7 @@ dmz::xml_to_config (const String &File, Config &data, Log *log) {
 
             if (log) {
 
-               log->error << "In file: " << File << " : " << parser.get_error ()
+               log->error << "In file: " << FileName << " : " << parser.get_error ()
                   << endl;
             }
          }
@@ -202,7 +202,7 @@ dmz::xml_to_config (const String &File, Config &data, Log *log) {
    }
    else if (log) {
 
-      log->error << "Unable to open file: " << file << endl;
+      log->error << "Unable to open file: " << FileName << endl;
    }
 
    return !error;
@@ -216,10 +216,10 @@ dmz::xml_to_config (const String &File, Config &data, Log *log) {
 
 */
 dmz::Boolean
-dmz::xml_to_version (const String &File, Version &value, Log *log) {
+dmz::xml_to_version (const String &FileName, Version &value, Log *log) {
 
    Config data ("global");
-   Boolean result = xml_to_config (File, data, log);
+   Boolean result = xml_to_config (FileName, data, log);
 
    if (result) {
 

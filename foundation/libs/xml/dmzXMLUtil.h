@@ -17,12 +17,12 @@ namespace dmz {
       Log *log = 0);
 
    DMZ_XML_LINK_SYMBOL Boolean xml_to_config (
-      const String &File,
+      const String &FileName,
       Config &data,
       Log *log = 0);
 
    DMZ_XML_LINK_SYMBOL Boolean xml_to_version (
-      const String &File,
+      const String &FileName,
       Version &value,
       Log *log = 0);
 

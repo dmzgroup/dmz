@@ -8,6 +8,7 @@
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimePluginContainer.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 
@@ -109,6 +110,7 @@ namespace dmz {
 
             const Handle PacketID;
             NetExtPacketCodecObject &codec;
+            HandleContainer objects;
 
             EncodeObjectStruct (
                   const Handle ThePacketID,
@@ -135,6 +137,7 @@ namespace dmz {
             Marshal &outData);
 
          void _discover_codec (const Plugin *PluginPtr);
+         void _remove_codec (const Plugin *PluginPtr);
          void _init (Config &local, Config &global);
          void _build_header_codec (Config &local);
 

@@ -137,8 +137,16 @@ dmz::NetModulePacketCodecBasic::discover_plugin (
       const PluginDiscoverEnum Mode,
       const Plugin *PluginPtr) {
 
-   if (Mode == PluginDiscoverAdd) { _extensions.discover_external_plugin (PluginPtr); }
-   else if (Mode == PluginDiscoverAdd) { _extensions.remove_external_plugin (PluginPtr); }
+   if (Mode == PluginDiscoverAdd) {
+
+      _discover_codec (PluginPtr);
+      _extensions.discover_external_plugin (PluginPtr);
+   }
+   else if (Mode == PluginDiscoverAdd) {
+
+      _remove_codec (PluginPtr);
+      _extensions.remove_external_plugin (PluginPtr);
+   }
 }
 
 
@@ -216,6 +224,7 @@ dmz::NetModulePacketCodecBasic::register_object (
 
    if (ObjectHandle && eos && _objTable.store (ObjectHandle, eos)) {
 
+      eos->objects.add_handle (ObjectHandle);
       result = _write_object (ObjectHandle, NetObjectActivate, outData);
    }
 
@@ -239,7 +248,11 @@ dmz::NetModulePacketCodecBasic::release_object (
 
    _write_object (ObjectHandle, NetObjectDeactivate, outData);
 
-   return _objTable.remove (ObjectHandle) != 0;
+   EncodeObjectStruct *eos = _objTable.remove (ObjectHandle);
+
+   if (eos) { eos->objects.remove_handle (ObjectHandle); }
+
+   return eos != 0;
 }
 
 
@@ -379,6 +392,70 @@ dmz::NetModulePacketCodecBasic::_discover_codec (const Plugin *PluginPtr) {
    }
 }
 
+
+void
+dmz::NetModulePacketCodecBasic::_remove_codec (const Plugin *PluginPtr) {
+
+   const String Name (PluginPtr ? PluginPtr->get_plugin_name () : "");
+
+   NetExtPacketCodecObject *objCodec (NetExtPacketCodecObject::cast (PluginPtr));
+   NetExtPacketCodecEvent *eventCodec (NetExtPacketCodecEvent::cast (PluginPtr));
+
+   if (Name && (objCodec || eventCodec)) {
+
+      PacketStruct *hs (_packetTable.lookup (Name));
+
+      if (hs) {
+
+         DecodeStruct *ds = _decodeTable.remove (hs->PacketID);
+
+         if (ds) { delete ds; ds = 0; }
+
+         if (objCodec && hs->objects.get_count ()) {
+
+            ObjectTypeIterator it;
+
+            ObjectType type;
+
+            while (hs->objects.get_next (it, type)) {
+
+               _objTypeTable.remove (type.get_handle ());
+            }
+
+            EncodeObjectStruct *eos = _objEncodeTable.remove (hs->PacketID);
+
+            if (eos) {
+
+               Handle obj = eos->objects.get_first ();
+
+               while (obj) {
+
+                  _objTable.remove (obj);
+
+                  obj = eos->objects.get_next ();
+               }
+
+               delete eos; eos = 0;
+            }
+         }
+         else if (eventCodec && hs->events.get_count ()) {
+
+            EventTypeIterator it;
+
+            EventType type;
+
+            while (hs->events.get_next (it, type)) {
+
+               _eventTypeTable.remove (type.get_handle ());
+            }
+
+            EncodeEventStruct *ees = _eventEncodeTable.remove (hs->PacketID);
+
+            if (ees) { delete ees; ees = 0; }
+         }
+      }
+   }
+}
 
 void
 dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {

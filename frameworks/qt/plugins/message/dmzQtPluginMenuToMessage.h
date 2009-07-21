@@ -71,11 +71,6 @@ namespace dmz {
             Config &config,
             HandleContainer &targets);
 
-         void _get_type_set (
-            const String &Name,
-            Config &config,
-            ObjectTypeSet &set);
-
          void _build_menu (const String &Name, Config &config);
 
          void _init (Config &local);
@@ -89,6 +84,7 @@ namespace dmz {
          Message _showMessage;
          Handle _defaultAttrHandle;
          Handle _source;
+         Handle _defaultTarget;
          Handle _objectAttrHandle;
          Handle _positionAttrHandle;
          Handle _object;

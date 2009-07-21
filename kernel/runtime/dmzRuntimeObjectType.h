@@ -124,6 +124,11 @@ namespace dmz {
       const String &Name,
       const Config &Source,
       RuntimeContext *context);
+
+   ObjectTypeSet
+   config_to_object_type_set (
+      const Config &Source,
+      RuntimeContext *context);
 };
 
 
@@ -136,6 +141,14 @@ dmz::config_to_object_type (
    const ObjectType EmptyType;
    return config_to_object_type (Name, Source, EmptyType, context);
 }
+
+
+inline dmz::ObjectTypeSet
+dmz::config_to_object_type_set (const Config &Source, RuntimeContext *context) {
+
+   return config_to_object_type_set ("", Source, context);
+}
+
 
 #endif // DMZ_RUNTIME_OBJECT_TYPE_DOT_H
 

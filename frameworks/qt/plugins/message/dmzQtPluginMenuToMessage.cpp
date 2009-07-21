@@ -25,6 +25,7 @@ dmz::QtPluginMenuToMessage::QtPluginMenuToMessage (
       _defaultAttrHandle (0),
       _showMessage (0),
       _source (0),
+      _defaultTarget (0),
       _objectAttrHandle (0),
       _positionAttrHandle (0),
       _object (0),
@@ -105,7 +106,7 @@ dmz::QtPluginMenuToMessage::receive_message (
          Vector pos;
 
          if (InData->lookup_handle (_objectAttrHandle, 0, obj) &&
-             InData->lookup_vector (_positionAttrHandle, 0, pos)) {
+               InData->lookup_vector (_positionAttrHandle, 0, pos)) {
 
             const ObjectType Type (_objectModule->lookup_object_type (obj));
 
@@ -114,8 +115,6 @@ dmz::QtPluginMenuToMessage::receive_message (
                _object = obj;
 
                Int32 screenX, screenY;
-
-               pos.set_xyz (pos.get_x (), pos.get_z (), 0.0);
 
                if (_pickModule->world_to_screen (_source, pos, screenX, screenY)) {
 
@@ -187,29 +186,7 @@ dmz::QtPluginMenuToMessage::_get_targets (
          else { _log.error << "Unable to add unnamed target" << endl; }
       }
    }
-}
-
-
-void
-dmz::QtPluginMenuToMessage::_get_type_set (
-      const String &Name,
-      Config &config,
-      ObjectTypeSet &set) {
-
-   RuntimeContext *context (get_plugin_runtime_context ());
-
-   Config typeList;
-
-   if (config.lookup_all_config (Name + ".type", typeList)) {
-
-      ConfigIterator it;
-      Config cd;
-
-      while (typeList.get_next_config (it, cd)) {
-
-         set.add_object_type (config_to_string ("name", cd), context);
-      }
-   }
+   else if (_defaultTarget) { targets.add_handle (_defaultTarget); }
 }
 
 
@@ -274,6 +251,9 @@ dmz::QtPluginMenuToMessage::_init (Config &local) {
    _source = config_to_named_handle (
       "source.name", local, "dmzQtModuleCanvasBasic", context);
 
+   _defaultTarget = config_to_named_handle (
+      "default-target.name", local, context);
+
    _objectAttrHandle = config_to_named_handle (
       "attribute.object.name", local, "object", context);
 
@@ -288,7 +268,7 @@ dmz::QtPluginMenuToMessage::_init (Config &local) {
 
    subscribe_to_message (_showMessage);
 
-   _get_type_set ("object", local, _objectSet);
+   _objectSet = config_to_object_type_set (local, context);
 
    _build_menu ("menu", local);
 }

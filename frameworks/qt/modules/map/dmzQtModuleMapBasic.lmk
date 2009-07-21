@@ -1,16 +1,8 @@
-require "lmkQt"
-lmkQt.set_name "dmzQtModuleMapBasic"
+require "lmkQMapControl"
+lmkQMapControl.set_name "dmzQtModuleMapBasic"
 lmk.set_type "plugin"
-
-lmk.add_files ({
-   "dmzQtModuleMapBasic.h",
-},
-{src = "moc"})
-
-lmk.add_files {
-   "dmzQtModuleMapBasic.cpp",
-}
-
+lmk.add_files ({"dmzQtModuleMapBasic.h",},{src = "moc"})
+lmk.add_files {"dmzQtModuleMapBasic.cpp",}
 lmk.add_preqs {"dmzQtFramework", "dmzRenderFramework", "dmzInputFramework",}
-lmk.add_libs {"QMapControl", "dmzQtUtil", "dmzInputEvents", "dmzKernel",}
-lmkQt.add_libs {"QtCore", "QtGui", "QtNetwork",}
+lmk.add_libs {"dmzQtUtil", "dmzInputEvents", "dmzKernel",}
+lmkQMapControl.add_libs ()

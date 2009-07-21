@@ -1,6 +1,6 @@
 require "lmkOgre"
 require "lmkQt"
-lmk.set_name ("dmzRenderExtWindowOgreQt", { DMZ_USE_OGRE = true, DMZ_USE_QT = true })
+lmkOgre.set_name ("dmzRenderExtWindowOgreQt", lmkQt.get_flags ())
 lmk.set_type "plugin"
 lmk.add_libs {
    "dmzQtUtil",

@@ -595,8 +595,7 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
    set_qwidget_stylesheet ("stylesheet", local, this);
 
    if (config_to_boolean ("hide.value", local, False)) { hide (); }
-
-
+   
 //   setCorner (Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
    setCorner (

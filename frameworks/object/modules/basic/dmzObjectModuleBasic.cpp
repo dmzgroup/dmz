@@ -2937,7 +2937,6 @@ dmz::ObjectModuleBasic::immediate_destroy_object (const Handle ObjectHandle) {
       _inObsUpdate = False;
    }
 
-
    _update_observers ();
 }
 

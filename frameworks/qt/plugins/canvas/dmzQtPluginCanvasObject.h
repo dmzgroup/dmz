@@ -59,6 +59,12 @@ namespace dmz {
 
          virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
 
+         virtual void remove_object_attribute (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Mask &AttrMask);
+
          virtual void link_objects (
             const Handle LinkHandle,
             const Handle AttributeHandle,
@@ -74,6 +80,13 @@ namespace dmz {
             const Handle SuperHandle,
             const UUID &SubIdentity,
             const Handle SubHandle);
+
+         virtual void update_object_flag (      
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Boolean Value,
+            const Boolean *PreviousValue);
 
          virtual void update_object_position (
             const UUID &Identity,
@@ -129,6 +142,7 @@ namespace dmz {
          Handle _defaultAttrHandle;
          Handle _positionAttrHandle;
          Handle _linkAttrHandle;
+         Handle _hideAttrHandle;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
          HashTableHandleTemplate<ObjectStruct> _updateTable;
          Boolean _zoomChanged;

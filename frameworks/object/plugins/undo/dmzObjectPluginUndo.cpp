@@ -1101,7 +1101,7 @@ dmz::ObjectPluginUndo::_remove_attribute (
 
    Data data;
    data.store_uuid (_uuidHandle, 0, Identity);
-   data.store_string (_stringHandle, 0, _defs.lookup_named_handle_name (AttrHandle));
+   data.store_string (_handleHandle, 0, _defs.lookup_named_handle_name (AttrHandle));
    data.store_mask (_maskHandle, RemoveMask);
    _undo.store_action (_removeAttribute, get_plugin_handle (), &data);
 }

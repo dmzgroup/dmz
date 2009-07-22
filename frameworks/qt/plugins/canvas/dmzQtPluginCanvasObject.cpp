@@ -133,6 +133,7 @@ dmz::QtPluginCanvasObject::QtPluginCanvasObject (
       _defaultAttrHandle (0),
       _positionAttrHandle (0),
       _linkAttrHandle (0),
+      _hideAttrHandle (0),
       _canvasModule (0),
       _canvasModuleName (),
       _objectTable (),
@@ -280,6 +281,25 @@ dmz::QtPluginCanvasObject::destroy_object (
 
 
 void
+dmz::QtPluginCanvasObject::remove_object_attribute (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Mask &AttrMask) {
+
+   if ((AttributeHandle == _hideAttrHandle) && AttrMask.contains (ObjectFlagMask)) {
+
+      ObjectStruct *os (_objectTable.lookup (ObjectHandle));
+
+      if (os && os->item) {
+
+         os->item->show ();
+      }
+   }
+}
+
+
+void
 dmz::QtPluginCanvasObject::link_objects (
       const Handle LinkHandle,
       const Handle AttributeHandle,
@@ -332,6 +352,27 @@ dmz::QtPluginCanvasObject::unlink_objects (
             if (group) { superItem->setGroup (0); }
             else { superItem->setParentItem (0); }
          }
+      }
+   }
+}
+
+
+void
+dmz::QtPluginCanvasObject::update_object_flag (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Boolean Value,
+      const Boolean *PreviousValue) {
+
+   if (AttributeHandle == _hideAttrHandle) {
+      
+      ObjectStruct *os (_objectTable.lookup (ObjectHandle));
+
+      if (os && os->item) {
+
+         if (Value) { os->item->hide (); }
+         else { os->item->show (); }
       }
    }
 }
@@ -493,6 +534,10 @@ dmz::QtPluginCanvasObject::_init (Config &local, Config &global) {
       ObjectAttributeLayerLinkName,
       ObjectLinkMask | ObjectUnlinkMask);
    
+   _hideAttrHandle = activate_object_attribute (
+      ObjectAttributeHideName,
+      ObjectRemoveAttributeMask | ObjectFlagMask);
+
 #if 0
    Config preLoadList;
 

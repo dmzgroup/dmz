@@ -51,7 +51,7 @@ dmz::QtPluginMapProperties::update_plugin_state (
       const UInt32 Level) {
 
    if (State == PluginStateInit) {
-
+      
       if (_mapModule) {
          
          _ui.cacheDirLabel->setText (_mapModule->get_tile_cache_dir ().get_buffer ());
@@ -59,9 +59,11 @@ dmz::QtPluginMapProperties::update_plugin_state (
    }
    else if (State == PluginStateStart) {
 
+      _load_session ();
    }
    else if (State == PluginStateStop) {
 
+      _save_session ();
    }
    else if (State == PluginStateShutdown) {
 
@@ -244,6 +246,38 @@ dmz::QtPluginMapProperties::on_emptyCacheButton_clicked () {
       _mapModule->empty_tile_cache ();
       qApp->restoreOverrideCursor ();
    }
+}
+
+
+void
+dmz::QtPluginMapProperties::_save_session () {
+
+   // String data;
+   // 
+   // Config session (get_plugin_name ());
+   // 
+   // session.add_config (
+   //    qbytearray_to_config ("geometry", saveGeometry ()));
+   // 
+   // session.add_config (qbytearray_to_config ("state", saveState (LocalSessionVersion)));
+   // 
+   // set_session_config (get_plugin_runtime_context (), session);
+}
+
+
+void
+dmz::QtPluginMapProperties::_load_session () {
+
+   // Config session (
+   //    get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
+   // 
+   // QByteArray geometry (config_to_qbytearray ("geometry", session, saveGeometry ()));
+   // restoreGeometry (geometry);
+   // 
+   // QByteArray stateData (
+   //    config_to_qbytearray ("state", session, saveState (LocalSessionVersion)));
+   // 
+   // restoreState (stateData, LocalSessionVersion);
 }
 
 

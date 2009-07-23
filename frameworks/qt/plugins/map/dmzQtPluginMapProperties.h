@@ -72,6 +72,8 @@ namespace dmz {
          void on_emptyCacheButton_clicked ();
          
       protected:
+         void _save_session ();
+         void _load_session ();
          void _init (Config &local);
 
          Log _log;

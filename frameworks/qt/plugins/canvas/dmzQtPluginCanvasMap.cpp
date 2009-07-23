@@ -116,8 +116,13 @@ dmz::QtPluginCanvasMap::discover_plugin (
       
       if (_mapModule && (_mapModule == QtModuleMap::cast (PluginPtr))) {
 
-         _mapWidget->setParent (0);
-         _mapWidget = 0;
+         if (_mapWidget) {
+            
+            _layout->removeWidget (_mapWidget);
+            _mapWidget->setParent (0);
+            _mapWidget = 0;
+         }
+         
          _mapModule = 0;
       }
    }
@@ -165,7 +170,7 @@ dmz::QtPluginCanvasMap::_init (Config &local) {
 
    _layout = new QVBoxLayout (this);
    _layout->setSpacing (0);
-   _layout->setContentsMargins (0, 0, 0, 0);
+   _layout->setContentsMargins (2, 2, 2, 2);
    
    setLayout (_layout);
 }

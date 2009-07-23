@@ -157,6 +157,7 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
       setUnifiedTitleAndToolBarOnMac (_showUnifiedTitleAndToolBar);
       show ();
       raise ();
+      activateWindow ();
    }
    else if (State == PluginStateStop) {
 

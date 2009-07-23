@@ -32,6 +32,7 @@ dmz::QtModuleMapBasic::QtModuleMapBasic (const PluginInfo &Info, Config &local) 
       _ignoreEvents (False),
       _itemTable (),
       _map (0),
+      _defaultAdapter (0),
       _mapAdapter (0),
       _baseLayer (0),
       _geomLayer (0),
@@ -70,6 +71,8 @@ dmz::QtModuleMapBasic::update_plugin_state (
    }
    else if (State == PluginStateShutdown) {
 
+      use_default_map_adapter ();
+      
       // if (_baseLayer) { _baseLayer->clearGeometries (); }
       // if (_geomLayer) { _geomLayer->clearGeometries (); }
    }
@@ -154,6 +157,67 @@ dmz::QtModuleMapBasic::get_qt_widget () { return this; }
 // QtModuleMap
 qmapcontrol::MapControl *
 dmz::QtModuleMapBasic::get_map_control () { return _map; }
+
+
+void
+dmz::QtModuleMapBasic::use_default_map_adapter () {
+
+   set_map_adapter (_defaultAdapter);
+}
+
+
+dmz::String
+dmz::QtModuleMapBasic::get_tile_cache_dir () const {
+   
+   return _cacheDir;
+}
+
+
+void
+dmz::QtModuleMapBasic::empty_tile_cache () {
+
+   String file;
+   PathContainer fileList;
+
+   if (get_file_list (_cacheDir, fileList)) {
+      
+      Boolean found (fileList.get_first (file));
+         
+      while (found) {
+      
+         const String CleanPath (format_path (_cacheDir + "/" + file));
+         if (get_absolute_path (CleanPath, file))  {
+
+            remove_file (file);
+         }
+         
+         found = fileList.get_next (file);
+      }
+   }
+}
+
+
+void
+dmz::QtModuleMapBasic::set_map_adapter (qmapcontrol::MapAdapter *adapter) {
+
+   if (adapter != _mapAdapter) {
+      
+      if (!adapter) { adapter = _defaultAdapter; }
+
+      if (adapter && _map && _mapAdapter) {
+
+         int zoom = _mapAdapter->adaptedZoom ();
+         _mapAdapter = adapter;
+
+         if (_baseLayer) { _baseLayer->setMapAdapter (_mapAdapter); }
+         if (_geomLayer) { _geomLayer->setMapAdapter (_mapAdapter); }
+         
+         qmapcontrol::ImageManager::instance ()->abortLoading ();
+         _map->updateRequestNew ();
+         _map->setZoom (zoom);
+      }
+   }
+}
 
 
 dmz::Boolean
@@ -317,7 +381,6 @@ dmz::QtModuleMapBasic::resizeEvent (QResizeEvent *event) {
 
          if (_map && event) {
 
-//            _map->resize (event->size () - QSize (1, 1));
             _map->resize (event->size ());
          }
 
@@ -562,6 +625,8 @@ dmz::QtModuleMapBasic::_init (Config &local) {
 #endif
 
       _cacheDir << "dmz/QMapControl";
+      
+      _cacheDir = format_path (_cacheDir);
    }
    else {
       
@@ -586,7 +651,7 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    String mapPath (config_to_string ("tileMapAdapter.path", local, "/%1/%2/%3.png"));
    Int32 tileSize (config_to_int32 ("tileMapAdapter.tileSize", local, 256));
    
-    _mapAdapter = new qmapcontrol::TileMapAdapter (
+    _defaultAdapter = new qmapcontrol::TileMapAdapter (
       mapUrl.get_buffer (),
       mapPath.get_buffer (),
       tileSize,
@@ -607,12 +672,14 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    //    // "/tilecache/tilecache.py/?LAYERS=osm&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A900913",
    //    tileSize);
 
-   _baseLayer = new qmapcontrol::MapLayer ("base", _mapAdapter);
+   _baseLayer = new qmapcontrol::MapLayer ("base", _defaultAdapter);
    _map->addLayer (_baseLayer);
 
-   _geomLayer = new qmapcontrol::GeometryLayer ("geom", _mapAdapter);
+   _geomLayer = new qmapcontrol::GeometryLayer ("geom", _defaultAdapter);
    _map->addLayer (_geomLayer);
-   
+
+   _mapAdapter = _defaultAdapter;
+      
    QVBoxLayout *layout (new QVBoxLayout ());
    layout->addWidget (_map);
    layout->setMargin (0);

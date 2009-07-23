@@ -8,17 +8,29 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeUndo.h>
+#include <QtGui/QDialog>
+#include "ui_dmzQtPluginMapProperties.h"
+
+namespace qmapcontrol {
+   
+   class MapControl;
+};
 
 
 namespace dmz {
 
+   class QtModuleMap;
+   class QtModuleCanvas;
    class QtModuleMainWindow;
+   
 
    class QtPluginMapProperties :
+         public QDialog,
          public Plugin,
          public ArchiveObserverUtil,
          public MessageObserver {
+            
+   Q_OBJECT
 
       public:
          QtPluginMapProperties (const PluginInfo &Info, Config &local);
@@ -52,22 +64,25 @@ namespace dmz {
             const Data *InData,
             Data *outData);
 
+      protected slots:
+         void on_mapCheckBox_stateChanged (int state);
+         void on_mapAdapterAddButton_clicked ();
+         void on_mapAdapterEditButton_clicked ();
+         void on_mapAdapterDeleteButton_clicked ();
+         void on_emptyCacheButton_clicked ();
+         
       protected:
-         QString _get_last_path ();
          void _init (Config &local);
 
          Log _log;
-         Undo _undo;
-         DataConverterString _dataConverter;
-         ApplicationStateWrapper _appState;
+         Ui::mapPropertiesDialog _ui;
          QtModuleMainWindow *_mainWindowModule;
          String _mainWindowModuleName;
+         QtModuleCanvas *_canvasModule;
+         String _canvasModuleName;
          QtModuleMap *_mapModule;
          String _mapModuleName;
-         Message _cleanupMessage;
-         Message _backgroundEditMessage;
-         Message _undoMessage;
-         Config _data;
+         Message _propertiesEditMessage;
          
       private:
          QtPluginMapProperties ();

@@ -11,6 +11,7 @@ class QPointF;
 
 namespace qmapcontrol {
    
+   class MapAdapter;
    class MapControl;
    class Geometry;
 };
@@ -29,6 +30,12 @@ namespace dmz {
          Handle get_qt_module_map_handle () const;
 
          virtual qmapcontrol::MapControl *get_map_control () = 0;
+         
+         virtual void use_default_map_adapter () = 0;
+         virtual void set_map_adapter (qmapcontrol::MapAdapter *adapter) = 0;
+
+         virtual String get_tile_cache_dir () const = 0;
+         virtual void empty_tile_cache () = 0;
          
          virtual Boolean add_item (const Handle ObjectHandle, qmapcontrol::Geometry *item) = 0;
          virtual qmapcontrol::Geometry *lookup_item (const Handle ObjectHandle) = 0;

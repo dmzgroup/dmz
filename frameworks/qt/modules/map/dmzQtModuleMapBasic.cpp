@@ -642,6 +642,7 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    // _map->setMouseMode (qmapcontrol::MapControl::None);
    
    _map->showScale (config_to_boolean ("map.scale", local, True));
+   _map->showLoading (config_to_boolean ("map.loading", local, True));
 
    _zoomMin = config_to_int32 ("zoom.min", local, _zoomMin);
    _zoomMax = config_to_int32 ("zoom.max", local, _zoomMax);

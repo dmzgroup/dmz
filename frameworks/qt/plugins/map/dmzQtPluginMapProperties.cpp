@@ -205,14 +205,20 @@ dmz::QtPluginMapProperties::on_mapCheckBox_stateChanged (int state) {
       
       if (state) {
 
-         if (map) { map->show (); map->updateRequestNew (); }
          qmapcontrol::ImageManager::instance ()->workOffline (false);
          _canvasModule->set_background_transparent (true);
+         
+         if (map) {
+            
+            map->show ();
+            map->updateRequestNew ();
+         }
+         
       }
       else {
             
-        if (map) { map->hide (); }
-        qmapcontrol::ImageManager::instance ()->workOffline (true);
+         if (map) { map->hide (); }
+         qmapcontrol::ImageManager::instance ()->workOffline (true);
          _canvasModule->set_background_transparent (false);
       }
    }

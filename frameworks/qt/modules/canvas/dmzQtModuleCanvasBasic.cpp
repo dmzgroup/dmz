@@ -91,6 +91,30 @@ QGraphicsView *
 dmz::QtModuleCanvasBasic::get_view () { return _canvas; }
 
 
+void
+dmz::QtModuleCanvasBasic::set_background_transparent (const Boolean Value) {
+
+   if (Value) {
+
+      _scene.enableGrid (False);
+
+      QPalette palette = _canvas->palette ();
+      palette.setBrush (QPalette::Base, Qt::transparent);
+      _canvas->setPalette (palette);
+      _canvas->setAttribute (Qt::WA_OpaquePaintEvent, false);
+   }
+   else {
+      
+      _scene.enableGrid (True);
+
+      QPalette palette = _canvas->palette ();
+      palette.setBrush (QPalette::Base, Qt::white);
+      _canvas->setPalette (palette);
+      _canvas->setAttribute (Qt::WA_OpaquePaintEvent, true);
+   }
+}
+
+
 dmz::Boolean
 dmz::QtModuleCanvasBasic::add_item (const Handle ObjectHandle, QGraphicsItem *item) {
 
@@ -493,16 +517,18 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
 
    _canvas = new QtCanvasView (this);
    _canvas->setMouseTracking (true);
+
+   set_background_transparent (config_to_boolean ("scene.background.transparent", local, False));
    
-   if (config_to_boolean ("scene.background.transparent", local, False)) {
-      
-      _scene.enableGrid (False);
-      
-      QPalette palette = _canvas->palette();
-      palette.setBrush (QPalette::Base, Qt::transparent);
-      _canvas->setPalette (palette);
-      _canvas->setAttribute (Qt::WA_OpaquePaintEvent, false);
-   }
+   // if (config_to_boolean ("scene.background.transparent", local, False)) {
+   //    
+   //    _scene.enableGrid (False);
+   //    
+   //    QPalette palette = _canvas->palette ();
+   //    palette.setBrush (QPalette::Base, Qt::transparent);
+   //    _canvas->setPalette (palette);
+   //    _canvas->setAttribute (Qt::WA_OpaquePaintEvent, false);
+   // }
 
    _canvas->setTransformationAnchor (QGraphicsView::AnchorViewCenter);
    _canvas->setResizeAnchor (QGraphicsView::AnchorViewCenter);

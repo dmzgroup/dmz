@@ -42,6 +42,8 @@ namespace dmz {
          virtual QGraphicsScene *get_scene ();
          virtual QGraphicsView *get_view ();
 
+         virtual void set_background_transparent (const Boolean Value);
+
          virtual Boolean add_item (const Handle ObjectHandle, QGraphicsItem *item);
          virtual QGraphicsItem *lookup_item (const Handle ObjectHandle);
          virtual QGraphicsItem *remove_item (const Handle ObjectHandle);

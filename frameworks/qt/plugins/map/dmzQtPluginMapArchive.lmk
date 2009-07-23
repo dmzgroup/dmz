@@ -1,7 +1,7 @@
-require "lmkQt"
-lmkQt.set_name "dmzQtPluginMapArchive"
+require "lmkQMapControl"
+lmkQMapControl.set_name "dmzQtPluginMapArchive"
 lmk.set_type "plugin"
 lmk.add_files {"dmzQtPluginMapArchive.cpp",}
-lmk.add_libs {"dmzQtUtil","QMapControl","dmzArchiveUtil","dmzKernel",}
+lmk.add_libs {"dmzQtUtil","dmzArchiveUtil","dmzKernel",}
 lmk.add_preqs {"dmzArchiveFramework","dmzQtFramework",}
-lmkQt.add_libs {"QtCore","QtGui",}
+lmkQMapControl.add_libs ()

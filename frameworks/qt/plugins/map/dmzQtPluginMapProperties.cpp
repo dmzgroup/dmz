@@ -1,4 +1,5 @@
 #include <dmzArchiveModule.h>
+#include <dmzQtModuleCanvas.h>
 #include <dmzQtModuleMap.h>
 #include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginMapProperties.h"
@@ -9,35 +10,31 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamString.h>
-#include <dmzXMLBase64.h>
+#include <qmapcontrol.h>
 #include <QtGui/QtGui>
+#include "ui_dmzQtPluginMapPropertiesTileMapAdapter.h"
 
 
 dmz::QtPluginMapProperties::QtPluginMapProperties (
       const PluginInfo &Info,
       Config &local) :
+      QDialog (0),
       Plugin (Info),
       ArchiveObserverUtil (Info, local),
       MessageObserver (Info),
       _log (Info),
-      _undo (Info),
-      _dataConverter (Info.get_context ()),
-      _appState (Info),
+      _canvasModule (0),
+      _canvasModuleName (),
       _mapModule (0),
       _mapModuleName (),
       _mainWindowModule (0),
       _mainWindowModuleName (),
-      _cleanupMessage (),
-      _backgroundEditMessage (),
-      _undoMessage (),
-      _imageFile (),
-      _bgItem (0),
-      _bgConfig ("image"),
-      _data ("") {
+      _propertiesEditMessage () {
 
-   _bgConfig.add_config (_data);
-   _data.set_formatted (True);
-         
+   setObjectName (get_plugin_name ().get_buffer ());
+
+   _ui.setupUi (this);
+
    _init (local);
 }
 
@@ -55,6 +52,10 @@ dmz::QtPluginMapProperties::update_plugin_state (
 
    if (State == PluginStateInit) {
 
+      if (_mapModule) {
+         
+         _ui.cacheDirLabel->setText (_mapModule->get_tile_cache_dir ().get_buffer ());
+      }
    }
    else if (State == PluginStateStart) {
 
@@ -75,6 +76,11 @@ dmz::QtPluginMapProperties::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
+      if (!_canvasModule) {
+
+         _canvasModule = QtModuleCanvas::cast (PluginPtr, _canvasModuleName);
+      }
+
       if (!_mapModule) {
 
          _mapModule = QtModuleMap::cast (PluginPtr, _mapModuleName);
@@ -83,9 +89,19 @@ dmz::QtPluginMapProperties::discover_plugin (
       if (!_mainWindowModule) {
 
          _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
+         
+         if (_mainWindowModule) {
+            
+            setParent (_mainWindowModule->get_widget (), Qt::Dialog);
+         }
       }
    }
    else if (Mode == PluginDiscoverRemove) {
+
+      if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
+
+         _canvasModule = 0;
+      }
 
       if (_mapModule && (_mapModule == QtModuleMap::cast (PluginPtr))) {
 
@@ -95,6 +111,7 @@ dmz::QtPluginMapProperties::discover_plugin (
       if (_mainWindowModule &&
           (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
 
+         setParent (0);
          _mainWindowModule = 0;
       }
    }
@@ -108,10 +125,6 @@ dmz::QtPluginMapProperties::create_archive (
       Config &local,
       Config &global) {
 
-   if (_bgItem) {
-      
-      local.add_config (_bgConfig);
-   }
 }
 
 
@@ -121,36 +134,6 @@ dmz::QtPluginMapProperties::process_archive (
       Config &local,
       Config &global) {
 
-   Config imageData;
-
-   String fileName (config_to_string ("image.file", local));
-
-   if (local.lookup_config ("image", imageData)) {
-
-      String encodedValue;
-      
-      if (imageData.get_value (encodedValue)) {
-         
-         String decodedValue;
-         decode_base64 (encodedValue, decodedValue);
-         
-         QPixmap pixmap;
-         
-         Int32 size (0);
-         const uchar *buffer = (uchar *)decodedValue.get_buffer (size);
-         
-         if (pixmap.loadFromData (buffer, size)) {
-            
-            // save the data so it can be put in the next archive -ss
-            _data.set_value (encodedValue);
-            
-            _load_pixmap (pixmap);
-            
-            _imageFile = fileName;
-            _bgConfig.store_attribute ("file", _imageFile);
-         }
-      }
-   }
 }
 
 
@@ -163,219 +146,103 @@ dmz::QtPluginMapProperties::receive_message (
       const Data *InData,
       Data *outData) {
 
-   if (Type == _backgroundEditMessage) {
+   if (Type == _propertiesEditMessage && _mapModule && _canvasModule) {
 
-      QMessageBox msgBox;
-      QPushButton *loadButton = msgBox.addButton ("Load...", QMessageBox::ActionRole);
+      qmapcontrol::MapControl *map (_mapModule->get_map_control ());
       
-      QPushButton *clearButton = msgBox.addButton ("Clear", QMessageBox::DestructiveRole);
-            
-      if (!_bgItem) { clearButton->setEnabled (False); }
-      
-      QPushButton *cancelButton = msgBox.addButton ("Cancel", QMessageBox::RejectRole);
-
-      msgBox.setIcon (QMessageBox::Question);
-      msgBox.setText ("Background Image");
-      
-      QString infoText ("Load a new background image");
-      infoText.append ("or\nclear the current background image.");
-      
-      msgBox.setInformativeText (infoText);
-      msgBox.exec();
-
-      if (msgBox.clickedButton() == loadButton) {
+      if (exec () == QDialog::Accepted) {
+         
+         // if (_ui.mapCheckBox->isChecked ()) {
+         // 
+         //    qmapcontrol::ImageManager::instance ()->workOffline (false);
+         //    _canvasModule->set_background_transparent (true);
+         //    map->show ();
+         //    if (map) { map->updateRequestNew (); }
+         // }
+         // else {
+         //    
+         //    map->hide ();
+         //    qmapcontrol::ImageManager::instance ()->workOffline (true);
+         //    _canvasModule->set_background_transparent (false);
+         // }
    
-         QList<QByteArray> imagesFormatList (QImageReader::supportedImageFormats ());
-         
-         QString filter ("Images (");
-         
-         foreach (QString format, imagesFormatList) {
-         
-            filter.append (QString ("*.%1 ").arg (format));
-         }
-
-         filter = filter.simplified () + ")";
-         
-         QString fileName =
-            QFileDialog::getOpenFileName (
-               _mainWindowModule ? _mainWindowModule->get_widget () : 0,
-               "Select Image File",
-               _get_last_path (),
-               filter);
-
-         if (!fileName.isEmpty ()) {
-         
-            qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
+         if (_mapModule) {
             
-            const Handle UndoHandle (_undo.start_record ("Set Background"));
-
-            Data data (_dataConverter.to_data (_imageFile));
-            _undo.store_action (_undoMessage, get_plugin_handle (), &data);
+             // qmapcontrol::TileMapAdapter *adapter = new qmapcontrol::TileMapAdapter (
+             //   "tile.openstreetmap.org",
+             //   "/%1/%2/%3.png",
+             //   256,
+             //   0,
+             //   17);
                
-            _load_background (qPrintable (fileName));
-            
-            _undo.stop_record (UndoHandle);
-            
-            qApp->restoreOverrideCursor ();
+//            qmapcontrol::TileMapAdapter *adapter = new qmapcontrol::OSMMapAdapter ();
+//            qmapcontrol::TileMapAdapter *adapter = new qmapcontrol::GoogleMapAdapter ();
+//            _mapModule->set_map_adapter (adapter);
          }
       }
-      else if (msgBox.clickedButton() == clearButton) {
-    
-         const Handle UndoHandle (_undo.start_record ("Clear Background"));
-      
-         Data data (_dataConverter.to_data (_imageFile));
-         _undo.store_action (_undoMessage, get_plugin_handle (), &data);
-            
-         _imageFile.flush ();
-         _bgConfig.store_attribute ("file", _imageFile);
+      else {
          
-         _clear_background ();
-
-         _undo.stop_record (UndoHandle);
-      }
-   }
-   else if (Type == _cleanupMessage) {
-      
-      _clear_background ();
-      _imageFile.flush ();
-   }
-   else if (Type == _undoMessage) {
-
-      String value (_dataConverter.to_string (InData));
-      
-      if (!value) {
-      
-         Data data (_dataConverter.to_data (_imageFile));
-         _undo.store_action (_undoMessage, get_plugin_handle (), &data);
-
-         _imageFile.flush ();
-         _bgConfig.store_attribute ("file", _imageFile);
+         if (_mapModule) {
             
-         _clear_background ();
-      }
-      else if (QFile::exists (value.get_buffer ())) {
-
-         Data data (_dataConverter.to_data (_imageFile));
-         _undo.store_action (_undoMessage, get_plugin_handle (), &data);
-
-         _load_background (value);
+//            qmapcontrol::TileMapAdapter *adapter = new qmapcontrol::YahooMapAdapter();
+//            qmapcontrol::TileMapAdapter *adapter = new qmapcontrol::YahooMapAdapter("us.maps3.yimg.com", "/aerial.maps.yimg.com/png?v=1.7&t=a&s=256&x=%2&y=%3&z=%1");
+//            _mapModule->set_map_adapter (adapter);
+//            _mapModule->use_default_map_adapter ();
+         }
       }
    }
-}
-
-
-QString
-dmz::QtPluginMapProperties::_get_last_path () {
-   
-   String lastPath (_appState.get_default_directory ());
-
-   QFileInfo fi (lastPath.get_buffer ());
-
-   return fi.absoluteFilePath ();
-}
-
-
-dmz::Boolean
-dmz::QtPluginMapProperties::_load_background (const String &FileName) {
-
-   Boolean result (False);
-
-   _imageFile = FileName;
-   _bgConfig.store_attribute ("file", _imageFile);
-         
-   if (_imageFile) {
-      
-      QPixmap bg (_imageFile.get_buffer ());
-      
-      _load_pixmap (bg);
-      
-      _mapModule->zoom_extents ();
-      
-      _encode_image (_imageFile);
-      
-      result = True;
-   }
-   
-   return result;
 }
 
 
 void
-dmz::QtPluginMapProperties::_load_pixmap (const QPixmap &Pixmap) {
+dmz::QtPluginMapProperties::on_mapCheckBox_stateChanged (int state) {
+
+   if (_mapModule && _canvasModule) {
+
+      qmapcontrol::MapControl *map (_mapModule->get_map_control ());
+      
+      if (state) {
+
+         if (map) { map->show (); map->updateRequestNew (); }
+         qmapcontrol::ImageManager::instance ()->workOffline (false);
+         _canvasModule->set_background_transparent (true);
+      }
+      else {
+            
+        if (map) { map->hide (); }
+        qmapcontrol::ImageManager::instance ()->workOffline (true);
+         _canvasModule->set_background_transparent (false);
+      }
+   }
+}
+
+
+void
+dmz::QtPluginMapProperties::on_mapAdapterAddButton_clicked () {
+  
+}
+
+
+void
+dmz::QtPluginMapProperties::on_mapAdapterEditButton_clicked () {
+   
+}
+
+
+void
+dmz::QtPluginMapProperties::on_mapAdapterDeleteButton_clicked () {
+   
+}
+
+
+void
+dmz::QtPluginMapProperties::on_emptyCacheButton_clicked () {
 
    if (_mapModule) {
-
-      QGraphicsScene *scene = _mapModule->get_scene ();
-
-      if (scene) {
-
-         if (!_bgItem) {
-            
-            _bgItem = scene->addPixmap (Pixmap);
-            _bgItem->setZValue (-1000);
-         }
-         else {
-            
-            _bgItem->setPixmap (Pixmap);
-         }
-      }
-   }
-}
-
-
-void
-dmz::QtPluginMapProperties::_clear_background () {
-
-   if (_mapModule && _bgItem) {
       
-      QGraphicsScene *scene = _mapModule->get_scene ();
-      
-      if (scene) {
-         
-         scene->removeItem (_bgItem);
-         
-         delete _bgItem;
-         _bgItem = 0;
-      }
-   }
-}
-
-
-void
-dmz::QtPluginMapProperties::_encode_image (const String &FileName) {
-
-   if (FileName) {
-
-      _data.set_value ("\n");
-
-      FILE *file = open_file (FileName, "rb");
-
-      if (file) {
-
-         const UInt32 RawBufferSize (1024);
-         const UInt64 Base64BufferSize (get_file_size (FileName) * 2);
-
-         String rawBuffer (0, 0, RawBufferSize + 1);
-         String base64Buffer (0, 0, Base64BufferSize + 1);
-         
-         StreamString stream (base64Buffer);
-         
-         Base64Encoder encoder;
-         encoder.set_stream (&stream);
-         encoder.set_line_length (120);
-
-         while (read_file (file, RawBufferSize, rawBuffer)) {
-
-            Int32 size (0);
-            const char *buffer = rawBuffer.get_buffer (size);
-
-            encoder.encode (buffer, size);
-         }
-
-         encoder.encode (0, 0);
-         
-         _data.append_value (base64Buffer, False);
-      }
+      qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
+      _mapModule->empty_tile_cache ();
+      qApp->restoreOverrideCursor ();
    }
 }
 
@@ -390,37 +257,26 @@ dmz::QtPluginMapProperties::_init (Config &local) {
       local,
       "dmzQtModuleMainWindowBasic");
       
-   _mapModuleName = config_to_string (
+   _canvasModuleName = config_to_string (
       "module.canvas.name",
+      local,
+      "dmzQtModuleCanvasBasic");
+
+   _mapModuleName = config_to_string (
+      "module.map.name",
       local,
       "dmzQtModuleMapBasic");
    
    init_archive (local);
    
-   _cleanupMessage = config_create_message (
-      "message.name",
+   _propertiesEditMessage = config_create_message (
+      "message.mapPropertiesEdit.name",
       local,
-      "CleanupObjectsMessage",
-      context,
-      &_log);
-   
-   _backgroundEditMessage = config_create_message (
-      "message.background.edit",
-      local,
-      "CanvasBackgroundEditMessage",
+      "MapPropertiesEditMessage",
       context,
       &_log);
 
-   _undoMessage = config_create_message (
-      "message.background.undo",
-      local,
-      "CanvasBackgroundUndoMessage",
-      context,
-      &_log);
-
-   subscribe_to_message (_cleanupMessage);
-   subscribe_to_message (_backgroundEditMessage);
-   subscribe_to_message (_undoMessage);
+   subscribe_to_message (_propertiesEditMessage);
 }
 
 

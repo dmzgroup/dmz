@@ -1,7 +1,7 @@
-require "lmkQt"
-lmkQt.set_name "dmzQtPluginRenderPickMap"
+require "lmkQMapControl"
+lmkQMapControl.set_name "dmzQtPluginRenderPickMap"
 lmk.set_type "plugin"
 lmk.add_files {"dmzQtPluginRenderPickMap.cpp",}
 lmk.add_libs {"dmzKernel", "dmzRenderUtil",}
-lmk.add_preqs {"dmzRenderFramework", "dmzObjectFramework","dmzQtFramework","QMapControl",}
-lmkQt.add_libs {"QtCore", "QtGui",}
+lmk.add_preqs {"dmzRenderFramework", "dmzObjectFramework","dmzQtFramework",}
+lmkQMapControl.add_libs ()

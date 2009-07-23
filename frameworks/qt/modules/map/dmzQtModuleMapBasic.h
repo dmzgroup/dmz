@@ -67,6 +67,12 @@ namespace dmz {
          // QtModuleMap Interface
          virtual qmapcontrol::MapControl *get_map_control ();
          
+         virtual void use_default_map_adapter ();
+         virtual void set_map_adapter (qmapcontrol::MapAdapter *adapter);
+         
+         virtual String get_tile_cache_dir () const;
+         virtual void empty_tile_cache ();
+         
          virtual Boolean add_item (const Handle ObjectHandle, qmapcontrol::Geometry *item);
          virtual qmapcontrol::Geometry *lookup_item (const Handle ObjectHandle);
          virtual qmapcontrol::Geometry *remove_item (const Handle ObjectHandle);
@@ -121,6 +127,7 @@ namespace dmz {
          Boolean _ignoreEvents;
          HashTableHandleTemplate<qmapcontrol::Geometry> _itemTable;
          qmapcontrol::MapControl *_map;
+         qmapcontrol::MapAdapter *_defaultAdapter;
          qmapcontrol::MapAdapter *_mapAdapter;
          qmapcontrol::MapLayer *_baseLayer;
          qmapcontrol::GeometryLayer *_geomLayer;

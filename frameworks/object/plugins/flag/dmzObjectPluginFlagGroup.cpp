@@ -17,6 +17,7 @@ dmz::ObjectPluginFlagGroup::ObjectPluginFlagGroup (
       Plugin (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
+      _undo (Info),
       _maxGroupSize (1),
       _flagAttrHandle (0) {
 
@@ -66,17 +67,20 @@ dmz::ObjectPluginFlagGroup::update_object_flag (
 
       _flagGroup.store (ObjectHandle, &LocalData);
 
-      if (_flagGroup.get_count () > _maxGroupSize) {
+      if (!_undo.is_in_undo ()) {
 
-         HashTableHandleIterator it;
+         if (_flagGroup.get_count () > _maxGroupSize) {
 
-         if (_flagGroup.get_first (it)) {
+            HashTableHandleIterator it;
 
-            ObjectModule *objMod (get_object_module ());
+            if (_flagGroup.get_first (it)) {
 
-            if (objMod) {
+               ObjectModule *objMod (get_object_module ());
 
-               objMod->store_flag (it.get_hash_key (), _flagAttrHandle, False);
+               if (objMod) {
+
+                  objMod->store_flag (it.get_hash_key (), _flagAttrHandle, False);
+               }
             }
          }
       }

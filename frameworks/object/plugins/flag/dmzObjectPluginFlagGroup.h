@@ -4,6 +4,7 @@
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeUndo.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 
 namespace dmz {
@@ -45,6 +46,7 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         Undo _undo;
 
          Int32 _maxGroupSize;
          Handle _flagAttrHandle;

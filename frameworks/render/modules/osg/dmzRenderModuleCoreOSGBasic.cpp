@@ -14,6 +14,7 @@
 #include <osg/DeleteHandler>
 #include <osg/LightSource>
 #include <osg/Referenced>
+#include <osg/Version>
 #include <osgDB/Registry>
 #include <osgUtil/Optimizer>
 
@@ -32,6 +33,11 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
       _overlayMask (0x100),
       _defaultHandle (0),
       _dirtyObjects (0) {
+
+   _log.info << "Built using Open Scene Graph v"
+      << Int32 (OPENSCENEGRAPH_MAJOR_VERSION) << "."
+      << Int32 (OPENSCENEGRAPH_MINOR_VERSION) << "."
+      << Int32 (OPENSCENEGRAPH_PATCH_VERSION) << endl;
 
    _scene = new osg::Group;
 

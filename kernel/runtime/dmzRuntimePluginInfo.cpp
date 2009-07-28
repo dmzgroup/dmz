@@ -30,6 +30,9 @@ struct dmz::PluginInfo::State {
 
    RuntimeHandle *_handlePtr;
    const String Name;
+   const String ClassName;
+   const String FactoryName;
+   const String ScopeName;
    const Handle PluginHandle;
    PluginDeleteModeEnum deleteMode;
    RuntimeContext *context;
@@ -39,16 +42,26 @@ struct dmz::PluginInfo::State {
 
    State (
          const String &TheName,
+         const String TheClassName,
+         const String TheFactoryName,
+         const String TheScopeName,
          const PluginDeleteModeEnum TheDeleteMode,
-         RuntimeContext *theContext) :
+         RuntimeContext *theContext,
+         DynamicLibrary *theLib) :
          _handlePtr (TheName ? 0 : new RuntimeHandle ("Plugin", theContext)),
          Name (TheName ? TheName : "Unnamed Component"),
+         ClassName (TheClassName),
+         FactoryName (TheFactoryName),
+         ScopeName (TheScopeName),
          PluginHandle (_handlePtr ?
             _handlePtr->get_runtime_handle () :
             Definitions (theContext).create_named_handle (TheName)),
          deleteMode (TheDeleteMode),
-         context (0),
-         lib (0) {;}
+         context (theContext),
+         lib (theLib) {
+
+      if (context) { context->ref (); }
+   }
 
    ~State () {
 
@@ -72,6 +85,39 @@ struct dmz::PluginInfo::State {
 
 \brief Constructor.
 \param[in] Name String containing the name of the Plugin.
+\param[in] ClassName String containing the class name of the Plugin.
+\param[in] FactoryName String containing the name of the factory function used to create
+the Plugin.
+\param[in] ScopeName String containing the name of the scope used to initialize the
+Plugin.
+\param[in] DeleteMode PluginDeletModeEnum specifying the delete mode to be used for the
+Plugin.
+\param[in] context Pointer to the runtime context.
+\param[in] lib Pointer to the DynamicLibrary used to load the Plugin.
+
+*/
+dmz::PluginInfo::PluginInfo (
+      const String &Name,
+      const String &ClassName,
+      const String &FactoryName,
+      const String &ScopeName,
+      const PluginDeleteModeEnum DeleteMode,
+      RuntimeContext *context,
+      DynamicLibrary *lib) :
+      _state (*(new State (
+         Name,
+         ClassName,
+         FactoryName,
+         ScopeName,
+         DeleteMode,
+         context,
+         lib))) {;} 
+
+
+/*!
+
+\brief Constructor.
+\param[in] Name String containing the name of the Plugin.
 \param[in] DeleteMode PluginDeletModeEnum specifying the delete mode to be used for the
 Plugin.
 \param[in] context Pointer to the runtime context.
@@ -82,18 +128,15 @@ dmz::PluginInfo::PluginInfo (
       const String &Name,
       const PluginDeleteModeEnum DeleteMode,
       RuntimeContext *context,
-      DynamicLibrary *lib) : _state (*(new State (Name, DeleteMode, context))) {
-
-   set_context (context);
-   set_dynamic_library (lib);
-}
+      DynamicLibrary *lib) :
+      _state (*(new State (Name, "", "", "", DeleteMode, context, lib))) {;}
 
 
 //! Destructor.
 dmz::PluginInfo::~PluginInfo () { delete &_state; }
 
 
-//! Returns String containing Plugin's name.
+//! Returns String containing Plugin's instance name.
 dmz::String
 dmz::PluginInfo::get_name () const { return _state.Name; }
 
@@ -103,9 +146,39 @@ dmz::Handle
 dmz::PluginInfo::get_handle () const { return _state.PluginHandle; }
 
 
+//! Returns String containing Plugin's class name.
+dmz::String
+dmz::PluginInfo::get_class_name () const { return _state.ClassName; }
+
+
+//! Returns String containing factory function used to create Plugin.
+dmz::String
+dmz::PluginInfo::get_factory_name () const { return _state.FactoryName; }
+
+
+//! Returns String containing scope name used to initialize the Plugin/
+dmz::String
+dmz::PluginInfo::get_scope_name () const { return _state.ScopeName; }
+
+
+//! Gets current delete mode.
+dmz::PluginDeleteModeEnum
+dmz::PluginInfo::get_delete_mode () const { return _state.deleteMode; }
+
+
+//! Gets current runtime context.
+dmz::RuntimeContext *
+dmz::PluginInfo::get_context () const { return _state.context; }
+
+
+//! Gets the current DynamicLibrary.
+dmz::DynamicLibrary *
+dmz::PluginInfo::get_dynamic_library () const { return _state.lib; }
+
+
 //! Returns dmz::True if the plugin uses the specified level.
 dmz::Boolean
-dmz::PluginInfo::uses_level (const UInt32 Level) {
+dmz::PluginInfo::uses_level (const UInt32 Level) const {
 
    return _state.levelTable.lookup (Level) != 0;
 }
@@ -143,57 +216,4 @@ dmz::PluginInfo::get_next_level () const {
 
    return result;
 }
-
-
-//! Sets current delete mode.
-void
-dmz::PluginInfo::set_delete_mode (const PluginDeleteModeEnum Mode) {
-
-   _state.deleteMode = Mode;
-}
-
-
-//! Gets current delete mode.
-dmz::PluginDeleteModeEnum
-dmz::PluginInfo::get_delete_mode () const { return _state.deleteMode; }
-
-
-/*!
-
-\brief Sets current runtime context. This should not be used after the Plugin has been
-created.
-\param[in] context Pointer to the runtime context.
-
-*/
-void
-dmz::PluginInfo::set_context (RuntimeContext *context) {
-
-   if (context != _state.context) {
-
-      if (_state.context) { _state.context->unref (); _state.context = 0; }
-      _state.context = context;
-      if (_state.context) { _state.context->ref (); }
-   }
-}
-
-
-//! Gets current runtime context.
-dmz::RuntimeContext *
-dmz::PluginInfo::get_context () const { return _state.context; }
-
-
-/*!
-
-\brief Sets the current DynamicLibrary.
-\param[in] lib DynamicLibrary used to create the Plugin.
-\note This function should not be called after the Plugin had been created.
-
-*/
-void
-dmz::PluginInfo::set_dynamic_library (DynamicLibrary *lib) { _state.lib = lib; }
-
-
-//! Gets the current DynamicLibrary.
-dmz::DynamicLibrary *
-dmz::PluginInfo::get_dynamic_library () { return _state.lib; }
 

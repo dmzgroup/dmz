@@ -327,7 +327,6 @@ dmz::AudioPluginObject::update_object_state (
 
          if (IsSet && !WasSet) {
 
-
             if (PreviousValue && _audioMod && current->Data.activateHandle) {
 
                init.set (SoundLooped, False);

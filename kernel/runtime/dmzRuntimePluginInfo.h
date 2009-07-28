@@ -20,6 +20,15 @@ namespace dmz {
       public:
          PluginInfo (
             const String &Name,
+            const String &ClassName,
+            const String &FactoryName,
+            const String &ScopeName,
+            const PluginDeleteModeEnum DeleteMode,
+            RuntimeContext *context,
+            DynamicLibrary *lib);
+
+         PluginInfo (
+            const String &Name,
             const PluginDeleteModeEnum DeleteMode,
             RuntimeContext *context,
             DynamicLibrary *lib);
@@ -27,22 +36,18 @@ namespace dmz {
          ~PluginInfo ();
 
          String get_name () const;
-
          Handle get_handle () const;
+         String get_class_name () const;
+         String get_factory_name () const;
+         String get_scope_name () const;
+         PluginDeleteModeEnum get_delete_mode () const;
+         RuntimeContext *get_context () const;
+         DynamicLibrary *get_dynamic_library () const;
 
-         Boolean uses_level (const UInt32 Level);
+         Boolean uses_level (const UInt32 Level) const;
          void add_level (const UInt32 Level);
          UInt32 get_first_level () const;
          UInt32 get_next_level () const;
-
-         void set_delete_mode (const PluginDeleteModeEnum Mode);
-         PluginDeleteModeEnum get_delete_mode () const;
-
-         void set_context (RuntimeContext *context);
-         RuntimeContext *get_context () const;
-
-         void set_dynamic_library (DynamicLibrary *lib);
-         DynamicLibrary *get_dynamic_library ();
 
       protected:
          struct State;

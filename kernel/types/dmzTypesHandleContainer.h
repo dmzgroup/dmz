@@ -6,6 +6,24 @@
 
 namespace dmz {
 
+   class DMZ_KERNEL_LINK_SYMBOL HandleContainerIterator {
+
+      public:
+         HandleContainerIterator ();
+         ~HandleContainerIterator ();
+
+         void reset ();
+
+         //! \cond
+         struct State;
+         State &state;
+         //! \endcond
+
+      private:
+         HandleContainerIterator (const HandleContainerIterator &);
+         HandleContainerIterator &operator= (const HandleContainerIterator &);
+   };
+
    class DMZ_KERNEL_LINK_SYMBOL HandleContainer {
 
       public:
@@ -29,9 +47,16 @@ namespace dmz {
          Handle get_prev () const;
          Handle get_last () const;
 
+         Handle get_first (HandleContainerIterator &it) const;
+         Handle get_next (HandleContainerIterator &it) const;
+         Handle get_prev (HandleContainerIterator &it) const;
+         Handle get_last (HandleContainerIterator &it) const;
+
       protected:
+         //! \cond
          struct State;
-         State &_state; //!< Internal state.
+         State &_state;
+         //! \endcond
    };
 };
 

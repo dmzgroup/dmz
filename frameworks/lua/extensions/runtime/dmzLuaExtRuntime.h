@@ -2,6 +2,7 @@
 #define DMZ_LUA_EXT_RUNTIME_DOT_H
 
 #include <dmzLuaExt.h>
+#include <dmzRuntimeConfig.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeModule.h>
 #include <dmzRuntimePlugin.h>
@@ -11,7 +12,15 @@ namespace dmz {
    class LuaExtRuntime : public Plugin, public LuaExt {
 
       public:
-         LuaExtRuntime (const PluginInfo &Info, Config &local);
+         struct RuntimeStruct {
+
+            RuntimeModule *runtime;
+            Config global;
+
+            RuntimeStruct () : runtime (0) {;}
+         };
+
+         LuaExtRuntime (const PluginInfo &Info, Config &local, Config &global);
          ~LuaExtRuntime ();
 
          // Plugin Interface
@@ -34,8 +43,8 @@ namespace dmz {
 
          Log _log;
 
-         RuntimeModule *_runtime;
-         RuntimeModule **_runtimePtr;
+         RuntimeStruct _runtime;
+         RuntimeStruct **_runtimePtr;
 
       private:
          LuaExtRuntime ();

@@ -12,7 +12,24 @@ using namespace dmz;
 
 namespace {
 
+typedef dmz::LuaExtRuntime::RuntimeStruct rstruct;
+
 static char RuntimeKey = 'r';
+
+static inline rstruct *
+get_runtime_struct (lua_State *L) {
+
+  rstruct *result (0);
+  lua_pushlightuserdata (L, (void *)&RuntimeKey);
+  lua_rawget (L, LUA_REGISTRYINDEX);
+
+  rstruct **runtime = (rstruct **)lua_touserdata (L, -1);
+
+  if (runtime && *runtime) { result = *runtime; }
+  lua_pop (L, 1); // pop runtime module
+
+  return result;
+}
 
 
 static inline dmz::RuntimeModule *
@@ -21,8 +38,10 @@ get_runtime (lua_State *L) {
   RuntimeModule *result (0);
   lua_pushlightuserdata (L, (void *)&RuntimeKey);
   lua_rawget (L, LUA_REGISTRYINDEX);
-  RuntimeModule **runtime = (RuntimeModule **)lua_touserdata (L, -1);
-  if (runtime) { result = *runtime; }
+
+  rstruct **runtime = (rstruct **)lua_touserdata (L, -1);
+
+  if (runtime && *runtime) { result = (*runtime)->runtime; }
   lua_pop (L, 1); // pop runtime module
 
   return result;
@@ -37,13 +56,111 @@ runtime_plugin_list (lua_State *L) {
    int result (0);
 
    RuntimeModule *runtime (get_runtime (L));
-   HandleContainer list;
 
    if (runtime) {
 
+      HandleContainer list;
       runtime->get_plugin_list (list);
       lua_handle_container_to_table (L, list);
       result = 1;
+   }
+
+   LUA_END_VALIDATE (L, result);
+
+   return result;
+}
+
+
+static int
+runtime_print_plugin_list (lua_State *L) {
+
+   LUA_START_VALIDATE (L);
+
+   int result (0);
+
+   RuntimeModule *runtime (get_runtime (L));
+
+   if (runtime) {
+
+      RuntimeContext *context = lua_get_runtime_context (L);
+      Log log ("", context);
+
+      HandleContainer list;
+      runtime->get_plugin_list (list);
+
+      Handle plugin = list.get_first ();
+
+      int cprint (0);
+      lua_getglobal (L, "cprint");
+
+      if (lua_type (L, -1) == LUA_TFUNCTION) { cprint = lua_gettop (L); }
+
+      while (plugin) {
+
+         const PluginInfo *InfoPtr = runtime->lookup_plugin_info (plugin);
+
+         if (InfoPtr) {
+
+            const String Name = InfoPtr->get_name ();
+            const String ClassName = InfoPtr->get_class_name ();
+
+            String out;
+            out << Name << "[" << plugin << "]";
+
+            if (Name != ClassName) { out << " of type: " << ClassName; }
+
+            log.info << out << endl;
+
+            if (cprint) {
+
+               lua_pushvalue (L, cprint);
+               lua_pushstring (L, out.get_buffer ());
+               lua_pcall (L, 1, 0, 0);
+            }
+         }
+
+         plugin = list.get_next ();
+      }
+
+      lua_pop (L, 1); // pop the cprint function or nil from the stack
+   }
+
+   LUA_END_VALIDATE (L, result);
+
+   return result;
+}
+
+
+static int
+runtime_load_plugin (lua_State *L) {
+
+   LUA_START_VALIDATE (L);
+
+   int result (0);
+
+   rstruct *rs (get_runtime_struct (L));
+   RuntimeModule *runtime (rs ? rs->runtime : 0);
+   const String PluginName (luaL_checkstring (L, 1));
+
+   if (runtime && PluginName) {
+
+      RuntimeContext *context = lua_get_runtime_context (L);
+      Log log ("Lua Plugin Loader", context);
+      PluginContainer container (context, &log);
+      Config plugin ("plugin");
+      plugin.store_attribute ("name", PluginName);
+      Config pluginList ("plugin-list");
+      pluginList.add_config (plugin);
+      Config empty;
+      Config global (rs ? rs->global : empty);
+
+      if (load_plugins (context, pluginList, global, empty, container, &log)) {
+
+         if (!runtime->add_plugins (container)) {
+
+            log.error << "Failed to add plugin: " << PluginName << endl;
+         }
+      }
    }
 
    LUA_END_VALIDATE (L, result);
@@ -75,58 +192,26 @@ runtime_unload_plugin (lua_State *L) {
 }
 
 
-static int
-runtime_load_plugin (lua_State *L) {
-
-   LUA_START_VALIDATE (L);
-
-   int result (0);
-
-   RuntimeModule *runtime (get_runtime (L));
-   const String PluginName (luaL_checkstring (L, 1));
-
-   if (runtime && PluginName) {
-
-      RuntimeContext *context = lua_get_runtime_context (L);
-      Log log ("Lua Plugin Loader", context);
-      PluginContainer container (context, &log);
-      Config plugin ("plugin");
-      plugin.store_attribute ("name", PluginName);
-      Config pluginList ("plugin-list");
-      pluginList.add_config (plugin);
-      Config empty;
-
-      if (load_plugins (context, pluginList, empty, empty, container, &log)) {
-
-         if (!runtime->add_plugins (container)) {
-
-            log.error << "Failed to add plugin: " << PluginName << endl;
-         }
-      }
-   }
-
-   LUA_END_VALIDATE (L, result);
-
-   return result;
-}
-
-
 static const luaL_Reg arrayFunc[] = {
    {"plugin_list", runtime_plugin_list},
-   {"unload_plugin", runtime_unload_plugin},
+   {"print_plugin_list", runtime_print_plugin_list},
    {"load_plugin", runtime_load_plugin},
+   {"unload_plugin", runtime_unload_plugin},
    {NULL, NULL},
 };
 
 };
 
-dmz::LuaExtRuntime::LuaExtRuntime (const PluginInfo &Info, Config &local) :
+dmz::LuaExtRuntime::LuaExtRuntime (
+      const PluginInfo &Info,
+      Config &local,
+      Config &global) :
       Plugin (Info),
       LuaExt (Info),
       _log (Info),
-      _runtime (0),
       _runtimePtr (0) {
 
+   _runtime.global = global;
    _init (local);
 }
 
@@ -164,19 +249,16 @@ dmz::LuaExtRuntime::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_runtime) {
+      if (!_runtime.runtime) {
 
-         _runtime = RuntimeModule::cast (PluginPtr);
-
-         if (_runtime && _runtimePtr && !(*_runtimePtr)) { *_runtimePtr = _runtime; }
+         _runtime.runtime = RuntimeModule::cast (PluginPtr);
       }
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_runtime && (_runtime == RuntimeModule::cast (PluginPtr))) {
+      if (_runtime.runtime && (_runtime.runtime == RuntimeModule::cast (PluginPtr))) {
 
-         _runtime = 0;
-         if (_runtimePtr) { *_runtimePtr = 0; }
+         _runtime.runtime = 0;
       }
    }
 }
@@ -195,11 +277,11 @@ dmz::LuaExtRuntime::open_lua_extension (lua_State *L) {
    LUA_START_VALIDATE (L);
 
    lua_pushlightuserdata (L, (void *)&RuntimeKey);
-   _runtimePtr = (RuntimeModule **)lua_newuserdata (L, sizeof (RuntimeModule *));
+   _runtimePtr = (RuntimeStruct **)lua_newuserdata (L, sizeof (RuntimeStruct *));
 
    if (_runtimePtr) {
 
-      *_runtimePtr = _runtime;
+      *_runtimePtr = &_runtime;
       lua_rawset (L, LUA_REGISTRYINDEX);
    }
    else { lua_pop (L, 1); } // pop light data
@@ -241,7 +323,7 @@ create_dmzLuaExtRuntime (
       dmz::Config &local,
       dmz::Config &global) {
 
-   return new dmz::LuaExtRuntime (Info, local);
+   return new dmz::LuaExtRuntime (Info, local, global);
 }
 
 };

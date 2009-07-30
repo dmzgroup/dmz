@@ -1,0 +1,11 @@
+lmk.set_name "dmzLuaExtRuntime"
+lmk.set_type "plugin"
+lmk.add_files {"dmzLuaExtRuntime.cpp",}
+lmk.add_libs {
+   "lua",
+   "dmzKernel",
+   "dmzLuaKernel",
+}
+lmk.add_preqs {
+   "dmzLuaFramework",
+}

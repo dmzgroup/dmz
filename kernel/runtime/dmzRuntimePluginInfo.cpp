@@ -42,9 +42,9 @@ struct dmz::PluginInfo::State {
 
    State (
          const String &TheName,
-         const String TheClassName,
-         const String TheFactoryName,
-         const String TheScopeName,
+         const String &TheClassName,
+         const String &TheFactoryName,
+         const String &TheScopeName,
          const PluginDeleteModeEnum TheDeleteMode,
          RuntimeContext *theContext,
          DynamicLibrary *theLib) :

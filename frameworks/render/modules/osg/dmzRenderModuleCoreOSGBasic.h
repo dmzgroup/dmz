@@ -122,11 +122,11 @@ namespace dmz {
          void _init (Config &local, Config &global);
 
          Log _log;
+         PluginContainer _extensions;
          UInt32 _cullMask;
          UInt32 _isectMask;
          UInt32 _overlayMask;
          Handle _defaultHandle;
-         PluginContainer _extensions;
          osg::ref_ptr<osg::Group> _scene;
          osg::ref_ptr<osg::Group> _overlay;
          osg::ref_ptr<osg::Group> _isect;

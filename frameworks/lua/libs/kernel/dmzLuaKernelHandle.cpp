@@ -3,6 +3,7 @@
 #include <dmzLuaKernelValidate.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzSystem.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesString.h>
 #include <luacpp.h>
@@ -320,5 +321,33 @@ dmz::lua_to_handle (lua_State *L, int narg) {
 //! Raises and error if the specified object on the stack is not a Handle.
 dmz::Handle *
 dmz::lua_check_handle (lua_State *L, int narg) { return handle_check (L, narg); }
+
+
+//! Converts a HandleContainer to a Lua table on the Lua stack.
+void
+dmz::lua_handle_container_to_table (lua_State *L, const HandleContainer &Container) {
+
+   LUA_START_VALIDATE (L);
+
+   lua_createtable (L, (int)Container.get_count (), 0);
+   const int Table (lua_gettop (L));
+
+   int count (1);
+
+   Handle value = Container.get_first ();
+
+   while (value) {
+
+      if (lua_create_handle (L, value)) {
+
+         lua_rawseti (L, Table, count);
+         count++;
+      }
+
+      value = Container.get_next ();
+   }
+
+   LUA_END_VALIDATE (L, 1);
+}
 
 //! @}

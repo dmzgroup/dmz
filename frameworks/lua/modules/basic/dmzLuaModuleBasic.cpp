@@ -95,14 +95,15 @@ dmz::LuaModuleBasic::LuaModuleBasic (
       Config &global) :
       Plugin (Info),
       LuaModule (Info),
-      _exit (Info.get_context ()),
+      _log (Info),
+      _exit (Info),
+      _extensions (Info.get_context (), &_log),
       _exitOnError (False),
       _startOptimizer (True),
       _luaState (0),
       _started (False),
       _hookCount (16),
-      _global (global),
-      _log (Info) {
+      _global (global) {
 
    Int32 count (0);
 

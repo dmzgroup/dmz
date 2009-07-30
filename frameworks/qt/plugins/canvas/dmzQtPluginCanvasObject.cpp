@@ -129,7 +129,7 @@ dmz::QtPluginCanvasObject::QtPluginCanvasObject (
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
-      _extensions (),
+      _extensions (Info.get_context (), &_log),
       _defaultAttrHandle (0),
       _positionAttrHandle (0),
       _linkAttrHandle (0),

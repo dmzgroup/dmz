@@ -8,9 +8,7 @@
 
 namespace dmz {
 
-   class LuaExtIsect :
-         public Plugin,
-         public LuaExt {
+   class LuaExtIsect : public Plugin, public LuaExt {
 
       public:
          //! \cond

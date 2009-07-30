@@ -28,6 +28,7 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
       ObjectObserverUtil (Info, local),
       RenderModuleCoreOSG (Info),
       _log (Info),
+      _extensions (Info.get_context (), &_log),
       _cullMask (0x001),
       _isectMask (0x010),
       _overlayMask (0x100),

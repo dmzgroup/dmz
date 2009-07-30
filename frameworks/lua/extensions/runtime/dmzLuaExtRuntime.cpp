@@ -137,10 +137,11 @@ runtime_load_plugin (lua_State *L) {
       plugin.store_attribute ("name", PluginName);
       Config pluginList ("plugin-list");
       pluginList.add_config (plugin);
-      Config empty;
-      Config global (rs ? rs->global : empty);
+      Config init ("dmz");
+      Config global (rs ? rs->global : Config ("global"));
+      global.lookup_all_config_merged ("dmz", init);
 
-      if (load_plugins (context, pluginList, global, empty, container, &log)) {
+      if (load_plugins (context, pluginList, global, init, container, &log)) {
 
          if (!runtime->add_plugins (container)) {
 

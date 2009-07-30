@@ -99,11 +99,10 @@ runtime_load_plugin (lua_State *L) {
       if (load_plugins (context, pluginList, empty, empty, container, &log)) {
 
          if (!runtime->add_plugins (container)) {
-log.warn << "Failed to add plugins" << endl;
-}
-      }
 
-log.error << "Done adding plugins" << endl;
+            log.error << "Failed to add plugin: " << PluginName << endl;
+         }
+      }
    }
 
    LUA_END_VALIDATE (L, result);

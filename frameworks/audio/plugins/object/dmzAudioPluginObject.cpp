@@ -107,8 +107,6 @@ dmz::AudioPluginObject::discover_plugin (
 
          if (_audioMod) {
 
-_log.warn << "Discovered Audio Module" << endl;
-
             HashTableHandleIterator it;
 
             SoundDefStruct *ss (_soundTable.get_first (it));
@@ -554,8 +552,6 @@ void
 dmz::AudioPluginObject::_lookup_sound_handles (SoundDefStruct &ss) {
 
    if (_audioMod) {
-
-_log.warn << "Looking up sound handles" << endl;
 
       if (ss.activateName) {
 

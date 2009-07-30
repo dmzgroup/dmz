@@ -90,11 +90,6 @@ runtime_print_plugin_list (lua_State *L) {
 
       Handle plugin = list.get_first ();
 
-      int cprint (0);
-      lua_getglobal (L, "cprint");
-
-      if (lua_type (L, -1) == LUA_TFUNCTION) { cprint = lua_gettop (L); }
-
       while (plugin) {
 
          const PluginInfo *InfoPtr = runtime->lookup_plugin_info (plugin);
@@ -110,19 +105,10 @@ runtime_print_plugin_list (lua_State *L) {
             if (Name != ClassName) { out << " of type: " << ClassName; }
 
             log.info << out << endl;
-
-            if (cprint) {
-
-               lua_pushvalue (L, cprint);
-               lua_pushstring (L, out.get_buffer ());
-               lua_pcall (L, 1, 0, 0);
-            }
          }
 
          plugin = list.get_next ();
       }
-
-      lua_pop (L, 1); // pop the cprint function or nil from the stack
    }
 
    LUA_END_VALIDATE (L, result);

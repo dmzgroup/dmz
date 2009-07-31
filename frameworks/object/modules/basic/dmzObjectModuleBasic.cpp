@@ -132,6 +132,24 @@ dmz::ObjectModuleBasic::~ObjectModuleBasic () {
 
 // Plugin Interface
 void
+dmz::ObjectModuleBasic::update_plugin_state (
+      const PluginStateEnum State,
+      const UInt32 Level) {
+
+   if (State == PluginStateShutdown) {
+
+      HashTableHandleIterator it;
+      ObjectStruct *os (0);
+
+      while (_objectTable.get_next (it, os)) {
+
+         destroy_object (os->handle);
+      }
+   }
+}
+
+
+void
 dmz::ObjectModuleBasic::discover_plugin (
       const PluginDiscoverEnum Mode,
       const Plugin *PluginPtr) {
@@ -305,7 +323,7 @@ dmz::ObjectModuleBasic::release_object_observer (
 
          if (!attrMaskPtr->is_set ()) {
 
-            attrMaskPtr = sub->table.remove (ObsHandle);
+            attrMaskPtr = sub->table.remove (AttributeHandle);
 
             if (attrMaskPtr) { delete attrMaskPtr; attrMaskPtr = 0; }
 

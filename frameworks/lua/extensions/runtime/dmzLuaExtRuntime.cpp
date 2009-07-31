@@ -127,6 +127,22 @@ runtime_load_plugin (lua_State *L) {
    rstruct *rs (get_runtime_struct (L));
    RuntimeModule *runtime (rs ? rs->runtime : 0);
    const String PluginName (luaL_checkstring (L, 1));
+   String scope, unique, factory;
+
+   if (lua_istable (L, 2)) {
+
+      lua_getfield (L, 2, "scope");
+      scope = lua_tostring (L, -1);
+      lua_pop (L, 1);
+
+      lua_getfield (L, 2, "unique");
+      unique = lua_tostring (L, -1);
+      lua_pop (L, 1);
+
+      lua_getfield (L, 2, "factory");
+      factory = lua_tostring (L, -1);
+      lua_pop (L, 1);
+   }
 
    if (runtime && PluginName) {
 
@@ -135,13 +151,16 @@ runtime_load_plugin (lua_State *L) {
       PluginContainer container (context, &log);
       Config plugin ("plugin");
       plugin.store_attribute ("name", PluginName);
+      if (scope) { plugin.store_attribute ("scope", scope); }
+      if (unique) { plugin.store_attribute ("unique", unique); }
+      if (factory) { plugin.store_attribute ("factory", factory); }
       Config pluginList ("plugin-list");
       pluginList.add_config (plugin);
       Config init ("dmz");
       Config global (rs ? rs->global : Config ("global"));
       global.lookup_all_config_merged ("dmz", init);
 
-      if (load_plugins (context, pluginList, global, init, container, &log)) {
+      if (load_plugins (context, pluginList, init, global, container, &log)) {
 
          if (!runtime->add_plugins (container)) {
 

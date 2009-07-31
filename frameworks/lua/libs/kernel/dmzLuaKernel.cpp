@@ -179,6 +179,7 @@ dmz::open_lua_kernel_libs (Config &global, lua_State *L, RuntimeContext *context
    open_lua_kernel_runtime_lib (L);
    open_lua_kernel_resources_lib (L);
    open_lua_kernel_sphere_lib (L);
+   open_lua_kernel_runtime_exit_lib (L);
    open_lua_kernel_time_slice_lib (L);
    open_lua_kernel_time_lib (L);
    open_lua_kernel_uuid_lib (L);
@@ -255,6 +256,14 @@ dmz::lua_create_dmz_namespace (lua_State *L, const String &Name) {
       }
 
       lua_remove (L, -2);
+
+      if (lua_getmetatable (L, -1)) {
+
+         lua_pushliteral (L, "__newindex");
+         lua_pushnil (L);
+         lua_rawset (L, -3);
+         lua_pop (L, 1); // pop meta table;
+      }
 
       result = True;
    }

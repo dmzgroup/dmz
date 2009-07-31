@@ -180,7 +180,9 @@ dmz::PluginInfo::get_dynamic_library () const { return _state.lib; }
 dmz::Boolean
 dmz::PluginInfo::uses_level (const UInt32 Level) const {
 
-   return _state.levelTable.lookup (Level) != 0;
+   return _state.levelTable.get_count () == 0 ?
+      (Level == 1) :
+      (_state.levelTable.lookup (Level) != 0);
 }
 
 

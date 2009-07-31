@@ -5,6 +5,7 @@
 #include <dmzRuntimePluginContainer.h>
 #include <dmzRuntimeLoadPlugins.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzSystemDynamicLibrary.h>
 #include <dmzTypesHandleContainer.h>
 #include <luacpp.h>
 
@@ -78,6 +79,8 @@ runtime_print_plugin_list (lua_State *L) {
 
    int result (0);
 
+   const Boolean Details = lua_toboolean (L, 1) != 0;
+
    RuntimeModule *runtime (get_runtime (L));
 
    if (runtime) {
@@ -96,15 +99,14 @@ runtime_print_plugin_list (lua_State *L) {
 
          if (InfoPtr) {
 
-            const String Name = InfoPtr->get_name ();
-            const String ClassName = InfoPtr->get_class_name ();
+            log.info << InfoPtr->get_name () << "[" << plugin << "]" << endl;
 
-            String out;
-            out << Name << "[" << plugin << "]";
+            if (Details) {
 
-            if (Name != ClassName) { out << " of type: " << ClassName; }
-
-            log.info << out << endl;
+               log.info << "\tClass:   " << InfoPtr->get_class_name ()  << endl;
+               log.info << "\tScope:   " << InfoPtr->get_scope_name ()  << endl;
+               log.info << "\tFactory: " << InfoPtr->get_factory_name ()  << endl;
+            }
          }
 
          plugin = list.get_next ();
@@ -185,7 +187,6 @@ runtime_unload_plugin (lua_State *L) {
    RuntimeModule *runtime (get_runtime (L));
    Handle *pluginHandle (lua_check_handle (L, 1));
 
-
    if (runtime && pluginHandle) {
 
       lua_pushboolean (L, runtime->unload_plugin (*pluginHandle) ? 1 : 0); 
@@ -198,11 +199,108 @@ runtime_unload_plugin (lua_State *L) {
 }
 
 
+static int
+runtime_reload_plugin (lua_State *L) {
+
+   int result (0);
+
+   LUA_START_VALIDATE (L);
+
+   rstruct *rs (get_runtime_struct (L));
+   RuntimeModule *runtime (rs ? rs->runtime : 0);
+   Handle *handlePtr (lua_check_handle (L, 1));
+
+   const PluginInfo *Info =
+      (runtime ? runtime->lookup_plugin_info (handlePtr ? *handlePtr : 0) : 0);
+
+   DynamicLibrary *lib = Info ? Info->get_dynamic_library () : 0;
+
+   Boolean unload (True);
+
+   RuntimeContext *context = lua_get_runtime_context (L);
+   Log log ("Lua Plugin Reloader", context);
+
+   if (Info && lib) {
+
+      if (Info->get_delete_mode () != PluginDeleteModeDelete) {
+
+         log.error << Info->get_name () << " can not be deleted." << endl;
+         unload = False;
+      }
+      else if (lib->get_mode () != DynamicLibraryModeUnload) {
+
+         log.error << Info->get_name () << "library: " << lib->get_name ()
+           << " can not be deleted." << endl;
+         unload = False;
+      }
+   }
+   else if (!Info) {
+
+      log.error << "Invalid plugin handle: " << (handlePtr ? *handlePtr : 0) << endl;
+      unload = False;
+   }
+   else if (!lib) {
+
+      log.error << "Plugin: " << Info->get_name () << " was not loaded from a library"
+         << endl;
+      unload = False;
+   }
+
+   if (runtime && handlePtr && Info && lib && unload) {
+
+      Config plugin ("plugin");
+      plugin.store_attribute ("name", Info->get_class_name ());
+      plugin.store_attribute ("scope", Info->get_scope_name ());
+      plugin.store_attribute ("unique", Info->get_name ());
+      plugin.store_attribute ("factory", Info->get_factory_name ());
+      plugin.store_attribute ("library", lib->get_name ());
+
+      Config pluginList ("plugin-list");
+      pluginList.add_config (plugin);
+      Config init ("dmz");
+      Config global (rs ? rs->global : Config ("global"));
+      global.lookup_all_config_merged ("dmz", init);
+      PluginContainer container (context, &log);
+
+      if (runtime->unload_plugin (*handlePtr)) {
+
+         if (load_plugins (context, pluginList, init, global, container, &log)) {
+
+            if (runtime->add_plugins (container)) {
+
+               lua_pushboolean (L, 1);
+               result = 1;
+            }
+            else {
+
+               log.error << "Failed to add plugin: " << Info->get_name () << endl;
+            }
+         }
+         else {
+
+            log.error << "Failed reloading plugin: " << Info->get_name () << endl;
+         }
+      }
+      else {
+
+         log.error << "Failed unloading plugin: " << Info->get_name () << endl;
+      }
+   }
+
+   if (!result) { lua_pushboolean (L, 0); result = 1; }
+
+   LUA_END_VALIDATE (L, result);
+
+   return result;
+}
+
+
 static const luaL_Reg arrayFunc[] = {
    {"plugin_list", runtime_plugin_list},
    {"print_plugin_list", runtime_print_plugin_list},
    {"load_plugin", runtime_load_plugin},
    {"unload_plugin", runtime_unload_plugin},
+   {"reload_plugin", runtime_reload_plugin},
    {NULL, NULL},
 };
 
@@ -297,6 +395,11 @@ dmz::LuaExtRuntime::open_lua_extension (lua_State *L) {
 
    lua_make_readonly (L, -1);
    lua_pop (L, 1); // pop dmz.runtime table
+
+#if 0
+   lua_pushcfunction (L, runtime_reload_plugin);
+   lua_setfield (L, LUA_GLOBALSINDEX, "reload");
+#endif
 
    LUA_END_VALIDATE (L, 0);
 }

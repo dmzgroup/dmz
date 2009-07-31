@@ -217,6 +217,9 @@ dmz::DynamicLibrary::is_loaded () { return _state.handle != 0; }
 dmz::String
 dmz::DynamicLibrary::get_name () { return _state.name; }
 
+//! Returns the LibraryModeEnum of the loaded dynamic library.
+dmz::DynamicLibraryModeEnum
+dmz::DynamicLibrary::get_mode () { return _state.LibMode; }
 
 //! Returns String containing last error.
 dmz::String

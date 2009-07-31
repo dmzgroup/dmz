@@ -40,7 +40,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="title">
       <string>Map Source</string>
@@ -48,11 +48,15 @@
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0" rowspan="4">
        <widget class="QListWidget" name="mapAdapterListWidget">
-        <item>
-         <property name="text">
-          <string>Default</string>
-         </property>
-        </item>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <property name="currentRow">
+         <number>-1</number>
+        </property>
        </widget>
       </item>
       <item row="0" column="1">
@@ -75,6 +79,16 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="mapAdapterDeleteButton">
+        <property name="text">
+         <string>Delete</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="1">
        <spacer name="verticalSpacer_4">
         <property name="orientation">
@@ -87,16 +101,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item row="3" column="1">
-       <widget class="QPushButton" name="mapAdapterDeleteButton">
-        <property name="text">
-         <string>Delete</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>

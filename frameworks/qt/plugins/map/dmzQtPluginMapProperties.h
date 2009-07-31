@@ -8,14 +8,13 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
+#include <QtCore/QList>
 #include <QtGui/QDialog>
 #include "ui_dmzQtPluginMapProperties.h"
 
-namespace qmapcontrol {
-   
-   class MapControl;
-};
+class QListWidgetItem;
 
+namespace qmapcontrol { class MapAdapter; }
 
 namespace dmz {
 
@@ -66,16 +65,28 @@ namespace dmz {
 
       protected slots:
          void on_mapCheckBox_stateChanged (int state);
+         void on_mapAdapterListWidget_itemActivated (QListWidgetItem *item);
+         void on_mapAdapterListWidget_currentRowChanged (int currentRow);
          void on_mapAdapterAddButton_clicked ();
          void on_mapAdapterEditButton_clicked ();
          void on_mapAdapterDeleteButton_clicked ();
          void on_emptyCacheButton_clicked ();
          
       protected:
+         struct AdapterItemStruct {
+         
+            Config config;
+            QListWidgetItem *item;
+         
+            AdapterItemStruct () : config (), item () {;}
+            ~AdapterItemStruct () { if (item) { delete item; item = 0; } }
+         };
+
+         void _update_adapter (const Config &Adapter);
          void _save_session ();
          void _load_session ();
          void _init (Config &local);
-
+         
          Log _log;
          Ui::mapPropertiesDialog _ui;
          QtModuleMainWindow *_mainWindowModule;
@@ -85,6 +96,8 @@ namespace dmz {
          QtModuleMap *_mapModule;
          String _mapModuleName;
          Message _propertiesEditMessage;
+         QList<AdapterItemStruct *> _adapterList;
+         qmapcontrol::MapAdapter *_mapAdapter;
          
       private:
          QtPluginMapProperties ();

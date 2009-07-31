@@ -673,6 +673,10 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    //    // "/tilecache/tilecache.py/?LAYERS=osm&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A900913",
    //    tileSize);
 
+//http://172.20.90.188/tilecache/tilecache.py/?LAYERS=osm&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A900913&BBOX=-15654303.2228,1878517.246,-15028131.0632,2504689.4056&WIDTH=256&HEIGHT=256
+
+//	_defaultAdapter = new qmapcontrol::WMSMapAdapter("www2.demis.nl", "/wms/wms.asp?wms=WorldMap&LAYERS=Countries,Borders,Cities,Rivers,Settlements,Hillshading,Waterbodies,Railroads,Highways,Roads&FORMAT=image/png&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/vnd.ogc.se_inimage&SRS=EPSG:4326&TRANSPARENT=FALSE", 256);
+
    _baseLayer = new qmapcontrol::MapLayer ("base", _defaultAdapter);
    _map->addLayer (_baseLayer);
 

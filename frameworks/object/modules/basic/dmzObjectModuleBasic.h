@@ -51,7 +51,7 @@ namespace dmz {
          // Plugin Interface
          virtual void update_plugin_state (
             const PluginStateEnum State,
-            const UInt32 Level) {;}
+            const UInt32 Level);
 
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,

@@ -123,7 +123,9 @@ namespace dmz {
          void _start_optimizer ();
          void _init (Config &local, Config &global);
 
+         Log _log;
          Exit _exit;
+         PluginContainer _extensions;
          Boolean _exitOnError;
          Boolean _startOptimizer;
 
@@ -146,14 +148,12 @@ namespace dmz {
          HashTableHandleTemplate<LuaObserver> _obsScriptTable;
          HashTableHandleTemplate<LuaObserver> _obsErrorTable;
 
-         PluginContainer _extensions;
          HashTableHandleTemplate<LuaExt> _extTable;
 
          PathContainer _luaPaths;
 
          Config _global;
 
-         Log _log;
          //! \endcond
 
       private:

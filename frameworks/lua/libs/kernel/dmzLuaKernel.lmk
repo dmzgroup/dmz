@@ -16,6 +16,7 @@ lmk.add_files {
    "dmzLuaKernelData.cpp",
    "dmzLuaKernelDefinitions.cpp",
    "dmzLuaKernelEventType.cpp",
+   "dmzLuaKernelExit.cpp",
    "dmzLuaKernelHandle.cpp",
    "dmzLuaKernelLog.cpp",
    "dmzLuaKernelMask.cpp",

@@ -244,6 +244,7 @@ dmz::Highlighter::highlightBlock (const QString &text) {
 
 dmz::QtExtLuaConsole::QtExtLuaConsole (const PluginInfo &Info, Config &local) :
       Plugin (Info),
+      LogObserver (Info.get_context ()),
       MessageObserver (Info),
       LuaExt (Info),
       L (0),
@@ -254,6 +255,8 @@ dmz::QtExtLuaConsole::QtExtLuaConsole (const PluginInfo &Info, Config &local) :
       _historyHead (0),
       _historyTail (0),
       _log (Info) {
+
+   detach_log_observer ();
 
    _console.setupUi (this);
 
@@ -354,6 +357,32 @@ dmz::QtExtLuaConsole::receive_message (
 }
 
 
+// LogObserver Interface
+void
+dmz::QtExtLuaConsole::store_log_message (
+      const String &LogName,
+      const LogLevelEnum Level,
+      const String &Message) {
+
+   String out;
+   if (LogName) { out << LogName << ":"; }
+   out << Message;
+
+   if (Level == LogLevelError) {
+
+      _console.displayBox->setTextColor (QColor ("red"));
+   }
+   else if (Level == LogLevelWarn) {
+
+      _console.displayBox->setTextColor (QColor ("orange"));
+   }
+
+   append (out);
+
+   _console.displayBox->setTextColor (_defaultColor);
+}
+
+
 // LuaExt Interface
 void
 dmz::QtExtLuaConsole::store_lua_module (LuaModule &module) { _luaMod = &module; }
@@ -382,10 +411,7 @@ dmz::QtExtLuaConsole::open_lua_extension (lua_State *luaState) {
 
 
 void
-dmz::QtExtLuaConsole::close_lua_extension (lua_State *luaState) {
-
-   L = 0;
-}
+dmz::QtExtLuaConsole::close_lua_extension (lua_State *luaState) { L = 0; }
 
 
 void
@@ -429,6 +455,8 @@ dmz::QtExtLuaConsole::on_executeButton_clicked () {
          lua_getglobal (L, get_plugin_name ().get_buffer ());
          lua_setfenv (L, -2); // set function env table
 
+         attach_log_observer ();
+
          if (!lua_pcall (L, 0, LUA_MULTRET, 0)) {
 
             _console.inputBox->clear ();
@@ -440,6 +468,8 @@ dmz::QtExtLuaConsole::on_executeButton_clicked () {
             if (NewTop > Top) { lua_pop (L, NewTop - Top); }
          }
          else { error = True; }
+
+         detach_log_observer ();
       }
       else { error = True; }
 
@@ -451,7 +481,6 @@ dmz::QtExtLuaConsole::on_executeButton_clicked () {
 
          _console.displayBox->setTextColor (QColor ("red"));
          _console.displayBox->append (error);
-
          _console.displayBox->setTextColor (_defaultColor);
       }
    }

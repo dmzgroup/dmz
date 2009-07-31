@@ -11,6 +11,7 @@ namespace dmz {
    class Config;
    class Data;
    class EventType;
+   class HandleContainer;
    class Log;
    class Mask;
    class Matrix;
@@ -63,6 +64,9 @@ namespace dmz {
 
    DMZ_LUA_KERNEL_LINK_SYMBOL Handle *
    lua_create_handle (lua_State *L, const Handle Value);
+
+   DMZ_LUA_KERNEL_LINK_SYMBOL void
+   lua_handle_container_to_table (lua_State *L, const HandleContainer &Container);
 
    DMZ_LUA_KERNEL_LINK_SYMBOL Log *lua_to_log (lua_State *L, int narg);
    DMZ_LUA_KERNEL_LINK_SYMBOL Log *lua_check_log (lua_State *L, int narg);

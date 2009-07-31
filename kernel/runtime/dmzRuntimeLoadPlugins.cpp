@@ -205,6 +205,9 @@ dmz::load_plugins (
                   PluginInfo *info (
                      new PluginInfo (
                         PluginName,
+                        NameValue,
+                        FactoryName,
+                        ScopeName,
                         DeleteMode,
                         context,
                         lib));

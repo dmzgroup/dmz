@@ -43,7 +43,7 @@ dmz::QtPluginMapObject::QtPluginMapObject (
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
-      _extensions (),
+      _extensions (Info.get_context (), &_log),
       _defaultAttributeHandle (0),
       _mapModule (0),
       _mapModuleName (),

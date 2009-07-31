@@ -384,7 +384,7 @@ dmz::InputObserverUtil::remove_input_module (
    if (__state.module == &module) {
 
       _remove_input_module (module);
-
+      __state.release_all (*this);
       __state.module = 0;
    }
 }

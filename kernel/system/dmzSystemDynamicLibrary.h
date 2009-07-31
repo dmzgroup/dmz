@@ -26,6 +26,7 @@ namespace dmz {
 
          Boolean is_loaded ();
          String get_name ();
+         DynamicLibraryModeEnum get_mode ();
          String get_error ();
 
       protected:

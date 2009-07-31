@@ -81,6 +81,10 @@ dmz::String
 dmz::DynamicLibrary::get_name () { return _state.name; }
 
 
+dmz::DynamicLibraryModeEnum
+dmz::DynamicLibrary::get_mode () { return _state.LibMode; }
+
+
 dmz::String
 dmz::DynamicLibrary::get_error () { return _state.error; }
 

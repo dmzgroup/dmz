@@ -3,18 +3,48 @@
 
 /*!
 
+\class dmz::HandleContainerIterator
+\ingroup Types
+\brief Iterator used to traverse a HandleContainer.
+
+*/
+
+//! cond
+struct dmz::HandleContainerIterator::State {
+
+   HashTableHandleIterator it;
+};
+//! \endcond
+
+
+//! Constructor.
+dmz::HandleContainerIterator::HandleContainerIterator () : state (*(new State)) {;}
+
+
+//! Destructor.
+dmz::HandleContainerIterator::~HandleContainerIterator () { delete &state; }
+
+
+//! Resets iterator.
+void
+dmz::HandleContainerIterator::reset () { state.it.reset (); }
+
+/*!
+
 \class dmz::HandleContainer
 \ingroup Types
 \brief Container class for storing Handles.
 
 */
 
+//! \cond
 struct dmz::HandleContainer::State {
 
    HashTableHandleIterator it;
    HashTableHandle table;
    ~State () { table.clear (); }
 };
+//! \endcond
 
 
 //! Constructor.
@@ -190,4 +220,88 @@ dmz::HandleContainer::get_last () const {
 }
 
 
+/*!
+
+\brief Gets first Handle in the container.
+\param[in] it HandleContainerIterator used to iterate over the container.
+\return Returns First Handle in the container. Returns zero if the container is
+empty.
+
+*/
+dmz::Handle
+dmz::HandleContainer::get_first (HandleContainerIterator &it) const {
+
+   Handle result (0);
+
+   it.state.it.reset ();
+
+   if (_state.table.get_next (it.state.it) != 0) { result = it.state.it.get_hash_key (); }
+
+   return result;
+}
+
+
+/*!
+
+\brief Gets next Handle in the container.
+\param[in] it HandleContainerIterator used to iterate over the container.
+\return Returns the next Handle in the container. Returns zero if all Handles
+have been returned.
+
+*/
+dmz::Handle
+dmz::HandleContainer::get_next (HandleContainerIterator &it) const {
+
+   Handle result (0);
+
+   if (_state.table.get_next (it.state.it) != 0) { result = it.state.it.get_hash_key (); }
+
+   return result;
+}
+
+
+/*!
+
+\brief Gets previous Handle in the container.
+\param[in] it HandleContainerIterator used to iterate over the container.
+\return Returns the previous Handle in the container. Returns zero if at the
+beginning of the table.
+
+*/
+dmz::Handle
+dmz::HandleContainer::get_prev (HandleContainerIterator &it) const {
+
+   Handle result (0);
+
+   if (_state.table.get_next (it.state.it, True) != 0) {
+
+      result = it.state.it.get_hash_key ();
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Gets last Handle in the container.
+\param[in] it HandleContainerIterator used to iterate over the container.
+\return Returns last Handle in the container. Returns zero if the container is
+empty.
+
+*/
+dmz::Handle
+dmz::HandleContainer::get_last (HandleContainerIterator &it) const {
+
+   Handle result (0);
+
+   it.state.it.reset ();
+
+   if (_state.table.get_next (it.state.it, True) != 0) {
+
+      result = it.state.it.get_hash_key ();
+   }
+
+   return result;
+}
 

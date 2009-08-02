@@ -1,7 +1,10 @@
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeModule.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimePluginContainer.h>
 #include <dmzRuntimeRTTI.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 
 /*!
@@ -105,8 +108,9 @@ This class provide the necessary functionality to manage extensions.
 
 */
 
-struct dmz::PluginContainer::State {
+struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
 
+   PluginInfo &info;
    Boolean discovered;
    Boolean started;
    PluginTable interfaceTable;
@@ -139,16 +143,160 @@ struct dmz::PluginContainer::State {
       maxLevel = 1;
    }
 
-   State (Log *theLog) :
+   State (PluginInfo &theInfo, Log *theLog) :
+         Plugin (theInfo),
+         RuntimeModule (theInfo),
+         info (theInfo),
          discovered (False),
          started (False),
          levelsHead (0),
          levelsTail (0),
          maxLevel (1),
-         log (theLog) {;}
+         log (theLog) {
+
+      externTable.store (get_plugin_handle (), this);
+   }
+
 
    ~State () { delete_plugins (); }
 
+
+   // Plugin Interface
+   virtual void update_plugin_state (const PluginStateEnum State, const UInt32 Level) {;}
+
+   virtual void discover_plugin (const PluginDiscoverEnum Mode, const Plugin *PluginPtr) {
+
+   }
+
+
+   // RuntimeModule Interface
+   virtual void get_plugin_list (HandleContainer &container) {
+
+      HashTableHandleIterator it;
+      PluginStruct *ps (0);
+   
+      while (pluginTable.get_next (it, ps)) {
+
+         container.add_handle (it.get_hash_key ());
+      }
+   }
+
+
+   virtual const PluginInfo *lookup_plugin_info (const Handle PluginHandle) {
+
+      PluginInfo *result (0);
+
+      PluginStruct *ps (pluginTable.lookup (PluginHandle));
+
+      if (ps) { result = ps->info; }
+
+      return result;
+   }
+
+
+   virtual Boolean add_plugin (PluginInfo *info, Plugin *plugin) {
+
+      Boolean result (False);
+
+      if (info && plugin) {
+
+         PluginStruct *ps (new PluginStruct (info, plugin, log));
+
+         if (ps && ps->info) {
+
+            update_levels (*ps);
+
+            if (pluginTable.store (ps->info->get_handle (), ps)) {
+
+               if (ps->info && ps->HasInterface) {
+
+                  interfaceTable.store (ps->info->get_handle (), ps);
+               }
+
+               result = True;
+            }
+            else { delete ps; ps = 0; }
+
+            if (discovered) {
+
+               discover_all_plugins (plugin);
+
+               if (ps->HasInterface) { discover_plugin (plugin); }
+            }
+
+            if (started) {
+
+                LevelStruct *ls (levelsTail);
+
+                while (ls) {
+
+                   if (info->uses_level (ls->Level)) {
+
+                      plugin->update_plugin_state (PluginStateInit, ls->Level);
+                   }
+
+                   ls = ls->prev;
+                }
+
+                ls = levelsTail;
+
+                while (ls) {
+
+                   if (info->uses_level (ls->Level)) {
+
+                      plugin->update_plugin_state (PluginStateStart, ls->Level);
+                   }
+
+                   ls = ls->prev;
+               }
+            }
+         }
+
+         result = True;
+      }
+
+      return result;
+   }
+
+
+   virtual Boolean add_plugins (PluginContainer &container) {
+
+      Boolean result (True);
+
+      HandleContainer pluginList;
+
+      container.get_plugin_list (pluginList);
+
+      Handle plugin = pluginList.get_first ();
+
+      while (plugin) {
+
+         PluginInfo *infoPtr = container.lookup_plugin_info (plugin);
+         Plugin *pluginPtr = container.lookup_plugin (plugin);
+
+         if (add_plugin (infoPtr, pluginPtr)) { container.release_plugin (plugin); }
+         else { container.remove_plugin (plugin); result = False; } 
+
+         plugin = pluginList.get_next ();
+      }
+
+      return result;
+   }
+
+
+   virtual Boolean unload_plugin (const Handle PluginHandle) {
+
+      Boolean result (False);
+
+      PluginStruct *ps = release_plugin (PluginHandle);
+
+      if (ps) { delete ps; ps = 0; result = True; }
+
+      return result;
+   }
+
+
+   // PluginContainer::State Interface
    LevelStruct *get_level (const UInt32 Level) {
 
       if (Level > maxLevel) { maxLevel = Level; }
@@ -224,7 +372,10 @@ struct dmz::PluginContainer::State {
             current;
             current = pluginTable.get_next (it)) {
 
-         if (current->plugin) { current->plugin->discover_plugin (PluginDiscoverAdd, PluginPtr); }
+         if (current->plugin) {
+
+            current->plugin->discover_plugin (PluginDiscoverAdd, PluginPtr);
+         }
       }
    }
 
@@ -237,7 +388,10 @@ struct dmz::PluginContainer::State {
             current;
             current = pluginTable.get_prev (it)) {
 
-         if (current->plugin) { current->plugin->discover_plugin (PluginDiscoverRemove, PluginPtr); }
+         if (current->plugin) {
+
+            current->plugin->discover_plugin (PluginDiscoverRemove, PluginPtr);
+         }
       }
    }
 
@@ -288,6 +442,58 @@ struct dmz::PluginContainer::State {
          }
       }
    }
+
+   PluginStruct *release_plugin (Handle PluginHandle) {
+
+      PluginStruct *ps = (pluginTable.remove (PluginHandle));
+
+      if (ps && ps->info && ps->plugin) {
+
+         if (started) {
+
+            LevelStruct *ls (levelsHead);
+
+            while (ls) {
+
+               if (ps->info->uses_level (ls->Level)) {
+
+                  ps->plugin->update_plugin_state (PluginStateStop, ls->Level);
+               }
+
+               ls = ls->next;
+            }
+
+            ls = levelsHead;
+
+            while (ls) {
+
+               if (ps->info->uses_level (ls->Level)) {
+
+                  ps->plugin->update_plugin_state (PluginStateShutdown, ls->Level);
+               }
+
+               ls = ls->next;
+            }
+         }
+
+         if (discovered) {
+
+            remove_all_plugins (ps->plugin);
+
+            if (ps->HasInterface) {
+
+               remove_plugin (ps->plugin);
+               interfaceTable.remove (PluginHandle);
+            }
+         }
+      }
+
+      LevelStruct *ls = levelsHead;
+
+      while (ls) { ls->table.remove (PluginHandle); ls = ls->next; }
+
+      return ps;
+   }
 };
 
 
@@ -298,7 +504,18 @@ struct dmz::PluginContainer::State {
 The container will not create any log messages.
 
 */
-dmz::PluginContainer::PluginContainer (Log *log) : _state (*(new State (log))) {;}
+dmz::PluginContainer::PluginContainer (RuntimeContext *context, Log *log) :
+      _state (
+         *(new State (
+            *(new PluginInfo (
+               "",
+               "PluginContainer",
+               "",
+               "",
+               PluginDeleteModeDoNotDelete,
+               context,
+               0)),
+         log))) {;}
 
 
 /*!
@@ -309,7 +526,19 @@ All Plugin instances and their corresponding libraries will be delete unless oth
 specified by the PluginInfo.
 
 */
-dmz::PluginContainer::~PluginContainer () { delete &_state; }
+dmz::PluginContainer::~PluginContainer () {
+
+   PluginInfo *info = &(_state.info);
+   delete &_state;
+   if (info) { delete info; info = 0; }
+}
+
+
+void
+dmz::PluginContainer::get_plugin_list (HandleContainer &container) {
+
+   _state.get_plugin_list (container);
+}
 
 
 /*!
@@ -326,59 +555,7 @@ Plugins have been started then the added Plugin will also be started.
 dmz::Boolean
 dmz::PluginContainer::add_plugin (PluginInfo *info, Plugin *plugin) {
 
-   Boolean result (False);
-
-   if (info && plugin) {
-
-      PluginStruct *ps (new PluginStruct (info, plugin, _state.log));
-
-      if (ps && ps->info) {
-
-         _state.update_levels (*ps);
-
-         if (_state.pluginTable.store (ps->info->get_handle (), ps)) {
-
-            if (ps->info && ps->HasInterface) {
-
-               _state.interfaceTable.store (ps->info->get_handle (), ps);
-            }
-
-            result = True;
-         }
-         else { delete ps; ps = 0; }
-
-         if (_state.discovered) { _state.discover_all_plugins (plugin); }
-
-         if (_state.started) {
-
-             LevelStruct *ls (_state.levelsTail);
-
-             while (ls) {
-
-                if (info->uses_level (ls->Level)) {
-
-                   plugin->update_plugin_state (PluginStateInit, ls->Level);
-                }
-
-                ls = ls->prev;
-            }
-
-             ls = _state.levelsTail;
-
-             while (ls) {
-
-                if (info->uses_level (ls->Level)) {
-
-                   plugin->update_plugin_state (PluginStateStart, ls->Level);
-                }
-
-                ls = ls->prev;
-            }
-         }
-      }
-   }
-
-   return result;
+   return _state.add_plugin (info, plugin);
 }
 
 
@@ -439,48 +616,34 @@ dmz::PluginContainer::remove_plugin (const Handle PluginHandle) {
 
    Boolean result (False);
 
-   PluginStruct *ps (_state.pluginTable.remove (PluginHandle));
+   PluginStruct *ps = _state.release_plugin (PluginHandle);
 
-   if (ps && ps->info && ps->plugin) {
+   if (ps) { delete ps; ps = 0; result = True; }
 
-      if (_state.started) {
+   return result;
+}
 
-         LevelStruct *ls (_state.levelsHead);
 
-         while (ls) {
+/*!
 
-            if (ps->info->uses_level (ls->Level)) {
+\brief Release Plugin with out deleting it.
+\details The Plugin is removed from all Plugins still in the container. This does not
+delete the plugin but only removed it from the container.
+\param[in] PluginHandle Unique Plugin handle.
+\return Returns dmz::True if the Plugin was released from the container.
 
-               ps->plugin->update_plugin_state (PluginStateStop, ls->Level);
-            }
+*/
+dmz::Boolean
+dmz::PluginContainer::release_plugin (const Handle PluginHandle) {
 
-            ls = ls->next;
-         }
+   Boolean result (False);
 
-         ls = _state.levelsHead;
+   PluginStruct *ps = _state.release_plugin (PluginHandle);
 
-         while (ls) {
+   if (ps) {
 
-            if (ps->info->uses_level (ls->Level)) {
-
-               ps->plugin->update_plugin_state (PluginStateShutdown, ls->Level);
-            }
-
-            ls = ls->next;
-         }
-      }
-
-      if (_state.discovered) {
-
-         _state.remove_all_plugins (ps->plugin);
-
-         if (ps->HasInterface) {
-
-            _state.remove_plugin (ps->plugin);
-            _state.interfaceTable.remove (PluginHandle);
-         }
-      }
-
+      ps->plugin = 0;
+      ps->info = 0;
       delete ps; ps = 0;
       result = True;
    }

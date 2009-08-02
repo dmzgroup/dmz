@@ -51,6 +51,7 @@ namespace dmz {
          public QWidget,
          public Plugin,
          public MessageObserver,
+         public LogObserver,
          public LuaExt {
 
       Q_OBJECT
@@ -75,6 +76,12 @@ namespace dmz {
             const Handle TargetObserverHandle,
             const Data *InData,
             Data *outData);
+
+         // LogObserver Interface
+         virtual void store_log_message (
+            const String &LogName,
+            const LogLevelEnum Level,
+            const String &Message);
 
          // LuaExt Interface
          virtual void store_lua_module (LuaModule &module);

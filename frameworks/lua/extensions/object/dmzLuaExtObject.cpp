@@ -1,5 +1,6 @@
 #include "dmzLuaExtObject.h"
 #include "dmzLuaExtObjectObserver.h"
+#include <dmzLuaKernel.h>
 #include <dmzLuaKernelValidate.h>
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectConsts.h>
@@ -177,33 +178,6 @@ object_get_hil (lua_State *L) {
 }
 
 
-static void
-handle_container_to_table (lua_State *L, const HandleContainer &Container) {
-
-   LUA_START_VALIDATE (L);
-
-   lua_createtable (L, (int)Container.get_count (), 0);
-   const int Table (lua_gettop (L));
-
-   int count (1);
-
-   Handle value = Container.get_first ();
-
-   while (value) {
-
-      if (lua_create_handle (L, value)) {
-
-         lua_rawseti (L, Table, count);
-         count++;
-      }
-
-      value = Container.get_next ();
-   }
-
-   LUA_END_VALIDATE (L, 1);
-}
-
-
 static int
 object_is_object (lua_State *L) {
 
@@ -263,7 +237,7 @@ object_get_all (lua_State *L) {
 
       if (objMod->get_object_handles (container)) {
 
-         handle_container_to_table (L, container);
+         lua_handle_container_to_table (L, container);
          result = 1;
       }
    }
@@ -671,7 +645,7 @@ object_super_links (lua_State *L) {
 
       if (objMod->lookup_super_links (*objPtr, *attrPtr, container)) {
 
-         handle_container_to_table (L, container);
+         lua_handle_container_to_table (L, container);
       }
       else { lua_pushnil (L); }
 
@@ -699,7 +673,7 @@ object_sub_links (lua_State *L) {
 
       if (objMod->lookup_sub_links (*objPtr, *attrPtr, container)) {
 
-         handle_container_to_table (L, container);
+         lua_handle_container_to_table (L, container);
       }
       else { lua_pushnil (L); }
 
@@ -1498,7 +1472,7 @@ object_get_selected (lua_State *L) {
 
       HandleContainer container;
       mod->get_selected_objects (container);
-      handle_container_to_table (L, container);
+      lua_handle_container_to_table (L, container);
       result = 1;
    }
 
@@ -1563,7 +1537,7 @@ object_find (lua_State *L) {
       HandleContainer list;
 
       grid->find_objects (*sphere, list, 0, 0);
-      handle_container_to_table (L, list);
+      lua_handle_container_to_table (L, list);
       result = 1;
    }
 

@@ -34,6 +34,7 @@ lmk.add_files {
    "runtime/dmzRuntimeLogObserverBasic.h",
    "runtime/dmzRuntimeLogObserverFile.h",
    "runtime/dmzRuntimeMessaging.h",
+   "runtime/dmzRuntimeModule.h",
    "runtime/dmzRuntimeObjectType.h",
    "runtime/dmzRuntimePlugin.h",
    "runtime/dmzRuntimePluginContainer.h",

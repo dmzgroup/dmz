@@ -9,6 +9,7 @@
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzTypesUUID.h>
 
 /*!
 
@@ -124,33 +125,22 @@ dmz::AudioPluginObject::discover_plugin (
                ss = _soundTable.get_next (it);
             }
 
-            ObjectStruct *os (_objectTable.get_first (it));
+            ObjectModule *objMod (get_object_module ());
 
-            while (os) {
+            if (objMod) {
 
-               HashTableHandleIterator attrIt;
+               ObjectStruct *os (_objectTable.get_first (it));
 
-               SoundStruct *current (os->list);
+               while (os) {
 
-               SoundInit init;
-               init.set (SoundLooped, True);
+                  Mask state;
+                  UUID uuid;
+                  const Handle ObjectHandle = it.get_hash_key ();
+                  objMod->lookup_state (ObjectHandle, _defaultHandle, state);
+                  update_object_state (uuid, ObjectHandle, _defaultHandle, state, 0);
 
-               SoundAttributes attr;
-               attr.set_position (os->pos);
-               attr.set_velocity (os->vel);
-
-               while (current) {
-
-                  init.set (SoundRelative, current->Data.relative);
-                  attr.set_pitch_scale (current->scale);
-
-                  current->handle =
-                     _audioMod->play_sound (current->Data.loopHandle, init, attr);
-
-                  current = current->next;
+                  os = _objectTable.get_next (it);
                }
-
-               os = _objectTable.get_next (it);
             }
          }
       }
@@ -193,6 +183,22 @@ dmz::AudioPluginObject::discover_plugin (
             }
 
             ss = _soundTable.get_next (it);
+         }
+
+         ObjectStruct *os (_objectTable.get_first (it));
+
+         while (os) {
+
+            SoundStruct *ss = os->list;
+
+            while (ss) {
+
+               ss->handle = 0;
+               ss->scale = 1.0;
+               ss = ss->next;
+            }
+
+            os = _objectTable.get_next (it);
          }
 
          _audioMod = 0;
@@ -326,7 +332,6 @@ dmz::AudioPluginObject::update_object_state (
          else { attr.set_pitch_scale (1.0); }
 
          if (IsSet && !WasSet) {
-
 
             if (PreviousValue && _audioMod && current->Data.activateHandle) {
 
@@ -588,17 +593,20 @@ dmz::AudioPluginObject::_stop_all_looped_sounds () {
 void
 dmz::AudioPluginObject::_stop_looped_sounds (ObjectStruct &obj) {
 
-   HashTableHandleIterator loopIt;
+   if (_audioMod) {
 
-   SoundStruct *current (obj.list);
+      HashTableHandleIterator loopIt;
 
-   while (current) {
+      SoundStruct *current (obj.list);
 
-      _audioMod->stop_sound (current->handle);
+      while (current) {
 
-      current->handle = 0;
+         _audioMod->stop_sound (current->handle);
 
-      current = current->next;
+         current->handle = 0;
+
+         current = current->next;
+      }
    }
 }
 

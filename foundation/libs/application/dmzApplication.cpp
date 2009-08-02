@@ -74,7 +74,7 @@ struct dmz::Application::State {
          cache (rt.get_context ()),
          appState (rt.get_context ()),
          global ("global"),
-         container (&log),
+         container (rt.get_context (), &log),
          error (False),
          startTime (0.0),
          frameCount (0.0),

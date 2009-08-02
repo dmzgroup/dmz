@@ -100,6 +100,7 @@ dmz::NetModulePacketCodecBasic::NetModulePacketCodecBasic (
       Plugin (Info),
       NetModulePacketCodec (Info),
       _log (Info),
+      _extensions (Info.get_context (), &_log),
       _headerCodec (0) {
 
    _init (local, global);

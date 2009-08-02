@@ -233,7 +233,7 @@ dmz::ObjectObserver::cast (const Plugin *PluginPtr, const String &PluginName) {
 inline dmz::Boolean
 dmz::ObjectObserver::is_valid (const Handle ObserverHandle, RuntimeContext *context) {
 
-   return (ObjectObserver *)lookup_rtti_interface (
+   return lookup_rtti_interface (
       ObjectObserverInterfaceName,
       ObserverHandle,
       context) != 0;

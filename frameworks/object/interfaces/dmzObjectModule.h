@@ -50,6 +50,7 @@ namespace dmz {
          virtual Boolean release_object_observer_all (ObjectObserver &observer) = 0;
 
          virtual Boolean is_object (const Handle ObjectHandle) = 0;
+         virtual Boolean is_activated (const Handle ObjectHandle) = 0;
          virtual Boolean is_link (const Handle LinkHandle) = 0;
 
          virtual Boolean get_object_handles (HandleContainer &container) = 0;

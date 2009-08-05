@@ -634,3 +634,15 @@ dmz::qtoolbutton_config_read (
 }
 
 
+void
+dmz::qlineedit_config_read (
+      const String &Name,
+      const Config &Source,
+      QLineEdit *lineEdit) {
+
+   if (lineEdit) {
+
+      lineEdit->setText (config_to_string (Name, Source).get_buffer ());
+   }
+}
+

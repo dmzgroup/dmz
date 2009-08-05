@@ -3,7 +3,7 @@
 #include <dmzQtModuleMap.h>
 #include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginMapProperties.h"
-#include "dmzQtPluginMapPropertiesTileMapAdapter.h"
+#include "dmzQtPluginMapPropertiesMapAdapter.h"
 #include <dmzQtUtil.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeData.h>
@@ -15,6 +15,7 @@
 #include <qmapcontrol.h>
 #include <QtGui/QtGui>
 
+#include <QtCore/QDebug>
 
 dmz::QtPluginMapProperties::QtPluginMapProperties (
       const PluginInfo &Info,
@@ -32,7 +33,8 @@ dmz::QtPluginMapProperties::QtPluginMapProperties (
       _mainWindowModuleName (),
       _propertiesEditMessage (),
       _adapterList (),
-      _mapAdapter (0) {
+      _mapAdapter (0),
+      _defaultAdapterList () {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
@@ -249,11 +251,11 @@ dmz::QtPluginMapProperties::on_mapAdapterListWidget_currentRowChanged (int curre
 void
 dmz::QtPluginMapProperties::on_mapAdapterAddButton_clicked () {
 
-   QtPluginMapPropertiesTileMapAdapter dialog (this);
+   QtPluginMapPropertiesMapAdapter dialog (this);
    
    if (dialog.exec () == QDialog::Accepted) {
 
-      Config data ("tile-map-adapter");
+      Config data ("map-adapter");
       dialog.to_config (data);
       
       const String Name (config_to_string ("name", data));
@@ -280,13 +282,13 @@ dmz::QtPluginMapProperties::on_mapAdapterEditButton_clicked () {
    
    if (ais) {
       
-      QtPluginMapPropertiesTileMapAdapter dialog (this);
+      QtPluginMapPropertiesMapAdapter dialog (this);
 
       dialog.from_config (ais->config);
 
       if (dialog.exec () == QDialog::Accepted) {
          
-         Config data ("tile-map-adapter");
+         Config data ("map-adapter");
          dialog.to_config (data);
          ais->config = data;
          
@@ -330,40 +332,80 @@ dmz::QtPluginMapProperties::on_emptyCacheButton_clicked () {
 void
 dmz::QtPluginMapProperties::_update_adapter (const Config &Adapter) {
    
-_log.warn << "_update_adapter" << endl;
-
    if (_mapModule) {
       
       qmapcontrol::MapAdapter *oldAdapter = _mapAdapter;
+      _mapAdapter = 0;
       
+      String type = config_to_string ("type", Adapter, "tile").get_lower ();
       String server = config_to_string ("server", Adapter);
-      String path = config_to_string ("path", Adapter);
-      Int32 tileSize = config_to_int32 ("tileSize", Adapter);
-      Int32 minZoom = config_to_int32 ("minZoom", Adapter);
-      Int32 maxZoom = config_to_int32 ("maxZoom", Adapter);
+      
+      if (type == "tile") {
+
+         String path = config_to_string ("path", Adapter);
+         Int32 tileSize = config_to_int32 ("tileSize", Adapter);
+         Int32 minZoom = config_to_int32 ("minZoom", Adapter);
+         Int32 maxZoom = config_to_int32 ("maxZoom", Adapter);
+      
+         _mapAdapter = _mapAdapter = new qmapcontrol::TileMapAdapter (
+            server.get_buffer (), path.get_buffer (), tileSize, minZoom, maxZoom);
+      }
+      else if (type == "wms") {
+         
+         QUrl url;
+         url.setHost (server.get_buffer ());
+         url.setPath (config_to_string ("path", Adapter).get_buffer ());
+         
+         _add_query_item (url, "SERVICE", config_to_string ("service", Adapter));
+         _add_query_item (url, "WMS", config_to_string ("wms", Adapter));
+         _add_query_item (url, "VERSION", config_to_string ("version", Adapter, "1.1.0"));
+         _add_query_item (url, "REQUEST", config_to_string ("request", Adapter, "GetMap"));
+         _add_query_item (url, "SRS", config_to_string ("projection", Adapter));
+         _add_query_item (url, "LAYERS", config_to_string ("layers", Adapter));
+         _add_query_item (url, "STYLES", config_to_string ("styles", Adapter));
+         _add_query_item (url, "FORMAT", config_to_string ("imageFormat", Adapter));
+         
+         Int32 tileSize = config_to_int32 ("tileSize", Adapter, 256);
+         
+qDebug () << url;
+qWarning () << url.toString (QUrl::RemoveAuthority);
+         _mapAdapter = _mapAdapter = new qmapcontrol::WMSMapAdapter (url.host (), url.toString (QUrl::RemoveAuthority), tileSize); 
+      }
       
       // _mapAdapter = new qmapcontrol::TileMapAdapter (
       //    server.get_buffer (), path.get_buffer (), tileSize, minZoom, maxZoom);
       
-//      _mapAdapter = new qmapcontrol::WMSMapAdapter("www2.demis.nl", "/wms/wms.asp?wms=WorldMap&LAYERS=Countries,Borders,Cities,Rivers,Settlements,Hillshading,Waterbodies,Railroads,Highways,Roads&FORMAT=image/png&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/vnd.ogc.se_inimage&SRS=EPSG:4326&TRANSPARENT=FALSE", 256);
+      // _mapAdapter = new qmapcontrol::WMSMapAdapter("www2.demis.nl", "/wms/wms.ashx?Service=WMS&WMS=WorldMap&Version=1.1.0&Request=GetMap&SRS=EPSG:4326&Layers=Countries,Borders,Coastlines&Format=image/png", 256);
+
+//      _mapAdapter = new qmapcontrol::WMSMapAdapter("www2.demis.nl", "/wms/wms.ashx?Service=WMS&WMS=BlueMarble&Version=1.1.0&Request=GetMap&SRS=EPSG:4326&Layers=Countries,Borders,Coastlines&Format=image/gif", 256);
 //   	_mapAdapter = new qmapcontrol::WMSMapAdapter("openaerialmap.org", "/wms/?wms=WorldMap&LAYERS=world&FORMAT=image/jpeg&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/vnd.ogc.se_inimage&SRS=EPSG:4326&TRANSPARENT=FALSE", 256);
 //   	_mapAdapter = new qmapcontrol::WMSMapAdapter("opentopomap.org", "/wms/?wms=WorldMap&LAYERS=world&FORMAT=image/jpeg&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/vnd.ogc.se_inimage&SRS=EPSG:4326&TRANSPARENT=FALSE", 256);
 
 //      _mapAdapter = new qmapcontrol::WMSMapAdapter("172.20.90.188", "/tilecache/tilecache.py/?LAYERS=osm&FORMAT=image/png&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/Fvnd.ogc.se_inimage&SRS=EPSG:900913", 256);
-      _mapAdapter = new qmapcontrol::WMSMapAdapter("172.20.90.188", "/tilecache/tilecache.py/?LAYERS=dystopia&FORMAT=image/png&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/vnd.ogc.se_inimage&SRS=EPSG:4326&TRANSPARENT=FALSE", 256);
+//      _mapAdapter = new qmapcontrol::WMSMapAdapter("172.20.90.188", "/tilecache/tilecache.py/?LAYERS=dystopia&FORMAT=image/png&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/vnd.ogc.se_inimage&SRS=EPSG:4326&TRANSPARENT=FALSE", 256);
       
 //      http://172.20.90.188/tilecache/tilecache.py/?LAYERS=osm&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A900913&BBOX=-15028131.0632,6887894.5228,-14401958.9036,7514066.6824&WIDTH=256&HEIGHT=256
       
       //http://172.20.90.188/tilecache/tilecache.py/?LAYERS=osm&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A900913&BBOX=-15654303.2228,1878517.246,-15028131.0632,2504689.4056&WIDTH=256&HEIGHT=256
       
-      _mapModule->set_map_adapter (_mapAdapter);
-      
-      if (oldAdapter) {
+      if (_mapAdapter) {
          
-         delete oldAdapter;
-         oldAdapter = 0;
+         _mapModule->set_map_adapter (_mapAdapter);
+      
+         if (oldAdapter) {
+         
+            delete oldAdapter;
+            oldAdapter = 0;
+         }
       }
    }
+}
+
+
+void
+dmz::QtPluginMapProperties::_add_query_item (QUrl &url, const QString &Key, const String &Value) {
+
+   if (Value) { url.addQueryItem (Key, Value.get_buffer ()); }
 }
 
 
@@ -389,7 +431,9 @@ dmz::QtPluginMapProperties::_load_session () {
    
    Config adapterList;
    
-   if (session.lookup_all_config ("tile-map-adapter", adapterList)) {
+   if (session.is_empty ()) { session = _defaultAdapterList; }
+   
+   if (session.lookup_all_config ("map-adapter", adapterList)) {
       
       ConfigIterator it;
       Config adapterConfig;
@@ -447,6 +491,8 @@ dmz::QtPluginMapProperties::_init (Config &local) {
       &_log);
 
    subscribe_to_message (_propertiesEditMessage);
+   
+   local.lookup_config ("default-map-adapter-list", _defaultAdapterList);
 }
 
 

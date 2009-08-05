@@ -386,6 +386,15 @@ dmz::ObjectModuleBasic::is_object (const Handle ObjectHandle) {
 
 
 dmz::Boolean
+dmz::ObjectModuleBasic::is_activated (const Handle ObjectHandle) {
+
+   ObjectStruct *os = _lookup_object (ObjectHandle);
+
+   return os ? os->active : False;
+}
+
+
+dmz::Boolean
 dmz::ObjectModuleBasic::is_link (const Handle LinkHandle) {
 
    return _linkTable.lookup (LinkHandle) != 0;

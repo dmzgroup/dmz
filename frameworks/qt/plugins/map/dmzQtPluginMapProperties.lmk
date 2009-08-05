@@ -3,15 +3,15 @@ lmkQMapControl.set_name "dmzQtPluginMapProperties"
 lmk.set_type "plugin"
 lmk.add_files {
    "dmzQtPluginMapProperties.ui",
-   "dmzQtPluginMapPropertiesTileMapAdapter.ui"
+   "dmzQtPluginMapPropertiesMapAdapter.ui"
 }
 lmk.add_files ({
    "dmzQtPluginMapProperties.h",
-   "dmzQtPluginMapPropertiesTileMapAdapter.h",
+   "dmzQtPluginMapPropertiesMapAdapter.h",
 }, {src = "moc"})
 lmk.add_files {
    "dmzQtPluginMapProperties.cpp",
-   "dmzQtPluginMapPropertiesTileMapAdapter.cpp",
+   "dmzQtPluginMapPropertiesMapAdapter.cpp",
 }
 lmk.add_libs {"dmzKernel", "dmzArchiveUtil", "dmzXML", "dmzQtUtil"}
 lmk.add_preqs {"dmzFoundation", "dmzArchiveFramework", "dmzQtFramework"}

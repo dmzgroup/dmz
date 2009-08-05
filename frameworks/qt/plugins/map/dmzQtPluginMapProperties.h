@@ -13,6 +13,7 @@
 #include "ui_dmzQtPluginMapProperties.h"
 
 class QListWidgetItem;
+class QUrl;
 
 namespace qmapcontrol { class MapAdapter; }
 
@@ -83,6 +84,7 @@ namespace dmz {
          };
 
          void _update_adapter (const Config &Adapter);
+         void _add_query_item (QUrl &url, const QString &Key, const String &Value);
          void _save_session ();
          void _load_session ();
          void _init (Config &local);
@@ -98,6 +100,7 @@ namespace dmz {
          Message _propertiesEditMessage;
          QList<AdapterItemStruct *> _adapterList;
          qmapcontrol::MapAdapter *_mapAdapter;
+         Config _defaultAdapterList;
          
       private:
          QtPluginMapProperties ();

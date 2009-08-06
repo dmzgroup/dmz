@@ -465,10 +465,7 @@ dmz::QtPluginMapProperties::_load_session () {
       }
    }
 
-_log.warn << adapterList<< endl;
-   
    Int32 index = config_to_int32 ("current.index", adapterList);
-_log.error << "current.index: " << index << endl;
    QListWidgetItem *item (_ui.mapAdapterListWidget->item (index));
    _ui.mapAdapterListWidget->setCurrentItem (item);
    _ui.mapAdapterListWidget->scrollToItem (item);

@@ -302,18 +302,22 @@ void
 dmz::QtPluginMapProperties::on_mapAdapterDeleteButton_clicked () {
 
    Int32 row = _ui.mapAdapterListWidget->currentRow ();
-   AdapterItemStruct *ais = _adapterList.takeAt (row);
-   
-   if (ais) {
 
-      delete ais;
-      ais = 0;
+   AdapterItemStruct *prevItemStruct = _adapterList.value (row - 1);
+   if (!prevItemStruct) { prevItemStruct = _adapterList.value (0); }
+   
+   if (prevItemStruct) {
+      
+      _ui.mapAdapterListWidget->setCurrentItem (prevItemStruct->item);
    }
+
+   AdapterItemStruct *itemStruct = _adapterList.takeAt (row);
    
-   QListWidgetItem *item = _ui.mapAdapterListWidget->item (row);
-   if (!item) { item = _ui.mapAdapterListWidget->item (0); }
-   
-   _ui.mapAdapterListWidget->setCurrentItem (item);
+   if (itemStruct) {
+
+      delete itemStruct;
+      itemStruct = 0;
+   }
 }
 
 
@@ -366,27 +370,14 @@ dmz::QtPluginMapProperties::_update_adapter (const Config &Adapter) {
          _add_query_item (url, "FORMAT", config_to_string ("imageFormat", Adapter));
          
          Int32 tileSize = config_to_int32 ("tileSize", Adapter, 256);
+
+         QString path (url.toString (QUrl::RemoveAuthority));
          
-qDebug () << url;
-qWarning () << url.toString (QUrl::RemoveAuthority);
-         _mapAdapter = _mapAdapter = new qmapcontrol::WMSMapAdapter (url.host (), url.toString (QUrl::RemoveAuthority), tileSize); 
+         _log.debug << "WMSMapAdapter: " << qPrintable (path) << endl;
+                       
+         _mapAdapter = _mapAdapter = new qmapcontrol::WMSMapAdapter (
+            url.host (), path, tileSize); 
       }
-      
-      // _mapAdapter = new qmapcontrol::TileMapAdapter (
-      //    server.get_buffer (), path.get_buffer (), tileSize, minZoom, maxZoom);
-      
-      // _mapAdapter = new qmapcontrol::WMSMapAdapter("www2.demis.nl", "/wms/wms.ashx?Service=WMS&WMS=WorldMap&Version=1.1.0&Request=GetMap&SRS=EPSG:4326&Layers=Countries,Borders,Coastlines&Format=image/png", 256);
-
-//      _mapAdapter = new qmapcontrol::WMSMapAdapter("www2.demis.nl", "/wms/wms.ashx?Service=WMS&WMS=BlueMarble&Version=1.1.0&Request=GetMap&SRS=EPSG:4326&Layers=Countries,Borders,Coastlines&Format=image/gif", 256);
-//   	_mapAdapter = new qmapcontrol::WMSMapAdapter("openaerialmap.org", "/wms/?wms=WorldMap&LAYERS=world&FORMAT=image/jpeg&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/vnd.ogc.se_inimage&SRS=EPSG:4326&TRANSPARENT=FALSE", 256);
-//   	_mapAdapter = new qmapcontrol::WMSMapAdapter("opentopomap.org", "/wms/?wms=WorldMap&LAYERS=world&FORMAT=image/jpeg&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/vnd.ogc.se_inimage&SRS=EPSG:4326&TRANSPARENT=FALSE", 256);
-
-//      _mapAdapter = new qmapcontrol::WMSMapAdapter("172.20.90.188", "/tilecache/tilecache.py/?LAYERS=osm&FORMAT=image/png&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/Fvnd.ogc.se_inimage&SRS=EPSG:900913", 256);
-//      _mapAdapter = new qmapcontrol::WMSMapAdapter("172.20.90.188", "/tilecache/tilecache.py/?LAYERS=dystopia&FORMAT=image/png&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/vnd.ogc.se_inimage&SRS=EPSG:4326&TRANSPARENT=FALSE", 256);
-      
-//      http://172.20.90.188/tilecache/tilecache.py/?LAYERS=osm&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A900913&BBOX=-15028131.0632,6887894.5228,-14401958.9036,7514066.6824&WIDTH=256&HEIGHT=256
-      
-      //http://172.20.90.188/tilecache/tilecache.py/?LAYERS=osm&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A900913&BBOX=-15654303.2228,1878517.246,-15028131.0632,2504689.4056&WIDTH=256&HEIGHT=256
       
       if (_mapAdapter) {
          
@@ -403,7 +394,10 @@ qWarning () << url.toString (QUrl::RemoveAuthority);
 
 
 void
-dmz::QtPluginMapProperties::_add_query_item (QUrl &url, const QString &Key, const String &Value) {
+dmz::QtPluginMapProperties::_add_query_item (
+      QUrl &url,
+      const QString &Key,
+      const String &Value) {
 
    if (Value) { url.addQueryItem (Key, Value.get_buffer ()); }
 }
@@ -412,14 +406,28 @@ dmz::QtPluginMapProperties::_add_query_item (QUrl &url, const QString &Key, cons
 void
 dmz::QtPluginMapProperties::_save_session () {
 
-   // String data;
-   // 
-   // Config session (get_plugin_name ());
-   // 
-   // Int32 count = _ui.mapAdapterListWidget->count ();
-   // 
-   // 
-   // set_session_config (get_plugin_runtime_context (), session);
+   String data;
+    
+   Config session (get_plugin_name ());
+
+   Config adapterList ("map-adapter-list");
+   session.add_config (adapterList);
+   
+   foreach (AdapterItemStruct *item, _adapterList) {
+      
+      adapterList.add_config (item->config);
+   } 
+   
+   Config current ("current");
+   data.flush () << _ui.mapAdapterListWidget->currentRow ();
+   current.store_attribute ("index", data);
+   adapterList.add_config (current);
+
+   Config map ("map");
+   map.store_attribute ("on", _ui.mapCheckBox->isChecked () ? "true" : "false");
+   session.add_config (map);
+   
+   set_session_config (get_plugin_runtime_context (), session);
 }
 
 
@@ -430,15 +438,18 @@ dmz::QtPluginMapProperties::_load_session () {
       get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
    
    Config adapterList;
+   if (!session.lookup_config ("map-adapter-list", adapterList)) {
+      
+      adapterList = _defaultAdapterList;
+   }
    
-   if (session.is_empty ()) { session = _defaultAdapterList; }
-   
-   if (session.lookup_all_config ("map-adapter", adapterList)) {
+   Config data;
+   if (adapterList.lookup_all_config ("map-adapter", data)) {
       
       ConfigIterator it;
       Config adapterConfig;
       
-      while (adapterList.get_next_config (it, adapterConfig)) {
+      while (data.get_next_config (it, adapterConfig)) {
 
          const String Name (config_to_string ("name", adapterConfig));
 
@@ -453,11 +464,16 @@ dmz::QtPluginMapProperties::_load_session () {
          }
       }
    }
+
+_log.warn << adapterList<< endl;
    
-   Int32 index = config_to_int32 ("current.index", session, 0);
+   Int32 index = config_to_int32 ("current.index", adapterList);
+_log.error << "current.index: " << index << endl;
    QListWidgetItem *item (_ui.mapAdapterListWidget->item (index));
    _ui.mapAdapterListWidget->setCurrentItem (item);
    _ui.mapAdapterListWidget->scrollToItem (item);
+   
+   _ui.mapCheckBox->setChecked (config_to_boolean ("map.on", session, True));
 }
 
 

@@ -20,6 +20,7 @@
 class QAbstractButton;
 class QAction;
 class QGraphicsView;
+class QLineEdit;
 class QPushButton;
 class QToolBar;
 class QToolButton;
@@ -137,13 +138,18 @@ namespace dmz {
 
    DMZ_QT_UTIL_LINK_SYMBOL void qpushbutton_config_read (
       const String &Name,
-      const Config &String,
+      const Config &Source,
       QPushButton *button);
 
    DMZ_QT_UTIL_LINK_SYMBOL void qtoolbutton_config_read (
       const String &Name,
-      const Config &String,
+      const Config &Source,
       QToolButton *button);
+      
+   DMZ_QT_UTIL_LINK_SYMBOL void qlineedit_config_read (
+      const String &Name,
+      const Config &Source,
+      QLineEdit *lineEdit);
 };
 
 

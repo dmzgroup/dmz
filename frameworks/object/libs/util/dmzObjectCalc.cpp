@@ -259,13 +259,13 @@ local_build_calc_tree (Config &source, Definitions &defs, Log *log) {
          log->error << "Object Attribute Calculator of type Link Count missing "
             << "attribute name." << endl;
       }
-
    }
+   else if (log) { log->error << "Unknown calculator type: " << Type << endl; }
 
    return result;
 }
 
-}
+};
 
 //! \endcond
 
@@ -323,7 +323,8 @@ dmz::config_to_object_attribute_calculator (
       config.get_first_config (it, root);
    }
 
-   if (root) { result = local_build_calc_tree (root, defs, log); }
+   if (!root.is_empty ()) { result = local_build_calc_tree (root, defs, log); }
+   else if (log) { log->error << "Calculator Config object is empty." << endl; }
 
    return result;
 }

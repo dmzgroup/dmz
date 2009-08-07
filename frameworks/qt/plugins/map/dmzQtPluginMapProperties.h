@@ -83,6 +83,9 @@ namespace dmz {
             ~AdapterItemStruct () { if (item) { delete item; item = 0; } }
          };
 
+         AdapterItemStruct *_lookup_adapter_item (const Config &Adapter);
+         AdapterItemStruct *_create_adapter_item (const Config &Adapter);
+
          void _update_adapter (const Config &Adapter);
          void _add_query_item (QUrl &url, const QString &Key, const String &Value);
          void _save_session ();

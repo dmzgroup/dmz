@@ -349,6 +349,48 @@ dmz::Config::is_empty () const {
 
 /*!
 
+\brief Determines if a Config objects have equal attributes.
+\param[in] Data Config used to compare the attributes.
+\return Returns dmz::True if \a Data has a equal number of attributes.
+And that each of those attributes have the same name and value.
+Will return dmz::False if \a Data has a different number of attributes. Or if
+any of the attributes have a different name or value.
+
+*/
+dmz::Boolean
+dmz::Config::are_attributes_equal (const Config &Data) const {
+
+   Boolean result (False);
+
+   if (_state.context && Data._state.context) {
+
+      if (_state.context->attrTable.get_count () ==
+          Data._state.context->attrTable.get_count ()) {
+
+         Boolean areEqual (True);
+
+         ConfigIterator it;
+         String name, lhs, rhs;
+
+         while (areEqual && get_next_attribute (it, name, lhs)) {
+
+            if (Data.lookup_attribute (name, rhs)) {
+
+               if (lhs != rhs) { areEqual = False; }
+            }
+            else { areEqual = False; }
+         }
+
+         result = areEqual;
+      }
+   }
+
+   return result;
+}
+
+
+/*!
+
 \brief Get first attribute stored in the config context.
 \param[in] it ConfigIterator used to iterate over the attributes.
 \param[out] name String to store the name of the first attribute.

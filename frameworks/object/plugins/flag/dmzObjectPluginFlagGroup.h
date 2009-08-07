@@ -14,6 +14,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          ObjectPluginFlagGroup (const PluginInfo &Info, Config &local);
          ~ObjectPluginFlagGroup ();
 
@@ -51,6 +52,7 @@ namespace dmz {
          Int32 _maxGroupSize;
          Handle _flagAttrHandle;
          HashTableHandleTemplate<Int32> _flagGroup;
+         //! \endcond
 
       private:
          ObjectPluginFlagGroup ();

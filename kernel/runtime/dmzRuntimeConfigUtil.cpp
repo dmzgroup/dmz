@@ -297,6 +297,24 @@ dmz::config_to_object_type (
 
 /*!
 
+\fn dmz::ObjectTypeSet dmz::config_to_object_type_set (
+const Config &Source,
+RuntimeContext *context)
+\brief Converts Config to ObjectTypeSet.
+\details Defined in dmzRuntimeObjectType.h.
+\code
+RuntimeContext *context (get_plugin_runtime_context ());
+dmz::ObjectTypeSet value = dmz::config_to_object_type_set (list, context);
+\endcode
+\param[in] Source Config containing config context to convert.
+\param[in] context Pointer to the runtime context.
+\return Returns dmz::ObjectTypeSet containing value.
+
+*/
+
+
+/*!
+
 \brief Converts Config to ObjectTypeSet.
 \details Defined in dmzRuntimeObjectType.h.
 \code

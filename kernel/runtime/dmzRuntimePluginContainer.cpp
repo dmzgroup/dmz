@@ -500,6 +500,7 @@ struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
 /*!
 
 \brief Constructor.
+\param[in] context Pointer to the runtime context.
 \param[in] log Pointer to dmz::Log used for log messaging. If the pointer is NULL
 The container will not create any log messages.
 
@@ -534,6 +535,12 @@ dmz::PluginContainer::~PluginContainer () {
 }
 
 
+/*!
+
+\brief Fills a HandleContainer with the Handles of all the loaded Plugins in the PluginContainer.
+\param[out] container HandleContainer used to return the loaded Plugin Handles.
+
+*/
 void
 dmz::PluginContainer::get_plugin_list (HandleContainer &container) {
 

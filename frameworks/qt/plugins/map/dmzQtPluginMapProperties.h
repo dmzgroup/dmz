@@ -88,6 +88,8 @@ namespace dmz {
 
          void _update_adapter (const Config &Adapter);
          void _add_query_item (QUrl &url, const QString &Key, const String &Value);
+
+         void _update_cache_info ();
          void _save_session ();
          void _load_session ();
          void _init (Config &local);

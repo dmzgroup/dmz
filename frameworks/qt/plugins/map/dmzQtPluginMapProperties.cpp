@@ -200,6 +200,10 @@ dmz::QtPluginMapProperties::receive_message (
 
    if (Type == _propertiesEditMessage) {
 
+      qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
+      _update_cache_info ();
+      qApp->restoreOverrideCursor ();
+
       exec ();
    }
 }
@@ -355,6 +359,7 @@ dmz::QtPluginMapProperties::on_emptyCacheButton_clicked () {
       
       qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
       _mapModule->empty_tile_cache ();
+      _update_cache_info ();
       qApp->restoreOverrideCursor ();
    }
 }
@@ -466,6 +471,52 @@ dmz::QtPluginMapProperties::_add_query_item (
       const String &Value) {
 
    if (Value) { url.addQueryItem (Key, Value.get_buffer ()); }
+}
+
+
+void
+dmz::QtPluginMapProperties::_update_cache_info () {
+
+   if (_mapModule) {
+
+      String CacheDir (_mapModule->get_tile_cache_dir ()); 
+
+      Int64 size (0);
+      Int64 count (0);
+
+      String file;
+      PathContainer fileList;
+
+      if (get_file_list (CacheDir, fileList)) {
+      
+         count = fileList.get_count ();
+
+         Boolean found (fileList.get_first (file));
+            
+         while (found) {
+      
+            const String CleanPath (format_path (CacheDir + "/" + file));
+            if (get_absolute_path (CleanPath, file))  {
+
+               size += get_file_size (file);
+            }
+         
+            found = fileList.get_next (file);
+         }
+
+         Float64 sizeInMb = Float64 (size) / 1048576;
+sizeInMb *= 100;
+         QString info =
+            QString ("%1 items, totalling %2 MB").arg (count).arg (sizeInMb, 0, 'f', 1);
+
+         _ui.cacheInfoLabel->setText (info);
+         _ui.cacheInfoLabel->show ();
+      }
+   }
+   else {
+
+      _ui.cacheInfoLabel->hide ();
+   }
 }
 
 

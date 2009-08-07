@@ -102,7 +102,15 @@ dmz::ObjectObserver &observer)
 \fn dmz::Boolean dmz::ObjectModule::is_object (const dmz::Handle ObjectHandle)
 \brief Tests if a handle is associated with an object stored in the module.
 \param[in] ObjectHandle Handle to test.
-\return Returns dmz::True if the Handle is associated with and object.
+\return Returns dmz::True if the Handle is associated with an object. The object does not
+need to be activated for this function to return dmz::True.
+
+\fn dmz::Boolean dmz::ObjectModule::is_activated (const Handle ObjectHandle)
+\brief Tests if a handle is associated with an activated object stored in the module.
+\param[in] ObjectHandle Handle to test.
+\return Returns dmz::True if the Handle is associated with an activated object. Returns
+dmz::False if the object has not be activated or if the Handle is not associated with an
+object.
 
 \fn dmz::Boolean dmz::ObjectModule::is_link (const dmz::Handle LinkHandle)
 \brief Tests if a handle is associated with linked objects stored in the module.

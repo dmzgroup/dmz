@@ -5,12 +5,31 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::ObjectPluginFlagGroup
+\brief Insures that only a predefined number of object have a give flag enabled.
+\ingroup Object
+\details This Plugin ensures that only a predefined number of object have a give flag
+enabled. When an object has the flag enabled and that pushes the group size over the
+define limit, the first object with its flag enabled in the group has the flag
+disabled. The default group size is one.
+\code
+<local>
+   <group size="Number of Objects permitted to have the flag enabled"/>
+   <flag attribute="Attribute Name of the flag"/>
+</local>
+\endcode
+*/
+
+
 namespace {
 
 static dmz::Int32 LocalData = 0;
 
 };
 
+//! \cond
 dmz::ObjectPluginFlagGroup::ObjectPluginFlagGroup (
       const PluginInfo &Info,
       Config &local) :
@@ -100,6 +119,7 @@ dmz::ObjectPluginFlagGroup::_init (Config &local) {
       config_to_string ("flag.attribute", local),
       ObjectRemoveAttributeMask | ObjectFlagMask);
 }
+//! \endcond
 
 
 extern "C" {

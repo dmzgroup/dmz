@@ -74,6 +74,10 @@ namespace dmz {
          void on_emptyCacheButton_clicked ();
          
       protected:
+         void showEvent (QShowEvent *event);
+         void closeEvent (QCloseEvent * event);
+         void timerEvent (QTimerEvent *event);
+         
          struct AdapterItemStruct {
          
             Config config;
@@ -83,8 +87,13 @@ namespace dmz {
             ~AdapterItemStruct () { if (item) { delete item; item = 0; } }
          };
 
+         AdapterItemStruct *_lookup_adapter_item (const Config &Adapter);
+         AdapterItemStruct *_create_adapter_item (const Config &Adapter);
+
          void _update_adapter (const Config &Adapter);
          void _add_query_item (QUrl &url, const QString &Key, const String &Value);
+
+         void _update_cache_info ();
          void _save_session ();
          void _load_session ();
          void _init (Config &local);
@@ -101,6 +110,7 @@ namespace dmz {
          QList<AdapterItemStruct *> _adapterList;
          qmapcontrol::MapAdapter *_mapAdapter;
          Config _defaultAdapterList;
+         Int32 _timerId;
          
       private:
          QtPluginMapProperties ();

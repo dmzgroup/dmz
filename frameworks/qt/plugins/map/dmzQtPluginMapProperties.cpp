@@ -34,7 +34,8 @@ dmz::QtPluginMapProperties::QtPluginMapProperties (
       _propertiesEditMessage (),
       _adapterList (),
       _mapAdapter (0),
-      _defaultAdapterList () {
+      _defaultAdapterList (),
+      _timerId (0) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
@@ -143,6 +144,25 @@ dmz::QtPluginMapProperties::create_archive (
       Config &local,
       Config &global) {
 
+   if (is_active_archive_handle (ArchiveHandle)) {
+
+      Config map ("map");
+      map.store_attribute (
+         "on", _ui.mapCheckBox->isChecked () ? "true" : "false");
+
+      local.add_config (map);
+
+      if (_ui.mapCheckBox->isChecked ()) {
+
+         AdapterItemStruct *ais = _adapterList.value (
+            _ui.mapAdapterListWidget->currentRow ());
+   
+         if (ais) {
+      
+            local.add_config (ais->config);
+         }
+      }
+   }
 }
 
 
@@ -152,6 +172,21 @@ dmz::QtPluginMapProperties::process_archive (
       Config &local,
       Config &global) {
 
+   if (is_active_archive_handle (ArchiveHandle)) {
+
+      _ui.mapCheckBox->setChecked (
+         config_to_boolean ("map.on", local, _ui.mapCheckBox->isChecked ()));
+
+      Config adapterConfig;
+      if (local.lookup_config ("map-adapter", adapterConfig)) {
+      
+         AdapterItemStruct *ais (_lookup_adapter_item (adapterConfig)); 
+
+         if (!ais) { ais = _create_adapter_item (adapterConfig); }
+
+         if (ais) { _ui.mapAdapterListWidget->setCurrentItem (ais->item); }
+      }
+   }
 }
 
 
@@ -165,6 +200,10 @@ dmz::QtPluginMapProperties::receive_message (
       Data *outData) {
 
    if (Type == _propertiesEditMessage) {
+
+      qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
+      _update_cache_info ();
+      qApp->restoreOverrideCursor ();
 
       exec ();
    }
@@ -258,17 +297,10 @@ dmz::QtPluginMapProperties::on_mapAdapterAddButton_clicked () {
       Config data ("map-adapter");
       dialog.to_config (data);
       
-      const String Name (config_to_string ("name", data));
+      AdapterItemStruct *ais (_create_adapter_item (data));
 
-      if (Name) {
-         
-         AdapterItemStruct *ais = new AdapterItemStruct ();
-         ais->config = data;
-         ais->item = new QListWidgetItem (_ui.mapAdapterListWidget);
-         ais->item->setText (Name.get_buffer ());
-         
-         _adapterList.append (ais);
-         
+      if (ais) {
+
          _ui.mapAdapterListWidget->setCurrentItem (ais->item);
       }
    }
@@ -328,8 +360,72 @@ dmz::QtPluginMapProperties::on_emptyCacheButton_clicked () {
       
       qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
       _mapModule->empty_tile_cache ();
+      _update_cache_info ();
       qApp->restoreOverrideCursor ();
    }
+}
+
+
+void
+dmz::QtPluginMapProperties::showEvent (QShowEvent *event) {
+
+   _timerId = startTimer (5000);
+   QWidget::showEvent (event);
+}
+
+
+void
+dmz::QtPluginMapProperties::closeEvent (QCloseEvent * event) {
+
+   killTimer (_timerId);
+   _timerId = 0;
+   QWidget::closeEvent (event);
+}
+
+
+void
+dmz::QtPluginMapProperties::timerEvent (QTimerEvent *event) {
+
+   _update_cache_info ();
+}
+
+
+dmz::QtPluginMapProperties::AdapterItemStruct *
+dmz::QtPluginMapProperties::_lookup_adapter_item (const Config &Adapter) {
+
+   AdapterItemStruct *itemStruct (0);
+
+   foreach (AdapterItemStruct *ais, _adapterList) {
+
+      if (Adapter.are_attributes_equal (ais->config)) {
+
+         itemStruct = ais;
+         break;
+      }
+   }
+
+   return (itemStruct);
+}
+
+
+dmz::QtPluginMapProperties::AdapterItemStruct *
+dmz::QtPluginMapProperties::_create_adapter_item (const Config &Adapter) {
+
+   AdapterItemStruct *itemStruct (0);
+
+   const String Name (config_to_string ("name", Adapter));
+
+   if (Name) {
+            
+      itemStruct = new AdapterItemStruct ();
+      itemStruct->config = Adapter;
+      itemStruct->item = new QListWidgetItem (_ui.mapAdapterListWidget);
+      itemStruct->item->setText (Name.get_buffer ());
+         
+      _adapterList.append (itemStruct);
+   }
+
+   return (itemStruct);
 }
 
 
@@ -404,6 +500,52 @@ dmz::QtPluginMapProperties::_add_query_item (
 
 
 void
+dmz::QtPluginMapProperties::_update_cache_info () {
+
+   if (_mapModule) {
+
+      String CacheDir (_mapModule->get_tile_cache_dir ()); 
+
+      Int64 size (0);
+      Int64 count (0);
+
+      String file;
+      PathContainer fileList;
+
+      if (get_file_list (CacheDir, fileList)) {
+      
+         count = fileList.get_count ();
+
+         Boolean found (fileList.get_first (file));
+            
+         while (found) {
+      
+            const String CleanPath (format_path (CacheDir + "/" + file));
+            if (get_absolute_path (CleanPath, file))  {
+
+               size += get_file_size (file);
+            }
+         
+            found = fileList.get_next (file);
+         }
+
+         Float64 sizeInMb = Float64 (size) / 1048576;
+
+         QString info =
+            QString ("%1 items, totalling %2 MB").arg (count).arg (sizeInMb, 0, 'f', 1);
+
+         _ui.cacheInfoLabel->setText (info);
+         _ui.cacheInfoLabel->show ();
+      }
+   }
+   else {
+
+      _ui.cacheInfoLabel->hide ();
+   }
+}
+
+
+void
 dmz::QtPluginMapProperties::_save_session () {
 
    String data;
@@ -451,17 +593,7 @@ dmz::QtPluginMapProperties::_load_session () {
       
       while (data.get_next_config (it, adapterConfig)) {
 
-         const String Name (config_to_string ("name", adapterConfig));
-
-         if (Name) {
-            
-            AdapterItemStruct *ais = new AdapterItemStruct ();
-            ais->config = adapterConfig;
-            ais->item = new QListWidgetItem (_ui.mapAdapterListWidget);
-            ais->item->setText (Name.get_buffer ());
-            
-            _adapterList.append (ais);
-         }
+         AdapterItemStruct *ais (_create_adapter_item (adapterConfig));
       }
    }
 
@@ -506,6 +638,8 @@ dmz::QtPluginMapProperties::_init (Config &local) {
    subscribe_to_message (_propertiesEditMessage);
    
    local.lookup_config ("default-map-adapter-list", _defaultAdapterList);
+   
+   init_archive (local);
 }
 
 

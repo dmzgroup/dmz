@@ -49,6 +49,7 @@ namespace dmz {
          Boolean is_formatted () const;
          Boolean has_children () const;
          Boolean is_empty () const;
+	 Boolean are_attributes_equal (const Config &Data) const;
 
          Boolean get_first_attribute (
             ConfigIterator &it,

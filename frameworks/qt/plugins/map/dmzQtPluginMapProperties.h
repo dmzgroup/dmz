@@ -74,6 +74,10 @@ namespace dmz {
          void on_emptyCacheButton_clicked ();
          
       protected:
+         void showEvent (QShowEvent *event);
+         void closeEvent (QCloseEvent * event);
+         void timerEvent (QTimerEvent *event);
+         
          struct AdapterItemStruct {
          
             Config config;
@@ -106,6 +110,7 @@ namespace dmz {
          QList<AdapterItemStruct *> _adapterList;
          qmapcontrol::MapAdapter *_mapAdapter;
          Config _defaultAdapterList;
+         Int32 _timerId;
          
       private:
          QtPluginMapProperties ();

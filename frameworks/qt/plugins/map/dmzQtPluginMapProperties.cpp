@@ -34,7 +34,8 @@ dmz::QtPluginMapProperties::QtPluginMapProperties (
       _propertiesEditMessage (),
       _adapterList (),
       _mapAdapter (0),
-      _defaultAdapterList () {
+      _defaultAdapterList (),
+      _timerId (0) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
@@ -365,6 +366,30 @@ dmz::QtPluginMapProperties::on_emptyCacheButton_clicked () {
 }
 
 
+void
+dmz::QtPluginMapProperties::showEvent (QShowEvent *event) {
+
+   _timerId = startTimer (5000);
+   QWidget::showEvent (event);
+}
+
+
+void
+dmz::QtPluginMapProperties::closeEvent (QCloseEvent * event) {
+
+   killTimer (_timerId);
+   _timerId = 0;
+   QWidget::closeEvent (event);
+}
+
+
+void
+dmz::QtPluginMapProperties::timerEvent (QTimerEvent *event) {
+
+   _update_cache_info ();
+}
+
+
 dmz::QtPluginMapProperties::AdapterItemStruct *
 dmz::QtPluginMapProperties::_lookup_adapter_item (const Config &Adapter) {
 
@@ -505,7 +530,7 @@ dmz::QtPluginMapProperties::_update_cache_info () {
          }
 
          Float64 sizeInMb = Float64 (size) / 1048576;
-sizeInMb *= 100;
+
          QString info =
             QString ("%1 items, totalling %2 MB").arg (count).arg (sizeInMb, 0, 'f', 1);
 

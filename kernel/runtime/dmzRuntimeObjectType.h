@@ -3,6 +3,7 @@
 
 #include <dmzKernelExport.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzSystemStream.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
 #include <dmzTypesBooleanOperator.h>
@@ -149,6 +150,30 @@ dmz::config_to_object_type_set (const Config &Source, RuntimeContext *context) {
    return config_to_object_type_set ("", Source, context);
 }
 
+
+inline dmz::Stream &
+operator<< (dmz::Stream &out, const dmz::ObjectType &Type) {
+
+   if (Type) { out << Type.get_name (); }
+   else { out << "<Undefined Type"; }
+
+   return out;
+}
+
+
+inline dmz::Stream &
+operator<< (dmz::Stream &out, const dmz::ObjectTypeSet &set) {
+
+   dmz::ObjectType type;
+   dmz::ObjectTypeIterator it;
+
+   while (set.get_next (it, type)) {
+
+      out << type << dmz::endl;
+   }
+
+   return out;
+}
 
 #endif // DMZ_RUNTIME_OBJECT_TYPE_DOT_H
 

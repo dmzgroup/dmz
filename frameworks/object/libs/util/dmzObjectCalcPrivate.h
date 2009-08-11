@@ -2,6 +2,7 @@
 #define DMZ_OBJECT_CALC_PRIVATE_H
 
 #include <dmzObjectCalc.h>
+#include <dmzRuntimeObjectType.h>
 
 namespace dmz {
 
@@ -59,6 +60,19 @@ namespace dmz {
       protected:
          const Handle _AttrHandle;
          const UInt32 _LinkMask;
+         ObjectModule *_objMod;
+   };
+
+   class ObjectAttrObjectTypeCount : public ObjectAttributeCalculator {
+
+      public:
+         ObjectAttrObjectTypeCount (const ObjectTypeSet &Set);
+         virtual ~ObjectAttrObjectTypeCount ();
+         virtual void store_object_module (ObjectModule *module);
+         virtual Float64 calculate (const Handle ObjectHandle);
+
+      protected:
+         const ObjectTypeSet _Set;
          ObjectModule *_objMod;
    };
 

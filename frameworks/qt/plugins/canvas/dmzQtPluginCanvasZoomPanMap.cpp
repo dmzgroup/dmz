@@ -57,11 +57,9 @@ dmz::QtPluginCanvasZoomPanMap::update_plugin_state (
 
    if (State == PluginStateStart) {
 
-      _load_session ();
    }
    else if (State == PluginStateStop) {
 
-      _save_session ();
    }
 }
 
@@ -99,7 +97,7 @@ dmz::QtPluginCanvasZoomPanMap::discover_plugin (
 
          _mapModule = QtModuleMap::cast (PluginPtr, _mapModuleName);
 
-         if (_mapModule) {
+         if (0 && _mapModule) {
 
             qmapcontrol::MapControl *map (_mapModule->get_map_control ());
             
@@ -134,6 +132,13 @@ dmz::QtPluginCanvasZoomPanMap::discover_plugin (
       
       if (_mapModule && (_mapModule == QtModuleMap::cast (PluginPtr))) {
 
+         qmapcontrol::MapControl *map (_mapModule->get_map_control ());
+            
+         if (map) {
+         
+            map->disconnect (this);
+         }
+         
          _mapModule = 0;
       }
    }
@@ -190,13 +195,8 @@ dmz::QtPluginCanvasZoomPanMap::receive_mouse_event (
             
          if (_mapModule) {
             
-            qmapcontrol::MapControl *map (_mapModule->get_map_control ());
-            
-            if (map) {
-             
-               _mapModule->pan_direction (
-                  -Value.get_mouse_delta_x (), -Value.get_mouse_delta_y ());
-            }
+            _mapModule->pan_direction (
+               -Value.get_mouse_delta_x (), -Value.get_mouse_delta_y ());
          }
       }
       else if (Value.get_scroll_delta_y ()) {
@@ -254,7 +254,7 @@ dmz::QtPluginCanvasZoomPanMap::on_panUpButton_clicked () {
    
    if (_mapModule) {
 
-      _mapModule->pan_direction (0, -_scrollDelta);
+      _mapModule->pan_direction (0, -(Int32)_scrollDelta);
    }
 }
 
@@ -333,13 +333,6 @@ dmz::QtPluginCanvasZoomPanMap::slot_zoom_changed (int value) {
 
    if (_mapModule && !_ignoreScaleChange) {
 
-      // const Float32 ZoomMin (_mapModule->get_zoom_min_value ());
-      // const Float32 ZoomMax (_mapModule->get_zoom_max_value ());
-      // const Float32 ZoomRange (ZoomMax - ZoomMin);
-      // const Float32 SliderRange (_ui.zoomSlider->maximum () - _ui.zoomSlider->minimum ());
-      // const Float32 SliderValue ((value - ZoomMin) / ZoomRange);
-
-      // _ui.zoomSlider->setValue (SliderValue * SliderRange);
       _ui.zoomSlider->setValue (value);
    }
 }
@@ -371,28 +364,6 @@ dmz::QtPluginCanvasZoomPanMap::eventFilter (QObject *obj, QEvent *event) {
 
    // pass the event on to the parent class
    return QWidget::eventFilter (obj, event);
-}
-
-
-void
-dmz::QtPluginCanvasZoomPanMap::_save_session () {
-
-//   String data;
-
-//   Config session (get_plugin_name ());
-
-//   Config window ("window");
-
-//   session.add_config (window);
-
-//   set_session_config (get_plugin_runtime_context (), session);
-}
-
-
-void
-dmz::QtPluginCanvasZoomPanMap::_load_session () {
-
-//   Config session (get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
 }
 
 

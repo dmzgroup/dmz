@@ -72,9 +72,6 @@ namespace dmz {
 
       protected:
          virtual bool eventFilter (QObject *obj, QEvent *event);
-
-         void _save_session ();
-         void _load_session ();
          void _init (Config &local);
 
          Log _log;

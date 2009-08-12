@@ -72,9 +72,6 @@ dmz::QtModuleMapBasic::update_plugin_state (
    else if (State == PluginStateShutdown) {
 
       use_default_map_adapter ();
-      
-      // if (_baseLayer) { _baseLayer->clearGeometries (); }
-      // if (_geomLayer) { _geomLayer->clearGeometries (); }
    }
 }
 
@@ -130,6 +127,7 @@ dmz::QtModuleMapBasic::source_to_world (
 
    return retVal;
 }
+
 
 dmz::Boolean
 dmz::QtModuleMapBasic::world_to_source (
@@ -204,9 +202,9 @@ dmz::QtModuleMapBasic::set_map_adapter (qmapcontrol::MapAdapter *adapter) {
       
       if (!adapter) { adapter = _defaultAdapter; }
 
-      if (adapter && _map && _mapAdapter) {
+      if (adapter && _map) {
 
-         int zoom = _mapAdapter->adaptedZoom ();
+		  int zoom = _map->currentZoom ();
          _mapAdapter = adapter;
 
          if (_baseLayer) { _baseLayer->setMapAdapter (_mapAdapter); }
@@ -605,106 +603,85 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    qwidget_config_read ("widget", local, this);
 
    _map = new qmapcontrol::MapControl (frameSize (), qmapcontrol::MapControl::None);
-   
-   connect (
-      _map, SIGNAL (mouseEventCoordinate (const QMouseEvent *, const QPointF)),
-      this, SLOT (_mouse_event_coordinate (const QMouseEvent *, const QPointF)));
-   
-   _map->setMouseTracking (true);
 
-   _cacheDir = get_home_directory ();
-   
-   if (is_valid_path (_cacheDir)) {
+   if (_map) {
       
+      connect (
+         _map, SIGNAL (mouseEventCoordinate (const QMouseEvent *, const QPointF)),
+         this, SLOT (_mouse_event_coordinate (const QMouseEvent *, const QPointF)));
+      
+      _map->setMouseTracking (true);
+   
+      _cacheDir = get_home_directory ();
+      
+      if (is_valid_path (_cacheDir)) {
+         
 #if defined (_WIN32)
-      _cacheDir << "/Local Settings/Application Data/";
+         _cacheDir << "/Local Settings/Application Data/";
 #elif defined (__APPLE__) || defined (MACOSX)
-      _cacheDir << "/Library/Caches/";
+         _cacheDir << "/Library/Caches/";
 #else
-      _cacheDir << "/.";
+         _cacheDir << "/.";
 #endif
-
-      _cacheDir << "dmz/QMapControl";
+   
+         _cacheDir << "dmz/QMapControl";
+         _cacheDir = format_path (_cacheDir);
+      }
+      else { _cacheDir = ""; }
       
-      _cacheDir = format_path (_cacheDir);
-   }
-   else {
+      if (config_to_boolean ("map.cache", local, True) && _cacheDir) {
+   
+         _log.info << "Persistent cache: " << _cacheDir << endl;
+         _map->enablePersistentCache (QString (_cacheDir.get_buffer ()));
+      }
       
-      _cacheDir = "";
-   }
+      _map->showScale (config_to_boolean ("map.scale", local, True));
+      _map->showLoading (config_to_boolean ("map.loading", local, True));
    
-   if (config_to_boolean ("map.cache", local, True) && _cacheDir) {
-
-      _log.info << "Persistent cache: " << _cacheDir << endl;
-      _map->enablePersistentCache (QString (_cacheDir.get_buffer ()));
-   }
-   
-   // _map->setMouseMode (qmapcontrol::MapControl::None);
-   
-   _map->showScale (config_to_boolean ("map.scale", local, True));
-   _map->showLoading (config_to_boolean ("map.loading", local, True));
-
-   _zoomMin = config_to_int32 ("zoom.min", local, _zoomMin);
-   _zoomMax = config_to_int32 ("zoom.max", local, _zoomMax);
-   _zoomDefault = config_to_int32 ("zoom.default", local, _zoomDefault);
-   
-   String mapUrl (config_to_string ("tileMapAdapter.url", local, "tile.openstreetmap.org"));
-   String mapPath (config_to_string ("tileMapAdapter.path", local, "/%1/%2/%3.png"));
-   Int32 tileSize (config_to_int32 ("tileMapAdapter.tileSize", local, 256));
-   
-    _defaultAdapter = new qmapcontrol::TileMapAdapter (
-      mapUrl.get_buffer (),
-      mapPath.get_buffer (),
-      tileSize,
-      _zoomMin,
-      _zoomMax);
-
-   // http://172.20.90.188/cgi-bin/tilecache.cgi/?LAYERS=dystopia
-   //    &FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1
-   //    &REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage
-   //    &SRS=EPSG%3A4326
-   //    &BBOX=0.087890625,0.17578125,0.17578125,0.263671875
-   //    &WIDTH=256
-   //    &HEIGHT=256
-
-   // _mapAdapter = new qmapcontrol::WMSMapAdapter (
-   //    "172.20.90.188",
-   //    "/tilecache/tilecache.py/?LAYERS=dystopia&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A4326",
-   //    // "/tilecache/tilecache.py/?LAYERS=osm&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A900913",
-   //    tileSize);
-
-//http://172.20.90.188/tilecache/tilecache.py/?LAYERS=osm&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A900913&BBOX=-15654303.2228,1878517.246,-15028131.0632,2504689.4056&WIDTH=256&HEIGHT=256
-
-//	_defaultAdapter = new qmapcontrol::WMSMapAdapter("www2.demis.nl", "/wms/wms.asp?wms=WorldMap&LAYERS=Countries,Borders,Cities,Rivers,Settlements,Hillshading,Waterbodies,Railroads,Highways,Roads&FORMAT=image/png&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&STYLES=&EXCEPTIONS=application/vnd.ogc.se_inimage&SRS=EPSG:4326&TRANSPARENT=FALSE", 256);
-
-   _baseLayer = new qmapcontrol::MapLayer ("base", _defaultAdapter);
-   _map->addLayer (_baseLayer);
-
-   _geomLayer = new qmapcontrol::GeometryLayer ("geom", _defaultAdapter);
-   _map->addLayer (_geomLayer);
-
-   _mapAdapter = _defaultAdapter;
+      _zoomMin = config_to_int32 ("zoom.min", local, _zoomMin);
+      _zoomMax = config_to_int32 ("zoom.max", local, _zoomMax);
+      _zoomDefault = config_to_int32 ("zoom.default", local, _zoomDefault);
       
-   QVBoxLayout *layout (new QVBoxLayout ());
-   layout->addWidget (_map);
-   layout->setMargin (0);
+      String mapUrl (config_to_string ("tileMapAdapter.url", local, "tile.openstreetmap.org"));
+      String mapPath (config_to_string ("tileMapAdapter.path", local, "/%1/%2/%3.png"));
+      Int32 tileSize (config_to_int32 ("tileMapAdapter.tileSize", local, 256));
+      
+       _defaultAdapter = new qmapcontrol::TileMapAdapter (
+         mapUrl.get_buffer (),
+         mapPath.get_buffer (),
+         tileSize,
+         _zoomMin,
+         _zoomMax);
    
-   setLayout (layout);
-   setMouseTracking (true);
+      _baseLayer = new qmapcontrol::MapLayer ("base", _defaultAdapter);
+      _map->addLayer (_baseLayer);
    
-   _inputModuleName = config_to_string ("module.input.name", local);
-
-   _keyEvent.set_source_handle (get_plugin_handle ());
-   _mouseEvent.set_source_handle (get_plugin_handle ());
+      _geomLayer = new qmapcontrol::GeometryLayer ("geom", _defaultAdapter);
+      _map->addLayer (_geomLayer);
    
-   set_zoom_min_value (_zoomMin);
-   set_zoom_max_value (_zoomMax);
-   set_zoom (_zoomDefault);
+      _mapAdapter = _defaultAdapter;
+         
+      QVBoxLayout *layout (new QVBoxLayout ());
+      layout->addWidget (_map);
+      layout->setMargin (0);
+      
+      setLayout (layout);
+      setMouseTracking (true);
+      
+      _inputModuleName = config_to_string ("module.input.name", local);
    
-   Float64 latitude (config_to_float64 ("startCoordinate.latitude", local, 0.0));
-   Float64 longitude (config_to_float64 ("startCoordinate.longitude", local, 0.0));
-   
-   _map->setView (QPointF (longitude, latitude));
+      _keyEvent.set_source_handle (get_plugin_handle ());
+      _mouseEvent.set_source_handle (get_plugin_handle ());
+      
+      set_zoom_min_value (_zoomMin);
+      set_zoom_max_value (_zoomMax);
+      set_zoom (_zoomDefault);
+      
+      Float64 latitude (config_to_float64 ("startCoordinate.latitude", local, 0.0));
+      Float64 longitude (config_to_float64 ("startCoordinate.longitude", local, 0.0));
+      
+      _map->setView (QPointF (longitude, latitude));
+   }
 }
 
 

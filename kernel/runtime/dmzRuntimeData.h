@@ -2,6 +2,7 @@
 #define DMZ_RUNTIME_DATA_DOT_H
 
 #include <dmzKernelExport.h>
+#include <dmzSystemStream.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesBooleanOperator.h>
 #include <dmzTypesString.h>

@@ -1,9 +1,9 @@
 #include <dmzObjectCalc.h>
 #include "dmzObjectCalcPrivate.h"
 #include <dmzObjectModule.h>
-#include <dmzRuntimeLog.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeLog.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzTypesHandleContainer.h>
 
@@ -155,6 +155,39 @@ dmz::ObjectAttrLinkCount::calculate (const Handle ObjectHandle) {
 }
 
 
+dmz::ObjectAttrObjectTypeCount::ObjectAttrObjectTypeCount (
+      const ObjectTypeSet &Set) :
+      _Set (Set),
+      _objMod (0) {;}
+
+
+dmz::ObjectAttrObjectTypeCount::~ObjectAttrObjectTypeCount () {;}
+
+
+void
+dmz::ObjectAttrObjectTypeCount::store_object_module (ObjectModule *module) {
+
+   _objMod = module;
+}
+
+
+dmz::Float64
+dmz::ObjectAttrObjectTypeCount::calculate (const Handle ObjectHandle) {
+
+   dmz::Float64 result (0.0);
+
+   if (_objMod) {
+
+      if (_Set.contains_type (_objMod->lookup_object_type (ObjectHandle))) {
+
+         result = 1.0;
+      }
+   }
+
+   return result;
+}
+
+
 dmz::ObjectAttrConst::ObjectAttrConst (const Float64 ConstValue) :
       _ConstValue (ConstValue) {;}
 
@@ -190,16 +223,20 @@ local_string_to_operator (const String TypeName) {
 
 
 static ObjectAttributeCalculator *
-local_build_calc_tree (Config &source, Definitions &defs, Log *log) {
+local_build_calc_tree (
+      Config &source,
+      Definitions &defs,
+      RuntimeContext *context,
+      Log *log) {
 
    ObjectAttributeCalculator *result (0);
 
-   const String Type (source.get_name ());
+   const String Type = config_to_string ("type", source);
 
    if (Type == "operator") {
 
       const ObjectAttrOperatorEnum Op (
-         local_string_to_operator (config_to_string ("type", source)));
+         local_string_to_operator (config_to_string ("mode", source)));
 
       ObjectAttrOperator *opResult (new ObjectAttrOperator (Op));
 
@@ -210,7 +247,8 @@ local_build_calc_tree (Config &source, Definitions &defs, Log *log) {
 
          while (source.get_next_config (it, arg)) {
 
-            ObjectAttributeCalculator *calc (local_build_calc_tree (arg, defs, log));
+            ObjectAttributeCalculator *calc (
+               local_build_calc_tree (arg, defs, context, log));
 
             if (calc) { opResult->add_calculator (*calc); }
          }
@@ -253,6 +291,22 @@ local_build_calc_tree (Config &source, Definitions &defs, Log *log) {
          if (config_to_boolean ("sub", source, False)) { mask |= SubMask; }
 
          result = new ObjectAttrLinkCount (AttrHandle, mask);
+      }
+      else if (log) {
+
+         log->error << "Object Attribute Calculator of type Link Count missing "
+            << "attribute name." << endl;
+      }
+   }
+   else if (Type == "object-type") {
+
+      const String AttrName (config_to_string ("name", source));
+
+      if (AttrName) {
+
+         const ObjectTypeSet Set = config_to_object_type_set (source, context);
+
+         result = new ObjectAttrObjectTypeCount (Set);
       }
       else if (log) {
 
@@ -313,17 +367,13 @@ dmz::config_to_object_attribute_calculator (
    ObjectAttributeCalculator *result (0);
 
    Config root;
+   String realName ("calculator");
 
-   if (!Name) { root = Source; }
-   else {
+   if (Name) { realName = Name + "." + realName; }
 
-      Config config;
-      Source.lookup_config (Name, config);
-      ConfigIterator it;
-      config.get_first_config (it, root);
-   }
+   Source.lookup_config (realName, root);
 
-   if (!root.is_empty ()) { result = local_build_calc_tree (root, defs, log); }
+   if (!root.is_empty ()) { result = local_build_calc_tree (root, defs, context, log); }
    else if (log) { log->error << "Calculator Config object is empty." << endl; }
 
    return result;

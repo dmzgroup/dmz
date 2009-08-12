@@ -96,7 +96,6 @@ dmz::QtPluginCanvasLink::QtPluginCanvasLink (
       _appState (Info),
       _defs (Info, &_log),
       _positionAttrHandle (0),
-      _linkAttrObjectType (),
       _canvasModule (0),
       _canvasModuleName (),
       _linkAttrTable (),
@@ -177,11 +176,6 @@ dmz::QtPluginCanvasLink::link_objects (
 
                _canvasModule->add_item (LinkHandle, os->item);
 
-               if (_appState.is_mode_normal ()) {
-
-                  _create_link_attribute_object (LinkHandle);
-               }
-
                QGraphicsItem *superParent = superItem->parentItem ();
 
                if (superParent) { os->item->setParentItem (superParent); }
@@ -211,47 +205,7 @@ dmz::QtPluginCanvasLink::unlink_objects (
 
       if (_canvasModule) { _canvasModule->remove_item (LinkHandle); }
 
-      ObjectModule *objMod (get_object_module ());
-
-      if (objMod && os->linkAttrObject) {
-
-         objMod->destroy_object (os->linkAttrObject);
-         os->linkAttrObject = 0;
-      }
-
       delete os; os = 0;
-   }
-}
-
-
-void
-dmz::QtPluginCanvasLink::update_link_attribute_object (
-      const Handle LinkHandle,
-      const Handle AttributeHandle,
-      const UUID &SuperIdentity,
-      const Handle SuperHandle,
-      const UUID &SubIdentity,
-      const Handle SubHandle,
-      const UUID &AttributeIdentity,
-      const Handle AttributeObjectHandle,
-      const UUID &PrevAttributeIdentity,
-      const Handle PrevAttributeObjectHandle) {
-
-   ObjectStruct *os (_objectTable.lookup (LinkHandle));
-
-   if (os && (os->AttrHandle == AttributeHandle)) {
-
-      ObjectModule *objMod (get_object_module ());
-
-      if (objMod && os->linkAttrObject) {
-
-         if (os->linkAttrObject == PrevAttributeObjectHandle) {
-
-            objMod->destroy_object (os->linkAttrObject);
-            os->linkAttrObject = AttributeObjectHandle;
-         }
-      }
-      else { os->linkAttrObject = AttributeObjectHandle; }
    }
 }
 
@@ -277,32 +231,6 @@ dmz::QtPluginCanvasLink::update_object_position (
 
             item->update (ObjectHandle, Value);
             item = node->edgeTable.get_next (it);
-         }
-      }
-   }
-}
-
-
-void
-dmz::QtPluginCanvasLink::_create_link_attribute_object (const Handle LinkHandle) {
-
-   ObjectModule *objMod (get_object_module ());
-   ObjectStruct *os (_objectTable.lookup (LinkHandle));
-
-   if (objMod && os) {
-
-      Handle attrObj (objMod->lookup_link_attribute_object (LinkHandle));
-
-      if (!attrObj) {
-
-         attrObj = objMod->create_object (_linkAttrObjectType, ObjectLocal);
-
-         if (attrObj) {
-
-            objMod->activate_object (attrObj);
-            objMod->store_link_attribute_object (LinkHandle, attrObj);
-
-            os->linkAttrObject = attrObj;
          }
       }
    }
@@ -377,15 +305,9 @@ dmz::QtPluginCanvasLink::_init (Config &local) {
    Handle attrHandle = activate_object_attribute (
      ObjectAttributeNodeLinkName,
      ObjectLinkMask |
-     ObjectUnlinkMask |
-     ObjectLinkAttributeMask);
+     ObjectUnlinkMask);
 
   _linkAttrTable.store (attrHandle, this);
-
-  const String TypeName (
-     config_to_string ("linkAttributeObjectType.name", local, "na_link_attribute"));
-
-  _defs.lookup_object_type (TypeName, _linkAttrObjectType);
 }
 
 

@@ -75,18 +75,6 @@ namespace dmz {
             const UUID &SubIdentity,
             const Handle SubHandle);
 
-         virtual void update_link_attribute_object (
-            const Handle LinkHandle,
-            const Handle AttributeHandle,
-            const UUID &SuperIdentity,
-            const Handle SuperHandle,
-            const UUID &SubIdentity,
-            const Handle SubHandle,
-            const UUID &AttributeIdentity,
-            const Handle AttributeObjectHandle,
-            const UUID &PrevAttributeIdentity,
-            const Handle PrevAttributeObjectHandle);
-
          virtual void update_object_position (
             const UUID &Identity,
             const Handle ObjectHandle,
@@ -101,7 +89,6 @@ namespace dmz {
             const Handle AttrHandle;
             const Handle SuperHandle;
             const Handle SubHandle;
-            Handle linkAttrObject;
             QtCanvasLink *item;
 
             ObjectStruct (
@@ -113,7 +100,6 @@ namespace dmz {
                AttrHandle (TheAttrHandle),
                SuperHandle (TheSuperHandle),
                SubHandle (TheSubHandle),
-               linkAttrObject (0),
                item (new QtCanvasLink (ObjHandle, SuperHandle, SubHandle)) {;}
 
             ~ObjectStruct () { if (item) { delete item; item = 0; } }
@@ -141,7 +127,6 @@ namespace dmz {
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
          Handle _positionAttrHandle;
-         ObjectType _linkAttrObjectType;
          HashTableHandle _linkAttrTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
          HashTableHandleTemplate<NodeStruct> _nodeTable;

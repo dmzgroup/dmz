@@ -532,8 +532,6 @@ object_lookup_linked_objects (lua_State *L) {
 }
 
 
-
-
 static int
 object_unlink (lua_State *L) {
 

@@ -57,6 +57,30 @@ get_input_struct (lua_State *L) {
   return result;
 }
 
+
+static int
+input_channel (lua_State *L) {
+
+   int result (0);
+
+   Handle *channelPtr (lua_check_handle (L, 1));
+   InputModule *module = get_input_module (L);
+
+   if (channelPtr && module) {
+
+      if (lua_isnone (L, 2) == 0) {
+
+         module->set_channel_state (*channelPtr, lua_toboolean (L, 2) == 1);
+      }
+
+      lua_pushboolean (L, module->get_channel_state (*channelPtr) ? 1 : 0);
+      result = 1;
+   }
+
+   return result;
+}
+
+
 static int
 input_get_key_value (lua_State *L) {
 
@@ -186,6 +210,7 @@ input_is_button_pressed (lua_State *L) {
 
 
 static const luaL_Reg arrayFunc[] = {
+   {"channel", input_channel},
    {"get_key_value", input_get_key_value},
    {"get_key_string", input_get_key_string},
    {"has_buttons_changed", input_has_buttons_changed},

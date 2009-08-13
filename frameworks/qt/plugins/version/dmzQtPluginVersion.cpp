@@ -67,10 +67,15 @@ dmz::QtPluginVersion::discover_plugin (
 #endif
             if (appMenu) { appMenu->addAction (_aboutAction); }
          }
+
+         _version.setParent (window->get_widget ());
       } 
    }
    else if (Mode == PluginDiscoverRemove) {
 
+      QtModuleMainWindow *window (QtModuleMainWindow::cast (PluginPtr));
+
+      if (window) { _version.setParent (0); }
    }
 }
 

@@ -105,6 +105,7 @@ dmz::QtPluginCanvasBackground::discover_plugin (
 void
 dmz::QtPluginCanvasBackground::create_archive (
       const Handle ArchiveHandle,
+      const Int32 Version,
       Config &local,
       Config &global) {
 
@@ -118,6 +119,7 @@ dmz::QtPluginCanvasBackground::create_archive (
 void
 dmz::QtPluginCanvasBackground::process_archive (
       const Handle ArchiveHandle,
+      const Int32 Version,
       Config &local,
       Config &global) {
 

@@ -38,23 +38,33 @@ namespace dmz {
             const String &Name,
             ArchiveModule &module);
 
-         virtual void pre_create_archive (const Handle ArchiveHandle) {;}
-
+         virtual void pre_create_archive (
+            const Handle ArchiveHandle,
+            const Int32 Version) {;}
+         
          virtual void create_archive (
             const Handle ArchiveHandle,
+            const Int32 Version,
             Config &local,
             Config &global) {;}
 
-         virtual void post_create_archive (const Handle ArchiveHandle) {;}
+         virtual void post_create_archive (
+            const Handle ArchiveHandle,
+            const Int32 Version) {;}         
 
-         virtual void pre_process_archive (const Handle ArchiveHandle) {;}
-
+         virtual void pre_process_archive (
+            const Handle ArchiveHandle,
+            const Int32 Version) {;}
+         
          virtual void process_archive (
             const Handle ArchiveHandle,
+            const Int32 Version,
             Config &local,
             Config &global) {;}
 
-         virtual void post_process_archive (const Handle ArchiveHandle) {;}
+         virtual void post_process_archive (
+            const Handle ArchiveHandle,
+            const Int32 Version) {;}
 
       protected:
          ArchiveObserverUtil (const PluginInfo &Info, const Config &Init);

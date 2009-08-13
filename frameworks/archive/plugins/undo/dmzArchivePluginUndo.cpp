@@ -36,6 +36,7 @@ dmz::ArchivePluginUndo::~ArchivePluginUndo () {
 void
 dmz::ArchivePluginUndo::create_archive (
       const Handle ArchiveHandle,
+      const Int32 Version,
       Config &local,
       Config &global) {
 
@@ -49,6 +50,7 @@ dmz::ArchivePluginUndo::create_archive (
 void
 dmz::ArchivePluginUndo::process_archive (
       const Handle ArchiveHandle,
+      const Int32 Version,
       Config &local,
       Config &global) {
 

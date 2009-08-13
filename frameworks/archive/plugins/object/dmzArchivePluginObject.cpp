@@ -160,6 +160,7 @@ dmz::ArchivePluginObject::get_archive_scope (const Handle ArchiveHandle) {
 void
 dmz::ArchivePluginObject::create_archive (
       const Handle ArchiveHandle,
+      const Int32 Version,
       Config &local,
       Config &global) {
 
@@ -197,6 +198,7 @@ dmz::ArchivePluginObject::create_archive (
 void
 dmz::ArchivePluginObject::process_archive (
       const Handle ArchiveHandle,
+      const Int32 Version,
       Config &local,
       Config &global) {
 

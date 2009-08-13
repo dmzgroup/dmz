@@ -1,6 +1,9 @@
 #include "dmzArchiveModuleBasic.h"
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+
 /*!
 
 \class dmz::ArchiveModuleBasic
@@ -19,9 +22,10 @@ dmz::ArchiveModuleBasic::ArchiveModuleBasic (
       Config &global) :
       Plugin (Info),
       ArchiveModule (Info),
+      _log (Info),
+      _defs (Info, &_log),
       _global (global),
-      _appState (Info),
-      _log (Info) {
+      _appState (Info) {
 
    _init (local);
 }
@@ -66,7 +70,7 @@ dmz::ArchiveModuleBasic::register_archive_observer (
 
       if (!as) {
 
-         as = new ArchiveStruct;
+         as = new ArchiveStruct (_defs.lookup_named_handle_name (ArchiveHandle), -1);
 
          if (as && !_archiveTable.store (ArchiveHandle, as)) { delete as; as = 0; }
       }
@@ -110,13 +114,26 @@ dmz::ArchiveModuleBasic::create_archive (const Handle ArchiveHandle) {
 
    if (as) {
 
+      if (as->Version >= 0) {
+
+         Config version ("archive-version");
+
+         if (as->Name != ArchiveDefaultName) {
+
+            version.store_attribute ("name", as->Name);
+         }
+
+         version.store_attribute ("version", String::number (as->Version));
+         result.add_config (version);
+      }
+
       HashTableHandleIterator it;
 
       ArchiveObserver *obs (as->table.get_first (it));
 
       while (obs) {
 
-         obs->pre_create_archive (ArchiveHandle);
+         obs->pre_create_archive (ArchiveHandle, as->Version);
          obs = as->table.get_next (it);
       }
 
@@ -128,7 +145,7 @@ dmz::ArchiveModuleBasic::create_archive (const Handle ArchiveHandle) {
          String scopeName;
          if (!sc.get_first (scopeName)) { scopeName = obs->get_archive_observer_name (); }
          Config local (scopeName);
-         obs->create_archive (ArchiveHandle, local, result);
+         obs->create_archive (ArchiveHandle, as->Version, local, result);
          if (!local.is_empty ()) { result.add_config (local); }
          obs = as->table.get_next (it);
       }
@@ -137,7 +154,7 @@ dmz::ArchiveModuleBasic::create_archive (const Handle ArchiveHandle) {
 
       while (obs) {
 
-         obs->post_create_archive (ArchiveHandle);
+         obs->post_create_archive (ArchiveHandle, as->Version);
          obs = as->table.get_next (it);
       }
    }
@@ -158,13 +175,21 @@ dmz::ArchiveModuleBasic::process_archive (const Handle ArchiveHandle, Config &ar
 
    if (as) {
 
+      const Int32 Version = config_to_int32 ("archive-version.version", archive, -1);
+
+      if (Version > as->Version) {
+
+         _log.warn << "Archive version number: " << Version
+            << " is greater than the supported version number: " << as->Version << endl;
+      }
+
       HashTableHandleIterator it;
 
       ArchiveObserver *obs (as->table.get_first (it));
 
       while (obs) {
 
-         obs->pre_process_archive (ArchiveHandle);
+         obs->pre_process_archive (ArchiveHandle, Version);
          obs = as->table.get_next (it);
       }
 
@@ -183,7 +208,7 @@ dmz::ArchiveModuleBasic::process_archive (const Handle ArchiveHandle, Config &ar
             found = sc.get_next (scopeName);
          }
 
-         obs->process_archive (ArchiveHandle, local, archive);
+         obs->process_archive (ArchiveHandle, Version, local, archive);
          obs = as->table.get_next (it);
       }
 
@@ -191,7 +216,7 @@ dmz::ArchiveModuleBasic::process_archive (const Handle ArchiveHandle, Config &ar
 
       while (obs) {
 
-         obs->post_process_archive (ArchiveHandle);
+         obs->post_process_archive (ArchiveHandle, Version);
          obs = as->table.get_next (it);
       }
    }
@@ -203,6 +228,34 @@ dmz::ArchiveModuleBasic::process_archive (const Handle ArchiveHandle, Config &ar
 void
 dmz::ArchiveModuleBasic::_init (Config &local) {
 
+   RuntimeContext *context (0);
+
+   Config list;
+
+   if (local.lookup_all_config ("archive", list)) {
+
+      ConfigIterator it;
+      Config archive;
+
+      while (list.get_next_config (it, archive)) {
+
+         const String ArchiveName =
+            config_to_string ("name", archive, ArchiveDefaultName);
+
+         const Int32 Version = config_to_int32 ("version", archive, -1);
+
+         if (ArchiveName) {
+
+            ArchiveStruct *as = new ArchiveStruct (ArchiveName, Version);
+
+            if (as &&
+                  !_archiveTable.store (_defs.create_named_handle (ArchiveName), as)) {
+
+               delete as; as = 0;
+            }
+         }
+      }
+   }
 }
 //! \endcond
 

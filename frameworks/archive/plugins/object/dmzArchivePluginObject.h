@@ -38,11 +38,13 @@ namespace dmz {
          virtual StringContainer get_archive_scope (const Handle ArchiveHandle);
          virtual void create_archive (
             const Handle ArchiveHandle,
+            const Int32 Version,
             Config &local,
             Config &global);
 
          virtual void process_archive (
             const Handle ArchiveHandle,
+            const Int32 Version,
             Config &local,
             Config &global);
 

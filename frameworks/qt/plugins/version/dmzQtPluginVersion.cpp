@@ -10,8 +10,9 @@ dmz::QtPluginVersion::QtPluginVersion (
       Config &local,
       Config &global) :
       Plugin (Info),
+      _global (global),
       _log (Info),
-      _version (global),
+      _version (0),
       _aboutAction (0) {
 
    _init (local);
@@ -20,6 +21,7 @@ dmz::QtPluginVersion::QtPluginVersion (
 
 dmz::QtPluginVersion::~QtPluginVersion () {
 
+   if (_version) { delete _version; _version = 0; }
 }
 
 
@@ -55,6 +57,8 @@ dmz::QtPluginVersion::discover_plugin (
 
       if (window && _aboutAction) {
 
+         _version = new QtVersion (window->get_widget (), _global);
+
          QMenuBar *menu = window->get_menu_bar ();
 
          if (menu) {
@@ -68,20 +72,19 @@ dmz::QtPluginVersion::discover_plugin (
             if (appMenu) { appMenu->addAction (_aboutAction); }
          }
 
-         _version.setParent (window->get_widget ());
       } 
    }
    else if (Mode == PluginDiscoverRemove) {
 
       QtModuleMainWindow *window (QtModuleMainWindow::cast (PluginPtr));
 
-      if (window) { _version.setParent (0); }
+      if (window) { _version->setParent (0); }
    }
 }
 
 
 void
-dmz::QtPluginVersion::_slot_about () { _version.exec (); }
+dmz::QtPluginVersion::_slot_about () { _version->exec (); }
 
 
 void

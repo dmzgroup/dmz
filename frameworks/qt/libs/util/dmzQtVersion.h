@@ -15,7 +15,7 @@ namespace dmz {
       Q_OBJECT
 
       public:
-         QtVersion (Config &local, const String &Prefix = "dmz.version");
+         QtVersion (QWidget *parent, Config &local, const String &Prefix = "dmz.version");
          virtual ~QtVersion ();
 
       protected:

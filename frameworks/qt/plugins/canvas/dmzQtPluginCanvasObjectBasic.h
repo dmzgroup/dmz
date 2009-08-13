@@ -46,6 +46,7 @@ namespace dmz {
          void set_text_color (const QColor &Color);
          void set_outline_color (const QColor &Color);
          void set_background_color (const QColor &Color);
+         void set_max_length (const int MaxLength);
          void enable_background (const Boolean Value);
 
          // QGraphicsItem Interface
@@ -67,6 +68,7 @@ namespace dmz {
             QColor _textColor;
             QColor _outlineColor;
             QColor _backgroundColor;
+            int _maxLength;
    };
 
 

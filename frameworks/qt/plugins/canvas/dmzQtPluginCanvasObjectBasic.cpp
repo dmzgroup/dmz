@@ -51,7 +51,8 @@ dmz::QtCanvasObjectText::QtCanvasObjectText (QGraphicsItem *parent) :
          _text (),
          _textColor (Qt::black),
          _outlineColor (Qt::black),
-         _backgroundColor (Qt::white) {
+         _backgroundColor (Qt::white),
+         _maxLength (0) {
 
 //   setFlag (ItemIsSelectable, true);
 }
@@ -74,6 +75,13 @@ dmz::QtCanvasObjectText::set_text (const QString &Text) {
 
    prepareGeometryChange ();
    _text = Text;
+
+   if ((_maxLength > 0) && (_text.length () > _maxLength)) {
+     
+      _text.resize (_maxLength);
+      _text += QString (3, '.'); 
+   }
+
    update ();
 }
 
@@ -100,6 +108,10 @@ dmz::QtCanvasObjectText::set_background_color (const QColor &Color) {
    _backgroundColor = Color;
    update ();
 }
+
+
+void
+dmz::QtCanvasObjectText::set_max_length (const int MaxLength) { _maxLength = MaxLength; }
 
 
 void
@@ -841,6 +853,10 @@ dmz::QtPluginCanvasObjectBasic::_create_text_item (
          if (alignmentName == "center") {  item->set_alignment (Qt::AlignCenter); }
          else if (alignmentName == "right") {  item->set_alignment (Qt::AlignRight); }
          else {  item->set_alignment (Qt::AlignLeft); }
+      }
+      else if (DataName == "max-length") {
+
+         item->set_max_length (config_to_int32 ("value", cd));
       }
       else if (DataName == "translate") {
 

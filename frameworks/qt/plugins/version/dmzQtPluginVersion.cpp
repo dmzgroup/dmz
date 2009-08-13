@@ -81,7 +81,7 @@ dmz::QtPluginVersion::discover_plugin (
 
 
 void
-dmz::QtPluginVersion::_slot_about () { _version.show (); }
+dmz::QtPluginVersion::_slot_about () { _version.exec (); }
 
 
 void

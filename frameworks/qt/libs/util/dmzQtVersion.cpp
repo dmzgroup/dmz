@@ -17,7 +17,7 @@ struct dmz::QtVersion::State {
 };
 
 dmz::QtVersion::QtVersion (Config &local, const String &Prefix) :
-      QWidget (0, Qt::Dialog),
+      QDialog (0),
       _state (*(new State (local, Prefix))) {
 
    _state.ui.setupUi (this);

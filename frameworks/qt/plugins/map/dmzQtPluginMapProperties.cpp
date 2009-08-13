@@ -119,9 +119,9 @@ dmz::QtPluginMapProperties::discover_plugin (
       if (_mapModule && (_mapModule == QtModuleMap::cast (PluginPtr))) {
 
          if (_mapAdapter) {
-
-            delete _mapAdapter;
-            _mapAdapter = 0;
+          
+             delete _mapAdapter;
+             _mapAdapter = 0;
          }
          
          _mapModule = 0;
@@ -447,7 +447,7 @@ dmz::QtPluginMapProperties::_update_adapter (const Config &Adapter) {
          Int32 minZoom = config_to_int32 ("minZoom", Adapter);
          Int32 maxZoom = config_to_int32 ("maxZoom", Adapter);
       
-         _mapAdapter = _mapAdapter = new qmapcontrol::TileMapAdapter (
+         _mapAdapter = new qmapcontrol::TileMapAdapter (
             server.get_buffer (), path.get_buffer (), tileSize, minZoom, maxZoom);
       }
       else if (type == "wms") {
@@ -471,19 +471,16 @@ dmz::QtPluginMapProperties::_update_adapter (const Config &Adapter) {
          
          _log.debug << "WMSMapAdapter: " << qPrintable (path) << endl;
                        
-         _mapAdapter = _mapAdapter = new qmapcontrol::WMSMapAdapter (
+         _mapAdapter = new qmapcontrol::WMSMapAdapter (
             url.host (), path, tileSize); 
       }
       
-      if (_mapAdapter) {
-         
-         _mapModule->set_map_adapter (_mapAdapter);
+      _mapModule->set_map_adapter (_mapAdapter);
       
-         if (oldAdapter) {
+      if (oldAdapter) {
          
-            delete oldAdapter;
-            oldAdapter = 0;
-         }
+         delete oldAdapter;
+         oldAdapter = 0;
       }
    }
 }

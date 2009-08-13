@@ -22,6 +22,7 @@ dmz::QtModuleMainWindowBasic::DockWidgetStruct::show (MainWindowStruct &window) 
 
    if (widget && window.main && !dock) {
 
+      widget->adjustSize ();
       dock = new QDockWidget (title ? title.get_buffer () : "");
       QLayout *layout (dock->layout ());
       dock->setObjectName (name.get_buffer ());

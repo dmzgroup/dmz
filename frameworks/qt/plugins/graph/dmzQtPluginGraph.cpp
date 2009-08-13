@@ -44,6 +44,9 @@ dmz::QtPluginGraph::~QtPluginGraph () {
    delete []_yLabels; _yLabels = 0;
    _objTable.empty ();
    _barTable.empty ();
+   
+   if (_view) { delete _view; _view = 0; }
+   if (_scene) { delete _scene; _scene = 0; }
 }
 
 

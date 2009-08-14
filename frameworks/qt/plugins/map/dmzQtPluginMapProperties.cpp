@@ -174,8 +174,7 @@ dmz::QtPluginMapProperties::process_archive (
 
    if (is_active_archive_handle (ArchiveHandle)) {
 
-      _ui.mapCheckBox->setChecked (
-         config_to_boolean ("map.on", local, _ui.mapCheckBox->isChecked ()));
+      _ui.mapCheckBox->setChecked (config_to_boolean ("map.on", local, False));
 
       Config adapterConfig;
       if (local.lookup_config ("map-adapter", adapterConfig)) {

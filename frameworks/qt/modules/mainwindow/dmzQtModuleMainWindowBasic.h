@@ -105,16 +105,20 @@ namespace dmz {
             String name;
             QDockWidget *dock;
             QDockWidget::DockWidgetFeatures features;
-            Qt::DockWidgetArea startArea;
-
+            Qt::DockWidgetArea area;
+            Boolean visible;
+            Boolean floating;
+            
             virtual void show (MainWindowStruct &window);
             virtual void hide (MainWindowStruct &window);
             virtual void remove (MainWindowStruct &window);
 
             DockWidgetStruct () :
                   dock (0),
-                  features (QDockWidget::NoDockWidgetFeatures),
-                  startArea (Qt::NoDockWidgetArea) {;}
+                  features (QDockWidget::AllDockWidgetFeatures),
+                  area (Qt::NoDockWidgetArea),
+                  visible (True),
+                  floating (False) {;}
 
             virtual ~DockWidgetStruct () { if (dock) { delete dock; dock = 0; } }
          };

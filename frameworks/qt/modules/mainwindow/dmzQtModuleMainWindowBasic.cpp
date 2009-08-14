@@ -11,11 +11,14 @@
 #include <dmzRuntimeSession.h>
 #include <QtGui/QtGui>
 
+#include <QtCore/QDebug>
+
 namespace {
 
-static const int LocalSessionVersion = 5;
+static const int LocalSessionVersion = 4;
 
 };
+
 
 void
 dmz::QtModuleMainWindowBasic::DockWidgetStruct::show (MainWindowStruct &window) {
@@ -26,18 +29,23 @@ dmz::QtModuleMainWindowBasic::DockWidgetStruct::show (MainWindowStruct &window) 
       dock = new QDockWidget (title ? title.get_buffer () : "");
       QLayout *layout (dock->layout ());
       dock->setObjectName (name.get_buffer ());
-      dock->setAllowedAreas (startArea);
+      dock->setAllowedAreas (area);
       dock->setFeatures (features);
       dock->setWidget (widget);
-      window.main->addDockWidget (startArea, dock);
+      window.main->addDockWidget (area, dock);
       dock->show ();
    }
 
    if (window.main && dock && !dock->parentWidget ()) {
 
-      window.main->addDockWidget (startArea, dock);
+      window.main->addDockWidget (area, dock);
       
-      dock->show ();
+      dock->setFloating (floating);
+      
+      if (visible) {
+         
+         dock->show ();
+      }
    }
 }
 
@@ -46,7 +54,10 @@ void
 dmz::QtModuleMainWindowBasic::DockWidgetStruct::hide (MainWindowStruct &window) {
 
    if (dock && dock->parentWidget ()) {
-
+      
+      floating = dock->isFloating ();
+      visible = dock->isVisible ();
+      
       window.main->removeDockWidget (dock);
       dock->setParent (0);
    }
@@ -117,7 +128,6 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
       _showUnifiedTitleAndToolBar (False) {
 
    setObjectName (get_plugin_name ().get_buffer ());
-//   setAttribute (Qt::WA_AlwaysShowToolTips);
 
    _ui.setupUi (this);
 
@@ -154,10 +164,25 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
    if (State == PluginStateStart) {
 
       _load_session ();
-      setUnifiedTitleAndToolBarOnMac (_showUnifiedTitleAndToolBar);
+//      setUnifiedTitleAndToolBarOnMac (_showUnifiedTitleAndToolBar);
       show ();
       raise ();
       activateWindow ();
+      
+      InputModule* input = get_input_module ();
+      if (input) {
+         
+         HashTableHandleIterator it;
+         ChannelStruct *cs (_channelTable.get_first (it));
+
+         while (cs) {
+
+            cs->count = input->get_channel_state (cs->Channel) ? 1 : 0;
+            cs = _channelTable.get_next (it);
+         }
+         
+         _update ();
+      }
    }
    else if (State == PluginStateStop) {
 
@@ -211,14 +236,17 @@ dmz::QtModuleMainWindowBasic::update_channel_state (
       const UInt32 Channel,
       const Boolean State) {
 
-   ChannelStruct *cs (_channelTable.lookup (Channel));
+   if (isVisible ()) {
 
-   if (cs) {
+      ChannelStruct *cs (_channelTable.lookup (Channel));
 
-      if (State) { cs->count++; }
-      else { cs->count--; }
+      if (cs) {
 
-      _update ();
+         if (State) { cs->count++; }
+         else { cs->count--; }
+
+         _update ();
+      }
    }
 }
 
@@ -412,7 +440,7 @@ dmz::QtModuleMainWindowBasic::_update () {
 
       while (ws) {
          
-         if (cs->count > 0) { ws->show (_windowInfo); } 
+         if (cs->count > 0) { ws->show (_windowInfo); }
          else { ws->hide (_windowInfo); }
 
          ws = cs->widgetTable.get_next (wit);
@@ -451,7 +479,7 @@ dmz::QtModuleMainWindowBasic::_load_session () {
    QByteArray stateData (
       config_to_qbytearray ("state", session, saveState (LocalSessionVersion)));
 
-   restoreState (stateData, LocalSessionVersion);
+//   restoreState (stateData, LocalSessionVersion);
 }
 
 
@@ -476,6 +504,8 @@ dmz::QtModuleMainWindowBasic::_init_widget_group (ChannelStruct &cs, Config &gro
       _log.error << "Unknown widget area: " << AreaName << endl;
    }
 
+   Config allowed;
+//   if (group.lookup_config ("allowd-areas"))
    if (group.lookup_all_config ("widget", widgetList)) {
 
       ConfigIterator it;
@@ -500,7 +530,7 @@ dmz::QtModuleMainWindowBasic::_init_widget_group (ChannelStruct &cs, Config &gro
                DockWidgetStruct *dws = new DockWidgetStruct;
                ws = dws;
 
-               if (dws) { dws->startArea = area; dws->name = WidgetName; }
+               if (dws) { dws->area = area; dws->name = WidgetName; }
             }
 
             if (ws && _widgetTable.store (WidgetName, ws)) {

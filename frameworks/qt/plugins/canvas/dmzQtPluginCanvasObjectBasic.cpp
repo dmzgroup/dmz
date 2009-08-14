@@ -299,7 +299,6 @@ dmz::QtPluginCanvasObjectBasic::create_object (
 
          Mask objState;
          _lookup_object_state (ObjectHandle, objState);
-
          _update_object_state (ObjectHandle, objState, 0);
       }
    }
@@ -461,6 +460,11 @@ dmz::QtPluginCanvasObjectBasic::_create_object (
          os->objType = Type;
 
          os->item = _create_item (*os, parent, ms.itemData);
+
+//         if (!parent->isVisible () && os->item) {
+//
+//            os->item->hide ();
+//         }
 
          _process_item_text (*os, ms.textData);
          _process_item_switch (*os, ms.switchData);

@@ -29,23 +29,20 @@ dmz::QtModuleMainWindowBasic::DockWidgetStruct::show (MainWindowStruct &window) 
       dock = new QDockWidget (title ? title.get_buffer () : "");
       QLayout *layout (dock->layout ());
       dock->setObjectName (name.get_buffer ());
-      dock->setAllowedAreas (area);
+      dock->setAllowedAreas (allowedAreas);
       dock->setFeatures (features);
       dock->setWidget (widget);
       window.main->addDockWidget (area, dock);
-      dock->show ();
+      dock->setFloating (floating);
+      if (visible) { dock->show (); }
+      else { dock->hide (); }
    }
 
    if (window.main && dock && !dock->parentWidget ()) {
 
       window.main->addDockWidget (area, dock);
-      
       dock->setFloating (floating);
-      
-      if (visible) {
-         
-         dock->show ();
-      }
+      if (visible) { dock->show (); }
    }
 }
 
@@ -57,7 +54,7 @@ dmz::QtModuleMainWindowBasic::DockWidgetStruct::hide (MainWindowStruct &window) 
       
       floating = dock->isFloating ();
       visible = dock->isVisible ();
-      
+      area = window.main->dockWidgetArea (dock);
       window.main->removeDockWidget (dock);
       dock->setParent (0);
    }
@@ -124,8 +121,7 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
       _exit (get_plugin_runtime_context ()),
       _log (Info),
       _fileExitAction (0),
-      _fileMenu (0),
-      _showUnifiedTitleAndToolBar (False) {
+      _fileMenu (0) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
@@ -164,7 +160,6 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
    if (State == PluginStateStart) {
 
       _load_session ();
-//      setUnifiedTitleAndToolBarOnMac (_showUnifiedTitleAndToolBar);
       show ();
       raise ();
       activateWindow ();
@@ -418,7 +413,7 @@ dmz::QtModuleMainWindowBasic::_update () {
    ChannelStruct *cs (_channelTable.get_first (it));
 
    while (cs) {
-
+      
       foreach (ToolBarStruct *tbs, cs->toolbar) {
 
          if (cs->count > 0) {
@@ -479,7 +474,7 @@ dmz::QtModuleMainWindowBasic::_load_session () {
    QByteArray stateData (
       config_to_qbytearray ("state", session, saveState (LocalSessionVersion)));
 
-//   restoreState (stateData, LocalSessionVersion);
+   restoreState (stateData, LocalSessionVersion);
 }
 
 
@@ -503,9 +498,7 @@ dmz::QtModuleMainWindowBasic::_init_widget_group (ChannelStruct &cs, Config &gro
 
       _log.error << "Unknown widget area: " << AreaName << endl;
    }
-
-   Config allowed;
-//   if (group.lookup_config ("allowd-areas"))
+   
    if (group.lookup_all_config ("widget", widgetList)) {
 
       ConfigIterator it;
@@ -530,7 +523,14 @@ dmz::QtModuleMainWindowBasic::_init_widget_group (ChannelStruct &cs, Config &gro
                DockWidgetStruct *dws = new DockWidgetStruct;
                ws = dws;
 
-               if (dws) { dws->area = area; dws->name = WidgetName; }
+               if (dws) {
+                  
+                  dws->area = area;
+                  dws->allowedAreas = config_to_dock_widget_areas ("allowed-areas", widget, area);
+                  dws->visible = config_to_boolean ("visible", widget, True);
+                  dws->floating = config_to_boolean ("floating", widget);
+                  dws->name = WidgetName;
+               }
             }
 
             if (ws && _widgetTable.store (WidgetName, ws)) {
@@ -596,6 +596,7 @@ dmz::QtModuleMainWindowBasic::_init_input_channels (Config &local) {
    }
 }
 
+
 void
 dmz::QtModuleMainWindowBasic::_init (Config &local) {
 
@@ -619,15 +620,11 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
 
    _init_input_channels (local);
 
-   _showUnifiedTitleAndToolBar = config_to_boolean (
+   setUnifiedTitleAndToolBarOnMac (config_to_boolean (
       "showUnifiedTitleAndToolBar.value",
-      local, _showUnifiedTitleAndToolBar);
+      local, False));
 
    set_qwidget_stylesheet ("stylesheet", local, this);
-
-   if (config_to_boolean ("hide.value", local, False)) { hide (); }
-   
-//   setCorner (Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
    setCorner (
       Qt::TopRightCorner,

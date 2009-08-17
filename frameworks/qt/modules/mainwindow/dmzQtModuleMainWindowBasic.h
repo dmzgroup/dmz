@@ -106,6 +106,7 @@ namespace dmz {
             QDockWidget *dock;
             QDockWidget::DockWidgetFeatures features;
             Qt::DockWidgetArea area;
+            Qt::DockWidgetAreas allowedAreas;
             Boolean visible;
             Boolean floating;
             
@@ -117,6 +118,7 @@ namespace dmz {
                   dock (0),
                   features (QDockWidget::AllDockWidgetFeatures),
                   area (Qt::NoDockWidgetArea),
+                  allowedAreas (Qt::NoDockWidgetArea),
                   visible (True),
                   floating (False) {;}
 
@@ -176,7 +178,6 @@ namespace dmz {
          QString _windowName;
          QAction *_fileExitAction;
          QMenu *_fileMenu;
-         Boolean _showUnifiedTitleAndToolBar;
          HashTableStringTemplate<WidgetStruct> _widgetTable;
          HashTableHandleTemplate<ChannelStruct> _channelTable;
          HashTableStringTemplate<StringContainer> _tabTable;

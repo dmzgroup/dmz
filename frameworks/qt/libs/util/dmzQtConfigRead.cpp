@@ -245,6 +245,40 @@ dmz::config_to_qbrush (
 }
 
 
+Qt::DockWidgetAreas
+dmz::config_to_dock_widget_areas (
+      const String &Name,
+      const Config &Source,
+      const Qt::DockWidgetAreas DefaultValue) {
+
+   Qt::DockWidgetAreas result (DefaultValue);
+   Config areas;
+
+   if (Name) { Source.lookup_config (Name, areas); }
+   else { areas = Source; }
+
+#if 0
+   <allowed-areas all="true"/>
+   <allowed-areas none="true"/>
+   <allowed-areas left="true" right="true" top="true" bottom="true"/>
+#endif
+
+   ConfigIterator it;
+   
+   if (config_to_boolean ("none", areas)) { result = Qt::NoDockWidgetArea; }
+   else if (config_to_boolean ("all", areas)) { result = Qt::AllDockWidgetAreas; }
+   else {
+      
+      if (config_to_boolean ("left", areas)) { result |= Qt::LeftDockWidgetArea; }
+      if (config_to_boolean ("right", areas)) { result |= Qt::RightDockWidgetArea; }
+      if (config_to_boolean ("top", areas)) { result |= Qt::TopDockWidgetArea; }
+      if (config_to_boolean ("bottom", areas)) { result |= Qt::BottomDockWidgetArea; }
+   }
+
+   return result;
+}
+
+
 void
 dmz::qicon_config_read (const String &Name, const Config &Source, QIcon *icon) {
 
@@ -646,3 +680,62 @@ dmz::qlineedit_config_read (
    }
 }
 
+void
+dmz::qmainwindow_config_read (
+   const String &Name,
+   const Config &Source,
+   QMainWindow *mainWindow) {
+
+   if (mainWindow) {
+
+      Config cd;
+
+      if (Name) { Source.lookup_config (Name, cd); }
+      else { cd = Source; }
+
+      QString windowName =
+         config_to_string ("window.title", cd, "DMZ Application").get_buffer ();
+
+      if (!windowName.isEmpty ()) { mainWindow->setWindowTitle (windowName); }
+
+      String iconFile (config_to_string ("window.icon", cd, ":/images/windowIcon.png"));
+
+      if (iconFile) {
+
+         QFileInfo fi (iconFile.get_buffer ());
+
+         if (fi.exists ()) {
+
+            mainWindow->setWindowIcon (QIcon (fi.absoluteFilePath ()));
+//            _log.info << "Window Icon: " << iconFile << endl;
+         }
+      }
+
+      mainWindow->setUnifiedTitleAndToolBarOnMac (config_to_boolean (
+         "window.showUnifiedTitleAndToolBar", cd, False));
+
+      mainWindow->setCorner (
+         Qt::TopRightCorner,
+         config_to_boolean ("corners.top.right", cd, False) ?
+            Qt::TopDockWidgetArea :
+            Qt::RightDockWidgetArea);
+
+      mainWindow->setCorner (
+         Qt::TopLeftCorner,
+         config_to_boolean ("corners.top.left", cd, False) ?
+            Qt::TopDockWidgetArea :
+            Qt::LeftDockWidgetArea);
+
+      mainWindow->setCorner (
+         Qt::BottomRightCorner,
+         config_to_boolean ("corners.bottom.right", cd, False) ?
+            Qt::BottomDockWidgetArea :
+            Qt::RightDockWidgetArea);
+
+      mainWindow->setCorner (
+         Qt::BottomLeftCorner,
+         config_to_boolean ("corners.bottom.left", cd, False) ?
+            Qt::BottomDockWidgetArea :
+            Qt::LeftDockWidgetArea);
+   }
+}

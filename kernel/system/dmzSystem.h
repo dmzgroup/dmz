@@ -20,6 +20,7 @@ namespace dmz {
    DMZ_KERNEL_LINK_SYMBOL void sleep (const Float64 Time);
    DMZ_KERNEL_LINK_SYMBOL String get_env (const String &Name);
    DMZ_KERNEL_LINK_SYMBOL void set_env (const String &Name, const String &Value);
+   DMZ_KERNEL_LINK_SYMBOL Float64 random ();
    DMZ_KERNEL_LINK_SYMBOL Boolean create_uuid (UUID &uuid);
 };
 

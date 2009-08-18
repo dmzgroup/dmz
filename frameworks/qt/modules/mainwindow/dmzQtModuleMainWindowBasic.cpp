@@ -149,8 +149,6 @@ dmz::QtModuleMainWindowBasic::~QtModuleMainWindowBasic () {
 }
 
 
-
-
 // Plugin Interface
 void
 dmz::QtModuleMainWindowBasic::update_plugin_state (

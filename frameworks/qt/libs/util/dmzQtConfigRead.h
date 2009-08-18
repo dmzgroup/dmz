@@ -165,11 +165,6 @@ namespace dmz {
       const String &Name,
       const Config &Source,
       QLineEdit *lineEdit);
-      
-   DMZ_QT_UTIL_LINK_SYMBOL void qmainwindow_config_read (
-      const String &Name,
-      const Config &Source,
-      QMainWindow *mainWindow);
 };
 
 
@@ -332,29 +327,6 @@ dmz::config_to_qcolor (const Config &Data, const QColor &Value) {
 
    return config_to_qcolor ("", Data, Value);
 }
-
-
-// inline QIcon
-// dmz::config_to_qicon (const Config &Data) {
-//
-//    const QIcon Value;
-//    return config_to_qicon ("", Data, Value);
-// }
-//
-//
-// inline QIcon
-// dmz::config_to_qicon (const String &Name, const Config &Data) {
-//
-//    const QIcon Value;
-//    return config_to_qicon (Name, Data, Value);
-// }
-//
-//
-// inline QIcon
-// dmz::config_to_qicon (const Config &Data, const QIcon &Value) {
-//
-//    return config_to_qicon ("", Data, Value);
-// }
 
 
 inline Qt::DockWidgetAreas

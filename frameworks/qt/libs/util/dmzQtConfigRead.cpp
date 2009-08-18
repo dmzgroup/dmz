@@ -474,7 +474,7 @@ dmz::qaction_config_read (const String &Name, const Config &Source, QAction *act
          action->setShortcut (shortcut);
       }
 
-      // use "&#38" in the xml to represent '&'
+      // use "&#38" or "&amp;" in the xml to represent '&'
 
       value = config_to_string ("text", cd);
       if (value) { action->setText (value.get_buffer ()); }
@@ -680,62 +680,3 @@ dmz::qlineedit_config_read (
    }
 }
 
-void
-dmz::qmainwindow_config_read (
-   const String &Name,
-   const Config &Source,
-   QMainWindow *mainWindow) {
-
-   if (mainWindow) {
-
-      Config cd;
-
-      if (Name) { Source.lookup_config (Name, cd); }
-      else { cd = Source; }
-
-      QString windowName =
-         config_to_string ("window.title", cd, "DMZ Application").get_buffer ();
-
-      if (!windowName.isEmpty ()) { mainWindow->setWindowTitle (windowName); }
-
-      String iconFile (config_to_string ("window.icon", cd, ":/images/windowIcon.png"));
-
-      if (iconFile) {
-
-         QFileInfo fi (iconFile.get_buffer ());
-
-         if (fi.exists ()) {
-
-            mainWindow->setWindowIcon (QIcon (fi.absoluteFilePath ()));
-//            _log.info << "Window Icon: " << iconFile << endl;
-         }
-      }
-
-      mainWindow->setUnifiedTitleAndToolBarOnMac (config_to_boolean (
-         "window.showUnifiedTitleAndToolBar", cd, False));
-
-      mainWindow->setCorner (
-         Qt::TopRightCorner,
-         config_to_boolean ("corners.top.right", cd, False) ?
-            Qt::TopDockWidgetArea :
-            Qt::RightDockWidgetArea);
-
-      mainWindow->setCorner (
-         Qt::TopLeftCorner,
-         config_to_boolean ("corners.top.left", cd, False) ?
-            Qt::TopDockWidgetArea :
-            Qt::LeftDockWidgetArea);
-
-      mainWindow->setCorner (
-         Qt::BottomRightCorner,
-         config_to_boolean ("corners.bottom.right", cd, False) ?
-            Qt::BottomDockWidgetArea :
-            Qt::RightDockWidgetArea);
-
-      mainWindow->setCorner (
-         Qt::BottomLeftCorner,
-         config_to_boolean ("corners.bottom.left", cd, False) ?
-            Qt::BottomDockWidgetArea :
-            Qt::LeftDockWidgetArea);
-   }
-}

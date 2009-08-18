@@ -293,7 +293,7 @@ dmz::QtPluginCanvasObject::remove_object_attribute (
 
       if (os && os->item) {
 
-         os->item->show ();
+         if (_canvasModule) { _canvasModule->add_item (os->ObjHandle, os->item); }
       }
    }
 }
@@ -369,10 +369,10 @@ dmz::QtPluginCanvasObject::update_object_flag (
       
       ObjectStruct *os (_objectTable.lookup (ObjectHandle));
 
-      if (os && os->item) {
+      if (_canvasModule && os && os->item) {
 
-         if (Value) { os->item->hide (); }
-         else { os->item->show (); }
+         if (Value) { _canvasModule->remove_item (os->ObjHandle); }
+         else { _canvasModule->add_item (os->ObjHandle, os->item); }
       }
    }
 }

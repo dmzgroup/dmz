@@ -4,18 +4,18 @@
 #include <dmzQtUtilExport.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
-#include <QtGui/QWidget>
+#include <QtGui/QDialog>
 
 namespace dmz {
 
    class Config;
 
-   class DMZ_QT_UTIL_LINK_SYMBOL QtVersion : public QWidget {
+   class DMZ_QT_UTIL_LINK_SYMBOL QtVersion : public QDialog {
 
       Q_OBJECT
 
       public:
-         QtVersion (Config &local, const String &Prefix = "dmz.version");
+         QtVersion (QWidget *parent, Config &local, const String &Prefix = "dmz.version");
          virtual ~QtVersion ();
 
       protected:

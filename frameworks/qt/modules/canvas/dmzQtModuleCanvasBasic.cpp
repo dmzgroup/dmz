@@ -261,9 +261,11 @@ dmz::QtModuleCanvasBasic::pan_direction (const Int32 Dx, const Int32 Dy) {
 void
 dmz::QtModuleCanvasBasic::center_on (const Handle ObjectHandle) {
 
-   if (_canvas && ObjectHandle) {
+    QGraphicsItem *item = _itemTable.lookup (ObjectHandle);
 
-      _canvas->centerOn (_itemTable.lookup (ObjectHandle));
+   if (_canvas && item) {
+
+      _canvas->centerOn (item);
       _canvas->set_scale (_canvas->get_scale ());
    }
 }

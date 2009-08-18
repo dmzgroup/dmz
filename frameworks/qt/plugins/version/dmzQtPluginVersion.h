@@ -1,6 +1,7 @@
 #ifndef DMZ_QT_PLUGIN_VERSION_DOT_H
 #define DMZ_QT_PLUGIN_VERSION_DOT_H
 
+#include <dmzRuntimeConfig.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzQtVersion.h>
@@ -33,9 +34,10 @@ namespace dmz {
       protected:
          void _init (Config &local);
 
+         Config _global;
          Log _log;
 
-         QtVersion _version;
+         QtVersion *_version;
          QAction *_aboutAction;
 
       private:

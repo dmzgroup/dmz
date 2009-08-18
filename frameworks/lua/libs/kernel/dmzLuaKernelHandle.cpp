@@ -107,9 +107,37 @@ handle_is_a (lua_State *L) {
 }
 
 
+static int
+handle_name (lua_State *L) {
+
+   int result (0);
+
+   Handle *ptr = lua_to_handle (L, 1);
+
+   Handle value (ptr ? *ptr : 0);
+
+   if (!value) { value = (Handle)lua_tointeger (L, 1); }
+
+   if (value) {
+
+      Definitions def (lua_get_runtime_context (L));
+      const String Name = def.lookup_named_handle_name (value);
+
+      if (Name) {
+
+         lua_pushstring (L, Name.get_buffer ());
+         result = 1;
+      }
+   }
+
+   return result;
+}
+
+
 static const luaL_Reg arrayFunc [] = {
    {"new", handle_new},
    {"is_a", handle_is_a},
+   {"name", handle_name},
    {NULL, NULL},
 };
 

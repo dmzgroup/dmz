@@ -53,54 +53,68 @@ ArchiveModule &module)
 \param[in] Name String containing the name of the module.
 \param[in] module ArchiveModule reference.
 
-\fn void dmz::ArchiveObserver::pre_create_archive (const Handle ArchiveHandle)
+\fn void dmz::ArchiveObserver::pre_create_archive (const Handle ArchiveHandle, const Int32 Version)
 \brief Pre create archive callback.
 \details Callback is made before the dmz::ArchiveObserver::create_archive() callback.
 Any pre-processing that needs to be performed before the archive is created should
 be done at this time.
 \param[in] ArchiveHandle Handle of the archive group.
+\param[in] Version Int32 of the archive's version number. If the version number is less
+than zero, no version number has been defined.
 
 \fn void dmz::ArchiveObserver::create_archive (
 const Handle ArchiveHandle,
+const Int32 Version,
 Config &local,
 Config &global)
 \brief Create archive callback.
 \details Data to be archived should be stored in the \a local Config. The \a global
 Config may be used if global data needs to be archived but should generally be avoided.
 \param[in] ArchiveHandle Handle of the archive group.
+\param[in] Version Int32 of the archive's version number. If the version number is less
+than zero, no version number has been defined.
 \param[out] local Config used to store archive data.
 \param[out] global Config used to store global archive data.
 
-\fn void dmz::ArchiveObserver::post_create_archive (const Handle ArchiveHandle)
+\fn void dmz::ArchiveObserver::post_create_archive (const Handle ArchiveHandle, const Int32 Version)
 \brief Post create archive callback.
 \details Callback is made after the dmz::ArchiveObserver::create_archive() callback.
 Any post-processing that needs to be performed after the archive is created should
 be done at this time.
 \param[in] ArchiveHandle Handle of the archive group.
+\param[in] Version Int32 of the archive's version number. If the version number is less
+than zero, no version number has been defined.
 
-\fn void dmz::ArchiveObserver::pre_process_archive (const Handle ArchiveHandle)
+\fn void dmz::ArchiveObserver::pre_process_archive (const Handle ArchiveHandle, const Int32 Version)
 \brief Pre process archive callback.
 \details Callback is made before the dmz::ArchiveObserver::process_archive() callback.
 Any pre-processing that needs to be performed before the archive is processed should
 be done at this time.
 \param[in] ArchiveHandle Handle of the archive group.
+\param[in] Version Int32 of the archive's version number. If the version number is less
+than zero, no version number has been defined.
 
 \fn void dmz::ArchiveObserver::process_archive (
 const Handle ArchiveHandle,
+const Int32 Version,
 Config &local,
 Config &global)
 \brief Process archive callback.
 \details Archived data is stored in the \a local Config. The \a global
 Config contains global archive data.
 \param[in] ArchiveHandle Handle of the archive group.
+\param[in] Version Int32 of the archive's version number. If the version number is less
+than zero, no version number has been defined.
 \param[in] local Config containing archive data.
 \param[in] global Config containing global archive data.
 
-\fn void dmz::ArchiveObserver::post_process_archive (const Handle ArchiveHandle)
+\fn void dmz::ArchiveObserver::post_process_archive (const Handle ArchiveHandle, const Int32 Version)
 \brief Post process archive callback.
 \details Callback is made after the dmz::ArchiveObserver::process_archive() callback.
 Any post-processing that needs to be performed after the archive is processed should
 be done at this time.
 \param[in] ArchiveHandle Handle of the archive group.
+\param[in] Version Int32 of the archive's version number. If the version number is less
+than zero, no version number has been defined.
 
 */

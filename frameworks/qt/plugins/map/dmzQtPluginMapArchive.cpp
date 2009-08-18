@@ -56,6 +56,7 @@ dmz::QtPluginMapArchive::discover_plugin (
 void
 dmz::QtPluginMapArchive::create_archive (
       const Handle ArchiveHandle,
+      const Int32 Version,
       Config &local,
       Config &global) {
 
@@ -82,6 +83,7 @@ dmz::QtPluginMapArchive::create_archive (
 void
 dmz::QtPluginMapArchive::process_archive (
       const Handle ArchiveHandle,
+      const Int32 Version,
       Config &local,
       Config &global) {
 

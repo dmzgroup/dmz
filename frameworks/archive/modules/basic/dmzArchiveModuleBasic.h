@@ -5,6 +5,7 @@
 #include <dmzArchiveModule.h>
 #include <dmzArchiveObserver.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
@@ -44,17 +45,24 @@ namespace dmz {
       protected:
          struct ArchiveStruct {
 
+            const String Name;
+            const Int32 Version;
             HashTableHandleTemplate<ArchiveObserver> table;
+
+            ArchiveStruct (const String &TheName, const Int32 TheVersion) :
+                  Name (TheName),
+                  Version (TheVersion) {;}
 
             ~ArchiveStruct () { table.clear (); }
          };
 
          void _init (Config &local);
 
+         Log _log;
+         Definitions _defs;
          Config _global;
          ApplicationStateWrapper _appState;
          HashTableHandleTemplate<ArchiveStruct> _archiveTable;
-         Log _log;
          //! \endcond
 
       private:

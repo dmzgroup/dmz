@@ -55,6 +55,7 @@ dmz::QtPluginCanvasArchive::discover_plugin (
 void
 dmz::QtPluginCanvasArchive::create_archive (
       const Handle ArchiveHandle,
+      const Int32 Version,
       Config &local,
       Config &global) {
 
@@ -81,6 +82,7 @@ dmz::QtPluginCanvasArchive::create_archive (
 void
 dmz::QtPluginCanvasArchive::process_archive (
       const Handle ArchiveHandle,
+      const Int32 Version,
       Config &local,
       Config &global) {
 

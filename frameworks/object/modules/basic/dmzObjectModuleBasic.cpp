@@ -4634,6 +4634,7 @@ dmz::ObjectModuleBasic::_dump_object_attributes_to_observer (
       const Handle AttributeHandle,
       const Mask &AttributeMask,
       ObjectObserver &obs) {
+
    if (AltObjectTypeMask & AttributeMask) {
 
       ObjectType *ptr (Obj.altTypeTable.lookup (AttributeHandle));

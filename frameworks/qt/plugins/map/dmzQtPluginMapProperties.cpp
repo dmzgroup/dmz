@@ -141,6 +141,7 @@ dmz::QtPluginMapProperties::discover_plugin (
 void
 dmz::QtPluginMapProperties::create_archive (
       const Handle ArchiveHandle,
+      const Int32 Version,
       Config &local,
       Config &global) {
 
@@ -169,6 +170,7 @@ dmz::QtPluginMapProperties::create_archive (
 void
 dmz::QtPluginMapProperties::process_archive (
       const Handle ArchiveHandle,
+      const Int32 Version,
       Config &local,
       Config &global) {
 

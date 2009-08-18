@@ -2,6 +2,7 @@
 #include "dmzEventModuleBasic.h"
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeData.h>
+#include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeInit.h>
 #include <dmzRuntimeEventType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -241,6 +242,12 @@ dmz::EventModuleBasic::release_event_observer (
       }
 
       result = True;
+
+      if ((sub->createTable.get_count () == 0) && (sub->closeTable.get_count () == 0)) {
+
+         _subscriptionTable.remove (ObsHandle);
+         delete sub; sub = 0;
+      }
    }
 
    return result;

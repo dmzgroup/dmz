@@ -293,7 +293,6 @@ local_parse_manifest (String &launchFile, Application &app) {
             }
 
             local_auto_save_file (app, launchFile);
-app.log.error << "1 " << launchFile << endl;
 
             const String VersionFile =
                config_to_string ("version.file", manifest, "./config/version.xml");
@@ -303,18 +302,13 @@ app.log.error << "1 " << launchFile << endl;
             if (is_valid_path (VersionFile)) { fileList.append_arg (VersionFile); }
 
             if (!local_init (manifest, app, fileList, launchFile, VersionFile)) {
-app.log.error << "2 " << launchFile << endl;
 
                if (launchFile) {
-app.log.error << "3 " << launchFile << endl;
 
                   Config launchFileConfig ("launch-file");
                   launchFileConfig.store_attribute ("name", launchFile);
-app.log.error << "4 " << launchFile << endl;
                   app.add_config ("", launchFileConfig);
                   fileList.append_arg (launchFile);
-app.log.error << "5 " << launchFile << endl;
-                  app.add_config ("", launchFileConfig);
                }
 
                Config configList;

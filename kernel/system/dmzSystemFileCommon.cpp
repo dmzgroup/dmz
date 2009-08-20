@@ -330,7 +330,7 @@ dmz::split_path_file_ext (
          else { index--; if (index < 0) { done = True; } }
       }
 
-      if (dotFound >= 0) {
+      if (dotFound > 0) {
 
          ext = file.get_sub (dotFound);
          file = file.get_sub (0, dotFound - 1);

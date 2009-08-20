@@ -1,5 +1,7 @@
 #include <dmzSystem.h>
 
+#include <stdlib.h>
+
 /*!
 
 \defgroup System DMZ Kernel System Layer
@@ -36,4 +38,15 @@ dmz::get_byte_order () {
 
    return result;
 }
+
+
+/*!
+
+\ingroup System
+\brief Returns a random Float64 between 0 and 1.
+\details Defined in dmzSystem.h.
+
+*/
+dmz::Float64
+dmz::random () { return Float64 (rand () % RAND_MAX) / Float64 (RAND_MAX); }
 

@@ -157,7 +157,7 @@ dmz::QtPluginStackedWidget::_init (Config &local) {
    _parent = new QFrame;
    _parent->setObjectName (get_plugin_name ().get_buffer ());
    
-   qwidget_config_read ("", local, _parent);
+   qframe_config_read ("", local, _parent);
 
    _stack = new QStackedLayout;
    

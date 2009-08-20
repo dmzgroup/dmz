@@ -1,20 +1,27 @@
+#include <dmzInputEventMasks.h>
+#include <dmzInputModule.h>
+#include <dmzInputConsts.h>
 #include "dmzQtPluginTabWidget.h"
 #include <dmzQtConfigRead.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
-
+#include <QtGui/QFrame>
 #include <QtGui/QGridLayout>
 
 
 dmz::QtPluginTabWidget::QtPluginTabWidget (const PluginInfo &Info, Config &local) :
+      QObject (0),
       Plugin (Info),
       QtWidget (Info),
+      InputObserverUtil (Info, local),
       _log (Info),
       _parent (0),
       _tab (0) {
 
+   setObjectName (get_plugin_name ().get_buffer ());
+   
    _init (local);
 }
 
@@ -22,6 +29,7 @@ dmz::QtPluginTabWidget::QtPluginTabWidget (const PluginInfo &Info, Config &local
 dmz::QtPluginTabWidget::~QtPluginTabWidget () {
 
    _widgetTable.empty ();
+   _channelTable.clear ();
    _tab = 0; // will be auto deleted by _parent
    if (_parent) { delete _parent; _parent = 0; }
 }
@@ -99,6 +107,7 @@ dmz::QtPluginTabWidget::discover_plugin (
 }
 
 
+// QtWidget Interface
 QWidget *
 dmz::QtPluginTabWidget::get_qt_widget () {
 
@@ -106,18 +115,80 @@ dmz::QtPluginTabWidget::get_qt_widget () {
 }
 
 
+// Input Observer Interface
+void
+dmz::QtPluginTabWidget::update_channel_state (const Handle Channel, const Boolean State) {
+
+   WidgetStruct *ws (_channelTable.lookup (Channel));
+
+   if (ws && _tab) {
+
+      if (State) { ws->count++; }
+      else { ws->count--; }
+
+      if (ws->count) {
+
+         _tab->setCurrentWidget (ws->widget);
+      }
+   }
+}
+
+
+void
+dmz::QtPluginTabWidget::_slot_tab_changed (int index) {
+
+   InputModule *input (get_input_module ());
+   
+   if (input && _tab) {
+
+      HashTableHandleIterator it;
+      WidgetStruct *ws (_channelTable.get_first (it));
+      
+      while (ws) {
+
+         Boolean currentTab (False);
+
+         if (ws->widget == _tab->widget (index)) { currentTab = True; }
+
+         input->set_channel_state (ws->channel, currentTab);
+
+         ws = _channelTable.get_next (it);
+      }
+   }
+}
+
+
 void
 dmz::QtPluginTabWidget::_init (Config &local) {
 
-   _parent = new QWidget;
+   _parent = new QFrame;
+
+   qframe_config_read ("", local, _parent);
 
    QGridLayout *layout = new QGridLayout (_parent);
 
    _tab = new QTabWidget (_parent);
+   
+   connect (
+      _tab, SIGNAL (currentChanged (int)),
+      this, SLOT (_slot_tab_changed (int)));
 
    _tab->setMinimumSize (config_to_qsize ("minimum-size", local, _tab->minimumSize ()));
    _tab->setMaximumSize (config_to_qsize ("maximum-size", local, _tab->maximumSize ()));
 
+   const String TabPosName (config_to_string ("position.value", local, "north").get_lower ());
+   
+   QTabWidget::TabPosition tabPos (QTabWidget::North);
+   
+   if (TabPosName == "north") { tabPos = QTabWidget::North; }
+   else if (TabPosName == "south") { tabPos = QTabWidget::South; }
+   else if (TabPosName == "west") { tabPos = QTabWidget::West; }
+   else if (TabPosName == "east") { tabPos = QTabWidget::East; }
+   
+   _tab->setTabPosition (tabPos);
+   
+   _tab->setDocumentMode (config_to_boolean ("document-mode.value", local, False));
+   
    layout->addWidget (_tab);
 
    Config widgetList;
@@ -130,13 +201,28 @@ dmz::QtPluginTabWidget::_init (Config &local) {
       while (widgetList.get_next_config (it, widget)) {
 
          const String WidgetName (config_to_string ("name", widget));
-
+         
          if (WidgetName && !_widgetTable.lookup (WidgetName)) {
 
             WidgetStruct *ws (new WidgetStruct);
-            if (ws) { ws->title = config_to_string ("title", widget); }
+            
+            if (ws) {
+               
+               ws->title = config_to_string ("title", widget);
+               
+               const String ChannelName (config_to_string ("channel", widget));
 
-            if (!_widgetTable.store (WidgetName, ws)) { delete ws; ws = 0; }
+               if (ChannelName) {
+                  
+                  ws->channel = activate_input_channel (ChannelName, InputEventChannelStateMask);
+               }
+            }
+
+            if (_widgetTable.store (WidgetName, ws)) {
+               
+               if (ws->channel) { _channelTable.store (ws->channel, ws); }
+            }
+            else { delete ws; ws = 0; }
          }
       }
    }

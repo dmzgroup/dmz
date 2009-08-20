@@ -105,7 +105,7 @@ dmz::QtPluginMapProperties::discover_plugin (
          
          if (_mainWindowModule) {
             
-            setParent (_mainWindowModule->get_widget (), Qt::Dialog);
+            setParent (_mainWindowModule->get_qt_main_window (), Qt::Dialog);
          }
       }
    }

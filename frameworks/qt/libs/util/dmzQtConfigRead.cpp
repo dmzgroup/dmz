@@ -404,6 +404,49 @@ dmz::qwidget_config_read (const String &Name, const Config &Source, QWidget *wid
 
 
 void
+dmz::qframe_config_read (const String &Name, const Config &Source, QFrame *frame) {
+
+   if (frame) {
+
+      Config cd;
+
+      if (Name) { Source.lookup_config (Name, cd); }
+      else { cd = Source; }
+
+#if 0
+      <frame
+         line-width="Int32"
+         mid-line-width="Int32"
+         shape="[noframe|box|panel|styledpanel|hline|vline]"
+         shadow="[plain|raised|sunken]">
+         <widget>
+            ...
+         </widget>
+      </frame>
+#endif
+
+      qwidget_config_read ("widget", cd, frame);
+      
+      frame->setLineWidth (config_to_int32 ("line-width", cd, 1));
+      frame->setMidLineWidth (config_to_int32 ("mmid-line-width", cd, 0));
+      
+      String value;
+      
+      value = config_to_string ("shape", cd).to_lower ();
+      if (value == "noframe") { frame->setFrameShape (QFrame::NoFrame); }
+      else if (value == "box") { frame->setFrameShape (QFrame::Box); }
+      else if (value == "panel") { frame->setFrameShape (QFrame::Panel); }
+      else if (value == "styledpanel") { frame->setFrameShape (QFrame::StyledPanel); }
+
+      value = config_to_string ("shadow", cd).to_lower ();
+      if (value == "plain") { frame->setFrameShadow (QFrame::Plain); }
+      else if (value == "raised") { frame->setFrameShadow (QFrame::Raised); }
+      else if (value == "sunken") { frame->setFrameShadow (QFrame::Sunken); }
+   }
+}
+
+
+void
 dmz::qaction_config_read (const String &Name, const Config &Source, QAction *action) {
 
    if (action) {

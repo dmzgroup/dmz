@@ -16,6 +16,7 @@ struct dmz::QtVersion::State {
    State (const Config &Source, const String &Prefix) : version (Source, Prefix) {;}
 };
 
+
 dmz::QtVersion::QtVersion (QWidget *parent, Config &local, const String &Prefix) :
       QDialog (parent),
       _state (*(new State (local, Prefix))) {

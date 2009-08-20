@@ -19,6 +19,7 @@
 
 class QAbstractButton;
 class QAction;
+class QFrame;
 class QGraphicsView;
 class QLineEdit;
 class QMainWindow;
@@ -130,6 +131,11 @@ namespace dmz {
       const String &Name,
       const Config &Source,
       QWidget *widget);
+
+   DMZ_QT_UTIL_LINK_SYMBOL void qframe_config_read (
+      const String &Name,
+      const Config &Source,
+      QFrame *frame);
 
    DMZ_QT_UTIL_LINK_SYMBOL void qaction_config_read (
       const String &Name,

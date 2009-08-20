@@ -1,5 +1,5 @@
-#ifndef DMZ_QT_PLUGIN_TAB_WIDGET_DOT_H
-#define DMZ_QT_PLUGIN_TAB_WIDGET_DOT_H
+#ifndef DMZ_QT_PLUGIN_STACKED_WIDGET_DOT_H
+#define DMZ_QT_PLUGIN_STACKED_WIDGET_DOT_H
 
 #include <dmzInputObserverUtil.h>
 #include <dmzQtWidget.h>
@@ -7,24 +7,22 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
-#include <QtGui/QTabWidget>
 
 class QFrame;
+class QStackedLayout;
+class QWidget;
 
 
 namespace dmz {
 
-   class QtPluginTabWidget :
-         public QObject,
+   class QtPluginStackedWidget :
          public Plugin,
-         public QtWidget,
-         public InputObserverUtil {
-            
-   Q_OBJECT
+         public InputObserverUtil,
+         public QtWidget {
 
       public:
-         QtPluginTabWidget (const PluginInfo &Info, Config &local);
-         ~QtPluginTabWidget ();
+         QtPluginStackedWidget (const PluginInfo &Info, Config &local);
+         ~QtPluginStackedWidget ();
 
          // Plugin Interface
          virtual void update_plugin_state (
@@ -35,9 +33,6 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
-         // QtWidget Interface
-         virtual QWidget *get_qt_widget ();
-         
          // Input Observer Interface
          virtual void update_channel_state (const Handle Channel, const Boolean State);
 
@@ -65,37 +60,38 @@ namespace dmz {
             const Handle Channel,
             const Handle Source,
             const Data &Value) {;}
+            
+         // QtWidget Interface
+         virtual QWidget *get_qt_widget ();
 
-      protected slots:
-         void _slot_tab_changed (int index);
-         
       protected:
-         struct WidgetStruct {
+         struct ChannelStruct {
 
-            String title;
-            QWidget *widget;
-            Handle channel;
+            const Handle Channel;
             Int32 count;
+            QWidget *widget;
 
-            WidgetStruct () : widget (0), channel (0), count (0) {;}
+            ChannelStruct (const Handle TheChannel) :
+               Channel (TheChannel),
+               count (0),
+               widget (0) {;}
          };
 
+         void _init_input_channels (Config &local);
          void _init (Config &local);
-
+         
          Log _log;
-
          QFrame *_parent;
-         QTabWidget *_tab;
-
-         HashTableStringTemplate<WidgetStruct> _widgetTable;
-         HashTableHandleTemplate<WidgetStruct> _channelTable;
+         QStackedLayout *_stack;
+         HashTableHandleTemplate<ChannelStruct> _channelTable;
+         HashTableStringTemplate<ChannelStruct> _widgetTable;
 
       private:
-         QtPluginTabWidget ();
-         QtPluginTabWidget (const QtPluginTabWidget &);
-         QtPluginTabWidget &operator= (const QtPluginTabWidget &);
-
+         QtPluginStackedWidget ();
+         QtPluginStackedWidget (const QtPluginStackedWidget &);
+         QtPluginStackedWidget &operator= (const QtPluginStackedWidget &);
    };
 };
 
-#endif // DMZ_QT_PLUGIN_TAB_WIDGET_DOT_H
+
+#endif // DMZ_QT_PLUGIN_STACKED_WIDGET_DOT_H

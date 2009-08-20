@@ -28,11 +28,15 @@ local_escape_string (const dmz::String &Value, dmz::String &result) {
 
          const char C = Buffer[ix];
 
-         if(C == '<') { result << "&lt;"; }
-         else if(C == '>') { result << "&gt;"; }
-         else if(C == '&') { result << "&amp;"; }
-         else if(C == '"') { result << "&quot;"; }
-         else if(C == '\'') { result << "&apos;"; }
+         if (C == '<') { result << "&lt;"; }
+         else if (C == '>') { result << "&gt;"; }
+         else if (C == '&') { result << "&amp;"; }
+         else if (C == '"') { result << "&quot;"; }
+         else if (C == '\'') { result << "&apos;"; }
+         else if (C == char (9)) { result << "&#x0009;"; } // tab
+         else if (C == char (10)) { result << "&#x000A;"; } // LF
+         else if (C == char (13)) { result << "&#x000D;"; } // CR
+         else if (C < char (32)) {;} // Ignore invalid characters
          else { charArray[0] = C; result << charArray; }
       }
    }

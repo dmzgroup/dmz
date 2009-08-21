@@ -192,7 +192,7 @@ dmz::QtCanvasObjectText::_outline_rect () const {
       const int Padding (8);
       QFontMetricsF metrics = qApp->font ();
 
-      rect = metrics.boundingRect (_text);
+      rect.setSize (metrics.size (0, _text));
 
       if (_drawBackground) {
 

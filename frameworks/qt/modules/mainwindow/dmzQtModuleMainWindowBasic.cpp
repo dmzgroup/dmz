@@ -1,6 +1,3 @@
-#include <dmzInputEventMasks.h>
-#include <dmzInputModule.h>
-#include <dmzInputConsts.h>
 #include "dmzQtModuleMainWindowBasic.h"
 #include <dmzQtUtil.h>
 #include <dmzQtWidget.h>
@@ -11,94 +8,95 @@
 #include <dmzRuntimeSession.h>
 #include <QtGui/QtGui>
 
+
 namespace {
 
 static const int LocalSessionVersion = 5;
 
 };
 
+
+dmz::QtModuleMainWindowBasic::DockWidgetStruct::DockWidgetStruct (
+      const String &WidgetName,
+      const Config &Data,
+      const Qt::DockWidgetArea Area) :
+      Name (WidgetName),
+      dock (0),
+      widget (0),
+      area (Area) {
+            
+   const String Title (config_to_string ("title", Data, ""));
+   
+   dock = new QDockWidget (Title.get_buffer ());
+   dock->setObjectName (WidgetName.get_buffer ());
+   dock->setAllowedAreas (config_to_dock_widget_areas ("allowed-areas", Data, area));
+   dock->setFeatures (QDockWidget::AllDockWidgetFeatures);
+   
+   visible = config_to_boolean ("visible", Data, True);
+   floating = config_to_boolean ("floating", Data, False);
+}
+
+
+dmz::QtModuleMainWindowBasic::DockWidgetStruct::~DockWidgetStruct () {
+   
+   if (dock) { delete dock; dock = 0; }
+}
+
+
 void
-dmz::QtModuleMainWindowBasic::DockWidgetStruct::show (MainWindowStruct &window) {
+dmz::QtModuleMainWindowBasic::DockWidgetStruct::set_widget (QWidget *theWidget) {
 
-   if (widget && window.main && !dock) {
-
-      widget->adjustSize ();
-      dock = new QDockWidget (title ? title.get_buffer () : "");
-      QLayout *layout (dock->layout ());
-      dock->setObjectName (name.get_buffer ());
-      dock->setAllowedAreas (startArea);
-      dock->setFeatures (features);
-      dock->setWidget (widget);
-      window.main->addDockWidget (startArea, dock);
-      dock->show ();
-   }
-
-   if (window.main && dock && !dock->parentWidget ()) {
-
-      window.main->addDockWidget (startArea, dock);
+   if (dock) {
       
-      dock->show ();
+      if (theWidget) {
+
+         if (widget) {
+            
+            dock->setWidget (0);
+            widget->setParent (0);
+         }
+         
+         widget = theWidget;
+         widget->adjustSize ();
+         QVBoxLayout *layout = new QVBoxLayout;
+         dock->setLayout (layout);
+         dock->setWidget (widget);
+      }
+      else {
+
+         dock->setWidget (0);
+         
+         if (widget) {
+            
+            widget->setParent (0);
+            widget = 0;
+         }
+      }
    }
 }
 
 
 void
-dmz::QtModuleMainWindowBasic::DockWidgetStruct::hide (MainWindowStruct &window) {
+dmz::QtModuleMainWindowBasic::DockWidgetStruct::add_to (QMainWindow *window) {
 
-   if (dock && dock->parentWidget ()) {
+   if (dock && widget && window) {
+      
+      dock->adjustSize ();
+      window->addDockWidget (area, dock);
+      dock->setFloating (floating);
+      if (visible) { dock->show (); }
+      else { dock->hide (); }
+   }
+}
 
-      window.main->removeDockWidget (dock);
+
+void
+dmz::QtModuleMainWindowBasic::DockWidgetStruct::remove_from (QMainWindow *window) {
+   
+   if (dock && window) {
+      
+      window->removeDockWidget (dock);
       dock->setParent (0);
-   }
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::DockWidgetStruct::remove (MainWindowStruct &window) {
-
-   hide (window);
-
-   if (dock && widget) {
-
-      dock->setWidget (0);
-      widget->setParent (0);
-   }
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::CentralWidgetStruct::show (MainWindowStruct &window) {
-
-   if (widget && window.stack) {
-
-      if (!widget->parentWidget ()) {
-
-         window.stack->addWidget (widget);
-         widget->show ();
-      }
-
-      window.stack->setCurrentWidget (widget);
-   }
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::CentralWidgetStruct::hide (MainWindowStruct &window) {
-
-   // Nothing to do?
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::CentralWidgetStruct::remove (MainWindowStruct &window) {
-
-   if (widget && window.stack) {
-
-      if (widget->parentWidget ()) {
-
-         window.stack->removeWidget (widget);
-         widget->setParent (0);
-      }
    }
 }
 
@@ -107,30 +105,24 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
       const PluginInfo &Info,
       Config &local) :
       QMainWindow (0),
-      QtModuleMainWindow (Info),
       Plugin (Info),
-      InputObserverUtil (Info, local),
+      QtModuleMainWindow (Info),
+      QtWidget (Info),
       _exit (get_plugin_runtime_context ()),
       _log (Info),
       _fileExitAction (0),
       _fileMenu (0),
-      _showUnifiedTitleAndToolBar (False) {
+      _mainWidgetName (),
+      _dockWidgetTable () {
 
    setObjectName (get_plugin_name ().get_buffer ());
-//   setAttribute (Qt::WA_AlwaysShowToolTips);
 
    _ui.setupUi (this);
-
-   _windowInfo.main = this;
-   _windowInfo.stack = _ui.stackedWidget;
 
    _create_actions ();
    _create_menus ();
    _create_tool_bars ();
    _create_status_bar ();
-
-   QWidget *widget (new QWidget (this));
-   _ui.stackedWidget->addWidget (widget);
 
    _init (local);
 }
@@ -138,11 +130,8 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
 
 dmz::QtModuleMainWindowBasic::~QtModuleMainWindowBasic () {
 
-   _widgetTable.empty ();
-   _channelTable.empty ();
+   _dockWidgetTable.empty ();
 }
-
-
 
 
 // Plugin Interface
@@ -154,7 +143,6 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
    if (State == PluginStateStart) {
 
       _load_session ();
-      setUnifiedTitleAndToolBarOnMac (_showUnifiedTitleAndToolBar);
       show ();
       raise ();
       activateWindow ();
@@ -180,11 +168,19 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
 
          const String Name = w->get_qt_widget_name ();
          QWidget *widget = w->get_qt_widget ();
-         WidgetStruct *ws = _widgetTable.lookup (Name);
-
-         if (ws) {
-
-            ws->widget = widget;
+         
+         if (Name == _mainWidgetName) {
+         
+            setCentralWidget (widget);
+         }
+         else {
+            
+            DockWidgetStruct *dws = _dockWidgetTable.lookup (Name);
+            if (dws) {
+            
+               dws->set_widget (widget);
+               dws->add_to (this);
+            }
          }
       }
    }
@@ -195,30 +191,24 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
       if (w) {
 
          const String Name = w->get_qt_widget_name ();
-         WidgetStruct *ws = _widgetTable.lookup (Name);
-         if (ws && (ws->widget == w->get_qt_widget ())) {
+         
+         if (Name == _mainWidgetName) {
+            
+            setCentralWidget (0);
+            
+            QWidget *widget = w->get_qt_widget ();
+            if (widget) { widget->setParent (0); }
+         }
+         else {
+            
+            DockWidgetStruct *dws = _dockWidgetTable.remove (Name);
+            if (dws && (dws->widget == w->get_qt_widget ())) {
 
-            ws->remove (_windowInfo);
-            ws->widget = 0;
+               dws->remove_from (this);
+               dws->set_widget (0);
+            }
          }
       }
-   }
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::update_channel_state (
-      const UInt32 Channel,
-      const Boolean State) {
-
-   ChannelStruct *cs (_channelTable.lookup (Channel));
-
-   if (cs) {
-
-      if (State) { cs->count++; }
-      else { cs->count--; }
-
-      _update ();
    }
 }
 
@@ -228,118 +218,13 @@ QString
 dmz::QtModuleMainWindowBasic::get_window_name () { return _windowName; }
 
 
+QMainWindow *
+dmz::QtModuleMainWindowBasic::get_qt_main_window () { return this; }
+
+
+// QtWidget Interface
 QWidget *
-dmz::QtModuleMainWindowBasic::get_widget () { return this; }
-
-
-QMenuBar *
-dmz::QtModuleMainWindowBasic::get_menu_bar () { return menuBar (); }
-
-
-QStatusBar *
-dmz::QtModuleMainWindowBasic::get_status_bar () { return statusBar (); }
-
-
-dmz::Boolean
-dmz::QtModuleMainWindowBasic::add_tool_bar (QToolBar *toolBar) {
-
-   Boolean retVal (False);
-
-   if (toolBar) {
-
-      addToolBar (toolBar);
-      retVal = True;
-   }
-
-   return retVal;
-}
-
-
-dmz::Boolean
-dmz::QtModuleMainWindowBasic::add_tool_bar (const Handle Channel, QToolBar *toolBar) {
-
-   Boolean retVal (False);
-
-   ChannelStruct *cs (_channelTable.lookup (Channel));
-
-   if (cs && toolBar) {
-
-      ToolBarStruct *tbs (new ToolBarStruct ());
-      tbs->visible = True;
-      tbs->toolBar = toolBar;
-      tbs->area = Qt::TopToolBarArea;
-
-      cs->toolbar.append (tbs);
-
-      if (cs->count) {
-
-         addToolBar (toolBar);
-      }
-
-      retVal = True;
-   }
-
-   return retVal;
-}
-
-
-dmz::Boolean
-dmz::QtModuleMainWindowBasic::remove_tool_bar (QToolBar *toolBar) {
-
-   Boolean retVal (False);
-
-   if (toolBar) {
-
-      removeToolBar (toolBar);
-      toolBar->setParent (0);
-      retVal = True;
-   }
-
-   return retVal;
-}
-
-
-dmz::Boolean
-dmz::QtModuleMainWindowBasic::remove_tool_bar (const Handle Channel, QToolBar *toolBar) {
-
-   Boolean retVal (False);
-   ChannelStruct *cs (_channelTable.lookup (Channel));
-
-   if (cs && toolBar) {
-
-      ToolBarStruct *tbs (0);
-
-      foreach (ToolBarStruct *ctbs, cs->toolbar) {
-
-         if (ctbs->toolBar == toolBar) {
-
-            tbs = ctbs;
-            break;
-         }
-      }
-
-      Int32 index (cs->toolbar.indexOf (tbs));
-
-      if (index != -1) {
-
-         cs->toolbar.takeAt (index);
-         removeToolBar (tbs->toolBar);
-         delete tbs; tbs = 0;
-         retVal = True;
-      }
-
-      toolBar->setParent (0);
-   }
-
-   return retVal;
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::add_tool_bar_break (const Qt::ToolBarArea Area) {
-
-   addToolBarBreak (Area);
-}
+dmz::QtModuleMainWindowBasic::get_qt_widget () { return this; }
 
 
 void
@@ -381,49 +266,6 @@ dmz::QtModuleMainWindowBasic::_create_status_bar () {
 
 
 void
-dmz::QtModuleMainWindowBasic::_update () {
-
-   _ui.stackedWidget->setCurrentIndex (0);
-
-   HashTableHandleIterator it;
-
-   ChannelStruct *cs (_channelTable.get_first (it));
-
-   while (cs) {
-
-      foreach (ToolBarStruct *tbs, cs->toolbar) {
-
-         if (cs->count > 0) {
-
-            addToolBar (tbs->area, tbs->toolBar);
-            //if (tbs->visible) { tbs->toolBar->setVisible (True); }
-            tbs->toolBar->setVisible (True);
-         }
-         else {
-
-            //tbs->visible = tbs->toolBar->isVisible ();
-            //tbs->area = toolBarArea (tbs->toolBar);
-            removeToolBar (tbs->toolBar);
-         }
-      }
-
-      HashTableStringIterator wit;
-      WidgetStruct *ws (cs->widgetTable.get_first (wit));
-
-      while (ws) {
-         
-         if (cs->count > 0) { ws->show (_windowInfo); } 
-         else { ws->hide (_windowInfo); }
-
-         ws = cs->widgetTable.get_next (wit);
-      }
-
-      cs = _channelTable.get_next (it);
-   }
-}
-
-
-void
 dmz::QtModuleMainWindowBasic::_save_session () {
 
    String data;
@@ -456,115 +298,76 @@ dmz::QtModuleMainWindowBasic::_load_session () {
 
 
 void
-dmz::QtModuleMainWindowBasic::_init_widget_group (ChannelStruct &cs, Config &group) {
+dmz::QtModuleMainWindowBasic::_init_dock_windows (Config &local) {
 
-   Config widgetList;
+   Config dockList;
 
-   Qt::DockWidgetArea area = Qt::NoDockWidgetArea;
-
-   Boolean isMain (False);
-
-   String AreaName (config_to_string ("area", group).get_lower ());
-
-   if (AreaName == "main") { isMain = True; }
-   else if (AreaName == "left") { area = Qt::LeftDockWidgetArea; }
-   else if (AreaName == "right") { area = Qt::RightDockWidgetArea; }
-   else if (AreaName == "top") { area = Qt::TopDockWidgetArea; }
-   else if (AreaName == "bottom") { area = Qt::BottomDockWidgetArea; }
-   else {
-
-      _log.error << "Unknown widget area: " << AreaName << endl;
-   }
-
-   if (group.lookup_all_config ("widget", widgetList)) {
+   if (local.lookup_all_config ("dock-windows", dockList)) {
 
       ConfigIterator it;
-      Config widget;
+      Config dock;
 
-      while (widgetList.get_next_config (it, widget)) {
+      while (dockList.get_next_config (it, dock)) {
 
-         const String WidgetName (config_to_string ("name", widget));
-         const String WidgetTitle (config_to_string ("title", widget));
+         Config groupList;
 
-         if (!_widgetTable.lookup (WidgetName)) {
+         if (dock.lookup_all_config ("group", groupList)) {
 
-            WidgetStruct *ws (0);
+            ConfigIterator wit;
+            Config group;
 
-            if (isMain) {
+            while (groupList.get_next_config (wit, group)) {
 
-               CentralWidgetStruct *cws = new CentralWidgetStruct;
-               ws = cws;
-            }
-            else {
+               Config widgetList;
 
-               DockWidgetStruct *dws = new DockWidgetStruct;
-               ws = dws;
+               Qt::DockWidgetArea area = Qt::NoDockWidgetArea;
 
-               if (dws) { dws->startArea = area; dws->name = WidgetName; }
-            }
+               String AreaName (config_to_string ("area", group).get_lower ());
 
-            if (ws && _widgetTable.store (WidgetName, ws)) {
+               if (AreaName == "left") { area = Qt::LeftDockWidgetArea; }
+               else if (AreaName == "right") { area = Qt::RightDockWidgetArea; }
+               else if (AreaName == "top") { area = Qt::TopDockWidgetArea; }
+               else if (AreaName == "bottom") { area = Qt::BottomDockWidgetArea; }
+               else {
 
-               ws->title = WidgetTitle;
-               cs.widgetTable.store (WidgetName, ws);
-            }
-            else { delete ws; ws = 0; }
-         }
-         else {
+                  _log.error << "Unknown widget area: " << AreaName << endl;
+               }
 
-            _log.error << "Widget: " << WidgetName
-               << " has already been mapped to the main window." << endl;
-         }
-      }
-   }
-}
+               if (group.lookup_all_config ("widget", widgetList)) {
 
+                  ConfigIterator it;
+                  Config widget;
 
-void
-dmz::QtModuleMainWindowBasic::_init_input_channels (Config &local) {
+                  while (widgetList.get_next_config (it, widget)) {
 
-   Config channelList;
+                     const String WidgetName (config_to_string ("name", widget));
+                     const String WidgetTitle (config_to_string ("title", widget));
 
-   if (local.lookup_all_config ("channel", channelList)) {
+                     if (!_dockWidgetTable.lookup (WidgetName)) {
 
-      ConfigIterator it;
-      Config channel;
+                        DockWidgetStruct *dws = new DockWidgetStruct (WidgetName, widget, area);
 
-      while (channelList.get_next_config (it, channel)) {
+                        if (dws) {
 
-         const String ChannelName (
-            config_to_string ("name", channel, InputChannelDefaultName));
+                           if (!_dockWidgetTable.store (WidgetName, dws)) {
+                              
+                              delete dws; dws = 0;
+                           }
+                        }
+                     }
+                     else {
 
-         const Handle ChannelHandle (
-            activate_input_channel (ChannelName, InputEventChannelStateMask));
-
-         ChannelStruct *cs (_channelTable.lookup (ChannelHandle));
-
-         if (!cs) {
-
-            cs = new ChannelStruct (ChannelHandle);
-
-            if (cs && !_channelTable.store (cs->Channel, cs)) { delete cs; cs = 0; }
-         }
-
-         if (cs) {
-
-            Config groupList;
-
-            if (channel.lookup_all_config ("group", groupList)) {
-
-               ConfigIterator wit;
-               Config group;
-
-               while (groupList.get_next_config (wit, group)) {
-
-                  _init_widget_group (*cs, group);
+                        _log.error << "Widget: " << WidgetName
+                           << " has already been mapped to the main window." << endl;
+                     }
+                  }
                }
             }
          }
       }
    }
 }
+
 
 void
 dmz::QtModuleMainWindowBasic::_init (Config &local) {
@@ -587,17 +390,10 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
       }
    }
 
-   _init_input_channels (local);
-
-   _showUnifiedTitleAndToolBar = config_to_boolean (
-      "showUnifiedTitleAndToolBar.value",
-      local, _showUnifiedTitleAndToolBar);
+   setUnifiedTitleAndToolBarOnMac (config_to_boolean (
+      "showUnifiedTitleAndToolBar.value", local, False));
 
    set_qwidget_stylesheet ("stylesheet", local, this);
-
-   if (config_to_boolean ("hide.value", local, False)) { hide (); }
-   
-//   setCorner (Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
    setCorner (
       Qt::TopRightCorner,
@@ -622,6 +418,10 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
       config_to_boolean ("corners.bottom.left", local, False) ?
          Qt::BottomDockWidgetArea :
          Qt::LeftDockWidgetArea);
+
+   _mainWidgetName = config_to_string ("central-widget.name", local);
+         
+   _init_dock_windows (local);
 }
 
 

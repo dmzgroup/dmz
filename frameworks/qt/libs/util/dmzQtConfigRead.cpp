@@ -245,6 +245,40 @@ dmz::config_to_qbrush (
 }
 
 
+Qt::DockWidgetAreas
+dmz::config_to_dock_widget_areas (
+      const String &Name,
+      const Config &Source,
+      const Qt::DockWidgetAreas DefaultValue) {
+
+   Qt::DockWidgetAreas result (DefaultValue);
+   Config areas;
+
+   if (Name) { Source.lookup_config (Name, areas); }
+   else { areas = Source; }
+
+#if 0
+   <allowed-areas all="true"/>
+   <allowed-areas none="true"/>
+   <allowed-areas left="true" right="true" top="true" bottom="true"/>
+#endif
+
+   ConfigIterator it;
+   
+   if (config_to_boolean ("none", areas)) { result = Qt::NoDockWidgetArea; }
+   else if (config_to_boolean ("all", areas)) { result = Qt::AllDockWidgetAreas; }
+   else {
+      
+      if (config_to_boolean ("left", areas)) { result |= Qt::LeftDockWidgetArea; }
+      if (config_to_boolean ("right", areas)) { result |= Qt::RightDockWidgetArea; }
+      if (config_to_boolean ("top", areas)) { result |= Qt::TopDockWidgetArea; }
+      if (config_to_boolean ("bottom", areas)) { result |= Qt::BottomDockWidgetArea; }
+   }
+
+   return result;
+}
+
+
 void
 dmz::qicon_config_read (const String &Name, const Config &Source, QIcon *icon) {
 
@@ -370,6 +404,49 @@ dmz::qwidget_config_read (const String &Name, const Config &Source, QWidget *wid
 
 
 void
+dmz::qframe_config_read (const String &Name, const Config &Source, QFrame *frame) {
+
+   if (frame) {
+
+      Config cd;
+
+      if (Name) { Source.lookup_config (Name, cd); }
+      else { cd = Source; }
+
+#if 0
+      <frame
+         line-width="Int32"
+         mid-line-width="Int32"
+         shape="[noframe|box|panel|styledpanel|hline|vline]"
+         shadow="[plain|raised|sunken]">
+         <widget>
+            ...
+         </widget>
+      </frame>
+#endif
+
+      qwidget_config_read ("widget", cd, frame);
+      
+      frame->setLineWidth (config_to_int32 ("line-width", cd, 1));
+      frame->setMidLineWidth (config_to_int32 ("mmid-line-width", cd, 0));
+      
+      String value;
+      
+      value = config_to_string ("shape", cd).to_lower ();
+      if (value == "noframe") { frame->setFrameShape (QFrame::NoFrame); }
+      else if (value == "box") { frame->setFrameShape (QFrame::Box); }
+      else if (value == "panel") { frame->setFrameShape (QFrame::Panel); }
+      else if (value == "styledpanel") { frame->setFrameShape (QFrame::StyledPanel); }
+
+      value = config_to_string ("shadow", cd).to_lower ();
+      if (value == "plain") { frame->setFrameShadow (QFrame::Plain); }
+      else if (value == "raised") { frame->setFrameShadow (QFrame::Raised); }
+      else if (value == "sunken") { frame->setFrameShadow (QFrame::Sunken); }
+   }
+}
+
+
+void
 dmz::qaction_config_read (const String &Name, const Config &Source, QAction *action) {
 
    if (action) {
@@ -440,7 +517,7 @@ dmz::qaction_config_read (const String &Name, const Config &Source, QAction *act
          action->setShortcut (shortcut);
       }
 
-      // use "&#38" in the xml to represent '&'
+      // use "&#38" or "&amp;" in the xml to represent '&'
 
       value = config_to_string ("text", cd);
       if (value) { action->setText (value.get_buffer ()); }

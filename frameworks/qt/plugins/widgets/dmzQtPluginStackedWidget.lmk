@@ -1,0 +1,12 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginStackedWidget"
+lmk.set_type "plugin"
+lmk.add_files {"dmzQtPluginStackedWidget.cpp",}
+lmk.add_libs {
+   "dmzQtUtil",
+   "dmzInputEvents",
+   "dmzInputUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzQtFramework", "dmzInputFramework",}
+lmkQt.add_libs {"QtCore", "QtGui",}

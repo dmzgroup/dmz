@@ -19,8 +19,10 @@
 
 class QAbstractButton;
 class QAction;
+class QFrame;
 class QGraphicsView;
 class QLineEdit;
+class QMainWindow;
 class QPushButton;
 class QToolBar;
 class QToolButton;
@@ -100,6 +102,20 @@ namespace dmz {
       const String &Name,
       const Config &Source,
       const QBrush &DefaultValue);
+   
+   Qt::DockWidgetAreas config_to_dock_widget_areas (const Config &Source);
+   Qt::DockWidgetAreas config_to_dock_widget_areas (
+      const String  &Name,
+      const Config &Source);
+      
+   Qt::DockWidgetAreas config_to_dock_widget_areas (
+      const Config &Source,
+      const Qt::DockWidgetAreas DefaultValue);
+   
+   DMZ_QT_UTIL_LINK_SYMBOL Qt::DockWidgetAreas config_to_dock_widget_areas (
+      const String &Name,
+      const Config &Source,
+      const Qt::DockWidgetAreas DefaultValue);
 
    DMZ_QT_UTIL_LINK_SYMBOL void qicon_config_read (
       const String &Name,
@@ -115,6 +131,11 @@ namespace dmz {
       const String &Name,
       const Config &Source,
       QWidget *widget);
+
+   DMZ_QT_UTIL_LINK_SYMBOL void qframe_config_read (
+      const String &Name,
+      const Config &Source,
+      QFrame *frame);
 
    DMZ_QT_UTIL_LINK_SYMBOL void qaction_config_read (
       const String &Name,
@@ -133,7 +154,7 @@ namespace dmz {
 
    DMZ_QT_UTIL_LINK_SYMBOL void qabstractbutton_config_read (
       const String &Name,
-      const Config &String,
+      const Config &Source,
       QAbstractButton *button);
 
    DMZ_QT_UTIL_LINK_SYMBOL void qpushbutton_config_read (
@@ -314,27 +335,27 @@ dmz::config_to_qcolor (const Config &Data, const QColor &Value) {
 }
 
 
-// inline QIcon
-// dmz::config_to_qicon (const Config &Data) {
-//
-//    const QIcon Value;
-//    return config_to_qicon ("", Data, Value);
-// }
-//
-//
-// inline QIcon
-// dmz::config_to_qicon (const String &Name, const Config &Data) {
-//
-//    const QIcon Value;
-//    return config_to_qicon (Name, Data, Value);
-// }
-//
-//
-// inline QIcon
-// dmz::config_to_qicon (const Config &Data, const QIcon &Value) {
-//
-//    return config_to_qicon ("", Data, Value);
-// }
+inline Qt::DockWidgetAreas
+dmz::config_to_dock_widget_areas (const Config &Data) {
+
+   const Qt::DockWidgetAreas Value = Qt::AllDockWidgetAreas;
+   return config_to_dock_widget_areas ("", Data, Value);
+}
+
+
+inline Qt::DockWidgetAreas
+dmz::config_to_dock_widget_areas (const String &Name, const Config &Data) {
+
+   const Qt::DockWidgetAreas Value = Qt::AllDockWidgetAreas;
+   return config_to_dock_widget_areas (Name, Data, Value);
+}
+
+
+inline Qt::DockWidgetAreas
+dmz::config_to_dock_widget_areas (const Config &Data, const Qt::DockWidgetAreas Value) {
+
+   return config_to_dock_widget_areas ("", Data, Value);
+}
 
 
 #endif // DMZ_QT_CONFIG_READ_DOT_H

@@ -200,7 +200,7 @@ dmz::QtPluginCanvasBackground::receive_message (
          
          QString fileName =
             QFileDialog::getOpenFileName (
-               _mainWindowModule ? _mainWindowModule->get_widget () : 0,
+               _mainWindowModule ? _mainWindowModule->get_qt_main_window () : 0,
                "Select Image File",
                _get_last_path (),
                filter);

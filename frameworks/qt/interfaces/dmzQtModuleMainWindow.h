@@ -6,11 +6,7 @@
 #include <dmzTypesBase.h>
 #include <QtCore/Qt>
 
-class QDockWidget;
-class QMenuBar;
-class QStatusBar;
-class QToolBar;
-class QWidget;
+class QMainWindow;
 
 
 namespace dmz {
@@ -23,35 +19,7 @@ namespace dmz {
             const String &PluginName = "");
 
          virtual QString get_window_name () = 0;
-         virtual QWidget *get_widget () = 0;
-         virtual QMenuBar *get_menu_bar () = 0;
-         virtual QStatusBar *get_status_bar () = 0;
-
-         virtual Boolean add_tool_bar (QToolBar *toolBar) = 0;
-         virtual Boolean add_tool_bar (const Handle Channel, QToolBar *toolBar) = 0;
-
-         virtual Boolean remove_tool_bar (QToolBar *toolBar) = 0;
-         virtual Boolean remove_tool_bar (const Handle Channel, QToolBar *toolBar) = 0;
-
-         virtual void add_tool_bar_break (
-            const Qt::ToolBarArea Area = Qt::TopToolBarArea) = 0;
-
-#if 0
-         virtual Boolean add_dock_widget (
-            const Qt::DockWidgetArea Area,
-            QDockWidget *dock) = 0;
-
-         virtual Boolean add_dock_widget (
-            const Handle Channel,
-            const Qt::DockWidgetArea Area,
-            QDockWidget *dock) = 0;
-
-         virtual Boolean remove_dock_widget (QDockWidget *dock) = 0;
-         virtual Boolean remove_dock_widget (const Handle Channel, QDockWidget *dock) = 0;
-
-         virtual Boolean add_central_widget (const Handle Channel, QWidget *widget) = 0;
-         virtual Boolean remove_central_widget (const Handle Channel) = 0;
-#endif
+         virtual QMainWindow *get_qt_main_window () = 0;
 
       protected:
          QtModuleMainWindow (const PluginInfo &Info);

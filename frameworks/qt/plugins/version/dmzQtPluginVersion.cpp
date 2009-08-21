@@ -2,6 +2,7 @@
 #include "dmzQtPluginVersion.h"
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 
@@ -57,21 +58,25 @@ dmz::QtPluginVersion::discover_plugin (
 
       if (window && _aboutAction) {
 
-         _version = new QtVersion (window->get_widget (), _global);
+         QMainWindow *mainWindow (window->get_qt_main_window ());
 
-         QMenuBar *menu = window->get_menu_bar ();
+         _version = new QtVersion (mainWindow, _global);
 
-         if (menu) {
+         if (mainWindow) {
+            
+            QMenuBar *menu (mainWindow->menuBar ());
+
+            if (menu) {
 
 #if defined(__APPLE__) || defined(MACOSX)
-            QMenu *appMenu = menu->addMenu ("Application Menu");
+               QMenu *appMenu = menu->addMenu ("Application Menu");
 #else
-            _aboutAction->setText ("About");
-            QMenu *appMenu = menu->addMenu ("Help");
+               _aboutAction->setText ("About");
+               QMenu *appMenu = menu->addMenu ("Help");
 #endif
-            if (appMenu) { appMenu->addAction (_aboutAction); }
+               if (appMenu) { appMenu->addAction (_aboutAction); }
+            }
          }
-
       } 
    }
    else if (Mode == PluginDiscoverRemove) {

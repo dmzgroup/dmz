@@ -75,7 +75,7 @@ dmz::QtCanvasObjectText::set_text (const QString &Text) {
 
    prepareGeometryChange ();
    _text = Text;
-
+   
    if ((_maxLength > 0) && (_text.length () > _maxLength)) {
      
       _text.resize (_maxLength);

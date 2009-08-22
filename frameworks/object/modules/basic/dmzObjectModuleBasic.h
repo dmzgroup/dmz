@@ -334,6 +334,15 @@ namespace dmz {
             Data &value);
 
          // ObjectModuleBasic Interface
+         Boolean immediate_release_global_object_observer (ObjectObserver &observer);
+
+         Boolean immediate_release_object_observer (
+            const Handle AttributeHandle,
+            const Mask &AttributeMask,
+            ObjectObserver &observer);
+
+         Boolean immediate_release_object_observer_all (ObjectObserver &observer);
+
          void activate_created_object (const Handle ObjectHandle);
 
          void immediate_destroy_object (const Handle ObjectHandle);

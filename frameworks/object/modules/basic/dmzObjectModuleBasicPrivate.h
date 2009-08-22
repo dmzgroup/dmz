@@ -18,6 +18,54 @@ namespace {
 
    typedef ObjectModuleBasic::ObsUpdateStruct ostruct;
 
+   struct ReleaseGlobalObserverStruct : public ostruct {
+
+      ObjectObserver &observer;
+
+      ReleaseGlobalObserverStruct (ObjectObserver &theObserver) :
+            observer (theObserver) {;}
+
+      virtual void update (ObjectModuleBasic &module) {
+
+         module.immediate_release_global_object_observer (observer);
+      }
+   };
+
+   struct ReleaseObserverStruct : public ostruct {
+
+      const Handle AttributeHandle;
+      const Mask AttributeMask;
+      ObjectObserver &observer;
+
+      ReleaseObserverStruct (
+            const Handle TheAttributeHandle,
+            const Mask TheAttributeMask,
+            ObjectObserver &theObserver) :
+            AttributeHandle (TheAttributeHandle),
+            AttributeMask (TheAttributeMask),
+            observer (theObserver) {;}
+
+      virtual void update (ObjectModuleBasic &module) {
+
+         module.immediate_release_object_observer (
+            AttributeHandle,
+            AttributeMask,
+            observer);
+      }
+   };
+
+   struct ReleaseObserverAllStruct : public ostruct {
+
+      ObjectObserver &observer;
+
+      ReleaseObserverAllStruct (ObjectObserver &theObserver) : observer (theObserver) {;}
+
+      virtual void update (ObjectModuleBasic &module) {
+
+         module.immediate_release_object_observer_all (observer);
+      }
+   };
+
    struct CreateObjectStruct : public ostruct {
 
       const Handle ObjectHandle;

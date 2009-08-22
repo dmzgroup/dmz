@@ -208,32 +208,14 @@ dmz::ObjectModuleBasic::register_global_object_observer (ObjectObserver &observe
 dmz::Boolean
 dmz::ObjectModuleBasic::release_global_object_observer (ObjectObserver &observer) {
 
-   const Handle ObsHandle (observer.get_object_observer_handle ());
+   Boolean result (False);
 
-   Boolean result (_globalTable.remove (ObsHandle) == &observer);
+   if (!_inObsUpdate) { result = immediate_release_global_object_observer (observer); }
+   else {
 
-   _globalCount = _globalTable.get_count ();
+      _add_observer_update (new ReleaseGlobalObserverStruct (observer));
 
-   SubscriptionStruct *sub (_subscriptionTable.lookup (ObsHandle));
-
-   if (sub) {
-
-      HashTableHandleIterator it;
-      Mask *attrMaskPtr (sub->table.get_first (it));
-
-      while (attrMaskPtr) {
-
-         if (*attrMaskPtr) {
-
-            _update_subscription (
-               it.get_hash_key (),
-               *attrMaskPtr,
-               AddObserver,
-               observer);
-         }
-
-         attrMaskPtr = sub->table.get_next (it);
-      }
+      result = True;
    }
 
    return result;
@@ -298,42 +280,21 @@ dmz::ObjectModuleBasic::release_object_observer (
 
    Boolean result (False);
 
-   const Handle ObsHandle (observer.get_object_observer_handle ());
-   const Boolean IsGlobal (_globalTable.lookup (ObsHandle) == &observer);
-   SubscriptionStruct *sub (_subscriptionTable.lookup (ObsHandle));
+   if (!_inObsUpdate) {
 
-   if (sub) {
+      result = immediate_release_object_observer (
+         AttributeHandle,
+         AttributeMask,
+         observer);
+   }
+   else {
 
-      Mask *attrMaskPtr (sub->table.lookup (AttributeHandle));
+      _add_observer_update (new ReleaseObserverStruct (
+         AttributeHandle,
+         AttributeMask,
+         observer));
 
-      if (attrMaskPtr) {
-
-         result = True;
-
-         if (!IsGlobal) {
-
-            _update_subscription (
-               AttributeHandle,
-               AttributeMask,
-               RemoveObserver,
-               observer);
-         }
-
-         attrMaskPtr->unset (AttributeMask);
-
-         if (!attrMaskPtr->is_set ()) {
-
-            attrMaskPtr = sub->table.remove (AttributeHandle);
-
-            if (attrMaskPtr) { delete attrMaskPtr; attrMaskPtr = 0; }
-
-            if (sub->table.get_count () <= 0) {
-
-               sub = _subscriptionTable.remove (ObsHandle);
-               if (sub) { delete sub; sub = 0; }
-            }
-         }
-      }
+      result = True;
    }
 
    return result;
@@ -345,31 +306,10 @@ dmz::ObjectModuleBasic::release_object_observer_all (ObjectObserver &observer) {
 
    Boolean result (False);
 
-   const Handle ObsHandle (observer.get_object_observer_handle ());
-   SubscriptionStruct *sub (_subscriptionTable.remove (ObsHandle));
+   if (!_inObsUpdate) { result = immediate_release_object_observer_all (observer); }
+   else {
 
-   if (sub) {
-
-      HashTableHandleIterator it;
-
-      Mask *attrMaskPtr (sub->table.get_first (it));
-
-      while (attrMaskPtr) {
-
-         _update_subscription (
-            it.get_hash_key (),
-            *attrMaskPtr,
-            RemoveObserver,
-            observer);
-
-         attrMaskPtr->clear ();
-
-         attrMaskPtr = sub->table.get_next (it);
-      }
-
-      release_global_object_observer (observer);
-
-      delete sub; sub = 0;
+      _add_observer_update (new ReleaseObserverAllStruct (observer));
 
       result = True;
    }
@@ -2894,6 +2834,148 @@ dmz::ObjectModuleBasic::lookup_data (
 
 
 // ObjectModuleBasic Interface
+dmz::Boolean
+dmz::ObjectModuleBasic::immediate_release_global_object_observer (
+      ObjectObserver &observer) {
+
+   _inObsUpdate = True;
+
+   const Handle ObsHandle (observer.get_object_observer_handle ());
+
+   Boolean result (_globalTable.remove (ObsHandle) == &observer);
+
+   _globalCount = _globalTable.get_count ();
+
+   SubscriptionStruct *sub (_subscriptionTable.lookup (ObsHandle));
+
+   if (sub) {
+
+      HashTableHandleIterator it;
+      Mask *attrMaskPtr (sub->table.get_first (it));
+
+      while (attrMaskPtr) {
+
+         if (*attrMaskPtr) {
+
+            _update_subscription (
+               it.get_hash_key (),
+               *attrMaskPtr,
+               AddObserver,
+               observer);
+         }
+
+         attrMaskPtr = sub->table.get_next (it);
+      }
+   }
+
+   _inObsUpdate = False;
+
+   _update_observers ();
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::ObjectModuleBasic::immediate_release_object_observer (
+      const Handle AttributeHandle,
+      const Mask &AttributeMask,
+      ObjectObserver &observer) {
+
+   _inObsUpdate = True;
+
+   Boolean result (False);
+
+   const Handle ObsHandle (observer.get_object_observer_handle ());
+   const Boolean IsGlobal (_globalTable.lookup (ObsHandle) == &observer);
+   SubscriptionStruct *sub (_subscriptionTable.lookup (ObsHandle));
+
+   if (sub) {
+
+      Mask *attrMaskPtr (sub->table.lookup (AttributeHandle));
+
+      if (attrMaskPtr) {
+
+         result = True;
+
+         if (!IsGlobal) {
+
+            _update_subscription (
+               AttributeHandle,
+               AttributeMask,
+               RemoveObserver,
+               observer);
+         }
+
+         attrMaskPtr->unset (AttributeMask);
+
+         if (!attrMaskPtr->is_set ()) {
+
+            attrMaskPtr = sub->table.remove (AttributeHandle);
+
+            if (attrMaskPtr) { delete attrMaskPtr; attrMaskPtr = 0; }
+
+            if (sub->table.get_count () <= 0) {
+
+               sub = _subscriptionTable.remove (ObsHandle);
+               if (sub) { delete sub; sub = 0; }
+            }
+         }
+      }
+   }
+
+   _inObsUpdate = False;
+
+   _update_observers ();
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::ObjectModuleBasic::immediate_release_object_observer_all (ObjectObserver &observer) {
+
+   _inObsUpdate = True;
+
+   Boolean result (False);
+
+   const Handle ObsHandle (observer.get_object_observer_handle ());
+   SubscriptionStruct *sub (_subscriptionTable.remove (ObsHandle));
+
+   if (sub) {
+
+      HashTableHandleIterator it;
+
+      Mask *attrMaskPtr (sub->table.get_first (it));
+
+      while (attrMaskPtr) {
+
+         _update_subscription (
+            it.get_hash_key (),
+            *attrMaskPtr,
+            RemoveObserver,
+            observer);
+
+         attrMaskPtr->clear ();
+
+         attrMaskPtr = sub->table.get_next (it);
+      }
+
+      release_global_object_observer (observer);
+
+      delete sub; sub = 0;
+
+      result = True;
+   }
+
+   _inObsUpdate = False;
+
+   _update_observers ();
+
+   return result;
+}
+
+
 void
 dmz::ObjectModuleBasic::activate_created_object (const Handle ObjectHandle) {
 

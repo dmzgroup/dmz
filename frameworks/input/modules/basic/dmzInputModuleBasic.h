@@ -68,11 +68,6 @@ namespace dmz {
          virtual void send_mouse_event (const InputEventMouse &Event);
          virtual void send_data_event (const Handle Source, const Data &Event);
 
-         void immedate_release_input_observer (
-            const Handle Channel,
-            const Mask &EventMask,
-            InputObserver &obs);
-
       protected:
          struct ObsStruct {
 

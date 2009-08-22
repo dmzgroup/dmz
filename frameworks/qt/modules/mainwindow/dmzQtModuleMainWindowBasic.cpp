@@ -140,8 +140,20 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
       const PluginStateEnum State,
       const UInt32 Level) {
 
-   if (State == PluginStateStart) {
+   if (State == PluginStateInit) {
 
+   }
+   else if (State == PluginStateStart) {
+
+      HashTableStringIterator it;
+      DockWidgetStruct *dws (_dockWidgetTable.get_first (it));
+      
+      while (dws) {
+
+         dws->add_to (this);
+         dws = _dockWidgetTable.get_next (it);
+      }
+      
       _load_session ();
       show ();
       raise ();
@@ -150,7 +162,20 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
    else if (State == PluginStateStop) {
 
       _save_session ();
+      
       hide ();
+      
+      HashTableStringIterator it;
+      DockWidgetStruct *dws (_dockWidgetTable.get_first (it));
+
+      while (dws) {
+
+         dws->dock->hide ();
+         dws = _dockWidgetTable.get_next (it);
+      }
+   }
+   else if (State == PluginStateShutdown) {
+
    }
 }
 
@@ -179,7 +204,7 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
             if (dws) {
             
                dws->set_widget (widget);
-               dws->add_to (this);
+//               dws->add_to (this);
             }
          }
       }

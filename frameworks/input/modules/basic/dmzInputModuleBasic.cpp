@@ -34,6 +34,26 @@ static const Mask LocalDataMask (0, InputEventDataConst);
 
 typedef InputModuleBasic::EventQueStruct estruct;
 
+struct ReleaseObserverStruct : public estruct {
+
+   const Handle Channel;
+   const Mask EventMask;
+   InputObserver &obs;
+
+   ReleaseObserverStruct ( 
+         const Handle TheChannel,
+         const Mask &TheEventMask,
+         InputObserver &theObs) :
+         Channel (TheChannel),
+         EventMask (TheEventMask),
+         obs (theObs) {;}
+
+   virtual void send_event (InputModule &module) {
+
+      module.release_input_observer (Channel, EventMask, obs);
+   }
+};
+
 struct AxisQueStruct : public estruct {
 
    const InputEventAxis Event;
@@ -283,94 +303,104 @@ dmz::InputModuleBasic::release_input_observer (
       const Mask &EventMask,
       InputObserver &obs) {
 
-   ChannelStruct *cs (_channelTable.lookup (Channel));
-   const Handle ObsHandle (obs.get_input_observer_handle ());
-   ObsStruct *os (_obsTable.lookup (ObsHandle));
+   if (_inEvent) { _que_event (new ReleaseObserverStruct (Channel, EventMask, obs)); } 
+   else {
 
-   if (cs && os) {
+      _inEvent = True;
 
-      Mask *obsMask (os->table.lookup (Channel));
+      ChannelStruct *cs (_channelTable.lookup (Channel));
+      const Handle ObsHandle (obs.get_input_observer_handle ());
+      ObsStruct *os (_obsTable.lookup (ObsHandle));
 
-      if (obsMask) {
+      if (cs && os) {
 
-         Mask updateMask;
+         Mask *obsMask (os->table.lookup (Channel));
 
-         if (EventMask & LocalStateMask) {
+         if (obsMask) {
 
-            if (cs->stateTable.remove (ObsHandle)) { obsMask->unset (LocalStateMask); }
-         }
+            Mask updateMask;
 
-         if (EventMask & LocalAxisMask) {
+            if (EventMask & LocalStateMask) {
 
-            if (cs->axisTable.remove (ObsHandle)) {
-
-               obsMask->unset (LocalAxisMask);
-               updateMask |= LocalAxisMask;
+               if (cs->stateTable.remove (ObsHandle)) { obsMask->unset (LocalStateMask); }
             }
-         }
 
-         if (EventMask & LocalButtonMask) {
+            if (EventMask & LocalAxisMask) {
 
-            if (cs->buttonTable.remove (ObsHandle)) {
+               if (cs->axisTable.remove (ObsHandle)) {
 
-               obsMask->unset (LocalButtonMask);
-               updateMask |= LocalButtonMask;
+                  obsMask->unset (LocalAxisMask);
+                  updateMask |= LocalAxisMask;
+               }
             }
-         }
 
-         if (EventMask & LocalSwitchMask) {
+            if (EventMask & LocalButtonMask) {
 
-            if (cs->switchTable.remove (ObsHandle)) {
+               if (cs->buttonTable.remove (ObsHandle)) {
 
-               obsMask->unset (LocalSwitchMask);
-               updateMask |= LocalSwitchMask;
+                  obsMask->unset (LocalButtonMask);
+                  updateMask |= LocalButtonMask;
+               }
             }
-         }
 
-         if (EventMask & LocalKeyMask) {
+            if (EventMask & LocalSwitchMask) {
 
-            if (cs->keyTable.remove (ObsHandle)) {
+               if (cs->switchTable.remove (ObsHandle)) {
 
-               obsMask->unset (LocalKeyMask);
-               updateMask |= LocalKeyMask;
+                  obsMask->unset (LocalSwitchMask);
+                  updateMask |= LocalSwitchMask;
+               }
             }
-         }
 
-         if (EventMask & LocalMouseMask) {
+            if (EventMask & LocalKeyMask) {
 
-            if (cs->mouseTable.remove (ObsHandle)) {
+               if (cs->keyTable.remove (ObsHandle)) {
 
-               obsMask->unset (LocalMouseMask);
-               updateMask |= LocalMouseMask;
+                  obsMask->unset (LocalKeyMask);
+                  updateMask |= LocalKeyMask;
+               }
             }
-         }
 
-         if (EventMask & LocalDataMask) {
+            if (EventMask & LocalMouseMask) {
 
-            if (cs->dataTable.remove (ObsHandle)) {
+               if (cs->mouseTable.remove (ObsHandle)) {
 
-               obsMask->unset (LocalDataMask);
-               updateMask |= LocalDataMask;
+                  obsMask->unset (LocalMouseMask);
+                  updateMask |= LocalMouseMask;
+               }
             }
-         }
 
-         if (cs->active && updateMask.is_set ()) {
+            if (EventMask & LocalDataMask) {
 
-            _decrement_active_count (cs->ChannelHandle, updateMask, *os);
-         }
+               if (cs->dataTable.remove (ObsHandle)) {
 
-         if (!obsMask->is_set ()) {
+                  obsMask->unset (LocalDataMask);
+                  updateMask |= LocalDataMask;
+               }
+            }
 
-            cs->activeTable.remove (os->ObsHandle);
+            if (cs->active && updateMask.is_set ()) {
 
-            if (os->table.remove (Channel)) { delete obsMask; obsMask = 0; }
+               _decrement_active_count (cs->ChannelHandle, updateMask, *os);
+            }
 
-            if (os->table.get_count () == 0) {
+            if (!obsMask->is_set ()) {
 
-               if (_obsTable.remove (ObsHandle)) { delete os; os = 0; }
+               cs->activeTable.remove (os->ObsHandle);
+
+               if (os->table.remove (Channel)) { delete obsMask; obsMask = 0; }
+
+               if (os->table.get_count () == 0) {
+
+                  if (_obsTable.remove (ObsHandle)) { delete os; os = 0; }
+               }
             }
          }
       }
+
+      _inEvent = False;
+
+      _do_qued_events ();
    }
 }
 

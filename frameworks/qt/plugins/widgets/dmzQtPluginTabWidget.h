@@ -86,6 +86,7 @@ namespace dmz {
 
          QFrame *_parent;
          QTabWidget *_tab;
+         WidgetStruct *_defaultTab;
 
          HashTableStringTemplate<WidgetStruct> _widgetTable;
          HashTableHandleTemplate<WidgetStruct> _channelTable;

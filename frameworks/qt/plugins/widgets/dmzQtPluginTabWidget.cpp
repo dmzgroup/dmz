@@ -18,7 +18,8 @@ dmz::QtPluginTabWidget::QtPluginTabWidget (const PluginInfo &Info, Config &local
       InputObserverUtil (Info, local),
       _log (Info),
       _parent (0),
-      _tab (0) {
+      _tab (0),
+      _defaultTab (0) {
 
    setObjectName (get_plugin_name ().get_buffer ());
    
@@ -42,17 +43,10 @@ dmz::QtPluginTabWidget::update_plugin_state (
       const UInt32 Level) {
 
    if (State == PluginStateInit) {
-
-      if (_tab) {
-
-         HashTableStringIterator it;
-         WidgetStruct *ws (_widgetTable.get_first (it));
-
-         while (ws) {
-
-            if (ws->widget) { _tab->addTab (ws->widget, ws->title.get_buffer ()); }
-            ws = _widgetTable.get_next (it);
-         }
+      
+      if (_tab && _defaultTab && _defaultTab->widget) {
+         
+         _tab->setCurrentWidget (_defaultTab->widget);
       }
    }
    else if (State == PluginStateStart) {
@@ -74,7 +68,7 @@ dmz::QtPluginTabWidget::discover_plugin (
 
    QtWidget *w = QtWidget::cast (PluginPtr);
 
-   if (w) {
+   if (w && _tab) {
 
       const String WidgetName (w->get_qt_widget_name ());
       WidgetStruct *ws (_widgetTable.lookup (WidgetName));
@@ -83,9 +77,16 @@ dmz::QtPluginTabWidget::discover_plugin (
 
          if (Mode == PluginDiscoverAdd) {
 
-            ws->widget = w->get_qt_widget ();
-
             if (!ws->title) { ws->title = WidgetName; }
+
+            QWidget *widget = w->get_qt_widget ();
+            
+            if (widget) {
+               
+               ws->widget = widget;
+               
+               _tab->addTab (ws->widget, ws->title.get_buffer ());
+            }
          }
          else if (Mode == PluginDiscoverRemove) {
 
@@ -93,10 +94,7 @@ dmz::QtPluginTabWidget::discover_plugin (
 
             if (widget && (ws->widget == widget)) {
 
-               if (_tab) {
-
-                  _tab->removeTab (_tab->indexOf (widget));
-               }
+               _tab->removeTab (_tab->indexOf (widget));
 
                widget->setParent (0);
                ws->widget = 0;
@@ -126,10 +124,7 @@ dmz::QtPluginTabWidget::update_channel_state (const Handle Channel, const Boolea
       if (State) { ws->count++; }
       else { ws->count--; }
 
-      if (ws->count) {
-
-         _tab->setCurrentWidget (ws->widget);
-      }
+      if (ws->count) { _tab->setCurrentWidget (ws->widget); }
    }
 }
 
@@ -162,6 +157,8 @@ void
 dmz::QtPluginTabWidget::_init (Config &local) {
 
    _parent = new QFrame;
+
+   _parent->setObjectName (get_plugin_name ().get_buffer ());
 
    qframe_config_read ("", local, _parent);
 
@@ -215,6 +212,11 @@ dmz::QtPluginTabWidget::_init (Config &local) {
                if (ChannelName) {
                   
                   ws->channel = activate_input_channel (ChannelName, InputEventChannelStateMask);
+               }
+               
+               if (config_to_boolean ("default", widget, False)) {
+                  
+                  if (!_defaultTab) { _defaultTab = ws; }
                }
             }
 

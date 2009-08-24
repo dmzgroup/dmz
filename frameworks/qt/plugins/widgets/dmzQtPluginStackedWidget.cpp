@@ -67,6 +67,7 @@ dmz::QtPluginStackedWidget::discover_plugin (
          if (Mode == PluginDiscoverAdd) {
 
             cs->widget = w->get_qt_widget ();
+
             if (cs->widget) { _stack->addWidget (cs->widget); }
          }
          else if (Mode == PluginDiscoverRemove) {
@@ -98,10 +99,7 @@ dmz::QtPluginStackedWidget::update_channel_state (const Handle Channel, const Bo
       if (State) { cs->count++; }
       else { cs->count--; }
 
-      if (cs->count) {
-
-         _stack->setCurrentWidget (cs->widget);
-      }
+      if (cs->count) { _stack->setCurrentWidget (cs->widget); }
    }
 }
 

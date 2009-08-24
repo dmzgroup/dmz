@@ -175,7 +175,11 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
    }
 
    layout->addStretch ();
-   setLayout (layout);
+   
+   QVBoxLayout *mainLayout = new QVBoxLayout;
+   mainLayout->addLayout (layout);
+   mainLayout->addStretch ();
+   setLayout (mainLayout);
 }
 
 

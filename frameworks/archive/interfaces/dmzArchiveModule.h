@@ -7,10 +7,6 @@
 
 namespace dmz {
 
-   //! \cond
-   const char ArchiveModuleInterfaceName[] = "ArchiveModuleInterface";
-   //! \endcond
-
    //! \brief Default archive group name.
    //! \ingroup Archive
    const char ArchiveDefaultName[] = "Default_Archive";
@@ -24,6 +20,9 @@ namespace dmz {
          static ArchiveModule *cast (
             const Plugin *PluginPtr,
             const String &PluginName = "");
+
+         String get_archive_module_name () const;
+         Handle get_archive_module_handle () const;
 
          // ArchiveModule Interface
          virtual Boolean register_archive_observer (
@@ -48,6 +47,10 @@ namespace dmz {
 
          const PluginInfo &__Info;
    };
+
+   //! \cond
+   const char ArchiveModuleInterfaceName[] = "ArchiveModuleInterface";
+   //! \endcond
 };
 
 
@@ -73,6 +76,17 @@ inline
 dmz::ArchiveModule::~ArchiveModule () {
 
    remove_rtti_interface (ArchiveModuleInterfaceName, __Info);
+}
+
+
+inline dmz::String
+dmz::ArchiveModule::get_archive_module_name () const { return __Info.get_name (); }
+
+
+inline dmz::Handle
+dmz::ArchiveModule::get_archive_module_handle () const {
+
+   return __Info.get_handle ();
 }
 
 #endif // DMZ_ARCHIVE_MODULE_DOT_H

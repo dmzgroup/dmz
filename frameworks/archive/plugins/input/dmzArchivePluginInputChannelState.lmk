@@ -1,0 +1,5 @@
+lmk.set_name "dmzArchivePluginInputChannelState"
+lmk.set_type "plugin"
+lmk.add_files {"dmzArchivePluginInputChannelState.cpp",}
+lmk.add_libs {"dmzInputUtil", "dmzArchiveUtil", "dmzKernel",}
+lmk.add_preqs {"dmzArchiveFramework","dmzInputFramework",}

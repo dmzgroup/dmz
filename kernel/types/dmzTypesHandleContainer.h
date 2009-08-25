@@ -49,7 +49,9 @@ namespace dmz {
 
          Handle get_first (HandleContainerIterator &it) const;
          Handle get_next (HandleContainerIterator &it) const;
+         Boolean get_next (HandleContainerIterator &it, Handle &value) const;
          Handle get_prev (HandleContainerIterator &it) const;
+         Boolean get_prev (HandleContainerIterator &it, Handle &value) const;
          Handle get_last (HandleContainerIterator &it) const;
 
       protected:

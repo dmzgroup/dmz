@@ -67,7 +67,13 @@ dmz::ArchiveObserverUtil::ArchiveObserverUtil (
 
 dmz::ArchiveObserverUtil::~ArchiveObserverUtil () {
 
-   if (__state.module) { remove_archive_module ("", *(__state.module)); }
+   if (__state.module) {
+
+      remove_archive_module (
+         __state.module->get_archive_module_name (),
+         *(__state.module));
+   }
+
    delete &__state;
 }
 

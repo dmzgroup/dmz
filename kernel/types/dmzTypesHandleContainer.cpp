@@ -260,6 +260,17 @@ dmz::HandleContainer::get_next (HandleContainerIterator &it) const {
 }
 
 
+dmz::Boolean
+dmz::HandleContainer::get_next (HandleContainerIterator &it, Handle &value) const {
+
+   value = 0;
+
+   if (_state.table.get_next (it.state.it) != 0) { value = it.state.it.get_hash_key (); }
+
+   return value != 0;
+}
+
+
 /*!
 
 \brief Gets previous Handle in the container.
@@ -279,6 +290,20 @@ dmz::HandleContainer::get_prev (HandleContainerIterator &it) const {
    }
 
    return result;
+}
+
+
+dmz::Boolean
+dmz::HandleContainer::get_prev (HandleContainerIterator &it, Handle &value) const {
+
+   value = 0;
+
+   if (_state.table.get_next (it.state.it, True) != 0) {
+
+      value = it.state.it.get_hash_key ();
+   }
+
+   return value != 0;
 }
 
 

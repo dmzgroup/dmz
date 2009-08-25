@@ -58,8 +58,6 @@ dmz::QtModuleMainWindowBasic::DockWidgetStruct::set_widget (QWidget *theWidget) 
          
          widget = theWidget;
          widget->adjustSize ();
-         QVBoxLayout *layout = new QVBoxLayout;
-         dock->setLayout (layout);
          dock->setWidget (widget);
       }
       else {
@@ -110,14 +108,20 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
       QtWidget (Info),
       _exit (get_plugin_runtime_context ()),
       _log (Info),
-      _fileExitAction (0),
-      _fileMenu (0),
+      _menuBar (0),
+      _exitAction (0),
       _mainWidgetName (),
       _dockWidgetTable () {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
    _ui.setupUi (this);
+
+// #ifdef Q_WS_MAC
+//    _menuBar = new QMenuBar (0);
+// #else
+    _menuBar = menuBar ();
+// #endif
 
    _create_actions ();
    _create_menus ();
@@ -204,7 +208,6 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
             if (dws) {
             
                dws->set_widget (widget);
-//               dws->add_to (this);
             }
          }
       }
@@ -247,6 +250,40 @@ QMainWindow *
 dmz::QtModuleMainWindowBasic::get_qt_main_window () { return this; }
 
 
+QMenu *
+dmz::QtModuleMainWindowBasic::lookup_menu (const String &Text) {
+
+   QMenu *menu (_menuTable.lookup (Text));
+   
+   if (!menu) {
+      
+      menu = _menuBar->addMenu (Text.get_buffer ());
+      if (!_menuTable.store (Text, menu)) { delete menu; menu = 0; }
+   }
+   
+   return menu;
+}
+
+
+void
+dmz::QtModuleMainWindowBasic::add_menu_action (const String &MenuName, QAction *action) {
+   
+   if (MenuName && action) {
+      
+      QMenu *menu (lookup_menu (MenuName));
+      if (menu) { menu->addAction (action); }
+   }
+}
+
+
+void
+dmz::QtModuleMainWindowBasic::remove_menu_action (const String &MenuName, QAction *action) {
+
+   QMenu *menu (_menuTable.lookup (MenuName));
+   if (menu) { menu->removeAction (action); }
+}
+
+
 // QtWidget Interface
 QWidget *
 dmz::QtModuleMainWindowBasic::get_qt_widget () { return this; }
@@ -262,18 +299,17 @@ dmz::QtModuleMainWindowBasic::closeEvent (QCloseEvent *event) {
 void
 dmz::QtModuleMainWindowBasic::_create_actions () {
 
-   _fileExitAction = new QAction (tr ("E&xit"), this);
-   _fileExitAction->setShortcut (tr ("Ctrl+Q"));
-   _fileExitAction->setStatusTip (tr ("Exit the application"));
-   connect (_fileExitAction, SIGNAL (triggered ()), this, SLOT (close ()));
+   _exitAction = new QAction (tr ("E&xit"), this);
+   _exitAction->setShortcut (tr ("Ctrl+Q"));
+   _exitAction->setStatusTip (tr ("Exit the application"));
+   connect (_exitAction, SIGNAL (triggered ()), this, SLOT (close ()));
 }
 
 
 void
 dmz::QtModuleMainWindowBasic::_create_menus () {
 
-   _fileMenu = menuBar ()->addMenu (tr ("&File"));
-   _fileMenu->addAction (_fileExitAction);
+   add_menu_action ("&File", _exitAction);
 }
 
 

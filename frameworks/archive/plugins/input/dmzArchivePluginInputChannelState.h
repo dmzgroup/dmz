@@ -28,8 +28,6 @@ namespace dmz {
             const Plugin *PluginPtr);
 
          // ArchiveObserver Interface.
-         virtual StringContainer get_archive_scope (const Handle ArchiveHandle);
-
          virtual void create_archive (
             const Handle ArchiveHandle,
             const Int32 Version,
@@ -48,7 +46,6 @@ namespace dmz {
          Log _log;
          InputModule *_input;
          String _inputModuleName;
-         StringContainer _scope;
          HandleContainer _channels;
 
       private:

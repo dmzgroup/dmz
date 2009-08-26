@@ -414,7 +414,6 @@ main (int argc, char *argv[]) {
    if (!qtApp.get_requested_file ().isEmpty ()) {
 
       launchFile = qPrintable (qtApp.get_requested_file ());
-app.log.error << launchFile << endl;
    }
 #else
    QApplication qtApp (argc, argv);

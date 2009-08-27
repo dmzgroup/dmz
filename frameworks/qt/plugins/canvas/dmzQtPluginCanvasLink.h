@@ -8,6 +8,7 @@
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesMask.h>
 #include <QtGui/QGraphicsItem>
 
 
@@ -75,6 +76,25 @@ namespace dmz {
             const UUID &SubIdentity,
             const Handle SubHandle);
 
+         virtual void update_link_attribute_object (
+            const Handle LinkHandle,
+            const Handle AttributeHandle,
+            const UUID &SuperIdentity,
+            const Handle SuperHandle,
+            const UUID &SubIdentity,
+            const Handle SubHandle,
+            const UUID &AttributeIdentity,
+            const Handle AttributeObjectHandle,
+            const UUID &PrevAttributeIdentity,
+            const Handle PrevAttributeObjectHandle);
+
+         virtual void update_object_state (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Mask &Value,
+            const Mask *PreviousValue);
+
          virtual void update_object_position (
             const UUID &Identity,
             const Handle ObjectHandle,
@@ -83,7 +103,7 @@ namespace dmz {
             const Vector *PreviousValue);
 
       protected:
-         struct ObjectStruct {
+         struct LinkStruct {
 
             const Handle ObjHandle;
             const Handle AttrHandle;
@@ -91,7 +111,7 @@ namespace dmz {
             const Handle SubHandle;
             QtCanvasLink *item;
 
-            ObjectStruct (
+            LinkStruct (
                const Handle TheHandle,
                const Handle TheAttrHandle,
                const Handle TheSuperHandle,
@@ -102,7 +122,7 @@ namespace dmz {
                SubHandle (TheSubHandle),
                item (new QtCanvasLink (ObjHandle, SuperHandle, SubHandle)) {;}
 
-            ~ObjectStruct () { if (item) { delete item; item = 0; } }
+            ~LinkStruct () { if (item) { delete item; item = 0; } }
          };
 
          struct NodeStruct {
@@ -110,6 +130,29 @@ namespace dmz {
             HashTableHandleTemplate<QtCanvasLink> edgeTable;
             NodeStruct () : edgeTable () {;}
             ~NodeStruct () { edgeTable.clear (); }
+         };
+
+         struct ColorStruct {
+
+            const Mask State;
+            const QColor Color;
+            ColorStruct *next;
+
+            ColorStruct (const Mask &TheState, const QColor &TheColor) :
+                  State (TheState),
+                  Color (TheColor),
+                  next (0) {;}
+
+            ~ColorStruct () {
+
+               while (next) {
+
+                  ColorStruct *tmp = next;
+                  next = next->next;
+                  tmp->next = 0;
+                  delete tmp; tmp = 0;
+               }
+            }
          };
 
          void _lookup_object_position (const Handle ObjectHandle, Vector &pos);
@@ -128,8 +171,11 @@ namespace dmz {
          String _canvasModuleName;
          Handle _positionAttrHandle;
          HashTableHandle _linkAttrTable;
-         HashTableHandleTemplate<ObjectStruct> _objectTable;
+         HashTableHandleTemplate<LinkStruct> _linkTable;
          HashTableHandleTemplate<NodeStruct> _nodeTable;
+         HashTableHandleTemplate<LinkStruct> _attrObjTable;
+
+         ColorStruct *_stateList;
 
       private:
          QtPluginCanvasLink ();

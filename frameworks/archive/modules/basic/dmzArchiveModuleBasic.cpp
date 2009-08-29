@@ -197,15 +197,31 @@ dmz::ArchiveModuleBasic::process_archive (const Handle ArchiveHandle, Config &ar
 
       while (obs) {
 
-         Config local;
          StringContainer sc = obs->get_archive_scope (ArchiveHandle);
          String scopeName;
-         Boolean found = sc.get_first (scopeName);
+         sc.get_first (scopeName);
+         Config local (scopeName);
 
-         while (found && !local) {
+         Boolean found = sc.get_last (scopeName);
 
-            archive.lookup_all_config_merged (scopeName, local);
-            found = sc.get_next (scopeName);
+         while (found) {
+
+            Config data;
+            archive.lookup_all_config_merged (scopeName, data);
+
+            if (data) {
+
+               local.add_children (data);
+               ConfigIterator it;
+               String attr, value;
+
+               while (data.get_next_attribute (it, attr, value)) {
+
+                  local.store_attribute (attr, value);
+               }
+            }
+
+            found = sc.get_prev (scopeName);
          }
 
          obs->process_archive (ArchiveHandle, Version, local, archive);

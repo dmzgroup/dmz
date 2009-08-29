@@ -181,14 +181,14 @@ local_init (
 
       if (func) {
 
-         result = True;
-
          app.log.info << "Launching init extension: " << FuncName << " from "
             << LibName << endl;
 
-         AppShellInitStruct init (launchFile, versionFile, manifest, app, fileList);
+         AppShellInitStruct init (versionFile, launchFile, manifest, app, fileList);
 
          func (init);
+
+         result = init.fileListPopulated;
       }
       else {
 

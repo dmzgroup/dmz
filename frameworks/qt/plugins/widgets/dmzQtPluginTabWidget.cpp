@@ -7,6 +7,7 @@
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzRuntimeSession.h>
 #include <QtGui/QFrame>
 #include <QtGui/QGridLayout>
 
@@ -51,9 +52,27 @@ dmz::QtPluginTabWidget::update_plugin_state (
    }
    else if (State == PluginStateStart) {
 
+      Config session (get_session_config (
+         get_plugin_name (),
+         get_plugin_runtime_context ()));
+
+      const Int32 Index = config_to_int32 ("tab-index.value", session, -1);
+
+      if (_tab && Index >= 0) {
+
+         _tab->setCurrentIndex ((int)Index);
+      }
    }
    else if (State == PluginStateStop) {
 
+      if (_tab) {
+
+         Config session (get_plugin_name ());
+         Config data ("tab-index");
+         data.store_attribute ("value", String::number (_tab->currentIndex ()));
+         session.add_config (data);
+         set_session_config (get_plugin_runtime_context (), session);
+      }
    }
    else if (State == PluginStateShutdown) {
 
@@ -137,17 +156,18 @@ dmz::QtPluginTabWidget::_slot_tab_changed (int index) {
    if (input && _tab) {
 
       HashTableHandleIterator it;
-      WidgetStruct *ws (_channelTable.get_first (it));
+      WidgetStruct *ws (0);
       
-      while (ws) {
+      while (_channelTable.get_next (it, ws)) {
 
-         Boolean currentTab (False);
+         if (ws->channel) {
 
-         if (ws->widget == _tab->widget (index)) { currentTab = True; }
+            Boolean currentTab (False);
 
-         input->set_channel_state (ws->channel, currentTab);
+            if (ws->widget == _tab->widget (index)) { currentTab = True; }
 
-         ws = _channelTable.get_next (it);
+            input->set_channel_state (ws->channel, currentTab);
+         }
       }
    }
 }
@@ -173,7 +193,8 @@ dmz::QtPluginTabWidget::_init (Config &local) {
    _tab->setMinimumSize (config_to_qsize ("minimum-size", local, _tab->minimumSize ()));
    _tab->setMaximumSize (config_to_qsize ("maximum-size", local, _tab->maximumSize ()));
 
-   const String TabPosName (config_to_string ("position.value", local, "north").get_lower ());
+   const String TabPosName (
+      config_to_string ("position.value", local, "north").get_lower ());
    
    QTabWidget::TabPosition tabPos (QTabWidget::North);
    
@@ -211,7 +232,9 @@ dmz::QtPluginTabWidget::_init (Config &local) {
 
                if (ChannelName) {
                   
-                  ws->channel = activate_input_channel (ChannelName, InputEventChannelStateMask);
+                  ws->channel = activate_input_channel (
+                     ChannelName,
+                     InputEventChannelStateMask);
                }
                
                if (config_to_boolean ("default", widget, False)) {

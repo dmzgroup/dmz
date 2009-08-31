@@ -1,5 +1,20 @@
 #include <dmzTypesStringContainer.h>
 #include <dmzTypesHashTableStringTemplate.h>
+/*!
+
+\class dmz::StringContainerIterator
+\ingroup Types
+\brief Iterator used to traverse a StringContainer.
+
+*/
+
+//! cond
+struct dmz::StringContainerIterator::State {
+
+   HashTableStringIterator it;
+};
+//! \endcond
+
 
 /*!
 
@@ -193,5 +208,51 @@ dmz::StringContainer::get_last (String &value) const {
    }
 
    return result;
+}
+
+
+dmz::Boolean
+dmz::StringContainer::get_first (StringContainerIterator &it, String &value) const {
+
+   it.state.it.reset ();
+   return get_next (it, value);
+}
+
+
+dmz::Boolean
+dmz::StringContainer::get_next (StringContainerIterator &it, String &value) const {
+
+   Boolean result (False);
+
+   if (_state.table.get_next (it.state.it) != 0) {
+
+      value = it.state.it.get_hash_key ();
+      result = True;
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::StringContainer::get_prev (StringContainerIterator &it, String &value) const {
+
+   Boolean result (False);
+
+   if (_state.table.get_next (it.state.it, True) != 0) {
+
+      value = it.state.it.get_hash_key ();
+      result = True;
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::StringContainer::get_last (StringContainerIterator &it, String &value) const {
+
+   it.state.it.reset ();
+   return get_prev (it, value);
 }
 

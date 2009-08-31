@@ -8,6 +8,24 @@ namespace dmz {
 
    class String;
 
+   class DMZ_KERNEL_LINK_SYMBOL StringContainerIterator {
+
+      public:
+         StringContainerIterator ();
+         ~StringContainerIterator ();
+
+         void reset ();
+
+         //! \cond
+         struct State;
+         State &state;
+         //! \endcond
+
+      private:
+         StringContainerIterator (const StringContainerIterator &);
+         StringContainerIterator &operator= (const StringContainerIterator &);
+   };
+
    class DMZ_KERNEL_LINK_SYMBOL StringContainer {
 
       public:
@@ -30,6 +48,11 @@ namespace dmz {
          Boolean get_next (String &value) const;
          Boolean get_prev (String &value) const;
          Boolean get_last (String &value) const;
+
+         Boolean get_first (StringContainerIterator &it, String &value) const;
+         Boolean get_next (StringContainerIterator &it, String &value) const;
+         Boolean get_prev (StringContainerIterator &it, String &value) const;
+         Boolean get_last (StringContainerIterator &it, String &value) const;
 
       protected:
          struct State;

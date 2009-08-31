@@ -1,11 +1,13 @@
 #include <dmzArchiveModule.h>
 #include <dmzArchiveObserverUtil.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToStringContainer.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHandleContainer.h>
+#include <dmzTypesStringContainer.h>
 
 /*!
 
@@ -22,6 +24,7 @@ struct dmz::ArchiveObserverUtil::State {
    Definitions defs;
    ArchiveModule *module;
    HashTableStringTemplate<Handle> handleTable;
+   StringContainer scope;
    HandleContainer validHandles;
 
    State (const PluginInfo &Info, const Config &Init) :
@@ -98,7 +101,7 @@ dmz::ArchiveObserverUtil::is_active_archive_handle (const Handle ArchiveHandle) 
 \details The \a Init Config should contain a list of Config objects named
 "archive". These objects should also contain an attribute called "name" which
 contains the name of the archive group. If the name attribute is not set, the default
-archive group name is used.
+archive group name is used. Also calls init_archive_scope().
 \code
 <dmz>
 <dmzFooPluginArchive>
@@ -110,7 +113,7 @@ archive group name is used.
 \endcode
 \param[in] Init Config containing a list of the archive groups.
 \param[in] log Pointer to a Log used for logging.
-
+\sa dmz::ArchiveObserverUtil::init_archive_scope()
 */
 void
 dmz::ArchiveObserverUtil::init_archive (const Config &Init, Log *log) {
@@ -128,6 +131,39 @@ dmz::ArchiveObserverUtil::init_archive (const Config &Init, Log *log) {
       }
    }
    else { activate_default_archive (); }
+
+   init_archive_scope (Init);
+}
+
+
+/*!
+
+\brief Creates a list of supported archive scopes.
+\details The \a Init Config should contain a list of Config object called "string"
+contained in a Config object called "archive-scope". Each "string" Config
+should contain an attribute called "value" that specifies a scope name. When
+processing an archive, the Archive module will first look for a Config object with
+the first scope name specified in the scope list. It will continue down the list
+until it find a matching Config object. When creating an archive, the archive module
+will always use the first scope name in the list when creating the Config object
+to be used to store the archive data.
+\code
+<dmz>
+<dmzFooPluginArchive>
+   <archive-scope>
+      <string value="First Scope Name"/>
+      <string value="Next Scope Name"/>
+   </archive-scope>
+</dmzFooPluginArchive>
+</dmz>
+\endcode
+\param[in] Init Config containing the archive scope list.
+
+*/
+void
+dmz::ArchiveObserverUtil::init_archive_scope (const Config &Init) {
+
+   __state.scope = config_to_string_container ("archive-scope.string", Init);
 }
 
 
@@ -265,7 +301,8 @@ dmz::ArchiveObserverUtil::get_archive_scope (const Handle ArchiveHandle) {
 
    StringContainer result;
 
-   result.add_string (get_archive_observer_name ());
+   if (__state.scope.get_count () != 0) { result = __state.scope; }
+   else { result.add_string (get_archive_observer_name ()); }
 
    return result;
 }

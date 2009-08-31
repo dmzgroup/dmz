@@ -35,7 +35,6 @@ namespace dmz {
             const Plugin *PluginPtr) {;}
 
          // ArchiveObserver Interface.
-         virtual StringContainer get_archive_scope (const Handle ArchiveHandle);
          virtual void create_archive (
             const Handle ArchiveHandle,
             const Int32 Version,

@@ -181,14 +181,14 @@ local_init (
 
       if (func) {
 
-         result = True;
-
          app.log.info << "Launching init extension: " << FuncName << " from "
             << LibName << endl;
 
-         AppShellInitStruct init (launchFile, versionFile, manifest, app, fileList);
+         AppShellInitStruct init (versionFile, launchFile, manifest, app, fileList);
 
          func (init);
+
+         result = init.fileListPopulated;
       }
       else {
 
@@ -414,7 +414,6 @@ main (int argc, char *argv[]) {
    if (!qtApp.get_requested_file ().isEmpty ()) {
 
       launchFile = qPrintable (qtApp.get_requested_file ());
-app.log.error << launchFile << endl;
    }
 #else
    QApplication qtApp (argc, argv);

@@ -2,7 +2,6 @@
 #include <dmzInputModule.h>
 #include "dmzArchivePluginInputChannelState.h"
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeConfigToStringContainer.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -55,20 +54,6 @@ dmz::ArchivePluginInputChannelState::discover_plugin (
 
 
 // ArchiveObserver Interface.
-dmz::StringContainer
-dmz::ArchivePluginInputChannelState::get_archive_scope (const Handle ArchiveHandle) {
-
-   StringContainer result = _scope;
-
-   if (result.get_count () == 0) {
-
-      result.add_string (get_archive_observer_name ());
-   }
-
-   return result;
-}
-
-
 void
 dmz::ArchivePluginInputChannelState::create_archive (
       const Handle ArchiveHandle,
@@ -199,8 +184,6 @@ dmz::ArchivePluginInputChannelState::_init (Config &local) {
             defs.create_named_handle (config_to_string ("name", channel)));
       }
    }
-
-   _scope = config_to_string_container ("scope.string", local);
 }
 
 

@@ -19,23 +19,25 @@ class Config;
 struct AppShellInitStruct {
 
    const String VersionFile; //!< Config file containing versioning information.
-   const String LaunchFile; //!< File used to launch application.
+   String &launchFile; //!< File used to launch application.
    Config &manifest; //!< Config of application manifest file.
    Application &app; //!< Reference to the Application object.
    CommandLineArgs &files; //!< List of config files to load.
+   Boolean fileListPopulated;
 
    //! \cond
    AppShellInitStruct (
-         const String &TheLaunchFile,
          const String &TheVersionFile, 
+         String &theLaunchFile,
          Config &theManifest,
          Application &theApp,
          CommandLineArgs &theFiles) :
-         LaunchFile (TheLaunchFile),
+         launchFile (theLaunchFile),
          VersionFile (TheVersionFile),
          manifest (theManifest),
          app (theApp),
-         files (theFiles) {;}
+         files (theFiles),
+         fileListPopulated (True) {;}
    //! \endcond
 };
 

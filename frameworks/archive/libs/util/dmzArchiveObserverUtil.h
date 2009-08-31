@@ -17,6 +17,7 @@ namespace dmz {
          Boolean is_active_archive_handle (const Handle ArchiveHandle);
 
          void init_archive (const Config &Init, Log *log = 0);
+         void init_archive_scope (const Config &Init);
 
          Handle activate_default_archive ();
          Handle activate_archive (const String &ArchiveName);

@@ -5,6 +5,7 @@
 #include <dmzQtModuleCanvas.h>
 #include <dmzQtUtil.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToState.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -99,8 +100,9 @@ dmz::QtPluginCanvasLink::QtPluginCanvasLink (
       _canvasModule (0),
       _canvasModuleName (),
       _linkAttrTable (),
-      _objectTable (),
-      _nodeTable () {
+      _linkTable (),
+      _nodeTable (),
+      _stateList (0) {
 
    _init (local);
 }
@@ -108,8 +110,11 @@ dmz::QtPluginCanvasLink::QtPluginCanvasLink (
 
 dmz::QtPluginCanvasLink::~QtPluginCanvasLink () {
 
+   _attrObjTable.clear ();
    _nodeTable.empty ();
-   _objectTable.empty ();
+   _linkTable.empty ();
+
+   if (_stateList) { delete _stateList; _stateList = 0; }
 }
 
 
@@ -131,7 +136,7 @@ dmz::QtPluginCanvasLink::discover_plugin (
       if (_canvasModule && (_canvasModule == QtModuleCanvas::cast (PluginPtr))) {
 
          _nodeTable.empty ();
-         _objectTable.empty ();
+         _linkTable.empty ();
          _canvasModule = 0;
       }
    }
@@ -157,10 +162,10 @@ dmz::QtPluginCanvasLink::link_objects (
 
          if (superItem && subItem) {
 
-            ObjectStruct *os (
-               new ObjectStruct (LinkHandle, AttributeHandle, SuperHandle, SubHandle));
+            LinkStruct *os (
+               new LinkStruct (LinkHandle, AttributeHandle, SuperHandle, SubHandle));
 
-            if (_objectTable.store (LinkHandle, os)) {
+            if (_linkTable.store (LinkHandle, os)) {
 
                Float32 minZ (qMin (superItem->zValue (), subItem->zValue ()));
 
@@ -196,16 +201,73 @@ dmz::QtPluginCanvasLink::unlink_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-   ObjectStruct *os (_objectTable.remove (LinkHandle));
+   LinkStruct *ls (_linkTable.remove (LinkHandle));
 
-   if (os && (os->AttrHandle == AttributeHandle)) {
+   if (ls && (ls->AttrHandle == AttributeHandle)) {
 
-      _remove_edge (SuperHandle, os->item);
-      _remove_edge (SubHandle, os->item);
+      _remove_edge (SuperHandle, ls->item);
+      _remove_edge (SubHandle, ls->item);
 
       if (_canvasModule) { _canvasModule->remove_item (LinkHandle); }
 
-      delete os; os = 0;
+      delete ls; ls = 0;
+   }
+}
+
+
+void
+dmz::QtPluginCanvasLink::update_link_attribute_object (
+      const Handle LinkHandle,
+      const Handle AttributeHandle,
+      const UUID &SuperIdentity,
+      const Handle SuperHandle,
+      const UUID &SubIdentity,
+      const Handle SubHandle,
+      const UUID &AttributeIdentity,
+      const Handle AttributeObjectHandle,
+      const UUID &PrevAttributeIdentity,
+      const Handle PrevAttributeObjectHandle) {
+
+   if (AttributeObjectHandle) {
+
+      LinkStruct *ls = _linkTable.lookup (LinkHandle);
+
+      if (ls) { _attrObjTable.store (AttributeObjectHandle, ls); }
+   }
+
+   if (PrevAttributeObjectHandle) { _attrObjTable.remove (PrevAttributeObjectHandle); }
+}
+
+
+void
+dmz::QtPluginCanvasLink::update_object_state (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Mask &Value,
+      const Mask *PreviousValue) {
+
+   LinkStruct *ls = _attrObjTable.lookup (ObjectHandle);
+
+   if (ls) {
+
+      ColorStruct *current (_stateList);
+
+      ColorStruct *cs (0);
+
+      while (current && !cs) {
+
+         if (Value.contains (current->State)) { cs = current; }
+         else { current = current->next; }
+      }
+
+      QColor color (Qt::black);
+      color.setAlphaF (0.75f);
+
+      if (cs) { color = cs->Color; }
+
+      QBrush b (color);
+      ls->item->setPen (QPen (b, 4));
    }
 }
 
@@ -293,21 +355,48 @@ dmz::QtPluginCanvasLink::_remove_edge (
 void
 dmz::QtPluginCanvasLink::_init (Config &local) {
 
+   RuntimeContext *context = get_plugin_runtime_context ();
+
    _canvasModuleName = config_to_string ("module.canvas.name", local);
 
    const String PosAttrName (
       config_to_string ("attribute.position.name", local, ObjectAttributeDefaultName));
    
+   activate_default_object_attribute (ObjectStateMask);
+
    _positionAttrHandle = activate_object_attribute (
       PosAttrName,
       ObjectPositionMask);
 
    Handle attrHandle = activate_object_attribute (
      ObjectAttributeNodeLinkName,
-     ObjectLinkMask |
-     ObjectUnlinkMask);
+     ObjectLinkMask | ObjectUnlinkMask | ObjectLinkAttributeMask);
 
-  _linkAttrTable.store (attrHandle, this);
+   _linkAttrTable.store (attrHandle, this);
+
+   Config colorList;
+
+   if (local.lookup_all_config ("state-color-list.state-color", colorList)) {
+
+
+      QColor defaultColor (Qt::black);
+      defaultColor.setAlphaF (0.75);
+
+      ConfigIterator it;
+      Config color;
+
+      while (colorList.get_prev_config (it, color)) {
+
+         const Mask State = config_to_state ("name", color, context);
+         const QColor Value = config_to_qcolor (color, defaultColor);
+
+         if (State) {
+
+            ColorStruct *cs = new ColorStruct (State, Value);
+            if (cs) { cs->next = _stateList; _stateList = cs; }
+         }
+      }
+   }
 }
 
 

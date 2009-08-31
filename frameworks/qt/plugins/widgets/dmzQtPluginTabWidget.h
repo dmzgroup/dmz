@@ -84,6 +84,7 @@ namespace dmz {
 
          Log _log;
 
+         String _widgetFocus;
          QFrame *_parent;
          QTabWidget *_tab;
          WidgetStruct *_defaultTab;

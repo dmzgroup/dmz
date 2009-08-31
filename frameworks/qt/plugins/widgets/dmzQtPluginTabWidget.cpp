@@ -45,25 +45,37 @@ dmz::QtPluginTabWidget::update_plugin_state (
 
    if (State == PluginStateInit) {
       
-      if (_tab && _defaultTab && _defaultTab->widget) {
+      if (_widgetFocus) {
+
+         WidgetStruct *ws = _widgetTable.lookup (_widgetFocus);
+
+         if (ws) { _tab->setCurrentWidget (ws->widget); }
+      }
+      else {
+
+         Config session (get_session_config (
+            get_plugin_name (),
+            get_plugin_runtime_context ()));
+
+         const Int32 Index = config_to_int32 ("tab-index.value", session, -1);
+
+         if (_tab && Index >= 0) {
+
+            _tab->setCurrentIndex ((int)Index);
+         }
+         else if (_tab && _defaultTab && _defaultTab->widget) {
          
-         _tab->setCurrentWidget (_defaultTab->widget);
+            _tab->setCurrentWidget (_defaultTab->widget);
+         }
       }
    }
    else if (State == PluginStateStart) {
 
-      Config session (get_session_config (
-         get_plugin_name (),
-         get_plugin_runtime_context ()));
-
-      const Int32 Index = config_to_int32 ("tab-index.value", session, -1);
-
-      if (_tab && Index >= 0) {
-
-         _tab->setCurrentIndex ((int)Index);
-      }
    }
    else if (State == PluginStateStop) {
+
+   }
+   else if (State == PluginStateShutdown) {
 
       if (_tab) {
 
@@ -73,9 +85,6 @@ dmz::QtPluginTabWidget::update_plugin_state (
          session.add_config (data);
          set_session_config (get_plugin_runtime_context (), session);
       }
-   }
-   else if (State == PluginStateShutdown) {
-
    }
 }
 
@@ -251,6 +260,8 @@ dmz::QtPluginTabWidget::_init (Config &local) {
          }
       }
    }
+
+   _widgetFocus = config_to_string ("focus.widget", local);
 }
 
 

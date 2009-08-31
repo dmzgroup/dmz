@@ -12,6 +12,7 @@ namespace dmz {
    class LuaExtRuntime : public Plugin, public LuaExt {
 
       public:
+         //! \cond
          struct RuntimeStruct {
 
             RuntimeModule *runtime;
@@ -45,6 +46,7 @@ namespace dmz {
 
          RuntimeStruct _runtime;
          RuntimeStruct **_runtimePtr;
+         //! \endcond
 
       private:
          LuaExtRuntime ();

@@ -260,6 +260,15 @@ dmz::HandleContainer::get_next (HandleContainerIterator &it) const {
 }
 
 
+/*!
+
+\brief Gets next Handle in the container.
+\param[in] it HandleContainerIterator used to iterate over the container.
+\param[out] value Handle containing the next Handle in the container.
+\return Returns dmz::True if a \a value was returned. Returns dmz::False if there
+are no more Handles to return.
+
+*/
 dmz::Boolean
 dmz::HandleContainer::get_next (HandleContainerIterator &it, Handle &value) const {
 
@@ -293,6 +302,15 @@ dmz::HandleContainer::get_prev (HandleContainerIterator &it) const {
 }
 
 
+/*!
+
+\brief Gets previous Handle in the container.
+\param[in] it HandleContainerIterator used to iterate over the container.
+\param[out] value Handle containing the previous Handle in the container.
+\return Returns dmz::True if a \a value was returned. Returns dmz::False if there
+are no more Handles to return.
+
+*/
 dmz::Boolean
 dmz::HandleContainer::get_prev (HandleContainerIterator &it, Handle &value) const {
 

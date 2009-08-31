@@ -15,6 +15,7 @@ namespace dmz {
          public ArchiveObserverUtil {
 
       public:
+         //! \cond
          ArchivePluginInputChannelState (const PluginInfo &Info, Config &local);
          ~ArchivePluginInputChannelState ();
 
@@ -47,6 +48,7 @@ namespace dmz {
          InputModule *_input;
          String _inputModuleName;
          HandleContainer _channels;
+         //! \endcond
 
       private:
          ArchivePluginInputChannelState ();

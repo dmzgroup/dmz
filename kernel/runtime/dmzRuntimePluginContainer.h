@@ -19,8 +19,10 @@ namespace dmz {
          PluginIterator ();
          ~PluginIterator ();
 
+         //! \cond
          struct State;
          State &state; //!< Internal state.
+         //! \endcond
 
       private:
          PluginIterator (const PluginIterator &);
@@ -55,8 +57,10 @@ namespace dmz {
          void remove_external_plugin (const Plugin *PluginPtr);
 
       protected:
+         //! \cond
          struct State;
-         State &_state; //!< Internal state.
+         State &_state;
+         //! \endcond
 
       private:
          PluginContainer (const PluginContainer &Container);

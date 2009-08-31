@@ -7,12 +7,31 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+\class dmz::ArchivePluginInputChannelState
+\ingroup Archive
+\brief Archives and restores the state of the specified input channels.
+\details
+Calls dmz::ArchiveObserverUtil::init_archive.
+\code
+<dmz>
+<ArchivePluginInputChannelState>
+   <channel name="Name of channel to archive"/>
+   <channel name="Name of channel to archive"/>
+</ArchivePluginInputChannelState>
+</dmz>
+\endcode
+\sa dmz::ArchiveObserverUtil::init_archive()
+
+*/
+
 namespace {
 
 static const char DisableAllName[] = "disable-all-channels";
 
 };
 
+//! \cond
 dmz::ArchivePluginInputChannelState::ArchivePluginInputChannelState (
       const PluginInfo &Info,
       Config &local) :
@@ -185,6 +204,7 @@ dmz::ArchivePluginInputChannelState::_init (Config &local) {
       }
    }
 }
+//! \endcond
 
 
 extern "C" {

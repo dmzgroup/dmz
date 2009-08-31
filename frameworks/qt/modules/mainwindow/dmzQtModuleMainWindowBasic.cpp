@@ -312,8 +312,17 @@ dmz::QtModuleMainWindowBasic::_load_session () {
    Config session (
       get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
 
-   QByteArray geometry (config_to_qbytearray ("geometry", session, saveGeometry ()));
-   restoreGeometry (geometry);
+   Config geometry;
+
+   if (session.lookup_config ("geometry", geometry)) {
+
+      restoreGeometry (config_to_qbytearray (geometry));
+   }
+   else {
+
+      QRect grect = QApplication::desktop ()->availableGeometry (this);
+      move(grect.center () - rect ().center ());
+   }
 
    QByteArray stateData (
       config_to_qbytearray ("state", session, saveState (LocalSessionVersion)));

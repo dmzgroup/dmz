@@ -90,6 +90,7 @@ namespace dmz {
 
          void _save_session ();
          void _load_session ();
+         void _restore_state ();
          void _init_dock_windows (Config &local);
          void _init (Config &local);
 
@@ -100,6 +101,7 @@ namespace dmz {
          QMenuBar *_menuBar;
          QAction *_exitAction;
          String _mainWidgetName;
+         String _windowMenuName;
          HashTableStringTemplate<QMenu> _menuTable;
          HashTableStringTemplate<DockWidgetStruct> _dockWidgetTable;
 

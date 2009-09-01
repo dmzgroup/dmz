@@ -11,8 +11,7 @@
 
 namespace {
 
-static const int LocalSessionVersion = 5;
-static const dmz::String LocalWindowMenuName ("&Window");
+static const int LocalSessionVersion = 6;
 
 };
 
@@ -60,6 +59,7 @@ dmz::QtModuleMainWindowBasic::DockWidgetStruct::set_widget (QWidget *theWidget) 
          widget = theWidget;
          widget->adjustSize ();
          dock->setWidget (widget);
+         dock->hide ();
       }
       else {
 
@@ -111,6 +111,7 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
       _log (Info),
       _exitAction (0),
       _mainWidgetName (),
+      _windowMenuName ("&Window"),
       _dockWidgetTable () {
 
    setObjectName (get_plugin_name ().get_buffer ());
@@ -146,7 +147,7 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
       while (dws) {
 
          dws->add_to (this);
-         add_menu_action (LocalWindowMenuName, dws->dock->toggleViewAction ());
+         add_menu_action (_windowMenuName, dws->dock->toggleViewAction ());
          dws = _dockWidgetTable.get_next (it);
       }
       
@@ -155,6 +156,8 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
       show ();
       raise ();
       activateWindow ();
+      
+      _restore_state ();
    }
    else if (State == PluginStateStop) {
 
@@ -225,7 +228,7 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
             DockWidgetStruct *dws = _dockWidgetTable.remove (Name);
             if (dws && (dws->widget == w->get_qt_widget ())) {
 
-               remove_menu_action (LocalWindowMenuName, dws->dock->toggleViewAction ());
+               remove_menu_action (_windowMenuName, dws->dock->toggleViewAction ());
                dws->remove_from (this);
                dws->set_widget (0);
             }
@@ -323,6 +326,14 @@ dmz::QtModuleMainWindowBasic::_load_session () {
       QRect grect = QApplication::desktop ()->availableGeometry (this);
       move(grect.center () - rect ().center ());
    }
+}
+
+
+void
+dmz::QtModuleMainWindowBasic::_restore_state () {
+
+   Config session (
+      get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
 
    QByteArray stateData (
       config_to_qbytearray ("state", session, saveState (LocalSessionVersion)));
@@ -481,6 +492,8 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
 
    const String FileMenu (config_to_string ("file-menu.text", local, "&File"));
    add_menu_action (FileMenu, _exitAction);
+   
+   _windowMenuName = config_to_string ("window-menu.text", local, _windowMenuName);
          
    _init_dock_windows (local);
 }

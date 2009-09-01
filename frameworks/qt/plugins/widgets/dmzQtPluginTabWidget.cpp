@@ -214,7 +214,7 @@ dmz::QtPluginTabWidget::_init (Config &local) {
    
    _tab->setTabPosition (tabPos);
    
-   _tab->setDocumentMode (config_to_boolean ("document-mode.value", local, False));
+   //_tab->setDocumentMode (config_to_boolean ("document-mode.value", local, False));
    
    layout->addWidget (_tab);
 

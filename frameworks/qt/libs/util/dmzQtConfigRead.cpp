@@ -349,8 +349,8 @@ dmz::qobject_config_read (
       </object>
 #endif
 
-      String name (config_to_string ("name", cd));
-      if (name) { object->setObjectName (name.get_buffer ()); }
+      String objName (config_to_string ("name", cd));
+      if (objName) { object->setObjectName (objName.get_buffer ()); }
 
       set_qobject_properties ("properties", cd, object);
    }
@@ -514,6 +514,38 @@ dmz::qaction_config_read (const String &Name, const Config &Source, QAction *act
       if (value) {
 
          QKeySequence shortcut (value.get_buffer ());
+
+         const String StandardKey (value.get_lower ());
+
+         if (StandardKey == "undo") {
+
+            shortcut = QKeySequence::Undo;
+         }
+         else if (StandardKey == "redo") {
+
+            shortcut = QKeySequence::Redo;
+         }
+         else if (StandardKey == "open") {
+
+            shortcut = QKeySequence::Open;
+         }
+         else if (StandardKey == "save") {
+         
+            shortcut = QKeySequence::Save;
+         }
+         else if (StandardKey == "saveas") {
+            
+            shortcut = QKeySequence::SaveAs;
+         }
+         else if (StandardKey == "zoomin") {
+            
+            shortcut = QKeySequence::ZoomIn;
+         }
+         else if (StandardKey == "zoomout") {
+            
+            shortcut = QKeySequence::ZoomOut;
+         }
+
          action->setShortcut (shortcut);
       }
 

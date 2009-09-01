@@ -354,9 +354,9 @@ dmz::QtPluginCanvasZoomPanMap::eventFilter (QObject *obj, QEvent *event) {
             QRect viewRect (view->geometry ());
             QRect myRect (geometry ());
 
-            myRect.moveTopLeft  (viewRect.topLeft ());
+            myRect.moveTopRight (viewRect.topRight ());
             myRect.moveTop (myRect.top () + 5);
-            myRect.moveLeft (myRect.left ());
+            myRect.moveRight (myRect.right () - 5);
             setGeometry (myRect);
          }
       }

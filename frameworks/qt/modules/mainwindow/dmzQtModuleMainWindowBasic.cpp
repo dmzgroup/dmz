@@ -12,6 +12,7 @@
 namespace {
 
 static const int LocalSessionVersion = 5;
+static const dmz::String LocalWindowMenuName ("&Window");
 
 };
 
@@ -108,7 +109,6 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
       QtWidget (Info),
       _exit (get_plugin_runtime_context ()),
       _log (Info),
-      _menuBar (0),
       _exitAction (0),
       _mainWidgetName (),
       _dockWidgetTable () {
@@ -117,18 +117,9 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
 
    _ui.setupUi (this);
 
-// #ifdef Q_WS_MAC
-//    _menuBar = new QMenuBar (0);
-// #else
-    _menuBar = menuBar ();
-// #endif
-
-   _create_actions ();
-   _create_menus ();
-   _create_tool_bars ();
-   _create_status_bar ();
-
    _init (local);
+
+   statusBar()->showMessage (tr ("Ready"), 2000);
 }
 
 
@@ -155,6 +146,7 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
       while (dws) {
 
          dws->add_to (this);
+         add_menu_action (LocalWindowMenuName, dws->dock->toggleViewAction ());
          dws = _dockWidgetTable.get_next (it);
       }
       
@@ -232,6 +224,7 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
             DockWidgetStruct *dws = _dockWidgetTable.remove (Name);
             if (dws && (dws->widget == w->get_qt_widget ())) {
 
+               remove_menu_action (LocalWindowMenuName, dws->dock->toggleViewAction ());
                dws->remove_from (this);
                dws->set_widget (0);
             }
@@ -257,7 +250,7 @@ dmz::QtModuleMainWindowBasic::lookup_menu (const String &Text) {
    
    if (!menu) {
       
-      menu = _menuBar->addMenu (Text.get_buffer ());
+      menu = menuBar ()->addMenu (Text.get_buffer ());
       if (!_menuTable.store (Text, menu)) { delete menu; menu = 0; }
    }
    
@@ -293,36 +286,6 @@ void
 dmz::QtModuleMainWindowBasic::closeEvent (QCloseEvent *event) {
 
    _exit.request_exit (dmz::ExitStatusNormal, get_plugin_name () + " Closed");
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::_create_actions () {
-
-   _exitAction = new QAction (tr ("E&xit"), this);
-   _exitAction->setShortcut (tr ("Ctrl+Q"));
-   _exitAction->setStatusTip (tr ("Exit the application"));
-   connect (_exitAction, SIGNAL (triggered ()), this, SLOT (close ()));
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::_create_menus () {
-
-   add_menu_action ("&File", _exitAction);
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::_create_tool_bars () {
-
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::_create_status_bar () {
-
-   statusBar()->showMessage (tr ("Ready"), 2000);
 }
 
 
@@ -481,6 +444,33 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
          Qt::LeftDockWidgetArea);
 
    _mainWidgetName = config_to_string ("central-widget.name", local);
+
+   Config menuList;
+   if (local.lookup_config ("menu-bar", menuList)) {
+      
+      ConfigIterator it;
+      Config menu;
+      
+      while (menuList.get_next_config (it, menu)) {
+
+         const String Name (config_to_string ("text", menu));
+         if (Name) { lookup_menu (Name); }
+      }
+   }
+   
+   _exitAction = new QAction (this);
+   qaction_config_read ("exit-action", local, _exitAction);
+   connect (_exitAction, SIGNAL (triggered ()), this, SLOT (close ()));
+   
+   if (_exitAction->text ().isEmpty ()) {
+      
+      _exitAction->setText ("E&xit"); 
+      _exitAction->setShortcut (QKeySequence ("Ctrl+Q"));
+      _exitAction->setStatusTip ("Exit the application");
+   }
+
+   const String FileMenu (config_to_string ("file-menu.text", local, "&File"));
+   add_menu_action (FileMenu, _exitAction);
          
    _init_dock_windows (local);
 }

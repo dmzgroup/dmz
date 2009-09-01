@@ -88,11 +88,6 @@ namespace dmz {
 
          virtual void closeEvent (QCloseEvent *event);
 
-         void _create_actions ();
-         void _create_menus ();
-         void _create_tool_bars ();
-         void _create_status_bar ();
-
          void _save_session ();
          void _load_session ();
          void _init_dock_windows (Config &local);

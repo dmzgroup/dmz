@@ -52,38 +52,27 @@ dmz::QtPluginVersion::discover_plugin (
       const PluginDiscoverEnum Mode,
       const Plugin *PluginPtr) {
 
+   const String AboutMenu ("About");
+
    if (Mode == PluginDiscoverAdd) {
 
       QtModuleMainWindow *window (QtModuleMainWindow::cast (PluginPtr));
 
       if (window && _aboutAction) {
 
-         QMainWindow *mainWindow (window->get_qt_main_window ());
-
-         _version = new QtVersion (mainWindow, _global);
-
-         if (mainWindow) {
-            
-            QMenuBar *menu (mainWindow->menuBar ());
-
-            if (menu) {
-
-#if defined(__APPLE__) || defined(MACOSX)
-               QMenu *appMenu = menu->addMenu ("Application Menu");
-#else
-               _aboutAction->setText ("About");
-               QMenu *appMenu = menu->addMenu ("Help");
-#endif
-               if (appMenu) { appMenu->addAction (_aboutAction); }
-            }
-         }
+         _version = new QtVersion (window->get_qt_main_window (), _global);
+         window->add_menu_action (AboutMenu, _aboutAction);
       } 
    }
    else if (Mode == PluginDiscoverRemove) {
 
       QtModuleMainWindow *window (QtModuleMainWindow::cast (PluginPtr));
 
-      if (window) { _version->setParent (0); }
+      if (window) {
+      
+         window->remove_menu_action (AboutMenu, _aboutAction);
+         _version->setParent (0);
+      }
    }
 }
 

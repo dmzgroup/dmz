@@ -39,6 +39,9 @@ namespace dmz {
          // QtModuleMainWindow Interface
          virtual QString get_window_name ();
          virtual QMainWindow *get_qt_main_window ();
+         virtual QMenu *lookup_menu (const String &Text);
+         virtual void add_menu_action (const String &MenuName, QAction *action);
+         virtual void remove_menu_action (const String &MenuName, QAction *action);
          
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();
@@ -85,11 +88,6 @@ namespace dmz {
 
          virtual void closeEvent (QCloseEvent *event);
 
-         void _create_actions ();
-         void _create_menus ();
-         void _create_tool_bars ();
-         void _create_status_bar ();
-
          void _save_session ();
          void _load_session ();
          void _init_dock_windows (Config &local);
@@ -99,9 +97,10 @@ namespace dmz {
          Log _log;
          Ui::MainWindow _ui;
          QString _windowName;
-         QAction *_fileExitAction;
-         QMenu *_fileMenu;
+         QMenuBar *_menuBar;
+         QAction *_exitAction;
          String _mainWidgetName;
+         HashTableStringTemplate<QMenu> _menuTable;
          HashTableStringTemplate<DockWidgetStruct> _dockWidgetTable;
 
       private:

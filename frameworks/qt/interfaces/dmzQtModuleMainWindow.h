@@ -6,7 +6,9 @@
 #include <dmzTypesBase.h>
 #include <QtCore/Qt>
 
+class QAction;
 class QMainWindow;
+class QMenu;
 
 
 namespace dmz {
@@ -20,6 +22,11 @@ namespace dmz {
 
          virtual QString get_window_name () = 0;
          virtual QMainWindow *get_qt_main_window () = 0;
+         
+         virtual QMenu *lookup_menu (const String &Text) = 0;
+         
+         virtual void add_menu_action (const String &MenuName, QAction *action) = 0;
+         virtual void remove_menu_action (const String &MenuName, QAction *action) = 0;
 
       protected:
          QtModuleMainWindow (const PluginInfo &Info);

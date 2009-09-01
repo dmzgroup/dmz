@@ -151,6 +151,7 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
       }
       
       _load_session ();
+      
       show ();
       raise ();
       activateWindow ();
@@ -158,8 +159,6 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
    else if (State == PluginStateStop) {
 
       _save_session ();
-      
-      hide ();
       
       HashTableStringIterator it;
       DockWidgetStruct *dws (_dockWidgetTable.get_first (it));
@@ -169,6 +168,8 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
          dws->dock->hide ();
          dws = _dockWidgetTable.get_next (it);
       }
+      
+      hide ();
    }
    else if (State == PluginStateShutdown) {
 

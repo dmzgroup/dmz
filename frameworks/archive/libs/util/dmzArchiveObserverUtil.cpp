@@ -167,6 +167,20 @@ dmz::ArchiveObserverUtil::init_archive_scope (const Config &Init) {
 }
 
 
+void
+dmz::ArchiveObserverUtil::add_archive_scope (const String &Scope) {
+
+   __state.scope.add_string (Scope);
+}
+
+
+dmz::Boolean
+dmz::ArchiveObserverUtil::is_archive_scope_empty () {
+
+   return __state.scope.get_count () == 0;
+}
+
+
 /*!
 
 \brief Joins default archive group.

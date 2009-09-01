@@ -16,6 +16,19 @@ struct dmz::StringContainerIterator::State {
 //! \endcond
 
 
+//! Constructor.
+dmz::StringContainerIterator::StringContainerIterator () : state (*(new State)) {;}
+
+
+//! Destructor.
+dmz::StringContainerIterator::~StringContainerIterator () { delete &state; }
+
+
+//! Resets iterator.
+void
+dmz::StringContainerIterator::reset () { state.it.reset (); }
+
+
 /*!
 
 \class dmz::StringContainer
@@ -211,6 +224,15 @@ dmz::StringContainer::get_last (String &value) const {
 }
 
 
+/*!
+
+\brief Gets the first String in the container.
+\param[in] it StringContainerIterator used to iterate over the container.
+\param[out] value String containing the first String in the container.
+\return Returns dmz::True if a \a value was returned. Returns dmz::False if there
+are no Strings in the container.
+
+*/
 dmz::Boolean
 dmz::StringContainer::get_first (StringContainerIterator &it, String &value) const {
 
@@ -219,6 +241,15 @@ dmz::StringContainer::get_first (StringContainerIterator &it, String &value) con
 }
 
 
+/*!
+
+\brief Gets the next String in the container.
+\param[in] it StringContainerIterator used to iterate over the container.
+\param[out] value String containing the next String in the container.
+\return Returns dmz::True if a \a value was returned. Returns dmz::False if there
+are no more Strings to return.
+
+*/
 dmz::Boolean
 dmz::StringContainer::get_next (StringContainerIterator &it, String &value) const {
 
@@ -234,6 +265,15 @@ dmz::StringContainer::get_next (StringContainerIterator &it, String &value) cons
 }
 
 
+/*!
+
+\brief Gets the previous String in the container.
+\param[in] it StringContainerIterator used to iterate over the container.
+\param[out] value String containing the previous String in the container.
+\return Returns dmz::True if a \a value was returned. Returns dmz::False if there
+are no more Strings to return.
+
+*/
 dmz::Boolean
 dmz::StringContainer::get_prev (StringContainerIterator &it, String &value) const {
 
@@ -249,6 +289,15 @@ dmz::StringContainer::get_prev (StringContainerIterator &it, String &value) cons
 }
 
 
+/*!
+
+\brief Gets the last String in the container.
+\param[in] it StringContainerIterator used to iterate over the container.
+\param[out] value String containing the last String in the container.
+\return Returns dmz::True if a \a value was returned. Returns dmz::False if there
+are no Strings in the container.
+
+*/
 dmz::Boolean
 dmz::StringContainer::get_last (StringContainerIterator &it, String &value) const {
 

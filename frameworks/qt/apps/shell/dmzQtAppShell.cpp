@@ -143,7 +143,7 @@ local_find_working_dir (const Application &App) {
       QApplication::addLibraryPath (plugins);
    }
 
-   if (!result) { App.log.info << "No working found." << endl; }
+   if (!result) { App.log.info << "No working directory found." << endl; }
    else if (change_directory (result)) {
 
       App.log.info << "Working directory: " << get_current_directory () << endl;

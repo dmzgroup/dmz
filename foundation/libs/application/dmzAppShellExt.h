@@ -23,6 +23,8 @@ struct AppShellInitStruct {
    Config &manifest; //!< Config of application manifest file.
    Application &app; //!< Reference to the Application object.
    CommandLineArgs &files; //!< List of config files to load.
+   //! Return value to indicate if the file list has been populated by the
+   //! initialization extension.
    Boolean fileListPopulated;
 
    //! \cond

@@ -97,7 +97,7 @@ dmz::QtPluginCanvasZoomPanMap::discover_plugin (
 
          _mapModule = QtModuleMap::cast (PluginPtr, _mapModuleName);
 
-         if (0 && _mapModule) {
+         if (_mapModule) {
 
             qmapcontrol::MapControl *map (_mapModule->get_map_control ());
             
@@ -110,6 +110,7 @@ dmz::QtPluginCanvasZoomPanMap::discover_plugin (
             
             _mapModule->set_zoom_min_value (_zoomMin);
             _mapModule->set_zoom_max_value (_zoomMax);
+_log.error << _zoomDefault << endl;
             _mapModule->set_zoom (_zoomDefault);
          }
       }

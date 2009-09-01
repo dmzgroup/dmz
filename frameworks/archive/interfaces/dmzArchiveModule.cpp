@@ -33,6 +33,14 @@ the Plugin's name.
 \fn dmz::ArchiveModule::~ArchiveModule ()
 \brief Destructor.
 
+\fn dmz::String dmz::ArchiveModule::get_archive_module_name () const
+\brief Gets archive module's name.
+\return Returns String containing archive module's name.
+
+\fn dmz::Handle dmz::ArchiveModule::get_archive_module_handle () const
+\brief Gets archive module's runtime Handle.
+\return Returns Handle containing archive module's runtime Handle.
+
 \fn dmz::Boolean dmz::ArchiveModule::register_archive_observer (
 const Handle ArchiveHandle,
 ArchiveObserver &observer)

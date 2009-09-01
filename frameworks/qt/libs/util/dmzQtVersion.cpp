@@ -4,8 +4,6 @@
 #include <QtGui/QPixmap>
 #include <ui_dmzQtVersion.h>
 
-#include <qdb.h>
-static dmz::qdb out;
 
 struct dmz::QtVersion::State {
 
@@ -39,7 +37,6 @@ dmz::QtVersion::QtVersion (QWidget *parent, Config &local, const String &Prefix)
 
          _state.ui.imageLabel->setPixmap (_state.pix);
       }
-      else { out << "**** Unable to load about image: " << Image << endl; }
    }
 
    if (Name) { _state.ui.nameLabel->setText (Name.get_buffer ()); }

@@ -16,10 +16,12 @@
 
 */
 
+//! \cond
 struct dmz::PluginIterator::State {
 
    HashTableHandleIterator it;
 };
+//! \endcond
 
 
 //! Base constructor.
@@ -108,6 +110,7 @@ This class provide the necessary functionality to manage extensions.
 
 */
 
+//! \cond
 struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
 
    PluginInfo &info;
@@ -495,6 +498,7 @@ struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
       return ps;
    }
 };
+//! \endcond
 
 
 /*!

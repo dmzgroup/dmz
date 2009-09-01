@@ -9,6 +9,15 @@
 #include <dmzTypesHandleContainer.h>
 #include <luacpp.h>
 
+/*!
+
+\class dmz::LuaExtRuntime
+\ingroup Lua
+\brief Provides a Lua API to the Runtime Module.
+\sa dmz::RuntimeModule
+
+*/
+
 using namespace dmz;
 
 namespace {
@@ -306,6 +315,7 @@ static const luaL_Reg arrayFunc[] = {
 
 };
 
+//! \cond
 dmz::LuaExtRuntime::LuaExtRuntime (
       const PluginInfo &Info,
       Config &local,
@@ -422,6 +432,7 @@ void
 dmz::LuaExtRuntime::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

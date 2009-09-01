@@ -2,6 +2,22 @@
 #include <dmzTypesHashTableStringTemplate.h>
 #include <stdio.h>
 
+struct dmz::PathContainerIterator::State {
+
+   dmz::HashTableStringIterator it;
+};
+
+
+dmz::PathContainerIterator::PathContainerIterator () : state (*(new State)) {;}
+
+
+dmz::PathContainerIterator::~PathContainerIterator () { delete &state; }
+
+
+void
+dmz::PathContainerIterator::reset () { state.it.reset (); }
+
+
 /*!
 
 \file dmzSystemFile.h
@@ -127,6 +143,42 @@ dmz::PathContainer::get_next (String &path) const {
    if (ptr) { path.flush () << *ptr; result = True; }
    return result;
 }
+
+dmz::Boolean
+dmz::PathContainer::get_first (PathContainerIterator &it, String &path) const {
+
+   it.state.it.reset ();
+   return get_next (it, path);
+}
+
+
+dmz::Boolean
+dmz::PathContainer::get_next (PathContainerIterator &it, String &path) const {
+
+   Boolean result (False);
+   String *ptr =  _state.paths.get_next (it.state.it);
+   if (ptr) { path.flush () << *ptr; result = True; }
+   return result;
+}
+
+
+dmz::Boolean
+dmz::PathContainer::get_prev (PathContainerIterator &it, String &path) const {
+
+   Boolean result (False);
+   String *ptr =  _state.paths.get_prev (it.state.it);
+   if (ptr) { path.flush () << *ptr; result = True; }
+   return result;
+}
+
+
+dmz::Boolean
+dmz::PathContainer::get_last (PathContainerIterator &it, String &path) const {
+
+   it.state.it.reset ();
+   return get_prev (it, path);
+}
+
 
 
 //! \addtogroup System

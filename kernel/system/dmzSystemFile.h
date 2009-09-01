@@ -8,6 +8,18 @@
 
 namespace dmz {
 
+   class DMZ_KERNEL_LINK_SYMBOL PathContainerIterator {
+
+      public:
+         PathContainerIterator ();
+         ~PathContainerIterator ();
+
+         void reset ();
+
+         struct State;
+         State &state;
+   };
+
    class DMZ_KERNEL_LINK_SYMBOL PathContainer {
 
       public:
@@ -23,6 +35,11 @@ namespace dmz {
          Int32 get_count () const;
          Boolean get_first (String &path) const;
          Boolean get_next (String &path) const;
+
+         Boolean get_first (PathContainerIterator &it, String &path) const;
+         Boolean get_next (PathContainerIterator &it, String &path) const;
+         Boolean get_prev (PathContainerIterator &it, String &path) const;
+         Boolean get_last (PathContainerIterator &it, String &path) const;
 
       protected:
          //! \cond

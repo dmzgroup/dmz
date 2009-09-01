@@ -1,5 +1,5 @@
-#ifndef DMZ_HANDLE_CONTAINER_DOT_H
-#define DMZ_HANDLE_CONTAINER_DOT_H
+#ifndef DMZ_TYPES_HANDLE_CONTAINER_DOT_H
+#define DMZ_TYPES_HANDLE_CONTAINER_DOT_H
 
 #include <dmzKernelExport.h>
 #include <dmzTypesBase.h>
@@ -62,4 +62,4 @@ namespace dmz {
    };
 };
 
-#endif // DMZ_HANDLE_CONTAINER_DOT_H
+#endif // DMZ_TYPES_HANDLE_CONTAINER_DOT_H

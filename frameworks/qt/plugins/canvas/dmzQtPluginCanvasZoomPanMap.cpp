@@ -110,7 +110,6 @@ dmz::QtPluginCanvasZoomPanMap::discover_plugin (
             
             _mapModule->set_zoom_min_value (_zoomMin);
             _mapModule->set_zoom_max_value (_zoomMax);
-_log.error << _zoomDefault << endl;
             _mapModule->set_zoom (_zoomDefault);
          }
       }

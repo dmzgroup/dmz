@@ -18,6 +18,8 @@ namespace dmz {
 
          void init_archive (const Config &Init, Log *log = 0);
          void init_archive_scope (const Config &Init);
+         void add_archive_scope (const String &Scope);
+         Boolean is_archive_scope_empty ();
 
          Handle activate_default_archive ();
          Handle activate_archive (const String &ArchiveName);

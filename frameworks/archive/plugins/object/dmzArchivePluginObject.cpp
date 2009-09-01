@@ -1241,6 +1241,8 @@ dmz::ArchivePluginObject::_init (Config &local) {
 
    init_archive_scope (local);
 
+   if (is_archive_scope_empty ()) { add_archive_scope ("archive"); }
+
    _defaultHandle = _defs.create_named_handle (ObjectAttributeDefaultName);
 
    Config filterList;

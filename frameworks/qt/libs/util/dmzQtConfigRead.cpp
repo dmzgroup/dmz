@@ -533,13 +533,14 @@ dmz::qaction_config_read (const String &Name, const Config &Source, QAction *act
          
             shortcut = QKeySequence::Save;
          }
-#if 0
-// No supported in Qt 4.4. Added in Qt 4.5.
          else if (StandardKey == "saveas") {
             
+#if (QT_VERSION >= QT_VERSION_CHECK(4, 5, 0))
             shortcut = QKeySequence::SaveAs;
-         }
+#else
+            shortcut = QKeySequence (Qt::Key_S + Qt::ControlModifier + Qt::ShiftModifier);
 #endif
+         }
          else if (StandardKey == "zoomin") {
             
             shortcut = QKeySequence::ZoomIn;

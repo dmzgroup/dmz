@@ -59,6 +59,18 @@ namespace dmz {
             Data *outData) const;
 
          UInt32 send (
+            const Handle TargetObserverHandle,
+            const Data *InData) const {
+
+            return send (TargetObserverHandle, InData, 0);
+         }
+
+         UInt32 send (const Handle TargetObserverHandle) const {
+
+            return send (TargetObserverHandle, 0, 0);
+         }
+
+         UInt32 send (
             const HandleContainer &Targets,
             const Data *InData,
             Data *outData) const;

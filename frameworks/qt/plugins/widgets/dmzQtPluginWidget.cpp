@@ -114,11 +114,11 @@ dmz::QtPluginWidget::get_qt_widget () {
 void
 dmz::QtPluginWidget::_init (Config &local) {
 
-   _parent = new QWidget;
+   _parent = new QFrame;
 
    _layout = new QGridLayout (_parent);
 
-   qwidget_config_read ("", local, _parent);
+   qframe_config_read ("", local, _parent);
 
    Config widgetList;
 

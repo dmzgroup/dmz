@@ -6,7 +6,7 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableStringTemplate.h>
 
-#include <QtGui/QWidget>
+#include <QtGui/QFrame>
 
 namespace dmz {
 
@@ -43,7 +43,7 @@ namespace dmz {
 
          Log _log;
 
-         QWidget *_parent;
+         QFrame *_parent;
          QLayout *_layout;
 
          HashTableStringTemplate<WidgetStruct> _widgetTable;

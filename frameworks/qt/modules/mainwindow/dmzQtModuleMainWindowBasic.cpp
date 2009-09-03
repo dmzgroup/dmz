@@ -138,9 +138,6 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
 
    if (State == PluginStateInit) {
 
-   }
-   else if (State == PluginStateStart) {
-
       HashTableStringIterator it;
       DockWidgetStruct *dws (_dockWidgetTable.get_first (it));
       
@@ -159,7 +156,13 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
       
       _restore_state ();
    }
+   else if (State == PluginStateStart) {
+
+   }
    else if (State == PluginStateStop) {
+
+   }
+   else if (State == PluginStateShutdown) {
 
       _save_session ();
       
@@ -173,9 +176,6 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
       }
       
       hide ();
-   }
-   else if (State == PluginStateShutdown) {
-
    }
 }
 

@@ -7,15 +7,14 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
+#include <QtGui/QFrame>
 #include <QtGui/QTabWidget>
-
-class QFrame;
 
 
 namespace dmz {
 
    class QtPluginTabWidget :
-         public QObject,
+         public QFrame,
          public Plugin,
          public QtWidget,
          public InputObserverUtil {
@@ -85,7 +84,6 @@ namespace dmz {
          Log _log;
 
          String _widgetFocus;
-         QFrame *_parent;
          QTabWidget *_tab;
          WidgetStruct *_defaultTab;
 

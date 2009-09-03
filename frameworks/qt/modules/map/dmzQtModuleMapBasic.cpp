@@ -59,18 +59,17 @@ dmz::QtModuleMapBasic::update_plugin_state (
 
    if (State == PluginStateInit) {
 
+      _load_session ();
    }
    else if (State == PluginStateStart) {
 
-      _load_session ();
-      setFocus (Qt::ActiveWindowFocusReason);
    }
    else if (State == PluginStateStop) {
 
-      _save_session ();
    }
    else if (State == PluginStateShutdown) {
 
+      _save_session ();
       use_default_map_adapter ();
    }
 }

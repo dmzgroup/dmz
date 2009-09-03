@@ -8,17 +8,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
-#include <QtGui/QFrame>
 #include <QtGui/QGridLayout>
 
 
 dmz::QtPluginTabWidget::QtPluginTabWidget (const PluginInfo &Info, Config &local) :
-      QObject (0),
+      QFrame (0),
       Plugin (Info),
       QtWidget (Info),
       InputObserverUtil (Info, local),
       _log (Info),
-      _parent (0),
       _tab (0),
       _defaultTab (0) {
 
@@ -33,7 +31,6 @@ dmz::QtPluginTabWidget::~QtPluginTabWidget () {
    _widgetTable.empty ();
    _channelTable.clear ();
    _tab = 0; // will be auto deleted by _parent
-   if (_parent) { delete _parent; _parent = 0; }
 }
 
 
@@ -137,7 +134,7 @@ dmz::QtPluginTabWidget::discover_plugin (
 QWidget *
 dmz::QtPluginTabWidget::get_qt_widget () {
 
-   return _parent;
+   return this;
 }
 
 
@@ -185,22 +182,21 @@ dmz::QtPluginTabWidget::_slot_tab_changed (int index) {
 void
 dmz::QtPluginTabWidget::_init (Config &local) {
 
-   _parent = new QFrame;
+   setObjectName (get_plugin_name ().get_buffer ());
 
-   _parent->setObjectName (get_plugin_name ().get_buffer ());
+   qframe_config_read ("", local, this);
 
-   qframe_config_read ("", local, _parent);
+   QVBoxLayout *layout = new QVBoxLayout;
 
-   QGridLayout *layout = new QGridLayout (_parent);
-
-   _tab = new QTabWidget (_parent);
+   setLayout (layout);
+   
+   _tab = new QTabWidget (this);
+   
+   qwidget_config_read ("tab", local, _tab);
    
    connect (
       _tab, SIGNAL (currentChanged (int)),
       this, SLOT (_slot_tab_changed (int)));
-
-   _tab->setMinimumSize (config_to_qsize ("minimum-size", local, _tab->minimumSize ()));
-   _tab->setMaximumSize (config_to_qsize ("maximum-size", local, _tab->maximumSize ()));
 
    const String TabPosName (
       config_to_string ("position.value", local, "north").get_lower ());

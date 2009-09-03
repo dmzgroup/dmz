@@ -67,3 +67,23 @@ dmz::set_qwidget_stylesheet (const String &Name, const Config &Source, QWidget *
    return result;
 }
 
+
+void
+dmz::set_qwidget_contents_margins (const String &Name, const Config &Source, QWidget *widget) {
+
+   if (widget) {
+
+      Config cd;
+
+      if (Name) { Source.lookup_config (Name, cd); }
+      else { cd = Source; }
+
+      Int32 left (config_to_int32 ("left", cd, 0));
+      Int32 top (config_to_int32 ("top", cd, 0));
+      Int32 right (config_to_int32 ("right", cd, 0));
+      Int32 bottom (config_to_int32 ("bottom", cd, 0));
+
+      widget->setContentsMargins (left, top, right, bottom);
+   }
+}
+

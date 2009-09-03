@@ -1,18 +1,22 @@
 #include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginVersion.h"
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 
+
 dmz::QtPluginVersion::QtPluginVersion (
       const PluginInfo &Info,
       Config &local,
       Config &global) :
+      QObject (),
       Plugin (Info),
       _global (global),
       _log (Info),
+      _helpMenuName (),
       _version (0),
       _aboutAction (0) {
 
@@ -52,8 +56,6 @@ dmz::QtPluginVersion::discover_plugin (
       const PluginDiscoverEnum Mode,
       const Plugin *PluginPtr) {
 
-   const String AboutMenu ("About");
-
    if (Mode == PluginDiscoverAdd) {
 
       QtModuleMainWindow *window (QtModuleMainWindow::cast (PluginPtr));
@@ -61,7 +63,8 @@ dmz::QtPluginVersion::discover_plugin (
       if (window && _aboutAction) {
 
          _version = new QtVersion (window->get_qt_main_window (), _global);
-         window->add_menu_action (AboutMenu, _aboutAction);
+
+         window->add_menu_action (_helpMenuName, _aboutAction);
       } 
    }
    else if (Mode == PluginDiscoverRemove) {
@@ -70,7 +73,7 @@ dmz::QtPluginVersion::discover_plugin (
 
       if (window) {
       
-         window->remove_menu_action (AboutMenu, _aboutAction);
+         window->remove_menu_action (_helpMenuName, _aboutAction);
          _version->setParent (0);
       }
    }
@@ -89,10 +92,13 @@ dmz::QtPluginVersion::_init (Config &local) {
    if (_aboutAction) {
 
       _aboutAction->setMenuRole (QAction::AboutRole);
+      
+      _aboutAction->setText (
+         config_to_string ("about-menu.text", local, "&About").get_buffer ());
 
-      connect (
-         _aboutAction, SIGNAL (triggered ()),
-         this, SLOT (_slot_about ()));
+      connect (_aboutAction, SIGNAL (triggered ()), this, SLOT (_slot_about ()));
+      
+      _helpMenuName = config_to_string ("help-menu.text", local, "&Help");
    }
 }
 

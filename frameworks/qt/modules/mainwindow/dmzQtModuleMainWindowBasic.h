@@ -87,7 +87,6 @@ namespace dmz {
          };
 
          virtual void closeEvent (QCloseEvent *event);
-
          void _save_session ();
          void _load_session ();
          void _restore_state ();
@@ -111,5 +110,6 @@ namespace dmz {
          QtModuleMainWindowBasic &operator= (const QtModuleMainWindowBasic &);
    };
 };
+
 
 #endif // DMZ_QT_MODULE_MAIN_WINDOW_BASIC_DOT_H

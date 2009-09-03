@@ -34,6 +34,14 @@ namespace dmz {
       const String &Name,
       const Config &Source,
       QWidget *widget);
+   
+   
+   void set_qwidget_contents_margins (const Config &Source, QWidget *widget);
+   
+   DMZ_QT_UTIL_LINK_SYMBOL void set_qwidget_contents_margins (
+      const String &Name,
+      const Config &Source,
+      QWidget *widget);
 };
 
 
@@ -91,6 +99,13 @@ inline dmz::Boolean
 dmz::set_qwidget_stylesheet (const Config &Source, QWidget *widget) {
 
    return set_qwidget_stylesheet ("", Source, widget);
+}
+
+
+inline void
+dmz::set_qwidget_contents_margins (const Config &Source, QWidget  *widget) {
+
+   set_qwidget_contents_margins ("", Source, widget);
 }
 
 

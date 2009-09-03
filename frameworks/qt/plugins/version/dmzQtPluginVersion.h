@@ -7,6 +7,7 @@
 #include <dmzQtVersion.h>
 #include <QtCore/QObject>
 
+
 namespace dmz {
 
    class QtPluginVersion :
@@ -36,7 +37,7 @@ namespace dmz {
 
          Config _global;
          Log _log;
-
+         String _helpMenuName;
          QtVersion *_version;
          QAction *_aboutAction;
 

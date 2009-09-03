@@ -263,8 +263,6 @@ dmz::config_to_dock_widget_areas (
    <allowed-areas left="true" right="true" top="true" bottom="true"/>
 #endif
 
-   ConfigIterator it;
-   
    if (config_to_boolean ("none", areas)) { result = Qt::NoDockWidgetArea; }
    else if (config_to_boolean ("all", areas)) { result = Qt::AllDockWidgetAreas; }
    else {
@@ -376,13 +374,13 @@ dmz::qwidget_config_read (const String &Name, const Config &Source, QWidget *wid
       </widget>
 #endif
 
+      qobject_config_read ("object", cd, widget);
+
       widget->setMinimumSize (
          config_to_qsize ("minimum-size", cd, widget->minimumSize ()));
 
       widget->setMaximumSize (
          config_to_qsize ("maximum-size", cd, widget->maximumSize ()));
-
-      qobject_config_read ("object", cd, widget);
 
       String value;
 
@@ -399,6 +397,8 @@ dmz::qwidget_config_read (const String &Name, const Config &Source, QWidget *wid
       if (value) { widget->setWindowTitle (value.get_buffer ()); }
 
       set_qwidget_stylesheet ("stylesheet", cd, widget);
+      
+//      set_qwidget_contents_margins ("margins", cd, widget);
    }
 }
 
@@ -428,7 +428,7 @@ dmz::qframe_config_read (const String &Name, const Config &Source, QFrame *frame
       qwidget_config_read ("widget", cd, frame);
       
       frame->setLineWidth (config_to_int32 ("line-width", cd, 1));
-      frame->setMidLineWidth (config_to_int32 ("mmid-line-width", cd, 0));
+      frame->setMidLineWidth (config_to_int32 ("mid-line-width", cd, 0));
       
       String value;
       

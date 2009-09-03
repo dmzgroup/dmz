@@ -156,16 +156,15 @@ dmz::QtPluginStackedWidget::_init (Config &local) {
    _parent->setObjectName (get_plugin_name ().get_buffer ());
    
    qframe_config_read ("", local, _parent);
-
+   
    _stack = new QStackedLayout;
    
-   // QWidget *widget (new QWidget (_parent));
-   // _stack->addWidget (widget);
-
    _init_input_channels (local);
    
    QVBoxLayout *mainLayout = new QVBoxLayout;
    mainLayout->addLayout (_stack);
+   mainLayout->setContentsMargins (0, 0, 0, 0);
+   
    _parent->setLayout (mainLayout);
 }
 

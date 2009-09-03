@@ -62,6 +62,8 @@ dmz::QtPluginMapProperties::update_plugin_state (
       const UInt32 Level) {
 
    if (State == PluginStateInit) {
+
+      _load_session ();
       
       if (_mapModule) {
          
@@ -70,14 +72,13 @@ dmz::QtPluginMapProperties::update_plugin_state (
    }
    else if (State == PluginStateStart) {
 
-      _load_session ();
    }
    else if (State == PluginStateStop) {
 
-      _save_session ();
    }
    else if (State == PluginStateShutdown) {
 
+      _save_session ();
    }
 }
 
@@ -147,9 +148,9 @@ dmz::QtPluginMapProperties::create_archive (
 
    if (is_active_archive_handle (ArchiveHandle)) {
 
-      Config map ("map");
+      Config map ("show-map");
       map.store_attribute (
-         "on", _ui.mapCheckBox->isChecked () ? "true" : "false");
+         "value", _ui.mapCheckBox->isChecked () ? "true" : "false");
 
       local.add_config (map);
 
@@ -176,8 +177,12 @@ dmz::QtPluginMapProperties::process_archive (
 
    if (is_active_archive_handle (ArchiveHandle)) {
 
-      _ui.mapCheckBox->setChecked (config_to_boolean ("map.on", local, False));
-
+      String showMap;
+      if (local.lookup_attribute ("show-map.value", showMap)) {
+      
+         _ui.mapCheckBox->setChecked (string_to_boolean (showMap));
+      }
+      
       Config adapterConfig;
       if (local.lookup_config ("map-adapter", adapterConfig)) {
       
@@ -563,8 +568,8 @@ dmz::QtPluginMapProperties::_save_session () {
    current.store_attribute ("index", data);
    adapterList.add_config (current);
 
-   Config map ("map");
-   map.store_attribute ("on", _ui.mapCheckBox->isChecked () ? "true" : "false");
+   Config map ("show-map");
+   map.store_attribute ("value", _ui.mapCheckBox->isChecked () ? "true" : "false");
    session.add_config (map);
    
    set_session_config (get_plugin_runtime_context (), session);
@@ -600,7 +605,7 @@ dmz::QtPluginMapProperties::_load_session () {
    _ui.mapAdapterListWidget->setCurrentItem (item);
    _ui.mapAdapterListWidget->scrollToItem (item);
    
-   _ui.mapCheckBox->setChecked (config_to_boolean ("map.on", session, True));
+   _ui.mapCheckBox->setChecked (config_to_boolean ("show-map.value", session, True));
 }
 
 

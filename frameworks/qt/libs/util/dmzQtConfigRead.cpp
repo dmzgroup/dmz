@@ -535,7 +535,11 @@ dmz::qaction_config_read (const String &Name, const Config &Source, QAction *act
          }
          else if (StandardKey == "saveas") {
             
+#if (QT_VERSION >= QT_VERSION_CHECK(4, 5, 0))
             shortcut = QKeySequence::SaveAs;
+#else
+            shortcut = QKeySequence (Qt::Key_S + Qt::ControlModifier + Qt::ShiftModifier);
+#endif
          }
          else if (StandardKey == "zoomin") {
             

@@ -101,6 +101,7 @@ namespace dmz {
          QAction *_exitAction;
          String _mainWidgetName;
          String _windowMenuName;
+         String _fileMenuName;
          HashTableStringTemplate<QMenu> _menuTable;
          HashTableStringTemplate<DockWidgetStruct> _dockWidgetTable;
 

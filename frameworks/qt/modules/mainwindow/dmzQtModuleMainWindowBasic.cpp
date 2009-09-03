@@ -112,6 +112,7 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
       _exitAction (0),
       _mainWidgetName (),
       _windowMenuName ("&Window"),
+      _fileMenuName ("&File"),
       _dockWidgetTable () {
 
    setObjectName (get_plugin_name ().get_buffer ());
@@ -147,6 +148,11 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
          add_menu_action (_windowMenuName, dws->dock->toggleViewAction ());
          dws = _dockWidgetTable.get_next (it);
       }
+      
+      QAction *action (new QAction (this));
+      action->setSeparator (True);
+      add_menu_action (_fileMenuName, action);
+      add_menu_action (_fileMenuName, _exitAction);
       
       _load_session ();
       
@@ -490,8 +496,7 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
       _exitAction->setStatusTip ("Exit the application");
    }
 
-   const String FileMenu (config_to_string ("file-menu.text", local, "&File"));
-   add_menu_action (FileMenu, _exitAction);
+   _fileMenuName = config_to_string ("file-menu.text", local, _fileMenuName);
    
    _windowMenuName = config_to_string ("window-menu.text", local, _windowMenuName);
          

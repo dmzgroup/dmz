@@ -101,26 +101,29 @@ dmz::CommandLineConfig::process_command_line (
 
             if (find_file (_state.paths, file, foundFile)) {
 
-               FILE *file = open_file (foundFile, "rb");
+               FILE *ptr = open_file (foundFile, "rb");
 
-               if (file) {
+               if (ptr) {
 
-                  String buffer;
+                  const Int32 BufferSize = 1024;
+                  char buffer[BufferSize];
+                  Boolean done = False;
 
-                  while (read_file (file, 1024, buffer) && !error) {
+                  while (!done) {
 
-                     const Int32 Length = buffer.get_length ();
-                     const char *cbuf = buffer.get_buffer ();
+                     const Int32 Length = read_file (ptr, BufferSize, buffer);
 
-                     if (!parser.parse_buffer (cbuf, Length, Length < 1024)) {
+                     if (!parser.parse_buffer (buffer, Length, Length < BufferSize)) {
 
+                        done = True;
                         error = True;
                         _state.error.flush () << "In file: " << foundFile << " : "
                            << parser.get_error ();
                      }
+                     else if (Length < BufferSize) { done = True; }
                   }
 
-                  close_file (file);
+                  close_file (ptr);
 
                   if (!error && log) {
 

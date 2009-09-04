@@ -17,7 +17,7 @@
 
 
 dmz::QtModuleMapBasic::QtModuleMapBasic (const PluginInfo &Info, Config &local) :
-      QWidget (0),
+      QFrame (0),
       Plugin (Info),
       RenderModulePickConvert (Info),
       QtWidget (Info),
@@ -599,7 +599,7 @@ dmz::QtModuleMapBasic::_init (Config &local) {
 
    _pickModuleName = config_to_string ("module.pick.name", local);
 
-   qwidget_config_read ("widget", local, this);
+   qframe_config_read ("frame", local, this);
 
    _map = new qmapcontrol::MapControl (frameSize (), qmapcontrol::MapControl::None);
 

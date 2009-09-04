@@ -89,11 +89,6 @@ dmz::QtPluginWidget::discover_plugin (
 
             if (widget && (ws->widget == widget)) {
 
-               if (_parent) {
-
-                  // _parent->removeWidget (widget);
-               }
-
                widget->setParent (0);
                if (_layout) { _layout->removeWidget (widget); }
                ws->widget = 0;
@@ -118,7 +113,7 @@ dmz::QtPluginWidget::_init (Config &local) {
 
    _layout = new QGridLayout (_parent);
 
-   qframe_config_read ("", local, _parent);
+   qframe_config_read ("frame", local, _parent);
 
    Config widgetList;
 

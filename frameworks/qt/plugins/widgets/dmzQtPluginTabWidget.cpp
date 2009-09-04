@@ -184,7 +184,7 @@ dmz::QtPluginTabWidget::_init (Config &local) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
-   qframe_config_read ("", local, this);
+   qframe_config_read ("frame", local, this);
 
    QVBoxLayout *layout = new QVBoxLayout;
 

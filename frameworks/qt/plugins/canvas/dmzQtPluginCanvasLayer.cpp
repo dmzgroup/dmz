@@ -1234,7 +1234,7 @@ dmz::QtPluginCanvasLayerModel::_move_layer (
 dmz::QtPluginCanvasLayer::QtPluginCanvasLayer (
       const PluginInfo &Info,
       const Config &Local) :
-      QWidget (0),
+      QFrame (0),
       Plugin (Info),
       TimeSlice (Info),
       QtWidget (Info),
@@ -1453,7 +1453,7 @@ dmz::QtPluginCanvasLayer::_init (const Config &Local) {
    _objectModuleName = config_to_string ("module.object.name", Local);
    _canvasModuleName = config_to_string ("module.canvas.name", Local);
 
-   qwidget_config_read ("widget", Local, this);
+   qframe_config_read ("frame", Local, this);
 
    qtoolbutton_config_read ("addLayer", Local, _ui.addButton);
    qtoolbutton_config_read ("deleteLayer", Local, _ui.deleteButton);

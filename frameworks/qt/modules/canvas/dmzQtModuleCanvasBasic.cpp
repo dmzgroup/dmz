@@ -17,7 +17,7 @@
 
 
 dmz::QtModuleCanvasBasic::QtModuleCanvasBasic (const PluginInfo &Info, Config &local) :
-      QWidget (0),
+      QFrame (0),
       QtModuleCanvas (Info),
       Plugin (Info),
       QtWidget (Info),
@@ -499,7 +499,7 @@ dmz::QtModuleCanvasBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we)
 void
 dmz::QtModuleCanvasBasic::_init (Config &local) {
 
-   qwidget_config_read ("widget", local, this);
+   qframe_config_read ("frame", local, this);
 
    const Int32 MinX = config_to_int32 ("scene.min.x", local, -50000);
    const Int32 MinY = config_to_int32 ("scene.min.y", local, -50000);

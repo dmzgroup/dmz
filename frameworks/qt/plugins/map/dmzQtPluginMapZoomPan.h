@@ -5,7 +5,7 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <QtGui/QWidget>
+#include <QtGui/QFrame>
 #include "ui_dmzQtPluginMapZoomPan.h"
 
 
@@ -16,7 +16,7 @@ namespace dmz {
 
 
    class QtPluginMapZoomPan :
-         public QWidget,
+         public QFrame,
          public Plugin,
          public InputObserverUtil {
 

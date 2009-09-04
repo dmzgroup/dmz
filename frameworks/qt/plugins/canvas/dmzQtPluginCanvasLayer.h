@@ -11,7 +11,7 @@
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <QtGui/QGraphicsItem>
 #include <QtGui/QStandardItemModel>
-#include <QtGui/QWidget>
+#include <QtGui/QFrame>
 #include "ui_dmzQtPluginCanvasLayer.h"
 
 class QDockWidget;
@@ -199,7 +199,7 @@ namespace dmz {
 
 
    class QtPluginCanvasLayer :
-         public QWidget,
+         public QFrame,
          public Plugin,
          public TimeSlice,
          public QtWidget {

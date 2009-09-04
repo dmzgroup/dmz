@@ -9,7 +9,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
-#include <QtGui/QWidget>
+#include <QtGui/QFrame>
 
 
 namespace dmz {
@@ -18,7 +18,7 @@ namespace dmz {
    class QtCanvasView;
 
    class QtModuleCanvasBasic :
-         public QWidget,
+         public QFrame,
          public Plugin,
          public QtModuleCanvas,
          public QtWidget {

@@ -24,6 +24,8 @@ dmz::QtLuaProfilerTable::QtLuaProfilerTable () : model (0, 4, this), proxyModel 
       header->setResizeMode (2, QHeaderView::ResizeToContents);
       header->setResizeMode (3, QHeaderView::ResizeToContents);
    }
+   
+   adjustSize ();
 }
 
 

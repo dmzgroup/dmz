@@ -2,18 +2,32 @@
 #include <dmzTypesHashTableStringTemplate.h>
 #include <stdio.h>
 
+//! \cond
 struct dmz::PathContainerIterator::State {
 
    dmz::HashTableStringIterator it;
 };
+//! \endcond
 
 
+/*!
+
+\class dmz::PathContainerIterator
+\ingroup System
+\brief Iterator used to traverse a PathContainer.
+
+*/
+
+
+//! Constructor.
 dmz::PathContainerIterator::PathContainerIterator () : state (*(new State)) {;}
 
 
+//! Destructor.
 dmz::PathContainerIterator::~PathContainerIterator () { delete &state; }
 
 
+//! Resets iterator.
 void
 dmz::PathContainerIterator::reset () { state.it.reset (); }
 
@@ -144,6 +158,15 @@ dmz::PathContainer::get_next (String &path) const {
    return result;
 }
 
+
+/*!
+
+\brief Gets first \a path stored in container.
+\param[in] it PathContainerIterator used to iterate over the container.
+\param[out] path String containing first path in the list.
+\return Returns dmz::True if a value is stored in \a path.
+
+*/
 dmz::Boolean
 dmz::PathContainer::get_first (PathContainerIterator &it, String &path) const {
 
@@ -152,6 +175,15 @@ dmz::PathContainer::get_first (PathContainerIterator &it, String &path) const {
 }
 
 
+/*!
+
+\brief Gets next \a path stored in container.
+\param[in] it PathContainerIterator used to iterate over the container.
+\param[out] path String containing first path in the list.
+\return Returns dmz::True if a value was returned. Returns dmz::False if there are no
+more paths to return.
+
+*/
 dmz::Boolean
 dmz::PathContainer::get_next (PathContainerIterator &it, String &path) const {
 
@@ -162,6 +194,15 @@ dmz::PathContainer::get_next (PathContainerIterator &it, String &path) const {
 }
 
 
+/*!
+
+\brief Gets previous \a path stored in container.
+\param[in] it PathContainerIterator used to iterate over the container.
+\param[out] path String containing first path in the list.
+\return Returns dmz::True if a value was returned. Returns dmz::False if there are no
+more paths to return.
+
+*/
 dmz::Boolean
 dmz::PathContainer::get_prev (PathContainerIterator &it, String &path) const {
 
@@ -172,13 +213,20 @@ dmz::PathContainer::get_prev (PathContainerIterator &it, String &path) const {
 }
 
 
+/*!
+
+\brief Gets last \a path stored in container.
+\param[in] it PathContainerIterator used to iterate over the container.
+\param[out] path String containing first path in the list.
+\return Returns dmz::True if a value is stored in \a path.
+
+*/
 dmz::Boolean
 dmz::PathContainer::get_last (PathContainerIterator &it, String &path) const {
 
    it.state.it.reset ();
    return get_prev (it, path);
 }
-
 
 
 //! \addtogroup System

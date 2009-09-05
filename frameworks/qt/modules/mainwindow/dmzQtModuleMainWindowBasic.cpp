@@ -57,9 +57,7 @@ dmz::QtModuleMainWindowBasic::DockWidgetStruct::set_widget (QWidget *theWidget) 
          }
          
          widget = theWidget;
-         widget->adjustSize ();
          dock->setWidget (widget);
-         dock->hide ();
       }
       else {
 

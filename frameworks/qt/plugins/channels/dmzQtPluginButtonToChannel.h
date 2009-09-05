@@ -5,7 +5,7 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <QtGui/QWidget>
+#include <QtGui/QFrame>
 
 class QAction;
 class QActionGroup;
@@ -16,7 +16,7 @@ namespace dmz {
 
    class InputModule;
 
-   class QtPluginButtonToChannel : public QWidget, public Plugin, public QtWidget {
+   class QtPluginButtonToChannel : public QFrame, public Plugin, public QtWidget {
 
       Q_OBJECT
 

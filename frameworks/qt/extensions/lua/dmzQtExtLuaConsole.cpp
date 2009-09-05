@@ -281,6 +281,8 @@ dmz::QtExtLuaConsole::QtExtLuaConsole (const PluginInfo &Info, Config &local) :
 
    _defaultColor = _console.displayBox->textColor ();
    _init (local);
+   
+   adjustSize ();
 }
 
 

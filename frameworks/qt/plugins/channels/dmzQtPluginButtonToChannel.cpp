@@ -11,7 +11,7 @@
 dmz::QtPluginButtonToChannel::QtPluginButtonToChannel (
       const PluginInfo &Info,
       Config &local) :
-      QWidget (0),
+      QFrame (0),
       Plugin (Info),
       QtWidget (Info),
       _log (Info),
@@ -123,7 +123,7 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
 
 //   _defaultChannel = defs.create_named_handle (DefaultName);
 
-   qwidget_config_read ("widget", local, this);
+   qframe_config_read ("frame", local, this);
 
    QHBoxLayout *layout (new QHBoxLayout ());
 

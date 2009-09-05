@@ -9,7 +9,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
-#include <QtGui/QWidget>
+#include <QtGui/QFrame>
 
 
 namespace qmapcontrol {
@@ -27,7 +27,7 @@ namespace dmz {
    class RenderModulePick;
 
    class QtModuleMapBasic :
-         public QWidget,
+         public QFrame,
          public Plugin,
          public RenderModulePickConvert,
          public QtWidget,

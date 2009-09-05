@@ -16,7 +16,7 @@
 dmz::QtPluginCanvasZoomPan::QtPluginCanvasZoomPan (
       const PluginInfo &Info,
       Config &local) :
-      QWidget (0),
+      QFrame (0),
       Plugin (Info),
       InputObserverUtil (Info, local),
       _log (Info),
@@ -374,7 +374,8 @@ dmz::QtPluginCanvasZoomPan::_init (Config &local) {
    _zoomStep = config_to_float32 ("zoom.step", local, _zoomStep);
    _zoomDefault = config_to_float32 ("zoom.default", local, _zoomDefault);
 
-   qwidget_config_read ("widget", local, this);
+   qframe_config_read ("frame", local, this);
+   
    qtoolbutton_config_read ("panLeft", local, _ui.panLeftButton);
    qtoolbutton_config_read ("panRight", local, _ui.panRightButton);
    qtoolbutton_config_read ("panUp", local, _ui.panUpButton);

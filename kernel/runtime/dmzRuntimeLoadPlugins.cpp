@@ -111,7 +111,7 @@ dmz::load_plugins (
          data.lookup_all_config ("level", levelList);
 
          Config scopeList;
-         data.lookup_all_config ("scope", scopeList);
+         data.lookup_all_config ("additional-scope", scopeList);
 
          const PluginDeleteModeEnum DeleteMode (
             config_to_boolean ("delete", data, True) ?

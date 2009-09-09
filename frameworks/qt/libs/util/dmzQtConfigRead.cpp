@@ -525,6 +525,10 @@ dmz::qaction_config_read (const String &Name, const Config &Source, QAction *act
 
             shortcut = QKeySequence::Redo;
          }
+         else if (StandardKey == "new") {
+
+            shortcut = QKeySequence::New;
+         }
          else if (StandardKey == "open") {
 
             shortcut = QKeySequence::Open;

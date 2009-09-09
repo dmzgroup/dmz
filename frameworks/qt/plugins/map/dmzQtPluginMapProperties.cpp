@@ -35,7 +35,10 @@ dmz::QtPluginMapProperties::QtPluginMapProperties (
       _adapterList (),
       _mapAdapter (0),
       _defaultAdapterList (),
-      _timerId (0) {
+      _timerId (0),
+      _showMapAction (0),
+      _showAction (0),
+      _menuName ("&Edit") {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
@@ -107,6 +110,9 @@ dmz::QtPluginMapProperties::discover_plugin (
          if (_mainWindowModule) {
             
             setParent (_mainWindowModule->get_qt_main_window (), Qt::Dialog);
+            
+            _mainWindowModule->add_menu_action (_menuName, _showMapAction);
+            _mainWindowModule->add_menu_action (_menuName, _showAction);
          }
       }
    }
@@ -131,6 +137,9 @@ dmz::QtPluginMapProperties::discover_plugin (
       if (_mainWindowModule &&
           (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
 
+         _mainWindowModule->remove_menu_action (_menuName, _showMapAction);
+         _mainWindowModule->remove_menu_action (_menuName, _showAction);
+         
          setParent (0);
          _mainWindowModule = 0;
       }
@@ -207,11 +216,7 @@ dmz::QtPluginMapProperties::receive_message (
 
    if (Type == _propertiesEditMessage) {
 
-      qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
-      _update_cache_info ();
-      qApp->restoreOverrideCursor ();
-
-      exec ();
+      on_showAction_triggered ();
    }
 }
 
@@ -369,6 +374,17 @@ dmz::QtPluginMapProperties::on_emptyCacheButton_clicked () {
       _update_cache_info ();
       qApp->restoreOverrideCursor ();
    }
+}
+
+
+void
+dmz::QtPluginMapProperties::on_showAction_triggered () {
+   
+   qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
+   _update_cache_info ();
+   qApp->restoreOverrideCursor ();
+
+   exec ();
 }
 
 
@@ -643,6 +659,28 @@ dmz::QtPluginMapProperties::_init (Config &local) {
    local.lookup_config ("default-map-adapter-list", _defaultAdapterList);
    
    init_archive (local);
+   
+   _showMapAction = new QAction (this);
+   qaction_config_read ("show-map-action", local, _showMapAction);
+   
+   _showMapAction->setChecked (_ui.mapCheckBox->isChecked ());
+   
+   connect (
+      _showMapAction, SIGNAL (toggled (bool)),
+      _ui.mapCheckBox, SLOT (setChecked (bool)));
+      
+   connect (
+      _ui.mapCheckBox, SIGNAL (toggled (bool)),
+      _showMapAction, SLOT (setChecked (bool)));
+
+   _showAction = new QAction (this);
+   qaction_config_read ("show-action", local, _showAction);
+   
+   connect (
+      _showAction, SIGNAL (triggered ()),
+      this, SLOT (on_showAction_triggered ()));
+      
+   _menuName = config_to_string ("menu.name", local, _menuName);
 }
 
 

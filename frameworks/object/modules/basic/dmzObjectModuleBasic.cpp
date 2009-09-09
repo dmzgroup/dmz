@@ -448,7 +448,7 @@ dmz::ObjectModuleBasic::create_object (
 
       ObjectStruct *obj (_recycleList);
 
-      if (obj) { _recycleList = _recycleList->next; obj->next = 0; obj->reset (); }
+      if (obj) { _recycleList = _recycleList->next; obj->reset (); }
       else { obj = new ObjectStruct; }
 
       if (obj) {
@@ -606,7 +606,7 @@ dmz::ObjectModuleBasic::clone_object (
 
       ObjectStruct *next (_recycleList);
 
-      if (next) { _recycleList = next->next; next->next = 0; }
+      if (next) { _recycleList = next->next; next->reset (); }
 
       ObjectStruct *clone (obj->clone (next));
 
@@ -2997,9 +2997,12 @@ dmz::ObjectModuleBasic::immediate_destroy_object (const Handle ObjectHandle) {
 
    ObjectStruct *obj (_lookup_object (ObjectHandle));
 
-   if (obj) {
+   if (obj) { _unlink_object (*obj); }
 
-      _unlink_object (*obj);
+   // Check to see if the object was deleted in _unlink_object
+   obj = _lookup_object (ObjectHandle);
+
+   if (obj) {
 
       _inObsUpdate = True;
 

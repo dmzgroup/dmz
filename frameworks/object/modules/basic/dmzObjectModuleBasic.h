@@ -687,7 +687,16 @@ namespace dmz {
                   active (False),
                   locality (ObjectLocalityUnknown) {;}
 
-            ~ObjectStruct () { if (next) { delete next; next = 0; } reset (); }
+            ~ObjectStruct () {
+
+               while (next) {
+
+                  ObjectStruct *tmp = next;
+                  next = next->next;
+                  tmp->reset ();
+                  delete tmp; tmp = 0;
+               }
+            }
          };
 
          struct SubscriptionStruct {

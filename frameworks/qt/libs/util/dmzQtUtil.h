@@ -7,6 +7,7 @@
 
 class QObject;
 class QWidget;
+class QString;
 
 
 namespace dmz {
@@ -42,6 +43,13 @@ namespace dmz {
       const String &Name,
       const Config &Source,
       QWidget *widget);
+      
+   DMZ_QT_UTIL_LINK_SYMBOL QString get_save_file_name_with_extension (
+         QWidget *parent,
+         const QString &title,
+         QString dir,
+         const QString &filter,
+         const QString &extension);
 };
 
 

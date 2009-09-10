@@ -369,7 +369,7 @@ dmz::QtPluginMapProperties::on_emptyCacheButton_clicked () {
 
    if (_mapModule) {
       
-      qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
+      qApp->setOverrideCursor (QCursor (Qt::WaitCursor));
       _mapModule->empty_tile_cache ();
       _update_cache_info ();
       qApp->restoreOverrideCursor ();
@@ -380,7 +380,7 @@ dmz::QtPluginMapProperties::on_emptyCacheButton_clicked () {
 void
 dmz::QtPluginMapProperties::on_showAction_triggered () {
    
-   qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
+   qApp->setOverrideCursor (QCursor (Qt::WaitCursor));
    _update_cache_info ();
    qApp->restoreOverrideCursor ();
 

@@ -245,7 +245,7 @@ dmz::Undo::do_next (const UndoTypeEnum Type) {
 
    Boolean result (False);
 
-   if (_context && !_context->currentStack) {
+   if (_context && !_context->inUndo && !_context->currentStack) {
 
       _context->inUndo = True;
 

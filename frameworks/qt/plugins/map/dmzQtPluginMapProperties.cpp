@@ -216,7 +216,7 @@ dmz::QtPluginMapProperties::receive_message (
 
    if (Type == _propertiesEditMessage) {
 
-      on_showAction_triggered ();
+      _slot_showAction_triggered ();
    }
 }
 
@@ -378,7 +378,7 @@ dmz::QtPluginMapProperties::on_emptyCacheButton_clicked () {
 
 
 void
-dmz::QtPluginMapProperties::on_showAction_triggered () {
+dmz::QtPluginMapProperties::_slot_showAction_triggered () {
    
    qApp->setOverrideCursor (QCursor (Qt::WaitCursor));
    _update_cache_info ();
@@ -678,7 +678,7 @@ dmz::QtPluginMapProperties::_init (Config &local) {
    
    connect (
       _showAction, SIGNAL (triggered ()),
-      this, SLOT (on_showAction_triggered ()));
+      this, SLOT (_slot_showAction_triggered ()));
       
    _menuName = config_to_string ("menu.name", local, _menuName);
 }

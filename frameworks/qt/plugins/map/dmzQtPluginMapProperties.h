@@ -74,7 +74,7 @@ namespace dmz {
          void on_mapAdapterEditButton_clicked ();
          void on_mapAdapterDeleteButton_clicked ();
          void on_emptyCacheButton_clicked ();
-         void on_showAction_triggered ();
+         void _slot_showAction_triggered ();
          
       protected:
          void showEvent (QShowEvent *event);

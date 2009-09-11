@@ -164,8 +164,8 @@ dmz::QtPluginCanvasMap::resizeEvent (QResizeEvent *event) {
 void
 dmz::QtPluginCanvasMap::_init (Config &local) {
 
-   _canvasModuleName = config_to_string ("canvas.name", local);
-   _mapModuleName = config_to_string ("map.name", local);
+   _canvasModuleName = config_to_string ("module.canvas.name", local);
+   _mapModuleName = config_to_string ("module.map.name", local);
 
    _layout = new QVBoxLayout (this);
    _layout->setSpacing (0);

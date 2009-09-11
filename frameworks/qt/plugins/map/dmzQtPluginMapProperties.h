@@ -109,7 +109,9 @@ namespace dmz {
          String _canvasModuleName;
          QtModuleMap *_mapModule;
          String _mapModuleName;
+         Handle _toggleHandle;
          Message _propertiesEditMessage;
+         Message _toggleMapMessage;
          QList<AdapterItemStruct *> _adapterList;
          qmapcontrol::MapAdapter *_mapAdapter;
          Config _defaultAdapterList;

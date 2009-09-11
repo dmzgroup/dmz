@@ -153,6 +153,47 @@ data_get_attributes (lua_State *L) {
 
 
 static int
+data_store_boolean (lua_State *L) {
+
+   Data **data = data_check (L, 1);
+   Handle *handlePtr = lua_check_handle (L, 2);
+   Int32 index = (Int32)luaL_checkinteger (L, 3) - 1;
+   Boolean value = lua_toboolean (L, 4) > 0 ? True : False;
+
+   if (data && *data && handlePtr) {
+
+      (*data)->store_boolean (*handlePtr, index, value);
+   }
+
+   return 0;
+}
+
+
+static int
+data_lookup_boolean (lua_State *L) {
+
+   int result (0);
+
+   Data **data = data_check (L, 1);
+   Handle *handlePtr = lua_check_handle (L, 2);
+   Int32 index = (Int32)luaL_checkinteger (L, 3) - 1;
+
+   if (data && *data && handlePtr) {
+
+      Boolean value;
+
+      if ((*data)->lookup_boolean (*handlePtr, index, value)) {
+
+         lua_pushboolean (L, value ? 1 : 0);
+         result = 1;
+      }
+   }
+
+   return result;
+}
+
+
+static int
 data_store_string (lua_State *L) {
 
    Data **data = data_check (L, 1);
@@ -333,6 +374,8 @@ static const luaL_Reg arrayMembers [] = {
    {"__tostring", data_to_string},
    {"__eq", data_equal},
    {"get_attributes", data_get_attributes},
+   {"store_boolean", data_store_boolean},
+   {"lookup_boolean", data_lookup_boolean},
    {"store_string", data_store_string},
    {"lookup_string", data_lookup_string},
    {"store_number", data_store_number},

@@ -57,6 +57,16 @@ namespace dmz {
          Int32 lookup_attribute_element_count (const Handle AttrHandle) const;
          BaseTypeEnum lookup_attribute_base_type_enum (const Handle AttrHandle) const;
 
+         Boolean store_boolean (
+            const Handle AttrHandle,
+            const Int32 Element,
+            const Boolean Value);
+
+         Boolean lookup_boolean (
+            const Handle AttrHandle,
+            const Int32 Element,
+            Boolean &value) const;
+
          Boolean store_uint32 (
             const Handle AttrHandle,
             const Int32 Element,

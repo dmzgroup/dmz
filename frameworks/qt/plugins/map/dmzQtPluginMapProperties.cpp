@@ -5,6 +5,7 @@
 #include "dmzQtPluginMapProperties.h"
 #include "dmzQtPluginMapPropertiesMapAdapter.h"
 #include <dmzQtUtil.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -29,6 +30,7 @@ dmz::QtPluginMapProperties::QtPluginMapProperties (
       _canvasModuleName (),
       _mapModule (0),
       _mapModuleName (),
+      _toggleHandle (0),
       _mainWindowModule (0),
       _mainWindowModuleName (),
       _propertiesEditMessage (),
@@ -214,7 +216,16 @@ dmz::QtPluginMapProperties::receive_message (
       const Data *InData,
       Data *outData) {
 
-   if (Type == _propertiesEditMessage) {
+   if (Type == _toggleMapMessage) {
+
+      Boolean toggle (True);
+
+      if (InData && InData->lookup_boolean (_toggleHandle, 0, toggle)) {
+
+         on_mapCheckBox_stateChanged (toggle ? 1 : 0);
+      }
+   }
+   else if (Type == _propertiesEditMessage) {
 
       _slot_showAction_triggered ();
    }
@@ -654,7 +665,17 @@ dmz::QtPluginMapProperties::_init (Config &local) {
       context,
       &_log);
 
+   _toggleMapMessage = config_create_message (
+      "message.toggle-map.name",
+      local,
+      "ToggleMapMessage",
+      context,
+      &_log);
+
    subscribe_to_message (_propertiesEditMessage);
+   subscribe_to_message (_toggleMapMessage);
+
+   _toggleHandle = config_to_named_handle ("toggle.name", local, "toggle", context);
    
    local.lookup_config ("default-map-adapter-list", _defaultAdapterList);
    

@@ -42,6 +42,7 @@ dmz::QtPluginCanvasMap::update_plugin_state (
 
    if (State == PluginStateInit) {
 
+      if (_mapWidget) { _mapWidget->resize (size ()); }
    }
    else if (State == PluginStateStart) {
 
@@ -152,8 +153,6 @@ void
 dmz::QtPluginCanvasMap::resizeEvent (QResizeEvent *event) {
 
    if (event) {
-
-//      if (_mapWidget) { _mapWidget->resize (event->size ()); }
 
       if (_canvasWidget) { _canvasWidget->resize (event->size ()); }
 

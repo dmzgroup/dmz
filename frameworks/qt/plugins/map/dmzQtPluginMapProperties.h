@@ -74,6 +74,7 @@ namespace dmz {
          void on_mapAdapterEditButton_clicked ();
          void on_mapAdapterDeleteButton_clicked ();
          void on_emptyCacheButton_clicked ();
+         void on_showAction_triggered ();
          
       protected:
          void showEvent (QShowEvent *event);
@@ -113,6 +114,9 @@ namespace dmz {
          qmapcontrol::MapAdapter *_mapAdapter;
          Config _defaultAdapterList;
          Int32 _timerId;
+         QAction *_showMapAction;
+         QAction *_showAction;
+         String _menuName;
          
       private:
          QtPluginMapProperties ();

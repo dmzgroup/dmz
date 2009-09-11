@@ -207,7 +207,7 @@ dmz::QtPluginCanvasBackground::receive_message (
 
          if (!fileName.isEmpty ()) {
          
-            qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
+            qApp->setOverrideCursor (QCursor (Qt::WaitCursor));
             
             const Handle UndoHandle (_undo.start_record ("Set Background"));
 

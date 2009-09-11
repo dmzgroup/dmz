@@ -43,6 +43,9 @@ using namespace dmz;
 namespace {
 
 static inline
+void local_string_to (const String &From, Boolean &to) { to = string_to_boolean (From); }
+
+static inline
 void local_string_to (const String &From, Int32 &to) { to = string_to_int32 (From); }
 
 static inline
@@ -73,6 +76,7 @@ struct attrStruct {
          Size (TheSize) {;}
 };
 
+static const attrStruct BooleanAt (BaseTypeBoolean, sizeof (UInt32));
 static const attrStruct Int32At (BaseTypeInt32, sizeof (Int32));
 static const attrStruct Int64At (BaseTypeInt64, sizeof (Int64));
 static const attrStruct UInt32At (BaseTypeUInt32, sizeof (UInt32));
@@ -288,6 +292,10 @@ dataConvertTemplate<T>::write (
 
          *((Float32 *)(&(ptr[Offset]))) = Float32 (Value);
       }
+      else if (Type == BaseTypeBoolean) {
+
+         *((UInt32 *)(&(ptr[Offset]))) = UInt32 (Value);
+      }
       else if (Type == BaseTypeInt32) { *((Int32 *)(&(ptr[Offset]))) = Int32 (Value); }
       else if (Type == BaseTypeUInt32) { *((UInt32 *)(&(ptr[Offset]))) = UInt32 (Value); }
       else if (Type == BaseTypeInt64) { *((Int64 *)(&(ptr[Offset]))) = Int64 (Value); }
@@ -340,6 +348,7 @@ dataConvertTemplate<T>::read (
       else if (Type == BaseTypeFloat64) { data = T (*((Float64 *)(&(Ds.data[Offset])))); }
       else if (Type == BaseTypeFloat32) { data = T (*((Float32 *)(&(Ds.data[Offset])))); }
       else if (Type == BaseTypeInt32) { data = T (*((Int32 *)(&(Ds.data[Offset])))); }
+      else if (Type == BaseTypeBoolean) { data = T (*((UInt32 *)(&(Ds.data[Offset])))); }
       else if (Type == BaseTypeUInt32) { data = T (*((UInt32 *)(&(Ds.data[Offset])))); }
       else if (Type == BaseTypeInt64) { data = T (*((Int64 *)(&(Ds.data[Offset])))); }
       else if (Type == BaseTypeUInt64) { data = T (*((UInt64 *)(&(Ds.data[Offset])))); }
@@ -357,6 +366,7 @@ dataConvertTemplate<T>::read (
 }
 
 
+static dataConvertTemplate<UInt32> booleanConvert (BaseTypeBoolean);
 static dataConvertTemplate<Int32> int32Convert (BaseTypeInt32);
 static dataConvertTemplate<Int64> int64Convert (BaseTypeInt64);
 static dataConvertTemplate<UInt32> uint32Convert (BaseTypeUInt32);
@@ -705,6 +715,50 @@ dmz::Data::lookup_attribute_base_type_enum (const Handle AttrHandle) const {
    dataStruct *ds = _state.get_data (AttrHandle);
 
    if (ds) { result = ds->Attr.Type; }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::Data::store_boolean (
+      const Handle AttrHandle,
+      const Int32 Element,
+      const Boolean Value) {
+
+   Boolean result (False);
+
+   dataStruct *ds = _state.get_data (AttrHandle, &BooleanAt);
+
+   if (ds) {
+
+      result = booleanConvert.write (Value ? 1 : 0, Element, _state.stringTable, *ds);
+   }
+
+   return result;
+
+}
+
+dmz::Boolean
+dmz::Data::lookup_boolean (
+      const Handle AttrHandle,
+      const Int32 Element,
+      Boolean &value) const {
+
+   Boolean result (False);
+
+   dataStruct *ds = _state.get_data (AttrHandle);
+
+   if (ds) {
+
+      UInt32 uvalue (0);
+
+      if (booleanConvert.read (*ds, Element, _state.stringTable, uvalue)) {
+
+         value = (uvalue > 0) ? True : False;
+         result = True;
+      }
+   }
 
    return result;
 }
@@ -1078,6 +1132,11 @@ dmz::Data::store_string (
          const UInt64 Converted (string_to_uint64 (Value));
          result = uint64Convert.write (Converted, Element, _state.stringTable, *ds);
       }
+      else if (Type == BaseTypeBoolean) {
+
+         const UInt32 Converted (string_to_boolean (Value) ? 1 : 0);
+         result = booleanConvert.write (Converted, Element, _state.stringTable, *ds);
+      }
    }
 
    return result;
@@ -1105,7 +1164,8 @@ dmz::Data::store_string (
 
       const attrStruct *Attr (&StringAt);
 
-      if (Type == BaseTypeUInt32) { Attr = &UInt32At; }
+      if (Type == BaseTypeBoolean) { Attr = &BooleanAt; }
+      else if (Type == BaseTypeUInt32) { Attr = &UInt32At; }
       else if (Type == BaseTypeUInt64) { Attr = &UInt64At; }
       else if (Type == BaseTypeInt32) { Attr = &Int32At; }
       else if (Type == BaseTypeInt64) { Attr = &Int64At; }
@@ -1200,6 +1260,12 @@ dmz::Data::lookup_string (
          result = uint64Convert.read (*ds, Element, _state.stringTable, converted);
          value.flush () << converted;
       }
+      else if (Type == BaseTypeBoolean) {
+
+         UInt32 converted (0);
+         result = booleanConvert.read (*ds, Element, _state.stringTable, converted);
+         value.flush () << (converted > 0 ? "true" : "false");
+      }
    }
 
    return result;
@@ -1241,6 +1307,7 @@ dmz::Data::store_vector (
 
    return result;
 }
+
 
 /*!
 

@@ -1,6 +1,7 @@
 #include <dmzLuaKernel.h>
 #include "dmzLuaKernelPrivate.h"
 #include <dmzLuaKernelValidate.h>
+#include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzSystemStreamString.h>
 #include <dmzTypesString.h>
@@ -29,7 +30,8 @@ message_check (lua_State *L, int index) {
 
          if (ptr) {
 
-            ptr->set_type (name, lua_get_runtime_context (L));
+            Definitions defs (lua_get_runtime_context (L));
+            defs.create_message (name, *ptr);
 
             lua_replace (L, index);
 

@@ -223,6 +223,7 @@ dmz::QtPluginMapProperties::receive_message (
       if (InData && InData->lookup_boolean (_toggleHandle, 0, toggle)) {
 
          on_mapCheckBox_stateChanged (toggle ? 1 : 0);
+         _ui.mapCheckBox->setCheckState (toggle ? Qt::Checked : Qt::Unchecked);
       }
    }
    else if (Type == _propertiesEditMessage) {

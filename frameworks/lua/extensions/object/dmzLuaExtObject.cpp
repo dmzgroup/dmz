@@ -604,9 +604,7 @@ object_link_attribute_object (lua_State *L) {
 
       if (objPtr) {
 
-         if (objMod->store_link_attribute_object (
-               *linkPtr,
-               *objPtr)) {
+         if (objMod->store_link_attribute_object (*linkPtr, *objPtr)) {
 
             lua_pushvalue (L, 2);
          }

@@ -831,6 +831,14 @@ dmz::LuaModuleBasic::_instance_script (InstanceStruct &is) {
                }
             }
          }
+         else {
+
+            _log.error << "Failed creating instance: " << is.Name
+               << " because unable to find function \"new\" in script: "
+               << is.Script.Name << endl;
+
+            lua_pop (_luaState, 1); // pop error message
+         }
       }
       else {
 

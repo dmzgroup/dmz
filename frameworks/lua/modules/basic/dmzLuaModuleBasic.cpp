@@ -333,7 +333,7 @@ dmz::LuaModuleBasic::handle_lua_error (lua_State *L) {
 
    int level = 1;
 
-   while (lua_getstack (L, level, &ar)) {
+   while (lua_getstack (L, level, &ar) && (level <= 50)) {
 
       lua_getinfo (L, "Snl", &ar);
 

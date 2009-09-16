@@ -112,6 +112,7 @@ dmz::QtPluginWidget::_init (Config &local) {
    _parent = new QFrame;
 
    _layout = new QGridLayout (_parent);
+   _layout->setContentsMargins (0, 0, 0, 0);
 
    qframe_config_read ("frame", local, _parent);
 

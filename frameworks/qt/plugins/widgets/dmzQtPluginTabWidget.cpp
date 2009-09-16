@@ -19,8 +19,6 @@ dmz::QtPluginTabWidget::QtPluginTabWidget (const PluginInfo &Info, Config &local
       _log (Info),
       _tab (0),
       _defaultTab (0) {
-
-   setObjectName (get_plugin_name ().get_buffer ());
    
    _init (local);
 }

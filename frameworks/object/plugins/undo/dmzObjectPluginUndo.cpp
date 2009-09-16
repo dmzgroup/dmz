@@ -64,10 +64,6 @@ dmz::ObjectPluginUndo::ObjectPluginUndo (const PluginInfo &Info, Config &local) 
       _uuidHandle (0),
       _valueHandle (0),
       _maskHandle (0),
-      _booleanHandle (0),
-      _float64Handle (0),
-      _vectorHandle (0),
-      _matrixHandle (0),
       _recording (False),
       _inDump (False),
       _undo (Info),
@@ -168,6 +164,33 @@ dmz::ObjectPluginUndo::receive_message (
          const Handle LinkHandle (objMod->lookup_link_handle (AttrHandle, Super, Sub));
 
          objMod->store_link_attribute_object (LinkHandle, ObjectHandle);
+      }
+      else if (Msg == _storeCounter) {
+
+         const Handle ObjectHandle (local_uuid_to_handle (*InData, _uuidHandle, *objMod));
+         const Handle AttrHandle (
+            local_attr_name_to_handle (*InData, _handleHandle, _defs));
+         Int64 count (0);
+         InData->lookup_int64 (_valueHandle, 0, count);
+         objMod->store_counter (ObjectHandle, AttrHandle, count);
+      }
+      else if (Msg == _storeCounterMin) {
+
+         const Handle ObjectHandle (local_uuid_to_handle (*InData, _uuidHandle, *objMod));
+         const Handle AttrHandle (
+            local_attr_name_to_handle (*InData, _handleHandle, _defs));
+         Int64 count (0);
+         InData->lookup_int64 (_valueHandle, 0, count);
+         objMod->store_counter_minimum (ObjectHandle, AttrHandle, count);
+      }
+      else if (Msg == _storeCounterMax) {
+
+         const Handle ObjectHandle (local_uuid_to_handle (*InData, _uuidHandle, *objMod));
+         const Handle AttrHandle (
+            local_attr_name_to_handle (*InData, _handleHandle, _defs));
+         Int64 count (0);
+         InData->lookup_int64 (_valueHandle, 0, count);
+         objMod->store_counter_maximum (ObjectHandle, AttrHandle, count);
       }
       else if (Msg == _storeType) {
 
@@ -653,9 +676,28 @@ dmz::ObjectPluginUndo::update_object_counter (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Int64 &Value,
+      const Int64 Value,
       const Int64 *PreviousValue) {
 
+   if (_recording) {
+
+      if (!_inDump && !PreviousValue) {
+
+         _remove_attribute (Identity, AttributeHandle, ObjectCounterMask);
+      }
+      else {
+
+         const Int64 CounterValue (_inDump ? Value : *PreviousValue);
+
+         Data data;
+         data.store_uuid (_uuidHandle, 0, Identity);
+         const String AttrName (_defs.lookup_named_handle_name (AttributeHandle));
+         data.store_string (_handleHandle, 0, AttrName);
+         data.store_int64 (_valueHandle, 0, CounterValue);
+
+         _undo.store_action (_storeCounter, get_plugin_handle (), &data);
+      }
+   }
 }
 
 
@@ -664,9 +706,28 @@ dmz::ObjectPluginUndo::update_object_counter_minimum (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Int64 &Value,
+      const Int64 Value,
       const Int64 *PreviousValue) {
 
+   if (_recording) {
+
+      if (!_inDump && !PreviousValue) {
+
+         _remove_attribute (Identity, AttributeHandle, ObjectMinCounterMask);
+      }
+      else {
+
+         const Int64 CounterValue (_inDump ? Value : *PreviousValue);
+
+         Data data;
+         data.store_uuid (_uuidHandle, 0, Identity);
+         const String AttrName (_defs.lookup_named_handle_name (AttributeHandle));
+         data.store_string (_handleHandle, 0, AttrName);
+         data.store_int64 (_valueHandle, 0, CounterValue);
+
+         _undo.store_action (_storeCounterMin, get_plugin_handle (), &data);
+      }
+   }
 }
 
 
@@ -675,8 +736,28 @@ dmz::ObjectPluginUndo::update_object_counter_maximum (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Int64 &Value,
+      const Int64 Value,
       const Int64 *PreviousValue) {
+
+   if (_recording) {
+
+      if (!_inDump && !PreviousValue) {
+
+         _remove_attribute (Identity, AttributeHandle, ObjectMaxCounterMask);
+      }
+      else {
+
+         const Int64 CounterValue (_inDump ? Value : *PreviousValue);
+
+         Data data;
+         data.store_uuid (_uuidHandle, 0, Identity);
+         const String AttrName (_defs.lookup_named_handle_name (AttributeHandle));
+         data.store_string (_handleHandle, 0, AttrName);
+         data.store_int64 (_valueHandle, 0, CounterValue);
+
+         _undo.store_action (_storeCounterMax, get_plugin_handle (), &data);
+      }
+   }
 
 }
 
@@ -1142,6 +1223,16 @@ dmz::ObjectPluginUndo::_init (Config &local) {
       "Object_Plugin_Undo_Store_Link_Attribute_Object_Message",
       _storeLinkAttributeObject);
 
+   _defs.create_message ("Object_Plugin_Undo_Store_Counter_Message", _storeCounter);
+
+   _defs.create_message (
+      "Object_Plugin_Undo_Store_Counter_Minimum_Message",
+      _storeCounterMin);
+
+   _defs.create_message (
+      "Object_Plugin_Undo_Store_Counter_Maximum_Message",
+      _storeCounterMax);
+
    _defs.create_message ("Object_Plugin_Undo_Store_Type_Message", _storeType);
    _defs.create_message ("Object_Plugin_Undo_Store_State_Message", _storeState);
    _defs.create_message ("Object_Plugin_Undo_Store_Flag_Message", _storeFlag);
@@ -1181,6 +1272,9 @@ dmz::ObjectPluginUndo::_init (Config &local) {
    subscribe_to_message (_linkObjects);
    subscribe_to_message (_unlinkObjects);
    subscribe_to_message (_storeLinkAttributeObject);
+   subscribe_to_message (_storeCounter);
+   subscribe_to_message (_storeCounterMin);
+   subscribe_to_message (_storeCounterMax);
    subscribe_to_message (_storeType);
    subscribe_to_message (_storeState);
    subscribe_to_message (_storeFlag);
@@ -1204,10 +1298,6 @@ dmz::ObjectPluginUndo::_init (Config &local) {
    _uuidHandle = _defs.create_named_handle ("UUID");
    _valueHandle = _defs.create_named_handle ("Value");
    _maskHandle = _defs.create_named_handle ("Mask");
-   _booleanHandle = _defs.create_named_handle ("Boolean");
-   _float64Handle = _defs.create_named_handle ("Float64");
-   _vectorHandle = _defs.create_named_handle ("Vector");
-   _matrixHandle = _defs.create_named_handle ("Matrix");
 }
 //! \endcond
 

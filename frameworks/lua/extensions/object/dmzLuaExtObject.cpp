@@ -184,7 +184,7 @@ object_is_object (lua_State *L) {
    int result (0);
 
    ObjectModule *objMod (get_object_module (L));
-   Handle *ptr (lua_to_handle (L, 1));
+   Handle *ptr (check_obj_handle (L, 1, objMod));
 
    if (objMod && ptr) {
 
@@ -207,7 +207,7 @@ object_is_link (lua_State *L) {
    int result (0);
 
    ObjectModule *objMod (get_object_module (L));
-   Handle *ptr (lua_to_handle (L, 1));
+   Handle *ptr (check_obj_handle (L, 1, objMod));
 
    if (objMod && ptr) {
 
@@ -604,9 +604,7 @@ object_link_attribute_object (lua_State *L) {
 
       if (objPtr) {
 
-         if (objMod->store_link_attribute_object (
-               *linkPtr,
-               *objPtr)) {
+         if (objMod->store_link_attribute_object (*linkPtr, *objPtr)) {
 
             lua_pushvalue (L, 2);
          }

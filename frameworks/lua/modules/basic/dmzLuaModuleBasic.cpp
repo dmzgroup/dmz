@@ -333,7 +333,7 @@ dmz::LuaModuleBasic::handle_lua_error (lua_State *L) {
 
    int level = 1;
 
-   while (lua_getstack (L, level, &ar)) {
+   while (lua_getstack (L, level, &ar) && (level <= 50)) {
 
       lua_getinfo (L, "Snl", &ar);
 
@@ -830,6 +830,14 @@ dmz::LuaModuleBasic::_instance_script (InstanceStruct &is) {
                   lua_pop (_luaState, 1); // pop error message
                }
             }
+         }
+         else {
+
+            _log.error << "Failed creating instance: " << is.Name
+               << " because unable to find function \"new\" in script: "
+               << is.Script.Name << endl;
+
+            lua_pop (_luaState, 1); // pop error message
          }
       }
       else {

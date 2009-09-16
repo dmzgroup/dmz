@@ -96,21 +96,21 @@ namespace dmz {
             const UUID &Identity,
             const Handle ObjectHandle,
             const Handle AttributeHandle,
-            const Int64 &Value,
+            const Int64 Value,
             const Int64 *PreviousValue);
 
          virtual void update_object_counter_minimum (
             const UUID &Identity,
             const Handle ObjectHandle,
             const Handle AttributeHandle,
-            const Int64 &Value,
+            const Int64 Value,
             const Int64 *PreviousValue);
 
          virtual void update_object_counter_maximum (
             const UUID &Identity,
             const Handle ObjectHandle,
             const Handle AttributeHandle,
-            const Int64 &Value,
+            const Int64 Value,
             const Int64 *PreviousValue);
 
          virtual void update_object_alternate_type (
@@ -233,6 +233,9 @@ namespace dmz {
          Message _linkObjects;
          Message _unlinkObjects;
          Message _storeLinkAttributeObject;
+         Message _storeCounter;
+         Message _storeCounterMin;
+         Message _storeCounterMax;
          Message _storeType;
          Message _storeState;
          Message _storeFlag;
@@ -254,10 +257,6 @@ namespace dmz {
          Handle _uuidHandle;
          Handle _valueHandle;
          Handle _maskHandle;
-         Handle _booleanHandle;
-         Handle _float64Handle;
-         Handle _vectorHandle;
-         Handle _matrixHandle;
 
          Boolean _recording;
          Boolean _inDump;

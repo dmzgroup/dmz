@@ -182,7 +182,6 @@ dmz::QtPluginCanvasLink::link_objects (
                _canvasModule->add_item (LinkHandle, os->item);
 
                QGraphicsItem *superParent = superItem->parentItem ();
-
                if (superParent) { os->item->setParentItem (superParent); }
             }
             else { delete os; os = 0; }

@@ -644,9 +644,10 @@ dmz::QtPluginCanvasLayerModel::destroy_object (
    }
    else {
 
-      if (_canvasModule) { _canvasModule->remove_item (ObjectHandle); }
+      if (_layerItemTable.remove (ObjectHandle)) {
 
-      _layerItemTable.remove (ObjectHandle);
+         if (_canvasModule) { _canvasModule->remove_item (ObjectHandle); }
+      }
 
       _layersUpdated = True;
 

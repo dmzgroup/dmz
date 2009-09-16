@@ -147,7 +147,7 @@ dmz::QtModuleCanvasBasic::remove_item (const Handle ObjectHandle) {
 
    QGraphicsItem *item (_itemTable.remove (ObjectHandle));
 
-   if (item) {
+   if (item && (item->scene () == &_scene)) {
 
       _scene.removeItem (item);
    }

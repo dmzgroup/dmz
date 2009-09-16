@@ -5,6 +5,7 @@
 #include "dmzQtPluginMapProperties.h"
 #include "dmzQtPluginMapPropertiesMapAdapter.h"
 #include <dmzQtUtil.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -29,13 +30,17 @@ dmz::QtPluginMapProperties::QtPluginMapProperties (
       _canvasModuleName (),
       _mapModule (0),
       _mapModuleName (),
+      _toggleHandle (0),
       _mainWindowModule (0),
       _mainWindowModuleName (),
       _propertiesEditMessage (),
       _adapterList (),
       _mapAdapter (0),
       _defaultAdapterList (),
-      _timerId (0) {
+      _timerId (0),
+      _showMapAction (0),
+      _showAction (0),
+      _menuName ("&Edit") {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
@@ -107,6 +112,9 @@ dmz::QtPluginMapProperties::discover_plugin (
          if (_mainWindowModule) {
             
             setParent (_mainWindowModule->get_qt_main_window (), Qt::Dialog);
+            
+            _mainWindowModule->add_menu_action (_menuName, _showMapAction);
+            _mainWindowModule->add_menu_action (_menuName, _showAction);
          }
       }
    }
@@ -131,6 +139,9 @@ dmz::QtPluginMapProperties::discover_plugin (
       if (_mainWindowModule &&
           (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
 
+         _mainWindowModule->remove_menu_action (_menuName, _showMapAction);
+         _mainWindowModule->remove_menu_action (_menuName, _showAction);
+         
          setParent (0);
          _mainWindowModule = 0;
       }
@@ -205,13 +216,19 @@ dmz::QtPluginMapProperties::receive_message (
       const Data *InData,
       Data *outData) {
 
-   if (Type == _propertiesEditMessage) {
+   if (Type == _toggleMapMessage) {
 
-      qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
-      _update_cache_info ();
-      qApp->restoreOverrideCursor ();
+      Boolean toggle (True);
 
-      exec ();
+      if (InData && InData->lookup_boolean (_toggleHandle, 0, toggle)) {
+
+         on_mapCheckBox_stateChanged (toggle ? 1 : 0);
+         _ui.mapCheckBox->setCheckState (toggle ? Qt::Checked : Qt::Unchecked);
+      }
+   }
+   else if (Type == _propertiesEditMessage) {
+
+      _slot_showAction_triggered ();
    }
 }
 
@@ -364,11 +381,22 @@ dmz::QtPluginMapProperties::on_emptyCacheButton_clicked () {
 
    if (_mapModule) {
       
-      qApp->setOverrideCursor (QCursor (Qt::BusyCursor));
+      qApp->setOverrideCursor (QCursor (Qt::WaitCursor));
       _mapModule->empty_tile_cache ();
       _update_cache_info ();
       qApp->restoreOverrideCursor ();
    }
+}
+
+
+void
+dmz::QtPluginMapProperties::_slot_showAction_triggered () {
+   
+   qApp->setOverrideCursor (QCursor (Qt::WaitCursor));
+   _update_cache_info ();
+   qApp->restoreOverrideCursor ();
+
+   exec ();
 }
 
 
@@ -638,11 +666,43 @@ dmz::QtPluginMapProperties::_init (Config &local) {
       context,
       &_log);
 
+   _toggleMapMessage = config_create_message (
+      "message.toggle-map.name",
+      local,
+      "ToggleMapMessage",
+      context,
+      &_log);
+
    subscribe_to_message (_propertiesEditMessage);
+   subscribe_to_message (_toggleMapMessage);
+
+   _toggleHandle = config_to_named_handle ("toggle.name", local, "toggle", context);
    
    local.lookup_config ("default-map-adapter-list", _defaultAdapterList);
    
    init_archive (local);
+   
+   _showMapAction = new QAction (this);
+   qaction_config_read ("show-map-action", local, _showMapAction);
+   
+   _showMapAction->setChecked (_ui.mapCheckBox->isChecked ());
+   
+   connect (
+      _showMapAction, SIGNAL (toggled (bool)),
+      _ui.mapCheckBox, SLOT (setChecked (bool)));
+      
+   connect (
+      _ui.mapCheckBox, SIGNAL (toggled (bool)),
+      _showMapAction, SLOT (setChecked (bool)));
+
+   _showAction = new QAction (this);
+   qaction_config_read ("show-action", local, _showAction);
+   
+   connect (
+      _showAction, SIGNAL (triggered ()),
+      this, SLOT (_slot_showAction_triggered ()));
+      
+   _menuName = config_to_string ("menu.name", local, _menuName);
 }
 
 

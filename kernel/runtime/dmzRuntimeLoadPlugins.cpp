@@ -106,8 +106,12 @@ dmz::load_plugins (
          const String FactoryName (config_to_string ("factory", data, defaultFactory));
          const String ScopeName (config_to_string ("scope", data, PluginName));
          const String Platform (config_to_string ("platform", data));
-         Config levelConfig;
-         data.lookup_all_config ("level", levelConfig);
+
+         Config levelList;
+         data.lookup_all_config ("level", levelList);
+
+         Config scopeList;
+         data.lookup_all_config ("additional-scope", scopeList);
 
          const PluginDeleteModeEnum DeleteMode (
             config_to_boolean ("delete", data, True) ?
@@ -217,14 +221,33 @@ dmz::load_plugins (
                      ConfigIterator it;
                      Config level;
 
-                     while (levelConfig.get_next_config (it, level)) {
+                     while (levelList.get_next_config (it, level)) {
 
                         info->add_level (config_to_uint32 ("value", level, 0));
                      }
 
-                     Config local;
+                     Config local (ScopeName);
 
-                     pluginInit.lookup_all_config_merged (ScopeName, local);
+                     it.reset ();
+                     Config scope;
+
+                     while (scopeList.get_prev_config (it, scope)) {
+
+                        const String Name = config_to_string ("name", scope);
+
+                        if (Name) {
+
+                           Config data;
+                           pluginInit.lookup_all_config_merged (Name, data);
+                           local.add_children (data);
+                           local.copy_attributes (data);
+                        }
+                     }
+
+                     Config data;
+                     pluginInit.lookup_all_config_merged (ScopeName, data);
+                     local.add_children (data);
+                     local.copy_attributes (data);
 
                      if (log) {
 

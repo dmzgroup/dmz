@@ -550,6 +550,25 @@ dmz::Config::store_attribute (const String &Name, const String &Value) {
 
 /*!
 
+\brief Copies the attributes of another Config object.
+\param[in] Data Config object used for the source of the attributes to copied.
+
+*/
+void
+dmz::Config::copy_attributes (const Config &Data) {
+
+   ConfigIterator it;
+   String name, value;
+
+   while (Data.get_next_attribute (it, name, value)) {
+
+      store_attribute (name, value);
+   }
+}
+
+
+/*!
+
 \brief Looks an attribute by its name.
 \details The \a Name parameter may be used to look up an attribute in child config
 contexts.  For example the following code snippet:
@@ -925,10 +944,7 @@ dmz::Config::overwrite_config (const String &Scope, const Config &Data) {
       ConfigIterator it;
       Config cd;
 
-      for (
-            Boolean found = list.get_first_config (it, cd);
-            found;
-            found = list.get_next_config (it, cd)) {
+      while (list.get_next_config (it, cd)) {
 
          ConfigContext *context (cd.get_config_context ());
 
@@ -1025,10 +1041,7 @@ dmz::Config::add_children (const Config &Data) {
       ConfigIterator it;
       Config cd;
 
-      for (
-            Boolean found = Data.get_first_config (it, cd);
-            found;
-            found = Data.get_next_config (it, cd)) { add_config (cd); }
+      while (Data.get_next_config (it, cd)) { add_config (cd); }
    }
 
    return has_children ();
@@ -1096,10 +1109,7 @@ dmz::Config::lookup_all_config (const String &Name, Config &data) const {
 
       ConfigContext *curContext = current.get_config_context ();
 
-      for (
-            Boolean found = prev.get_first_config (tableIt, next);
-            found;
-            found = prev.get_next_config (tableIt, next)) {
+      while (prev.get_next_config (tableIt, next)) {
 
          ConfigContext *nextContext = next.get_config_context ();
 
@@ -1162,38 +1172,22 @@ dmz::Config::lookup_all_config_merged (const String &Name, Config &data) const {
 
    if (lookup_all_config (Name, foundData)) {
 
+      Boolean first = True;
       ConfigIterator it;
       Config tmp;
 
-      Boolean found (foundData.get_first_config (it, tmp));
+      while (foundData.get_next_config (it, tmp)) {
 
-      result = found;
+         if (first) { 
 
-      if (result) {
-
-         Config newName (tmp.get_name ());
-
-         data = newName;
-      }
-
-      while (found) {
-
-         ConfigIterator attrIt;
-
-         String name, value;
-
-         Boolean attrFound = tmp.get_first_attribute (attrIt, name, value);
-
-         while (attrFound) {
-
-            data.store_attribute (name, value);
-
-            attrFound = tmp.get_next_attribute (attrIt, name, value);
+            Config newName (tmp.get_name ());
+            data = newName;
+            first = False;
+            result = True;
          }
 
+         data.copy_attributes (tmp);
          data.add_children (tmp);
-
-         found = foundData.get_next_config (it, tmp);
       }
    }
 

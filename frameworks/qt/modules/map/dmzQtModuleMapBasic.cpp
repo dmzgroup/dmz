@@ -335,6 +335,16 @@ dmz::QtModuleMapBasic::pan_direction (const Int32 Dx, const Int32 Dy) {
 }
 
 
+void
+dmz::QtModuleMapBasic::center_on (const Float64 Dx, const Float64 Dy) {
+
+   if (_map) {
+      
+      _map->setView (QPointF ((Float32)Dx, (Float32)Dy));
+   }
+}
+
+
 QPoint
 dmz::QtModuleMapBasic::world_to_screen (const QPointF &Coordinate) const {
 

@@ -350,6 +350,28 @@ dmz::Message::send (
 
 /*!
 
+\fn dmz::UInt32 dmz::Message::send (const Handle TargetObserverHandle, const Data *InData) const
+\brief Sends the message.
+\param[in] TargetObserverHandle Unique handle of message observer to send message. If set
+to zero, message will be sent to all subscribers to the message type.
+\param[in] InData Pointer to the data object that is sent along with the message. May
+be NULL if no data is to be sent.
+\return Returns a id associated with the sent message. This id is not a unique
+runtime handle but is instead a running counter that will roll over when max unsigned
+integer messages have been sent.
+
+\fn dmz::UInt32 dmz::Message::send (const Handle TargetObserverHandle) const
+\brief Sends the message.
+\param[in] TargetObserverHandle Unique handle of message observer to send message. If set
+to zero, message will be sent to all subscribers to the message type.
+\return Returns a id associated with the sent message. This id is not a unique
+runtime handle but is instead a running counter that will roll over when max unsigned
+integer messages have been sent.
+
+*/
+
+/*!
+
 \brief Sends the message to multiple targets.
 \param[in] Targets HandleContainer of unique handles of message observers to send message.
 \param[in] InData Pointer to the data object that is sent along with the message. May
@@ -409,6 +431,20 @@ be NULL if no data is to be sent.
 runtime handle but is instead a running counter that will roll over when max unsigned
 integer messages have been sent.
 
+\fn dmz::UInt32 dmz::Message::send(const Data *InData) const
+\brief Sends message to all subscribed message observers.
+\param[in] InData Pointer to Data object containing data to send with the message.
+May be NULL if no data is to be sent with the message.
+\return Returns a handle associated with the sent message. This handle is not a unique
+runtime handle but is instead a running counter that will roll over when max unsigned
+integer messages have been sent.
+
+\fn dmz::UInt32 dmz::Message::send() const
+\brief Sends message to all subscribed message observers.
+\return Returns a handle associated with the sent message. This handle is not a unique
+runtime handle but is instead a running counter that will roll over when max unsigned
+integer messages have been sent.
+
 */
 
 //! For internal use.
@@ -428,24 +464,6 @@ dmz::Message::set_message_context (MessageContext *context) {
 dmz::MessageContext *
 dmz::Message::get_message_context () const { return _context; }
 
-
-/*!
-
-\fn dmz::UInt32 dmz::Message::send(const Data *InData) const
-\brief Sends message to all subscribed message observers.
-\param[in] InData Pointer to Data object containing data to send with the message.
-May be NULL if no data is to be sent with the message.
-\return Returns a handle associated with the sent message. This handle is not a unique
-runtime handle but is instead a running counter that will roll over when max unsigned
-integer messages have been sent.
-
-\fn dmz::UInt32 dmz::Message::send() const
-\brief Sends message to all subscribed message observers.
-\return Returns a handle associated with the sent message. This handle is not a unique
-runtime handle but is instead a running counter that will roll over when max unsigned
-integer messages have been sent.
-
-*/
 
 /*!
 

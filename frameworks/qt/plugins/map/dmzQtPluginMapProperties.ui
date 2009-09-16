@@ -17,7 +17,7 @@
    <item>
     <widget class="QCheckBox" name="mapCheckBox">
      <property name="text">
-      <string>Enable Map</string>
+      <string>Show Map</string>
      </property>
      <property name="checked">
       <bool>true</bool>

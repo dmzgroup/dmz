@@ -49,7 +49,7 @@ namespace dmz {
          Boolean is_formatted () const;
          Boolean has_children () const;
          Boolean is_empty () const;
-	 Boolean are_attributes_equal (const Config &Data) const;
+         Boolean are_attributes_equal (const Config &Data) const;
 
          Boolean get_first_attribute (
             ConfigIterator &it,
@@ -62,6 +62,7 @@ namespace dmz {
             String &value) const;
 
          Boolean store_attribute (const String &Name, const String &Value);
+         void copy_attributes (const Config &Data);
          Boolean lookup_attribute (const String &Name, String &value) const;
 
          Boolean set_value (const String &Value);

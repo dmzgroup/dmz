@@ -16,8 +16,10 @@ namespace dmz {
 
          void reset ();
 
+         //! \cond
          struct State;
          State &state;
+         //! \endcond
    };
 
    class DMZ_KERNEL_LINK_SYMBOL PathContainer {

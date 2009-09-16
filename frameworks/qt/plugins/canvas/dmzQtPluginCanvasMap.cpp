@@ -42,6 +42,7 @@ dmz::QtPluginCanvasMap::update_plugin_state (
 
    if (State == PluginStateInit) {
 
+      if (_mapWidget) { _mapWidget->resize (size ()); }
    }
    else if (State == PluginStateStart) {
 
@@ -153,8 +154,6 @@ dmz::QtPluginCanvasMap::resizeEvent (QResizeEvent *event) {
 
    if (event) {
 
-//      if (_mapWidget) { _mapWidget->resize (event->size ()); }
-
       if (_canvasWidget) { _canvasWidget->resize (event->size ()); }
 
       event->ignore ();
@@ -165,8 +164,8 @@ dmz::QtPluginCanvasMap::resizeEvent (QResizeEvent *event) {
 void
 dmz::QtPluginCanvasMap::_init (Config &local) {
 
-   _canvasModuleName = config_to_string ("canvas.name", local);
-   _mapModuleName = config_to_string ("map.name", local);
+   _canvasModuleName = config_to_string ("module.canvas.name", local);
+   _mapModuleName = config_to_string ("module.map.name", local);
 
    _layout = new QVBoxLayout (this);
    _layout->setSpacing (0);

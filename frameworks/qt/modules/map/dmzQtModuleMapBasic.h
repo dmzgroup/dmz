@@ -90,6 +90,8 @@ namespace dmz {
          virtual void zoom_out ();
          
          virtual void pan_direction (const Int32 Dx, const Int32 Dy);
+
+         virtual void center_on (const Float64 Dx, const Float64 Dy);
          
          virtual QPoint world_to_screen (const QPointF &World) const;
          virtual QPointF screen_to_world (const QPoint &Screen) const;

@@ -167,6 +167,12 @@ dmz::ArchiveObserverUtil::init_archive_scope (const Config &Init) {
 }
 
 
+/*!
+
+\brief Adds a scope name to the archive's scope list.
+\param[in] Scope String containing name of scope to add to list.
+
+*/
 void
 dmz::ArchiveObserverUtil::add_archive_scope (const String &Scope) {
 
@@ -174,6 +180,13 @@ dmz::ArchiveObserverUtil::add_archive_scope (const String &Scope) {
 }
 
 
+/*!
+
+\brief Tests if the scope name list is empty.
+\return Returns dmz::True if the list is empty. dmz::False is returned if the list
+contains any scope names.
+
+*/
 dmz::Boolean
 dmz::ArchiveObserverUtil::is_archive_scope_empty () {
 

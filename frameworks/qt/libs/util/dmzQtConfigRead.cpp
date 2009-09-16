@@ -517,38 +517,21 @@ dmz::qaction_config_read (const String &Name, const Config &Source, QAction *act
 
          const String StandardKey (value.get_lower ());
 
-         if (StandardKey == "undo") {
-
-            shortcut = QKeySequence::Undo;
-         }
-         else if (StandardKey == "redo") {
-
-            shortcut = QKeySequence::Redo;
-         }
-         else if (StandardKey == "open") {
-
-            shortcut = QKeySequence::Open;
-         }
-         else if (StandardKey == "save") {
-         
-            shortcut = QKeySequence::Save;
-         }
-         else if (StandardKey == "saveas") {
-            
+         if (StandardKey == "undo") { shortcut = QKeySequence::Undo; }
+         else if (StandardKey == "redo") { shortcut = QKeySequence::Redo; }
+         else if (StandardKey == "new") { shortcut = QKeySequence::New; }
+         else if (StandardKey == "open") { shortcut = QKeySequence::Open; }
+         else if (StandardKey == "save") { shortcut = QKeySequence::Save; }
+         else if (StandardKey == "saveas") { 
 #if (QT_VERSION >= QT_VERSION_CHECK(4, 5, 0))
             shortcut = QKeySequence::SaveAs;
 #else
             shortcut = QKeySequence (Qt::Key_S + Qt::ControlModifier + Qt::ShiftModifier);
 #endif
          }
-         else if (StandardKey == "zoomin") {
-            
-            shortcut = QKeySequence::ZoomIn;
-         }
-         else if (StandardKey == "zoomout") {
-            
-            shortcut = QKeySequence::ZoomOut;
-         }
+         else if (StandardKey == "print") { shortcut = QKeySequence::Print; }
+         else if (StandardKey == "zoomin") { shortcut = QKeySequence::ZoomIn; }
+         else if (StandardKey == "zoomout") { shortcut = QKeySequence::ZoomOut; }
 
          action->setShortcut (shortcut);
       }

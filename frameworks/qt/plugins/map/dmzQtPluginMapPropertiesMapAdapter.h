@@ -27,7 +27,6 @@ namespace dmz {
          Ui::mapAdapterDialog _ui;
          
       private:
-         QtPluginMapPropertiesMapAdapter ();
          QtPluginMapPropertiesMapAdapter (const QtPluginMapPropertiesMapAdapter &);
          QtPluginMapPropertiesMapAdapter &operator= (const QtPluginMapPropertiesMapAdapter &);
    };

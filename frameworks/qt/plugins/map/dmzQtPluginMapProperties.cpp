@@ -595,10 +595,6 @@ dmz::QtPluginMapProperties::_save_session () {
    data.flush () << _ui.mapAdapterListWidget->currentRow ();
    current.store_attribute ("index", data);
    adapterList.add_config (current);
-
-   Config map ("show-map");
-   map.store_attribute ("value", _ui.mapCheckBox->isChecked () ? "true" : "false");
-   session.add_config (map);
    
    set_session_config (get_plugin_runtime_context (), session);
 }
@@ -632,8 +628,6 @@ dmz::QtPluginMapProperties::_load_session () {
    QListWidgetItem *item (_ui.mapAdapterListWidget->item (index));
    _ui.mapAdapterListWidget->setCurrentItem (item);
    _ui.mapAdapterListWidget->scrollToItem (item);
-   
-   _ui.mapCheckBox->setChecked (config_to_boolean ("show-map.value", session, True));
 }
 
 
@@ -684,6 +678,10 @@ dmz::QtPluginMapProperties::_init (Config &local) {
    
    _showMapAction = new QAction (this);
    qaction_config_read ("show-map-action", local, _showMapAction);
+
+#ifdef Q_WS_MAC
+      _showMapAction->setIconVisibleInMenu (False);
+#endif
    
    _showMapAction->setChecked (_ui.mapCheckBox->isChecked ());
    
@@ -697,6 +695,10 @@ dmz::QtPluginMapProperties::_init (Config &local) {
 
    _showAction = new QAction (this);
    qaction_config_read ("show-action", local, _showAction);
+   
+#ifdef Q_WS_MAC
+      _showAction->setIconVisibleInMenu (False);
+#endif
    
    connect (
       _showAction, SIGNAL (triggered ()),

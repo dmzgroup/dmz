@@ -70,6 +70,7 @@ lmk.add_files {
    "types/dmzTypesBooleanOperator.h",
    "types/dmzTypesCylinder.h",
    "types/dmzTypesConsts.h",
+   "types/dmzTypesDeleteListTemplate.h",
    "types/dmzTypesHandleContainer.h",
    "types/dmzTypesHashTableLock.h",
    "types/dmzTypesMask.h",

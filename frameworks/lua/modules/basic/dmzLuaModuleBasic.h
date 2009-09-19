@@ -10,6 +10,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimePluginContainer.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzSystemFile.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
@@ -20,6 +21,7 @@ namespace dmz {
 
    class LuaModuleBasic :
          public Plugin,
+         public TimeSlice,
          public LuaModule,
          public LuaErrorHandler,
          public FileCacheAction {
@@ -38,6 +40,9 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
+         // TimeSlice Interface
+         virtual void update_time_slice (const Float64 DeltaTime);
+
          // LuaModule Interface
          virtual void add_lua_path (const String &Path);
 
@@ -49,7 +54,7 @@ namespace dmz {
             const UInt32 CallbackMask,
             LuaObserver &observer);
 
-         virtual Boolean reset_lua ();
+         virtual void reset_lua ();
          virtual void set_hook_count (const Int32 Count);
          virtual Int32 get_hook_count ();
 

@@ -94,6 +94,7 @@ dmz::LuaModuleBasic::LuaModuleBasic (
       Config &local,
       Config &global) :
       Plugin (Info),
+      TimeSlice (Info, TimeSliceTypeRuntime, TimeSliceModeSingle, 0.0),
       LuaModule (Info),
       _log (Info),
       _exit (Info),
@@ -195,6 +196,18 @@ dmz::LuaModuleBasic::discover_plugin (
 }
 
 
+// TimeSlice Interface
+void
+dmz::LuaModuleBasic::update_time_slice (const Float64 DeltaTime) {
+
+   _log.info << "Reseting Lua Runtime." << endl;
+   _stop_lua_plugins ();
+   _close_lua ();
+   _open_lua ();
+   _start_lua_plugins ();
+}
+
+
 // LuaModule Interface
 void
 dmz::LuaModuleBasic::add_lua_path (const String &Path) {
@@ -257,17 +270,8 @@ dmz::LuaModuleBasic::release_lua_observer (
 }
 
 
-dmz::Boolean
-dmz::LuaModuleBasic::reset_lua () {
-
-   _log.info << "Reseting Lua Runtime." << endl;
-   _stop_lua_plugins ();
-   _close_lua ();
-   _open_lua ();
-   _start_lua_plugins ();
-
-   return _luaState != 0;
-}
+void
+dmz::LuaModuleBasic::reset_lua () { start_time_slice (); }
 
 
 void

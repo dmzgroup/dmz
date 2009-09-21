@@ -1278,12 +1278,12 @@ dmz::ArchivePluginObject::_filter_state (
 
          if (filter->mode & Mode) {
 
-         Mask *filterMask (filter->stateTable.lookup (AttrHandle));
+            Mask *filterMask (filter->stateTable.lookup (AttrHandle));
 
-         if (filterMask) { result.unset (*filterMask); }
-
-            filter = filter->next;
+            if (filterMask) { result.unset (*filterMask); }
          }
+
+         filter = filter->next;
       }
    }
 

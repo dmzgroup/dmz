@@ -1,4 +1,5 @@
 #include <dmzRuntimeConfig.h>
+#include <dmzTypesDeleteListTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesStringUtil.h>
 #include <dmzXMLInterpreterConfig.h>
@@ -11,16 +12,7 @@ namespace {
       ValueStruct *next;
 
       ValueStruct (const dmz::String &TheValue) : Value (TheValue), next (0) {;}
-      ~ValueStruct () {
-
-         while (next) {
-
-            ValueStruct *tmp = next;
-            next = next->next;
-            tmp->next = 0;
-            delete tmp; tmp = 0;
-         }
-      }
+      ~ValueStruct () { dmz::delete_list (next); }
    };
 
    struct DataStruct {

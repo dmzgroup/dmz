@@ -12,6 +12,8 @@
 #include <dmzRuntimeObjectType.h>
 #include <dmzTypesHandleContainer.h>
 #include <dmzTypesMask.h>
+#include <dmzTypesStringTokenizer.h>
+#include <dmzTypesStringUtil.h>
 #include <dmzTypesUUID.h>
 
 /*!
@@ -73,7 +75,7 @@ The filter XML format:
 \code
 <dmz>
 <dmzArchivePluginObject>
-   <archive name="Archive Name" import="Boolean Value" export="Boolean Value">
+   <archive name="Archive Name" mode="import|export">
       <object-type-set>
          <object-type name="Object Type Name" exclude="Boolean Value"/>
          <!-- more object types -->
@@ -95,6 +97,9 @@ The filter XML format:
 using namespace dmz;
 
 namespace {
+
+static const UInt32 LocalImportMask = 0x01;
+static const UInt32 LocalExportMask = 0x02;
 
 static Mask
 local_config_to_mask (Config config, Log &log) {
@@ -134,7 +139,7 @@ dmz::ArchivePluginObject::ArchivePluginObject (
       ObjectObserverUtil (Info, local),
       _defs (Info, &_log),
       _defaultHandle (0),
-      _currentFilter (0),
+      _currentFilterList (0),
       _log (Info) {
 
    _init (local);
@@ -161,9 +166,7 @@ dmz::ArchivePluginObject::create_archive (
 
    if (objMod) {
 
-      _currentFilter = _filterTable.lookup (ArchiveHandle);
-
-      if (_currentFilter && !_currentFilter->exportArchive) { _currentFilter = 0; }
+      _currentFilterList = _filterTable.lookup (ArchiveHandle);
 
       HandleContainer container;
 
@@ -183,7 +186,7 @@ dmz::ArchivePluginObject::create_archive (
          object = container.get_next ();
       }
 
-      _currentFilter = 0;
+      _currentFilterList = 0;
    }
 }
 
@@ -199,13 +202,11 @@ dmz::ArchivePluginObject::process_archive (
 
    if (local.lookup_all_config ("object", objList)) {
 
-      _currentFilter = _filterTable.lookup (ArchiveHandle);
-
-      if (_currentFilter && !_currentFilter->importArchive) { _currentFilter = 0; }
+      _currentFilterList = _filterTable.lookup (ArchiveHandle);
 
       _create_objects (objList);
 
-      _currentFilter = 0;
+      _currentFilterList = 0;
    }
 }
 
@@ -457,7 +458,7 @@ dmz::ArchivePluginObject::update_object_state (
 
    if (Value && _get_attr_config (AttributeHandle, ObjectStateMask, config)) {
 
-      const Mask FilteredValue (_filter_state (AttributeHandle, Value));
+      const Mask FilteredValue (_filter_state (AttributeHandle, Value, LocalExportMask));
 
       if (FilteredValue) {
 
@@ -679,15 +680,30 @@ dmz::ArchivePluginObject::_archive_object (const Handle ObjectHandle) {
 
       if (Type) {
 
-         if (_currentFilter) {
+         if (_currentFilterList) {
 
-            if (_currentFilter->exTypes.get_count () &&
-                  _currentFilter->exTypes.contains_type (Type)) { archiveObject = False; }
+            FilterStruct *filter = _currentFilterList->list;
 
-            if (archiveObject && _currentFilter->inTypes.get_count () &&
-                  !_currentFilter->inTypes.contains_type (Type)) {
+            while (filter) {
 
-               archiveObject = False;
+               if (filter->mode & LocalExportMask) {
+
+                  if (filter->exTypes.get_count () &&
+                        filter->exTypes.contains_type (Type)) {
+
+                     archiveObject = False;
+                     filter = 0;
+                  }
+
+                  if (filter && filter->inTypes.get_count () &&
+                        !filter->inTypes.contains_type (Type)) {
+
+                     archiveObject = False;
+                     filter = 0;
+                  }
+               }
+
+               if (filter) { filter = filter->next; }
             }
          }
       }
@@ -725,7 +741,7 @@ dmz::ArchivePluginObject::_get_attr_config (
 
    Boolean result (False);
 
-   const Mask FilterMask (_find_attr_filter_mask (AttrHandle));
+   const Mask FilterMask (_find_attr_filter_mask (AttrHandle, LocalExportMask));
 
    if (!FilterMask.contains (AttrMask)) {
 
@@ -842,15 +858,30 @@ dmz::ArchivePluginObject::_config_to_object (Config &objData) {
 
       Boolean filterObject (False);
 
-      if (_currentFilter) {
+      if (_currentFilterList) {
 
-         if (_currentFilter->exTypes.get_count () &&
-               _currentFilter->exTypes.contains_type (Type)) { filterObject = True; }
+         FilterStruct *filter = _currentFilterList->list;
 
-         if (!filterObject && _currentFilter->inTypes.get_count () &&
-               !_currentFilter->inTypes.contains_type (Type)) {
+         while (filter) {
 
-            filterObject = True;
+            if (filter->mode & LocalImportMask) {
+
+               if (filter->exTypes.get_count () &&
+                     filter->exTypes.contains_type (Type)) {
+
+                  filterObject = True;
+                  filter = 0;
+               }
+
+               if (filter && filter->inTypes.get_count () &&
+                     !filter->inTypes.contains_type (Type)) {
+
+                  filterObject = True;
+                  filter = 0;
+               }
+            }
+
+            if (filter) { filter = filter->next; }
          }
       }
 
@@ -929,7 +960,7 @@ dmz::ArchivePluginObject::_store_object_attributes (
 
       const Handle AttrHandle (_defs.create_named_handle (AttributeName));
 
-      const Mask FilterMask (_find_attr_filter_mask (AttrHandle));
+      const Mask FilterMask (_find_attr_filter_mask (AttrHandle, LocalImportMask));
 
       ConfigIterator it;
 
@@ -1055,6 +1086,8 @@ dmz::ArchivePluginObject::_store_object_attributes (
 
                _defs.lookup_state (config_to_string ("value", data), value);
 
+               value = _filter_state (AttrHandle, value, LocalImportMask);
+
                objMod->store_state (ObjectHandle, AttrHandle, value);
             }
          }
@@ -1175,59 +1208,83 @@ dmz::ArchivePluginObject::_store_object_attributes (
 
 
 dmz::Mask
-dmz::ArchivePluginObject::_find_attr_filter_mask (const Handle AttrHandle) {
+dmz::ArchivePluginObject::_find_attr_filter_mask (
+      const Handle AttrHandle,
+      const UInt32 Mode) {
 
    Mask result;
 
-   if (_currentFilter) {
+   if (_currentFilterList) {
 
-      Mask *maskPtr = _currentFilter->attrTable.lookup (AttrHandle);
+      FilterStruct *filter = _currentFilterList->list;
 
-      if (!maskPtr) {
+      while (filter) {
 
-         FilterAttrStruct *current (_currentFilter->list);
+         if (filter->mode & Mode) {
 
-         if (current) {
+            Mask *maskPtr = filter->attrTable.lookup (AttrHandle);
 
-            const String AttrName (_defs.lookup_named_handle_name (AttrHandle));
+            if (!maskPtr) {
 
-            while (current && !maskPtr) {
+               FilterAttrStruct *current (filter->list);
 
-               Int32 place (-1);
+               if (current) {
 
-               if (AttrName.find_sub (current->Name, place)) {
+                  const String AttrName (_defs.lookup_named_handle_name (AttrHandle));
 
-                  maskPtr = new Mask (current->Attr);
+                  while (current && !maskPtr) {
 
-                  if (maskPtr && !_currentFilter->attrTable.store (AttrHandle, maskPtr)) {
+                     Int32 place (-1);
 
-                     delete maskPtr; maskPtr = 0;
+                     if (AttrName.find_sub (current->Name, place)) {
+
+                        maskPtr = new Mask (current->Attr);
+
+                        if (maskPtr && !filter->attrTable.store (AttrHandle, maskPtr)) {
+
+                           delete maskPtr; maskPtr = 0;
+                        }
+                     }
+
+                     current = current->next;
                   }
                }
-
-               current = current->next;
             }
-         }
-      }
 
-      if (maskPtr) { result = *maskPtr; }
+            if (maskPtr) { result |= *maskPtr; }
+         }
+
+         filter = filter->next;
+      }
    }
 
    return result;
 }
 
 
-
 dmz::Mask
-dmz::ArchivePluginObject::_filter_state (const Handle AttrHandle, const Mask &Value) {
+dmz::ArchivePluginObject::_filter_state (
+      const Handle AttrHandle,
+      const Mask &Value,
+      const UInt32 Mode) {
 
    Mask result (Value);
 
-   if (_currentFilter) {
+   if (_currentFilterList) {
 
-      Mask *filterMask (_currentFilter->stateTable.lookup (AttrHandle));
+      FilterStruct *filter = _currentFilterList->list;
 
-      if (filterMask) { result.unset (*filterMask); }
+      while (filter) {
+
+         if (filter->mode & Mode) {
+
+            Mask *filterMask (filter->stateTable.lookup (AttrHandle));
+
+            if (filterMask) { result.unset (*filterMask); }
+         }
+
+         filter = filter->next;
+      }
    }
 
    return result;
@@ -1252,7 +1309,9 @@ dmz::ArchivePluginObject::_init (Config &local) {
       ConfigIterator it;
       Config filter;
 
-      while (filterList.get_next_config (it, filter)) {
+      // Read list in reverse order so they are stored in the correct order in the 
+      // filter list.
+      while (filterList.get_prev_config (it, filter)) {
 
          const String ArchiveName (config_to_string ("name", filter, ArchiveDefaultName));
 
@@ -1264,9 +1323,24 @@ dmz::ArchivePluginObject::_init (Config &local) {
 
          if (fs) {
 
-            fs->importArchive = config_to_boolean ("import", filter, True);
+            const String ModeStr = config_to_string ("mode", filter, "export|import");
 
-            fs->exportArchive = config_to_boolean ("export", filter, True);
+            if (ModeStr) {
+
+               StringTokenizer st (ModeStr, '|');
+               String value;
+
+               while (st.get_next (value)) {
+
+                  trim_ascii_white_space (value);
+                  value.to_lower ();
+
+                  if (value == "import") { fs->mode |= LocalImportMask; }
+                  else if (value == "export") { fs->mode |= LocalExportMask; }
+                  else { _log.error << "Unknown archive mode: " << value << endl; }
+               }
+            }
+
             Config objects;
 
             if (filter.lookup_all_config ("object-type-set.object-type", objects)) {
@@ -1381,12 +1455,16 @@ dmz::ArchivePluginObject::_init (Config &local) {
                }
             }
 
-            if (!_filterTable.store (ArchiveHandle, fs)) {
+            FilterListStruct *fls = _filterTable.lookup (ArchiveHandle);
 
-               delete fs; fs = 0;
-               _log.error << "Unable to store filter for archive: " << ArchiveName
-                  << ". Possible duplicate?" << endl;
+            if (!fls) {
+
+               fls = new FilterListStruct (ArchiveHandle);
+
+               if (!_filterTable.store (ArchiveHandle, fls)) { delete fls; fls = 0; }
             }
+
+            if (fls) { fs->next = fls->list; fls->list = fs; }
          }
       }
    }

@@ -1,23 +1,26 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzQtConfigRead.h>
+#include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginGraph.h"
+#include <dmzQtUtil.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
-
-#include <QtGui/QPainterPath>
-
+#include <QtGui/QtGui>
 #include <math.h>
 
+
 dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
+      QFrame (0),
       Plugin (Info),
       TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       QtWidget (Info),
       _log (Info),
+      _mainWindowModule (0),
+      _mainWindowModuleName (),
       _scene (0),
-      _view (0),
       _xAxis (0),
       _yAxis (0),
       _yLabels (0),
@@ -35,7 +38,11 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       _yDivisions (4),
       _steps (1) {
 
+   _ui.setupUi (this);
+
    _init (local);
+   
+   adjustSize ();
 }
 
 
@@ -44,9 +51,6 @@ dmz::QtPluginGraph::~QtPluginGraph () {
    delete []_yLabels; _yLabels = 0;
    _objTable.empty ();
    _barTable.empty ();
-   
-   if (_view) { delete _view; _view = 0; }
-   if (_scene) { delete _scene; _scene = 0; }
 }
 
 
@@ -97,9 +101,18 @@ dmz::QtPluginGraph::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
+      if (!_mainWindowModule) {
+
+         _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
+      }
    }
    else if (Mode == PluginDiscoverRemove) {
 
+      if (_mainWindowModule &&
+            (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
+
+         _mainWindowModule = 0;
+      }
    }
 }
 
@@ -224,7 +237,75 @@ dmz::QtPluginGraph::update_object_counter (
 
 // QtWidget Interface
 QWidget *
-dmz::QtPluginGraph::get_qt_widget () { return _view; }
+dmz::QtPluginGraph::get_qt_widget () { return this; }
+
+
+void
+dmz::QtPluginGraph::on_exportButton_clicked () {
+
+   if (_mainWindowModule) {
+
+      QMainWindow *mainWindow (_mainWindowModule->get_qt_main_window ());
+
+      const char *format = "png";
+      const QString Extension = QString::fromAscii (format);
+      const QString Filter = tr ("Image files (*.%1)").arg (Extension);
+
+      QImage image;
+
+      do {
+
+         const QString FileName (get_save_file_name_with_extension (
+            mainWindow, tr ("Save Image"), QString::null, Filter, Extension));
+
+         if (FileName.isEmpty ()) { break; }
+
+         if (image.isNull ()) {
+
+            QPixmap pixmap = _screen_grab ();
+
+            if (!pixmap.isNull ()) { image = pixmap.toImage (); }
+         }
+
+         if (image.save (FileName, format)) {
+
+            if (mainWindow) {
+
+               QString msg = tr ("Saved image %1.").arg (QFileInfo (FileName).fileName ()); 
+               mainWindow->statusBar ()->showMessage (msg, 2000);
+            }
+
+            break;
+          }
+
+          QMessageBox box (
+             QMessageBox::Warning,
+             tr("Save Image"),
+             tr("The file %1 could not be written.").arg (FileName),
+             QMessageBox::Retry | QMessageBox::Cancel,
+             mainWindow);
+
+           if (box.exec () == QMessageBox::Cancel) { break; }
+      } while (True);
+   }
+}
+
+
+QPixmap
+dmz::QtPluginGraph::_screen_grab () {
+   
+   qApp->setOverrideCursor (QCursor (Qt::WaitCursor));
+   
+   QPixmap screenGrab (_ui.graphicsView->viewport ()->rect ().size ());
+   screenGrab.fill (Qt::white);
+   QPainter painter (&screenGrab);
+   _ui.graphicsView->render (&painter);
+   painter.end ();
+   
+   qApp->restoreOverrideCursor ();
+
+   return screenGrab;
+}
 
 
 void
@@ -554,13 +635,19 @@ dmz::QtPluginGraph::_update_graph () {
 void
 dmz::QtPluginGraph::_init (Config &local) {
 
+   setObjectName (get_plugin_name ().get_buffer ());
+
    RuntimeContext *context (get_plugin_runtime_context ());
    Definitions defs (context);
+   
+   qframe_config_read ("frame", local, this);
 
-   _scene = new QGraphicsScene;
-   _view = new QGraphicsView (_scene);
-   _view->setAlignment (Qt::AlignLeft); // | Qt::AlignBottom);
+   _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
 
+   _scene = new QGraphicsScene (this);
+
+   _ui.graphicsView->setScene (_scene);
+   
    _typeSet = config_to_object_type_set ("set", local, context);
 
    if (_typeSet.get_count () == 0) {

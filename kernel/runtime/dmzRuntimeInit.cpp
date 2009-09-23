@@ -397,10 +397,7 @@ local_init_message (
       ConfigIterator it;
       Config current;
 
-      for (
-            Boolean found = Init.get_first_config (it, current);
-            found;
-            found = Init.get_next_config (it, current)) {
+      while (Init.get_next_config (it, current)) {
 
          String name;
 
@@ -411,6 +408,11 @@ local_init_message (
             current.lookup_attribute ("parent", parentName);
 
             Message tmp = container->create_message (name, parentName, context, rcm);
+
+            if (config_to_boolean ("monostate", current, False)) {
+
+               tmp.set_monostate_mode (MessageMonostateOn);
+            }
 
             const String FoundParentName (tmp.get_parent ().get_name ());
 
@@ -649,10 +651,7 @@ dmz::runtime_init (const Config &Init, RuntimeContext *context, Log *log) {
          }
       }
 
-      if (mconfig) {
-
-         local_init_message (mconfig, context, log);
-      }
+      if (mconfig) { local_init_message (mconfig, context, log); }
       else if (log) { log->debug << "Message type config not found" << endl; }
 
       if (tconfig) { local_init_time (tconfig, context, log); }

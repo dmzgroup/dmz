@@ -39,6 +39,9 @@ namespace dmz {
          void add_global_config (Config &data);
          void add_config (const String &Name, Config &data);
 
+         void get_session_config (Config &data) const;
+         void set_session_config (Config &data);
+
          Boolean load_session ();
          Boolean process_command_line (const CommandLine &CL);
          Boolean load_plugins ();

@@ -25,12 +25,22 @@ struct dmz::Runtime::State {
 
    RuntimeContext *context;
    State () : context (0) { context = new RuntimeContext; }
+
+   State (RuntimeContext *theContext) : context (theContext) {
+
+      if (context) { context->ref (); }
+   }
+
    ~State () { if (context) { context->unref (); context = 0; } }
 };
 
 
 //! Base constructor.
 dmz::Runtime::Runtime () : _state (*(new State)) {;}
+
+
+//! Base constructor.
+dmz::Runtime::Runtime (RuntimeContext *context) : _state (*(new State (context))) {;}
 
 
 /*!

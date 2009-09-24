@@ -228,6 +228,22 @@ dmz::Application::add_config (const String &Name, Config &data) {
 }
 
 
+//! Gets the root of the session Config.
+void
+dmz::Application::get_session_config (Config &data) const {
+
+   _state.rt.get_session_config (data);
+}
+
+
+//! Sets the root of the session Config.
+void
+dmz::Application::set_session_config (Config &data) {
+
+   _state.rt.set_session_config (data);
+}
+
+
 /*!
 
 \brief Loads session data.

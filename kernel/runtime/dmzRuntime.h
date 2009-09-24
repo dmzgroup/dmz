@@ -12,6 +12,7 @@ namespace dmz {
 
       public:
          Runtime ();
+         Runtime (RuntimeContext *context);
          ~Runtime ();
 
          RuntimeContext *get_context ();

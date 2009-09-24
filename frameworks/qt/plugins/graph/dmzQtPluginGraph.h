@@ -10,6 +10,7 @@
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableUInt32Template.h>
 
+#include <QtGui/QFrame>
 #include <QtGui/QBrush>
 #include <QtGui/QGraphicsLineItem>
 #include <QtGui/QGraphicsPathItem>
@@ -18,14 +19,22 @@
 #include <QtGui/QGraphicsTextItem>
 #include <QtGui/QGraphicsView>
 #include <QtGui/QPen>
+#include <ui_GraphForm.h>
+
 
 namespace dmz {
+   
+   class QtModuleMainWindow;
+
 
    class QtPluginGraph :
+         public QFrame,
          public Plugin,
          public TimeSlice,
          public ObjectObserverUtil,
          public QtWidget {
+            
+      Q_OBJECT
 
       public:
          QtPluginGraph (const PluginInfo &Info, Config &local);
@@ -78,6 +87,9 @@ namespace dmz {
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();
 
+      protected slots:
+         void on_exportButton_clicked ();
+      
       protected:
          struct BarStruct {
 
@@ -107,6 +119,7 @@ namespace dmz {
             ObjectStruct () : count (0), bar (0) {;}
          };
 
+         QPixmap _screen_grab ();
          void _update_object_count (const Int32 Value, ObjectStruct &obj);
          BarStruct *_lookup_bar (const Int32 Count);
          void _remove_bar (BarStruct &bar);
@@ -116,8 +129,10 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         Ui::GraphForm _ui;
+         QtModuleMainWindow *_mainWindowModule;
+         String _mainWindowModuleName;
          QGraphicsScene *_scene;
-         QGraphicsView *_view;
          QGraphicsLineItem *_xAxis;
          QGraphicsLineItem *_yAxis;
          QGraphicsTextItem **_yLabels;

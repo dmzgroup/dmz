@@ -18,9 +18,8 @@ dmz::QtPluginTabWidget::QtPluginTabWidget (const PluginInfo &Info, Config &local
       InputObserverUtil (Info, local),
       _log (Info),
       _tab (0),
-      _defaultTab (0) {
-
-   setObjectName (get_plugin_name ().get_buffer ());
+      _defaultTab (0),
+      _saveToSession (True) {
    
    _init (local);
 }
@@ -74,7 +73,7 @@ dmz::QtPluginTabWidget::update_plugin_state (
    }
    else if (State == PluginStateShutdown) {
 
-      if (_tab) {
+      if (_tab && _saveToSession) {
 
          Config session (get_plugin_name ());
          Config data ("tab-index");
@@ -258,6 +257,8 @@ dmz::QtPluginTabWidget::_init (Config &local) {
    }
 
    _widgetFocus = config_to_string ("focus.widget", local);
+   
+   _saveToSession = config_to_boolean ("remember-state.value", local, _saveToSession);
 }
 
 

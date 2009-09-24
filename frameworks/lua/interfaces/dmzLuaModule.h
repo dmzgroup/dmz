@@ -31,7 +31,7 @@ namespace dmz {
             const UInt32 CallbackMask,
             LuaObserver &observer) = 0;
 
-         virtual Boolean reset_lua () = 0;
+         virtual void reset_lua () = 0;
 
          virtual void set_hook_count (const Int32 Count) = 0;
          virtual Int32 get_hook_count () = 0;

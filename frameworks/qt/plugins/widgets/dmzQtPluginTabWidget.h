@@ -86,6 +86,7 @@ namespace dmz {
          String _widgetFocus;
          QTabWidget *_tab;
          WidgetStruct *_defaultTab;
+         Boolean _saveToSession;
 
          HashTableStringTemplate<WidgetStruct> _widgetTable;
          HashTableHandleTemplate<WidgetStruct> _channelTable;

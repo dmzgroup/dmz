@@ -9,6 +9,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzTypesDeleteListTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesStringContainer.h>
@@ -227,26 +228,43 @@ namespace dmz {
                   Attr (TheAttr),
                   next (0) {;}
 
-            ~FilterAttrStruct () { if (next) { delete next; next = 0; } }
+            ~FilterAttrStruct () { delete_list (next);  }
          };
 
          struct FilterStruct {
 
-            Boolean importArchive;
-            Boolean exportArchive;
+            FilterStruct *next;
+            UInt32 mode;
             ObjectTypeSet inTypes;
             ObjectTypeSet exTypes;
             HashTableHandleTemplate<Mask> attrTable;
             HashTableHandleTemplate<Mask> stateTable;
             FilterAttrStruct *list;
 
-            FilterStruct () : importArchive (True), exportArchive (True), list (0) {;}
+            FilterStruct () :
+                  next (0),
+                  mode (0),
+                  list (0) {;}
+
             ~FilterStruct () {
 
-               if (list) { delete list; list = 0; }
+               delete_list (next);
+               delete_list (list);
                attrTable.empty ();
                stateTable.empty ();
             }
+         };
+
+         struct FilterListStruct {
+
+            const Handle ArchiveHandle;
+            FilterStruct *list;
+
+            FilterListStruct (const Handle TheArchiveHandle) :
+                  ArchiveHandle (TheArchiveHandle),
+                  list (0) {;}
+
+            ~FilterListStruct () { delete_list (list); }
          };
 
          struct LinkStruct {
@@ -293,17 +311,20 @@ namespace dmz {
             Config &attrData,
             ObjectLinkStruct *links);
 
-         Mask _find_attr_filter_mask (const Handle AttrHandle);
+         Mask _find_attr_filter_mask (const Handle AttrHandle, const UInt32 Mode);
 
-         Mask _filter_state (const Handle AttrHandle, const Mask &Value);
+         Mask _filter_state (
+            const Handle AttrHandle,
+            const Mask &Value,
+            const UInt32 Mode);
 
          void _init (Config &local);
 
          Definitions _defs;
          Handle _defaultHandle;
 
-         HashTableHandleTemplate<FilterStruct> _filterTable;
-         FilterStruct *_currentFilter;
+         HashTableHandleTemplate<FilterListStruct> _filterTable;
+         FilterListStruct *_currentFilterList;
 
          HashTableStringTemplate<ObjectLinkStruct> _linkTable;
 

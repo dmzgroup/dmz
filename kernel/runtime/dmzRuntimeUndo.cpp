@@ -253,6 +253,9 @@ dmz::Undo::do_next (const UndoTypeEnum Type) {
 
       if (Type == UndoTypeUndo) {
 
+#ifdef DMZ_RUNTIME_UNDO_DEBUG
+out << "@@@@@@@@@@ Start Do Next Undo @@@@@@@@@@" << endl;
+#endif
          current = _context->undoHead;
 
          if (current) {
@@ -270,6 +273,10 @@ dmz::Undo::do_next (const UndoTypeEnum Type) {
          }
       }
       else if (Type == UndoTypeRedo) {
+
+#ifdef DMZ_RUNTIME_UNDO_DEBUG
+out << "@@@@@@@@@@ Start Do Next Redo @@@@@@@@@@" << endl;
+#endif
 
          current = _context->redoHead;
 

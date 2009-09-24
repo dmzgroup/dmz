@@ -40,8 +40,6 @@ dmz::QtPluginCanvasZoomPan::QtPluginCanvasZoomPan (
 
    _ui.setupUi (this);
 
-   setAttribute (Qt::WA_TransparentForMouseEvents);
-
    _init (local);
 }
 

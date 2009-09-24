@@ -1,0 +1,13 @@
+require "lmkQtPropertyBrowser"
+lmkQtPropertyBrowser.set_name "dmzQtPluginPropertyBrowser"
+lmk.set_type "plugin"
+lmk.add_files {"PropertyBrowser.ui",}
+lmk.add_files ({"dmzQtPropertyManager.h","dmzQtPluginPropertyBrowser.h",},{src="moc"})
+lmk.add_files {"dmzQtPropertyManager.cpp","dmzQtPluginPropertyBrowser.cpp",}
+lmk.add_libs {
+   "dmzQtUtil",
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzObjectFramework","dmzQtFramework",}
+lmkQtPropertyBrowser.add_libs ()

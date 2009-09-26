@@ -4,6 +4,113 @@
 
 /*!
 
+\class dmz::DataConverterBoolean
+\ingroup Runtime
+\brief Class for converting between a Boolean and a Data object.
+\note This class does not serialize a Data object into a Boolean. It provides
+a simple way to package a string into a Data object and then extract that Boolean.
+
+*/
+
+struct dmz::DataConverterBoolean::State {
+
+   Handle handle;
+
+   State (RuntimeContext *context) : handle (0)  {
+
+      Definitions defs (context);
+
+      handle = defs.create_named_handle (base_type_enum_to_string (BaseTypeBoolean));
+   }
+};
+
+
+/*!
+
+\brief Constructor.
+\param[in] Info reference to PluginInfo.
+
+*/
+dmz::DataConverterBoolean::DataConverterBoolean (const PluginInfo &Info) :
+      _state (*(new State (Info.get_context ()))) {;}
+
+
+/*!
+
+\brief Constructor.
+\param[in] context Pointer to the runtime context.
+
+*/
+dmz::DataConverterBoolean::DataConverterBoolean (RuntimeContext *context) :
+      _state (*(new State (context))) {;}
+
+
+//! Destructor.
+dmz::DataConverterBoolean::~DataConverterBoolean () { delete &_state; }
+
+
+/*!
+
+\brief Converts Data object to a Boolean.
+\note This function assumes the Boolean in the Data object was stored
+using the dmz::DataConverterBoolean::to_data function.
+\param[in] Value Data object to convert to a Boolean.
+\return Returns Boolean containing converted data. The Boolean will be empty if
+the Data object is not the correct type or is empty.
+
+*/
+dmz::Boolean
+dmz::DataConverterBoolean::to_boolean (const Data &Value) {
+
+   Boolean result (False);
+
+   Value.lookup_boolean (_state.handle, 0, result);
+
+   return result;
+}
+
+
+/*!
+
+\brief Converts Pointer to a Data object to a Boolean.
+\note This function assumes the Boolean in the Data object was stored
+using the dmz::DataConverterBoolean::to_data function.
+\param[in] Value Pointer to the Data object to convert to a Boolean.
+\return Returns Boolean containing converted data. The Boolean will be empty if
+the Data object is not the correct type or is empty.
+
+*/
+dmz::Boolean
+dmz::DataConverterBoolean::to_boolean (const Data *Value) {
+
+   Boolean result (False);
+
+   if (Value) { result = to_boolean (*Value); }
+
+   return result;
+}
+
+
+/*!
+
+\brief Converts a Boolean to a Data object.
+\param[in] Value Boolean containing value to store in returned Data object.
+\return Returns a Data object containing the string in \a Value.
+
+*/
+dmz::Data
+dmz::DataConverterBoolean::to_data (const Boolean Value) {
+
+   Data result;
+
+   if (_state.handle) { result.store_boolean (_state.handle, 0, Value); }
+
+   return result;
+}
+
+
+/*!
+
 \class dmz::DataConverterString
 \ingroup Runtime
 \brief Class for converting between a String and a Data object.

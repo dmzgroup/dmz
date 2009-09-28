@@ -1,8 +1,0 @@
-lmk.set_name "dmzQtPluginObjectBrowser"
-lmk.set_type "plugin"
-lmk.add_files {"dmzQtPluginObjectBrowser.cpp",}
-lmk.add_libs {
-   "dmzObjectUtil",
-   "dmzKernel",
-}
-lmk.add_preqs {"dmzObjectFramework",}

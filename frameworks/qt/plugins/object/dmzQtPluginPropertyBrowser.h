@@ -227,20 +227,49 @@ namespace dmz {
             QTreeWidgetItem *current, QTreeWidgetItem *previous);
       
       protected:
+         QtProperty *_lookup_group_property (const QString &Name);
+
+         void _add_int64_property (
+               const QString &GroupName,
+               const Handle AttributeHandle,
+               const Int64 Value);
+         
+         void _add_float64_property (
+               const QString &GroupName,
+               const Handle AttributeHandle,
+               const Float64 Value);
+
+         void _add_string_property (
+               const QString &GroupName,
+               const Handle AttributeHandle,
+               const QString &Value);
+
+         void _add_vector_property (
+               const QString &GroupName,
+               const Handle AttributeHandle,
+               const Vector &Value);
+
          void _add_property (QtProperty *property, const QString &id);
          void _update_expand_state ();
-         Handle _handle (QTreeWidgetItem *item);
+         QString _uuid_to_string (const UUID &Identity);
+         QString _type_to_string (const ObjectType &Type);
+         QString _handle_to_name (const Handle Object);
+         QString _handle_to_string (const Handle Object);
+         Handle _item_to_handle (QTreeWidgetItem *item);
          void _init (Config &local);
 
          Log _log;
          Definitions _defs;
          Ui::PropertyBrowserForm _ui;
          Handle _defaultAttrHandle;
+         QtGroupPropertyManager *_groupManager;
+         QtEnumPropertyManager *_enumManager;
+         QtEnumPropertyManager *_enumManagerRO;
          QtVariantPropertyManager *_variantManager;
          QtVariantPropertyManager *_variantManagerRO;
-         QtEnumPropertyManager *_enumManager;
-         QtGroupPropertyManager *_groupManager;
          VectorPropertyManager *_vectorManager;
+         VectorPropertyManager *_vectorManagerRO;
+         
          QMap<QtProperty *, QString> _propertyToId;
          QMap<QString, QtProperty *> _idToProperty;
          QMap<QString, bool> _idToExpanded;

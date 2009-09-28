@@ -16,6 +16,25 @@ namespace {
    const dmz::UInt32 HandleRole (Qt::UserRole + 1);
    const dmz::UInt32 HandleCol (0);
    const dmz::UInt32 TypeCol (1);
+   
+   const QLatin1String HandleName ("Handle");
+   const QLatin1String UUIDName ("UUID");
+   const QLatin1String LocalityName ("Locality");
+   const QLatin1String TimeStampName ("Time Stamp");
+   const QLatin1String FlagName ("Flag");
+   const QLatin1String PositionName ("Position");
+   const QLatin1String TextName ("Text");
+   const QLatin1String StateName ("State");
+   const QLatin1String ObjectTypeName ("Object Type");
+   const QLatin1String VelocityName ("Velocity");
+   const QLatin1String AccelerationName ("Acceleration");
+   const QLatin1String ScaleName ("Scale");
+   const QLatin1String ScalarName ("Scalar");
+   const QLatin1String CounterName ("Counter");
+   const QLatin1String CounterMinimumName ("Counter Minimum");
+   const QLatin1String CounterMaximumName ("Counter Maximum");
+   const QLatin1String AlternateTypeName ("Alternate Object Type");
+   const QLatin1String VectorName ("Vector");
 };
 
 
@@ -30,10 +49,13 @@ dmz::QtPluginPropertyBrowser::QtPluginPropertyBrowser (
       _log (Info),
       _defs (Info, &_log),
       _defaultAttrHandle (0),
-      _variantManager (0),
-      _enumManager (0),
       _groupManager (0),
+      _variantManager (0),
+      _variantManagerRO (0),
+      _enumManager (0),
+      _enumManagerRO (0),
       _vectorManager (0),
+      _vectorManagerRO (0),
       _propertyToId (),
       _idToProperty (),
       _idToExpanded (),
@@ -111,34 +133,33 @@ dmz::QtPluginPropertyBrowser::create_object (
 
    if (ObjectHandle == _currentObject) {
       
-      const QLatin1String Name ("Handle");
-      QtVariantProperty *property;
-      
-      property = _variantManagerRO->addProperty (QVariant::String, Name);
+      QtVariantProperty *property =
+         _variantManagerRO->addProperty (QVariant::String, HandleName);
 
-      String handlAsString;
-      handlAsString << ObjectHandle;
-      property->setValue (handlAsString.get_buffer ());
+      property->setValue (_handle_to_string (ObjectHandle));
       
-      _add_property (property, Name);
+      _add_property (property, HandleName);
+      
+      property = _variantManagerRO->addProperty (QVariant::String, ObjectTypeName);
+         
+      property->setValue (_type_to_string (Type));
+      
+      _add_property (property, ObjectTypeName);
    }
    else {
-      
+
       QTreeWidgetItem *item = new QTreeWidgetItem;
 
-      String handleAsString;
-      handleAsString << ObjectHandle;
-
-      item->setText (HandleCol, handleAsString.get_buffer ());
+      item->setText (HandleCol, _handle_to_string (ObjectHandle));
       item->setData (HandleCol, HandleRole, (quint64)ObjectHandle);
-      item->setText (TypeCol, Type.get_name ().get_buffer ());
+      item->setText (TypeCol, _type_to_string (Type));
 
       _ui.objectTreeWidget->addTopLevelItem (item);
 
-      if (_ui.objectTreeWidget->topLevelItemCount () == 1) {
+//      if (_ui.objectTreeWidget->topLevelItemCount () == 1) {
 
          _ui.objectTreeWidget->setCurrentItem (item);
-      }
+//      }
    }
 }
 
@@ -159,13 +180,12 @@ dmz::QtPluginPropertyBrowser::update_object_uuid (
 
    if (ObjectHandle == _currentObject) {
       
-      const QLatin1String Name ("UUID");
-      QtVariantProperty *property;
+      QtVariantProperty *property =
+         _variantManager->addProperty (QVariant::String, UUIDName);
       
-      property = _variantManagerRO->addProperty (QVariant::String, Name);
-      property->setValue (Identity.to_string ().get_buffer ());
+      property->setValue (_uuid_to_string (Identity));
 
-      _add_property (property, Name);
+      _add_property (property, UUIDName);
    }
 }
 
@@ -189,10 +209,7 @@ dmz::QtPluginPropertyBrowser::update_object_locality (
 
    if (ObjectHandle == _currentObject) {
       
-      const QLatin1String Name ("Locality");
-      QtProperty *property;
-
-      property = _enumManager->addProperty (Name);
+      QtProperty *property = _enumManager->addProperty (LocalityName);
 
       QStringList enumNames;
       enumNames << "Unknown" << "Local" << "Remote";
@@ -200,7 +217,7 @@ dmz::QtPluginPropertyBrowser::update_object_locality (
       _enumManager->setEnumNames(property, enumNames);
       _enumManager->setValue (property, Locality);
       
-      _add_property (property, Name);
+      _add_property (property, LocalityName);
    }
 }
 
@@ -253,7 +270,11 @@ dmz::QtPluginPropertyBrowser::update_object_counter (
       const Handle AttributeHandle,
       const Int64 Value,
       const Int64 *PreviousValue) {
+         
+   if (ObjectHandle == _currentObject) {
 
+      _add_int64_property (CounterName, AttributeHandle, Value);
+   }
 }
 
 
@@ -265,6 +286,10 @@ dmz::QtPluginPropertyBrowser::update_object_counter_minimum (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
+   if (ObjectHandle == _currentObject) {
+
+      _add_int64_property (CounterMinimumName, AttributeHandle, Value);
+   }
 }
 
 
@@ -276,6 +301,10 @@ dmz::QtPluginPropertyBrowser::update_object_counter_maximum (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
+   if (ObjectHandle == _currentObject) {
+
+      _add_int64_property (CounterMaximumName, AttributeHandle, Value);
+   }
 }
 
 
@@ -287,6 +316,10 @@ dmz::QtPluginPropertyBrowser::update_object_alternate_type (
       const ObjectType &Value,
       const ObjectType *PreviousValue) {
 
+   if (ObjectHandle == _currentObject) {
+
+      _add_string_property (AlternateTypeName, AttributeHandle, _type_to_string (Value));
+   }
 }
 
 
@@ -298,6 +331,13 @@ dmz::QtPluginPropertyBrowser::update_object_state (
       const Mask &Value,
       const Mask *PreviousValue) {
 
+   if (ObjectHandle == _currentObject) {
+
+      String name;
+      _defs.lookup_state_name (Value, name);
+      
+      _add_string_property (StateName, AttributeHandle, QLatin1String (name.get_buffer ()));
+   }
 }
 
 
@@ -311,25 +351,17 @@ dmz::QtPluginPropertyBrowser::update_object_flag (
 
    if (ObjectHandle == _currentObject) {
    
-      QtProperty *group (_idToProperty["Flag"]);
-   
-      if (!group) {
-   
-         group = _groupManager->addProperty ("Flag");
-         _ui.propertyEditor->addProperty (group);
-         _add_property (group, "Flag");
-      }
+      QtProperty *group (_lookup_group_property (FlagName));
    
       if (group) {
 
-         const QString Name (_defs.lookup_named_handle_name (AttributeHandle).get_buffer ());
-      
-         QtVariantProperty *property (_variantManager->addProperty (QVariant::Bool, Name));
+         const QString Name (_handle_to_name (AttributeHandle));
+
+         QtVariantProperty *property = _variantManager->addProperty (QVariant::Bool, Name);
+         
          property->setValue (Value);
 
          group->addSubProperty (property);
-      
-//         _add_property (property, Name);
       }
    }
 }
@@ -345,26 +377,7 @@ dmz::QtPluginPropertyBrowser::update_object_time_stamp (
 
    if (ObjectHandle == _currentObject) {
 
-      QtProperty *group (_idToProperty["TimeStamp"]);
-
-      if (!group) {
-
-         group = _groupManager->addProperty ("TimeStamp");
-         _ui.propertyEditor->addProperty (group);
-         _add_property (group, "TimeStamp");
-      }
-
-      if (group) {
-
-         const QString Name (_defs.lookup_named_handle_name (AttributeHandle).get_buffer ());
-
-         QtVariantProperty *property (_variantManager->addProperty (QVariant::Double, Name));
-         property->setValue (Value);
-
-         group->addSubProperty (property);
-
-//         _add_property (property, Name);
-      }
+      _add_float64_property (TimeStampName, AttributeHandle, Value);
    }
 }
 
@@ -379,26 +392,7 @@ dmz::QtPluginPropertyBrowser::update_object_position (
 
    if (ObjectHandle == _currentObject) {
 
-      QtProperty *group (_idToProperty["Position"]);
-
-      if (!group) {
-
-         group = _groupManager->addProperty ("Position");
-         _ui.propertyEditor->addProperty (group);
-         _add_property (group, "Position");
-      }
-
-      if (group) {
-
-         const QString Name (_defs.lookup_named_handle_name (AttributeHandle).get_buffer ());
-
-         QtProperty *property (_vectorManager->addProperty (Name));
-         _vectorManager->setValue (property, Value);
-
-         group->addSubProperty (property);
-
-//         _add_property (property, Name);
-      }
+      _add_vector_property (PositionName, AttributeHandle, Value);
    }
 }
 
@@ -411,6 +405,10 @@ dmz::QtPluginPropertyBrowser::update_object_orientation (
       const Matrix &Value,
       const Matrix *PreviousValue) {
 
+   if (ObjectHandle == _currentObject) {
+
+//      _add_vector_property (PositionName, AttributeHandle, Value);
+   }
 }
 
 
@@ -422,6 +420,10 @@ dmz::QtPluginPropertyBrowser::update_object_velocity (
       const Vector &Value,
       const Vector *PreviousValue) {
 
+   if (ObjectHandle == _currentObject) {
+
+      _add_vector_property (VelocityName, AttributeHandle, Value);
+   }
 }
 
 
@@ -433,6 +435,10 @@ dmz::QtPluginPropertyBrowser::update_object_acceleration (
       const Vector &Value,
       const Vector *PreviousValue) {
 
+   if (ObjectHandle == _currentObject) {
+
+      _add_vector_property (AccelerationName, AttributeHandle, Value);
+   }
 }
 
 
@@ -444,6 +450,10 @@ dmz::QtPluginPropertyBrowser::update_object_scale (
       const Vector &Value,
       const Vector *PreviousValue) {
 
+   if (ObjectHandle == _currentObject) {
+
+      _add_vector_property (ScaleName, AttributeHandle, Value);
+   }
 }
 
 
@@ -455,6 +465,10 @@ dmz::QtPluginPropertyBrowser::update_object_vector (
       const Vector &Value,
       const Vector *PreviousValue) {
 
+   if (ObjectHandle == _currentObject) {
+
+      _add_vector_property (VectorName, AttributeHandle, Value);
+   }
 }
 
 
@@ -466,6 +480,10 @@ dmz::QtPluginPropertyBrowser::update_object_scalar (
       const Float64 Value,
       const Float64 *PreviousValue) {
 
+   if (ObjectHandle == _currentObject) {
+
+      _add_float64_property (ScalarName, AttributeHandle, Value);
+   }
 }
 
 
@@ -479,26 +497,7 @@ dmz::QtPluginPropertyBrowser::update_object_text (
 
    if (ObjectHandle == _currentObject) {
 
-      QtProperty *group (_idToProperty["Text"]);
-
-      if (!group) {
-
-         group = _groupManager->addProperty ("Text");
-         _ui.propertyEditor->addProperty (group);
-         _add_property (group, "Text");
-      }
-
-      if (group) {
-
-         const QString Name (_defs.lookup_named_handle_name (AttributeHandle).get_buffer ());
-
-         QtVariantProperty *property (_variantManager->addProperty (QVariant::String, Name));
-         property->setValue (Value.get_buffer ());
-
-         group->addSubProperty (property);
-
-//         _add_property (property, Name);
-      }
+      _add_string_property (TextName, AttributeHandle, QLatin1String (Value.get_buffer ()));
    }
 }
 
@@ -520,7 +519,7 @@ dmz::QtPluginPropertyBrowser::on_objectTreeWidget_currentItemChanged (
       QTreeWidgetItem *previous) {
 
    ObjectModule *objMod (get_object_module ());
-   _currentObject = _handle (current);
+   _currentObject = _item_to_handle (current);
       
    if (_currentObject && objMod) {
 
@@ -550,6 +549,107 @@ dmz::QtPluginPropertyBrowser::_value_changed (QtProperty *property, const QVaria
 }
 
 
+QtProperty *
+dmz::QtPluginPropertyBrowser::_lookup_group_property (const QString &Name) {
+
+   QtProperty *group (_idToProperty[Name]);
+
+   if (!group) {
+
+      group = _groupManager->addProperty (Name);
+      _add_property (group, Name);
+   }
+
+   return group;
+}
+
+
+void
+dmz::QtPluginPropertyBrowser::_add_int64_property (
+      const QString &GroupName,
+      const Handle AttributeHandle,
+      const Int64 Value) {
+
+   QtProperty *group (_lookup_group_property (GroupName));
+
+   if (group) {
+
+      const QString Name (_handle_to_name (AttributeHandle));
+
+      QtVariantProperty *property =
+         _variantManager->addProperty (QVariant::LongLong, Name);
+
+      property->setValue (Value);
+
+      group->addSubProperty (property);
+   }
+}
+
+
+void
+dmz::QtPluginPropertyBrowser::_add_float64_property (
+      const QString &GroupName,
+      const Handle AttributeHandle,
+      const Float64 Value) {
+
+   QtProperty *group (_lookup_group_property (GroupName));
+
+   if (group) {
+
+      const QString Name (_handle_to_name (AttributeHandle));
+
+      QtVariantProperty *property =
+         _variantManager->addProperty (QVariant::Double, Name);
+
+      property->setValue (Value);
+
+      group->addSubProperty (property);
+   }
+}
+
+
+void
+dmz::QtPluginPropertyBrowser::_add_string_property (
+      const QString &GroupName,
+      const Handle AttributeHandle,
+      const QString &Value) {
+
+   QtProperty *group (_lookup_group_property (GroupName));
+
+   if (group) {
+
+      const QString Name (_handle_to_name (AttributeHandle));
+
+      QtVariantProperty *property =
+         _variantManager->addProperty (QVariant::String, Name);
+
+      property->setValue (Value);
+
+      group->addSubProperty (property);
+   }
+}
+
+
+void
+dmz::QtPluginPropertyBrowser::_add_vector_property (
+      const QString &GroupName,
+      const Handle AttributeHandle,
+      const Vector &Value) {
+
+   QtProperty *group (_lookup_group_property (GroupName));
+
+   if (group) {
+
+      const QString Name (_handle_to_name (AttributeHandle));
+
+      QtProperty *property (_vectorManager->addProperty (Name));
+      _vectorManager->setValue (property, Value);
+
+      group->addSubProperty (property);
+   }
+}
+
+
 void
 dmz::QtPluginPropertyBrowser::_add_property (QtProperty *property, const QString &id) {
    
@@ -560,7 +660,7 @@ dmz::QtPluginPropertyBrowser::_add_property (QtProperty *property, const QString
    
    if (_idToExpanded.contains (id)) {
       
-//      _ui.propertyEditor->setExpanded(item, _idToExpanded[id]);
+      _ui.propertyEditor->setExpanded(item, _idToExpanded[id]);
    }
 }
 
@@ -581,8 +681,38 @@ dmz::QtPluginPropertyBrowser::_update_expand_state () {
 }
 
 
+QString
+dmz::QtPluginPropertyBrowser::_uuid_to_string (const UUID &Identity) {
+
+   return QLatin1String (Identity.to_string ().get_buffer ());
+}
+
+
+QString
+dmz::QtPluginPropertyBrowser::_type_to_string (const ObjectType &Type) {
+
+   return QLatin1String (Type.get_name ().get_buffer ());
+}
+
+
+QString
+dmz::QtPluginPropertyBrowser::_handle_to_name (const Handle Object) {
+
+   return QLatin1String (_defs.lookup_named_handle_name (Object).get_buffer ());
+}
+
+
+QString
+dmz::QtPluginPropertyBrowser::_handle_to_string (const Handle Object) {
+
+   String str;
+   str << Object;
+   return QLatin1String (str.get_buffer ());
+}
+
+
 dmz::Handle
-dmz::QtPluginPropertyBrowser::_handle (QTreeWidgetItem *item) {
+dmz::QtPluginPropertyBrowser::_item_to_handle (QTreeWidgetItem *item) {
 
    Handle retVal (0);
    if (item) { retVal = item->data (HandleCol, HandleRole).toULongLong (); }
@@ -598,8 +728,6 @@ dmz::QtPluginPropertyBrowser::_init (Config &local) {
    _ui.setupUi (this);
    
    qframe_config_read ("frame", local, this);
-   
-//   activate_global_object_observer ();
 
    _defaultAttrHandle = activate_default_object_attribute (
       ObjectCreateMask | ObjectDestroyMask);
@@ -611,11 +739,13 @@ dmz::QtPluginPropertyBrowser::_init (Config &local) {
    headerList << "Handle" << "ObjectType";
    _ui.objectTreeWidget->setHeaderLabels (headerList);
    
+   _groupManager = new QtGroupPropertyManager (this);
    _variantManager = new QtVariantPropertyManager (this);
    _variantManagerRO = new QtVariantPropertyManager (this);
    _enumManager = new QtEnumPropertyManager (this);
-   _groupManager = new QtGroupPropertyManager (this);
+   _enumManagerRO = new QtEnumPropertyManager (this);
    _vectorManager = new VectorPropertyManager (this);
+   _vectorManagerRO = new VectorPropertyManager (this);
 
    connect (
       _variantManager, SIGNAL (valueChanged (QtProperty *, const QVariant &)),

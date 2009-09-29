@@ -3,6 +3,7 @@
 
 namespace dmz {
 
+//! \cond
 template <class T>
 void delete_list (T *&ptr) {
 
@@ -14,6 +15,7 @@ void delete_list (T *&ptr) {
       delete current; current = 0;
    }
 }
+//! \endcond
 
 };
 

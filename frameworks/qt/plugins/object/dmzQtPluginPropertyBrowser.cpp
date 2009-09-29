@@ -582,6 +582,8 @@ dmz::QtPluginPropertyBrowser::_add_int64_property (
       property->setValue (Value);
 
       group->addSubProperty (property);
+
+      _add_property (property, Name);
    }
 }
 
@@ -604,6 +606,8 @@ dmz::QtPluginPropertyBrowser::_add_float64_property (
       property->setValue (Value);
 
       group->addSubProperty (property);
+
+      _add_property (property, Name);
    }
 }
 
@@ -626,6 +630,8 @@ dmz::QtPluginPropertyBrowser::_add_string_property (
       property->setValue (Value);
 
       group->addSubProperty (property);
+
+      _add_property (property, Name);
    }
 }
 
@@ -646,6 +652,8 @@ dmz::QtPluginPropertyBrowser::_add_vector_property (
       _vectorManager->setValue (property, Value);
 
       group->addSubProperty (property);
+
+      _add_property (property, Name);
    }
 }
 
@@ -660,7 +668,7 @@ dmz::QtPluginPropertyBrowser::_add_property (QtProperty *property, const QString
    
    if (_idToExpanded.contains (id)) {
       
-      _ui.propertyEditor->setExpanded(item, _idToExpanded[id]);
+//      _ui.propertyEditor->setExpanded (item, _idToExpanded[id]);
    }
 }
 
@@ -668,15 +676,15 @@ dmz::QtPluginPropertyBrowser::_add_property (QtProperty *property, const QString
 void
 dmz::QtPluginPropertyBrowser::_update_expand_state () {
    
-    QList<QtBrowserItem *> list = _ui.propertyEditor->topLevelItems ();
+    QList<QtBrowserItem *> itemList = _ui.propertyEditor->topLevelItems ();
     
-    QListIterator<QtBrowserItem *> it (list);
+    QListIterator<QtBrowserItem *> it (itemList);
     
     while (it.hasNext ()) {
        
         QtBrowserItem *item = it.next ();
         QtProperty *prop = item->property ();
-        _idToExpanded[_propertyToId[prop]] = _ui.propertyEditor->isExpanded (item);
+//        _idToExpanded[_propertyToId[prop]] = _ui.propertyEditor->isExpanded (item);
     }
 }
 

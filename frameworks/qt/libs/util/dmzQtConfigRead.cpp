@@ -742,3 +742,31 @@ dmz::qlineedit_config_read (
    }
 }
 
+
+void
+dmz::qdoublespinbox_config_read (
+      const String &Name,
+      const Config &Source,
+      QDoubleSpinBox *spinBox) {
+         
+   if (spinBox) {
+   
+      Config cd;
+      
+      if (Name) { Source.lookup_config (Name, cd); }
+      else { cd = Source; }
+      
+      qwidget_config_read ("widget", cd, spinBox);
+      
+      spinBox->setDecimals (config_to_int32 ("decimals", cd, 2));
+      
+      spinBox->setRange (
+         config_to_float64 ("min", cd, 0), config_to_float64 ("max", cd, 1e+10)),
+         
+      spinBox->setPrefix (config_to_string ("prefix", cd).get_buffer ());
+      spinBox->setSingleStep (config_to_float64 ("step", cd, 1000));
+      spinBox->setSuffix (config_to_string ("suffix", cd).get_buffer ());
+      spinBox->setValue (config_to_float64 ("default", cd, 0.0));
+   }
+}
+

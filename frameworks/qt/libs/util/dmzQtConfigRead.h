@@ -19,6 +19,7 @@
 
 class QAbstractButton;
 class QAction;
+class QDoubleSpinBox;
 class QFrame;
 class QGraphicsView;
 class QLineEdit;
@@ -171,6 +172,11 @@ namespace dmz {
       const String &Name,
       const Config &Source,
       QLineEdit *lineEdit);
+
+   DMZ_QT_UTIL_LINK_SYMBOL void qdoublespinbox_config_read (
+      const String &Name,
+      const Config &Source,
+      QDoubleSpinBox *spinBox);
 };
 
 

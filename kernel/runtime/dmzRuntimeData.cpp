@@ -720,6 +720,15 @@ dmz::Data::lookup_attribute_base_type_enum (const Handle AttrHandle) const {
 }
 
 
+/*!
+
+\brief Store a dmz::Boolean in an attribute element.
+\param[in] AttrHandle Attribute handle.
+\param[in] Element Index of attribute element.
+\param[in] Value Variable to be stored.
+\return Returns dmz::True if the element was successfully stored.
+
+*/
 dmz::Boolean
 dmz::Data::store_boolean (
       const Handle AttrHandle,
@@ -739,6 +748,16 @@ dmz::Data::store_boolean (
 
 }
 
+
+/*!
+
+\brief Look up a dmz::Boolean from an attribute element.
+\param[in] AttrHandle Attribute handle.
+\param[in] Element Index of attribute element.
+\param[out] value Variable to be returned.
+\return Returns dmz::True if the element was successfully retrieved.
+
+*/
 dmz::Boolean
 dmz::Data::lookup_boolean (
       const Handle AttrHandle,

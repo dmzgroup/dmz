@@ -3018,11 +3018,11 @@ dmz::ObjectModuleBasic::immediate_destroy_object (const Handle ObjectHandle) {
    // Check to see if the object was deleted in store_link_attribute_object
    obj = _lookup_object (ObjectHandle);
 
+   _inObsUpdate = True;
+
    if (obj) {
 
       if (obj->active) {
-
-         _inObsUpdate = True;
 
          HashTableHandleIterator it;
 
@@ -3044,7 +3044,6 @@ dmz::ObjectModuleBasic::immediate_destroy_object (const Handle ObjectHandle) {
                obs = _globalTable.get_next (it);
             }
          }
-         _inObsUpdate = False;
       }
 
       _objectTable.remove (ObjectHandle);
@@ -3056,6 +3055,8 @@ dmz::ObjectModuleBasic::immediate_destroy_object (const Handle ObjectHandle) {
       Data out (_handleConverter.to_data (ObjectHandle));
       _removeObjMsg.send (&out);
    }
+
+   _inObsUpdate = False;
 
    _update_observers ();
 }

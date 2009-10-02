@@ -11,6 +11,29 @@ namespace dmz {
    class PluginInfo;
    class RuntimeContext;
 
+   class DMZ_KERNEL_LINK_SYMBOL DataConverterBoolean {
+
+      public:
+         DataConverterBoolean (const PluginInfo &Info);
+         DataConverterBoolean (RuntimeContext *context);
+         ~DataConverterBoolean ();
+
+         Boolean to_boolean (const Data &Value);
+         Boolean to_boolean (const Data *Value);
+         Data to_data (const Boolean Value);
+
+      protected:
+         //! \cond
+         struct State;
+         State &_state;
+         //! \endcond
+
+      private:
+         DataConverterBoolean ();
+         DataConverterBoolean (const DataConverterBoolean &);
+         DataConverterBoolean &operator= (const DataConverterBoolean &);
+   };
+
    class DMZ_KERNEL_LINK_SYMBOL DataConverterString {
 
       public:
@@ -24,8 +47,10 @@ namespace dmz {
          Data to_data (const String *Value);
 
       protected:
+         //! \cond
          struct State;
-         State &_state; //!< Internal state.
+         State &_state;
+         //! \endcond
 
       private:
          DataConverterString ();
@@ -45,8 +70,10 @@ namespace dmz {
          Data to_data (const Handle &Value);
 
       protected:
+         //! \cond
          struct State;
-         State &_state; //!< Internal state.
+         State &_state;
+         //! \endcond
 
       private:
          DataConverterHandle ();

@@ -1,8 +1,11 @@
 #ifndef DMZ_PLUGIN_SAVE_MESSAGE_MONOSTATE_DOT_H
 #define DMZ_PLUGIN_SAVE_MESSAGE_MONOSTATE_DOT_H
 
+#include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzTypesStringContainer.h>
 
 
 namespace dmz {
@@ -24,9 +27,13 @@ namespace dmz {
             const Plugin *PluginPtr);
 
       protected:
+         void _restore_messages (Config &list);
+         void _init_messages (Config &list);
          void _init (Config &local);
 
          Log _log;
+         Definitions _defs;
+         StringContainer _messages;
 
       private:
          PluginSaveMessageMonostate ();

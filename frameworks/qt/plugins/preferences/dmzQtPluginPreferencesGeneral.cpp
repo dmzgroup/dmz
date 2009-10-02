@@ -50,6 +50,23 @@ dmz::QtPluginPreferencesGeneral::update_plugin_state (
    }
    else if (State == PluginStateStart) {
 
+      HashTableStringIterator it;
+
+      MessageStruct *ms (_messageTable.get_first (it));
+
+      while (ms) {
+
+         QDoubleSpinBox *spinBox = qobject_cast<QDoubleSpinBox *> (ms->widget);
+
+         if (spinBox) {
+
+            Data data;
+            data.store_float64 (_valueAttrHandle, 0, spinBox->value ());
+            ms->message.send (&data);
+         }
+
+         ms = _messageTable.get_next (it);
+      }
    }
    else if (State == PluginStateStop) {
 
@@ -114,38 +131,9 @@ dmz::QtPluginPreferencesGeneral::_slot_scalar_value_changed (double value) {
       if (ms && ms->message) {
          
          Data data;
-
-         data.store_float64 (_valueAttrHandle, 0, spinBox->value ());
-
-         ms->message.send (ms->targets, &data, 0);
-      }
-   }
-}
-
-
-void
-dmz::QtPluginPreferencesGeneral::_get_targets (
-      const String &Name,
-      Config &config,
-      HandleContainer &targets) {
-
-   Config targetList;
-
-   if (config.lookup_all_config (Name, targetList)) {
-
-      ConfigIterator it;
-      Config targetConfig;
-
-      while (targetList.get_next_config (it, targetConfig)) {
-
-         const String TargetName (config_to_string ("name", targetConfig));
-
-         if (TargetName) {
-
-            const Handle Target (_defs.create_named_handle (TargetName));
-            targets.add_handle (Target);
-         }
-         else { _log.error << "Unable to add unnamed target" << endl; }
+         const Float64 Value (spinBox->value ());
+         data.store_float64 (_valueAttrHandle, 0, Value);
+         ms->message.send (&data);
       }
    }
 }
@@ -199,8 +187,6 @@ dmz::QtPluginPreferencesGeneral::_create_properties (Config &list) {
             
             ms->message = message;
             
-            _get_targets ("target", property, ms->targets);
-
             if (_messageTable.store (ms->message.get_name (), ms)) {
             
                QLabel *label (new QLabel (Name.get_buffer ()));

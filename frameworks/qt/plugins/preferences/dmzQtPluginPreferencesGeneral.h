@@ -6,7 +6,6 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <QtGui/QFrame>
 
@@ -55,16 +54,10 @@ namespace dmz {
 
             QWidget *widget;
             Message message;
-            HandleContainer targets;
 
-            MessageStruct () : widget (0), message (), targets () {;}
+            MessageStruct () : widget (0), message (){;}
          };
          
-         void _get_targets (
-               const String &Name,
-               Config &config,
-               HandleContainer &targets);
-               
          void _create_properties (Config &list);
          void _init (Config &local);
 

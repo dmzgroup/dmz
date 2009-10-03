@@ -19,7 +19,10 @@
 \ingroup Runtime
 \brief Container for message type context.
 \details Message types are hierarchical. A message type may have one parent and
-multiple children.
+multiple children. Messages may be sent to a specific target, a list of targets, or
+globally. Globally sent messages may be monostates where the last Data object sent is
+saved. Any MessageObserver subscribing to a monostate Message will receive the last
+sent Data object. Sending a monostate message to a specific target will fail. Monostate
 \sa dmz::MessageContext
 
 \enum dmz::MessageMonostateEnum
@@ -277,7 +280,11 @@ dmz::Message::set_monostate_mode (const MessageMonostateEnum Mode) const {
       }
       else if (Mode == MessageMonostateOff) {
 
-         if (_context->monostate) { delete (_context->monostate); }
+         if (_context->monostate) {
+
+            delete (_context->monostate);
+            _context->monostate = 0;
+         }
       }
    }
 }
@@ -324,6 +331,9 @@ integer messages have been sent.
 \note The outData should only be used when sending a message to a specific message
 observer, otherwise the outData may be over written if more than one message
 observer has subscribed to the sent message.
+\note If the Message is a monostate, the ObserverHandle must be zero so that the
+message is sent globally. A monostate Message sent with a target ObserverHandle
+will fail.
 
 */
 dmz::UInt32
@@ -336,12 +346,21 @@ dmz::Message::send (
 
    if (_context && _context->context) {
 
-      if (_context->monostate && !ObserverHandle && InData) {
+      Boolean send (True);
 
-         *(_context->monostate) = *InData;
+      if (_context->monostate) {
+
+         if (!ObserverHandle) {
+
+            if (InData) { *(_context->monostate) = *InData; }
+         }
+         else { send = False; }
       }
 
-      result = _context->context->send (true, *this, ObserverHandle, InData, outData);
+      if (send) {
+
+         result = _context->context->send (true, *this, ObserverHandle, InData, outData);
+      }
    }
 
    return result;
@@ -359,6 +378,7 @@ be NULL if no data is to be sent.
 \return Returns a id associated with the sent message. This id is not a unique
 runtime handle but is instead a running counter that will roll over when max unsigned
 integer messages have been sent.
+\sa dmz::UInt32 dmz::Message::send (const Handle ObserverHandle, const Data *InData, Data *outData) const
 
 \fn dmz::UInt32 dmz::Message::send (const Handle TargetObserverHandle) const
 \brief Sends the message.
@@ -367,6 +387,7 @@ to zero, message will be sent to all subscribers to the message type.
 \return Returns a id associated with the sent message. This id is not a unique
 runtime handle but is instead a running counter that will roll over when max unsigned
 integer messages have been sent.
+\sa dmz::UInt32 dmz::Message::send (const Handle ObserverHandle, const Data *InData, Data *outData) const
 
 */
 
@@ -382,6 +403,7 @@ returned.
 \return Returns an id associated with the sent message. This id is not a unique
 runtime handle but is instead a running counter that will roll over when max unsigned
 integer messages have been sent.
+\note If the message is a monostate, this call will fail.
 
 */
 dmz::UInt32
@@ -392,7 +414,7 @@ dmz::Message::send (
 
    UInt32 result (0);
    
-   if (_context && _context->context) {
+   if (_context && _context->context && !_context->monostate) {
 
       Handle target (Targets.get_first ());
 
@@ -411,6 +433,7 @@ dmz::Message::send (
 
    return result;
 }
+
 
 /*!
 

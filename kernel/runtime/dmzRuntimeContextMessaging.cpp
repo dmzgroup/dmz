@@ -73,15 +73,18 @@ dmz::RuntimeContextMessaging::RuntimeContextMessaging (
       RuntimeContextThreadKey &theKey,
       RuntimeContextMessageContainer &container,
       RuntimeContext *context) :
+      log (context ? context->get_log_context () : 0),
       head (0),
       tail (0),
       messageCount (0),
       key (theKey),
       obsHandleTable (&obsHandleLock),
-      obsNameTable (&obsNameLock) {
+      obsNameTable (&obsNameLock),
+      monostateErrorTable (&monostateErrorLock) {
 
    globalType = container.create_message ("Global_Message", "", context, this);
    key.ref ();
+   if (log) { log->ref (); }
 }
 
 
@@ -91,6 +94,8 @@ dmz::RuntimeContextMessaging::~RuntimeContextMessaging () {
    obsHandleTable.clear ();
    obsNameTable.clear ();
    key.unref ();
+
+   if (log) { log->unref (); }
 
    listLock.lock ();
    if (head) { delete head; head = tail = 0; }
@@ -123,6 +128,25 @@ local_send (
       }
 
       context.inSend = dmz::False;
+   }
+}
+
+
+void
+dmz::RuntimeContextMessaging::send_monostate_warning (const Message &Msg) {
+
+   if (log) {
+
+      MessageContext *context = Msg.get_message_context ();
+
+      if (context &&
+            !monostateErrorTable.lookup (context->Handle.get_runtime_handle ())) {
+
+         String out ("Attempting to send Monostate Message: ");
+         out << context->Name << " to target. Target ignored.";
+         log->write_kernel_message (LogLevelWarn, out);
+         monostateErrorTable.store (context->Handle.get_runtime_handle (), context);
+      }
    }
 }
 

@@ -2,6 +2,7 @@
 #define DMZ_RUNTIME_CONTEXT_MESSAGING_DOT_H
 
 #include "dmzRuntimeConfigContext.h"
+#include "dmzRuntimeContextLog.h"
 #include "dmzRuntimeContextThreadKey.h"
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeHandleAllocator.h>
@@ -74,6 +75,8 @@ namespace dmz {
             RuntimeContextMessageContainer &container,
             RuntimeContext *context);
 
+         void send_monostate_warning (const Message &Msg);
+
          UInt32 send (
             const Boolean IncrementCount,
             const Message &Type,
@@ -84,6 +87,8 @@ namespace dmz {
          void update_time_slice ();
          Boolean add_observer (MessageObserver &obs);
          Boolean remove_observer (MessageObserver &obs);
+
+         RuntimeContextLog *log;
 
          Mutex listLock; //!< Lock.
          MessageStruct *head; //!< Message type list head.
@@ -97,6 +102,9 @@ namespace dmz {
 
          ConfigContextLock obsNameLock; //!< Lock.
          HashTableStringTemplate<MessageObserver> obsNameTable; //!< Table.
+
+         ConfigContextLock monostateErrorLock; //!< Lock.
+         HashTableHandleTemplate<MessageContext> monostateErrorTable; //!< Table.
 
       protected:
          ~RuntimeContextMessaging ();

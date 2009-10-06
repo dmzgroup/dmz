@@ -11,7 +11,7 @@ const char DefaultName[] = "QtLogObserver";
 dmz::QtLogObserver::QtLogObserver (
       RuntimeContext *context,
       QWidget *parent) :
-      QDialog (parent),
+      QWidget (parent),
       LogObserver (context),
       MessageObserver (0, DefaultName, context),
       _context (context),
@@ -82,7 +82,7 @@ void
 dmz::QtLogObserver::toggle_visibility () {
 
    if (isVisible ()) { close (); }
-   else { show (); }
+   else { show (); raise (); }
 }
 
 
@@ -97,8 +97,8 @@ dmz::QtLogObserver::eventFilter (QObject *object, QEvent *event) {
 
          QKeyEvent *keyEvent = (QKeyEvent *) event;
 
-         if ((keyEvent->key () == Qt::Key_QuoteLeft) &&
-             (keyEvent->modifiers () & Qt::CTRL)) {
+         if ((keyEvent->key () == Qt::Key_L) &&
+             (keyEvent->modifiers () & (Qt::SHIFT | Qt::CTRL))) {
 
             toggle_visibility ();
             retVal = true;

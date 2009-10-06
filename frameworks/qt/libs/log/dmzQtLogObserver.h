@@ -17,7 +17,7 @@
 
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
-#include <QtGui/QDialog>
+#include <QtGui/QWidget>
 
 
 namespace dmz {
@@ -26,7 +26,7 @@ namespace dmz {
    class RuntimeContext;
 
    class DMZ_QT_LOG_OBSERVER_LINK_SYMBOL QtLogObserver :
-         public QDialog,
+         public QWidget,
          protected MessageObserver,
          protected LogObserver {
 

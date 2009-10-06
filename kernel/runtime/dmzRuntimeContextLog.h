@@ -33,6 +33,10 @@ namespace dmz {
 
          String *get_buffer ();
 
+         void write_kernel_message (
+            const LogLevelEnum Level,
+            const String &Message);
+
          void write_message (
             const String &LogName,
             const LogLevelEnum Level,

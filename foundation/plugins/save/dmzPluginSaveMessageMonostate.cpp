@@ -96,16 +96,12 @@ dmz::PluginSaveMessageMonostate::_restore_messages (Config &list) {
       const String Name (config_to_string ("name", cd));
       Message message;
       
-_log.error << "Name: " << Name << endl;
-
       if (_defs.lookup_message (Name, message)) {
 
          if (_messages.contains (message.get_name ())) {
          
             Data data;
             
-_log.error << "calling config_to_data: " << data << endl;
-
             if (config_to_data ("data", cd, context, data, &_log)) {
                
                message.send (&data);

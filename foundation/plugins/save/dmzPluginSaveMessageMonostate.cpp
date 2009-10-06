@@ -86,15 +86,17 @@ dmz::PluginSaveMessageMonostate::discover_plugin (
 void
 dmz::PluginSaveMessageMonostate::_restore_messages (Config &list) {
 
+   RuntimeContext *context (get_plugin_runtime_context ());
+   
    ConfigIterator it;
    Config cd;
-   
-   RuntimeContext *context (get_plugin_runtime_context ());
    
    while (list.get_next_config (it, cd)) {
       
       const String Name (config_to_string ("name", cd));
       Message message;
+      
+_log.error << "Name: " << Name << endl;
 
       if (_defs.lookup_message (Name, message)) {
 
@@ -102,6 +104,8 @@ dmz::PluginSaveMessageMonostate::_restore_messages (Config &list) {
          
             Data data;
             
+_log.error << "calling config_to_data: " << data << endl;
+
             if (config_to_data ("data", cd, context, data, &_log)) {
                
                message.send (&data);
@@ -115,10 +119,10 @@ dmz::PluginSaveMessageMonostate::_restore_messages (Config &list) {
 void
 dmz::PluginSaveMessageMonostate::_init_messages (Config &list) {
    
+   RuntimeContext *context (get_plugin_runtime_context ());
+
    ConfigIterator it;
    Config cd;
-   
-   RuntimeContext *context (get_plugin_runtime_context ());
    
    while (list.get_next_config (it, cd)) {
       
@@ -138,18 +142,19 @@ dmz::PluginSaveMessageMonostate::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
 
-   Config list;
+   Config initList;
    
-   if (local.lookup_all_config ("message", list)) {
+   if (local.lookup_all_config ("message", initList)) {
       
-      _init_messages (list);
+      _init_messages (initList);
    }
 
+   Config restoreList;
    Config session (get_session_config (get_plugin_name (), context));
    
-   if (session.lookup_all_config ("message", list)) {
-   
-      _restore_messages (list);
+   if (session.lookup_all_config ("message", restoreList)) {
+
+      _restore_messages (restoreList);
    }
 }
 

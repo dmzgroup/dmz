@@ -46,17 +46,27 @@ namespace dmz {
             const Data *InData,
             Data *outData);
 
+      public:
+         struct WidgetStruct {
+
+            const Handle ValueAttrHandle;
+            QWidget *widget;
+            Message message;
+            
+            WidgetStruct (const Handle AttrHandle) :
+               ValueAttrHandle (AttrHandle), widget (0), message () {;}
+
+            virtual ~WidgetStruct () { widget = 0; }
+            
+            virtual void init (Config &local) = 0;
+            virtual void send_message () = 0;
+            virtual void update (const Data &InData) = 0;
+         };
+
       protected Q_SLOTS:
          void _slot_scalar_value_changed (double);
       
       protected:
-         struct MessageStruct {
-
-            QWidget *widget;
-            Message message;
-
-            MessageStruct () : widget (0), message (){;}
-         };
          
          void _create_properties (Config &list);
          void _init (Config &local);
@@ -65,7 +75,7 @@ namespace dmz {
          Definitions _defs;
          QFormLayout *_layout;
          Handle _valueAttrHandle;
-         HashTableStringTemplate<MessageStruct> _messageTable;
+         HashTableStringTemplate<WidgetStruct> _widgetTable;
 
       private:
          QtPluginPreferencesGeneral ();

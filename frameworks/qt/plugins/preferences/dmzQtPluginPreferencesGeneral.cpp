@@ -7,6 +7,81 @@
 #include <dmzRuntimePluginInfo.h>
 #include <QtGui/QtGui>
 
+using namespace dmz;
+
+namespace {
+   
+   typedef dmz::QtPluginPreferencesGeneral::WidgetStruct BaseWidgetStruct;
+   
+   struct ScalarStruct : public BaseWidgetStruct {
+
+      ScalarStruct (const Handle AttrHandle);
+      ~ScalarStruct ();
+      
+      void init (Config &local);
+      void update (const Data &InData);
+      void send_message ();
+      
+      private:
+         QDoubleSpinBox *_spinBox;
+         Float64 _scale;
+   };
+   
+   ScalarStruct::ScalarStruct (const Handle AttrHandle) :
+         BaseWidgetStruct (AttrHandle),
+         _spinBox (new QDoubleSpinBox),
+         _scale (1.0) {
+   
+      widget = _spinBox;
+   }
+
+
+   ScalarStruct::~ScalarStruct () {
+      
+      if (_spinBox) {
+         
+         _spinBox->setParent (0);
+         delete _spinBox;
+         _spinBox = 0;
+      }
+   }
+   
+   
+   void
+   ScalarStruct::init (Config &local) {
+   
+      qdoublespinbox_config_read ("", local, _spinBox);
+      _scale = config_to_float64 ("scale", local, 1.0);
+      if (_scale < 0.0) { _scale = 1.0; }
+      widget = _spinBox;
+   }
+   
+   
+   void
+   ScalarStruct::send_message () {
+
+      if (_spinBox) {
+
+         Data data;
+         data.store_float64 (ValueAttrHandle, 0, _spinBox->value () / _scale);
+         message.send (&data);
+      }
+   }
+   
+   void
+   ScalarStruct::update (const Data &InData) {
+
+      if (_spinBox) {
+         
+         Float64 value;
+         if (InData.lookup_float64 (ValueAttrHandle, 0, value)) {
+            
+            _spinBox->setValue (value * _scale);
+         }
+      }
+   }
+};
+
 
 dmz::QtPluginPreferencesGeneral::QtPluginPreferencesGeneral (
       const PluginInfo &Info,
@@ -19,7 +94,7 @@ dmz::QtPluginPreferencesGeneral::QtPluginPreferencesGeneral (
       _defs (Info),
       _layout (0),
       _valueAttrHandle (0),
-      _messageTable () {
+      _widgetTable () {
 
    _init (local);
 }
@@ -27,7 +102,7 @@ dmz::QtPluginPreferencesGeneral::QtPluginPreferencesGeneral (
 
 dmz::QtPluginPreferencesGeneral::~QtPluginPreferencesGeneral () {
 
-   _messageTable.empty ();
+   _widgetTable.empty ();
 }
 
 
@@ -51,21 +126,12 @@ dmz::QtPluginPreferencesGeneral::update_plugin_state (
    else if (State == PluginStateStart) {
 
       HashTableStringIterator it;
+      WidgetStruct *ws (_widgetTable.get_first (it));
 
-      MessageStruct *ms (_messageTable.get_first (it));
+      while (ws) {
 
-      while (ms) {
-
-         QDoubleSpinBox *spinBox = qobject_cast<QDoubleSpinBox *> (ms->widget);
-
-         if (spinBox) {
-
-            Data data;
-            data.store_float64 (_valueAttrHandle, 0, spinBox->value ());
-            ms->message.send (&data);
-         }
-
-         ms = _messageTable.get_next (it);
+         ws->send_message ();
+         ws = _widgetTable.get_next (it);
       }
    }
    else if (State == PluginStateStop) {
@@ -100,20 +166,11 @@ dmz::QtPluginPreferencesGeneral::receive_message (
       const Data *InData,
       Data *outData) {
 
-   MessageStruct *ms (_messageTable.lookup (Type.get_name ()));
+   WidgetStruct *ws (_widgetTable.lookup (Type.get_name ()));
          
-   if (ms && InData) {
+   if (ws && InData) {
 
-      QDoubleSpinBox *spinBox = qobject_cast<QDoubleSpinBox *> (ms->widget);
-      
-      if (spinBox) {
-         
-         Float64 value;
-         if (InData->lookup_float64 (_valueAttrHandle, 0, value)) {
-            
-            spinBox->setValue (value);
-         }
-      }
+      ws->update (*InData);
    }
 }
 
@@ -121,20 +178,19 @@ dmz::QtPluginPreferencesGeneral::receive_message (
 void
 dmz::QtPluginPreferencesGeneral::_slot_scalar_value_changed (double value) {
    
-   QDoubleSpinBox *spinBox = qobject_cast<QDoubleSpinBox *> (sender ());
+   HashTableStringIterator it;
+   WidgetStruct *ws (_widgetTable.get_first (it));
+   Boolean found (False);
    
-   if (spinBox) {
-      
-      QString name (spinBox->objectName ());
-      MessageStruct *ms = _messageTable.lookup (qPrintable (name));
-      
-      if (ms && ms->message) {
+   while (ws && !found) {
+
+      if (ws->widget == sender ()) {
          
-         Data data;
-         const Float64 Value (spinBox->value ());
-         data.store_float64 (_valueAttrHandle, 0, Value);
-         ms->message.send (&data);
+         ws->send_message ();
+         found = True;
       }
+
+      ws = _widgetTable.get_next (it);
    }
 }
 
@@ -158,42 +214,42 @@ dmz::QtPluginPreferencesGeneral::_create_properties (Config &list) {
 
          subscribe_to_message (message);
 
-         MessageStruct *ms (new MessageStruct);
+         WidgetStruct *ws;
          
-         if (ms) {
-            
-            if (Type == "scalar") {
+         if (Type == "scalar") {
 
-               QDoubleSpinBox *scalar (new QDoubleSpinBox);
-               qdoublespinbox_config_read ("", property, scalar);
+            ScalarStruct *ss (new ScalarStruct (_valueAttrHandle));
+            ss->init (property);
+
+            connect (
+               ss->widget, SIGNAL (valueChanged (double)),
+               this, SLOT (_slot_scalar_value_changed (double)));
+
+            ws = ss;
+         }
+         // else if (Type == "line") {
+         //    
+         // }
+         // else if (Type == "") {
+         //    
+         // }
+         
+         if (ws) {
+            
+            if (ws->widget) {
                
-               connect (
-                  scalar, SIGNAL (valueChanged (double)),
-                  this, SLOT (_slot_scalar_value_changed (double)));
-               
-               ms->widget = scalar;
+               ws->widget->setObjectName (message.get_name ().get_buffer ());
             }
-            // else if (Type == "line") {
-            //    
-            // }
-            // else if (Type == "") {
-            //    
-            // }
             
-            if (ms->widget) {
-               
-               ms->widget->setObjectName (message.get_name ().get_buffer ());
-            }
+            ws->message = message;
             
-            ms->message = message;
-            
-            if (_messageTable.store (ms->message.get_name (), ms)) {
+            if (_widgetTable.store (ws->message.get_name (), ws)) {
             
                QLabel *label (new QLabel (Name.get_buffer ()));
             
-               _layout->addRow (label, ms->widget);
+               _layout->addRow (label, ws->widget);
             }
-            else { delete ms; ms = 0; }
+            else { delete ws; ws = 0; }
          }
       }
    }

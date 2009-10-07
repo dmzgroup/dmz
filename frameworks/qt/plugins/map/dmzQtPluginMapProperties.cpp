@@ -1,4 +1,5 @@
 #include <dmzArchiveModule.h>
+#include <dmzQtConfigRead.h>
 #include <dmzQtModuleCanvas.h>
 #include <dmzQtModuleMap.h>
 #include <dmzQtModuleMainWindow.h>
@@ -21,7 +22,8 @@
 dmz::QtPluginMapProperties::QtPluginMapProperties (
       const PluginInfo &Info,
       Config &local) :
-      QDialog (0),
+      QFrame (0),
+      QtWidget (Info),
       Plugin (Info),
       ArchiveObserverUtil (Info, local),
       MessageObserver (Info),
@@ -39,10 +41,7 @@ dmz::QtPluginMapProperties::QtPluginMapProperties (
       _defaultAdapterList (),
       _timerId (0),
       _showMapAction (0),
-      _showAction (0),
       _menuName ("&Edit") {
-
-   setObjectName (get_plugin_name ().get_buffer ());
 
    _ui.setupUi (this);
 
@@ -57,6 +56,14 @@ dmz::QtPluginMapProperties::~QtPluginMapProperties () {
       AdapterItemStruct *ais = _adapterList.takeFirst ();
       if (ais) { delete ais; }
    }
+}
+
+
+// QtWidget Interface
+QWidget *
+dmz::QtPluginMapProperties::get_qt_widget () {
+
+   return this;
 }
 
 
@@ -114,7 +121,6 @@ dmz::QtPluginMapProperties::discover_plugin (
             setParent (_mainWindowModule->get_qt_main_window (), Qt::Dialog);
             
             _mainWindowModule->add_menu_action (_menuName, _showMapAction);
-            _mainWindowModule->add_menu_action (_menuName, _showAction);
          }
       }
    }
@@ -140,7 +146,6 @@ dmz::QtPluginMapProperties::discover_plugin (
           (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
 
          _mainWindowModule->remove_menu_action (_menuName, _showMapAction);
-         _mainWindowModule->remove_menu_action (_menuName, _showAction);
          
          setParent (0);
          _mainWindowModule = 0;
@@ -225,10 +230,6 @@ dmz::QtPluginMapProperties::receive_message (
          on_mapCheckBox_stateChanged (toggle ? 1 : 0);
          _ui.mapCheckBox->setCheckState (toggle ? Qt::Checked : Qt::Unchecked);
       }
-   }
-   else if (Type == _propertiesEditMessage) {
-
-      _slot_showAction_triggered ();
    }
 }
 
@@ -389,21 +390,31 @@ dmz::QtPluginMapProperties::on_emptyCacheButton_clicked () {
 }
 
 
-void
-dmz::QtPluginMapProperties::_slot_showAction_triggered () {
-   
-   qApp->setOverrideCursor (QCursor (Qt::WaitCursor));
-   _update_cache_info ();
-   qApp->restoreOverrideCursor ();
-
-   exec ();
-}
+// void
+// dmz::QtPluginMapProperties::_slot_showAction_triggered () {
+//    
+//    qApp->setOverrideCursor (QCursor (Qt::WaitCursor));
+//    _update_cache_info ();
+//    qApp->restoreOverrideCursor ();
+// 
+//    exec ();
+// }
 
 
 void
 dmz::QtPluginMapProperties::showEvent (QShowEvent *event) {
 
-   _timerId = startTimer (5000);
+   if (!_timerId) {
+
+_log.error << "showEvent" << endl;
+      
+      qApp->setOverrideCursor (QCursor (Qt::WaitCursor));
+      _update_cache_info ();
+      qApp->restoreOverrideCursor ();
+      
+      _timerId = startTimer (60000);
+   }
+   
    QWidget::showEvent (event);
 }
 
@@ -411,8 +422,14 @@ dmz::QtPluginMapProperties::showEvent (QShowEvent *event) {
 void
 dmz::QtPluginMapProperties::closeEvent (QCloseEvent * event) {
 
-   killTimer (_timerId);
-   _timerId = 0;
+   if (_timerId){
+      
+_log.error << "closeEvent" << endl;
+
+      killTimer (_timerId);
+      _timerId = 0;
+   }
+
    QWidget::closeEvent (event);
 }
 
@@ -634,8 +651,12 @@ dmz::QtPluginMapProperties::_load_session () {
 void
 dmz::QtPluginMapProperties::_init (Config &local) {
 
+   setObjectName (get_plugin_name ().get_buffer ());
+
    RuntimeContext *context (get_plugin_runtime_context ());
 
+   qframe_config_read ("frame", local, this);
+   
    _mainWindowModuleName = config_to_string (
       "module.mainWindow.name",
       local,
@@ -693,17 +714,6 @@ dmz::QtPluginMapProperties::_init (Config &local) {
       _ui.mapCheckBox, SIGNAL (toggled (bool)),
       _showMapAction, SLOT (setChecked (bool)));
 
-   _showAction = new QAction (this);
-   qaction_config_read ("show-action", local, _showAction);
-   
-#ifdef Q_WS_MAC
-      _showAction->setIconVisibleInMenu (False);
-#endif
-   
-   connect (
-      _showAction, SIGNAL (triggered ()),
-      this, SLOT (_slot_showAction_triggered ()));
-      
    _menuName = config_to_string ("menu.name", local, _menuName);
 }
 

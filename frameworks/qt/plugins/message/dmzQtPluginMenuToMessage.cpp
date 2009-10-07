@@ -142,14 +142,7 @@ dmz::QtPluginMenuToMessage::_slot_send (QAction *action) {
 
                data.store_handle (_objectAttrHandle, 0, _object);
 
-               Handle target = ms->targets.get_first ();
-
-               while (target) {
-
-                  ms->message.send (target, &data, 0);
-
-                  target = ms->targets.get_next ();
-               }
+               ms->message.send (ms->targets, &data, 0);
             }
 
             break;

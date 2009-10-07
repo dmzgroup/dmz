@@ -1,0 +1,6 @@
+lmk.set_name "dmzPluginSaveMessageMonostate"
+lmk.set_type "plugin"
+lmk.add_files {"dmzPluginSaveMessageMonostate.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+}

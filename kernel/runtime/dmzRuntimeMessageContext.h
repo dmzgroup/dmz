@@ -33,7 +33,7 @@ namespace dmz {
          Boolean inSend;
 
          MessageContext *parent;
-         RuntimeContextMessaging *context;
+         RuntimeContextMessaging *dispatch;
 
          HashTableHandleTemplate<MessageObserver> obsTable;
    };
@@ -51,9 +51,9 @@ dmz::MessageContext::MessageContext (
       monostate (0),
       inSend (False),
       parent (theParent),
-      context (msgContext) {
+      dispatch (msgContext) {
 
-   if (context) { context->ref (); }
+   if (dispatch) { dispatch->ref (); }
    if (parent) { parent->ref (); }
 }
 
@@ -64,7 +64,7 @@ dmz::MessageContext::~MessageContext () {
    obsTable.clear ();
    if (parent) { parent->unref (); parent = 0; }
    if (monostate) { delete monostate; monostate = 0; }
-   if (context) { context->unref (); context = 0; }
+   if (dispatch) { dispatch->unref (); dispatch = 0; }
 }
 
 #endif // DMZ_RUNTIME_MESSAGE_TYPE_CONTEXT_DOT_H

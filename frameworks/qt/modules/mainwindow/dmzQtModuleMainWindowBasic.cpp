@@ -329,6 +329,17 @@ dmz::QtModuleMainWindowBasic::_load_session () {
 
       QRect grect = QApplication::desktop ()->availableGeometry (this);
       move(grect.center () - rect ().center ());
+      
+      
+      HashTableStringIterator it;
+      DockWidgetStruct *dws (_dockWidgetTable.get_first (it));
+      
+      while (dws) {
+
+         QDockWidget *dock (dws->dock);
+         dock->move (grect.center () - dock->rect ().center ());
+         dws = _dockWidgetTable.get_next (it);
+      }
    }
 }
 

@@ -110,6 +110,15 @@ dmz::RuntimeContextLog::get_buffer () {
 }
 
 
+void
+dmz::RuntimeContextLog::write_kernel_message (
+      const LogLevelEnum Level,
+      const String &Message) {
+
+   write_message (String ("kernel"), Level, Message);
+}
+
+
 //! Writes log message to observers.
 void
 dmz::RuntimeContextLog::write_message (

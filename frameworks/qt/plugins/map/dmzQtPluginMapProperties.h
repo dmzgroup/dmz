@@ -3,19 +3,21 @@
 
 #include <dmzApplicationState.h>
 #include <dmzArchiveObserverUtil.h>
+#include <dmzQtWidget.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeDataConverters.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
 #include <QtCore/QList>
-#include <QtGui/QDialog>
+#include <QtGui/QFrame>
 #include "ui_dmzQtPluginMapProperties.h"
 
 class QListWidgetItem;
 class QUrl;
 
 namespace qmapcontrol { class MapAdapter; }
+
 
 namespace dmz {
 
@@ -25,7 +27,8 @@ namespace dmz {
    
 
    class QtPluginMapProperties :
-         public QDialog,
+         public QFrame,
+         public QtWidget,
          public Plugin,
          public ArchiveObserverUtil,
          public MessageObserver {
@@ -35,6 +38,9 @@ namespace dmz {
       public:
          QtPluginMapProperties (const PluginInfo &Info, Config &local);
          ~QtPluginMapProperties ();
+
+         // QtWidget Interface
+         virtual QWidget *get_qt_widget ();
 
          // Plugin Interface
          virtual void update_plugin_state (
@@ -74,7 +80,6 @@ namespace dmz {
          void on_mapAdapterEditButton_clicked ();
          void on_mapAdapterDeleteButton_clicked ();
          void on_emptyCacheButton_clicked ();
-         void _slot_showAction_triggered ();
          
       protected:
          void showEvent (QShowEvent *event);
@@ -102,7 +107,7 @@ namespace dmz {
          void _init (Config &local);
          
          Log _log;
-         Ui::mapPropertiesDialog _ui;
+         Ui::mapPropertiesForm _ui;
          QtModuleMainWindow *_mainWindowModule;
          String _mainWindowModuleName;
          QtModuleCanvas *_canvasModule;
@@ -117,7 +122,6 @@ namespace dmz {
          Config _defaultAdapterList;
          Int32 _timerId;
          QAction *_showMapAction;
-         QAction *_showAction;
          String _menuName;
          
       private:

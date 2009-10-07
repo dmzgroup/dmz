@@ -19,7 +19,11 @@
 \ingroup Runtime
 \brief Container for message type context.
 \details Message types are hierarchical. A message type may have one parent and
-multiple children.
+multiple children. Messages may be sent to a specific target, a list of targets, or
+globally. Globally sent messages may be monostates where the last Data object sent is
+saved. Any MessageObserver subscribing to a monostate Message will receive the last
+sent Data object. When sending a monostate message to a specific target, the target
+will be ignored.
 \sa dmz::MessageContext
 
 \enum dmz::MessageMonostateEnum
@@ -277,7 +281,11 @@ dmz::Message::set_monostate_mode (const MessageMonostateEnum Mode) const {
       }
       else if (Mode == MessageMonostateOff) {
 
-         if (_context->monostate) { delete (_context->monostate); }
+         if (_context->monostate) {
+
+            delete (_context->monostate);
+            _context->monostate = 0;
+         }
       }
    }
 }
@@ -324,6 +332,7 @@ integer messages have been sent.
 \note The outData should only be used when sending a message to a specific message
 observer, otherwise the outData may be over written if more than one message
 observer has subscribed to the sent message.
+\note If the Message is a monostate, the ObserverHandle will be ignored.
 
 */
 dmz::UInt32
@@ -334,14 +343,20 @@ dmz::Message::send (
 
    UInt32 result (0);
 
-   if (_context && _context->context) {
+   if (_context && _context->dispatch) {
 
-      if (_context->monostate && !ObserverHandle && InData) {
+      if (_context->monostate) {
 
-         *(_context->monostate) = *InData;
+         if (ObserverHandle) { _context->dispatch->send_monostate_warning (*this); }
+         if (InData) { *(_context->monostate) = *InData; }
       }
 
-      result = _context->context->send (true, *this, ObserverHandle, InData, outData);
+      result = _context->dispatch->send (
+         true,
+         *this,
+         _context->monostate ? 0 : ObserverHandle,
+         InData,
+         outData);
    }
 
    return result;
@@ -359,6 +374,7 @@ be NULL if no data is to be sent.
 \return Returns a id associated with the sent message. This id is not a unique
 runtime handle but is instead a running counter that will roll over when max unsigned
 integer messages have been sent.
+\sa dmz::UInt32 dmz::Message::send (const Handle ObserverHandle, const Data *InData, Data *outData) const
 
 \fn dmz::UInt32 dmz::Message::send (const Handle TargetObserverHandle) const
 \brief Sends the message.
@@ -367,6 +383,7 @@ to zero, message will be sent to all subscribers to the message type.
 \return Returns a id associated with the sent message. This id is not a unique
 runtime handle but is instead a running counter that will roll over when max unsigned
 integer messages have been sent.
+\sa dmz::UInt32 dmz::Message::send (const Handle ObserverHandle, const Data *InData, Data *outData) const
 
 */
 
@@ -382,6 +399,7 @@ returned.
 \return Returns an id associated with the sent message. This id is not a unique
 runtime handle but is instead a running counter that will roll over when max unsigned
 integer messages have been sent.
+\note If the Message is a monostate, Targets will be ignored.
 
 */
 dmz::UInt32
@@ -391,26 +409,36 @@ dmz::Message::send (
       Data *outData) const {
 
    UInt32 result (0);
-   
-   if (_context && _context->context) {
 
-      Handle target (Targets.get_first ());
+   if (_context && _context->dispatch) {
 
-      while (target) {
+      if (_context->monostate) {
 
-         result = _context->context->send (
-            (result == 0 ? True : False),
-            *this,
-            target,
-            InData,
-            outData);
+         _context->dispatch->send_monostate_warning (*this);
 
-         target = Targets.get_next ();
+         send (0, InData, outData);
+      }
+      else {
+
+         Handle target (Targets.get_first ());
+
+         while (target) {
+
+            result = _context->dispatch->send (
+               (result == 0 ? True : False),
+               *this,
+               target,
+               InData,
+               outData);
+
+            target = Targets.get_next ();
+         }
       }
    }
 
    return result;
 }
+
 
 /*!
 
@@ -479,7 +507,7 @@ struct dmz::MessageObserver::MessageObserverState {
    const Handle ObsHandle;
    const String Name;
    RuntimeHandle *handlePtr;
-   RuntimeContextMessaging *context;
+   RuntimeContextMessaging *dispatch;
    HashTableHandleTemplate<Message> msgTable;
 
    MessageObserverState (
@@ -489,11 +517,11 @@ struct dmz::MessageObserver::MessageObserverState {
          ObsHandle (TheHandle),
          Name (TheName),
          handlePtr (0),
-         context (0) {
+         dispatch (0) {
 
       if (theContext) {
 
-         context = theContext->get_messaging_context ();
+         dispatch = theContext->get_messaging_context ();
 
          if (!ObsHandle) {
 
@@ -501,12 +529,12 @@ struct dmz::MessageObserver::MessageObserverState {
          }
       }
 
-      if (context) { context->ref (); }
+      if (dispatch) { dispatch->ref (); }
    }
 
    ~MessageObserverState () {
 
-      if (context) { context->unref (); context = 0; }
+      if (dispatch) { dispatch->unref (); dispatch = 0; }
       if (handlePtr) { delete handlePtr; handlePtr = 0; }
       msgTable.empty ();
    }
@@ -529,7 +557,7 @@ dmz::MessageObserver::MessageObserver (
       RuntimeContext *context) :
       _msgObsState (*(new MessageObserverState (ObsHandle, Name, context))) {
 
-   if (_msgObsState.context) { _msgObsState.context->add_observer (*this); }
+   if (_msgObsState.dispatch) { _msgObsState.dispatch->add_observer (*this); }
 }
 
 
@@ -549,7 +577,7 @@ dmz::MessageObserver::MessageObserver (const PluginInfo &Info) :
          Info.get_name (),
          Info.get_context ()))) {
 
-   if (_msgObsState.context) { _msgObsState.context->add_observer (*this); }
+   if (_msgObsState.dispatch) { _msgObsState.dispatch->add_observer (*this); }
 }
 
 
@@ -557,7 +585,7 @@ dmz::MessageObserver::MessageObserver (const PluginInfo &Info) :
 dmz::MessageObserver::~MessageObserver () {
 
    unsubscribe_to_all_messages ();
-   if (_msgObsState.context) { _msgObsState.context->remove_observer (*this); }
+   if (_msgObsState.dispatch) { _msgObsState.dispatch->remove_observer (*this); }
    delete &_msgObsState;
 }
 
@@ -591,9 +619,9 @@ dmz::MessageObserver::subscribe_to_message (const Message &Type) {
 
    Boolean result (False);
 
-   if (_msgObsState.context && !_msgObsState.msgTable.lookup (Type.get_handle ())) {
+   if (_msgObsState.dispatch && !_msgObsState.msgTable.lookup (Type.get_handle ())) {
 
-      if (_msgObsState.context->key.is_main_thread ()) {
+      if (_msgObsState.dispatch->key.is_main_thread ()) {
 
          MessageContext *typeContext (Type.get_message_context ());
 
@@ -637,9 +665,9 @@ dmz::MessageObserver::unsubscribe_to_message (const Message &Type) {
 
    Boolean result (False);
 
-   if (_msgObsState.context) {
+   if (_msgObsState.dispatch) {
 
-      if (_msgObsState.context->key.is_main_thread ()) {
+      if (_msgObsState.dispatch->key.is_main_thread ()) {
 
          MessageContext *typeContext (Type.get_message_context ());
 
@@ -669,9 +697,9 @@ dmz::MessageObserver::unsubscribe_to_all_messages () {
 
    Boolean result (False);
 
-   if (_msgObsState.context) {
+   if (_msgObsState.dispatch) {
 
-      if (_msgObsState.context->key.is_main_thread ()) {
+      if (_msgObsState.dispatch->key.is_main_thread ()) {
 
          result = True;
 

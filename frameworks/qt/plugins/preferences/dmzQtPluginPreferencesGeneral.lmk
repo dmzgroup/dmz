@@ -1,0 +1,8 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginPreferencesGeneral"
+lmk.set_type "plugin"
+lmk.add_files ({"dmzQtPluginPreferencesGeneral.h",},{src="moc"})
+lmk.add_files {"dmzQtPluginPreferencesGeneral.cpp",}
+lmk.add_libs {"dmzQtUtil","dmzKernel",}
+lmk.add_preqs {"dmzQtFramework",}
+lmkQt.add_libs {"QtCore","QtGui",}

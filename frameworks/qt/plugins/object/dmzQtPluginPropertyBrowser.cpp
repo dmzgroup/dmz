@@ -392,7 +392,7 @@ dmz::QtPluginPropertyBrowser::update_object_position (
 
    if (ObjectHandle == _currentObject) {
 
-      _add_vector_property (PositionName, AttributeHandle, Value);
+      _update_vector_property (PositionName, AttributeHandle, Value);
    }
 }
 
@@ -407,7 +407,7 @@ dmz::QtPluginPropertyBrowser::update_object_orientation (
 
    if (ObjectHandle == _currentObject) {
 
-//      _add_vector_property (PositionName, AttributeHandle, Value);
+//      _update_vector_property (PositionName, AttributeHandle, Value);
    }
 }
 
@@ -422,7 +422,7 @@ dmz::QtPluginPropertyBrowser::update_object_velocity (
 
    if (ObjectHandle == _currentObject) {
 
-      _add_vector_property (VelocityName, AttributeHandle, Value);
+      _update_vector_property (VelocityName, AttributeHandle, Value);
    }
 }
 
@@ -437,7 +437,7 @@ dmz::QtPluginPropertyBrowser::update_object_acceleration (
 
    if (ObjectHandle == _currentObject) {
 
-      _add_vector_property (AccelerationName, AttributeHandle, Value);
+      _update_vector_property (AccelerationName, AttributeHandle, Value);
    }
 }
 
@@ -452,7 +452,7 @@ dmz::QtPluginPropertyBrowser::update_object_scale (
 
    if (ObjectHandle == _currentObject) {
 
-      _add_vector_property (ScaleName, AttributeHandle, Value);
+      _update_vector_property (ScaleName, AttributeHandle, Value);
    }
 }
 
@@ -558,6 +558,7 @@ dmz::QtPluginPropertyBrowser::_lookup_group_property (const QString &Name) {
 
       group = _groupManager->addProperty (Name);
       _add_property (group, Name);
+//      _ui.propertyEditor->setExpanded (item, False);
    }
 
    return group;
@@ -583,7 +584,7 @@ dmz::QtPluginPropertyBrowser::_add_int64_property (
 
       group->addSubProperty (property);
 
-      _add_property (property, Name);
+      _add_property (property, Name, False);
    }
 }
 
@@ -607,7 +608,7 @@ dmz::QtPluginPropertyBrowser::_add_float64_property (
 
       group->addSubProperty (property);
 
-      _add_property (property, Name);
+      _add_property (property, Name, False);
    }
 }
 
@@ -631,7 +632,7 @@ dmz::QtPluginPropertyBrowser::_add_string_property (
 
       group->addSubProperty (property);
 
-      _add_property (property, Name);
+      _add_property (property, Name, False);
    }
 }
 
@@ -653,22 +654,64 @@ dmz::QtPluginPropertyBrowser::_add_vector_property (
 
       group->addSubProperty (property);
 
-      _add_property (property, Name);
+      _add_property (property, Name, False);
    }
 }
 
 
 void
-dmz::QtPluginPropertyBrowser::_add_property (QtProperty *property, const QString &id) {
-   
-   _propertyToId[property] = id;
-   _idToProperty[id] = property;
-   
-   QtBrowserItem *item = _ui.propertyEditor->addProperty (property);
-   
-   if (_idToExpanded.contains (id)) {
+dmz::QtPluginPropertyBrowser::_update_vector_property (
+      const QString &GroupName,
+      const Handle AttributeHandle,
+      const Vector &Value) {
+
+   if (_vectorManager) {
       
-//      _ui.propertyEditor->setExpanded (item, _idToExpanded[id]);
+      QtProperty *group (_lookup_group_property (GroupName));
+
+      if (group) {
+
+         const QString Name (_handle_to_name (AttributeHandle));
+
+         QtProperty *property (_idToProperty[Name]);
+
+         if (!property) {
+
+            property = _vectorManager->addProperty (Name);
+
+            group->addSubProperty (property);
+
+            _add_property (property, Name, False);
+         }
+
+         if (property) {
+
+            _vectorManager->setValue (property, Value);
+         }
+      }
+   }
+}
+
+
+void
+dmz::QtPluginPropertyBrowser::_add_property (
+      QtProperty *property,
+      const QString &Id,
+      const Boolean AddToTree) {
+   
+   _propertyToId[property] = Id;
+   _idToProperty[Id] = property;
+   
+   if (AddToTree) {
+      
+      QtBrowserItem *item = _ui.propertyEditor->addProperty (property);
+
+      // if (_idToExpanded.contains (Id)) {
+      // 
+      //     _ui.propertyEditor->setExpanded (item, _idToExpanded[Id]);
+      // }
+
+      _ui.propertyEditor->setExpanded (item, False);
    }
 }
 
@@ -684,7 +727,7 @@ dmz::QtPluginPropertyBrowser::_update_expand_state () {
        
         QtBrowserItem *item = it.next ();
         QtProperty *prop = item->property ();
-//        _idToExpanded[_propertyToId[prop]] = _ui.propertyEditor->isExpanded (item);
+        _idToExpanded[_propertyToId[prop]] = _ui.propertyEditor->isExpanded (item);
     }
 }
 

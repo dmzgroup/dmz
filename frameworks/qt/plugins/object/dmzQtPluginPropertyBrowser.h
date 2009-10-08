@@ -230,26 +230,35 @@ namespace dmz {
          QtProperty *_lookup_group_property (const QString &Name);
 
          void _add_int64_property (
-               const QString &GroupName,
-               const Handle AttributeHandle,
-               const Int64 Value);
+            const QString &GroupName,
+            const Handle AttributeHandle,
+            const Int64 Value);
          
          void _add_float64_property (
-               const QString &GroupName,
-               const Handle AttributeHandle,
-               const Float64 Value);
+            const QString &GroupName,
+            const Handle AttributeHandle,
+            const Float64 Value);
 
          void _add_string_property (
-               const QString &GroupName,
-               const Handle AttributeHandle,
-               const QString &Value);
+            const QString &GroupName,
+            const Handle AttributeHandle,
+            const QString &Value);
 
          void _add_vector_property (
-               const QString &GroupName,
-               const Handle AttributeHandle,
-               const Vector &Value);
+            const QString &GroupName,
+            const Handle AttributeHandle,
+            const Vector &Value);
 
-         void _add_property (QtProperty *property, const QString &id);
+         void _update_vector_property (
+            const QString &GroupName,
+            const Handle AttributeHandle,
+            const Vector &Value);
+
+         void _add_property (
+            QtProperty *property,
+            const QString &id,
+            const Boolean AddToTree = True);
+            
          void _update_expand_state ();
          QString _uuid_to_string (const UUID &Identity);
          QString _type_to_string (const ObjectType &Type);

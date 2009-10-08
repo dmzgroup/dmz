@@ -1139,13 +1139,12 @@ dmz::Config::lookup_all_config (const String &Name, Config &data) const {
       else {
 
          sub = it.get_next ();
-         if (!sub) { data = current; done = True; }
+         if (!sub) { data = current; done = True; result = True; }
          else { prev = current; Config next (sub); current = next; }
       }
    }
 
-   if (data.is_empty ()) { data.set_config_context (0); }
-   else { result = True; }
+   if (data.is_empty ()) { data.set_config_context (0); result = False; }
 
    return result;
 }

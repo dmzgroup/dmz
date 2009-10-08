@@ -6,16 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>493</width>
+    <width>500</width>
     <height>166</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string/>
+   <string>Software Update</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" rowspan="2">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="iconLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>

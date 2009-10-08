@@ -1,7 +1,9 @@
+#include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginAppUpdater.h"
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
-#include <QtGui/QMessageBox>
+#include <QtGui/QMainWindow>
+//#include <QtGui/QMessageBox>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
@@ -9,7 +11,12 @@
 namespace {
    
    const dmz::String INTERNAL_BUILD ("INTERNAL BUILD");
-   const QLatin1String MBRA_LATEST_URL ("http://shillcock.github.com/mbra/latest.html");
+   const QLatin1String MBRA_LATEST_URL ("http://dmzdev.github.com/latest/mbra.txt");
+   
+// http://dmzdev.github.com/latest/mbra.xml
+// http://dmzdev.github.com/latest/mbra.txt
+// http://cloud.github.com/downloads/dmzdev/latest/MBRA-091008182940.dmg
+// http://bit.ly/4mdLYP
 }
 
 
@@ -17,11 +24,13 @@ dmz::QtPluginAppUpdater::QtPluginAppUpdater (
       const PluginInfo &Info,
       Config &local,
       Config &global) :
-      QObject (0),
+      QDialog (0),
       Plugin (Info),
       _log (Info),
       _version (global),
       _netManager (0) {
+
+   _ui.setupUi (this);
 
    _init (local);
 }
@@ -48,7 +57,6 @@ dmz::QtPluginAppUpdater::update_plugin_state (
          QNetworkRequest request;
          request.setUrl (QUrl (MBRA_LATEST_URL));
          
-_log.warn << "_netManager->get (request);" << endl;
          _netManager->get (request);
       }
    }
@@ -68,9 +76,18 @@ dmz::QtPluginAppUpdater::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
+      if (!_mainWindowModule) {
+
+         _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
+      }
    }
    else if (Mode == PluginDiscoverRemove) {
 
+      if (_mainWindowModule &&
+            (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
+
+         _mainWindowModule = 0;
+      }
    }
 }
 
@@ -83,9 +100,16 @@ dmz::QtPluginAppUpdater::_slot_reply_finished (QNetworkReply *reply) {
       QString latestVersion (reply->readAll ());
       QString currentVersion (_version.get_build ().get_buffer ());
 
-      if (1 || latestVersion > currentVersion) {
+      if (1) { //latestVersion > currentVersion) {
 
-         QMessageBox dialog;
+         if (_mainWindowModule) {
+            
+            setParent (_mainWindowModule->get_qt_main_window ());
+         }
+
+         open ();
+
+//         QMessageBox dialog (_mainWindowModule ? _mainWindowModule->get_qt_main_window () : 0);
 
          const String Name (_version.get_name ());
          const String Major (_version.get_major ());
@@ -95,10 +119,19 @@ dmz::QtPluginAppUpdater::_slot_reply_finished (QNetworkReply *reply) {
          const String Release (_version.get_release ());
          const String Image (_version.get_image_name ());
          
-         String value;
-         value << "A new version of " << Name << "is available.";
+         if (Image) {
+
+            QPixmap pix (Image.get_buffer ());
+
+            if (!pix.isNull ()) { _ui.iconLabel->setPixmap (pix); }
+            else { _ui.iconLabel->hide (); }
+         }
          
-         dialog.setText (value.get_buffer ());
+         String value;
+         value << "A new version of " << Name << " (" << qPrintable (latestVersion) << ") is available.";
+  
+         _ui.textLabel->setText (value.get_buffer ());
+//         dialog.setText (value.get_buffer ());
 
          value.flush () << Name;
          
@@ -118,39 +151,54 @@ dmz::QtPluginAppUpdater::_slot_reply_finished (QNetworkReply *reply) {
 //            value << " (" << qPrintable (latestVersion) << ") is now available.\n";
          }
 
-         value << " is now available.\n";
+         value << " is now available.";
          value << "Would you like to download it now?";
          
-         dialog.setInformativeText (value.get_buffer ());
-
-         int result = dialog.exec ();
+         _ui.infoLabel->setText (value.get_buffer ());
          
-         switch (result) {
-            
-            case QMessageBox::Yes:
-               break;
-            
-            case QMessageBox::No:
-               break;
-            
-            default: break;
-         }
+         exec ();
+
+//         dialog.setInformativeText (value.get_buffer ());
+         
+//         dialog.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
+//         dialog.setDefaultButton (QMessageBox::No);
+
+         //int result =
+//         dialog.open (this, SLOT (_slot_download_update ()));
+         
+         // switch (result) {
+         //    
+         //    case QMessageBox::Yes:
+         //       break;
+         //    
+         //    case QMessageBox::No:
+         //       break;
+         //    
+         //    default: break;
+         // }
       }
    }   
 }
 
 
 void
+dmz::QtPluginAppUpdater::_slot_download_update () {
+   
+}
+
+void
 dmz::QtPluginAppUpdater::_init (Config &local) {
 
-   if (1 || _version.get_build () != INTERNAL_BUILD) {
+   setObjectName (get_plugin_name ().get_buffer ());
+
+//   if (_version.get_build () != INTERNAL_BUILD) {
       
       _netManager = new QNetworkAccessManager (this);
 
       connect (
          _netManager, SIGNAL (finished (QNetworkReply *)),
          this, SLOT (_slot_reply_finished (QNetworkReply *)));
-   }
+//   }
 }
 
 

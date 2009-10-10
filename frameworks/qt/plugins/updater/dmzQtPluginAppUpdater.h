@@ -4,9 +4,10 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeVersion.h>
-#include <QtGui/QDialog>
+#include <QtCore/QObject>
 #include "ui_UpdateDialog.h"
 
+class QDialog;
 class QNetworkAccessManager;
 class QNetworkReply;
 
@@ -16,7 +17,7 @@ namespace dmz {
    class QtModuleMainWindow;
 
    class QtPluginAppUpdater :
-         public QDialog,
+         public QObject,
          public Plugin {
 
    Q_OBJECT
@@ -35,18 +36,26 @@ namespace dmz {
             const Plugin *PluginPtr);
 
       protected Q_SLOTS:
-         void _slot_reply_finished (QNetworkReply *);
-         void _slot_download_update ();
+         void _slot_get_version_read_ready ();
+         void _slot_get_version_finished ();
+         void _slot_download_start ();
+         void _slot_download_cancel ();
+         void _slot_download_finished ();
+         void _slot_download_progress (qint64 received, qint64 total);
       
       protected:
          void _init (Config &local);
 
          Log _log;
-         Ui::UpdateDialog _ui;
          Version _version;
+         Version _updateVersion;
+         Ui::UpdateDialog _ui;
          QtModuleMainWindow *_mainWindowModule;
          String _mainWindowModuleName;
          QNetworkAccessManager *_netManager;
+         QNetworkReply *_downloadReply;
+         QDialog *_updateDialog;
+         Boolean _forceUpdate;
 
       private:
          QtPluginAppUpdater ();

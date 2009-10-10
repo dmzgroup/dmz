@@ -4,6 +4,6 @@ lmk.set_type "plugin"
 lmk.add_files {"UpdateDialog.ui",}
 lmk.add_files ({"dmzQtPluginAppUpdater.h",},{src="moc"})
 lmk.add_files {"dmzQtPluginAppUpdater.cpp",}
-lmk.add_libs {"dmzQtUtil","dmzKernel",}
+lmk.add_libs {"dmzQtUtil","dmzXML","dmzKernel",}
 lmk.add_preqs {"dmzQtFramework",}
-lmkQt.add_libs {"QtCore","QtGui","QtNetwork",}
+lmkQt.add_libs {"QtCore","QtGui","QtNetwork","QtXml"}

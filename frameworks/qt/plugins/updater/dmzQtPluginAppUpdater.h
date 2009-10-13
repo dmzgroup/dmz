@@ -36,7 +36,7 @@ namespace dmz {
             const Plugin *PluginPtr);
 
       protected Q_SLOTS:
-         void _slot_get_version_read_ready ();
+         void _slot_get_version_error ();
          void _slot_get_version_finished ();
          void _slot_download_start ();
          void _slot_download_cancel ();
@@ -55,6 +55,9 @@ namespace dmz {
          QNetworkAccessManager *_netManager;
          QNetworkReply *_downloadReply;
          QDialog *_updateDialog;
+         String _releaseChannel;
+         String _versionUrl;
+         String _downloadUrl;
          Boolean _forceUpdate;
 
       private:

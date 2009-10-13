@@ -1,5 +1,6 @@
 #include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginAppUpdater.h"
+#include <dmzQtUtil.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -18,13 +19,11 @@ namespace {
    
    const dmz::String INTERNAL_BUILD ("INTERNAL BUILD");
    
-   // http://dmzdev.github.com/latest/{system_name}/{app_name}.xml
-   const dmz::String VERSION_SERVER ("http://dmzdev.github.com/latest/");
-   const QString VERSION_URL ("http://dmzdev.github.com/latest/%1/%2.xml");
+   // latest/{release_channel}/{system_name}/{app_name}.xml
+   const dmz::String VERSION_URL ("http://dmzdev.github.com/latest/%1/%2/%3.xml");
    
-   // http://cloud.github.com/downloads/dmzdev/latest/{app_name}-{build_number}.dmg
-   const QString DOWNLOAD_SERVER ("http://cloud.github.com/downloads/dmzdev/latest/");
-   const QString DOWNLOAD_URL ("http://cloud.github.com/downloads/dmzdev/latest/%1-%2.%3");
+   // downloads/dmzdev/latest/{app_name}-{build_number}.{exe|zip}
+   const dmz::String DOWNLOAD_URL ("http://cloud.github.com/downloads/dmzdev/latest/%1-%2.%3");
 }
 
 
@@ -41,6 +40,9 @@ dmz::QtPluginAppUpdater::QtPluginAppUpdater (
       _mainWindowModuleName (),
       _netManager (0),
       _updateDialog (0),
+      _releaseChannel ("stable"),
+      _versionUrl (VERSION_URL),
+      _downloadUrl (DOWNLOAD_URL),
       _downloadReply (0) {
 
    _init (local);
@@ -71,12 +73,18 @@ dmz::QtPluginAppUpdater::update_plugin_state (
 
       if (_netManager) {
          
-         String versionServer (VERSION_SERVER);
-         versionServer << get_system_name ();
-         versionServer << "/" << _version.get_name ().to_lower () << ".xml";
-         _log.info << "get: " << versionServer << endl;
+         QString versionServer = QString (_versionUrl.get_buffer ()).
+            arg (_releaseChannel.get_buffer ()).
+            arg (get_system_name ().get_buffer ()).
+            arg (_version.get_name ().get_buffer ());
          
-         QNetworkRequest request (QUrl::fromEncoded (versionServer.get_buffer ()));
+         versionServer.replace (QRegExp (" "), "_");
+         
+         QUrl url (versionServer);
+         
+         _log.info << "get: " << qPrintable (url.toString ()) << endl;
+         
+         QNetworkRequest request (url);
          QNetworkReply *reply (_netManager->get (request));
          
           if (reply) {
@@ -135,8 +143,9 @@ dmz::QtPluginAppUpdater::discover_plugin (
    }
 }
 
+
 void
-dmz::QtPluginAppUpdater::_slot_get_version_read_ready () {
+dmz::QtPluginAppUpdater::_slot_get_version_error () {
    
    
 }
@@ -212,43 +221,48 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
    if (_updateDialog) {
       
 #if defined (Q_WS_WIN)
-      const String FileType ("exe");
+      const QString FileType ("exe");
       const QString DownlaodDr ("Desktop");
 #elif defined (Q_WS_MAC)
-      const String FileType ("dmg");
+      const QString FileType ("dmg");
       const QString DownloadDir ("Downloads");
 #else
-      const String FileType ("zip");
+      const QString FileType ("zip");
       const QString DownloadDir ("Desktop");
 #endif
 
       const String Name (_updateVersion.get_name ());
       const String Build (_updateVersion.get_build ());
       
-      const String Target (Name + "-" + Build + "." + FileType);
-      
-      QString defaultFileName (tr ("%1/%2/%3").
+      QString defaultFileName = tr ("%1/%2/%3-%4.%5").
          arg (QDir::homePath ()).
          arg (DownloadDir).
-         arg (Target.get_buffer ()));
+         arg (Name.get_buffer ()).
+         arg (Build.get_buffer ()).
+         arg (FileType);
          
       defaultFileName.replace (QRegExp (" "), "_");
 
-      QString fileName = QFileDialog::getSaveFileName (
+      QString fileName = get_save_file_name_with_extension (
          _mainWindowModule ? _mainWindowModule->get_qt_main_window () : 0,
-         "Save File",
-         defaultFileName);
-   
+         tr ("Save File"),
+         defaultFileName,
+         tr ("*.%1").arg (FileType),
+         FileType);
+
       if (!fileName.isEmpty ()) {
          
-         QString downloadServer (DOWNLOAD_SERVER + QLatin1String (Target.get_buffer ()));
+         QString downloadServer = QString (_downloadUrl.get_buffer ()).
+            arg (Name.get_buffer ()).
+            arg (Build.get_buffer ()).
+            arg (FileType);
             
          downloadServer.replace (QRegExp (" "), "_");
          
          QUrl url (downloadServer);
          
          _log.info << "downloading: " << qPrintable (url.toString ()) << endl;
-
+         
          QNetworkRequest request (url);
          request.setAttribute (QNetworkRequest::User, fileName);
          
@@ -350,6 +364,12 @@ dmz::QtPluginAppUpdater::_init (Config &local) {
    _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
 
    _forceUpdate = config_to_boolean ("force-update.value", local, False);
+   
+   _releaseChannel = config_to_string ("release.channel", local, _releaseChannel);
+
+   _versionUrl = config_to_string ("version.url", local, _versionUrl);
+   
+   _downloadUrl = config_to_string ("download.url", local, _downloadUrl);
    
    if (_forceUpdate || (_version.get_build () != INTERNAL_BUILD)) {
       

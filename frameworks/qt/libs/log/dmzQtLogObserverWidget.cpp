@@ -160,7 +160,7 @@ dmz::QtLogObserverWidget::keyPressEvent (QKeyEvent *event) {
       }
    }
    else {
-
+      
       if (text.isEmpty () || text[0].isSpace () || !text[0].isPrint ()) {
 
          QWidget::keyPressEvent (event);

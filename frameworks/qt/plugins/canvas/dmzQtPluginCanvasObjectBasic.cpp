@@ -378,7 +378,7 @@ dmz::QtPluginCanvasObjectBasic::process_file (
 
             QPixmap pixmap;
 
-            _log.info << "Loading pixmap file: " << LocalFilePath << endl;
+            //_log.info << "Loading pixmap file: " << LocalFilePath << endl;
 
             if (pixmap.load (LocalFilePath.get_buffer ())) {
 
@@ -401,7 +401,7 @@ dmz::QtPluginCanvasObjectBasic::process_file (
 
                renderer = new QSvgRenderer ();
 
-               _log.info << "Loading SVG file: " << LocalFilePath << endl;
+               //_log.info << "Loading SVG file: " << LocalFilePath << endl;
 
                if (renderer->load (QString (LocalFilePath.get_buffer ()))) {
 
@@ -1024,7 +1024,6 @@ dmz::QtPluginCanvasObjectBasic::_file_request (QGraphicsItem *item, const Config
 
       if (_fileRequestTable.store (Url + File, item)) {
 
-         //_log.info << "Adding file request: " << Url << File << endl;
          fc->add_file_request (Url, File, *this);
          retVal = True;
       }

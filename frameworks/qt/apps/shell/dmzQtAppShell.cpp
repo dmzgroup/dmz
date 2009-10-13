@@ -476,7 +476,7 @@ main (int argc, char *argv[]) {
 
       DynamicLibrary::dump_loaded (app.log.info);
 
-      while (qtLogObs.isVisible ()) {
+      while (qtLogObs.isVisible () && !app.is_forced ()) {
 
          // wait for log window to close
          QApplication::sendPostedEvents (0, -1);

@@ -13,6 +13,7 @@ namespace dmz {
    enum ExitStatusEnum {
       ExitStatusError = 0, //!< Exit requested due to error condition.
       ExitStatusNormal, //!< Standard exit requested.
+      ExitStatusForced, //!< Forced exit requested.
    };
 
    class DMZ_KERNEL_LINK_SYMBOL Exit {

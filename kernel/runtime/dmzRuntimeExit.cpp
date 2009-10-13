@@ -25,6 +25,7 @@
 namespace {
 
    const char LocalNormalExitMessageName[] = "DMZ_NORMAL_EXIT_MESSAGE";
+   const char LocalForcedExitMessageName[] = "DMZ_FORCED_EXIT_MESSAGE";
    const char LocalErrorExitMessageName[] = "DMZ_ERROR_EXIT_MESSAGE";
 
    static dmz::Message
@@ -58,6 +59,12 @@ namespace {
    }
 
    static dmz::Message
+   local_get_forced_exit_message (dmz::RuntimeContext *context) {
+
+      return local_get_exit_message (LocalForcedExitMessageName, context);
+   }
+
+   static dmz::Message
    local_get_error_exit_message (dmz::RuntimeContext *context) {
 
       return local_get_exit_message (LocalErrorExitMessageName, context);
@@ -67,6 +74,7 @@ namespace {
 
       public:
          const dmz::Message NormalMsg;
+         const dmz::Message ForcedMsg;
          const dmz::Message ErrorMsg;
          dmz::ExitObserver *callback;
          dmz::DataConverterString convert;
@@ -74,6 +82,7 @@ namespace {
          exitMessageObserver (dmz::RuntimeContext *context) :
             MessageObserver (0, "exitMessageObserver", context),
             NormalMsg (local_get_normal_exit_message (context)),
+            ForcedMsg (local_get_forced_exit_message (context)),
             ErrorMsg (local_get_error_exit_message (context)),
             callback (0),
             convert (context) {;}
@@ -95,6 +104,12 @@ namespace {
                      dmz::ExitStatusNormal,
                      convert.to_string (InData));
                }
+               else if (Msg == ForcedMsg) {
+
+                  callback->exit_requested (
+                     dmz::ExitStatusForced,
+                     convert.to_string (InData));
+               }
                else if (Msg == ErrorMsg) {
 
                   callback->exit_requested (
@@ -110,11 +125,13 @@ namespace {
 struct dmz::Exit::State {
 
    const Message NormalMsg;
+   const Message ForcedMsg;
    const Message ErrorMsg;
    DataConverterString convert;
 
    State (RuntimeContext *context) :
          NormalMsg (local_get_normal_exit_message (context)),
+         ForcedMsg (local_get_forced_exit_message (context)),
          ErrorMsg (local_get_error_exit_message (context)),
          convert (context) {;}
 };
@@ -157,6 +174,10 @@ dmz::Exit::request_exit (const ExitStatusEnum Status, const String &ExitReason) 
    if (Status == ExitStatusNormal) {
 
       _state.NormalMsg.send (value ? &value : 0);
+   }
+   else if (Status == ExitStatusForced) {
+
+      _state.ForcedMsg.send (value ? &value : 0);
    }
    else if (Status == ExitStatusError) {
 
@@ -268,6 +289,7 @@ dmz::ExitObserver::ExitObserver (const PluginInfo &Info) :
 
    __state.obs.callback = this;
    __state.obs.subscribe_to_message (__state.obs.NormalMsg);
+   __state.obs.subscribe_to_message (__state.obs.ForcedMsg);
    __state.obs.subscribe_to_message (__state.obs.ErrorMsg);
 }
 
@@ -282,6 +304,7 @@ dmz::ExitObserver::ExitObserver (RuntimeContext *context) :
 
    __state.obs.callback = this;
    __state.obs.subscribe_to_message (__state.obs.NormalMsg);
+   __state.obs.subscribe_to_message (__state.obs.ForcedMsg);
    __state.obs.subscribe_to_message (__state.obs.ErrorMsg);
 }
 

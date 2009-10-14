@@ -222,7 +222,7 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
       
 #if defined (Q_WS_WIN)
       const QString FileType ("exe");
-      const QString DownlaodDr ("Desktop");
+      const QString DownloadDir ("Desktop");
 #elif defined (Q_WS_MAC)
       const QString FileType ("dmg");
       const QString DownloadDir ("Downloads");
@@ -241,7 +241,7 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
          arg (Build.get_buffer ()).
          arg (FileType);
          
-      defaultFileName.replace (QRegExp (" "), "_");
+//      defaultFileName.replace (QRegExp (" "), "_");
 
       QString fileName = get_save_file_name_with_extension (
          _mainWindowModule ? _mainWindowModule->get_qt_main_window () : 0,

@@ -599,7 +599,7 @@ dmz::Data::operator!= (const Data &Value) const { return !(*this == Value); }
 
 */
 dmz::Boolean
-dmz::Data::operator! () const { return !_state.dataTable.get_count (); }
+dmz::Data::operator! () const { return _state.dataTable.get_count () == 0; }
 
 
 //! Gets RuntimeContext stored in Data object.

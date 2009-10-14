@@ -34,6 +34,7 @@ dmz::QtPluginAppUpdater::QtPluginAppUpdater (
       QObject (0),
       Plugin (Info),
       _log (Info),
+      _exit (get_plugin_runtime_context ()),
       _version (global),
       _updateVersion (),
       _mainWindowModule (0),
@@ -316,6 +317,8 @@ dmz::QtPluginAppUpdater::_slot_download_finished () {
                file.close ();
                
                _log.info << "Download saved as " << qPrintable (fileName) << endl;
+               
+               _handle_downloaded_file (fileName);
             }
       
             if (_updateDialog) { _updateDialog->accept (); }
@@ -363,6 +366,29 @@ dmz::QtPluginAppUpdater::_slot_download_progress (qint64 received, qint64 total)
       _ui.infoLabel->setText (info);
       _ui.progressBar->setMaximum (total);
       _ui.progressBar->setValue (received);
+   }
+}
+
+
+void
+dmz::QtPluginAppUpdater::_handle_downloaded_file (const QString &FileName) {
+
+#if defined (Q_WS_WIN)
+   QString command (tr ("\"\"\"%1\"\"\"")arg. (FileName));
+#elif defined (Q_WS_MAC)
+   QString command (tr ("hdiutil attach %1 -autoopen -quiet").arg (FileName));
+#else
+   QString command (tr ("unzip %1").arg (FileName));
+#endif
+   
+   if (QProcess::startDetached (command)) {
+      
+      _exit.request_exit (dmz::ExitStatusForced, get_plugin_name () + " Closed");
+   }
+   else {
+      
+      QString msg (tr ("Update has been downloaded to: %1").arg (FileName));
+      QMessageBox::information (_updateDialog->parentWidget (), "Update Downloaded", msg);
    }
 }
 

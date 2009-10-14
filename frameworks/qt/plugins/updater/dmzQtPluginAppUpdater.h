@@ -1,6 +1,7 @@
 #ifndef DMZ_QT_PLUGIN_APP_UPDATER_DOT_H
 #define DMZ_QT_PLUGIN_APP_UPDATER_DOT_H
 
+#include <dmzRuntimeExit.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeVersion.h>
@@ -44,9 +45,11 @@ namespace dmz {
          void _slot_download_progress (qint64 received, qint64 total);
       
       protected:
+         void _handle_downloaded_file (const QString &FileName);
          void _init (Config &local);
 
          Log _log;
+         Exit _exit;
          Version _version;
          Version _updateVersion;
          Ui::UpdateDialog _ui;

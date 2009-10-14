@@ -374,13 +374,14 @@ void
 dmz::QtPluginAppUpdater::_handle_downloaded_file (const QString &FileName) {
 
 #if defined (Q_WS_WIN)
-   QString command (tr ("\"\"\"%1\"\"\"")arg. (FileName));
+   QString command (tr ("\"%1\"").arg (FileName));
 #elif defined (Q_WS_MAC)
    QString command (tr ("hdiutil attach %1 -autoopen -quiet").arg (FileName));
 #else
    QString command (tr ("unzip %1").arg (FileName));
 #endif
    
+   _log.info << "Running: " << qPrintable (command) << endl;
    if (QProcess::startDetached (command)) {
       
       _exit.request_exit (dmz::ExitStatusForced, get_plugin_name () + " Closed");

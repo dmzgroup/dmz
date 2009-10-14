@@ -90,12 +90,13 @@ dmz::QtPluginAppUpdater::update_plugin_state (
                this, SLOT (_slot_download_cancel ()));
          }
          
+         QString appName (_version.get_name ().get_buffer ());
+         appName.replace (QRegExp (" "), "-");
+         
          QString versionServer = QString (_versionUrl.get_buffer ()).
             arg (_releaseChannel.get_buffer ()).
             arg (get_system_name ().get_buffer ()).
-            arg (_version.get_name ().get_buffer ());
-         
-         versionServer.replace (QRegExp (" "), "_");
+            arg (appName);
          
          QUrl url (versionServer);
          
@@ -159,51 +160,54 @@ dmz::QtPluginAppUpdater::_slot_get_version_finished () {
    
    if (reply) {
       
-      if (_updateDialog && (reply->error () == QNetworkReply::NoError)) {
+      if (reply->error () == QNetworkReply::NoError) {
 
-         QString data (reply->readAll ());
+         if (_updateDialog) {
+            
+            QString data (reply->readAll ());
 
-         const String XMLData (qPrintable (data));
+            const String XMLData (qPrintable (data));
 
-         Config cd ("global");
+            Config cd ("global");
 
-         if (xml_string_to_config (XMLData, cd)) {
+            if (xml_string_to_config (XMLData, cd)) {
 
-            _updateVersion = Version (cd);
+               _updateVersion = Version (cd);
 
-            QString latestBuild (_updateVersion.get_build ().get_buffer ());
-            QString currentBuild (_version.get_build ().get_buffer ());
+               QString latestBuild (_updateVersion.get_build ().get_buffer ());
+               QString currentBuild (_version.get_build ().get_buffer ());
 
-            if (_forceUpdate || (latestBuild > currentBuild)) {
+               if (_forceUpdate || (latestBuild > currentBuild)) {
 
-               _ui.progressBar->hide ();
+                  _ui.progressBar->hide ();
 
-               const String Name (_updateVersion.get_name ());
-               const String Build (_updateVersion.get_build ());
-               const String Image (_updateVersion.get_image_name ());
-               const String Version (_updateVersion.get_version ());
+                  const String Name (_updateVersion.get_name ());
+                  const String Build (_updateVersion.get_build ());
+                  const String Image (_updateVersion.get_image_name ());
+                  const String Version (_updateVersion.get_version ());
 
-               QPixmap pix (Image.get_buffer ());
+                  QPixmap pix (Image.get_buffer ());
 
-               if (!pix.isNull ()) {
+                  if (!pix.isNull ()) {
 
-                  _ui.iconLabel->setPixmap (pix);
-                  _ui.iconLabel->show ();
+                     _ui.iconLabel->setPixmap (pix);
+                     _ui.iconLabel->show ();
+                  }
+                  else { _ui.iconLabel->hide (); }
+
+                  String value;
+                  value << "<b>A new version of " << Name << " is available.</b>";
+
+                  _ui.textLabel->setText (value.get_buffer ());
+
+                  value.flush () << Name << " " << Version << " is now available";
+                  value << " (you have " << _version.get_version () << ").\n";
+                  value << "Would you like to download it now?";
+
+                  _ui.infoLabel->setText (value.get_buffer ());
+
+                  _updateDialog->open ();
                }
-               else { _ui.iconLabel->hide (); }
-
-               String value;
-               value << "<b>A new version of " << Name << " is available.</b>";
-
-               _ui.textLabel->setText (value.get_buffer ());
-
-               value.flush () << Name << " " << Version << " is now available";
-               value << " (you have " << _version.get_version () << ").\n";
-               value << "Would you like to download it now?";
-
-               _ui.infoLabel->setText (value.get_buffer ());
-
-               _updateDialog->open ();
             }
          }
       }
@@ -232,18 +236,18 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
       const QString DownloadDir ("Desktop");
 #endif
 
-      const String Name (_updateVersion.get_name ());
+      QString appName (_updateVersion.get_name ().get_buffer ());
+      appName.replace (QRegExp (" "), "-");
+      
       const String Build (_updateVersion.get_build ());
       
       QString defaultFileName = tr ("%1/%2/%3-%4.%5").
          arg (QDir::homePath ()).
          arg (DownloadDir).
-         arg (Name.get_buffer ()).
+         arg (appName).
          arg (Build.get_buffer ()).
          arg (FileType);
          
-//      defaultFileName.replace (QRegExp (" "), "_");
-
       QString fileName = get_save_file_name_with_extension (
          _mainWindowModule ? _mainWindowModule->get_qt_main_window () : 0,
          tr ("Save File"),
@@ -254,11 +258,9 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
       if (!fileName.isEmpty ()) {
          
          QString downloadServer = QString (_downloadUrl.get_buffer ()).
-            arg (Name.get_buffer ()).
+            arg (appName).
             arg (Build.get_buffer ()).
             arg (FileType);
-            
-         downloadServer.replace (QRegExp (" "), "_");
          
          QUrl url (downloadServer);
          
@@ -376,9 +378,9 @@ dmz::QtPluginAppUpdater::_handle_downloaded_file (const QString &FileName) {
 #if defined (Q_WS_WIN)
    QString command (tr ("\"%1\"").arg (FileName));
 #elif defined (Q_WS_MAC)
-   QString command (tr ("hdiutil attach %1 -autoopen -quiet").arg (FileName));
+   QString command (tr ("hdiutil attach \"%1\" -autoopen -quiet").arg (FileName));
 #else
-   QString command (tr ("unzip %1").arg (FileName));
+   QString command (tr ("unzip \"%1\"").arg (FileName));
 #endif
    
    _log.info << "Running: " << qPrintable (command) << endl;

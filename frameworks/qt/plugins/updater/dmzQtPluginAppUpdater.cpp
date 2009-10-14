@@ -73,6 +73,22 @@ dmz::QtPluginAppUpdater::update_plugin_state (
 
       if (_netManager) {
          
+         if (_mainWindowModule && !_updateDialog) {
+
+            _updateDialog = new QDialog (
+               _mainWindowModule ? _mainWindowModule->get_qt_main_window () : 0);
+
+            _ui.setupUi (_updateDialog);
+
+            connect (
+               _ui.buttonBox, SIGNAL (accepted ()),
+               this, SLOT (_slot_download_start ()));
+
+            connect (
+               _ui.buttonBox, SIGNAL (rejected ()),
+               this, SLOT (_slot_download_cancel ()));
+         }
+         
          QString versionServer = QString (_versionUrl.get_buffer ()).
             arg (_releaseChannel.get_buffer ()).
             arg (get_system_name ().get_buffer ()).
@@ -82,7 +98,7 @@ dmz::QtPluginAppUpdater::update_plugin_state (
          
          QUrl url (versionServer);
          
-         _log.info << "get: " << qPrintable (url.toString ()) << endl;
+         _log.info << "Get: " << qPrintable (url.toString ()) << endl;
          
          QNetworkRequest request (url);
          QNetworkReply *reply (_netManager->get (request));
@@ -113,23 +129,7 @@ dmz::QtPluginAppUpdater::discover_plugin (
 
       if (!_mainWindowModule) {
 
-         _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
-         
-         if (_mainWindowModule && !_updateDialog) {
-            
-            _updateDialog = new QDialog (
-               _mainWindowModule ? _mainWindowModule->get_qt_main_window () : 0);
-               
-            _ui.setupUi (_updateDialog);
-            
-            connect (
-               _ui.buttonBox, SIGNAL (accepted ()),
-               this, SLOT (_slot_download_start ()));
-
-            connect (
-               _ui.buttonBox, SIGNAL (rejected ()),
-               this, SLOT (_slot_download_cancel ()));
-         }
+         _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);         
       }
    }
    else if (Mode == PluginDiscoverRemove) {
@@ -261,7 +261,7 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
          
          QUrl url (downloadServer);
          
-         _log.info << "downloading: " << qPrintable (url.toString ()) << endl;
+         _log.info << "Downloading: " << qPrintable (url.toString ()) << endl;
          
          QNetworkRequest request (url);
          request.setAttribute (QNetworkRequest::User, fileName);
@@ -291,49 +291,60 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
 void
 dmz::QtPluginAppUpdater::_slot_download_cancel () {
 
-   if (_downloadReply) {
-      
-      _downloadReply->abort ();
-      delete _downloadReply;
-      _downloadReply = 0;
-   }
-   
-   if (_updateDialog) {
-      
-      _updateDialog->reject ();
-   }
+   if (_downloadReply) { _downloadReply->abort (); }
+   if (_updateDialog) { _updateDialog->reject (); }
 }
 
 
 void
 dmz::QtPluginAppUpdater::_slot_download_finished () {
    
-   if (_downloadReply && _updateDialog) {
+   if (_downloadReply) {
       
-      if (_downloadReply->error () == QNetworkReply::NoError) {
-   
-         QNetworkRequest request (_downloadReply->request ());
-         QVariant v (request.attribute (QNetworkRequest::User));
-         QString fileName = v.toString ();
-         QFile file (fileName);
-      
-         if (file.open (QFile::ReadWrite)) {
+      switch (_downloadReply->error ()) {
          
-            file.write (_downloadReply->readAll ());
+         case QNetworkReply::NoError: {
+         
+            QNetworkRequest request (_downloadReply->request ());
+            QVariant v (request.attribute (QNetworkRequest::User));
+            QString fileName = v.toString ();
+            QFile file (fileName);
+      
+            if (file.open (QFile::ReadWrite)) {
+         
+               file.write (_downloadReply->readAll ());
+               file.close ();
+               
+               _log.info << "Download saved as " << qPrintable (fileName) << endl;
+            }
+      
+            if (_updateDialog) { _updateDialog->accept (); }
+            break;
          }
-      
-         _updateDialog->accept ();
+         
+         case QNetworkReply::OperationCanceledError:
+         
+            _log.info << "Download operation canceled by user" << endl;
+            if (_updateDialog) { _updateDialog->reject (); }
+            break;
+         
+         default:
+         
+            _log.warn << qPrintable (_downloadReply->errorString ()) << endl;
+            
+            QMessageBox::warning (
+               _updateDialog->parentWidget (),
+               "Update Failed",
+               _downloadReply->errorString ());
+            
+            if (_updateDialog) { _updateDialog->reject (); }
+            break;
       }
-      else {
       
-         QMessageBox::warning (
-            _updateDialog->parentWidget (),
-            "Update Failed",
-            _downloadReply->errorString ());
-      
-         _slot_download_cancel ();
-      }
+      delete _downloadReply;
+      _downloadReply = 0;
    }
+   else if (_updateDialog) { _updateDialog->reject (); }
 }
 
 

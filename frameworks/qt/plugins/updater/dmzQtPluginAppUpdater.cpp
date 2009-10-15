@@ -20,10 +20,10 @@ namespace {
    const dmz::String INTERNAL_BUILD ("INTERNAL BUILD");
    
    // latest/{release_channel}/{system_name}/{app_name}.xml
-   const dmz::String VERSION_URL ("http://dmzdev.github.com/latest/%1/%2/%3.xml");
+   const dmz::String VERSION_URL ("http://update.dmzdev.org/latest/%1/%2/%3.xml");
    
-   // downloads/dmzdev/latest/{app_name}-{build_number}.{exe|zip}
-   const dmz::String DOWNLOAD_URL ("http://cloud.github.com/downloads/dmzdev/latest/%1-%2.%3");
+   // downloads/{app_name}-{build_number}.{exe|zip}
+   const dmz::String DOWNLOAD_URL ("http://update.dmzdev.org/downloads/%1-%2.%3");
 }
 
 

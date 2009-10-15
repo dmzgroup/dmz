@@ -18,12 +18,6 @@
 namespace {
    
    const dmz::String INTERNAL_BUILD ("INTERNAL BUILD");
-   
-   // latest/{release_channel}/{system_name}/{app_name}.xml
-   const dmz::String VERSION_URL ("http://update.dmzdev.org/latest/%1/%2/%3.xml");
-   
-   // downloads/{app_name}-{build_number}.{exe|zip}
-   const dmz::String DOWNLOAD_URL ("http://update.dmzdev.org/downloads/%1-%2.%3");
 }
 
 
@@ -42,8 +36,8 @@ dmz::QtPluginAppUpdater::QtPluginAppUpdater (
       _netManager (0),
       _updateDialog (0),
       _releaseChannel ("stable"),
-      _versionUrl (VERSION_URL),
-      _downloadUrl (DOWNLOAD_URL),
+      _versionUrl (),
+      _downloadUrl (),
       _downloadReply (0) {
 
    _init (local);
@@ -407,13 +401,26 @@ dmz::QtPluginAppUpdater::_init (Config &local) {
    
    _releaseChannel = config_to_string ("release.channel", local, _releaseChannel);
 
+   // latest/{release_channel}/{system_name}/{app_name}.xml
+   // const String VERSION_URL ("http://update.dmzdev.org/latest/%1/%2/%3.xml");
    _versionUrl = config_to_string ("version.url", local, _versionUrl);
    
+   // downloads/{app_name}-{build_number}.{exe|zip}
+   // const String DOWNLOAD_URL ("http://update.dmzdev.org/downloads/%1-%2.%3");
    _downloadUrl = config_to_string ("download.url", local, _downloadUrl);
    
    if (_forceUpdate || (_version.get_build () != INTERNAL_BUILD)) {
       
-      _netManager = new QNetworkAccessManager (this);
+      if (_versionUrl && _downloadUrl) {
+         
+         _netManager = new QNetworkAccessManager (this);
+      }
+         
+      if (_versionUrl) { _log.debug << "Version URL: " << _versionUrl << endl; }
+      else { _log.debug << "Version URL not specified." << endl; }
+      
+      if (_downloadUrl) { _log.debug << "Download URL: " << _downloadUrl << endl; }
+      else { _log.debug << "Download URL not specified." << endl; }
    }
 }
 

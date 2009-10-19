@@ -8,9 +8,9 @@
    <!-- <plugin name="dmzExPluginInput"/> -->
 </plugin-list>
 <dmzLuaModuleBasic>
-   <extensions>
+   <plugin-list>
       <plugin name="dmzLuaExtInput"/>
-   </extensions>
+   </plugin-list>
    <instance name="dmzExPluginInput"/>
 </dmzLuaModuleBasic>
 <dmzArchivePluginInput>

@@ -26,9 +26,9 @@ static dmz::qdb out;
 <dmzLuaModuleBasic>
    <path value="Lua script search path"/>
    <!-- Note extensions work similar to the plugin specification -->
-   <extensions>
+   <plugin-list>
       <plugin name="Name of Lua extension"/>
-   </extensions>
+   </plugin-list>
    <!-- Note script instances work similar to the plugin specification.
         Everything but the name parameter is optional -->
    <instance
@@ -1027,7 +1027,7 @@ dmz::LuaModuleBasic::_init (Config &local, Config &global) {
 
    Config pluginList;
 
-   if (local.lookup_all_config ("extensions.plugin", pluginList)) {
+   if (local.lookup_all_config ("plugin-list.plugin", pluginList)) {
 
       RuntimeContext *context (get_plugin_runtime_context ());
 

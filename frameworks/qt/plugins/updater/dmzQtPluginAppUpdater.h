@@ -61,6 +61,7 @@ namespace dmz {
          String _releaseChannel;
          String _versionUrl;
          String _downloadUrl;
+         Boolean _downloadToTemp;
          Boolean _forceUpdate;
 
       private:

@@ -38,7 +38,9 @@ dmz::QtPluginAppUpdater::QtPluginAppUpdater (
       _releaseChannel ("stable"),
       _versionUrl (),
       _downloadUrl (),
-      _downloadReply (0) {
+      _downloadReply (0),
+      _downloadToTemp (True),
+      _forceUpdate (False) {
 
    _init (local);
 }
@@ -221,13 +223,10 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
       
 #if defined (Q_WS_WIN)
       const QString FileType ("exe");
-      const QString DownloadDir ("Desktop");
 #elif defined (Q_WS_MAC)
       const QString FileType ("dmg");
-      const QString DownloadDir ("Downloads");
 #else
       const QString FileType ("zip");
-      const QString DownloadDir ("Desktop");
 #endif
 
       QString appName (_updateVersion.get_name ().get_buffer ());
@@ -235,19 +234,41 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
       
       const String Build (_updateVersion.get_build ());
       
-      QString defaultFileName = tr ("%1/%2/%3-%4.%5").
-         arg (QDir::homePath ()).
-         arg (DownloadDir).
-         arg (appName).
-         arg (Build.get_buffer ()).
-         arg (FileType);
+      QString fileName;
+      
+      if (_downloadToTemp) {
+
+         fileName = tr ("%1/%2-%3.%4").
+            arg (QDir::tempPath ()).
+            arg (appName).
+            arg (Build.get_buffer ()).
+            arg (FileType);
+      }
+      else {
          
-      QString fileName = get_save_file_name_with_extension (
-         _mainWindowModule ? _mainWindowModule->get_qt_main_window () : 0,
-         tr ("Save File"),
-         defaultFileName,
-         tr ("*.%1").arg (FileType),
-         FileType);
+         QString defaultFileName = tr ("%1/%2-%3.%4").
+            arg (QDesktopServices::storageLocation (QDesktopServices::DesktopLocation)).
+            arg (appName).
+            arg (Build.get_buffer ()).
+            arg (FileType);
+         
+#if defined (Q_WS_MAC)
+         QString tempPath (defaultFileName);
+
+         tempPath.replace (QRegExp (
+            QDesktopServices::displayName (QDesktopServices::DesktopLocation)),
+            "Downloads");
+            
+         if (QFile::exists (tempPath)) { defaultFileName = tempPath; }
+#endif
+
+         fileName = get_save_file_name_with_extension (
+            _mainWindowModule ? _mainWindowModule->get_qt_main_window () : 0,
+            tr ("Save File"),
+            QDir::toNativeSeparators (defaultFileName),
+            tr ("*.%1").arg (FileType),
+            FileType);
+      }
 
       if (!fileName.isEmpty ()) {
          
@@ -396,9 +417,8 @@ dmz::QtPluginAppUpdater::_init (Config &local) {
    setObjectName (get_plugin_name ().get_buffer ());
    
    _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
-
-   _forceUpdate = config_to_boolean ("force-update.value", local, False);
-   
+   _forceUpdate = config_to_boolean ("force-update.value", local, _forceUpdate);
+   _downloadToTemp = config_to_boolean ("download-to-temp.value", local, _downloadToTemp);
    _releaseChannel = config_to_string ("release.channel", local, _releaseChannel);
 
    // latest/{release_channel}/{system_name}/{app_name}.xml

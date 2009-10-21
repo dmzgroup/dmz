@@ -38,7 +38,7 @@ dmz::QtPluginAppUpdater::QtPluginAppUpdater (
       _releaseChannel ("stable"),
       _versionUrl (),
       _downloadUrl (),
-      _downloadTempFile (QDir::tempPath () + "/dmz_temp"),
+      _downloadFile (),
       _downloadReply (0),
       _downloadToTemp (True),
       _forceUpdate (False) {
@@ -286,8 +286,6 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
          
          QNetworkRequest request (url);
          
-         request.setAttribute (QNetworkRequest::User, fileName);
-         
          _downloadReply = _netManager->get (request);
          
           if (_downloadReply) {
@@ -303,11 +301,13 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
             connect (
                _downloadReply, SIGNAL (finished ()),
                this, SLOT (_slot_download_finished ()));
+               
+            _downloadFile.setFileName (fileName);
          }
 
-         if (!_downloadTempFile.open ()) {
+         if (!_downloadFile.open (QIODevice::WriteOnly)) {
           
-            _log.warn << "Failed to open temp file for download. Download aborted!" << endl;
+            _log.warn << "Failed to open file for download. Download aborted!" << endl;
 
             if (_downloadReply) { _downloadReply->abort (); }
             
@@ -343,9 +343,9 @@ dmz::QtPluginAppUpdater::_slot_download_ready_read () {
    
    if (_downloadReply) {
 
-      if (_downloadTempFile.error () == QFile::NoError) {
+      if (_downloadFile.error () == QFile::NoError) {
          
-         _downloadTempFile.write (_downloadReply->readAll ());
+         _downloadFile.write (_downloadReply->readAll ());
       }
    }
 }
@@ -356,37 +356,14 @@ dmz::QtPluginAppUpdater::_slot_download_finished () {
    
    if (_downloadReply) {
       
+      _downloadFile.close ();
+
       switch (_downloadReply->error ()) {
          
          case QNetworkReply::NoError: {
             
-            _downloadTempFile.close ();
-         
-            Boolean error (False);
-            
-            QNetworkRequest request (_downloadReply->request ());
-            QVariant v (request.attribute (QNetworkRequest::User));
-            QString fileName = v.toString ();
-            
-            if (!rename_file (_downloadTempFile.fileName (), fileName)) {
-               
-               QString errorMsg = tr ("Failed to save download as %1.").arg (fileName);
-               
-               _log.warn << qPrintable (errorMsg) << endl;
-
-               QMessageBox::warning (
-                  _updateDialog->parentWidget (),
-                  "Update Failed",
-                  errorMsg);
-
-               if (_updateDialog) { _updateDialog->reject (); }
-            }
-            else {
-               
-               _log.info << "Download saved as " << qPrintable (fileName) << endl;
-               _handle_downloaded_file (fileName);
-            }
-      
+            _log.info << "Download saved as " << qPrintable (_downloadFile.fileName ()) << endl;
+            _handle_downloaded_file (_downloadFile.fileName ());
             if (_updateDialog) { _updateDialog->accept (); }
             break;
          }
@@ -395,6 +372,7 @@ dmz::QtPluginAppUpdater::_slot_download_finished () {
          
             _log.info << "Download operation canceled." << endl;
             if (_updateDialog) { _updateDialog->reject (); }
+            _downloadFile.remove ();
             break;
          
          default:
@@ -407,6 +385,7 @@ dmz::QtPluginAppUpdater::_slot_download_finished () {
                _downloadReply->errorString ());
             
             if (_updateDialog) { _updateDialog->reject (); }
+            _downloadFile.remove ();
             break;
       }
       
@@ -449,8 +428,6 @@ dmz::QtPluginAppUpdater::_handle_downloaded_file (const QString &FileName) {
    
    _log.info << "Running: " << qPrintable (command) << endl;
    if (QProcess::startDetached (command)) {
-      
-      _downloadTempFile.setAutoRemove (False);
       
       _exit.request_exit (dmz::ExitStatusForced, get_plugin_name () + " Closed");
    }

@@ -63,7 +63,7 @@ namespace dmz {
          String _releaseChannel;
          String _versionUrl;
          String _downloadUrl;
-         QTemporaryFile _downloadTempFile;
+         QFile _downloadFile;
          Boolean _downloadToTemp;
          Boolean _forceUpdate;
 

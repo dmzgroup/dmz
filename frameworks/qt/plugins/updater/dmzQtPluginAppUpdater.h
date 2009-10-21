@@ -5,6 +5,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeVersion.h>
+#include <QtCore/QTemporaryFile>
 #include <QtCore/QObject>
 #include "ui_UpdateDialog.h"
 
@@ -41,6 +42,7 @@ namespace dmz {
          void _slot_get_version_finished ();
          void _slot_download_start ();
          void _slot_download_cancel ();
+         void _slot_download_ready_read ();
          void _slot_download_finished ();
          void _slot_download_progress (qint64 received, qint64 total);
       
@@ -61,6 +63,7 @@ namespace dmz {
          String _releaseChannel;
          String _versionUrl;
          String _downloadUrl;
+         QTemporaryFile _downloadTempFile;
          Boolean _downloadToTemp;
          Boolean _forceUpdate;
 

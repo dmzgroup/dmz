@@ -38,6 +38,7 @@ dmz::QtPluginAppUpdater::QtPluginAppUpdater (
       _releaseChannel ("stable"),
       _versionUrl (),
       _downloadUrl (),
+      _downloadTempFile (QDir::tempPath () + "/dmz_temp"),
       _downloadReply (0),
       _downloadToTemp (True),
       _forceUpdate (False) {
@@ -102,7 +103,7 @@ dmz::QtPluginAppUpdater::update_plugin_state (
          QNetworkReply *reply (_netManager->get (request));
          
           if (reply) {
-             
+
             connect (
                reply, SIGNAL (finished ()),
                this, SLOT (_slot_get_version_finished ()));
@@ -259,7 +260,9 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
             QDesktopServices::displayName (QDesktopServices::DesktopLocation)),
             "Downloads");
             
-         if (QFile::exists (tempPath)) { defaultFileName = tempPath; }
+         QFileInfo fi (tempPath);
+         
+         if (QFile::exists (fi.absolutePath ())) { defaultFileName = tempPath; }
 #endif
 
          fileName = get_save_file_name_with_extension (
@@ -282,6 +285,7 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
          _log.info << "Downloading: " << qPrintable (url.toString ()) << endl;
          
          QNetworkRequest request (url);
+         
          request.setAttribute (QNetworkRequest::User, fileName);
          
          _downloadReply = _netManager->get (request);
@@ -293,14 +297,34 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
                this, SLOT (_slot_download_progress (qint64, qint64)));
 
             connect (
+               _downloadReply, SIGNAL (readyRead ()),
+               this, SLOT (_slot_download_ready_read ()));
+
+            connect (
                _downloadReply, SIGNAL (finished ()),
                this, SLOT (_slot_download_finished ()));
-          }
+         }
+
+         if (!_downloadTempFile.open ()) {
+          
+            _log.warn << "Failed to open temp file for download. Download aborted!" << endl;
+
+            if (_downloadReply) { _downloadReply->abort (); }
+            
+            QMessageBox::warning (
+               _updateDialog->parentWidget (),
+               "Update Failed",
+               "Failed to open temp file for download.\nDownload aborted!");
          
-         _ui.textLabel->setText ("<b>Downloading update...</b>");
-         _ui.infoLabel->setText (QString::null);
-         _ui.progressBar->show ();
-         _ui.buttonBox->setStandardButtons (QDialogButtonBox::Cancel);
+            _updateDialog->reject ();
+         }
+         else {
+            
+            _ui.textLabel->setText ("<b>Downloading update...</b>");
+            _ui.infoLabel->setText (QString::null);
+            _ui.progressBar->show ();
+            _ui.buttonBox->setStandardButtons (QDialogButtonBox::Cancel);
+         }
       }
    }
 }
@@ -315,6 +339,19 @@ dmz::QtPluginAppUpdater::_slot_download_cancel () {
 
 
 void
+dmz::QtPluginAppUpdater::_slot_download_ready_read () {
+   
+   if (_downloadReply) {
+
+      if (_downloadTempFile.error () == QFile::NoError) {
+         
+         _downloadTempFile.write (_downloadReply->readAll ());
+      }
+   }
+}
+
+
+void
 dmz::QtPluginAppUpdater::_slot_download_finished () {
    
    if (_downloadReply) {
@@ -322,19 +359,31 @@ dmz::QtPluginAppUpdater::_slot_download_finished () {
       switch (_downloadReply->error ()) {
          
          case QNetworkReply::NoError: {
+            
+            _downloadTempFile.close ();
          
+            Boolean error (False);
+            
             QNetworkRequest request (_downloadReply->request ());
             QVariant v (request.attribute (QNetworkRequest::User));
             QString fileName = v.toString ();
-            QFile file (fileName);
-      
-            if (file.open (QFile::ReadWrite)) {
-         
-               file.write (_downloadReply->readAll ());
-               file.close ();
+            
+            if (!rename_file (_downloadTempFile.fileName (), fileName)) {
+               
+               QString errorMsg = tr ("Failed to save download as %1.").arg (fileName);
+               
+               _log.warn << qPrintable (errorMsg) << endl;
+
+               QMessageBox::warning (
+                  _updateDialog->parentWidget (),
+                  "Update Failed",
+                  errorMsg);
+
+               if (_updateDialog) { _updateDialog->reject (); }
+            }
+            else {
                
                _log.info << "Download saved as " << qPrintable (fileName) << endl;
-               
                _handle_downloaded_file (fileName);
             }
       
@@ -344,7 +393,7 @@ dmz::QtPluginAppUpdater::_slot_download_finished () {
          
          case QNetworkReply::OperationCanceledError:
          
-            _log.info << "Download operation canceled by user" << endl;
+            _log.info << "Download operation canceled." << endl;
             if (_updateDialog) { _updateDialog->reject (); }
             break;
          
@@ -400,6 +449,8 @@ dmz::QtPluginAppUpdater::_handle_downloaded_file (const QString &FileName) {
    
    _log.info << "Running: " << qPrintable (command) << endl;
    if (QProcess::startDetached (command)) {
+      
+      _downloadTempFile.setAutoRemove (False);
       
       _exit.request_exit (dmz::ExitStatusForced, get_plugin_name () + " Closed");
    }

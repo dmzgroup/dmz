@@ -89,11 +89,11 @@ dmz::QtPluginAppUpdater::update_plugin_state (
          
          QString appName (_version.get_name ().get_buffer ());
          appName.replace (QRegExp (" "), "-");
-         
-         QString versionServer = QString (_versionUrl.get_buffer ()).
-            arg (_releaseChannel.get_buffer ()).
-            arg (get_system_name ().get_buffer ()).
-            arg (appName);
+
+         QString versionServer = QString (_versionUrl.get_buffer ());
+         versionServer.replace ("{release_channel}", _releaseChannel.get_buffer ());
+         versionServer.replace ("{system_name}", get_system_name ().get_buffer ());
+         versionServer.replace ("{app_name}", appName);
          
          QUrl url (versionServer);
          
@@ -274,11 +274,11 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
       }
 
       if (!fileName.isEmpty ()) {
-         
-         QString downloadServer = QString (_downloadUrl.get_buffer ()).
-            arg (appName).
-            arg (Build.get_buffer ()).
-            arg (FileType);
+
+         QString downloadServer (_downloadUrl.get_buffer ());
+         downloadServer.replace ("{app_name}", appName);
+         downloadServer.replace ("{build_number}", Build.get_buffer ());
+         downloadServer.append (tr (".") + FileType);
          
          QUrl url (downloadServer);
          
@@ -451,11 +451,24 @@ dmz::QtPluginAppUpdater::_init (Config &local) {
 
    // latest/{release_channel}/{system_name}/{app_name}.xml
    // const String VERSION_URL ("http://update.dmzdev.org/latest/%1/%2/%3.xml");
-   _versionUrl = config_to_string ("version.url", local, _versionUrl);
+//   _versionUrl = config_to_string ("version.url", local, _versionUrl);
+   
+   String host = config_to_string ("version.host", local);
+   String path = config_to_string ("version.path", local);
+   
+   if (host && path) {
+      
+      _versionUrl = host + path;
+      
+      host = config_to_string ("download.host", local, host);
+      path = config_to_string ("download.path", local);
+      
+      if (host && path) { _downloadUrl = host + path; }
+   }
    
    // downloads/{app_name}-{build_number}.{exe|zip}
    // const String DOWNLOAD_URL ("http://update.dmzdev.org/downloads/%1-%2.%3");
-   _downloadUrl = config_to_string ("download.url", local, _downloadUrl);
+//   _downloadUrl = config_to_string ("download.url", local, _downloadUrl);
    
    if (_forceUpdate || (_version.get_build () != INTERNAL_BUILD)) {
       

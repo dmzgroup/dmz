@@ -15,7 +15,7 @@ class QNetworkReply;
 
 
 namespace dmz {
-   
+
    class QtModuleMainWindow;
 
    class QtPluginAppUpdater :
@@ -23,7 +23,7 @@ namespace dmz {
          public Plugin {
 
    Q_OBJECT
-   
+
       public:
          QtPluginAppUpdater (const PluginInfo &Info, Config &local, Config &global);
          ~QtPluginAppUpdater ();
@@ -40,14 +40,16 @@ namespace dmz {
       protected Q_SLOTS:
          void _slot_get_version_error ();
          void _slot_get_version_finished ();
+         void _slot_get_changelog_finished ();
          void _slot_download_start ();
          void _slot_download_cancel ();
          void _slot_download_ready_read ();
          void _slot_download_finished ();
          void _slot_download_progress (qint64 received, qint64 total);
-      
+         void _slot_handle_downloaded_file ();
+
       protected:
-         void _handle_downloaded_file (const QString &FileName);
+         void _get_changelog ();
          void _init (Config &local);
 
          Log _log;

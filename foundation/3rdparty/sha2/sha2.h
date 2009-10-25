@@ -57,6 +57,18 @@ typedef unsigned __int64 uint64_t;  /* 8-bytes (64-bits) */
 #   define SHA2_USE_INTTYPES_H
 #   include <sys/types.h>
 #   include <inttypes.h>
+#   if defined (__linux)
+#      include <endian.h>
+#      if !defined (LITTLE_ENDIAN)
+#         define LITTLE_ENDIAN __LITTLE_ENDIAN
+#      endif
+#      if !defined (BIG_ENDIAN)
+#         define BIG_ENDIAN __BIG_ENDIAN
+#      endif
+#      if !defined (BYTE_ORDER)
+#         define BYTE_ORDER __BYTE_ORDER
+#      endif
+#   endif
 #endif
 
 

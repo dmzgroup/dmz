@@ -193,8 +193,15 @@ p, li { white-space: pre-wrap; }
            </property>
            <property name="styleSheet">
             <string notr="true">QProgressBar {
-	 max-height: 10px;
- }</string>
+   max-height: 10px;
+   border: 1px solid lightgrey;
+   border-radius: 4px; 
+   background-color: lightgrey;
+}
+
+QProgressBar::chunk {
+   background-color: black;
+}</string>
            </property>
            <property name="value">
             <number>0</number>

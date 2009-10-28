@@ -38,7 +38,6 @@ namespace dmz {
             const Plugin *PluginPtr);
 
       protected Q_SLOTS:
-         void _slot_get_version_error ();
          void _slot_get_version_finished ();
          void _slot_get_changelog_finished ();
          void _slot_download_start ();
@@ -49,6 +48,8 @@ namespace dmz {
          void _slot_handle_downloaded_file ();
 
       protected:
+         void timerEvent (QTimerEvent *event);
+         void _check_for_update ();
          void _get_changelog ();
          void _init (Config &local);
 
@@ -63,11 +64,16 @@ namespace dmz {
          QNetworkReply *_downloadReply;
          QDialog *_updateDialog;
          String _releaseChannel;
-         String _versionUrl;
+         String _updateUrl;
          String _downloadUrl;
          QFile _downloadFile;
          Boolean _downloadToTemp;
          Boolean _forceUpdate;
+         Boolean _updateFlag;
+         Int32 _autoFinishCount;
+         Handle _valueAttrHandle;
+         String _updateMessageName;
+         String _channelMessageName;
 
       private:
          QtPluginAppUpdater ();

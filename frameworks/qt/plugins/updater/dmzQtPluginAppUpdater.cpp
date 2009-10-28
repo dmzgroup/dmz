@@ -1,8 +1,11 @@
 #include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginAppUpdater.h"
 #include <dmzQtUtil.h>
-#include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeData.h>
+#include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzSystem.h>
@@ -11,9 +14,6 @@
 #include <QtGui/QtGui>
 #include <QtNetwork/QtNetwork>
 #include <QtXml/QtXml>
-
-#include <QtCore/QDebug>
-
 
 namespace {
 
@@ -36,12 +36,16 @@ dmz::QtPluginAppUpdater::QtPluginAppUpdater (
       _netManager (0),
       _updateDialog (0),
       _releaseChannel ("stable"),
-      _versionUrl (),
+      _updateUrl (),
       _downloadUrl (),
       _downloadFile (),
       _downloadReply (0),
       _downloadToTemp (True),
-      _forceUpdate (False) {
+      _forceUpdate (False),
+      _updateFlag (True),
+      _autoFinishCount (15),
+      _updateMessageName ("AppUpdaterUpdateMessage"),
+      _channelMessageName ("AppUpdaterChannelMessage") {
 
    _init (local);
 }
@@ -49,6 +53,12 @@ dmz::QtPluginAppUpdater::QtPluginAppUpdater (
 
 dmz::QtPluginAppUpdater::~QtPluginAppUpdater () {
 
+   if (_netManager) {
+      
+      delete _netManager;
+      _netManager = 0;
+   }
+   
    if (_updateDialog) {
 
       _updateDialog->setParent (0);
@@ -68,50 +78,52 @@ dmz::QtPluginAppUpdater::update_plugin_state (
 
    }
    else if (State == PluginStateStart) {
+      
+      RuntimeContext *context (get_plugin_runtime_context ());
+      Definitions defs (context, &_log);
 
-      if (_netManager) {
+      Message message;
 
-         if (_mainWindowModule && !_updateDialog) {
+      if (defs.lookup_message (_updateMessageName, message)) {
 
-            _updateDialog = new QDialog (
-               _mainWindowModule ? _mainWindowModule->get_qt_main_window () : 0);
+         const Data *data (message.get_monostate ());
+         if (data) { data->lookup_boolean (_valueAttrHandle, 0, _updateFlag); }
+      }
+      
+      if (defs.lookup_message (_channelMessageName, message)) {
 
-            _ui.setupUi (_updateDialog);
+         const Data *data (message.get_monostate ());
+         if (data) { data->lookup_string (_valueAttrHandle, 0, _releaseChannel); }
+      }
 
-           connect (
-               _ui.downloadButton, SIGNAL (clicked ()),
-               this, SLOT (_slot_download_start ()));
+      if (_forceUpdate || _updateFlag) {
+         
+         if (!_netManager) { _netManager = new QNetworkAccessManager (this); }
+         
+         if (_netManager) {
 
-            connect (
-               _ui.laterButton, SIGNAL (clicked ()),
-               this, SLOT (_slot_download_cancel ()));
+            if (_mainWindowModule && !_updateDialog) {
 
-            connect (
-               _ui.finishedButton, SIGNAL (clicked ()),
-               this, SLOT (_slot_handle_downloaded_file ()));
+               _updateDialog = new QDialog (
+                  _mainWindowModule ? _mainWindowModule->get_qt_main_window () : 0);
+
+               _ui.setupUi (_updateDialog);
+
+              connect (
+                  _ui.downloadButton, SIGNAL (clicked ()),
+                  this, SLOT (_slot_download_start ()));
+
+               connect (
+                  _ui.laterButton, SIGNAL (clicked ()),
+                  this, SLOT (_slot_download_cancel ()));
+
+               connect (
+                  _ui.finishedButton, SIGNAL (clicked ()),
+                  this, SLOT (_slot_handle_downloaded_file ()));
+            }
+
+            _check_for_update ();
          }
-
-         QString appName (_version.get_name ().get_buffer ());
-         appName.replace (QRegExp (" "), "-");
-
-         QString versionServer = QString (_versionUrl.get_buffer ());
-         versionServer.replace ("{release_channel}", _releaseChannel.get_buffer ());
-         versionServer.replace ("{system_name}", get_system_name ().get_buffer ());
-         versionServer.replace ("{app_name}", appName);
-
-         QUrl url (versionServer);
-
-         _log.info << "Get: " << qPrintable (url.toString ()) << endl;
-
-         QNetworkRequest request (url);
-         QNetworkReply *reply (_netManager->get (request));
-
-          if (reply) {
-
-            connect (
-               reply, SIGNAL (finished ()),
-               this, SLOT (_slot_get_version_finished ()));
-          }
       }
    }
    else if (State == PluginStateStop) {
@@ -148,13 +160,6 @@ dmz::QtPluginAppUpdater::discover_plugin (
 
 
 void
-dmz::QtPluginAppUpdater::_slot_get_version_error () {
-
-
-}
-
-
-void
 dmz::QtPluginAppUpdater::_slot_get_version_finished () {
 
    QNetworkReply *reply (qobject_cast<QNetworkReply *>(sender ()));
@@ -182,26 +187,21 @@ dmz::QtPluginAppUpdater::_slot_get_version_finished () {
 
                   _get_changelog ();
 
-                  const String Name (_updateVersion.get_name ());
-                  const String Build (_updateVersion.get_build ());
-                  const String Image (_updateVersion.get_image_name ());
-                  const String Version (_updateVersion.get_version ());
+                  const QString Name (_updateVersion.get_name ().get_buffer ());
+                  const QString Build (_updateVersion.get_build ().get_buffer ());
+                  const QString Version (_updateVersion.get_version ().get_buffer ());
+                  const QString CVersion (_version.get_version ().get_buffer ());
+                  const QString CBuild (_version.get_build ().get_buffer ());
 
-                  QPixmap pix (Image.get_buffer ());
-
-                  if (!pix.isNull ()) {
-
-                     _ui.iconLabel->setPixmap (pix);
-                     _ui.iconLabel->show ();
-                  }
-                  else { _ui.iconLabel->hide (); }
+                  QPixmap pix (_updateVersion.get_image_name ().get_buffer());
+                  if (!pix.isNull ()) { _ui.iconLabel->setPixmap (pix); }
 
                   QString message = _ui.textLabel->text ();
-                  message.replace ("{app_name}", Name.get_buffer ());
-                  message.replace ("{version}", Version.get_buffer ());
-                  message.replace ("{build_number}", Build.get_buffer ());
-                  message.replace ("{cversion}", _version.get_version ().get_buffer ());
-                  message.replace ("{cbuild_number}", _version.get_build ().get_buffer ());
+                  message.replace ("{app_name}", Name);
+                  message.replace ("{version}", Version);
+                  message.replace ("{build_number}", Build);
+                  message.replace ("{cversion}", CVersion);
+                  message.replace ("{cbuild_number}", CBuild);
                   _ui.textLabel->setText (message);
 
                   _ui.stackedWidget->setCurrentWidget (_ui.startPage);
@@ -210,11 +210,6 @@ dmz::QtPluginAppUpdater::_slot_get_version_finished () {
             }
          }
       }
-      // else if (reply->error () == QNetworkReply::HostNotFoundError ||
-      //          reply->error () == QNetworkReply::ConnectionRefusedError ||
-      //          reply->error () == QNetworkReply::ContentNotFoundError) {
-      //
-      // }
    }
 }
 
@@ -363,6 +358,7 @@ dmz::QtPluginAppUpdater::_slot_download_finished () {
 
             _log.info << "Download saved as " << qPrintable (_downloadFile.fileName ()) << endl;
             _ui.stackedWidget->setCurrentWidget (_ui.finishPage);
+            startTimer (1000);
             break;
          }
 
@@ -461,6 +457,59 @@ dmz::QtPluginAppUpdater::_slot_get_changelog_finished () {
 
 
 void
+dmz::QtPluginAppUpdater::timerEvent (QTimerEvent *event) {
+
+   if (_updateDialog) {
+
+      _autoFinishCount--;
+
+      if (_autoFinishCount <= 0) {
+
+         _ui.finishedButton->animateClick ();
+      }
+      else if (_autoFinishCount < 10) {
+
+         QString buttonText (_ui.finishedButton->text ());
+         if (buttonText.contains ("(")) { buttonText.chop (4); }
+         buttonText.append (tr (" (%2)").arg (_autoFinishCount));
+         _ui.finishedButton->setText (buttonText);
+      }
+   }
+}
+
+
+void
+dmz::QtPluginAppUpdater::_check_for_update () {
+
+   if (_netManager) {
+
+      QString appName (_version.get_name ().get_buffer ());
+      appName.replace (QRegExp (" "), "-");
+
+      QString versionServer = QString (_updateUrl.get_buffer ());
+      versionServer.replace ("{release_channel}", _releaseChannel.get_buffer ());
+      versionServer.replace ("{system_name}", get_system_name ().get_buffer ());
+      versionServer.replace ("{app_name}", appName);
+      versionServer.append (tr (".xml"));
+
+      QUrl url (versionServer);
+
+      _log.info << "Get: " << qPrintable (url.toString ()) << endl;
+
+      QNetworkRequest request (url);
+      QNetworkReply *reply (_netManager->get (request));
+
+      if (reply) {
+
+         connect (
+               reply, SIGNAL (finished ()),
+               this, SLOT (_slot_get_version_finished ()));
+      }
+   }
+}
+
+
+void
 dmz::QtPluginAppUpdater::_get_changelog () {
 
    if (_netManager) {
@@ -496,41 +545,43 @@ void
 dmz::QtPluginAppUpdater::_init (Config &local) {
 
    setObjectName (get_plugin_name ().get_buffer ());
+   RuntimeContext *context (get_plugin_runtime_context ());
 
    _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
    _forceUpdate = config_to_boolean ("force-update.value", local, _forceUpdate);
    _downloadToTemp = config_to_boolean ("download-to-temp.value", local, _downloadToTemp);
    _releaseChannel = config_to_string ("release.channel", local, _releaseChannel);
 
-   // _verionsUrl = "latest/{system_name}-{release_channel}/{app_name}.xml";
+   // _updateUrl = "latest/{system_name}-{release_channel}/{app_name}.xml";
    // _downloadUrl = "downloads/{app_name}-{build_number}";
 
-   String host = config_to_string ("version.host", local);
-   String path = config_to_string ("version.path", local);
+   String host = config_to_string ("update.host", local);
+   String path = config_to_string ("update.path", local);
 
    if (host && path) {
 
-      _versionUrl = host + path;
+      _updateUrl = host + path;
 
       host = config_to_string ("download.host", local, host);
       path = config_to_string ("download.path", local);
 
       if (host && path) { _downloadUrl = host + path; }
    }
+   
+   if (_updateUrl) { _log.debug << "Update URL: " << _updateUrl << endl; }
+   else { _log.debug << "Update URL not specified." << endl; }
 
-   if (_forceUpdate || (_version.get_build () != INTERNAL_BUILD)) {
+   if (_downloadUrl) { _log.debug << "Download URL: " << _downloadUrl << endl; }
+   else { _log.debug << "Download URL not specified." << endl; }
+   
+   _valueAttrHandle = config_to_named_handle (
+      "attribute.value.name",
+      local,
+      "value",
+      context);
 
-      if (_versionUrl && _downloadUrl) {
-
-         _netManager = new QNetworkAccessManager (this);
-      }
-
-      if (_versionUrl) { _log.debug << "Version URL: " << _versionUrl << endl; }
-      else { _log.debug << "Version URL not specified." << endl; }
-
-      if (_downloadUrl) { _log.debug << "Download URL: " << _downloadUrl << endl; }
-      else { _log.debug << "Download URL not specified." << endl; }
-   }
+   _updateMessageName = config_to_string ("update.message", local, _updateMessageName);
+   _channelMessageName = config_to_string ("channel.message", local, _channelMessageName);
 }
 
 

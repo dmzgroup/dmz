@@ -1,0 +1,12 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginPreferencesAppUpdater"
+lmk.set_type "plugin"
+lmk.add_files {"dmzQtPluginPreferencesAppUpdater.ui",}
+lmk.add_files ({"dmzQtPluginPreferencesAppUpdater.h",},{src="moc"})
+lmk.add_files {"dmzQtPluginPreferencesAppUpdater.cpp",}
+lmk.add_libs {
+   "dmzQtUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzQtFramework",}
+lmkQt.add_libs {"QtCore","QtGui",}

@@ -1,0 +1,12 @@
+require "lmkOSG"
+
+lmkOSG.set_name "dmzRenderPluginHighlightOSG"
+lmk.set_type "plugin"
+lmk.add_files {"dmzRenderPluginHighlightOSG.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzRenderModuleCoreOSG", "dmzObjectFramework",}
+lmkOSG.add_libs { "osg", "OpenThreads",}
+

@@ -370,6 +370,7 @@ dmz::LuaExtInput::close_lua_extension (lua_State *LuaState) {
    InputObserver *obs (0);
 
    while (_obsTable.get_next (it, obs)) { release_input_observer (*obs); }
+
    _obsTable.clear ();
 
    L = 0;

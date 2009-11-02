@@ -4,6 +4,7 @@ lmkOSG.set_name "dmzRenderPluginHighlightOSG"
 lmk.set_type "plugin"
 lmk.add_files {"dmzRenderPluginHighlightOSG.cpp",}
 lmk.add_libs {
+   "dmzRenderUtilOSG",
    "dmzObjectUtil",
    "dmzKernel",
 }

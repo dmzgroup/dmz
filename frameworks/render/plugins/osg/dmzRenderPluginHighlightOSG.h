@@ -4,6 +4,7 @@
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzTypesDeleteListTemplate.h>
 
 #include <osg/StateSet>
 
@@ -43,13 +44,26 @@ namespace dmz {
             const Boolean *PreviousValue);
 
       protected:
+         struct HighlightStruct {
+
+            const Handle Attribute;
+            HighlightStruct *next;
+            osg::ref_ptr<osg::StateSet> color;
+
+            HighlightStruct (const Handle TheAttribute) :
+                  Attribute (TheAttribute),
+                  next (0) {;}
+
+            ~HighlightStruct () { color = 0; delete_list (next); }
+         };
+
          void _init (Config &local);
 
          Log _log;
 
          RenderModuleCoreOSG *_core;
 
-         osg::ref_ptr<osg::StateSet> _yellow;
+         HighlightStruct *_highlightList;
 
       private:
          RenderPluginHighlightOSG ();

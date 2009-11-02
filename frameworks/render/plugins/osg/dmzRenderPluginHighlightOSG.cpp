@@ -1,6 +1,11 @@
 #include <dmzObjectAttributeMasks.h>
+#include <dmzObjectModule.h>
+#include <dmzRenderConfigToOSG.h>
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginHighlightOSG.h"
+#include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
@@ -14,7 +19,8 @@ dmz::RenderPluginHighlightOSG::RenderPluginHighlightOSG (
       Plugin (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
-      _core (0) {
+      _core (0),
+      _highlightList (0) {
 
    _init (local);
 }
@@ -22,7 +28,7 @@ dmz::RenderPluginHighlightOSG::RenderPluginHighlightOSG (
 
 dmz::RenderPluginHighlightOSG::~RenderPluginHighlightOSG () {
 
-   _yellow = 0;
+   if (_highlightList) { delete _highlightList; _highlightList = 0; }
 }
 
 
@@ -82,13 +88,24 @@ dmz::RenderPluginHighlightOSG::update_object_flag (
       const Boolean Value,
       const Boolean *PreviousValue) {
 
-   if (_core) {
+   ObjectModule *objMod = get_object_module ();
+
+   if (_core && objMod) {
 
       osg::Group *group = _core->lookup_dynamic_object (ObjectHandle);
 
       if (group) {
 
-         if (Value) { group->setStateSet (_yellow.get ()); }
+         HighlightStruct *current = _highlightList;
+         Boolean done (False);
+
+         while (!done && current) {
+
+            if (objMod->lookup_flag (ObjectHandle, current->Attribute)) { done = True; }
+            else { current = current->next; }
+         }
+
+         if (current) { group->setStateSet (current->color.get ()); }
          else { group->setStateSet (0); } 
       }
    }
@@ -98,30 +115,61 @@ dmz::RenderPluginHighlightOSG::update_object_flag (
 void
 dmz::RenderPluginHighlightOSG::_init (Config &local) {
 
-   activate_object_attribute ("Highlight", ObjectRemoveAttributeMask | ObjectFlagMask);
+   Config highlightList;
 
-   _yellow = new osg::StateSet;
-   osg::ref_ptr <osg::Material> material = new osg::Material;
-   material->setColorMode (osg::Material::OFF);
-   osg::Vec4 none (0.0f, 0.0f, 0.0f, 1.0f);
-   material->setAmbient (osg::Material::FRONT_AND_BACK, none);
-   material->setDiffuse (osg::Material::FRONT_AND_BACK, none);
-   material->setSpecular (osg::Material::FRONT_AND_BACK, none);
+   if (local.lookup_all_config ("highlight", highlightList)) {
 
-   material->setEmission (osg::Material::FRONT_AND_BACK, osg::Vec4 (1.0,1.0f,0.0f,1.0f));
+      const osg::Vec4 None (0.0f, 0.0f, 0.0f, 1.0f);
 
-   _yellow->setAttributeAndModes (
-      material.get (),
-      osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
+      ConfigIterator it;
+      Config highlight;
 
-   _yellow->setMode (
-      GL_LIGHTING,
-      osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
+      while (highlightList.get_prev_config (it, highlight)) {
 
-   _yellow->setTextureMode (
-      0,
-      GL_TEXTURE_2D, 
-      osg::StateAttribute::OVERRIDE | osg::StateAttribute::OFF);
+         const String AttrName = config_to_string ("attribute", highlight);
+
+         const Handle Attr = activate_object_attribute (
+            AttrName,
+            ObjectRemoveAttributeMask | ObjectFlagMask);
+
+         if (Attr) {
+
+            HighlightStruct *hs = new HighlightStruct (Attr);
+
+            if (hs) {
+
+               hs->color = new osg::StateSet;
+               osg::ref_ptr <osg::Material> material = new osg::Material;
+               material->setColorMode (osg::Material::OFF);
+               osg::Vec4 color (None);
+               color = config_to_osg_vec4_color ("ambient", highlight, None);
+               material->setAmbient (osg::Material::FRONT_AND_BACK, color);
+               color = config_to_osg_vec4_color ("diffuse", highlight, None);
+               material->setDiffuse (osg::Material::FRONT_AND_BACK, color);
+               color = config_to_osg_vec4_color ("specular", highlight, None);
+               material->setSpecular (osg::Material::FRONT_AND_BACK, color);
+               color = config_to_osg_vec4_color ("emission", highlight, None);
+               material->setEmission (osg::Material::FRONT_AND_BACK, color);
+
+               hs->color->setAttributeAndModes (
+                  material.get (),
+                  osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
+
+               hs->color->setMode (
+                  GL_LIGHTING,
+                  osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
+
+               hs->color->setTextureMode (
+                  0,
+                  GL_TEXTURE_2D, 
+                  osg::StateAttribute::OVERRIDE | osg::StateAttribute::OFF);
+            }
+
+            hs->next = _highlightList;
+            _highlightList = hs;
+         }
+      }
+   }
 }
 
 

@@ -35,10 +35,7 @@ dmz::config_to_osg_vec4_color (
    
    Config cd;
 
-   if (Name) {
-
-      Source.lookup_config (Name, cd);
-   }
+   if (Name) { Source.lookup_config (Name, cd); }
    else { cd = Source; }
 
    const osg::Vec4 Result (

@@ -1,5 +1,5 @@
 require "lmkQtPropertyBrowser"
-lmkQtPropertyBrowser.set_name "dmzQtPluginPropertyBrowser"
+--lmkQtPropertyBrowser.set_name "dmzQtPluginPropertyBrowser"
 lmk.set_type "plugin"
 lmk.add_files {"PropertyBrowser.ui",}
 lmk.add_files ({"dmzQtPropertyManager.h","dmzQtPluginPropertyBrowser.h",},{src="moc"})

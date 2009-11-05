@@ -85,7 +85,6 @@ dmz::QtLogObserver::toggle_visibility () {
    else { show (); raise (); }
 }
 
-
 bool
 dmz::QtLogObserver::eventFilter (QObject *object, QEvent *event) {
 
@@ -98,7 +97,8 @@ dmz::QtLogObserver::eventFilter (QObject *object, QEvent *event) {
          QKeyEvent *keyEvent = (QKeyEvent *) event;
 
          if ((keyEvent->key () == Qt::Key_L) &&
-             (keyEvent->modifiers () & (Qt::SHIFT | Qt::CTRL))) {
+             ((keyEvent->modifiers () & (Qt::SHIFT | Qt::CTRL)) ==
+                (Qt::SHIFT | Qt::CTRL))) {
 
             toggle_visibility ();
             retVal = true;

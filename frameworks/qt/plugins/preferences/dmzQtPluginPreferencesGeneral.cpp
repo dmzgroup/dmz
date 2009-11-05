@@ -10,53 +10,66 @@
 using namespace dmz;
 
 namespace {
-   
+
    typedef dmz::QtPluginPreferencesGeneral::WidgetStruct BaseWidgetStruct;
-   
+
    struct ScalarStruct : public BaseWidgetStruct {
 
       ScalarStruct (const Handle AttrHandle);
       ~ScalarStruct ();
-      
+
       void init (Config &local);
       void update (const Data &InData);
       void send_message ();
-      
+
       private:
          QDoubleSpinBox *_spinBox;
          Float64 _scale;
    };
-   
+
+   struct BooleanStruct : public BaseWidgetStruct {
+
+      BooleanStruct (const Handle AttrHandle);
+      ~BooleanStruct ();
+
+      void init (Config &local);
+      void update (const Data &InData);
+      void send_message ();
+
+   private:
+      QCheckBox *_checkBox;
+   };
+
+
    ScalarStruct::ScalarStruct (const Handle AttrHandle) :
          BaseWidgetStruct (AttrHandle),
          _spinBox (new QDoubleSpinBox),
          _scale (1.0) {
-   
+
       widget = _spinBox;
    }
 
 
    ScalarStruct::~ScalarStruct () {
-      
+
       if (_spinBox) {
-         
+
          _spinBox->setParent (0);
          delete _spinBox;
          _spinBox = 0;
       }
    }
-   
-   
+
+
    void
    ScalarStruct::init (Config &local) {
-   
+
       qdoublespinbox_config_read ("", local, _spinBox);
       _scale = config_to_float64 ("scale", local, 1.0);
       if (_scale < 0.0) { _scale = 1.0; }
-      widget = _spinBox;
    }
-   
-   
+
+
    void
    ScalarStruct::send_message () {
 
@@ -67,16 +80,71 @@ namespace {
          message.send (&data);
       }
    }
-   
+
    void
    ScalarStruct::update (const Data &InData) {
 
       if (_spinBox) {
-         
+
          Float64 value;
          if (InData.lookup_float64 (ValueAttrHandle, 0, value)) {
-            
+
             _spinBox->setValue (value * _scale);
+         }
+      }
+   }
+
+
+   BooleanStruct::BooleanStruct (const Handle AttrHandle) :
+         BaseWidgetStruct (AttrHandle),
+         _checkBox (new QCheckBox) {
+
+      widget = _checkBox;
+   }
+
+
+   BooleanStruct::~BooleanStruct () {
+
+      if (_checkBox) {
+
+         _checkBox->setParent (0);
+         delete _checkBox;
+         _checkBox = 0;
+      }
+   }
+
+
+   void
+   BooleanStruct::init (Config &local) {
+
+      if (_checkBox) {
+
+         _checkBox->setChecked (config_to_boolean ("checked", local));
+         _checkBox->setText (config_to_string ("text", local).get_buffer ());
+      }
+   }
+
+
+   void
+   BooleanStruct::send_message () {
+
+      if (_checkBox) {
+
+         Data data;
+         data.store_boolean (ValueAttrHandle, 0, _checkBox->isChecked () ? True : False);
+         message.send (&data);
+      }
+   }
+
+   void
+   BooleanStruct::update (const Data &InData) {
+
+      if (_checkBox) {
+
+         Boolean value;
+         if (InData.lookup_boolean (ValueAttrHandle, 0, value)) {
+
+            _checkBox->setChecked (value);
          }
       }
    }
@@ -167,7 +235,7 @@ dmz::QtPluginPreferencesGeneral::receive_message (
       Data *outData) {
 
    WidgetStruct *ws (_widgetTable.lookup (Type.get_name ()));
-         
+
    if (ws && InData) {
 
       ws->update (*InData);
@@ -176,16 +244,16 @@ dmz::QtPluginPreferencesGeneral::receive_message (
 
 
 void
-dmz::QtPluginPreferencesGeneral::_slot_scalar_value_changed (double value) {
-   
+dmz::QtPluginPreferencesGeneral::_slot_widget_value_changed () {
+
    HashTableStringIterator it;
    WidgetStruct *ws (_widgetTable.get_first (it));
    Boolean found (False);
-   
+
    while (ws && !found) {
 
       if (ws->widget == sender ()) {
-         
+
          ws->send_message ();
          found = True;
       }
@@ -197,56 +265,68 @@ dmz::QtPluginPreferencesGeneral::_slot_scalar_value_changed (double value) {
 
 void
 dmz::QtPluginPreferencesGeneral::_create_properties (Config &list) {
-   
+
    ConfigIterator it;
    Config property;
-   
+
    RuntimeContext *context (get_plugin_runtime_context ());
-   
+
    while (list.get_next_config (it, property)) {
-      
+
       const String Type (config_to_string ("type", property));
       const String Name (config_to_string ("name", property) + ":");
       Message message (config_create_message ("message", property, "", context));
       message.set_monostate_mode (MessageMonostateOn);
-      
+
       if (Type && Name && message) {
 
          subscribe_to_message (message);
 
          WidgetStruct *ws;
-         
+
          if (Type == "scalar") {
 
             ScalarStruct *ss (new ScalarStruct (_valueAttrHandle));
-            ss->init (property);
+            ws = ss;
 
             connect (
                ss->widget, SIGNAL (valueChanged (double)),
-               this, SLOT (_slot_scalar_value_changed (double)));
-
-            ws = ss;
+               this, SLOT (_slot_widget_value_changed ()));
          }
-         // else if (Type == "line") {
-         //    
-         // }
-         // else if (Type == "") {
-         //    
-         // }
-         
+         else if (Type == "boolean") {
+
+            BooleanStruct *bs (new BooleanStruct (_valueAttrHandle));
+            ws = bs;
+
+            connect (
+               bs->widget, SIGNAL (stateChanged (int)),
+               this, SLOT (_slot_widget_value_changed ()));
+         }
+         else if (Type == "list") {
+
+//            ComboBoxStruct *cs (new ComboBoxStruct (_valueAttrHandle));
+//            ws = cs;
+
+//            connect (
+//               cs->widget, SIGNAL (currentIndexChanged (int)),
+//               this, SLOT (_slot_widget_value_changed ()));
+         }
+
          if (ws) {
-            
+
+            ws->init (property);
+
             if (ws->widget) {
-               
+
                ws->widget->setObjectName (message.get_name ().get_buffer ());
             }
-            
+
             ws->message = message;
-            
+
             if (_widgetTable.store (ws->message.get_name (), ws)) {
-            
+
                QLabel *label (new QLabel (Name.get_buffer ()));
-            
+
                _layout->addRow (label, ws->widget);
             }
             else { delete ws; ws = 0; }
@@ -260,25 +340,25 @@ void
 dmz::QtPluginPreferencesGeneral::_init (Config &local) {
 
    setObjectName (get_plugin_name ().get_buffer ());
-   
+
   RuntimeContext *context (get_plugin_runtime_context ());
 
    qframe_config_read ("frame", local, this);
-   
+
    _layout = new QFormLayout;
-   
+
    setLayout (_layout);
-   
+
    _valueAttrHandle = config_to_named_handle (
       "attribute.value.name",
       local,
       "value",
       context);
-      
+
    Config list;
-   
+
    if (local.lookup_all_config ("property", list)) {
-      
+
       _create_properties (list);
    }
 }

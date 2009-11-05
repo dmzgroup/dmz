@@ -406,8 +406,6 @@ dmz::QtPluginMapProperties::showEvent (QShowEvent *event) {
 
    if (!_timerId) {
 
-_log.error << "showEvent" << endl;
-      
       qApp->setOverrideCursor (QCursor (Qt::WaitCursor));
       _update_cache_info ();
       qApp->restoreOverrideCursor ();
@@ -424,8 +422,6 @@ dmz::QtPluginMapProperties::closeEvent (QCloseEvent * event) {
 
    if (_timerId){
       
-_log.error << "closeEvent" << endl;
-
       killTimer (_timerId);
       _timerId = 0;
    }

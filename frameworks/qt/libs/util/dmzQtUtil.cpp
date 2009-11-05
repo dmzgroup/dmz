@@ -132,3 +132,20 @@ dmz::get_save_file_name_with_extension (
     return saveFile;
 }
 
+
+
+dmz::Boolean
+dmz::rename_file (const QString &OldName, const QString &NewName) {
+   
+   Boolean retVal (False);
+   
+   if (OldName == NewName) { retVal = True; }
+   else {
+      
+      if (QFile::exists (NewName)) { QFile::remove (NewName); }
+      
+      if (QFile::rename (OldName, NewName)) { retVal = True; }
+   }
+   
+   return retVal;
+}

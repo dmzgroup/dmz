@@ -22,40 +22,18 @@ dmz::QtVersion::QtVersion (QWidget *parent, Config &local, const String &Prefix)
    _state.ui.setupUi (this);
 
    const String Name (_state.version.get_name ());
-   const String Major (_state.version.get_major ());
-   const String Minor (_state.version.get_minor ());
-   const String Bug (_state.version.get_bug ());
    const String Build (_state.version.get_build ());
-   const String Release (_state.version.get_release ());
    const String Image (_state.version.get_image_name ());
+   const String Version (_state.version.get_version ());
 
    if (Image) {
 
       _state.pix.load (Image.get_buffer ());
-
-      if (!_state.pix.isNull ()) {
-
-         _state.ui.imageLabel->setPixmap (_state.pix);
-      }
+      if (!_state.pix.isNull ()) { _state.ui.imageLabel->setPixmap (_state.pix); }
    }
 
    if (Name) { _state.ui.nameLabel->setText (Name.get_buffer ()); }
-
-   if (Major) {
-
-      String value (Major);
-      if (Minor) {
-
-         value << "." << Minor;
-
-         if (Bug) { value << "." << Bug; }
-      }
-
-      if (Release) { value << " " << Release; }
-
-      _state.ui.versionLabel->setText (value.get_buffer ());
-   }
-
+   if (Version) { _state.ui.versionLabel->setText (Version.get_buffer ()); }
    if (Build) { _state.ui.buildLabel->setText (Build.get_buffer ()); }
 
    // hit Ctrl+V to display a aboutQt message box

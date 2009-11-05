@@ -55,6 +55,7 @@ struct dmz::Application::State {
    Config global;
    PluginContainer container;
    Boolean error;
+   Boolean forced;
    String errorMsg;
    String sessionDir;
    String sessionFile;
@@ -76,6 +77,7 @@ struct dmz::Application::State {
          global ("global"),
          container (rt.get_context (), &log),
          error (False),
+         forced (False),
          startTime (0.0),
          frameCount (0.0),
          quiet (False) {;}
@@ -122,6 +124,16 @@ dmz::Application::quit (const String &Reason) {
 */
 void
 dmz::Application::set_quiet (const Boolean Value) { _state.quiet = Value; }
+
+
+/*!
+
+\brief Gets forced exit state.
+\return Returns dmz::True if a force exit was requested.
+
+*/
+dmz::Boolean
+dmz::Application::is_forced () const { return _state.forced; }
 
 
 /*!
@@ -464,7 +476,9 @@ dmz::Application::update_time_slice () {
       if (result) { _state.rt.update_time_slice (); }
       else {
 
-         _state.error = (_state.exitObs.get_status () == ExitStatusError ? True : False);
+         const ExitStatusEnum Status = _state.exitObs.get_status ();
+         _state.error = (Status == ExitStatusError ? True : False);
+         _state.forced = (Status == ExitStatusForced ? True : False);
          _state.errorMsg.flush () << _state.exitObs.get_reason ();
 
          if (!_state.quiet) {

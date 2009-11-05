@@ -45,11 +45,15 @@ namespace dmz {
       QWidget *widget);
       
    DMZ_QT_UTIL_LINK_SYMBOL QString get_save_file_name_with_extension (
-         QWidget *parent,
-         const QString &title,
-         QString dir,
-         const QString &filter,
-         const QString &extension);
+      QWidget *parent,
+      const QString &title,
+      QString dir,
+      const QString &filter,
+      const QString &extension);
+         
+   DMZ_QT_UTIL_LINK_SYMBOL Boolean rename_file (
+      const QString &OldName,
+      const QString &NewName);
 };
 
 

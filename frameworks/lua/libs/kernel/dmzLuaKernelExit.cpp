@@ -22,8 +22,21 @@ runtime_exit (lua_State *L) {
 }
 
 
+static int
+runtime_exit_forced (lua_State *L) {
+
+   RuntimeContext *context = lua_get_runtime_context (L);
+   Exit quit (context);
+   const String Reason = lua_tostring (L, -1);
+   quit.request_exit (ExitStatusForced, Reason);
+
+   return 0;
+}
+
+
 static const luaL_Reg arrayFunc [] = {
    {"exit", runtime_exit},
+   {"exit_forced", runtime_exit_forced},
    {NULL, NULL},
 };
 

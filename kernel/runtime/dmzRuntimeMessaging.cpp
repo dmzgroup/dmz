@@ -640,7 +640,7 @@ dmz::MessageObserver::subscribe_to_message (const Message &Type) {
                }
             }
 
-            if (typeContext->monostate) {
+            if (typeContext->monostate && *(typeContext->monostate)) {
 
                receive_message (Type, 0, ObsHandle, typeContext->monostate, 0);
             }

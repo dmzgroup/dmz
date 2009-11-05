@@ -19,7 +19,7 @@ namespace dmz {
          public QtWidget,
          public Plugin,
          public MessageObserver {
-            
+
    Q_OBJECT
 
       public:
@@ -52,22 +52,22 @@ namespace dmz {
             const Handle ValueAttrHandle;
             QWidget *widget;
             Message message;
-            
+
             WidgetStruct (const Handle AttrHandle) :
                ValueAttrHandle (AttrHandle), widget (0), message () {;}
 
             virtual ~WidgetStruct () { widget = 0; }
-            
+
             virtual void init (Config &local) = 0;
             virtual void send_message () = 0;
             virtual void update (const Data &InData) = 0;
          };
 
       protected Q_SLOTS:
-         void _slot_scalar_value_changed (double);
-      
+         void _slot_widget_value_changed ();
+
       protected:
-         
+
          void _create_properties (Config &list);
          void _init (Config &local);
 

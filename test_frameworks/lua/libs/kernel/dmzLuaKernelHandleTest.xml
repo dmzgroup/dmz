@@ -6,8 +6,8 @@
 <dmzLuaModuleBasic>
    <error exit="true"/>
    <script name="dmzLuaKernelHandleTest"/>
-   <extensions>
+   <plugin-list>
       <plugin name="dmzLuaExtTest"/>
-   </extensions>
+   </plugin-list>
 </dmzLuaModuleBasic>
 </dmz>

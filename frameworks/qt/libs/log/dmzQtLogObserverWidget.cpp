@@ -76,6 +76,12 @@ dmz::QtLogObserverWidget::store_log_message (
          _ui.logComboBox->addItems (_logList);
       }
 
+      QString msg (Message.get_buffer ());
+      msg.replace ("&", "&amp;");
+      msg.replace ("<", "&lt;");
+      msg.replace (">", "&gt;");
+      msg.replace ("\n", "<br>");
+      msg.replace (" ", "&nbsp;");
       QString text =
          QString ("<table><tr id=\"%1\">" \
                   "  <td>%2:</td>" \
@@ -87,7 +93,7 @@ dmz::QtLogObserverWidget::store_log_message (
             arg (_messageNumber++).
             arg (localLevelStr[Level]).
             arg (LogName.get_buffer ()).
-            arg (Message.get_buffer ());
+            arg (msg);
 
       _ui.textEdit->append (text);
 
@@ -160,7 +166,7 @@ dmz::QtLogObserverWidget::keyPressEvent (QKeyEvent *event) {
       }
    }
    else {
-
+      
       if (text.isEmpty () || text[0].isSpace () || !text[0].isPrint ()) {
 
          QWidget::keyPressEvent (event);

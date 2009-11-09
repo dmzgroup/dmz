@@ -60,7 +60,7 @@ struct PluginStruct {
          // Note: The info can only be deleted if the Plugin can be deleted
          delete info; info = 0;
       }
-      else if (log) {
+      else if (log && plugin) {
 
          log->info << "Not Deleting plugin: " << (info ? info->get_name () : "Unknown")
             << dmz::endl;

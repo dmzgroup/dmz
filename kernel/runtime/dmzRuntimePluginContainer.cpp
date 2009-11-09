@@ -52,8 +52,13 @@ struct PluginStruct {
                log->info << "Deleting plugin: " << info->get_name () << dmz::endl;
             }
 
+            // Info must be delete AFTER plugin so the lib is unloaded After the
+            // plugin's destructor is called.
             delete plugin; plugin = 0;
          }
+
+         // Note: The info can only be deleted if the Plugin can be deleted
+         delete info; info = 0;
       }
       else if (log) {
 
@@ -71,16 +76,7 @@ struct PluginStruct {
          plugin (thePlugin),
          log (theLog) {;}
 
-   ~PluginStruct () {
-
-      // Info must be delete AFTER plugin so the lib is unloaded After the
-      // plugin's destructor is called.
-      if (info) {
-
-         delete_plugin ();
-         delete info; info = 0;
-      }
-   }
+   ~PluginStruct () { delete_plugin (); }
 };
 
 typedef dmz::HashTableHandleTemplate<PluginStruct> PluginTable;

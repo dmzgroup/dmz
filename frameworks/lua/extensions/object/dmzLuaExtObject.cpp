@@ -1931,6 +1931,10 @@ dmz::LuaExtObject::close_lua_extension (lua_State *LuaState) {
       _obj.tempObjects.clear ();
    }
 
+   HashTableHandleIterator it;
+   ObjectObserver *obs (0);
+   while (_obsTable.get_next (it, obs)) { release_object_observer (*obs); }
+
    _obsTable.clear ();
 
    L = 0;

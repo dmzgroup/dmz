@@ -9,7 +9,6 @@
 
 namespace dmz {
 
-   class RuntimeContext;
 
    class QtLogObserverWidget : public QWidget {
 

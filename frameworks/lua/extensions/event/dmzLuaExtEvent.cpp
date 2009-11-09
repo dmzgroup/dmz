@@ -1081,6 +1081,10 @@ dmz::LuaExtEvent::open_lua_extension (lua_State *LuaState) {
 void
 dmz::LuaExtEvent::close_lua_extension (lua_State *LuaState) {
 
+   HashTableHandleIterator it;
+   EventObserver *obs (0);
+   while (_obsTable.get_next (it, obs)) { release_event_observer (*obs); }
+
    _obsTable.clear ();
 
    L = 0;

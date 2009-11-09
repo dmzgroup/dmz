@@ -5,7 +5,19 @@
 #include <dmzRuntimeConfigWrite.h>
 #include <QtGui/QtGui>
 
-const char DefaultName[] = "QtLogObserver";
+
+namespace {
+   
+   const char DefaultName[] = "QtLogObserver";
+};
+
+
+struct dmz::QtLogObserver::State {
+
+   Boolean processUpdates;
+   RuntimeContext *context;
+   QtLogObserverWidget *logWidget;
+};
 
 
 dmz::QtLogObserver::QtLogObserver (
@@ -14,16 +26,16 @@ dmz::QtLogObserver::QtLogObserver (
       QWidget (parent),
       LogObserver (context),
       MessageObserver (0, DefaultName, context),
-      _context (context),
-      _logWidget (0),
-      _processUpdates (False) {
+      _state (*(new State ())) {
 
-   _logWidget = new QtLogObserverWidget (this);
+   _state.context = context;
+   _state.processUpdates = False;
+   _state.logWidget = new QtLogObserverWidget (this);
 
    QVBoxLayout *layout (new QVBoxLayout (this));
    layout->setMargin (8);
    layout->setSpacing (0);
-   layout->addWidget (_logWidget, 0);
+   layout->addWidget (_state.logWidget, 0);
 
    setWindowTitle (tr ("DMZ Log Output"));
    qApp->installEventFilter (this);
@@ -32,20 +44,21 @@ dmz::QtLogObserver::QtLogObserver (
 
 dmz::QtLogObserver::~QtLogObserver () {
 
+   delete &_state;
 }
 
 
 void
 dmz::QtLogObserver::set_process_updates (const Boolean Value) {
 
-   _processUpdates = Value;
+   _state.processUpdates = Value;
 }
 
 
 void
 dmz::QtLogObserver::save_session () {
 
-   if (_context) {
+   if (_state.context) {
 
       String data;
 
@@ -58,7 +71,7 @@ dmz::QtLogObserver::save_session () {
          session.add_config (boolean_to_config ("window", "visible", True));
       }
 
-      set_session_config (_context, session);
+      set_session_config (_state.context, session);
    }
 }
 
@@ -66,9 +79,9 @@ dmz::QtLogObserver::save_session () {
 void
 dmz::QtLogObserver::load_session () {
 
-   if (_context) {
+   if (_state.context) {
 
-      Config session (get_session_config (DefaultName, _context));
+      Config session (get_session_config (DefaultName, _state.context));
 
       QByteArray geometry (config_to_qbytearray ("geometry", session, saveGeometry ()));
       restoreGeometry (geometry);
@@ -129,16 +142,16 @@ dmz::QtLogObserver::store_log_message (
       const LogLevelEnum Level,
       const String &Message) {
 
-   if (_logWidget) {
+   if (_state.logWidget) {
 
-      _logWidget->store_log_message (LogName, Level, Message);
+      _state.logWidget->store_log_message (LogName, Level, Message);
 
       if (Level == LogLevelError) {
 
          //QMessageBox::critical (this, tr ("Error"), Message.get_buffer ());
       }
 
-      if (_processUpdates) { qApp->processEvents (); }
+      if (_state.processUpdates) { qApp->processEvents (); }
    }
 }
 

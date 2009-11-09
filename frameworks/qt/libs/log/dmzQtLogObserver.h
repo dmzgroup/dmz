@@ -24,6 +24,7 @@ namespace dmz {
 
    class QtLogObserverWidget;
    class RuntimeContext;
+   
 
    class DMZ_QT_LOG_OBSERVER_LINK_SYMBOL QtLogObserver :
          public QWidget,
@@ -60,9 +61,8 @@ namespace dmz {
             const String &Message);
 
       protected:
-         Boolean _processUpdates;
-         RuntimeContext *_context;
-         QtLogObserverWidget *_logWidget;
+         struct State;
+         State &_state;
 
       private:
          QtLogObserver ();

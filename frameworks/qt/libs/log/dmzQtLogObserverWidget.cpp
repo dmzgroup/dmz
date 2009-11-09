@@ -1,11 +1,13 @@
 #include "dmzQtLogObserverWidget.h"
 #include <QtGui/QtGui>
 
-static const dmz::String LocalPassed ("PASSED");
-static const dmz::String LocalFailed ("FAILED");
-static const char *localLevelStr[] = { "[D]:", "[I]:", "[W]:", "[E]:", "" };
-static const char *localLevelDivId[] =
-   { "debug", "info", "warn", "error", "out" };
+
+namespace {
+   
+   static const char *localLevelStr[] = { "[D]:", "[I]:", "[W]:", "[E]:", "" };
+   static const char *localLevelDivId[] = { "debug", "info", "warn", "error", "out" };
+   static const char *localLevelColor[] = { "#888888", "blue", "orange", "red", "black" };
+};
 
 
 dmz::QtLogObserverWidget::QtLogObserverWidget (QWidget *parent) :
@@ -15,14 +17,14 @@ dmz::QtLogObserverWidget::QtLogObserverWidget (QWidget *parent) :
 
    _ui.setupUi (this);
 
-   QString css =
-      "tr#debug { color:#888888; } " \
-      "tr#info { color:blue; } " \
-      "tr#warn { color:orange; } " \
-      "tr#error { color:red; } ";
-
-   _ui.textEdit->document ()->setDefaultStyleSheet (css);
-   _ui.filteredTextEdit->document ()->setDefaultStyleSheet (css);
+   // QString css =
+   //    "#debug { color:#888888; } " \
+   //    "#info { color:blue; } " \
+   //    "#warn { color:orange; } " \
+   //    "#error { color:red; } ";
+   // 
+   // _ui.textEdit->document ()->setDefaultStyleSheet (css);
+   // _ui.filteredTextEdit->document ()->setDefaultStyleSheet (css);
 
    connect (
       _ui.findPreviousButton, SIGNAL (clicked ()),
@@ -65,7 +67,7 @@ dmz::QtLogObserverWidget::store_log_message (
       const String &Message) {
 
    if (Level >= 0) {
-
+      
       if (!_logList.contains (LogName.get_buffer ())) {
 
          _logList.removeFirst ();
@@ -82,21 +84,29 @@ dmz::QtLogObserverWidget::store_log_message (
       msg.replace (">", "&gt;");
       msg.replace ("\n", "<br>");
       msg.replace (" ", "&nbsp;");
-      QString text =
-         QString ("<table><tr id=\"%1\">" \
-                  "  <td>%2:</td>" \
-                  "  <td>%3</td>"
-                  "  <td><b>%4</b>:</td>" \
-                  "  <td>%5</td>" \
-                  "</tr></table>").
-            arg (localLevelDivId[Level]).
-            arg (_messageNumber++).
-            arg (localLevelStr[Level]).
-            arg (LogName.get_buffer ()).
-            arg (msg);
+
+//       QString text =
+//          QString ("<table><tr id=\"%1\">" \
+//                   "  <td>%2:</td>" \
+//                   "  <td>%3</td>"
+//                   "  <td><b>%4</b>:</td>" \
+//                   "  <td>%5</td>" \
+//                   "</tr></table>").
+//             arg (localLevelDivId[Level]).
+//             arg (_messageNumber++).
+//             arg (localLevelStr[Level]).
+//             arg (LogName.get_buffer ()).
+//             arg (msg);
+
+      QString text = tr ("<font color=\"%1\">%2:%3<strong>%4</strong>:%5</font>").
+         arg (localLevelColor[Level]).
+         arg (_messageNumber++).
+         arg (localLevelStr[Level]).
+         arg (LogName.get_buffer ()).
+         arg (msg);
 
       _ui.textEdit->append (text);
-
+      
       if (_ui.stackedWidget->currentIndex () == 1) {
 
          if (text.contains (_ui.logComboBox->currentText ())) {

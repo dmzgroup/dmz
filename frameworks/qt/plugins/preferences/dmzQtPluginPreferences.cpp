@@ -29,6 +29,7 @@ dmz::QtPluginPreferences::QtPluginPreferences (const PluginInfo &Info, Config &l
 dmz::QtPluginPreferences::~QtPluginPreferences () {
 
    _widgetTable.empty ();
+   if (_preferencesAction) { delete _preferencesAction; _preferencesAction = 0; }
 }
 
 
@@ -76,10 +77,9 @@ dmz::QtPluginPreferences::discover_plugin (
 
          _mainWindowModule = QtModuleMainWindow::cast (PluginPtr, _mainWindowModuleName);
          
-         if (_mainWindowModule) {
+         if (_mainWindowModule && _preferencesAction) {
             
             setParent (_mainWindowModule->get_qt_main_window (), Qt::Dialog);
-            
             _mainWindowModule->add_menu_action (_menuName, _preferencesAction);
          }
       }
@@ -96,7 +96,6 @@ dmz::QtPluginPreferences::discover_plugin (
             if (!ws->title) { ws->title = WidgetName; }
             
             QWidget *widget (w->get_qt_widget ());
-            
             if (widget) { ws->widget = widget; }
          }
       }
@@ -107,7 +106,7 @@ dmz::QtPluginPreferences::discover_plugin (
           (_mainWindowModule == QtModuleMainWindow::cast (PluginPtr))) {
 
          _mainWindowModule->remove_menu_action (_menuName, _preferencesAction);
-         
+         _preferencesAction->setParent (0);
          setParent (0);
          _mainWindowModule = 0;
       }

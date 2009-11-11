@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PropertyBrowserForm</class>
- <widget class="QWidget" name="PropertyBrowserForm">
+ <class>PropertyBrowser</class>
+ <widget class="QWidget" name="PropertyBrowser">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -65,9 +65,6 @@
          <property name="columnCount">
           <number>1</number>
          </property>
-         <attribute name="headerShowSortIndicator" stdset="0">
-          <bool>true</bool>
-         </attribute>
          <attribute name="headerShowSortIndicator" stdset="0">
           <bool>true</bool>
          </attribute>

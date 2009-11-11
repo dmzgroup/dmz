@@ -1,47 +1,37 @@
-#ifndef DMZ_QT_PLUGIN_PROPERTY_BROWSER_DOT_H
-#define DMZ_QT_PLUGIN_PROPERTY_BROWSER_DOT_H
+#ifndef DMZ_QT_PROPERTY_BROWSER_DOT_H
+#define DMZ_QT_PROPERTY_BROWSER_DOT_H
 
 #include <dmzObjectObserverUtil.h>
+#include "dmzQtPropertyManager.h"
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
-#include <QtCore/QObject>
+#include <QtCore/QMap>
+#include <QtGui/QFrame>
+#include "ui_PropertyBrowser.h"
+
+
+class QtProperty;
+class QtVariantPropertyManager;
+class QtEnumPropertyManager;
+class QtGroupPropertyManager;
 
 
 namespace dmz {
-
-   class QtPropertyBrowser;
    
-   
-   class QtPluginPropertyBrowser :
-         public QObject,
-         public Plugin,
-         public MessageObserver,
-         public ObjectObserverUtil {
+   class QtPropertyBrowser :
+         public QFrame {
 
       Q_OBJECT
    
       public:
-         QtPluginPropertyBrowser (const PluginInfo &Info, Config &local);
-         ~QtPluginPropertyBrowser ();
-
-         // Plugin Interface
-         virtual void update_plugin_state (
-            const PluginStateEnum State,
-            const UInt32 Level);
-
-         virtual void discover_plugin (
-            const PluginDiscoverEnum Mode,
-            const Plugin *PluginPtr);
-
-         // Message Observer Interface
-         virtual void receive_message (
-            const Message &Type,
-            const UInt32 MessageSendHandle,
-            const Handle TargetObserverHandle,
-            const Data *InData,
-            Data *outData);
+         QtPropertyBrowser (
+            ObjectObserverUtil &observer,
+            const PluginInfo &Info,
+            Config &local);
+            
+         ~QtPropertyBrowser ();
 
          // Object Observer Interface
          virtual void create_object (
@@ -209,21 +199,80 @@ namespace dmz {
             const Data &Value,
             const Data *PreviousValue);
 
+      protected slots:
+         void _value_changed (QtProperty *property, const QVariant &value);
+         
+         void on_objectTreeWidget_currentItemChanged (
+            QTreeWidgetItem *current, QTreeWidgetItem *previous);
+      
       protected:
+         void _clear_properties ();
+         
+         QtProperty *_lookup_group_property (const QString &Name);
+
+         void _add_int64_property (
+            const QString &GroupName,
+            const Handle AttributeHandle,
+            const Int64 Value);
+         
+         void _add_float64_property (
+            const QString &GroupName,
+            const Handle AttributeHandle,
+            const Float64 Value);
+
+         void _add_string_property (
+            const QString &GroupName,
+            const Handle AttributeHandle,
+            const QString &Value);
+
+         void _add_vector_property (
+            const QString &GroupName,
+            const Handle AttributeHandle,
+            const Vector &Value);
+
+         void _update_vector_property (
+            const QString &GroupName,
+            const Handle AttributeHandle,
+            const Vector &Value);
+
+         void _add_property (
+            QtProperty *property,
+            const QString &id,
+            const Boolean AddToTree = True);
+            
+         void _update_expand_state ();
+         QString _uuid_to_string (const UUID &Identity);
+         QString _type_to_string (const ObjectType &Type);
+         QString _handle_to_name (const Handle Object);
+         QString _handle_to_string (const Handle Object);
+         Handle _item_to_handle (QTreeWidgetItem *item);
          void _init (Config &local);
 
+         ObjectObserverUtil &_obs;
          Log _log;
          Definitions _defs;
+         Ui::PropertyBrowser _ui;
          Handle _defaultAttrHandle;
-         QtPropertyBrowser *_browser;
+         QtGroupPropertyManager *_groupManager;
+         QtEnumPropertyManager *_enumManager;
+         QtEnumPropertyManager *_enumManagerRO;
+         QtVariantPropertyManager *_variantManager;
+         QtVariantPropertyManager *_variantManagerRO;
+         VectorPropertyManager *_vectorManager;
+         VectorPropertyManager *_vectorManagerRO;
+         
+         QMap<QtProperty *, QString> _propertyToId;
+         QMap<QString, QtProperty *> _idToProperty;
+         QMap<QString, bool> _idToExpanded;
+         QTreeWidgetItem *_currentItem;
+         Handle _currentObject;
 
       private:
-         QtPluginPropertyBrowser ();
-         QtPluginPropertyBrowser (const QtPluginPropertyBrowser &);
-         QtPluginPropertyBrowser &operator= (const QtPluginPropertyBrowser &);
+         QtPropertyBrowser ();
+         QtPropertyBrowser (const QtPropertyBrowser &);
+         QtPropertyBrowser &operator= (const QtPropertyBrowser &);
 
    };
 };
 
-
-#endif // DMZ_QT_PLUGIN_PROPERTY_BROWSER_DOT_H
+#endif // DMZ_QT_PROPERTY_BROWSER_DOT_H

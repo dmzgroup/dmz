@@ -20,16 +20,16 @@ class QtGroupPropertyManager;
 
 namespace dmz {
    
-   class QtPropertyBrowser :
-         public QFrame {
+   class QtPropertyBrowser : public QFrame {
 
       Q_OBJECT
    
       public:
          QtPropertyBrowser (
+            const Handle ObjHandle,
             ObjectObserverUtil &observer,
-            const PluginInfo &Info,
-            Config &local);
+            RuntimeContext *context,
+            QWidget *parent = 0);
             
          ~QtPropertyBrowser ();
 
@@ -39,8 +39,6 @@ namespace dmz {
             const Handle ObjectHandle,
             const ObjectType &Type,
             const ObjectLocalityEnum Locality);
-
-         virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
 
          virtual void update_object_uuid (
             const Handle ObjectHandle,
@@ -201,13 +199,8 @@ namespace dmz {
 
       protected slots:
          void _value_changed (QtProperty *property, const QVariant &value);
-         
-         void on_objectTreeWidget_currentItemChanged (
-            QTreeWidgetItem *current, QTreeWidgetItem *previous);
       
       protected:
-         void _clear_properties ();
-         
          QtProperty *_lookup_group_property (const QString &Name);
 
          void _add_int64_property (
@@ -245,9 +238,9 @@ namespace dmz {
          QString _type_to_string (const ObjectType &Type);
          QString _handle_to_name (const Handle Object);
          QString _handle_to_string (const Handle Object);
-         Handle _item_to_handle (QTreeWidgetItem *item);
-         void _init (Config &local);
+         void _init ();
 
+         const Handle _Handle;
          ObjectObserverUtil &_obs;
          Log _log;
          Definitions _defs;
@@ -260,12 +253,9 @@ namespace dmz {
          QtVariantPropertyManager *_variantManagerRO;
          VectorPropertyManager *_vectorManager;
          VectorPropertyManager *_vectorManagerRO;
-         
          QMap<QtProperty *, QString> _propertyToId;
          QMap<QString, QtProperty *> _idToProperty;
          QMap<QString, bool> _idToExpanded;
-         QTreeWidgetItem *_currentItem;
-         Handle _currentObject;
 
       private:
          QtPropertyBrowser ();

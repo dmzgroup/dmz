@@ -39,13 +39,15 @@ namespace {
 
 
 dmz::QtPropertyBrowser::QtPropertyBrowser (
+      const Handle ObjHandle,
       ObjectObserverUtil &observer,
-      const PluginInfo &Info,
-      Config &local) :
-      QFrame (0),
+      RuntimeContext *context,
+      QWidget *parent) :
+      QFrame (parent),
+      _Handle (ObjHandle),
       _obs (observer),
-      _log (Info),
-      _defs (Info, &_log),
+      _log ("QtPropertyBrowser", context),
+      _defs (context, &_log),
       _defaultAttrHandle (0),
       _groupManager (0),
       _variantManager (0),
@@ -56,11 +58,9 @@ dmz::QtPropertyBrowser::QtPropertyBrowser (
       _vectorManagerRO (0),
       _propertyToId (),
       _idToProperty (),
-      _idToExpanded (),
-      _currentItem (0),
-      _currentObject (0) {
+      _idToExpanded () {
 
-   _init (local);
+   _init ();
 }
 
 
@@ -77,7 +77,7 @@ dmz::QtPropertyBrowser::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
       
       QtVariantProperty *property =
          _variantManagerRO->addProperty (QVariant::String, HandleName);
@@ -92,46 +92,6 @@ dmz::QtPropertyBrowser::create_object (
       
       _add_property (property, ObjectTypeName);
    }
-   else {
-
-      QTreeWidgetItem *item = new QTreeWidgetItem;
-
-      item->setText (HandleCol, _handle_to_string (ObjectHandle));
-      item->setData (HandleCol, HandleRole, (quint64)ObjectHandle);
-
-      item->setText (TypeCol, _type_to_string (Type));
-
-      _ui.objectTreeWidget->addTopLevelItem (item);
-
-      if (_ui.objectTreeWidget->topLevelItemCount () == 1) {
-
-         _ui.objectTreeWidget->setCurrentItem (item);
-      }
-   }
-}
-
-
-void
-dmz::QtPropertyBrowser::destroy_object (
-      const UUID &Identity,
-      const Handle ObjectHandle) {
-
-   if (ObjectHandle == _currentObject) {
-   
-      _clear_properties ();
-      _currentObject = 0;
-   }
-   
-   for (int ix = 0; ix < _ui.objectTreeWidget->topLevelItemCount (); ++ix) {
-
-      QTreeWidgetItem *item = _ui.objectTreeWidget->topLevelItem (0);
-      if (ObjectHandle == _item_to_handle (item)) {
-         
-         item = _ui.objectTreeWidget->takeTopLevelItem (ix);
-         delete item; item = 0;
-         break;
-      }
-   }
 }
 
 
@@ -141,7 +101,7 @@ dmz::QtPropertyBrowser::update_object_uuid (
       const UUID &Identity,
       const UUID &PrevIdentity) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
       
       QtVariantProperty *property =
          _variantManager->addProperty (QVariant::String, UUIDName);
@@ -170,7 +130,7 @@ dmz::QtPropertyBrowser::update_object_locality (
       const ObjectLocalityEnum Locality,
       const ObjectLocalityEnum PrevLocality) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
       
       QtProperty *property = _enumManager->addProperty (LocalityName);
 
@@ -234,7 +194,7 @@ dmz::QtPropertyBrowser::update_object_counter (
       const Int64 Value,
       const Int64 *PreviousValue) {
          
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
       _add_int64_property (CounterName, AttributeHandle, Value);
    }
@@ -249,7 +209,7 @@ dmz::QtPropertyBrowser::update_object_counter_minimum (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
       _add_int64_property (CounterMinimumName, AttributeHandle, Value);
    }
@@ -264,7 +224,7 @@ dmz::QtPropertyBrowser::update_object_counter_maximum (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
       _add_int64_property (CounterMaximumName, AttributeHandle, Value);
    }
@@ -279,7 +239,7 @@ dmz::QtPropertyBrowser::update_object_alternate_type (
       const ObjectType &Value,
       const ObjectType *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
       _add_string_property (AlternateTypeName, AttributeHandle, _type_to_string (Value));
    }
@@ -294,7 +254,7 @@ dmz::QtPropertyBrowser::update_object_state (
       const Mask &Value,
       const Mask *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
       String name;
       _defs.lookup_state_name (Value, name);
@@ -312,7 +272,7 @@ dmz::QtPropertyBrowser::update_object_flag (
       const Boolean Value,
       const Boolean *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
    
       QtProperty *group (_lookup_group_property (FlagName));
    
@@ -338,7 +298,7 @@ dmz::QtPropertyBrowser::update_object_time_stamp (
       const Float64 &Value,
       const Float64 *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
       _add_float64_property (TimeStampName, AttributeHandle, Value);
    }
@@ -353,7 +313,7 @@ dmz::QtPropertyBrowser::update_object_position (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
 _log.warn << "update_object_position[" << ObjectHandle << ":" << AttributeHandle << "]: " << Value << endl;
       _update_vector_property (PositionName, AttributeHandle, Value);
@@ -369,7 +329,7 @@ dmz::QtPropertyBrowser::update_object_orientation (
       const Matrix &Value,
       const Matrix *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
 //      _update_vector_property (PositionName, AttributeHandle, Value);
    }
@@ -384,7 +344,7 @@ dmz::QtPropertyBrowser::update_object_velocity (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
       _update_vector_property (VelocityName, AttributeHandle, Value);
    }
@@ -399,7 +359,7 @@ dmz::QtPropertyBrowser::update_object_acceleration (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
       _update_vector_property (AccelerationName, AttributeHandle, Value);
    }
@@ -414,7 +374,7 @@ dmz::QtPropertyBrowser::update_object_scale (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
       _update_vector_property (ScaleName, AttributeHandle, Value);
    }
@@ -429,7 +389,7 @@ dmz::QtPropertyBrowser::update_object_vector (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
       _add_vector_property (VectorName, AttributeHandle, Value);
    }
@@ -444,7 +404,7 @@ dmz::QtPropertyBrowser::update_object_scalar (
       const Float64 Value,
       const Float64 *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
       _add_float64_property (ScalarName, AttributeHandle, Value);
    }
@@ -459,7 +419,7 @@ dmz::QtPropertyBrowser::update_object_text (
       const String &Value,
       const String *PreviousValue) {
 
-   if (ObjectHandle == _currentObject) {
+   if (ObjectHandle == _Handle) {
 
       _add_string_property (TextName, AttributeHandle, QLatin1String (Value.get_buffer ()));
    }
@@ -478,46 +438,25 @@ dmz::QtPropertyBrowser::update_object_data (
 
 
 void
-dmz::QtPropertyBrowser::on_objectTreeWidget_currentItemChanged (
-      QTreeWidgetItem *current,
-      QTreeWidgetItem *previous) {
-
-   ObjectModule *objMod (_obs.get_object_module ());
-   _currentObject = _item_to_handle (current);
-      
-   if (_currentObject && objMod) {
-
-      _currentItem = current;
-      
-      _update_expand_state ();
-      
-      _clear_properties ();
-      
-      objMod->dump_all_object_attributes (_currentObject, _obs);
-   }
-}
-
-
-void
 dmz::QtPropertyBrowser::_value_changed (QtProperty *property, const QVariant &value) {
    
 }
 
 
-void
-dmz::QtPropertyBrowser::_clear_properties () {
-
-   QMap<QtProperty *, QString>::ConstIterator itProp = _propertyToId.constBegin ();
-      
-   while (itProp != _propertyToId.constEnd ()) {
-         
-       delete itProp.key ();
-       itProp++;
-   }
-      
-   _propertyToId.clear ();
-   _idToProperty.clear ();
-}
+// void
+// dmz::QtPropertyBrowser::_clear_properties () {
+// 
+//    QMap<QtProperty *, QString>::ConstIterator itProp = _propertyToId.constBegin ();
+//       
+//    while (itProp != _propertyToId.constEnd ()) {
+//          
+//        delete itProp.key ();
+//        itProp++;
+//    }
+//       
+//    _propertyToId.clear ();
+//    _idToProperty.clear ();
+// }
 
 
 QtProperty *
@@ -733,34 +672,18 @@ dmz::QtPropertyBrowser::_handle_to_string (const Handle Object) {
 }
 
 
-dmz::Handle
-dmz::QtPropertyBrowser::_item_to_handle (QTreeWidgetItem *item) {
-
-   Handle retVal (0);
-   if (item) { retVal = item->data (HandleCol, HandleRole).toULongLong (); }
-   return retVal;
-}
-
-
 void
-dmz::QtPropertyBrowser::_init (Config &local) {
+dmz::QtPropertyBrowser::_init () {
 
-//   setObjectName (_obs.get_plugin_name ().get_buffer ());
+   // QString name ("%1-%2");
+   // name.arg (_obs.get_plugin_name ().get_buffer (), _Handle);
+   // setObjectName (name);
 
    _ui.setupUi (this);
    
-   qframe_config_read ("frame", local, this);
-
    _defaultAttrHandle = _obs.activate_default_object_attribute (
        ObjectCreateMask | ObjectDestroyMask);
 
-   _ui.splitter->setStretchFactor (0, 0);
-   _ui.splitter->setStretchFactor (1, 1);
-   
-   QStringList headerList;
-   headerList << "Handle" << "ObjectType";
-   _ui.objectTreeWidget->setHeaderLabels (headerList);
-   
    _groupManager = new QtGroupPropertyManager (this);
    _variantManager = new QtVariantPropertyManager (this);
    _variantManagerRO = new QtVariantPropertyManager (this);

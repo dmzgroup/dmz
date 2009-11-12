@@ -8,27 +8,32 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesUUID.h>
 
+namespace {
+  
+   const dmz::UInt32 HandleRole (Qt::UserRole + 1);
+   const dmz::UInt32 HandleCol (0);
+   const dmz::UInt32 TypeCol (1); 
+};
 
 dmz::QtPluginPropertyBrowser::QtPluginPropertyBrowser (
       const PluginInfo &Info,
       Config &local) :
+      QMainWindow (0),
       Plugin (Info),
       MessageObserver (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
       _defaultAttrHandle (0),
-      _browser (0) {
+      _browserTable () {
 
    _init (local);
-   
-   _browser = new QtPropertyBrowser (*this, Info, local);
 }
 
 
 dmz::QtPluginPropertyBrowser::~QtPluginPropertyBrowser () {
 
-   if (_browser) { delete _browser; _browser = 0; }
+   _browserTable.empty ();
 }
 
 
@@ -40,7 +45,7 @@ dmz::QtPluginPropertyBrowser::update_plugin_state (
 
    if (State == PluginStateInit) {
 
-      if (_browser) { _browser->show (); }
+      show ();
    }
    else if (State == PluginStateStart) {
 
@@ -50,7 +55,7 @@ dmz::QtPluginPropertyBrowser::update_plugin_state (
    }
    else if (State == PluginStateShutdown) {
 
-      if (_browser) { _browser->hide (); }
+      hide ();
    }
 }
 
@@ -89,10 +94,26 @@ dmz::QtPluginPropertyBrowser::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
-
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
       
-      _browser->create_object (Identity, ObjectHandle, Type, Locality);
+      browser->create_object (Identity, ObjectHandle, Type, Locality);
+   }
+   else {
+      
+      QTreeWidgetItem *item = new QTreeWidgetItem;
+
+      item->setText (HandleCol, _handle_to_string (ObjectHandle));
+      item->setData (HandleCol, HandleRole, (quint64)ObjectHandle);
+
+      item->setText (TypeCol, Type.get_name ().get_buffer ());
+
+      _ui.objectTreeWidget->addTopLevelItem (item);
+
+      if (_ui.objectTreeWidget->topLevelItemCount () == 1) {
+
+         _ui.objectTreeWidget->setCurrentItem (item);
+      }
    }
 }
 
@@ -101,9 +122,18 @@ dmz::QtPluginPropertyBrowser::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.remove (ObjectHandle);
+   if (browser) { delete browser; browser = 0; }
+   
+   for (int ix = 0; ix < _ui.objectTreeWidget->topLevelItemCount (); ++ix) {
 
-      _browser->destroy_object (Identity, ObjectHandle);
+      QTreeWidgetItem *item = _ui.objectTreeWidget->topLevelItem (ix);
+      if (ObjectHandle == _item_to_handle (item)) {
+         
+         item = _ui.objectTreeWidget->takeTopLevelItem (ix);
+         delete item; item = 0;
+         break;
+      }
    }
 }
 
@@ -114,9 +144,10 @@ dmz::QtPluginPropertyBrowser::update_object_uuid (
       const UUID &Identity,
       const UUID &PrevIdentity) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
    
-      _browser->update_object_uuid (ObjectHandle, Identity, PrevIdentity);
+      browser->update_object_uuid (ObjectHandle, Identity, PrevIdentity);
    }
 }
 
@@ -128,9 +159,10 @@ dmz::QtPluginPropertyBrowser::remove_object_attribute (
       const Handle AttributeHandle,
       const Mask &AttrMask) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->remove_object_attribute (
+      browser->remove_object_attribute (
          Identity, ObjectHandle, AttributeHandle, AttrMask);
    }
 }
@@ -143,9 +175,10 @@ dmz::QtPluginPropertyBrowser::update_object_locality (
       const ObjectLocalityEnum Locality,
       const ObjectLocalityEnum PrevLocality) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_locality (Identity, ObjectHandle, Locality, PrevLocality);
+      browser->update_object_locality (Identity, ObjectHandle, Locality, PrevLocality);
    }
 }
 
@@ -159,11 +192,12 @@ dmz::QtPluginPropertyBrowser::link_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-   if (_browser) {
-
-      _browser->link_objects (
-         LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
-   }
+   // QtPropertyBrowser *browser = _browserTable.lookup (LinkHandle);
+   // if (browser) {
+   // 
+   //    browser->link_objects (
+   //       LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
+   // }
 }
 
 
@@ -176,11 +210,12 @@ dmz::QtPluginPropertyBrowser::unlink_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-   if (_browser) {
-      
-      _browser->unlink_objects (
-         LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
-   }
+   // QtPropertyBrowser *browser = _browserTable.lookup (LinkHandle);
+   // if (browser) {
+   //    
+   //    browser->unlink_objects (
+   //       LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
+   // }
 }
 
 
@@ -198,20 +233,21 @@ dmz::QtPluginPropertyBrowser::update_link_attribute_object (
       const Handle PrevAttributeObjectHandle) {
 
 
-   if (_browser) {
-      
-      _browser->update_link_attribute_object (
-         LinkHandle,
-         AttributeHandle,
-         SuperIdentity,
-         SuperHandle,
-         SubIdentity,
-         SubHandle,
-         AttributeIdentity,
-         AttributeObjectHandle,
-         PrevAttributeIdentity,
-         PrevAttributeObjectHandle);
-   }
+   // QtPropertyBrowser *browser = _browserTable.lookup (LinkHandle);
+   // if (browser) {
+   //    
+   //    browser->update_link_attribute_object (
+   //       LinkHandle,
+   //       AttributeHandle,
+   //       SuperIdentity,
+   //       SuperHandle,
+   //       SubIdentity,
+   //       SubHandle,
+   //       AttributeIdentity,
+   //       AttributeObjectHandle,
+   //       PrevAttributeIdentity,
+   //       PrevAttributeObjectHandle);
+   // }
 }
 
 
@@ -223,9 +259,10 @@ dmz::QtPluginPropertyBrowser::update_object_counter (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_counter (
+      browser->update_object_counter (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -239,11 +276,12 @@ dmz::QtPluginPropertyBrowser::update_object_counter_minimum (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
-    if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
     
-      _browser->update_object_counter_minimum (
+      browser->update_object_counter_minimum (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
-    }
+   }
 }
 
 
@@ -255,9 +293,10 @@ dmz::QtPluginPropertyBrowser::update_object_counter_maximum (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-     _browser->update_object_counter_maximum (
+      browser->update_object_counter_maximum (
         Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -271,9 +310,10 @@ dmz::QtPluginPropertyBrowser::update_object_alternate_type (
       const ObjectType &Value,
       const ObjectType *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_alternate_type (
+      browser->update_object_alternate_type (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -287,9 +327,10 @@ dmz::QtPluginPropertyBrowser::update_object_state (
       const Mask &Value,
       const Mask *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_state (
+      browser->update_object_state (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -303,9 +344,10 @@ dmz::QtPluginPropertyBrowser::update_object_flag (
       const Boolean Value,
       const Boolean *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_flag (
+      browser->update_object_flag (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -319,9 +361,10 @@ dmz::QtPluginPropertyBrowser::update_object_time_stamp (
       const Float64 &Value,
       const Float64 *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_time_stamp (
+      browser->update_object_time_stamp (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -336,9 +379,10 @@ dmz::QtPluginPropertyBrowser::update_object_position (
       const Vector *PreviousValue) {
 
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_position (
+      browser->update_object_position (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -352,9 +396,10 @@ dmz::QtPluginPropertyBrowser::update_object_orientation (
       const Matrix &Value,
       const Matrix *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_orientation (
+      browser->update_object_orientation (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -368,9 +413,10 @@ dmz::QtPluginPropertyBrowser::update_object_velocity (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_velocity (
+      browser->update_object_velocity (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -384,9 +430,10 @@ dmz::QtPluginPropertyBrowser::update_object_acceleration (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_acceleration (
+      browser->update_object_acceleration (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -400,9 +447,10 @@ dmz::QtPluginPropertyBrowser::update_object_scale (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_scale (
+      browser->update_object_scale (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -416,9 +464,10 @@ dmz::QtPluginPropertyBrowser::update_object_vector (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_vector (
+      browser->update_object_vector (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -432,9 +481,10 @@ dmz::QtPluginPropertyBrowser::update_object_scalar (
       const Float64 Value,
       const Float64 *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_scalar (
+      browser->update_object_scalar (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -448,9 +498,10 @@ dmz::QtPluginPropertyBrowser::update_object_text (
       const String &Value,
       const String *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_text (
+      browser->update_object_text (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
@@ -464,13 +515,57 @@ dmz::QtPluginPropertyBrowser::update_object_data (
       const Data &Value,
       const Data *PreviousValue) {
 
-   if (_browser) {
+   QtPropertyBrowser *browser = _browserTable.lookup (ObjectHandle);
+   if (browser) {
 
-      _browser->update_object_data (
+      browser->update_object_data (
          Identity, ObjectHandle, AttributeHandle, Value, PreviousValue);
    }
 }
 
+
+void
+dmz::QtPluginPropertyBrowser::on_objectTreeWidget_itemActivated (
+      QTreeWidgetItem *item,
+      int column) {
+
+   ObjectModule *objMod (get_object_module ());
+   Handle objHandle = _item_to_handle (item);
+      
+   if (objHandle && objMod && !_browserTable.lookup (objHandle)) {
+
+      QtPropertyBrowser *browser =
+         new QtPropertyBrowser (objHandle, *this, get_plugin_runtime_context ());
+      
+      if (_browserTable.store (objHandle, browser)) {
+      
+         objMod->dump_all_object_attributes (objHandle, *this);
+         browser->show ();
+      }
+      else {
+         
+         delete browser; browser = 0;
+      }
+   }
+}
+
+
+QString
+dmz::QtPluginPropertyBrowser::_handle_to_string (const Handle Object) {
+
+   String str;
+   str << Object;
+   return QLatin1String (str.get_buffer ());
+}
+
+
+dmz::Handle
+dmz::QtPluginPropertyBrowser::_item_to_handle (QTreeWidgetItem *item) {
+
+   Handle retVal (0);
+   if (item) { retVal = item->data (HandleCol, HandleRole).toULongLong (); }
+   return retVal;
+}
 
 
 void
@@ -478,6 +573,15 @@ dmz::QtPluginPropertyBrowser::_init (Config &local) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
+   _ui.setupUi (this);
+   
+   QStringList headerList;
+   headerList << "Handle" << "ObjectType";
+   _ui.objectTreeWidget->setHeaderLabels (headerList);
+   
+   _defaultAttrHandle = activate_default_object_attribute (
+      ObjectCreateMask | ObjectDestroyMask);
+       
    activate_global_object_observer ();
 }
 

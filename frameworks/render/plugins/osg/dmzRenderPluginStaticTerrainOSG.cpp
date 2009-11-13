@@ -6,6 +6,7 @@
 #include <dmzRuntimePluginInfo.h>
 
 #include <osg/Group>
+#include <osg/BoundingSphere>
 #include <osgDB/ReadFile>
 
 dmz::RenderPluginStaticTerrainOSG::RenderPluginStaticTerrainOSG (
@@ -153,6 +154,12 @@ dmz::RenderPluginStaticTerrainOSG::_init (Config &local) {
                   ms->model = osgDB::readNodeFile (FileName.get_buffer ());
 
                   if (ms->model.valid ()) { 
+
+                  osg::BoundingSphere bound = ms->model->computeBound ();
+                  _log.info << FileName << " center: ["
+                     << bound.center ().x () << ", "
+                     << bound.center ().y () << ", "
+                     << bound.center ().z () << "]" << endl;
 
                      ms->next = _modelList;
                      _modelList = ms;

@@ -359,6 +359,14 @@ dmz::RenderModuleCoreOSGBasic::remove_viewer (const String &ViewerName) {
 void
 dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
 
+   const String UpStr = config_to_string ("osg-up.value", local, "y").to_lower ();
+   if (UpStr == "y") { set_osg_y_up (); _log.error << "Y is up???" << endl; }
+   else if (UpStr == "z") { set_osg_z_up (); _log.error << "Z is up!" << endl; }
+   else {
+
+      _log.warn << "Unknown osg up type: " << UpStr << ". Defaulting to Y up." << endl;
+   }
+
    Config pluginList;
 
    if (local.lookup_all_config ("plugin-list.plugin", pluginList)) {

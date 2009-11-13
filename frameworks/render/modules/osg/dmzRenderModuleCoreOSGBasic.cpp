@@ -360,8 +360,8 @@ void
 dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
 
    const String UpStr = config_to_string ("osg-up.value", local, "y").to_lower ();
-   if (UpStr == "y") { set_osg_y_up (); _log.error << "Y is up???" << endl; }
-   else if (UpStr == "z") { set_osg_z_up (); _log.error << "Z is up!" << endl; }
+   if (UpStr == "y") { set_osg_y_up (); _log.info << "OSG render Y is up." << endl; }
+   else if (UpStr == "z") { set_osg_z_up (); _log.info << "OSG render Z is up" << endl; }
    else {
 
       _log.warn << "Unknown osg up type: " << UpStr << ". Defaulting to Y up." << endl;

@@ -64,6 +64,11 @@ struct PluginStruct {
 
          log->info << "Not Deleting plugin: " << (info ? info->get_name () : "Unknown")
             << dmz::endl;
+
+         // Do not delete these. Instead just zero out the pointers. Yes, they will
+         // leak but it is better than the alternative which is probably to crash.
+         plugin = 0;
+         info = 0;
       }
    }
 

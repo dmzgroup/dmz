@@ -1,9 +1,11 @@
 #include <dmzObjectAttributeMasks.h>
-#include <dmzRenderConfigToOSG.h>
+//#include <dmzRenderConfigToOSG.h>
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginParticleEffectsOSG.h"
+#include <dmzRenderUtilOSG.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
@@ -18,7 +20,7 @@ namespace {
 
 typedef dmz::RenderPluginParticleEffectsOSG::ParticleStateFactory ParticleStateFactory;
 
-const osg::Vec3 Gravity (0.0, -9.18, 0.0);
+const dmz::Vector Gravity (0.0, -9.18, 0.0);
 
 class SmokeStateFactory : public ParticleStateFactory {
 
@@ -26,19 +28,19 @@ class SmokeStateFactory : public ParticleStateFactory {
       SmokeStateFactory (
          const dmz::Mask &State,
          const dmz::String &TextureName,
-         const osg::Vec3 Offset);
+         const dmz::Vector &Offset);
 
       virtual osgParticle::ParticleEffect *create_effect ();
 
    protected:
       const dmz::String _TextureName;
-      const osg::Vec3 _Offset;
+      const dmz::Vector _Offset;
 };
 
 SmokeStateFactory::SmokeStateFactory (
       const dmz::Mask &State,
       const dmz::String &TextureName,
-      const osg::Vec3 Offset) :
+      const dmz::Vector &Offset) :
       ParticleStateFactory (State),
       _TextureName (TextureName),
       _Offset (Offset) {;}
@@ -46,7 +48,8 @@ SmokeStateFactory::SmokeStateFactory (
 osgParticle::ParticleEffect *
 SmokeStateFactory::create_effect () {
 
-   osgParticle::SmokeEffect *result (new osgParticle::SmokeEffect (_Offset, 5.0, 1.0));
+   osgParticle::SmokeEffect *result (
+      new osgParticle::SmokeEffect (dmz::to_osg_vector (_Offset), 5.0, 1.0));
 
    if (result) {
 
@@ -56,7 +59,7 @@ SmokeStateFactory::create_effect () {
       osgParticle::FluidProgram *program = dynamic_cast<osgParticle::FluidProgram *> (
          result->getProgram ());
 
-      if (program) { program->setAcceleration (Gravity); }
+      if (program) { program->setAcceleration (dmz::to_osg_vector (Gravity)); }
 
       const osgParticle::Particle &OrigParticle = result->getDefaultParticleTemplate ();
 
@@ -82,20 +85,20 @@ class FireStateFactory : public ParticleStateFactory {
       FireStateFactory (
          const dmz::Mask &State,
          const dmz::String &TextureName,
-         const osg::Vec3 Offset);
+         const dmz::Vector &Offset);
 
       virtual osgParticle::ParticleEffect *create_effect ();
 
    protected:
       const dmz::String _TextureName;
-      const osg::Vec3 _Offset;
+      const dmz::Vector _Offset;
 };
 
 
 FireStateFactory::FireStateFactory (
       const dmz::Mask &State,
       const dmz::String &TextureName,
-      const osg::Vec3 Offset) :
+      const dmz::Vector &Offset) :
       ParticleStateFactory (State),
       _TextureName (TextureName),
       _Offset (Offset) {;}
@@ -104,7 +107,8 @@ FireStateFactory::FireStateFactory (
 osgParticle::ParticleEffect *
 FireStateFactory::create_effect () {
 
-   osgParticle::FireEffect *result (new osgParticle::FireEffect (_Offset, 5.0, 1.0));
+   osgParticle::FireEffect *result (
+      new osgParticle::FireEffect (dmz::to_osg_vector (_Offset), 5.0, 1.0));
 
    if (result) {
 
@@ -114,7 +118,7 @@ FireStateFactory::create_effect () {
       osgParticle::FluidProgram *program = dynamic_cast<osgParticle::FluidProgram *> (
          result->getProgram ());
 
-      if (program) { program->setAcceleration (Gravity); }
+      if (program) { program->setAcceleration (dmz::to_osg_vector (Gravity)); }
    }
 
    return result;
@@ -127,19 +131,19 @@ class DustStateFactory : public ParticleStateFactory {
       DustStateFactory (
          const dmz::Mask &State,
          const dmz::String &TextureName,
-         const osg::Vec3 Offset);
+         const dmz::Vector &Offset);
 
       virtual osgParticle::ParticleEffect *create_effect ();
 
    protected:
       const dmz::String _TextureName;
-      const osg::Vec3 _Offset;
+      const dmz::Vector _Offset;
 };
 
 DustStateFactory::DustStateFactory (
       const dmz::Mask &State,
       const dmz::String &TextureName,
-      const osg::Vec3 Offset) :
+      const dmz::Vector &Offset) :
       ParticleStateFactory (State),
       _TextureName (TextureName),
       _Offset (Offset) {;}
@@ -149,7 +153,7 @@ osgParticle::ParticleEffect *
 DustStateFactory::create_effect () {
 
    osgParticle::SmokeEffect *result (
-      new osgParticle::SmokeEffect (_Offset, 10.0, 1.0));
+      new osgParticle::SmokeEffect (dmz::to_osg_vector (_Offset), 10.0, 1.0));
 
    if (result) {
 
@@ -512,8 +516,7 @@ dmz::RenderPluginParticleEffectsOSG::_create_smoke_state_factory (Config &fx) {
 
       const String Resource = config_to_string ("texture.resource", fx, "smoke");
       const String Texture = Resource ? _rc.find_file (Resource) : String ();
-      const osg::Vec3 Offset (
-         config_to_osg_vec3 ("offset", fx, osg::Vec3 (0.0, 2.5, 0.0)));
+      const Vector Offset (config_to_vector ("offset", fx, Vector (0.0, 2.5, 0.0)));
 
       result = new SmokeStateFactory (state, Texture, Offset);
    }
@@ -539,8 +542,7 @@ dmz::RenderPluginParticleEffectsOSG::_create_fire_state_factory (Config &fx) {
 
       const String Resource = config_to_string ("texture.resource", fx, "fire");
       const String Texture = Resource ? _rc.find_file (Resource) : String ();
-      const osg::Vec3 Offset (
-         config_to_osg_vec3 ("offset", fx, osg::Vec3 (0.0, 1.5, 0.0)));
+      const Vector Offset (config_to_vector ("offset", fx, Vector (0.0, 1.5, 0.0)));
 
       result = new FireStateFactory (state, Texture, Offset);
    }
@@ -567,8 +569,7 @@ dmz::RenderPluginParticleEffectsOSG::_create_dust_state_factory (Config &fx) {
 
       const String Resource = config_to_string ("texture.resource", fx, "dust-trail");
       const String Texture = Resource ? _rc.find_file (Resource) : String ();
-      const osg::Vec3 Offset (
-         config_to_osg_vec3 ("offset", fx, osg::Vec3 (0.0, 0.0, 3.0)));
+      const Vector Offset (config_to_vector ("offset", fx, Vector (0.0, 0.0, 3.0)));
 
       result = new DustStateFactory (state, Texture, Offset);
    }

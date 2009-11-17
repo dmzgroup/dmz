@@ -2,6 +2,132 @@
 #include <dmzRenderUtilOSG.h>
 #include <osgGA/GUIEventHandler>
 
+#include <qdb.h>
+static dmz::qdb out;
+
+using namespace dmz;
+
+namespace {
+
+static osg::Vec3d
+to_osg_vector_y_up (const Vector &Source) {
+
+   osg::Vec3d result (Source.get_x (), Source.get_y (), Source.get_z ());
+   return result;
+}
+
+
+static Vector
+to_dmz_vector_y_up (const osg::Vec3d &Source) {
+
+   Vector result (Source.x (), Source.y (), Source.z ());
+   return result;
+}
+
+
+static osg::Matrixd
+to_osg_matrix_y_up (const Matrix &Source, const Vector &Trans) {
+
+   Float64 data[9];
+   Source.to_array (data);
+   osg::Matrixd result (
+      data[0], data[3], data[6], 0.0,
+      data[1], data[4], data[7], 0.0,
+      data[2], data[5], data[8], 0.0,
+      Trans.get_x (), Trans.get_y (), Trans.get_z (), 1.0);
+
+   return result;
+}
+
+
+static osg::Matrixd
+to_osg_inverse_matrix_y_up (const Matrix &Source) {
+
+   Float64 data[9];
+   Source.to_array (data);
+   const osg::Matrixd result (
+      data[0], data[1], data[2], 0.0,
+      data[3], data[4], data[5], 0.0,
+      data[6], data[7], data[8], 0.0,
+      0.0,     0.0,     0.0,     1.0);
+
+   return result;
+}
+
+
+static osg::Vec3d
+to_osg_vector_z_up (const Vector &Source) {
+
+   osg::Vec3d result (Source.get_x (), -Source.get_z (), Source.get_y ());
+   return result;
+}
+
+
+static Vector
+to_dmz_vector_z_up (const osg::Vec3d &Source) {
+
+   Vector result (Source.x (), Source.z (), -Source.y ());
+   return result;
+}
+
+
+static osg::Matrixd
+to_osg_matrix_z_up (const Matrix &Source, const Vector &Trans) {
+
+   Float64 data[9];
+   Source.to_array (data);
+   osg::Matrixd result (
+      data[0], -data[6], data[3], 0.0,
+      -data[2], data[8],-data[5],  0.0,
+      data[1], -data[7], data[4], 0.0,
+      Trans.get_x (), -Trans.get_z (), Trans.get_y (), 1.0);
+
+   return result;
+}
+
+
+static osg::Matrixd
+to_osg_inverse_matrix_z_up (const Matrix &Source) {
+
+   Float64 data[9];
+   Source.to_array (data);
+   const osg::Matrixd result (
+      data[0], data[1], data[2], 0.0,
+      -data[6], -data[7], -data[8], 0.0,
+      data[3], data[4], data[5], 0.0,
+      0.0,     0.0,     0.0,     1.0);
+
+   return result;
+}
+
+};
+
+
+dmz::to_osg_vector_func dmz::to_osg_vector = to_osg_vector_y_up;
+dmz::to_dmz_vector_func dmz::to_dmz_vector = to_dmz_vector_y_up;
+dmz::to_osg_matrix_func dmz::to_osg_matrix = to_osg_matrix_y_up;
+dmz::to_osg_inverse_matrix_func dmz::to_osg_inverse_matrix = to_osg_inverse_matrix_y_up;
+
+
+void
+dmz::set_osg_z_up () {
+
+   to_osg_vector = to_osg_vector_z_up;
+   to_dmz_vector = to_dmz_vector_z_up;
+   to_osg_matrix = to_osg_matrix_z_up;
+   to_osg_inverse_matrix = to_osg_inverse_matrix_z_up;
+}
+
+
+void
+dmz::set_osg_y_up () {
+
+   to_osg_vector = to_osg_vector_y_up;
+   to_dmz_vector = to_dmz_vector_y_up;
+   to_osg_matrix = to_osg_matrix_y_up;
+   to_osg_inverse_matrix = to_osg_inverse_matrix_y_up;
+}
+
 
 dmz::UInt32
 dmz::convert_osg_key_to_dmz_key (const UInt32 Key) {

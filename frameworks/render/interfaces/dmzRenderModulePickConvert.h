@@ -9,7 +9,7 @@
 
 
 namespace dmz {
-
+   //! \cond
    class RenderModulePickConvert {
 
       public:
@@ -44,6 +44,7 @@ namespace dmz {
 
          const PluginInfo &__Info;
    };
+   //! \endcond
 
    //! \cond
    const char RenderModulePickConvertInterfaceName[] = "RenderModulePickConvertInterface";
@@ -51,6 +52,7 @@ namespace dmz {
 };
 
 
+//! \cond
 inline dmz::RenderModulePickConvert *
 dmz::RenderModulePickConvert::cast (const Plugin *PluginPtr, const String &PluginName) {
 
@@ -82,6 +84,7 @@ dmz::RenderModulePickConvert::get_render_module_pick_convert_name () const { ret
 
 inline dmz::Handle
 dmz::RenderModulePickConvert::get_render_module_pick_convert_handle () const { return __Info.get_handle (); }
+//! \endcond
 
 
 #endif // DMZ_RENDER_MODULE_PICK_CONVERT_DOT_H

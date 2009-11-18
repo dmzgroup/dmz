@@ -125,6 +125,10 @@ namespace dmz {
 
          virtual Handle lookup_link_attribute_object (const Handle LinkHandle) = 0;
 
+         virtual Boolean lookup_attribute_object_links (
+            const Handle ObjectHandle,
+            HandleContainer &container) = 0;
+
          virtual Boolean lookup_super_links (
             const Handle ObjectHandle,
             const Handle AttributeHandle,

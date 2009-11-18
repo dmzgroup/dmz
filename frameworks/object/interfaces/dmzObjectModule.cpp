@@ -319,6 +319,16 @@ const dmz::Handle LinkHandle)
 \return Returns the dmz::Handle of the link's attribute object. Returns zero
 it the link does not have an attribute object.
 
+\fn dmz::Boolean dmz::ObjectModule::lookup_attribute_object_links (
+const Handle ObjectHandle,
+HandleContainer &container)
+\brief Gets all links using object as an attribute.
+\details Stores the dmz::Handle of all links that use the given object as an attribute
+object
+\param[in] ObjectHandle dmz::Handle of Attribute Object
+\param[out] container HandleContainer to store the dmz::Handle of the links.
+\return Returns dmz::True if the object is used by any links as an attribute object.
+
 \fn dmz::Boolean dmz::ObjectModule::lookup_super_links (
 const dmz::Handle ObjectHandle,
 const dmz::Handle AttributeHandle,

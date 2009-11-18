@@ -1162,6 +1162,34 @@ dmz::ObjectModuleBasic::lookup_link_attribute_object (const Handle LinkHandle) {
 
 
 dmz::Boolean
+dmz::ObjectModuleBasic::lookup_attribute_object_links (
+      const Handle ObjectHandle,
+      HandleContainer &container) {
+
+   Boolean result (False);
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+
+   if (obj) {
+
+      if (obj->linkTable.get_count () > 0) {
+
+         result = True;
+
+         HashTableHandleIterator it;
+
+         while (obj->linkTable.get_next (it)) {
+
+            container.add_handle (it.get_hash_key ());
+         }
+      }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
 dmz::ObjectModuleBasic::lookup_super_links (
       const Handle ObjectHandle,
       const Handle AttributeHandle,

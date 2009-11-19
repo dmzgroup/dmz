@@ -132,12 +132,12 @@ struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
       interfaceTable.clear ();
 
       HashTableHandleIterator it;
-      PluginStruct *ps (pluginTable.get_first (it));
+      PluginStruct *ps (pluginTable.get_last (it));
 
       while (ps) {
 
          ps->delete_plugin ();
-         ps = pluginTable.get_next (it);
+         ps = pluginTable.get_prev (it);
       }
 
       pluginTable.empty ();

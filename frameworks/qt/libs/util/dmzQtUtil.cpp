@@ -1,6 +1,40 @@
 #include <dmzQtUtil.h>
+#include <dmzRuntimeObjectType.h>
+#include <dmzTypesUUID.h>
 #include <math.h>
 #include <QtGui/QtGui>
+
+
+QLatin1String
+dmz::to_qstring (const Handle &ObjectHandle) {
+
+   String result; result << ObjectHandle;
+   return to_qstring (result);
+}
+
+
+QLatin1String
+dmz::to_qstring (const String &Text) {
+
+   QLatin1String result (Text.get_buffer ());
+   return result;
+}
+
+
+QLatin1String
+dmz::to_qstring (const UUID &Identity) {
+
+   QLatin1String result (Identity.to_string ().get_buffer ());
+   return result;
+}
+
+
+QLatin1String
+dmz::to_qstring (const ObjectType &Type) {
+
+   QLatin1String result (Type.get_name ().get_buffer ());
+   return result;
+}
 
 
 dmz::Float64
@@ -98,21 +132,21 @@ dmz::get_save_file_name_with_extension (
       QString dir,
       const QString &filter,
       const QString &extension) {
-         
+
     const QChar dot = QLatin1Char('.');
 
     QString saveFile;
     while (true) {
-       
+
         saveFile = QFileDialog::getSaveFileName(
            parent, title, dir, filter, 0, QFileDialog::DontConfirmOverwrite);
-           
+
         if (saveFile.isEmpty())
             return saveFile;
 
         const QFileInfo fInfo(saveFile);
         if (fInfo.suffix().isEmpty() && !fInfo.fileName().endsWith(dot)) {
-           
+
             saveFile += dot;
             saveFile += extension;
         }
@@ -123,7 +157,7 @@ dmz::get_save_file_name_with_extension (
 
         const QString prompt =
            QObject::tr("%1 already exists.\nDo you want to replace it?").arg(fi.fileName());
-           
+
         if (QMessageBox::warning(parent, title, prompt, QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
             break;
 
@@ -136,16 +170,17 @@ dmz::get_save_file_name_with_extension (
 
 dmz::Boolean
 dmz::rename_file (const QString &OldName, const QString &NewName) {
-   
+
    Boolean retVal (False);
-   
+
    if (OldName == NewName) { retVal = True; }
    else {
-      
+
       if (QFile::exists (NewName)) { QFile::remove (NewName); }
-      
+
       if (QFile::rename (OldName, NewName)) { retVal = True; }
    }
-   
+
    return retVal;
 }
+

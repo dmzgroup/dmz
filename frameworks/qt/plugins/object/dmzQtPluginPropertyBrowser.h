@@ -6,6 +6,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <QtGui/QMainWindow>
 #include "ui_MainWindow.h"
@@ -14,8 +15,8 @@
 namespace dmz {
 
    class QtPropertyBrowser;
-   
-   
+
+
    class QtPluginPropertyBrowser :
          public QMainWindow,
          public Plugin,
@@ -23,7 +24,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       Q_OBJECT
-   
+
       public:
          QtPluginPropertyBrowser (const PluginInfo &Info, Config &local);
          ~QtPluginPropertyBrowser ();
@@ -215,7 +216,6 @@ namespace dmz {
          void on_objectTreeWidget_itemActivated (QTreeWidgetItem *item, int column);
 
       protected:
-         QString _handle_to_string (const Handle Object);
          Handle _item_to_handle (QTreeWidgetItem *item);
          void _init (Config &local);
 
@@ -223,8 +223,8 @@ namespace dmz {
          Definitions _defs;
          Ui::MainWindow _ui;
          Handle _defaultAttrHandle;
-         
          HashTableHandleTemplate<QtPropertyBrowser> _browserTable;
+         HandleContainer _objects;
 
       private:
          QtPluginPropertyBrowser ();

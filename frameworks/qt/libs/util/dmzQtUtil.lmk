@@ -36,6 +36,7 @@ lmk.add_files ({
 }, {win32 = true})
 
 lmk.add_libs {"dmzKernel",}
+lmk.add_preqs {"dmzObjectFramework",}
 lmkQt.add_libs {"QtCore", "QtGui",}
 
 lmk.add_vars ({

@@ -13,12 +13,18 @@ class QString;
 namespace dmz {
 
    class Config;
+   class ObjectType;
 
    QPointF to_qpointf (const Vector &Source);
    Vector to_dmz_vector (const QPointF &Source);
 
    QSizeF to_qsizef (const Vector &Source);
    Vector to_dmz_vector (const QSizeF &Source);
+
+   DMZ_QT_UTIL_LINK_SYMBOL QLatin1String to_qstring (const String &Text);
+   DMZ_QT_UTIL_LINK_SYMBOL QLatin1String to_qstring (const Handle &ObjectHandle);
+   DMZ_QT_UTIL_LINK_SYMBOL QLatin1String to_qstring (const UUID &Identity);
+   DMZ_QT_UTIL_LINK_SYMBOL QLatin1String to_qstring (const ObjectType &Type);
 
    DMZ_QT_UTIL_LINK_SYMBOL Float64 get_qmatrix_scale (const QMatrix &Source);
 
@@ -35,22 +41,22 @@ namespace dmz {
       const String &Name,
       const Config &Source,
       QWidget *widget);
-   
-   
+
+
    void set_qwidget_contents_margins (const Config &Source, QWidget *widget);
-   
+
    DMZ_QT_UTIL_LINK_SYMBOL void set_qwidget_contents_margins (
       const String &Name,
       const Config &Source,
       QWidget *widget);
-      
+
    DMZ_QT_UTIL_LINK_SYMBOL QString get_save_file_name_with_extension (
       QWidget *parent,
       const QString &title,
       QString dir,
       const QString &filter,
       const QString &extension);
-         
+
    DMZ_QT_UTIL_LINK_SYMBOL Boolean rename_file (
       const QString &OldName,
       const QString &NewName);

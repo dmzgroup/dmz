@@ -6,7 +6,7 @@
 #include <dmzTypesHashTableUInt32Template.h>
 #include <osg/ref_ptr>
 
-namespace osg { class Light; }
+namespace osg { class Light; class LightSource; }
 
 namespace dmz {
 
@@ -32,11 +32,13 @@ namespace dmz {
          struct LightStruct {
 
             osg::ref_ptr<osg::Light> light;
+            osg::ref_ptr<osg::LightSource> source;
          };
 
-         void _init (Config &local);
-         void _init_light (const Int32 MaxLights, Config &light);
          void _add_lights ();
+         void _remove_lights ();
+         void _init_light (const Int32 MaxLights, Config &light);
+         void _init (Config &local);
 
          Log _log;
 

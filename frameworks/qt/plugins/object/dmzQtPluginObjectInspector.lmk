@@ -1,16 +1,16 @@
 require "lmkQtPropertyBrowser"
-lmkQtPropertyBrowser.set_name "dmzQtPluginPropertyBrowser"
+lmkQtPropertyBrowser.set_name "dmzQtPluginObjectInspector"
 lmk.set_type "plugin"
-lmk.add_files {"PropertyBrowser.ui","MainWindow.ui",}
+lmk.add_files {"ObjectInspectorForm.ui","ObjectListForm.ui",}
 lmk.add_files ({
    "dmzQtPropertyManager.h",
-   "dmzQtPropertyBrowser.h",
-   "dmzQtPluginPropertyBrowser.h",
+   "dmzQtObjectInspector.h",
+   "dmzQtPluginObjectInspector.h",
 },{src="moc"})
 lmk.add_files {
    "dmzQtPropertyManager.cpp",
-   "dmzQtPropertyBrowser.cpp",
-   "dmzQtPluginPropertyBrowser.cpp",
+   "dmzQtObjectInspector.cpp",
+   "dmzQtPluginObjectInspector.cpp",
 }
 lmk.add_libs {
    "dmzQtUtil",

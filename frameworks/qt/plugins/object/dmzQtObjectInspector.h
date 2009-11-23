@@ -1,50 +1,30 @@
-#ifndef DMZ_QT_PLUGIN_PROPERTY_BROWSER_DOT_H
-#define DMZ_QT_PLUGIN_PROPERTY_BROWSER_DOT_H
+#ifndef DMZ_QT_OBJECT_INSPECTOR_DOT_H
+#define DMZ_QT_OBJECT_INSPECTOR_DOT_H
 
 #include <dmzObjectObserverUtil.h>
-#include <dmzRuntimeDefinitions.h>
-#include <dmzRuntimeLog.h>
+#include "dmzQtPropertyManager.h"
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzTypesHandleContainer.h>
-#include <dmzTypesHashTableHandleTemplate.h>
-#include <QtGui/QMainWindow>
-#include "ui_MainWindow.h"
+#include <QtGui/QFrame>
+
+
+class QtProperty;
 
 
 namespace dmz {
 
-   class QtPropertyBrowser;
-
-
-   class QtPluginPropertyBrowser :
-         public QMainWindow,
-         public Plugin,
-         public MessageObserver,
-         public ObjectObserverUtil {
+   class QtObjectInspector : public QFrame {
 
       Q_OBJECT
 
       public:
-         QtPluginPropertyBrowser (const PluginInfo &Info, Config &local);
-         ~QtPluginPropertyBrowser ();
+         QtObjectInspector (
+            const Handle ObjHandle,
+            ObjectObserverUtil &observer,
+            RuntimeContext *context,
+            QWidget *parent = 0);
 
-         // Plugin Interface
-         virtual void update_plugin_state (
-            const PluginStateEnum State,
-            const UInt32 Level);
-
-         virtual void discover_plugin (
-            const PluginDiscoverEnum Mode,
-            const Plugin *PluginPtr);
-
-         // Message Observer Interface
-         virtual void receive_message (
-            const Message &Type,
-            const UInt32 MessageSendHandle,
-            const Handle TargetObserverHandle,
-            const Data *InData,
-            Data *outData);
+         ~QtObjectInspector ();
 
          // Object Observer Interface
          virtual void create_object (
@@ -52,8 +32,6 @@ namespace dmz {
             const Handle ObjectHandle,
             const ObjectType &Type,
             const ObjectLocalityEnum Locality);
-
-         virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
 
          virtual void update_object_uuid (
             const Handle ObjectHandle,
@@ -213,25 +191,21 @@ namespace dmz {
             const Data *PreviousValue);
 
       protected slots:
-         void on_objectTreeWidget_itemActivated (QTreeWidgetItem *item, int column);
+         void _value_changed (QtProperty *property, const QVariant &value);
+         void _value_changed (QtProperty *property, const Vector &Value);
 
       protected:
-         Handle _item_to_handle (QTreeWidgetItem *item);
-         void _init (Config &local);
+         void _init ();
 
-         Log _log;
-         Definitions _defs;
-         Ui::MainWindow _ui;
-         Handle _defaultAttrHandle;
-         HashTableHandleTemplate<QtPropertyBrowser> _browserTable;
-         HandleContainer _objects;
+         struct GroupStruct;
+         struct State;
+         State &_state;
 
       private:
-         QtPluginPropertyBrowser ();
-         QtPluginPropertyBrowser (const QtPluginPropertyBrowser &);
-         QtPluginPropertyBrowser &operator= (const QtPluginPropertyBrowser &);
+         QtObjectInspector ();
+         QtObjectInspector (const QtObjectInspector &);
+         QtObjectInspector &operator= (const QtObjectInspector &);
    };
 };
 
-
-#endif // DMZ_QT_PLUGIN_PROPERTY_BROWSER_DOT_H
+#endif // DMZ_QT_OBJECT_INSPECTOR_DOT_H

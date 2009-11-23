@@ -1,7 +1,7 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectModule.h>
 #include <dmzQtConfigRead.h>
-#include "dmzQtPropertyBrowser.h"
+#include "dmzQtObjectInspector.h"
 #include <dmzQtUtil.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
@@ -14,7 +14,7 @@
 #include <qtpropertymanager.h>
 #include <qttreepropertybrowser.h>
 #include <qtvariantproperty.h>
-#include "ui_PropertyBrowser.h"
+#include "ui_ObjectInspectorForm.h"
 
 
 namespace {
@@ -40,7 +40,7 @@ namespace {
 };
 
 
-class dmz::QtPropertyBrowser::GroupStruct {
+class dmz::QtObjectInspector::GroupStruct {
 
    public:
       GroupStruct (const QString &Name) : _Name (Name), _property (0) {;}
@@ -68,13 +68,13 @@ class dmz::QtPropertyBrowser::GroupStruct {
 };
 
 
-struct dmz::QtPropertyBrowser::State {
+struct dmz::QtObjectInspector::State {
 
    const Handle ObjHandle;
    ObjectObserverUtil &obs;
    Log log;
    Definitions defs;
-   Ui::PropertyBrowser ui;
+   Ui::ObjectInspectorForm ui;
    QtGroupPropertyManager *groupManager;
    QtEnumPropertyManager *enumManager;
    QtEnumPropertyManager *enumManagerRO;
@@ -94,7 +94,7 @@ struct dmz::QtPropertyBrowser::State {
    State (const Handle TheHandle, ObjectObserverUtil &theObs, RuntimeContext *theContext) :
          ObjHandle (TheHandle),
          obs (theObs),
-         log ("QtPropertyBrowser", theContext),
+         log ("QtObjectInspector", theContext),
          defs (theContext, &log),
          handleProperty (0),
          typeProperty (0),
@@ -130,8 +130,8 @@ struct dmz::QtPropertyBrowser::State {
 };
 
 
-dmz::QtPropertyBrowser::GroupStruct *
-dmz::QtPropertyBrowser::State::get_group (const QString &GroupName) {
+dmz::QtObjectInspector::GroupStruct *
+dmz::QtObjectInspector::State::get_group (const QString &GroupName) {
 
    GroupStruct *group (groupMap[GroupName]);
    if (!group && groupManager) {
@@ -147,7 +147,7 @@ dmz::QtPropertyBrowser::State::get_group (const QString &GroupName) {
 
 
 void
-dmz::QtPropertyBrowser::State::update_variant_property (
+dmz::QtObjectInspector::State::update_variant_property (
       const QString &GroupName,
       const Handle AttrHandle,
       const int PropertyType,
@@ -174,7 +174,7 @@ dmz::QtPropertyBrowser::State::update_variant_property (
 
 
 void
-dmz::QtPropertyBrowser::State::update_vector_property (
+dmz::QtObjectInspector::State::update_vector_property (
       const QString &GroupName,
       const Handle AttrHandle,
       const Vector &Value) {
@@ -199,7 +199,7 @@ dmz::QtPropertyBrowser::State::update_vector_property (
 }
 
 
-dmz::QtPropertyBrowser::QtPropertyBrowser (
+dmz::QtObjectInspector::QtObjectInspector (
       const Handle ObjHandle,
       ObjectObserverUtil &observer,
       RuntimeContext *context,
@@ -211,7 +211,7 @@ dmz::QtPropertyBrowser::QtPropertyBrowser (
 }
 
 
-dmz::QtPropertyBrowser::~QtPropertyBrowser () {
+dmz::QtObjectInspector::~QtObjectInspector () {
 
    delete &_state;
 }
@@ -219,7 +219,7 @@ dmz::QtPropertyBrowser::~QtPropertyBrowser () {
 
 // Object Observer Interface
 void
-dmz::QtPropertyBrowser::create_object (
+dmz::QtObjectInspector::create_object (
       const UUID &Identity,
       const Handle ObjectHandle,
       const ObjectType &Type,
@@ -248,7 +248,7 @@ dmz::QtPropertyBrowser::create_object (
 
 
 void
-dmz::QtPropertyBrowser::update_object_uuid (
+dmz::QtObjectInspector::update_object_uuid (
       const Handle ObjectHandle,
       const UUID &Identity,
       const UUID &PrevIdentity) {
@@ -270,7 +270,7 @@ dmz::QtPropertyBrowser::update_object_uuid (
 
 
 void
-dmz::QtPropertyBrowser::remove_object_attribute (
+dmz::QtObjectInspector::remove_object_attribute (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -280,7 +280,7 @@ dmz::QtPropertyBrowser::remove_object_attribute (
 
 
 void
-dmz::QtPropertyBrowser::update_object_locality (
+dmz::QtObjectInspector::update_object_locality (
       const UUID &Identity,
       const Handle ObjectHandle,
       const ObjectLocalityEnum Locality,
@@ -313,7 +313,7 @@ dmz::QtPropertyBrowser::update_object_locality (
 
 
 void
-dmz::QtPropertyBrowser::link_objects (
+dmz::QtObjectInspector::link_objects (
       const Handle LinkHandle,
       const Handle AttributeHandle,
       const UUID &SuperIdentity,
@@ -325,7 +325,7 @@ dmz::QtPropertyBrowser::link_objects (
 
 
 void
-dmz::QtPropertyBrowser::unlink_objects (
+dmz::QtObjectInspector::unlink_objects (
       const Handle LinkHandle,
       const Handle AttributeHandle,
       const UUID &SuperIdentity,
@@ -337,7 +337,7 @@ dmz::QtPropertyBrowser::unlink_objects (
 
 
 void
-dmz::QtPropertyBrowser::update_link_attribute_object (
+dmz::QtObjectInspector::update_link_attribute_object (
       const Handle LinkHandle,
       const Handle AttributeHandle,
       const UUID &SuperIdentity,
@@ -354,7 +354,7 @@ dmz::QtPropertyBrowser::update_link_attribute_object (
 
 
 void
-dmz::QtPropertyBrowser::update_object_counter (
+dmz::QtObjectInspector::update_object_counter (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -370,7 +370,7 @@ dmz::QtPropertyBrowser::update_object_counter (
 
 
 void
-dmz::QtPropertyBrowser::update_object_counter_minimum (
+dmz::QtObjectInspector::update_object_counter_minimum (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -386,7 +386,7 @@ dmz::QtPropertyBrowser::update_object_counter_minimum (
 
 
 void
-dmz::QtPropertyBrowser::update_object_counter_maximum (
+dmz::QtObjectInspector::update_object_counter_maximum (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -402,7 +402,7 @@ dmz::QtPropertyBrowser::update_object_counter_maximum (
 
 
 void
-dmz::QtPropertyBrowser::update_object_alternate_type (
+dmz::QtObjectInspector::update_object_alternate_type (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -418,7 +418,7 @@ dmz::QtPropertyBrowser::update_object_alternate_type (
 
 
 void
-dmz::QtPropertyBrowser::update_object_state (
+dmz::QtObjectInspector::update_object_state (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -440,7 +440,7 @@ dmz::QtPropertyBrowser::update_object_state (
 
 
 void
-dmz::QtPropertyBrowser::update_object_flag (
+dmz::QtObjectInspector::update_object_flag (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -456,7 +456,7 @@ dmz::QtPropertyBrowser::update_object_flag (
 
 
 void
-dmz::QtPropertyBrowser::update_object_time_stamp (
+dmz::QtObjectInspector::update_object_time_stamp (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -472,7 +472,7 @@ dmz::QtPropertyBrowser::update_object_time_stamp (
 
 
 void
-dmz::QtPropertyBrowser::update_object_position (
+dmz::QtObjectInspector::update_object_position (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -487,7 +487,7 @@ dmz::QtPropertyBrowser::update_object_position (
 
 
 void
-dmz::QtPropertyBrowser::update_object_orientation (
+dmz::QtObjectInspector::update_object_orientation (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -502,7 +502,7 @@ dmz::QtPropertyBrowser::update_object_orientation (
 
 
 void
-dmz::QtPropertyBrowser::update_object_velocity (
+dmz::QtObjectInspector::update_object_velocity (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -517,7 +517,7 @@ dmz::QtPropertyBrowser::update_object_velocity (
 
 
 void
-dmz::QtPropertyBrowser::update_object_acceleration (
+dmz::QtObjectInspector::update_object_acceleration (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -532,7 +532,7 @@ dmz::QtPropertyBrowser::update_object_acceleration (
 
 
 void
-dmz::QtPropertyBrowser::update_object_scale (
+dmz::QtObjectInspector::update_object_scale (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -547,7 +547,7 @@ dmz::QtPropertyBrowser::update_object_scale (
 
 
 void
-dmz::QtPropertyBrowser::update_object_vector (
+dmz::QtObjectInspector::update_object_vector (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -562,7 +562,7 @@ dmz::QtPropertyBrowser::update_object_vector (
 
 
 void
-dmz::QtPropertyBrowser::update_object_scalar (
+dmz::QtObjectInspector::update_object_scalar (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -578,7 +578,7 @@ dmz::QtPropertyBrowser::update_object_scalar (
 
 
 void
-dmz::QtPropertyBrowser::update_object_text (
+dmz::QtObjectInspector::update_object_text (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -597,7 +597,7 @@ dmz::QtPropertyBrowser::update_object_text (
 
 
 void
-dmz::QtPropertyBrowser::update_object_data (
+dmz::QtObjectInspector::update_object_data (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
@@ -608,7 +608,7 @@ dmz::QtPropertyBrowser::update_object_data (
 
 
 void
-dmz::QtPropertyBrowser::_value_changed (QtProperty *property, const QVariant &Value) {
+dmz::QtObjectInspector::_value_changed (QtProperty *property, const QVariant &Value) {
 
    _state.ignoreUpdates = True;
 
@@ -672,7 +672,7 @@ dmz::QtPropertyBrowser::_value_changed (QtProperty *property, const QVariant &Va
 
 
 void
-dmz::QtPropertyBrowser::_value_changed (QtProperty *property, const Vector &Value) {
+dmz::QtObjectInspector::_value_changed (QtProperty *property, const Vector &Value) {
 
    _state.ignoreUpdates = True;
 
@@ -709,7 +709,7 @@ dmz::QtPropertyBrowser::_value_changed (QtProperty *property, const Vector &Valu
 
 
 // void
-// dmz::QtPropertyBrowser::_clear_properties () {
+// dmz::QtObjectInspector::_clear_properties () {
 //
 //    QMap<QtProperty *, QString>::ConstIterator itProp = _state.propertyToId.constBegin ();
 //
@@ -725,7 +725,7 @@ dmz::QtPropertyBrowser::_value_changed (QtProperty *property, const Vector &Valu
 
 
 void
-dmz::QtPropertyBrowser::_init () {
+dmz::QtObjectInspector::_init () {
 
    // QString name ("%1-%2");
    // name.arg (_obs.get_plugin_name ().get_buffer (),  _state.ObjHandle);

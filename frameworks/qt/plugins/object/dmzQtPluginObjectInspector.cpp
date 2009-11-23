@@ -140,9 +140,12 @@ dmz::QtPluginObjectInspector::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
-   QtObjectInspector *inspector = _inspectorTable.remove (ObjectHandle);
-   if (inspector) { delete inspector; inspector = 0; }
+   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   if (inspector) {
 
+      inspector->destroy_object (Identity, ObjectHandle);
+   }
+         
    if (_objects.contains (ObjectHandle))  {
 
       for (int ix = 0; ix < _ui.objectTreeWidget->topLevelItemCount (); ++ix) {
@@ -550,15 +553,27 @@ dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
 
    ObjectModule *objMod (get_object_module ());
    Handle objHandle = _item_to_handle (item);
+   
+   QtObjectInspector *inspector = _inspectorTable.lookup (objHandle);
 
-   if (objHandle && objMod && !_inspectorTable.lookup (objHandle)) {
+   if (inspector) {
+      
+      inspector->show ();
+      inspector->raise ();
+   }
+   else if (objMod) {
 
       QtObjectInspector *inspector =
          new QtObjectInspector (objHandle, *this, get_plugin_runtime_context ());
 
       if (_inspectorTable.store (objHandle, inspector)) {
 
+         connect (
+            inspector, SIGNAL (finished (const Handle)),
+            this, SLOT (_inspector_finished (const Handle)));
+
          objMod->dump_all_object_attributes (objHandle, *this);
+         
          inspector->show ();
       }
       else {
@@ -566,6 +581,14 @@ dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
          delete inspector; inspector = 0;
       }
    }
+}
+
+
+void
+dmz::QtPluginObjectInspector::_inspector_finished (const Handle ObjectHandle) {
+
+   QtObjectInspector *inspector = _inspectorTable.remove (ObjectHandle);
+   if (inspector) { delete inspector; inspector = 0; }
 }
 
 

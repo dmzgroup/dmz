@@ -48,7 +48,6 @@ class dmz::QtObjectInspector::GroupStruct {
       ~GroupStruct () {;}
 
       void add_property (QtProperty *property) { _property = property; }
-
       void add_property (const dmz::Handle AttrHandle, QtProperty *property) {
 
          _handleMap[property] = AttrHandle;
@@ -236,7 +235,7 @@ dmz::QtObjectInspector::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
+   if (ObjectHandle == _state.ObjHandle && !_state.ignoreUpdates) {
 
       if (_state.variantManagerRO) {
 
@@ -254,6 +253,36 @@ dmz::QtObjectInspector::create_object (
 
          update_object_locality (Identity, ObjectHandle, Locality, Locality);
       }
+   }
+}
+
+
+void
+dmz::QtObjectInspector::destroy_object (
+      const UUID &Identity,
+      const Handle ObjectHandle) {
+
+   if (ObjectHandle == _state.ObjHandle && !_state.ignoreUpdates) {
+
+      QMap<QtProperty *, Handle>::ConstIterator itProp =
+         _state.propertyToHandleMap.constBegin ();
+
+      while (itProp != _state.propertyToHandleMap.constEnd ()) {
+
+         itProp.key ()->setEnabled (False);
+         itProp++;
+      }
+
+      _state.handleProperty->setEnabled (False);
+      _state.typeProperty->setEnabled (False);
+      _state.localityProperty->setEnabled (False);
+      _state.uuidProperty->setEnabled (False);
+      
+      _state.ui.addAttributeButton->setEnabled (False);
+      _state.ui.removeAttributeButton->setEnabled (False);
+      
+      _state.ignoreUpdates = true;
+      _state.ignoreValueChanged = true;
    }
 }
 
@@ -733,6 +762,13 @@ dmz::QtObjectInspector::_value_changed (QtProperty *property, const Vector &Valu
 //    _state.propertyToId.clear ();
 //    _state.idToProperty.clear ();
 // }
+
+
+void
+dmz::QtObjectInspector::closeEvent (QCloseEvent *event) {
+
+   Q_EMIT finished (_state.ObjHandle);
+}
 
 
 void

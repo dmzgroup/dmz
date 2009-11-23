@@ -214,6 +214,8 @@ namespace dmz {
 
       protected slots:
          void on_objectTreeWidget_itemActivated (QTreeWidgetItem *item, int column);
+         
+         void _inspector_finished (const Handle ObjectHandle);
 
       protected:
          Handle _item_to_handle (QTreeWidgetItem *item);

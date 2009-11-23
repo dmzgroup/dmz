@@ -32,6 +32,8 @@ namespace dmz {
             const Handle ObjectHandle,
             const ObjectType &Type,
             const ObjectLocalityEnum Locality);
+            
+         virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
 
          virtual void update_object_uuid (
             const Handle ObjectHandle,
@@ -189,12 +191,16 @@ namespace dmz {
             const Handle AttributeHandle,
             const Data &Value,
             const Data *PreviousValue);
+            
+      Q_SIGNALS:
+         void finished (const Handle);
 
       protected slots:
          void _value_changed (QtProperty *property, const QVariant &value);
          void _value_changed (QtProperty *property, const Vector &Value);
 
       protected:
+         virtual void closeEvent (QCloseEvent *event);
          void _init ();
 
          struct GroupStruct;

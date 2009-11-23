@@ -1,7 +1,6 @@
 require "lmkQt"
 lmkQt.set_name "dmzQtFramework"
 lmk.add_files {
-   "dmzQtModuleObject.h",
    "dmzQtModuleMainWindow.h",
    "dmzQtModuleCanvas.h",
    "dmzQtCanvasConsts.h",

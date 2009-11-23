@@ -160,6 +160,8 @@ dmz::RenderPluginArticulateOSG::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
+   ObjectStruct *obj = _objTable.remove (ObjectHandle);
+   if (obj) { delete obj; obj = 0; }
 }
 
 

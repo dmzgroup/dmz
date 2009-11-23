@@ -138,6 +138,11 @@ namespace dmz {
          ParticleStateFactory *_create_fire_state_factory (Config &fx);
          ParticleStateFactory *_create_dust_state_factory (Config &fx);
 
+         void _add_effect (const Handle ObjectHandle, ObjectStruct &os);
+         void _add_effects ();
+         void _remove_effect (const Handle ObjectHandle, ObjectStruct &os);
+         void _remove_effects ();
+
          void _init (Config &local);
 
          const Mask _EmptyState;

@@ -90,6 +90,8 @@ struct dmz::QtObjectInspector::State {
    QMap<QtProperty *, Handle> propertyToHandleMap;
    QMap<QString, GroupStruct *> groupMap;
    Boolean ignoreUpdates;
+   Boolean ignoreValueChanged;
+   
 
    State (const Handle TheHandle, ObjectObserverUtil &theObs, RuntimeContext *theContext) :
          ObjHandle (TheHandle),
@@ -100,7 +102,8 @@ struct dmz::QtObjectInspector::State {
          typeProperty (0),
          localityProperty (0),
          uuidProperty (0),
-         ignoreUpdates (False) {;}
+         ignoreUpdates (False),
+         ignoreValueChanged (False) {;}
 
    ~State () {;}
 
@@ -155,6 +158,8 @@ dmz::QtObjectInspector::State::update_variant_property (
 
    if (variantManager) {
 
+      ignoreValueChanged = true;
+      
       GroupStruct *group (get_group (GroupName));
       if (group) {
 
@@ -169,6 +174,8 @@ dmz::QtObjectInspector::State::update_variant_property (
 
          if (property) { variantManager->setValue (property, Value); }
       }
+      
+      ignoreValueChanged = false;
    }
 }
 
@@ -180,6 +187,8 @@ dmz::QtObjectInspector::State::update_vector_property (
       const Vector &Value) {
 
    if (vectorManager) {
+
+      ignoreValueChanged = true;
 
       GroupStruct *group (get_group (GroupName));
       if (group) {
@@ -196,6 +205,8 @@ dmz::QtObjectInspector::State::update_vector_property (
          if (property) { vectorManager->setValue (property, Value); }
       }
    }
+   
+   ignoreValueChanged = false;
 }
 
 
@@ -425,7 +436,7 @@ dmz::QtObjectInspector::update_object_state (
       const Mask &Value,
       const Mask *PreviousValue) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
+   if ((ObjectHandle == _state.ObjHandle) && !_state.ignoreUpdates) {
 
       String name;
       _state.defs.lookup_state_name (Value, name);
@@ -460,7 +471,7 @@ dmz::QtObjectInspector::update_object_time_stamp (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Float64 &Value,
+      const Float64 Value,
       const Float64 *PreviousValue) {
 
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
@@ -613,7 +624,7 @@ dmz::QtObjectInspector::_value_changed (QtProperty *property, const QVariant &Va
    _state.ignoreUpdates = True;
 
    ObjectModule *objMod (_state.obs.get_object_module ());
-   if (objMod) {
+   if (objMod && !_state.ignoreValueChanged) {
 
       const QString Group (_state.propertyToGroupMap[property]);
       const Handle Attr (_state.propertyToHandleMap[property]);

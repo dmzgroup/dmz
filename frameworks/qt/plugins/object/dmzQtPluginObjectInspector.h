@@ -146,7 +146,7 @@ namespace dmz {
             const UUID &Identity,
             const Handle ObjectHandle,
             const Handle AttributeHandle,
-            const Float64 &Value,
+            const Float64 Value,
             const Float64 *PreviousValue);
 
          virtual void update_object_position (

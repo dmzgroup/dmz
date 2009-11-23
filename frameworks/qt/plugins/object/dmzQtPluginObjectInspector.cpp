@@ -378,7 +378,7 @@ dmz::QtPluginObjectInspector::update_object_time_stamp (
       const UUID &Identity,
       const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Float64 &Value,
+      const Float64 Value,
       const Float64 *PreviousValue) {
 
    QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);

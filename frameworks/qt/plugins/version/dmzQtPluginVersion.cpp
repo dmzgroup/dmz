@@ -26,6 +26,7 @@ dmz::QtPluginVersion::QtPluginVersion (
 
 dmz::QtPluginVersion::~QtPluginVersion () {
 
+   if (_aboutAction) { delete _aboutAction; _aboutAction = 0; }
    if (_version) { delete _version; _version = 0; }
 }
 
@@ -60,7 +61,7 @@ dmz::QtPluginVersion::discover_plugin (
 
       QtModuleMainWindow *window (QtModuleMainWindow::cast (PluginPtr));
 
-      if (window && _aboutAction) {
+      if (!_version && window && _aboutAction) {
 
          _version = new QtVersion (window->get_qt_main_window (), _global);
 
@@ -74,6 +75,8 @@ dmz::QtPluginVersion::discover_plugin (
       if (window) {
       
          window->remove_menu_action (_helpMenuName, _aboutAction);
+         
+         _aboutAction->setParent (0);
          _version->setParent (0);
       }
    }

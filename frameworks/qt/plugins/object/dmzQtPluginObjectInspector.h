@@ -1,42 +1,34 @@
-#ifndef DMZ_QT_PLUGIN_PROPERTY_BROWSER_DOT_H
-#define DMZ_QT_PLUGIN_PROPERTY_BROWSER_DOT_H
+#ifndef DMZ_QT_PLUGIN_OBJECT_INSPECTOR_DOT_H
+#define DMZ_QT_PLUGIN_OBJECT_INSPECTOR_DOT_H
 
-#include <dmzQtWidget.h>
-#include "dmzQtPropertyManager.h"
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
-#include <QtCore/QMap>
+#include <dmzTypesHandleContainer.h>
+#include <dmzTypesHashTableHandleTemplate.h>
 #include <QtGui/QFrame>
-#include "ui_PropertyBrowser.h"
-
-
-class QtProperty;
-class QtVariantPropertyManager;
-class QtEnumPropertyManager;
-class QtGroupPropertyManager;
+#include "ui_ObjectListForm.h"
 
 
 namespace dmz {
 
-   class QtPluginPropertyBrowser :
+   class QtObjectInspector;
+
+
+   class QtPluginObjectInspector :
          public QFrame,
-         public QtWidget,
          public Plugin,
          public MessageObserver,
          public ObjectObserverUtil {
 
       Q_OBJECT
-   
-      public:
-         QtPluginPropertyBrowser (const PluginInfo &Info, Config &local);
-         ~QtPluginPropertyBrowser ();
 
-         // QtWidget Interface
-         virtual QWidget *get_qt_widget ();
-         
+      public:
+         QtPluginObjectInspector (const PluginInfo &Info, Config &local);
+         ~QtPluginObjectInspector ();
+
          // Plugin Interface
          virtual void update_plugin_state (
             const PluginStateEnum State,
@@ -154,7 +146,7 @@ namespace dmz {
             const UUID &Identity,
             const Handle ObjectHandle,
             const Handle AttributeHandle,
-            const Float64 &Value,
+            const Float64 Value,
             const Float64 *PreviousValue);
 
          virtual void update_object_position (
@@ -221,67 +213,25 @@ namespace dmz {
             const Data *PreviousValue);
 
       protected slots:
-         void _value_changed (QtProperty *property, const QVariant &value);
-         
-         void on_objectTreeWidget_currentItemChanged (
-            QTreeWidgetItem *current, QTreeWidgetItem *previous);
-      
+         void on_objectTreeWidget_itemActivated (QTreeWidgetItem *item, int column);
+
       protected:
-         QtProperty *_lookup_group_property (const QString &Name);
-
-         void _add_int64_property (
-               const QString &GroupName,
-               const Handle AttributeHandle,
-               const Int64 Value);
-         
-         void _add_float64_property (
-               const QString &GroupName,
-               const Handle AttributeHandle,
-               const Float64 Value);
-
-         void _add_string_property (
-               const QString &GroupName,
-               const Handle AttributeHandle,
-               const QString &Value);
-
-         void _add_vector_property (
-               const QString &GroupName,
-               const Handle AttributeHandle,
-               const Vector &Value);
-
-         void _add_property (QtProperty *property, const QString &id);
-         void _update_expand_state ();
-         QString _uuid_to_string (const UUID &Identity);
-         QString _type_to_string (const ObjectType &Type);
-         QString _handle_to_name (const Handle Object);
-         QString _handle_to_string (const Handle Object);
          Handle _item_to_handle (QTreeWidgetItem *item);
          void _init (Config &local);
 
          Log _log;
          Definitions _defs;
-         Ui::PropertyBrowserForm _ui;
+         Ui::ObjectListForm _ui;
          Handle _defaultAttrHandle;
-         QtGroupPropertyManager *_groupManager;
-         QtEnumPropertyManager *_enumManager;
-         QtEnumPropertyManager *_enumManagerRO;
-         QtVariantPropertyManager *_variantManager;
-         QtVariantPropertyManager *_variantManagerRO;
-         VectorPropertyManager *_vectorManager;
-         VectorPropertyManager *_vectorManagerRO;
-         
-         QMap<QtProperty *, QString> _propertyToId;
-         QMap<QString, QtProperty *> _idToProperty;
-         QMap<QString, bool> _idToExpanded;
-         QTreeWidgetItem *_currentItem;
-         Handle _currentObject;
+         HashTableHandleTemplate<QtObjectInspector> _inspectorTable;
+         HandleContainer _objects;
 
       private:
-         QtPluginPropertyBrowser ();
-         QtPluginPropertyBrowser (const QtPluginPropertyBrowser &);
-         QtPluginPropertyBrowser &operator= (const QtPluginPropertyBrowser &);
-
+         QtPluginObjectInspector ();
+         QtPluginObjectInspector (const QtPluginObjectInspector &);
+         QtPluginObjectInspector &operator= (const QtPluginObjectInspector &);
    };
 };
 
-#endif // DMZ_QT_PLUGIN_PROPERTY_BROWSER_DOT_H
+
+#endif // DMZ_QT_PLUGIN_OBJECT_INSPECTOR_DOT_H

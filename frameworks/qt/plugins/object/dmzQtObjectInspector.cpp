@@ -364,7 +364,7 @@ dmz::QtObjectInspector::update_object_counter (
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
 
       _state.update_variant_property (
-         CounterName, AttributeHandle, QVariant::LongLong, Value);
+         CounterName, AttributeHandle, QVariant::Int, Value);
    }
 }
 
@@ -380,7 +380,7 @@ dmz::QtObjectInspector::update_object_counter_minimum (
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
 
       _state.update_variant_property (
-         CounterMinimumName, AttributeHandle, QVariant::LongLong, Value);
+         CounterMinimumName, AttributeHandle, QVariant::Int, Value);
    }
 }
 
@@ -396,7 +396,7 @@ dmz::QtObjectInspector::update_object_counter_maximum (
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
 
       _state.update_variant_property (
-         CounterMaximumName, AttributeHandle, QVariant::String, Value);
+         CounterMaximumName, AttributeHandle, QVariant::Int, Value);
    }
 }
 

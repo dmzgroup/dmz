@@ -24,8 +24,8 @@ with the attribute handle defined by the String variable
 dmz::ObjectAttributeLastNetworkValueName.
 Attribute handles are named handles allocated by the runtime.
 Since attribute handles are runtime allocated, the
-attribute handle value should never be hard coded as it mostly like be a different
-number from run to run.
+attribute handle value should never be hard coded as it will most likely be a different
+value from run to run.
 Zero is considered an invalid attribute handle.
 \sa dmz::ObjectObserver \n dmz::Definitions::create_named_handle()
 
@@ -318,6 +318,16 @@ const dmz::Handle LinkHandle)
 \param[in] LinkHandle Link handle as returned by dmz::ObjectModule::link_objects()..
 \return Returns the dmz::Handle of the link's attribute object. Returns zero
 it the link does not have an attribute object.
+
+\fn dmz::Boolean dmz::ObjectModule::lookup_attribute_object_links (
+const Handle ObjectHandle,
+HandleContainer &container)
+\brief Gets all links using the object as an attribute.
+\details Stores the dmz::Handle of all links that use the given object as an attribute
+object
+\param[in] ObjectHandle dmz::Handle of Attribute Object
+\param[out] container HandleContainer to store the dmz::Handle of the links.
+\return Returns dmz::True if the object is used by any links as an attribute object.
 
 \fn dmz::Boolean dmz::ObjectModule::lookup_super_links (
 const dmz::Handle ObjectHandle,

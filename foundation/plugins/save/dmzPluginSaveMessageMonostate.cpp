@@ -7,8 +7,31 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
 
+/*!
 
-dmz::PluginSaveMessageMonostate::PluginSaveMessageMonostate (const PluginInfo &Info, Config &local) :
+\class dmz::PluginSaveMessageMonostate
+\ingroup Foundation
+\brief Saves and restores dmz::Message monostates.
+\details Uses the runtime session to archive and restore dmz::Message monostate values.
+\code
+<dmz>
+<dmzPluginSaveMessageMonostate>
+   <message name="Message Name"/>
+   <message name="Next Message Name"/>
+   ...
+   <message name="Final Message Name"/>
+</dmzPluginSaveMessageMonostate>
+</dmz>
+\endcode
+\sa dmz;::get_session_config
+
+*/
+
+
+//! \cond
+dmz::PluginSaveMessageMonostate::PluginSaveMessageMonostate (
+      const PluginInfo &Info,
+      Config &local) :
       Plugin (Info),
       _log (Info),
       _defs (Info),
@@ -153,6 +176,7 @@ dmz::PluginSaveMessageMonostate::_init (Config &local) {
       _restore_messages (restoreList);
    }
 }
+//! \endcond
 
 
 extern "C" {

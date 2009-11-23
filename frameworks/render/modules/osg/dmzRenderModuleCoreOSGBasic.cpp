@@ -64,10 +64,13 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
 dmz::RenderModuleCoreOSGBasic::~RenderModuleCoreOSGBasic () {
 
    _extensions.remove_plugins ();
+   _extensions.delete_plugins ();
    _objectTable.empty ();
    _viewerTable.empty ();
 
    osg::DeleteHandler *dh (osg::Referenced::getDeleteHandler ());
+
+   _scene = 0;
 
    if (dh) { dh->flush (); }
 }

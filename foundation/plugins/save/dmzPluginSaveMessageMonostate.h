@@ -14,6 +14,7 @@ namespace dmz {
          public Plugin {
 
       public:
+         //! \cond
          PluginSaveMessageMonostate (const PluginInfo &Info, Config &local);
          ~PluginSaveMessageMonostate ();
 
@@ -34,6 +35,7 @@ namespace dmz {
          Log _log;
          Definitions _defs;
          StringContainer _messages;
+         //! \endcond
 
       private:
          PluginSaveMessageMonostate ();

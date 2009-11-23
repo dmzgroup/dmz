@@ -4,6 +4,7 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimePluginContainer.h>
 #include <dmzRuntimeRTTI.h>
+#include <dmzSystemDynamicLibrary.h>
 #include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 
@@ -34,6 +35,26 @@ dmz::PluginIterator::~PluginIterator () { delete &state; }
 
 namespace {
 
+static dmz::String
+local_get_name (dmz::PluginInfo *info) {
+
+   dmz::String result ("<Unknown>");
+
+   if (info) {
+
+      result = info->get_name ();
+
+      if (info->get_class_name () != result) {
+
+         result << " of class: " << info->get_class_name ();
+      }
+
+      result << " [" << info->get_handle () << "]";
+   }
+
+   return result;
+}
+
 struct PluginStruct {
 
    dmz::Boolean HasInterface;
@@ -49,26 +70,45 @@ struct PluginStruct {
 
             if (log && info) {
 
-               log->info << "Deleting plugin: " << info->get_name () << dmz::endl;
+               log->info << "Deleting plugin: " << local_get_name (info) << dmz::endl;
             }
 
             // Info must be delete AFTER plugin so the lib is unloaded After the
             // plugin's destructor is called.
             delete plugin; plugin = 0;
          }
-
-         // Note: The info can only be deleted if the Plugin can be deleted
-         delete info; info = 0;
       }
       else if (log && plugin) {
 
-         log->info << "Not Deleting plugin: " << (info ? info->get_name () : "Unknown")
-            << dmz::endl;
+         log->info << "Not Deleting plugin: " << local_get_name (info) << dmz::endl;
 
          // Do not delete these. Instead just zero out the pointers. Yes, they will
          // leak but it is better than the alternative which is probably to crash.
          plugin = 0;
          info = 0;
+      }
+   }
+
+   void unload_plugin () {
+
+      // Note: The info can only be deleted if the Plugin can be deleted
+      if (info && (dmz::PluginDeleteModeDelete == info->get_delete_mode ())) {
+
+         if (log) {
+
+            dmz::String mode ("Unloading");
+
+            dmz::DynamicLibrary *dl = info->get_dynamic_library ();
+
+            if (dl && (dl->get_mode () == dmz::DynamicLibraryModeKeep)) {
+
+               mode = "Not unloading";
+            }
+
+            log->info << mode << " plugin: " << local_get_name (info) << dmz::endl;
+         }
+
+         delete info; info = 0;
       }
    }
 
@@ -81,7 +121,7 @@ struct PluginStruct {
          plugin (thePlugin),
          log (theLog) {;}
 
-   ~PluginStruct () { delete_plugin (); }
+   ~PluginStruct () { delete_plugin (); unload_plugin (); }
 };
 
 typedef dmz::HashTableHandleTemplate<PluginStruct> PluginTable;
@@ -132,13 +172,12 @@ struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
       interfaceTable.clear ();
 
       HashTableHandleIterator it;
-      PluginStruct *ps (pluginTable.get_first (it));
+      PluginStruct *ps (0);
+      while (pluginTable.get_prev (it, ps)) { ps->delete_plugin (); }
 
-      while (ps) {
-
-         ps->delete_plugin ();
-         ps = pluginTable.get_next (it);
-      }
+      it.reset ();
+      ps = 0;
+      while (pluginTable.get_prev (it, ps)) { ps->unload_plugin (); }
 
       pluginTable.empty ();
       externTable.clear ();

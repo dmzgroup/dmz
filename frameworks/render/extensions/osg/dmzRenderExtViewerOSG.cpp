@@ -28,10 +28,10 @@ dmz::RenderExtViewerOSG::RenderExtViewerOSG (
    _viewer->setThreadingModel (osgViewer::Viewer::SingleThreaded);
    _eventHandler = new RenderEventHandlerOSG (get_plugin_runtime_context (), local);
 
-   osgViewer::StatsHandler *stats = new osgViewer::StatsHandler;
+   osg::ref_ptr<osgViewer::StatsHandler> stats = new osgViewer::StatsHandler;
    stats->setKeyEventTogglesOnScreenStats (osgGA::GUIEventAdapter::KEY_F1);
    stats->setKeyEventPrintsOutStats (osgGA::GUIEventAdapter::KEY_F2);
-   _viewer->addEventHandler (stats);
+   _viewer->addEventHandler (stats.get ());
    _viewer->addEventHandler (_eventHandler.get ());
    _viewer->setKeyEventSetsDone (0);
    _viewer->setQuitEventSetsDone (true);

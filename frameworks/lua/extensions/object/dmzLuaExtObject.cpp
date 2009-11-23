@@ -627,6 +627,31 @@ object_link_attribute_object (lua_State *L) {
 
 
 static int
+object_attribute_object_links (lua_State *L) {
+
+   int result (0);
+
+   ObjectModule *objMod (get_object_module (L));
+   Handle *objPtr = check_obj_handle (L, 1, objMod);
+
+   if (objMod && objPtr) {
+
+      HandleContainer container;
+
+      if (objMod->lookup_attribute_object_links (*objPtr, container)) {
+
+         lua_handle_container_to_table (L, container);
+      }
+      else { lua_pushnil (L); }
+
+      result = 1;
+   }
+
+   return result;
+}
+
+
+static int
 object_super_links (lua_State *L) {
 
    int result (0);
@@ -1593,6 +1618,7 @@ static const luaL_Reg arrayFunc[] = {
    {"unlink_super_links", object_unlink_super_links},
    {"unlink_sub_links", object_unlink_sub_links},
    {"link_attribute_object", object_link_attribute_object},
+   {"attribute_object_links", object_attribute_object_links},
    {"super_links", object_super_links},
    {"sub_links", object_sub_links},
    {"locality", object_locality},

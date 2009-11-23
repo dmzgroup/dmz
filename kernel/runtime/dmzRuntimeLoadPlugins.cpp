@@ -249,11 +249,13 @@ dmz::load_plugins (
                      local.add_children (data);
                      local.copy_attributes (data);
 
+#if 0
                      if (log) {
 
                         log->info << "Loading plugin: " << PluginName << " from: "
                            << LibName << endl;
                      }
+#endif
 
                      Plugin *plugin = func (*info, local, global);
 
@@ -263,15 +265,29 @@ dmz::load_plugins (
 
                            if (log) {
 
-                              log->info << "Created plugin: " << PluginName
-                              << "[" << plugin->get_plugin_handle () << "]" << endl;
+                              String name (PluginName);
+
+                              if (info->get_class_name () != name) {
+
+                                 name << " of class: "<< info->get_class_name ();
+                              }
+
+                              log->info << "Created plugin: " << name
+                                 << " [" << plugin->get_plugin_handle () << "]" << endl;
                            }
                         }
                         else {
 
                            if (log) {
 
-                              log->error << "Failed storing plugin: " << PluginName
+                              String name (PluginName);
+
+                              if (info->get_class_name () != name) {
+
+                                 name << " of class: "<< info->get_class_name ();
+                              }
+
+                              log->error << "Failed storing plugin: " << name
                                  << " in plugin container." << endl;
                            }
 
@@ -305,7 +321,7 @@ dmz::load_plugins (
                      if (log) {
 
                         log->error << "Failed creating plugin info for plugin: "
-                           << PluginName << endl;
+                           << PluginName << " from dynamic library: " << LibName << endl;
                      }
 
                      error = True;

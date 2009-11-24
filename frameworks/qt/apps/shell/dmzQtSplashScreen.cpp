@@ -56,7 +56,7 @@ dmz::QtSplashScreen::store_log_message (
 
    Int32 index (0);
 
-   if (Message.find_sub ("Loading plugin:", index)) {
+   if (Message.find_sub ("Created plugin:", index)) {
 
       showMessage (Message.get_buffer (), Qt::AlignLeft | Qt::AlignBottom, Qt::white);
    }

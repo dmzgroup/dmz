@@ -260,11 +260,21 @@ dmz::RenderPluginParticleEffectsOSG::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_core) { _core = RenderModuleCoreOSG::cast (PluginPtr); }
+      if (!_core) {
+
+         _core = RenderModuleCoreOSG::cast (PluginPtr);
+
+         if (_core) { _add_effects (); }
+      }
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) { _core = 0; }
+      if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
+
+         _remove_effects ();
+
+         _core = 0;
+      }
    }
 }
 
@@ -285,18 +295,15 @@ dmz::RenderPluginParticleEffectsOSG::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
-   if (_core && !_ignoreTypes.contains_exact_type (Type)) {
+   if (!_ignoreTypes.contains_exact_type (Type)) {
 
       ObjectDefStruct *ods = _lookup_object_def (Type);
 
       if (ods) {
 
-         osg::Group *root = _core->get_dynamic_objects ();
-         osg::Group *obj = _core->lookup_dynamic_object (ObjectHandle);
-
          ObjectStruct *os = new ObjectStruct;
 
-         if (obj && root && os && _objTable.store (ObjectHandle, os)) {
+         if (os && _objTable.store (ObjectHandle, os)) {
 
             ParticleStateFactory *current (ods->list);
 
@@ -312,7 +319,6 @@ dmz::RenderPluginParticleEffectsOSG::create_object (
 
                      pss->enable (False);
 
-                     obj->addChild (pss->effect.get ());
                      os->geode->addDrawable (pss->effect->getParticleSystem ());
 
                      pss->next = os->list;
@@ -324,7 +330,7 @@ dmz::RenderPluginParticleEffectsOSG::create_object (
                current = current->next;
             }
 
-            root->addChild (os->geode.get ());
+            _add_effect (ObjectHandle, *os);
          }
          else if (os) { delete os; os = 0; }
       }
@@ -342,12 +348,7 @@ dmz::RenderPluginParticleEffectsOSG::destroy_object (
 
    if (os) {
 
-      if (_core) {
-
-         osg::Group *root = _core->get_dynamic_objects ();
-
-         if (root) { root->removeChild (os->geode.get ()); }
-      }
+      _remove_effect (ObjectHandle, *os);
 
       delete os; os = 0;
    }
@@ -579,6 +580,80 @@ dmz::RenderPluginParticleEffectsOSG::_create_dust_state_factory (Config &fx) {
    }
 
    return result;
+}
+
+
+void
+dmz::RenderPluginParticleEffectsOSG::_add_effect (
+      const Handle ObjectHandle,
+      ObjectStruct &os) {
+
+   if (_core) {
+
+      osg::Group *root = _core->get_dynamic_objects ();
+
+      if (root && os.geode.valid ()) { root->addChild (os.geode.get ()); }
+
+      osg::Group *obj = _core->create_dynamic_object (ObjectHandle);
+
+      if (obj) {
+
+         ParticleStateStruct *pss = os.list;
+
+         while (pss) {
+
+            if (pss->effect.valid ()) { obj->addChild (pss->effect.get ()); }
+            pss = pss->next;
+         }
+      }
+   }
+}
+
+
+void
+dmz::RenderPluginParticleEffectsOSG::_add_effects () {
+
+   HashTableHandleIterator it;
+   ObjectStruct *os (0);
+
+   while (_objTable.get_next (it, os)) { _add_effect (it.get_hash_key (), *os); }
+}
+
+
+void
+dmz::RenderPluginParticleEffectsOSG::_remove_effect (
+      const Handle ObjectHandle,
+      ObjectStruct &os) {
+
+   if (_core) {
+
+      osg::Group *root = _core->get_dynamic_objects ();
+
+      if (root && os.geode.valid ()) { root->removeChild (os.geode.get ()); }
+
+      osg::Group *obj = _core->lookup_dynamic_object (ObjectHandle);
+
+      if (obj) {
+
+         ParticleStateStruct *pss = os.list;
+
+         while (pss) {
+
+            if (pss->effect.valid ()) { obj->removeChild (pss->effect.get ()); }
+            pss = pss->next;
+         }
+      }
+   }
+}
+
+
+void
+dmz::RenderPluginParticleEffectsOSG::_remove_effects () {
+
+   HashTableHandleIterator it;
+   ObjectStruct *os (0);
+
+   while (_objTable.get_next (it, os)) { _remove_effect (it.get_hash_key (), *os); }
 }
 
 

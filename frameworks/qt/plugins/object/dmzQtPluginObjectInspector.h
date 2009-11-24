@@ -2,6 +2,7 @@
 #define DMZ_QT_PLUGIN_OBJECT_INSPECTOR_DOT_H
 
 #include <dmzObjectObserverUtil.h>
+#include <dmzQtWidget.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
@@ -19,6 +20,7 @@ namespace dmz {
 
    class QtPluginObjectInspector :
          public QFrame,
+         public QtWidget,
          public Plugin,
          public MessageObserver,
          public ObjectObserverUtil {
@@ -29,6 +31,9 @@ namespace dmz {
          QtPluginObjectInspector (const PluginInfo &Info, Config &local);
          ~QtPluginObjectInspector ();
 
+         // QtWidget Interface
+         virtual QWidget *get_qt_widget ();
+         
          // Plugin Interface
          virtual void update_plugin_state (
             const PluginStateEnum State,
@@ -227,6 +232,7 @@ namespace dmz {
          Handle _defaultAttrHandle;
          HashTableHandleTemplate<QtObjectInspector> _inspectorTable;
          HandleContainer _objects;
+         QPoint _newWindowPos;
 
       private:
          QtPluginObjectInspector ();

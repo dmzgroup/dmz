@@ -239,10 +239,13 @@ dmz::QtObjectInspector::create_object (
 
       if (_state.variantManagerRO) {
 
+         const QString HandleStr (to_qstring (ObjectHandle));
+         setWindowTitle (tr ("%1 (%2)").arg (windowTitle ()).arg (HandleStr));
+
          _state.handleProperty =
             _state.variantManagerRO->addProperty (QVariant::String, HandleName);
 
-         _state.handleProperty->setValue (to_qstring (ObjectHandle));
+         _state.handleProperty->setValue (HandleStr);
          _state.ui.propertyEditor->addProperty (_state.handleProperty);
 
          _state.typeProperty =
@@ -746,22 +749,6 @@ dmz::QtObjectInspector::_value_changed (QtProperty *property, const Vector &Valu
 
    _state.ignoreUpdates = False;
 }
-
-
-// void
-// dmz::QtObjectInspector::_clear_properties () {
-//
-//    QMap<QtProperty *, QString>::ConstIterator itProp = _state.propertyToId.constBegin ();
-//
-//    while (itProp != _state.propertyToId.constEnd ()) {
-//
-//        delete itProp.key ();
-//        itProp++;
-//    }
-//
-//    _state.propertyToId.clear ();
-//    _state.idToProperty.clear ();
-// }
 
 
 void

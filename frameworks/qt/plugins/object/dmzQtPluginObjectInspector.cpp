@@ -7,12 +7,13 @@
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzRuntimeSession.h>
 #include <dmzTypesUUID.h>
 #include <QtGui/QTreeWidgetItem>
-
+#include <QtGui/QDesktopWidget>
 
 namespace {
-
+   
    const dmz::UInt32 HandleRole (Qt::UserRole + 1);
    const dmz::UInt32 HandleCol (0);
    const dmz::UInt32 TypeCol (1);
@@ -25,6 +26,7 @@ dmz::QtPluginObjectInspector::QtPluginObjectInspector (
       const PluginInfo &Info,
       Config &local) :
       QFrame (0),
+      QtWidget (Info),
       Plugin (Info),
       MessageObserver (Info),
       ObjectObserverUtil (Info, local),
@@ -32,15 +34,28 @@ dmz::QtPluginObjectInspector::QtPluginObjectInspector (
       _defs (Info, &_log),
       _defaultAttrHandle (0),
       _inspectorTable (),
-      _objects () {
+      _objects (),
+      _newWindowPos () {
 
    _init (local);
+   
+   QDesktopWidget *desktop = QApplication::desktop ();
+   QRect rect = desktop->availableGeometry (desktop->primaryScreen ());
+   _newWindowPos = rect.topLeft ();
 }
 
 
 dmz::QtPluginObjectInspector::~QtPluginObjectInspector () {
 
    _inspectorTable.empty ();
+}
+
+
+// QtWidget Interface
+QWidget *
+dmz::QtPluginObjectInspector::get_qt_widget () {
+
+   return this;
 }
 
 
@@ -52,6 +67,13 @@ dmz::QtPluginObjectInspector::update_plugin_state (
 
    if (State == PluginStateInit) {
 
+      Config session (get_session_config (get_plugin_name (), get_plugin_runtime_context ()));
+
+      QByteArray geometry (config_to_qbytearray ("geometry", session, saveGeometry ()));
+      restoreGeometry (geometry);
+      
+     // if (config_to_boolean ("window.visible", session, False)) { show (); }
+      
       show ();
    }
    else if (State == PluginStateStart) {
@@ -62,6 +84,19 @@ dmz::QtPluginObjectInspector::update_plugin_state (
    }
    else if (State == PluginStateShutdown) {
 
+      String data;
+
+      Config session (get_plugin_name ());
+
+      session.add_config (qbytearray_to_config ("geometry", saveGeometry ()));
+
+      // if (isVisible ()) {
+      // 
+      //    session.add_config (boolean_to_config ("window", "visible", True));
+      // }
+
+      set_session_config (get_plugin_runtime_context (), session);
+      
       hide ();
    }
 }
@@ -573,8 +608,11 @@ dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
             this, SLOT (_inspector_finished (const Handle)));
 
          objMod->dump_all_object_attributes (objHandle, *this);
-         
+
+         inspector->move (_newWindowPos);
          inspector->show ();
+         
+         _newWindowPos += QPoint (25, 25);
       }
       else {
 
@@ -607,6 +645,8 @@ dmz::QtPluginObjectInspector::_init (Config &local) {
    setObjectName (get_plugin_name ().get_buffer ());
 
    _ui.setupUi (this);
+
+   qframe_config_read ("frame", local, this);
 
    QStringList headerList;
    headerList << "Handle" << "ObjectType" << "Locality" << "UUID";

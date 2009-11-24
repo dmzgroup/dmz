@@ -5,6 +5,7 @@
 #include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+
 #include <osg/Light>
 #include <osg/LightSource>
 
@@ -57,15 +58,164 @@ dmz::RenderPluginLightingOSG::discover_plugin (
          
          _core = RenderModuleCoreOSG::cast (PluginPtr); 
 
-         if (_core) {
-
-            _add_lights ();
-         }         
+         if (_core) { _add_lights (); }         
       }
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) { _core = 0; }
+      if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
+
+         _remove_lights ();
+         _core = 0;
+      }
+   }
+}
+
+
+void
+dmz::RenderPluginLightingOSG::_add_lights () {
+
+   osg::ref_ptr<osg::Group> scene (_core ? _core->get_scene () : 0);
+
+   if (scene.valid ()) {
+
+      if (_lightTable.get_count () == 0) {
+
+         LightStruct *ls = new LightStruct;
+
+         if (ls) {
+
+            ls->light = new osg::Light;
+
+            ls->light->setLightNum (0);
+            ls->light->setPosition (osg::Vec4 (0.0, 1000.0, 0.0, 1.0));
+            ls->light->setDirection (osg::Vec3 (0.0, -1.0, 0.0));
+
+            ls->source = new osg::LightSource;
+         
+            ls->source->setLight (ls->light.get ());
+            ls->source->setLocalStateSetModes (osg::StateAttribute::ON);
+
+            if (_lightTable.store (0, ls)) {
+
+               scene->addChild (ls->source.get ());
+
+               _log.info << "No valid lights found in config. Created Default Light."
+                  << endl;
+            }
+            else {
+
+               delete ls; ls = 0;
+               _log.error << "Failed to add default light source." << endl;
+            }
+         }
+      }
+
+      HashTableUInt32Iterator it;
+      LightStruct *ls (0);
+
+      while (_lightTable.get_next (it, ls)) {
+
+         scene->addChild (ls->source.get ());
+      }
+
+      _log.info << "Created " << _lightTable.get_size () << " Lights." << endl;
+   }
+}
+
+
+void
+dmz::RenderPluginLightingOSG::_remove_lights () {
+
+   osg::ref_ptr<osg::Group> scene (_core ? _core->get_scene () : 0);
+
+   if (scene.valid ()) {
+
+      HashTableUInt32Iterator it;
+      LightStruct *ls (0);
+
+      while (_lightTable.get_next (it, ls)) { scene->removeChild (ls->source.get ()); }
+   }
+}
+ 
+
+void 
+dmz::RenderPluginLightingOSG::_init_light (const Int32 MaxLights, Config &light) {
+
+   const Int32 LightValue (config_to_int32 ("value", light, -1));
+
+   if ((LightValue >= 0) && (LightValue < MaxLights)) {
+
+      LightStruct *ls (0);
+      
+      ls = _lightTable.lookup (LightValue);
+
+      if (!ls) {
+
+         ls = new LightStruct ();
+
+         if (ls && _lightTable.store (LightValue, ls)) {
+
+            ls->light = new osg::Light;
+            ls->light->setLightNum (LightValue);
+            ls->source = new osg::LightSource;
+            ls->source->setLight (ls->light.get ());
+         }
+         else if (ls) { delete ls; ls = 0; }
+      }
+      
+      if (ls && ls->light.valid ()) {
+
+         Config attr;
+         
+         if (light.lookup_config ("position", attr)) {
+
+            const Vector Value = config_to_vector (attr);
+
+            ls->light->setPosition (osg::Vec4 (
+               Value.get_x (), 
+               Value.get_y (), 
+               Value.get_z (), 
+               1.0));
+         }
+
+         if (light.lookup_config ("direction", attr)) {
+
+            const Vector Value = config_to_vector (attr).normalize ();
+
+            ls->light->setDirection (osg::Vec3 (
+               Value.get_x (), 
+               Value.get_y (), 
+               Value.get_z ()));
+         }
+
+         if (light.lookup_config ("ambient", attr)) {
+
+            const osg::Vec4 Value = config_to_osg_vec4_color (
+               attr,
+               osg::Vec4 (0.0, 0.0, 0.0, 1.0));
+
+            ls->light->setAmbient (Value);
+         }
+
+         if (light.lookup_config ("specular", attr)) {
+
+            const osg::Vec4 Value = config_to_osg_vec4_color (
+               attr,
+               osg::Vec4 (0.0, 0.0, 0.0, 1.0));
+
+            ls->light->setSpecular (Value);
+         }
+
+         if (light.lookup_config ("diffuse", attr)) {
+
+            const osg::Vec4 Value = config_to_osg_vec4_color (
+               attr,
+               osg::Vec4 (0.0, 0.0, 0.0, 1.0));
+
+            ls->light->setDiffuse (Value);
+         }
+      }
    }
 }
 
@@ -86,137 +236,6 @@ dmz::RenderPluginLightingOSG::_init (Config &local) {
 
          _init_light (MaxLights, light);
       }
-   }
-}
-
-
-void 
-dmz::RenderPluginLightingOSG::_init_light (const Int32 MaxLights, Config &light) {
-
-   const Int32 LightValue (config_to_int32 ("value", light, -1));
-
-   if ((LightValue >= 0) && (LightValue < MaxLights)) {
-
-      LightStruct *ptrLight;
-      
-      ptrLight = _lightTable.lookup (LightValue);
-
-      if (!ptrLight) {
-
-         ptrLight = new LightStruct ();
-         ptrLight->light = new osg::Light;
-         ptrLight->light->setLightNum (LightValue);
-         if (!_lightTable.store (LightValue, ptrLight)) {
-
-            delete ptrLight;
-            ptrLight = 0;
-         }
-      }
-      
-      if (ptrLight->light.valid ()) {
-
-         Config attr;
-         
-         if (light.lookup_config ("position", attr)) {
-
-            const Vector Value = config_to_vector (attr);
-
-            ptrLight->light->setPosition (osg::Vec4 (
-               Value.get_x (), 
-               Value.get_y (), 
-               Value.get_z (), 
-               1.0));
-         }
-
-         if (light.lookup_config ("direction", attr)) {
-
-            const Vector Value = config_to_vector (attr).normalize ();
-
-            ptrLight->light->setDirection (osg::Vec3 (
-               Value.get_x (), 
-               Value.get_y (), 
-               Value.get_z ()));
-         }
-
-         if (light.lookup_config ("ambient", attr)) {
-
-            const osg::Vec4 Value = config_to_osg_vec4_color (
-               attr,
-               osg::Vec4 (0.0, 0.0, 0.0, 1.0));
-
-            ptrLight->light->setAmbient (Value);
-         }
-
-         if (light.lookup_config ("specular", attr)) {
-
-            const osg::Vec4 Value = config_to_osg_vec4_color (
-               attr,
-               osg::Vec4 (0.0, 0.0, 0.0, 1.0));
-
-            ptrLight->light->setSpecular (Value);
-         }
-
-         if (light.lookup_config ("diffuse", attr)) {
-
-            const osg::Vec4 Value = config_to_osg_vec4_color (
-               attr,
-               osg::Vec4 (0.0, 0.0, 0.0, 1.0));
-
-            ptrLight->light->setDiffuse (Value);
-         }
-      }
-   }
-}
-
-
-void
-dmz::RenderPluginLightingOSG::_add_lights () {
-
-   osg::ref_ptr<osg::Group> scene (_core ? _core->get_scene () : 0);
-
-   if (scene.valid ()) {
-
-      osg::StateSet *stateset = scene->getOrCreateStateSet ();
-
-      if (_lightTable.get_count ()) {
-
-         HashTableUInt32Iterator it;
-
-         LightStruct *light = _lightTable.get_first (it);
-
-         while (light) {
-
-            osg::ref_ptr<osg::LightSource> ptrLightSource = new osg::LightSource;
-
-            ptrLightSource->setLight (light->light.get ());
-            ptrLightSource->setLocalStateSetModes (osg::StateAttribute::ON);
-            ptrLightSource->setStateSetModes (*stateset, osg::StateAttribute::ON);
-
-            scene->addChild (ptrLightSource.get ());
-
-            light = _lightTable.get_next (it);
-         }
-
-         _log.info << "Created " << _lightTable.get_size () << " Lights." << endl;
-      }
-      else {
-
-         osg::ref_ptr<osg::Light> ptrLight = new osg::Light;
-
-         ptrLight->setLightNum (0);
-         ptrLight->setPosition (osg::Vec4 (0.0, 1000.0, 0.0, 1.0));
-         ptrLight->setDirection (osg::Vec3 (0.0, -1.0, 0.0));
-
-         osg::ref_ptr<osg::LightSource> ptrLightSource = new osg::LightSource;
-         
-         ptrLightSource->setLight (ptrLight.get ());
-         ptrLightSource->setLocalStateSetModes (osg::StateAttribute::ON);
-         ptrLightSource->setStateSetModes (*stateset, osg::StateAttribute::ON);
-         
-         scene->addChild (ptrLightSource.get ());
-
-         _log.info << "No valid lights found in config. Created Default Light." << endl;
-      }     
    }
 }
 

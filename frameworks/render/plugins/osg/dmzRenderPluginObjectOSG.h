@@ -115,6 +115,8 @@ namespace dmz {
          DefStruct *_lookup_def_struct (const ObjectType &Type);
          DefStruct *_create_def_struct (const ObjectType &Type);
          ModelStruct *_load_model (const String &FileName);
+         void _add_models ();
+         void _remove_models ();
          void _init (Config &local);
 
          Log _log;

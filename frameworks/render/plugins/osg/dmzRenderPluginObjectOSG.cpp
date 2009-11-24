@@ -66,13 +66,14 @@ dmz::RenderPluginObjectOSG::discover_plugin (
 
       if (!_core) { _core = RenderModuleCoreOSG::cast (PluginPtr);
 
-         if (_core) { _cullMask = _core->get_cull_mask (); }
+         if (_core) { _cullMask = _core->get_cull_mask (); _add_models ();  }
       }
    }
    else if (Mode == PluginDiscoverRemove) {
 
       if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
 
+         _remove_models ();
          _core = 0;
          _cullMask = 0;
       }
@@ -88,7 +89,7 @@ dmz::RenderPluginObjectOSG::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
-   if (!_ignoreType.contains_exact_type (Type) && _core) {
+   if (!_ignoreType.contains_exact_type (Type)) {
 
       DefStruct *ds (_lookup_def_struct (Type));
 
@@ -102,9 +103,12 @@ dmz::RenderPluginObjectOSG::create_object (
 
             os->model->setSingleChildOn (0);
 
-            osg::Group *group (_core->create_dynamic_object (ObjectHandle));
+            if (_core) {
 
-            if (group) { group->addChild (os->model); }
+               osg::Group *group (_core->create_dynamic_object (ObjectHandle));
+
+               if (group) { group->addChild (os->model.get ()); }
+            }
          }
       }
       else { _ignoreType.add_object_type (Type); }
@@ -119,7 +123,17 @@ dmz::RenderPluginObjectOSG::destroy_object (
 
    ObjectStruct *os (_objectTable.remove (ObjectHandle));
 
-   if (os) { delete os; os = 0; }
+   if (os) {
+
+      if (_core && os->model.valid ()) {
+
+         osg::Group *group (_core->lookup_dynamic_object (ObjectHandle));
+
+         if (group) { group->removeChild (os->model.get ()); }
+      }
+
+      delete os; os = 0;
+   }
 }
 
 
@@ -316,6 +330,42 @@ dmz::RenderPluginObjectOSG::_load_model (const String &ResourceName) {
    }
 
    return result;
+}
+
+
+void
+dmz::RenderPluginObjectOSG::_add_models () {
+
+   if (_core) {
+
+      HashTableHandleIterator it;
+      ObjectStruct *os (0);
+
+      while (_objectTable.get_next (it, os)) {
+
+         osg::Group *group (_core->create_dynamic_object (it.get_hash_key ()));
+
+         if (os->model.valid () && group) { group->addChild (os->model.get ()); }
+      }
+   }
+}
+
+
+void
+dmz::RenderPluginObjectOSG::_remove_models () {
+
+   if (_core) {
+
+      HashTableHandleIterator it;
+      ObjectStruct *os (0);
+
+      while (_objectTable.get_next (it, os)) {
+
+         osg::Group *group (_core->lookup_dynamic_object (it.get_hash_key ()));
+
+         if (os->model.valid () && group) { group->removeChild (os->model.get ()); }
+      }
+   }
 }
 
 

@@ -651,15 +651,15 @@ dmz::NetModuleLocalDRBasic::_init (Config &local) {
          const Mask EmptyState;
 
          current->next = new stateTest (
-            LNVHandle,
             AttributeHandle,
+            LNVHandle,
             EmptyState);
 
          if (current->next) { current = current->next; }
 
          current->next = new zeroVelocityTest (
-            LNVHandle,
-            AttributeHandle);
+            AttributeHandle,
+            LNVHandle);
 
          if (current->next) { current = current->next; }
 
@@ -671,24 +671,24 @@ dmz::NetModuleLocalDRBasic::_init (Config &local) {
          if (current->next) { current = current->next; }
 
          current->next = new posSkewTest (
-            LNVHandle,
             AttributeHandle,
+            LNVHandle,
             _time,
             0.25);
 
          if (current->next) { current = current->next; }
 
          current->next = new oriTest (
-            LNVHandle,
             AttributeHandle,
+            LNVHandle,
             Pi64 / 60.0); // 0.05235987756 == 3 degrees
 
          if (current->next) { current = current->next; }
 
          current->next = new scalarTest (
+            defs.create_named_handle (ObjectAttributeScalarThrottleName),
             defs.create_named_handle (
                create_last_network_value_name (ObjectAttributeScalarThrottleName)),
-            defs.create_named_handle (ObjectAttributeScalarThrottleName),
             0.01);
       }
    }
@@ -733,8 +733,8 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
       else if (Type == "zero-velocity") {
 
          next = new zeroVelocityTest (
-            LNVHandle,
-            AttributeHandle);
+            AttributeHandle,
+            LNVHandle);
       }
       else if (Type == "velocity") {
 

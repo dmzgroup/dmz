@@ -143,8 +143,8 @@ dmz::EntityPluginArticulate::update_time_slice (const Float64 TimeDelta) {
 
             if (cs->limit) {
 
-               if (value > cs->max) { value = cs->max; }
-               else if (value < cs->min) { value = cs->min; }
+               if (value > cs->max) { value = cs->max; rate = 0.0; }
+               else if (value < cs->min) { value = cs->min; rate = 0.0; }
             }
             else {
 

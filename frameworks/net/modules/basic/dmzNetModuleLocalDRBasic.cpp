@@ -13,6 +13,11 @@
 
 #include <math.h>
 
+#include <qdb.h>
+static dmz::qdb out;
+
+//#include <typeinfo>
+
 /*!
 \class dmz::NetModuleLocalDRBasic
 \ingroup Net
@@ -344,14 +349,16 @@ posSkewTest::update_object (
    dmz::Boolean result (dmz::False);
 
    dmz::Vector pos, lnvPos, lnvVel;
+   dmz::Float64 lnvStamp (0.0);
 
    if (module.lookup_position (ObjectHandle, _AttributeHandle, pos) &&
          module.lookup_position (ObjectHandle, _LNVHandle, lnvPos) &&
-         module.lookup_velocity (ObjectHandle, _LNVHandle, lnvVel)) {
+         module.lookup_velocity (ObjectHandle, _LNVHandle, lnvVel) &&
+         module.lookup_time_stamp (ObjectHandle, _LNVHandle, lnvStamp)) {
 
       const dmz::Float64 FrameTime (_Time.get_frame_time ());
 
-      lnvPos += lnvVel * FrameTime;
+      lnvPos += lnvVel * (FrameTime - lnvStamp);
 
       const dmz::Float64 CalcDiff ((pos - lnvPos).magnitude ());
 
@@ -607,6 +614,11 @@ dmz::NetModuleLocalDRBasic::update_object (const Handle ObjectHandle) {
          while (test && !result && !limitRate) {
 
             result = test->update_object (ObjectHandle, *_objMod, limitRate);
+#if 0
+if (result) {
+_log.error << typeid (*test).name () << endl;
+}
+#endif
             test = test->next;
          }
       }
@@ -670,6 +682,7 @@ dmz::NetModuleLocalDRBasic::_init (Config &local) {
 
          if (current->next) { current = current->next; }
 
+#if 0
          current->next = new posSkewTest (
             AttributeHandle,
             LNVHandle,
@@ -677,6 +690,7 @@ dmz::NetModuleLocalDRBasic::_init (Config &local) {
             0.25);
 
          if (current->next) { current = current->next; }
+#endif
 
          current->next = new oriTest (
             AttributeHandle,
@@ -850,8 +864,8 @@ dmz::NetModuleLocalDRBasic::_create_test_from_type (const ObjectType &Type) {
                "net.rule",
                listData)) {
 
-            _log.info << "Creating network transmission rules for: " << Type.get_name ()
-               << endl;
+            _log.info << "Creating network transmission rules for: "
+               << current.get_name () << endl;
 
             result = _create_update_list (listData);
 

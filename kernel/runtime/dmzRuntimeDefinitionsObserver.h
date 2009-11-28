@@ -13,11 +13,31 @@ class EventType;
 class PluginInfo;
 class RuntimeContext;
 
+//! \addtogroup Runtime
+//! @{
+
+//! \brief Activate define_named_handle callback in dmz::DefinitionsObserver
+//! \details Defined in dmzRuntimeDefinitionsObserver.h
+//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
 const UInt32 RuntimeNamedHandleMask = 0x01;
-const UInt32 RuntimeStateNameMask = 0x02;
+//! \brief Activate define_state callback in dmz::DefinitionsObserver
+//! \details Defined in dmzRuntimeDefinitionsObserver.h
+//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
+const UInt32 RuntimeStateMask = 0x02;
+//! \brief Activate define_object_type callback in dmz::DefinitionsObserver
+//! \details Defined in dmzRuntimeDefinitionsObserver.h
+//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
 const UInt32 RuntimeObjectTypeMask = 0x04;
-const UInt32 RuntimeEventTypeeMask = 0x08;
+//! \brief Activate define_event_type callback in dmz::DefinitionsObserver
+//! \details Defined in dmzRuntimeDefinitionsObserver.h
+//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
+const UInt32 RuntimeEventTypeMask = 0x08;
+//! \brief Activate all callbacks in dmz::DefinitionsObserver
+//! \details Defined in dmzRuntimeDefinitionsObserver.h
+//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
 const UInt32 RuntimeAllMask = 0xFF;
+
+//! @}
 
 class DMZ_KERNEL_LINK_SYMBOL DefinitionsObserver {
 

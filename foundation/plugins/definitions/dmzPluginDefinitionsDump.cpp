@@ -4,6 +4,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::PluginDefinitionsDump
+\ingroup Foundation
+\brief Prints all runtime definitions to info log.
+
+*/
+
+//! \cond
 dmz::PluginDefinitionsDump::PluginDefinitionsDump (
       const PluginInfo &Info,
       Config &local) :
@@ -21,28 +30,28 @@ dmz::PluginDefinitionsDump::define_named_handle (
       const Handle TheHandle,
       const String &Name) {
 
-   _log.warn << "Defined Named Handle: " << Name << "[" << TheHandle << "]" << endl;
+   _log.info << "Defined Named Handle: " << Name << "[" << TheHandle << "]" << endl;
 }
 
 
 void
 dmz::PluginDefinitionsDump::define_state (const Mask &TheState, const String &Name) {
 
-   _log.warn << "Defined State: " << Name << " - " << TheState << endl;
+   _log.info << "Defined State: " << Name << " - " << TheState << endl;
 }
 
 
 void
 dmz::PluginDefinitionsDump::define_object_type (const ObjectType &Type) {
 
-   _log.warn << "Defined ObjectType: " << Type.get_name () << endl;
+   _log.info << "Defined ObjectType: " << Type.get_name () << endl;
 }
 
 
 void
 dmz::PluginDefinitionsDump::define_event_type (const EventType &Type) {
 
-   _log.warn << "Defined EventType: " << Type.get_name () << endl;
+   _log.info << "Defined EventType: " << Type.get_name () << endl;
 }
 
 
@@ -51,6 +60,7 @@ dmz::PluginDefinitionsDump::_init (Config &local) {
 
    set_definitions_observer_callback_mask (RuntimeAllMask);
 }
+//! \endcond
 
 
 extern "C" {

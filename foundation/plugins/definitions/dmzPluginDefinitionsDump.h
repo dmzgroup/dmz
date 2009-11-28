@@ -12,6 +12,7 @@ namespace dmz {
          public DefinitionsObserver {
 
       public:
+         //! \cond
          PluginDefinitionsDump (const PluginInfo &Info, Config &local);
          ~PluginDefinitionsDump () {;}
 
@@ -34,6 +35,7 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         //! \endcond
 
       private:
          PluginDefinitionsDump ();

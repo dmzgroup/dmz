@@ -31,6 +31,7 @@ namespace dmz {
          void set_session_config (const Config &Session);
 
          RuntimeContextThreadKey *get_thread_key ();
+         Boolean is_main_thread () const;
 
          HandleAllocator *get_handle_allocator ();
 

@@ -647,6 +647,51 @@ dmz::runtime_init (const Config &Init, RuntimeContext *context, Log *log) {
             else if (log) { log->debug << "Object type config not found" << endl; }
             if (sconfig) { local_init_state (sconfig, *defs, log); }
             else if (log) { log->debug << "State config not found" << endl; }
+
+            if (defs->handleObsTable.get_count () > 0) {
+
+               HashTableHandleIterator it;
+               String *ptr (0);
+
+               while (defs->namedHandleNameTable.get_next (it, ptr)) {
+
+                  defs->define_named_handle (it.get_hash_key (), *ptr);
+               }
+            }
+
+            if (defs->maskObsTable.get_count () > 0) {
+
+               HashTableStringIterator it;
+               Mask *ptr (0);
+
+               while (defs->maskTable.get_next (it, ptr)) {
+
+                  defs->define_state (*ptr, it.get_hash_key ());
+               }
+            }
+
+            if (defs->objectObsTable.get_count () > 0) {
+
+               HashTableHandleIterator it;
+               ObjectType *ptr (0);
+
+               while (defs->objectHandleTable.get_next (it, ptr)) {
+
+                  defs->define_object_type (*ptr);
+               }
+            }
+
+            if (defs->eventObsTable.get_count () > 0) {
+
+               HashTableHandleIterator it;
+               EventType *ptr (0);
+
+               while (defs->eventHandleTable.get_next (it, ptr)) {
+
+                  defs->define_event_type (*ptr);
+               }
+            }
+
             defs->unref (); defs = 0;
          }
       }
@@ -759,13 +804,17 @@ dmz::Definitions::create_named_handle (const String &Name) {
 
                if (ptr) {
 
-                  if (!_state.defs->namedHandleNameTable.store (
+                  if (_state.defs->namedHandleNameTable.store (
                         handle->get_runtime_handle (),
                         ptr)) {
 
-                     delete ptr; ptr = 0;
+                     _state.defs->define_named_handle (
+                        handle->get_runtime_handle (),
+                        Name);
                   }
+                  else { delete ptr; ptr = 0; }
                }
+
             }
             else {
 

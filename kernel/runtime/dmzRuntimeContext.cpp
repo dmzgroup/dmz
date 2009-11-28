@@ -113,6 +113,14 @@ dmz::RuntimeContextThreadKey *
 dmz::RuntimeContext::get_thread_key () { return _key; }
 
 
+//! Returns True if called from main thread.
+dmz::Boolean
+dmz::RuntimeContext::is_main_thread () const {
+
+   return _key ? _key->is_main_thread () : True;
+}
+
+
 //! Gets handle allocator.
 dmz::HandleAllocator *
 dmz::RuntimeContext::get_handle_allocator () {

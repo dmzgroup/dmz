@@ -27,6 +27,8 @@ dmz::QtCanvasObject::QtCanvasObject (QGraphicsItem *parent) :
    setFlag (ItemIsSelectable, true);
    setHandlesChildEvents (true);
    
+   setFlag (ItemIgnoresParentOpacity, true);
+
 //setFlag (ItemIgnoresTransformations, true);
 }
 

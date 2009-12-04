@@ -13,7 +13,7 @@
 #include <QtGui/QDesktopWidget>
 
 namespace {
-   
+
    const dmz::UInt32 HandleRole (Qt::UserRole + 1);
    const dmz::UInt32 HandleCol (0);
    const dmz::UInt32 TypeCol (1);
@@ -38,7 +38,7 @@ dmz::QtPluginObjectInspector::QtPluginObjectInspector (
       _newWindowPos () {
 
    _init (local);
-   
+
    QDesktopWidget *desktop = QApplication::desktop ();
    QRect rect = desktop->availableGeometry (desktop->primaryScreen ());
    _newWindowPos = rect.topLeft ();
@@ -71,9 +71,9 @@ dmz::QtPluginObjectInspector::update_plugin_state (
 
       QByteArray geometry (config_to_qbytearray ("geometry", session, saveGeometry ()));
       restoreGeometry (geometry);
-      
+
      // if (config_to_boolean ("window.visible", session, False)) { show (); }
-      
+
       show ();
    }
    else if (State == PluginStateStart) {
@@ -84,6 +84,7 @@ dmz::QtPluginObjectInspector::update_plugin_state (
    }
    else if (State == PluginStateShutdown) {
 
+      // save geometry to session
       String data;
 
       Config session (get_plugin_name ());
@@ -91,12 +92,21 @@ dmz::QtPluginObjectInspector::update_plugin_state (
       session.add_config (qbytearray_to_config ("geometry", saveGeometry ()));
 
       // if (isVisible ()) {
-      // 
+      //
       //    session.add_config (boolean_to_config ("window", "visible", True));
       // }
 
       set_session_config (get_plugin_runtime_context (), session);
-      
+
+      // close all inspector windows
+      HashTableHandleIterator it;
+      QtObjectInspector *inspector (0);
+
+      while (_inspectorTable.get_next (it, inspector)) {
+
+         inspector->close ();
+      }
+
       hide ();
    }
 }
@@ -180,7 +190,7 @@ dmz::QtPluginObjectInspector::destroy_object (
 
       inspector->destroy_object (Identity, ObjectHandle);
    }
-         
+
    if (_objects.contains (ObjectHandle))  {
 
       for (int ix = 0; ix < _ui.objectTreeWidget->topLevelItemCount (); ++ix) {
@@ -588,11 +598,11 @@ dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
 
    ObjectModule *objMod (get_object_module ());
    Handle objHandle = _item_to_handle (item);
-   
+
    QtObjectInspector *inspector = _inspectorTable.lookup (objHandle);
 
    if (inspector) {
-      
+
       inspector->show ();
       inspector->raise ();
    }
@@ -611,7 +621,7 @@ dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
 
          inspector->move (_newWindowPos);
          inspector->show ();
-         
+
          _newWindowPos += QPoint (25, 25);
       }
       else {

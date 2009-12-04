@@ -1,10 +1,13 @@
 #ifndef DMZ_QT_PROPERTY_MANAGER_H
 #define DMZ_QT_PROPERTY_MANAGER_H
 
+#include <dmzTypesMask.h>
 #include <dmzTypesVector.h>
+#include <dmzRuntimeDefinitions.h>
 #include <QtCore/QMap>
 #include "qtpropertybrowser.h"
 
+class QtBoolPropertyManager;
 class QtDoublePropertyManager;
 class QtProperty;
 
@@ -12,11 +15,11 @@ class QtProperty;
 namespace dmz {
 
    class VectorPropertyManagerPrivate;
-   
+
    class VectorPropertyManager : public QtAbstractPropertyManager {
-      
+
    Q_OBJECT
-   
+
       public:
          VectorPropertyManager(QObject *parent = 0);
          ~VectorPropertyManager();
@@ -29,16 +32,16 @@ namespace dmz {
       public Q_SLOTS:
          void setValue(QtProperty *property, const Vector &val);
          void setDecimals(QtProperty *property, int prec);
-   
+
       Q_SIGNALS:
          void valueChanged(QtProperty *property, const Vector &val);
          void decimalsChanged(QtProperty *property, int prec);
-   
+
       protected:
          QString valueText(const QtProperty *property) const;
          virtual void initializeProperty(QtProperty *property);
          virtual void uninitializeProperty(QtProperty *property);
-   
+
       private:
          VectorPropertyManagerPrivate *d_ptr;
          Q_DECLARE_PRIVATE(VectorPropertyManager)
@@ -46,7 +49,7 @@ namespace dmz {
          Q_PRIVATE_SLOT(d_func(), void slotDoubleChanged(QtProperty *, double))
          Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
    };
-   
+
    class VectorPropertyManagerPrivate {
 
       VectorPropertyManager *q_ptr;
@@ -76,6 +79,68 @@ namespace dmz {
       QMap<const QtProperty *, QtProperty *> m_xToProperty;
       QMap<const QtProperty *, QtProperty *> m_yToProperty;
       QMap<const QtProperty *, QtProperty *> m_zToProperty;
+   };
+
+   class MaskPropertyManagerPrivate;
+
+   class MaskPropertyManager : public QtAbstractPropertyManager
+   {
+       Q_OBJECT
+   public:
+       MaskPropertyManager(RuntimeContext *context, QObject *parent = 0);
+       ~MaskPropertyManager();
+
+       QtBoolPropertyManager *subBoolPropertyManager() const;
+
+       Mask value(const QtProperty *property) const;
+
+   public Q_SLOTS:
+       void setValue(QtProperty *property, const Mask &val);
+
+   Q_SIGNALS:
+       void valueChanged(QtProperty *property, const Mask &val);
+
+   protected:
+       QString valueText(const QtProperty *property) const;
+       virtual void initializeProperty(QtProperty *property);
+       virtual void uninitializeProperty(QtProperty *property);
+
+   private:
+       MaskPropertyManager *d_ptr;
+       Q_DECLARE_PRIVATE(MaskPropertyManager)
+       Q_DISABLE_COPY(MaskPropertyManager)
+       Q_PRIVATE_SLOT(d_func(), void slotBoolChanged(QtProperty *, bool))
+       Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
+   };
+
+   // MaskPropertyManagerPrivate
+
+   class MaskPropertyManagerPrivate
+   {
+       MaskPropertyManager *q_ptr;
+       Q_DECLARE_PUBLIC(MaskPropertyManager)
+   public:
+       MaskPropertyManagerPrivate(RuntimeContext *context);
+
+       void slotBoolChanged(QtProperty *property, bool value);
+       void slotPropertyDestroyed(QtProperty *property);
+
+       struct Data
+       {
+           Mask val;
+           QStringList maskNames;
+       };
+
+       typedef QMap<const QtProperty *, Data> PropertyValueMap;
+       PropertyValueMap m_values;
+
+       Definitions m_defs;
+
+       QtBoolPropertyManager *m_boolPropertyManager;
+
+       QMap<const QtProperty *, QList<QtProperty *> > m_propertyToMasks;
+
+       QMap<const QtProperty *, QtProperty *> m_maskToProperty;
    };
 };
 

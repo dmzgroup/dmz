@@ -90,13 +90,13 @@ struct dmz::QtObjectInspector::State {
    QMap<QString, GroupStruct *> groupMap;
    Boolean ignoreUpdates;
    Boolean ignoreValueChanged;
-   
+
 
    State (const Handle TheHandle, ObjectObserverUtil &theObs, RuntimeContext *theContext) :
          ObjHandle (TheHandle),
          obs (theObs),
          log ("QtObjectInspector", theContext),
-         defs (theContext, &log),
+         defs (theContext),
          handleProperty (0),
          typeProperty (0),
          localityProperty (0),
@@ -158,7 +158,7 @@ dmz::QtObjectInspector::State::update_variant_property (
    if (variantManager) {
 
       ignoreValueChanged = true;
-      
+
       GroupStruct *group (get_group (GroupName));
       if (group) {
 
@@ -173,7 +173,7 @@ dmz::QtObjectInspector::State::update_variant_property (
 
          if (property) { variantManager->setValue (property, Value); }
       }
-      
+
       ignoreValueChanged = false;
    }
 }
@@ -204,7 +204,7 @@ dmz::QtObjectInspector::State::update_vector_property (
          if (property) { vectorManager->setValue (property, Value); }
       }
    }
-   
+
    ignoreValueChanged = false;
 }
 
@@ -280,10 +280,10 @@ dmz::QtObjectInspector::destroy_object (
       _state.typeProperty->setEnabled (False);
       _state.localityProperty->setEnabled (False);
       _state.uuidProperty->setEnabled (False);
-      
+
       _state.ui.addAttributeButton->setEnabled (False);
       _state.ui.removeAttributeButton->setEnabled (False);
-      
+
       _state.ignoreUpdates = true;
       _state.ignoreValueChanged = true;
    }

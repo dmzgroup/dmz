@@ -30,6 +30,7 @@ namespace dmz {
 
          virtual ~StreamLog ();
 
+         virtual Stream &write_raw_data (const UInt8 *Data, const Int32 Size);
          virtual Stream &flush ();
          virtual Stream &newline ();
 
@@ -59,10 +60,6 @@ namespace dmz {
          StreamLog ();
          StreamLog (const StreamLog &);
          const StreamLog &operator= (const StreamLog &);
-         virtual Stream &write_raw_data (const UInt8 *Data, const Int32 Size) {
-
-            return *this;
-         }
    };
 
    class DMZ_KERNEL_LINK_SYMBOL Log {

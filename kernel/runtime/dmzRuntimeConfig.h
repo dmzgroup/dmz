@@ -47,6 +47,8 @@ namespace dmz {
          String get_name () const;
          void set_formatted (const Boolean IsFormatted);
          Boolean is_formatted () const;
+         void set_in_array (const Boolean IsInArray);
+         Boolean is_in_array () const;
          Boolean has_children () const;
          Boolean is_empty () const;
          Boolean are_attributes_equal (const Config &Data) const;

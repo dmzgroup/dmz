@@ -12,6 +12,6 @@ lmk.add_files {
 }
 
 lmk.add_vars ({
-   localDefines = "/DWIN32 /DYAJL_SHARED",
+   localDefines = "/DWIN32 /DYAJL_SHARED /DYAJL_BUILD",
 }, {win32 = true})
 

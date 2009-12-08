@@ -17,5 +17,5 @@ lmk.add_files {
 }
 
 lmk.add_vars ({
-   localDefines = "$(lmk.defineFlag)DMZ_JSON_EXPORT",
+   localDefines = "$(lmk.defineFlag)DMZ_JSON_EXPORT /DYAJL_SHARE",
 }, {win32 = true})

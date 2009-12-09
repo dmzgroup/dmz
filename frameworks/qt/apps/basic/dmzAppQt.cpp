@@ -7,7 +7,7 @@
 #include <dmzSystemDynamicLibrary.h>
 #include <dmzSystemFile.h>
 #include <QtGui/QtGui>
-#include <QtCore/QDebug>
+
 
 using namespace dmz;
 
@@ -58,7 +58,7 @@ main (int argc, char *argv[]) {
 
    // This little hack is needed to get the main menubar to
    // show up correctly under OSX when using Qt 4.6 -ss
-   QtEventLoop dummyLoop (app);
+   QEventLoop dummyLoop;
    QTimer::singleShot(0, &dummyLoop, SLOT (quit ()));
    dummyLoop.exec ();
    

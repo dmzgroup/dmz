@@ -1,0 +1,21 @@
+lmk.set_name "dmzJSON"
+lmk.set_type "shared"
+lmk.add_libs {"dmzKernel", "yajl"}
+
+lmk.add_files {
+   "dmzJSONInterpreterConfig.h",
+   "dmzJSONParser.h",
+   "dmzJSONExport.h",
+   "dmzJSONUtil.h",
+}
+
+lmk.add_files {
+   "dmzJSONInterpreterConfig.cpp",
+   "dmzJSONParserYAJL.cpp",
+   "dmzJSONUtil.cpp",
+   "dmzJSONUtilYAJL.cpp",
+}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_JSON_EXPORT /DYAJL_SHARE",
+}, {win32 = true})

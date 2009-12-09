@@ -1,0 +1,17 @@
+lmk.set_name "yajl"
+lmk.set_type "shared"
+lmk.add_files {"api/yajl_common.h", "api/yajl_gen.h", "api/yajl_parse.h",}
+lmk.add_files {
+   "yajl.c",
+   "yajl_alloc.c",
+   "yajl_buf.c",
+   "yajl_encode.c",
+   "yajl_gen.c",
+   "yajl_lex.c",
+   "yajl_parser.c",
+}
+
+lmk.add_vars ({
+   localDefines = "/DWIN32 /DYAJL_SHARED /DYAJL_BUILD",
+}, {win32 = true})
+

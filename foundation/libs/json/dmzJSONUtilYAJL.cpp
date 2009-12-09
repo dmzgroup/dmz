@@ -1,0 +1,117 @@
+#include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeLog.h>
+#include <dmzSystemStream.h>
+#include <dmzTypesStringUtil.h>
+#include <dmzJSONUtil.h>
+
+#include <yajl_gen.h>
+
+using namespace dmz;
+
+namespace {
+
+void
+local_escape_string (const dmz::String &Value, dmz::String &result) {
+
+   const dmz::Int32 Length (Value.get_length ());
+   const dmz::Int32 NewSize (Length * 2);
+   if (NewSize < result.get_size ()) { result.set_buffer (0, NewSize); }
+
+   const char *Buffer (Value.get_buffer ());
+
+   if (Buffer && Length) {
+
+      char charArray[2] = { '\0', '\0' };
+
+      for (dmz::Int32 ix = 0; ix < Length; ix++) {
+
+         const char C = Buffer[ix];
+
+         if (C == '"') { result << "\\\""; }
+         else if (C == '\'') { result << "\\'"; }
+         else if (C == '\\') { result << "\\\\"; }
+         else { charArray[0] = C; result << charArray; }
+      }
+   }
+   else { result << ""; }
+}
+
+
+static void
+local_write_config (yajl_gen gen, const Config &Data) {
+
+   
+}
+
+}; // namespace
+
+
+/*!
+
+\ingroup Foundation
+\brief Writes a config context tree to a stream as JSON.
+\details Defined in dmzJSONUtil.h.
+\param[in] Data Config object containing config context to write as JSON.
+\param[in] stream Stream to write JSON.
+\param[in] StripGlobal Strips root of config context tree so it is not included in
+the JSON.
+
+*/
+void
+dmz::format_config_to_json (
+      const Config &Data,
+      Stream &stream,
+      const Boolean StripGlobal) {
+
+   yajl_gen_config cg = { 1, 0 };
+   yajl_gen gen = yajl_gen_alloc (&cg, 0);
+
+   if (gen) {
+
+      if (StripGlobal) {
+
+         Boolean isArray (False);
+
+         ConfigIterator it;
+         Config data;
+
+         if (Data.get_first_config (it, data)) {
+
+            isArray = data.is_in_array ();
+         }
+
+         it.reset ();
+
+         if (isArray) { yajl_gen_array_open (gen); }
+         else { yajl_gen_map_open (gen); }
+
+         while (Data.get_next_config (it, data)) {
+
+         }
+
+         if (isArray) { yajl_gen_array_close (gen); }
+         else { yajl_gen_map_close (gen); }
+      }
+      else {
+
+         yajl_gen_map_open (gen);
+         local_write_config (gen, Data);
+         yajl_gen_map_close (gen);
+      }
+
+      const unsigned char *buf (0);
+      unsigned int len (0);
+
+      const yajl_gen_status Status = yajl_gen_get_buf (gen, &buf, &len);
+      yajl_gen_clear (gen);
+
+      if ((Status == yajl_gen_status_ok) && buf && len) {
+
+         stream.write_raw_data (buf, len);
+      }
+
+      yajl_gen_free (gen);
+   }
+}
+

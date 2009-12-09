@@ -50,7 +50,6 @@ orientation = 0.25 radians \n
 scalar = 0.25 \n
 counter = N/A \n
 state = Empty Mask \n
-skew = 0.25 radians \n
 heartbeat = 5.0sec \n
 rate-limit = 1/15 of a second \n
 
@@ -682,16 +681,6 @@ dmz::NetModuleLocalDRBasic::_init (Config &local) {
 
          if (current->next) { current = current->next; }
 
-#if 0
-         current->next = new posSkewTest (
-            AttributeHandle,
-            LNVHandle,
-            _time,
-            0.25);
-
-         if (current->next) { current = current->next; }
-#endif
-
          current->next = new oriTest (
             AttributeHandle,
             LNVHandle,
@@ -803,6 +792,9 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
          next = new stateTest (AttributeHandle, LNVHandle, state);
       }
       else if (Type == "skew") {
+
+         _log.warn << "Skew may not provide the expected results. Use with caution."
+            << endl;
 
          next = new posSkewTest (
             AttributeHandle,

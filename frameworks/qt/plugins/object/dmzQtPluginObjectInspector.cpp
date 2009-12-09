@@ -251,12 +251,19 @@ dmz::QtPluginObjectInspector::link_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-//    QtObjectInspector *inspector = _inspectorTable.lookup (LinkHandle);
-//    if (inspector) {
-//
-//       inspector->link_objects (
-//          LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
-//    }
+   QtObjectInspector *inspector = _inspectorTable.lookup (SuperHandle);
+   if (inspector) {
+
+      inspector->link_objects (
+         LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
+   }
+   
+   inspector = _inspectorTable.lookup (SubHandle);
+   if (inspector) {
+
+      inspector->link_objects (
+         LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
+   }
 }
 
 
@@ -269,12 +276,19 @@ dmz::QtPluginObjectInspector::unlink_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-   // QtObjectInspector *inspector = _inspectorTable.lookup (LinkHandle);
-   // if (inspector) {
-   //
-   //    inspector->unlink_objects (
-   //       LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
-   // }
+   QtObjectInspector *inspector = _inspectorTable.lookup (SuperHandle);
+   if (inspector) {
+   
+      inspector->unlink_objects (
+         LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
+   }
+
+   QtObjectInspector *inspector = _inspectorTable.lookup (SubHandle);
+   if (inspector) {
+   
+      inspector->unlink_objects (
+         LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
+   }
 }
 
 

@@ -21,7 +21,9 @@ dmz::ArchivePluginUndo::ArchivePluginUndo (const PluginInfo &Info, Config &local
       ArchiveObserverUtil (Info, local),
       _defs (Info),
       _undo (Info),
-      _log (Info) {
+      _log (Info),
+      _loadLimit (-1),
+      _saveLimit (-1) {
 
    _init (local);
 }
@@ -148,6 +150,8 @@ void
 dmz::ArchivePluginUndo::_init (Config &local) {
 
    init_archive (local);
+   _loadLimit = config_to_int32 ("load-limit.value", local, _loadLimit);
+   _saveLimit = config_to_int32 ("save-limit.value", local, _saveLimit);
 }
 //! \endcond
 

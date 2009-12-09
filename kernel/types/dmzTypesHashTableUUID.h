@@ -36,7 +36,7 @@ namespace dmz {
          Boolean move (
             const UUID &Key,
             const UUID *TargetKey,
-            const Boolean SignleStep,
+            const Boolean SingleStep,
             const Boolean Before);
 
          void *get_next (HashTableUUIDIterator &it, const Boolean Prev = False) const;

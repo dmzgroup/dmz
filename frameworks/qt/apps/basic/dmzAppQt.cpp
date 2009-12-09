@@ -7,10 +7,12 @@
 #include <dmzSystemDynamicLibrary.h>
 #include <dmzSystemFile.h>
 #include <QtGui/QtGui>
+#include <QtCore/QDebug>
 
 using namespace dmz;
 
 const char LocalIconFile[] = "./assets/DMZ-Icon.png";
+
 
 int
 main (int argc, char *argv[]) {
@@ -54,10 +56,17 @@ main (int argc, char *argv[]) {
    delete splash;
    splash = 0;
 
+   // This little hack is needed to get the main menubar to
+   // show up correctly under OSX when using Qt 4.6 -ss
+   QtEventLoop dummyLoop (app);
+   QTimer::singleShot(0, &dummyLoop, SLOT (quit ()));
+   dummyLoop.exec ();
+   
    do {
-
-      qtApp.processEvents ();
-
+   
+      QCoreApplication::sendPostedEvents (0, 0);
+      QCoreApplication::processEvents (QEventLoop::AllEvents);
+      
    } while (app.update_time_slice ());
 
    app.stop ();
@@ -81,7 +90,8 @@ main (int argc, char *argv[]) {
    while (qtLogObs.isVisible ()) {
 
       // wait for log window to close
-      qtApp.processEvents ();
+      QCoreApplication::sendPostedEvents (0, 0);
+      QCoreApplication::processEvents (QEventLoop::WaitForMoreEvents);
    }
 
    qtApp.quit ();

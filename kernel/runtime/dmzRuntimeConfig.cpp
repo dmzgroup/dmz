@@ -293,7 +293,8 @@ dmz::Config::set_formatted (const Boolean IsFormatted) {
 
    if (_state.context && !_state.context->Name) {
 
-      _state.context->isFormatted = IsFormatted;
+      if (IsFormatted) { _state.context->flags |= ConfigFormattedFlag; }
+      else { _state.context->flags &= ~ConfigFormattedFlag; }
    }
 }
 
@@ -310,7 +311,25 @@ feeds should not be removed.
 dmz::Boolean
 dmz::Config::is_formatted () const {
 
-   return _state.context ? _state.context->isFormatted : False;
+   return _state.context ? ((_state.context->flags & ConfigFormattedFlag) != 0) : False;
+}
+
+
+void
+dmz::Config::set_in_array (const Boolean IsInArray) {
+
+   if (_state.context) {
+
+      if (IsInArray) { _state.context->flags |= ConfigInArrayFlag; }
+      else { _state.context->flags &= ~ConfigInArrayFlag; }
+   }
+}
+
+
+dmz::Boolean
+dmz::Config::is_in_array () const {
+
+   return _state.context ? ((_state.context->flags & ConfigInArrayFlag) != 0) : False;
 }
 
 
@@ -696,7 +715,7 @@ dmz::Config::append_value (const String &Value, const Boolean IsFormatted) {
 
       if (!_state.context->Name) {
 
-         if (IsFormatted) { _state.context->isFormatted = True; }
+         if (IsFormatted) { _state.context->flags |= ConfigFormattedFlag; }
 
          ConfigAttributeContext *ac (_state.context->attrTable.lookup (""));
 
@@ -721,7 +740,7 @@ dmz::Config::append_value (const String &Value, const Boolean IsFormatted) {
 
          if (cd) {
 
-            cd->isFormatted = IsFormatted;
+            cd->flags |= IsFormatted ? ConfigFormattedFlag : 0;
             ConfigAttributeContext *ptr = new ConfigAttributeContext (Value);
             if (ptr && !cd->attrTable.store ("", ptr)) { delete ptr; ptr = 0; }
             _state.context->add_config (cd);

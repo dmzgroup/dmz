@@ -3,10 +3,14 @@
 
 #include <dmzSystemRefCount.h>
 #include <dmzSystemSpinLock.h>
+#include <dmzTypesBase.h>
 #include <dmzTypesHashTableLock.h>
 #include <dmzTypesHashTableStringTemplate.h>
 
 namespace dmz {
+
+   const UInt8 ConfigFormattedFlag = 0x01;
+   const UInt8 ConfigInArrayFlag     = 0x02;
 
    class ConfigContextLock : public HashTableLock {
 
@@ -88,8 +92,7 @@ namespace dmz {
          Boolean remove_config (const String &Name);
 
          const String Name;
-
-         Boolean isFormatted;
+         UInt8 flags;
 
          ConfigContextLock attrLock;
          HashTableStringTemplate<ConfigAttributeContext> attrTable;
@@ -116,7 +119,7 @@ namespace dmz {
 inline
 dmz::ConfigContext::ConfigContext (const String &TheName) :
       Name (TheName),
-      isFormatted (False),
+      flags (0),
       attrTable (&attrLock),
       configTable (&dataLock),
       configOrderTable (&dataOrderLock) {;}

@@ -106,6 +106,15 @@ dmz::StreamLog::~StreamLog () { delete &_state; }
 
 
 dmz::Stream &
+dmz::StreamLog::write_raw_data (const UInt8 *Data, const Int32 Size) {
+
+   String data ((const char *)Data, Size);
+
+   return *this << data;
+}
+
+
+dmz::Stream &
 dmz::StreamLog::flush () {
 
    return this->newline ();

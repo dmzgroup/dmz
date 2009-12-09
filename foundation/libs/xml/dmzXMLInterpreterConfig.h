@@ -1,5 +1,5 @@
-#ifndef DZM_XML_INTERPRETER_CONFIG_DOT_H
-#define DZM_XML_INTERPRETER_CONFIG_DOT_H
+#ifndef DMZ_XML_INTERPRETER_CONFIG_DOT_H
+#define DMZ_XML_INTERPRETER_CONFIG_DOT_H
 
 #include <dmzTypesBase.h>
 #include <dmzXMLExport.h>
@@ -38,4 +38,4 @@ namespace dmz {
    };
 };
 
-#endif // DZM_XML_INTERPRETER_CONFIG_DOT_H
+#endif // DMZ_XML_INTERPRETER_CONFIG_DOT_H

@@ -161,22 +161,22 @@ main (int argc, char *argv[]) {
 
    str = "0.0e01";
    test.validate (
-      str + " is MOT a number",
+      str + " is NOT a number",
       json_is_number (str) == False);
 
    str = "0.01e01";
    test.validate (
-      str + " is MOT a number",
+      str + " is NOT a number",
       json_is_number (str) == False);
 
    str = "11e01";
    test.validate (
-      str + " is MOT a number",
+      str + " is NOT a number",
       json_is_number (str) == False);
 
    str = "1.1e01";
    test.validate (
-      str + " is MOT a number",
+      str + " is NOT a number",
       json_is_number (str) == False);
 
    str = "1e0.1";

@@ -11,6 +11,8 @@ namespace dmz {
    class Stream;
    class Version;
 
+   DMZ_JSON_LINK_SYMBOL Boolean json_is_number (const String &Value);
+
    DMZ_JSON_LINK_SYMBOL Boolean json_string_to_config (
       const String &Value,
       Config &data,
@@ -26,9 +28,10 @@ namespace dmz {
       Version &value,
       Log *log = 0);
 
-   DMZ_JSON_LINK_SYMBOL void format_config_to_json (
+   DMZ_JSON_LINK_SYMBOL Boolean format_config_to_json (
       const Config &Config,
       Stream &stream,
+      Log *log = 0,
       const Boolean StripGlobal = False);
 
 };

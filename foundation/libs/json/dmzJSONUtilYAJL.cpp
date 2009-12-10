@@ -45,7 +45,7 @@ local_ok (const yajl_gen_status Status) {
 }
 
 static Boolean
-local_write_string (yajl_gen gen, const String &Str) {
+local_write_string (yajl_gen gen, const String &Str, Log *log) {
 
    Int32 length (0);
    const unsigned char *Buf = (const unsigned char *)Str.get_buffer (length);
@@ -54,8 +54,10 @@ local_write_string (yajl_gen gen, const String &Str) {
 
 static const void *TableValue ((void *)1);
 
-static void
-local_write_config (yajl_gen gen, const Config &Data) {
+static Boolean
+local_write_config (yajl_gen gen, const Config &Data, Log *log) {
+
+   Boolean result (True);
 
    yajl_gen_map_open (gen);
 
@@ -63,7 +65,22 @@ local_write_config (yajl_gen gen, const Config &Data) {
    String name;
    String value;
 
+   while (Data.get_next_attribute (it, name, value)) {
+
+      Config tmp;
+
+      if (!Data.lookup_config (name, tmp)) {
+
+      }
+      else if (log) {
+
+         log->error << "" << endl;
+      }
+   }
+
    yajl_gen_map_close (gen);
+
+   return result;
 }
 
 }; // namespace
@@ -80,11 +97,14 @@ local_write_config (yajl_gen gen, const Config &Data) {
 the JSON.
 
 */
-void
+dmz::Boolean
 dmz::format_config_to_json (
       const Config &Data,
       Stream &stream,
+      Log *log,
       const Boolean StripGlobal) {
+
+   Boolean result (True);
 
    yajl_gen_config cg = { 1, 0 };
    yajl_gen gen = yajl_gen_alloc (&cg, 0);
@@ -117,9 +137,9 @@ dmz::format_config_to_json (
             merged.add_children (data);
          }
 
-         if (isArray == False) { local_write_string (gen, merged.get_name ()); }
+         if (isArray == False) { local_write_string (gen, merged.get_name (), log); }
 
-         local_write_config (gen, merged);
+         result = local_write_config (gen, merged, log);
 
          if (isArray) { yajl_gen_array_close (gen); }
          else { yajl_gen_map_close (gen); }
@@ -127,7 +147,7 @@ dmz::format_config_to_json (
       else {
 
          yajl_gen_map_open (gen);
-         local_write_config (gen, Data);
+         result = local_write_config (gen, Data, log);
          yajl_gen_map_close (gen);
       }
 
@@ -137,12 +157,14 @@ dmz::format_config_to_json (
       const yajl_gen_status Status = yajl_gen_get_buf (gen, &buf, &len);
       yajl_gen_clear (gen);
 
-      if ((Status == yajl_gen_status_ok) && buf && len) {
+      if (result && (Status == yajl_gen_status_ok) && buf && len) {
 
          stream.write_raw_data (buf, len);
       }
 
       yajl_gen_free (gen);
    }
+
+   return result;
 }
 

@@ -9,6 +9,105 @@
 #include <dmzJSONParser.h>
 #include <dmzJSONUtil.h>
 
+#include <qdb.h>
+static dmz::qdb out;
+
+namespace {
+
+static inline dmz::Boolean
+isdigit (const char Val) { return (Val >= '0') && (Val <= '9'); }
+
+}
+
+dmz::Boolean
+dmz::json_is_number (const String &Value) {
+
+   Boolean result (False);
+
+   const Int32 Length (Value.get_length ());
+   const char *Buf = Value.get_buffer ();
+
+   if (Buf && Length) {
+
+      result = True;
+
+      Boolean done (False);
+      Boolean leadingZero (False);
+      Boolean isFloat (False);
+      Boolean afterExp (False);
+      Int32 digitCount (0);
+      Int32 place (0);
+
+      while (!done && result) {
+
+         const char Val = Buf[place];
+
+         if (isdigit (Val)) {
+
+            if ((0 == digitCount) && (Val == '0')) {
+
+               if (!isFloat) { leadingZero = True; }
+               else if (isFloat && afterExp) { leadingZero = True; }
+            }
+            else if (leadingZero) { result = False; }
+
+            digitCount++;
+         }
+         else if (Val == '-') {
+
+            if (place != 0) { result = False; }
+         }
+         else if (Val == '.') {
+
+            if (isFloat) { result = False; }
+            else if (afterExp) { result = False; }
+            else {
+
+               if (digitCount == 0) { result = False; }
+               else {
+
+                  isFloat = True;
+                  leadingZero = False;
+                  digitCount = 0;
+               }
+            }
+         }
+         else if ((Val == 'e') || (Val == 'E')) {
+
+            if (!afterExp && ((place + 1) < Length)) {
+
+               leadingZero = False;
+               digitCount = 0;
+               afterExp = True;
+               const char Next = Buf[place + 1];
+
+               if ((Next == '+') || (Next == '-')) {
+
+                  place++;
+                  if (place >= Length) { result = False; }
+               }
+            }
+            else { result = False; }
+         }
+         else { result = False; }
+
+         if (result && !done) {
+
+            place++;
+            if (place >= Length) {
+
+               done = True;
+
+               if ((isFloat || afterExp) && (digitCount == 0)) { result = False; }
+            }
+         }
+      }
+   }
+
+   return result;
+}
+
+
 /*!
 
 \ingroup Foundation

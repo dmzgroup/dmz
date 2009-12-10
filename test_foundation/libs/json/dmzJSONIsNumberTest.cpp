@@ -139,6 +139,51 @@ main (int argc, char *argv[]) {
       str + " is NOT a number",
       json_is_number (str) == False);
 
+   str = "e";
+   test.validate (
+      str + " is NOT a number",
+      json_is_number (str) == False);
+
+   str = "-";
+   test.validate (
+      str + " is NOT a number",
+      json_is_number (str) == False);
+
+   str = "e1";
+   test.validate (
+      str + " is NOT a number",
+      json_is_number (str) == False);
+
+   str = "e+1";
+   test.validate (
+      str + " is NOT a number",
+      json_is_number (str) == False);
+
+   str = "e-1";
+   test.validate (
+      str + " is NOT a number",
+      json_is_number (str) == False);
+
+   str = ".e";
+   test.validate (
+      str + " is NOT a number",
+      json_is_number (str) == False);
+
+   str = ".e1";
+   test.validate (
+      str + " is NOT a number",
+      json_is_number (str) == False);
+
+   str = ".e+1";
+   test.validate (
+      str + " is NOT a number",
+      json_is_number (str) == False);
+
+   str = ".e-1";
+   test.validate (
+      str + " is NOT a number",
+      json_is_number (str) == False);
+
    str = "00";
    test.validate (
       str + " is NOT a number",
@@ -155,6 +200,21 @@ main (int argc, char *argv[]) {
       json_is_number (str) == False);
 
    str = "1.2.3";
+   test.validate (
+      str + " is NOT a number",
+      json_is_number (str) == False);
+
+   str = "1e";
+   test.validate (
+      str + " is NOT a number",
+      json_is_number (str) == False);
+
+   str = "1e-";
+   test.validate (
+      str + " is NOT a number",
+      json_is_number (str) == False);
+
+   str = "1e+";
    test.validate (
       str + " is NOT a number",
       json_is_number (str) == False);

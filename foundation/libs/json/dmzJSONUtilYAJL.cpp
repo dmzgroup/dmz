@@ -38,13 +38,24 @@ local_escape_string (const dmz::String &Value, dmz::String &result) {
    else { result << ""; }
 }
 
-static Boolean
+
+static inline Boolean
+local_is_unique (const Config &Data, const String &Name) {
+
+   Config tmp;
+
+   return Data.lookup_config (Name, tmp) == False;
+}
+
+
+static inline Boolean
 local_ok (const yajl_gen_status Status) {
 
    return Status == yajl_gen_status_ok;
 }
 
-static Boolean
+
+static inline Boolean
 local_write_string (yajl_gen gen, const String &Str, Log *log) {
 
    Int32 length (0);
@@ -52,33 +63,104 @@ local_write_string (yajl_gen gen, const String &Str, Log *log) {
    return local_ok (yajl_gen_string (gen, Buf, (unsigned int)length));
 }
 
-static const void *TableValue ((void *)1);
+
+static void *TableValue ((void *)1);
 
 static Boolean
 local_write_config (yajl_gen gen, const Config &Data, Log *log) {
 
    Boolean result (True);
 
-   yajl_gen_map_open (gen);
+   result - local_ok (yajl_gen_map_open (gen));
 
    ConfigIterator it;
    String name;
    String value;
 
-   while (Data.get_next_attribute (it, name, value)) {
+   while (Data.get_next_attribute (it, name, value) && result) {
 
-      Config tmp;
+      if (local_is_unique (Data, name)) {
 
-      if (!Data.lookup_config (name, tmp)) {
+         local_write_string (gen, name, log);
 
+         if (json_is_number (value)) {
+
+            result = local_ok (
+               yajl_gen_number (
+                  gen,
+                  value.get_buffer (),
+                  (unsigned int)value.get_length ()));
+         }
+         else {
+
+            if (value.get_length ()) {
+
+               result = local_ok (yajl_gen_string (
+                  gen,
+                  (const unsigned char *)value.get_buffer (),
+                  (unsigned int)value.get_length ()));
+            }
+            else { result = local_ok (yajl_gen_null (gen)); }
+         }
       }
       else if (log) {
 
-         log->error << "" << endl;
+         log->error << "Attribute: " << name << "=" << value
+            << " conflicts with Config name. Attribute will be ignored." << endl;
       }
    }
 
-   yajl_gen_map_close (gen);
+   HashTableString unique;
+
+   it.reset ();
+   Config next;
+
+   while (Data.get_next_config (it, next) && result) {
+
+      const String Name = next.get_name ();
+
+      if (unique.lookup (Name) != TableValue) {
+
+         local_write_string (gen, Name, log);
+
+         unique.store (Name, TableValue);
+
+         Config group;
+
+         Boolean isArray (False);
+
+         if (Data.lookup_all_config (Name, group)) {
+
+            if (group.get_config_count () > 1) { isArray = True; }
+            else if (next.is_in_array ()) {
+
+               isArray = True;
+               group.add_config (next);
+            }
+         }
+
+         if (isArray) {
+
+            result = local_ok (yajl_gen_array_open (gen));
+
+            ConfigIterator git;
+            Config obj;
+
+            while (group.get_next_config (git, obj) && result) {
+
+               result = local_write_config (gen, obj, log);
+            }
+
+            result = local_ok (yajl_gen_array_close (gen));
+         }
+         else {
+
+            result = local_write_config (gen, next, log);
+         }
+      }
+   }
+
+   result = local_ok (yajl_gen_map_close (gen));
 
    return result;
 }
@@ -129,7 +211,6 @@ dmz::format_config_to_json (
          it.reset ();
 
          if (isArray) { yajl_gen_array_open (gen); }
-         else { yajl_gen_map_open (gen); }
 
          while (Data.get_next_config (it, data)) {
 
@@ -137,12 +218,9 @@ dmz::format_config_to_json (
             merged.add_children (data);
          }
 
-         if (isArray == False) { local_write_string (gen, merged.get_name (), log); }
-
          result = local_write_config (gen, merged, log);
 
          if (isArray) { yajl_gen_array_close (gen); }
-         else { yajl_gen_map_close (gen); }
       }
       else {
 
@@ -155,13 +233,13 @@ dmz::format_config_to_json (
       unsigned int len (0);
 
       const yajl_gen_status Status = yajl_gen_get_buf (gen, &buf, &len);
-      yajl_gen_clear (gen);
 
       if (result && (Status == yajl_gen_status_ok) && buf && len) {
 
          stream.write_raw_data (buf, len);
       }
 
+      yajl_gen_clear (gen);
       yajl_gen_free (gen);
    }
 

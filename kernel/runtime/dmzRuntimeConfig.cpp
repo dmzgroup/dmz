@@ -279,6 +279,22 @@ dmz::Config::get_name () const {
 }
 
 
+//! Returns the number attributes stored in the Config object.
+dmz::Int32
+dmz::Config::get_attribute_count () const {
+
+   return _state.context ? _state.context->attrTable.get_count () : 0;
+}
+
+
+//! Returns the number child Config objects stored in the Config object.
+dmz::Int32
+dmz::Config::get_config_count () const {
+
+   return _state.context ? _state.context->configOrderTable.get_count () : 0;
+}
+
+
 /*!
 
 \brief Sets the formatted state of the config context.

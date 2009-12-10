@@ -1,0 +1,4 @@
+lmk.set_name "dmzConvertConfig"
+lmk.set_type "exe"
+lmk.add_libs {"dmzJSON", "dmzXML", "dmzKernel",}
+lmk.add_files {"dmzConvertConfig.cpp"}

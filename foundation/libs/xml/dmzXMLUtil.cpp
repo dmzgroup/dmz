@@ -9,6 +9,28 @@
 #include <dmzXMLParser.h>
 #include <dmzXMLUtil.h>
 
+/*!
+
+\var dmz::XMLStripGlobal
+\ingroup Foundation
+\brief Specifies that the global scope should be stripped when converting a Config tree
+to XML.
+\details Defined in dmzXMLUtil.h
+\sa dmz::format_config_to_xml
+
+*/
+
+/*!
+
+\var dmz::XMLPrettyPrint
+\ingroup Foundation
+\brief Specifies that the generated XML should be pretty printed.
+\details Defined in dmzXMLUtil.h
+\sa dmz::format_config_to_xml
+
+*/
+
+
 namespace {
 
 static void
@@ -257,17 +279,19 @@ dmz::write_xml_header (Stream &stream) {
 \details Defined in dmzXMLUtil.h.
 \param[in] Data Config object containing config context to write as XML.
 \param[in] stream Stream to write XML.
-\param[in] StripGlobal Strips root of config context tree so it is not included in
-the XML.
+\param[in] Mode Mask specifying file generation mode.
+\param[in] log Pointer to Log used for error reporting.
+\sa dmz::XMLPrettyPrint\n dmz::XMLStripGlobal
 
 */
 void
 dmz::format_config_to_xml (
       const Config &Data,
       Stream &stream,
-      const Boolean StripGlobal) {
+      const UInt32 Mode,
+      Log *log) {
 
-   if (StripGlobal) {
+   if (Mode & XMLStripGlobal) {
 
       ConfigIterator it;
       Config data;

@@ -38,9 +38,9 @@ using Qt::WindowFlags;
 typedef HWND WindowHandle;
 typedef osgViewer::GraphicsWindowWin32::WindowData WindowData;
 #elif defined(__APPLE__)
-#include <osgViewer/api/Carbon/GraphicsWindowCarbon>
-typedef WindowRef WindowHandle;
-typedef osgViewer::GraphicsWindowCarbon::WindowData WindowData;
+#include <osgViewer/api/Cocoa/GraphicsWindowCocoa>
+//typedef WindowRef WindowHandle;
+typedef osgViewer::GraphicsWindowCocoa::WindowData WindowData;
 #else // all other unix
 #include <osgViewer/api/X11/GraphicsWindowX11>
 typedef Window WindowHandle;

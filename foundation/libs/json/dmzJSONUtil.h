@@ -11,6 +11,9 @@ namespace dmz {
    class Stream;
    class Version;
 
+   const UInt32 JSONStripGlobal = 0x01;
+   const UInt32 JSONPrettyPrint = 0x02;
+
    DMZ_JSON_LINK_SYMBOL Boolean json_is_number (const String &Value);
 
    DMZ_JSON_LINK_SYMBOL Boolean json_string_to_config (
@@ -31,8 +34,8 @@ namespace dmz {
    DMZ_JSON_LINK_SYMBOL Boolean format_config_to_json (
       const Config &Config,
       Stream &stream,
-      Log *log = 0,
-      const Boolean StripGlobal = False);
+      const UInt32 Mode = 0,
+      Log *log = 0);
 
 };
 

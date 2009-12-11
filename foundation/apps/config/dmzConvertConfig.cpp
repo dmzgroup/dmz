@@ -33,7 +33,7 @@ main (int argc, char *argv[]) {
                StreamFile out (fp);
 
                dmz::write_xml_header (out);
-               dmz::format_config_to_xml (data, out, dmz::True);
+               dmz::format_config_to_xml (data, out, XMLStripGlobal | XMLPrettyPrint, &log);
                close_file (fp); fp = 0;
             }
          }
@@ -48,7 +48,7 @@ main (int argc, char *argv[]) {
 
                StreamFile out (fp);
 
-               dmz::format_config_to_json (data, out, &log, dmz::True);
+               dmz::format_config_to_json (data, out, JSONPrettyPrint | JSONStripGlobal, &log);
                close_file (fp); fp = 0;
             }
          }

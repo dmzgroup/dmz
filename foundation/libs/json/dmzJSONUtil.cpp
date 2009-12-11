@@ -12,6 +12,27 @@
 #include <qdb.h>
 static dmz::qdb out;
 
+/*!
+
+\var dmz::JSONStripGlobal
+\ingroup Foundation
+\brief Specifies that the global scope should be stripped when converting a Config tree
+to JSON.
+\details Defined in dmzJSONUtil.h
+\sa dmz::format_config_to_json
+
+*/
+
+/*!
+
+\var dmz::JSONPrettyPrint
+\ingroup Foundation
+\brief Specifies that the generated JSON should be pretty printed.
+\details Defined in dmzJSONUtil.h
+\sa dmz::format_config_to_json
+
+*/
+
 namespace {
 
 static inline dmz::Boolean
@@ -19,6 +40,14 @@ isdigit (const char Val) { return (Val >= '0') && (Val <= '9'); }
 
 }
 
+/*!
+
+\brief Determines if a String contains a legally formatted JSON number.
+\ingroup Foundation
+\param[in] Value String containing the text to test.
+\return Returns dmz::True if the String contains a valid JSON number.
+
+*/
 dmz::Boolean
 dmz::json_is_number (const String &Value) {
 

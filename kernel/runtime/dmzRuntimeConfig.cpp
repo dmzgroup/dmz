@@ -331,6 +331,16 @@ dmz::Config::is_formatted () const {
 }
 
 
+/*!
+
+\brief Sets the array state of the config context.
+\details A config context may be flagged as being in an array. This flag is currently
+used by functions exporting a config context tree to a formatted file such as JSON
+that supports arrays.
+\param[in] IsInArray Boolean value set to True when config context is in an array.
+\sa dmz::format_config_to_json
+
+*/
 void
 dmz::Config::set_in_array (const Boolean IsInArray) {
 
@@ -341,7 +351,7 @@ dmz::Config::set_in_array (const Boolean IsInArray) {
    }
 }
 
-
+//! Returns True if config context is flagged as being in an array.
 dmz::Boolean
 dmz::Config::is_in_array () const {
 

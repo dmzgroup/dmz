@@ -170,30 +170,33 @@ local_write_config (yajl_gen gen, const Config &Data, Log *log) {
 
 /*!
 
-\ingroup Foundation
 \brief Writes a config context tree to a stream as JSON.
+\ingroup Foundation
 \details Defined in dmzJSONUtil.h.
 \param[in] Data Config object containing config context to write as JSON.
-\param[in] stream Stream to write JSON.
-\param[in] StripGlobal Strips root of config context tree so it is not included in
-the JSON.
+\param[in] stream Stream to output JSON.
+\param[in] Mode Mask specifying file generation mode.
+\param[in] log Pointer to Log used for error reporting.
+\return Returns dmz::True if data was successfully formatted.
+\sa dmz::JSONPrettyPrint\n dmz::JSONStripGlobal
 
 */
 dmz::Boolean
 dmz::format_config_to_json (
       const Config &Data,
       Stream &stream,
-      Log *log,
-      const Boolean StripGlobal) {
+      const UInt32 Mode,
+      Log *log) {
+
 
    Boolean result (True);
 
-   yajl_gen_config cg = { 1, 0 };
+   yajl_gen_config cg = { (Mode & JSONPrettyPrint ? 1 : 0), 0 };
    yajl_gen gen = yajl_gen_alloc (&cg, 0);
 
    if (gen) {
 
-      if (StripGlobal) {
+      if (Mode & JSONStripGlobal) {
 
          Boolean isArray (False);
 

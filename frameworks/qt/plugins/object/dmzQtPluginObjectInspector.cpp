@@ -9,6 +9,7 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
 #include <dmzTypesUUID.h>
+#include <QtCore/QList>
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QDesktopWidget>
 
@@ -261,18 +262,17 @@ dmz::QtPluginObjectInspector::link_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (SuperHandle);
-   if (inspector) {
+   QList<Handle> handleList;
+   handleList << SuperHandle << SubHandle;
 
-      inspector->link_objects (
-         LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
-   }
-   
-   inspector = _inspectorTable.lookup (SubHandle);
-   if (inspector) {
+   foreach (Handle obj, handleList) {
 
-      inspector->link_objects (
-         LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
+      QtObjectInspector *inspector = _inspectorTable.lookup (obj);
+      if (inspector) {
+
+         inspector->link_objects (
+            LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
+      }
    }
 }
 
@@ -286,18 +286,17 @@ dmz::QtPluginObjectInspector::unlink_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (SuperHandle);
-   if (inspector) {
+   QList<Handle> handleList;
+   handleList << SuperHandle << SubHandle;
    
-      inspector->unlink_objects (
-         LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
-   }
+   foreach (Handle obj, handleList) {
+      
+      QtObjectInspector *inspector = _inspectorTable.lookup (obj);
+      if (inspector) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (SubHandle);
-   if (inspector) {
-   
-      inspector->unlink_objects (
-         LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
+         inspector->unlink_objects (
+            LinkHandle, AttributeHandle, SuperIdentity, SuperHandle, SubIdentity, SubHandle);
+      }
    }
 }
 
@@ -315,21 +314,27 @@ dmz::QtPluginObjectInspector::update_link_attribute_object (
       const UUID &PrevAttributeIdentity,
       const Handle PrevAttributeObjectHandle) {
 
-   // QtObjectInspector *inspector = _inspectorTable.lookup (LinkHandle);
-   // if (inspector) {
-   //
-   //    inspector->update_link_attribute_object (
-   //       LinkHandle,
-   //       AttributeHandle,
-   //       SuperIdentity,
-   //       SuperHandle,
-   //       SubIdentity,
-   //       SubHandle,
-   //       AttributeIdentity,
-   //       AttributeObjectHandle,
-   //       PrevAttributeIdentity,
-   //       PrevAttributeObjectHandle);
-   // }
+   QList<Handle> handleList;
+   handleList << SuperHandle << SubHandle;
+
+   foreach (Handle obj, handleList) {
+
+      QtObjectInspector *inspector = _inspectorTable.lookup (obj);
+      if (inspector) {
+      
+         inspector->update_link_attribute_object (
+            LinkHandle,
+            AttributeHandle,
+            SuperIdentity,
+            SuperHandle,
+            SubIdentity,
+            SubHandle,
+            AttributeIdentity,
+            AttributeObjectHandle,
+            PrevAttributeIdentity,
+            PrevAttributeObjectHandle);
+      }
+   }
 }
 
 

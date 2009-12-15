@@ -9,6 +9,135 @@
 #include <dmzJSONParser.h>
 #include <dmzJSONUtil.h>
 
+#include <qdb.h>
+static dmz::qdb out;
+
+/*!
+
+\var dmz::JSONStripGlobal
+\ingroup Foundation
+\brief Specifies that the global scope should be stripped when converting a Config tree
+to JSON.
+\details Defined in dmzJSONUtil.h
+\sa dmz::format_config_to_json
+
+*/
+
+/*!
+
+\var dmz::JSONPrettyPrint
+\ingroup Foundation
+\brief Specifies that the generated JSON should be pretty printed.
+\details Defined in dmzJSONUtil.h
+\sa dmz::format_config_to_json
+
+*/
+
+namespace {
+
+static inline dmz::Boolean
+isdigit (const char Val) { return (Val >= '0') && (Val <= '9'); }
+
+}
+
+/*!
+
+\brief Determines if a String contains a legally formatted JSON number.
+\ingroup Foundation
+\param[in] Value String containing the text to test.
+\return Returns dmz::True if the String contains a valid JSON number.
+
+*/
+dmz::Boolean
+dmz::json_is_number (const String &Value) {
+
+   Boolean result (False);
+
+   const Int32 Length (Value.get_length ());
+   const char *Buf = Value.get_buffer ();
+
+   if (Buf && Length) {
+
+      result = True;
+
+      Boolean done (False);
+      Boolean leadingZero (False);
+      Boolean foundDecimal (False);
+      Boolean foundExp (False);
+      Int32 digitCount (0);
+      Int32 place (0);
+
+      while (!done && result) {
+
+         const char Val = Buf[place];
+
+         if (isdigit (Val)) {
+
+            if ((0 == digitCount) && (Val == '0')) {
+
+               if (!foundDecimal) { leadingZero = True; }
+               else if (foundDecimal && foundExp) { leadingZero = True; }
+            }
+            else if (leadingZero) { result = False; }
+
+            digitCount++;
+         }
+         else if (Val == '-') {
+
+            if (place != 0) { result = False; }
+         }
+         else if (Val == '.') {
+
+            if (foundDecimal) { result = False; }
+            else if (foundExp) { result = False; }
+            else {
+
+               if (digitCount == 0) { result = False; }
+               else {
+
+                  foundDecimal = True;
+                  leadingZero = False;
+                  digitCount = 0;
+               }
+            }
+         }
+         else if ((Val == 'e') || (Val == 'E')) {
+
+            if (digitCount == 0) { result = False; }
+            else if (!foundExp && ((place + 1) < Length)) {
+
+               leadingZero = False;
+               digitCount = 0;
+               foundExp = True;
+               const char Next = Buf[place + 1];
+
+               if ((Next == '+') || (Next == '-')) {
+
+                  place++;
+                  if (place >= Length) { result = False; }
+               }
+            }
+            else { result = False; }
+         }
+         else { result = False; }
+
+         if (result && !done) {
+
+            place++;
+
+            if (place >= Length) {
+
+               if (digitCount == 0) { result = False; }
+               else { done = True; }
+            }
+         }
+      }
+   }
+
+   return result;
+}
+
+
 /*!
 
 \ingroup Foundation

@@ -36,7 +36,7 @@ namespace dmz {
          Boolean move (
             const UInt32 &Key,
             const UInt32 *TargetKey,
-            const Boolean SignleStep,
+            const Boolean SingleStep,
             const Boolean Before);
 
          void *get_next (HashTableUInt32Iterator &it, const Boolean Prev = False) const;

@@ -34,7 +34,7 @@ namespace dmz {
          Boolean move (
             const $(type) &Key,
             const $(type) *TargetKey,
-            const Boolean SignleStep,
+            const Boolean SingleStep,
             const Boolean Before);
 
          void *get_next (HashTable$(type)Iterator &it, const Boolean Prev = False) const;

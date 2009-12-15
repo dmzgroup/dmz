@@ -11,6 +11,7 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzTypesBase.h>
+#include <dmzTypesDeleteListTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableUUIDTemplate.h>
@@ -40,7 +41,7 @@ namespace dmz {
             ObsUpdateStruct *next;
 
             ObsUpdateStruct () : next (0) {;}
-            virtual ~ObsUpdateStruct () { if (next) { delete next; next = 0; } }
+            virtual ~ObsUpdateStruct () { delete_list (next); }
 
             virtual void update (ObjectModuleBasic &module) = 0;
          };
@@ -641,9 +642,9 @@ namespace dmz {
                dataTable.empty ();
             }
 
-            ObjectStruct *clone (ObjectStruct *next) {
+            ObjectStruct *clone (ObjectStruct *obj) {
 
-               ObjectStruct *result (next);
+               ObjectStruct *result (obj);
 
                if (!result) { result = new ObjectStruct; }
                else { result->reset (); }

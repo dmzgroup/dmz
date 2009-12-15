@@ -11,6 +11,9 @@ namespace dmz {
    class Stream;
    class Version;
 
+   const UInt32 XMLStripGlobal = 0x01;
+   const UInt32 XMLPrettyPrint = 0x02;
+
    DMZ_XML_LINK_SYMBOL Boolean xml_string_to_config (
       const String &Value,
       Config &data,
@@ -31,7 +34,8 @@ namespace dmz {
    DMZ_XML_LINK_SYMBOL void format_config_to_xml (
       const Config &Config,
       Stream &stream,
-      const Boolean StripGlobal = False);
+      const UInt32 Mode = 0,
+      Log *log = 0);
 
 };
 

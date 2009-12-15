@@ -279,6 +279,22 @@ dmz::Config::get_name () const {
 }
 
 
+//! Returns the number attributes stored in the Config object.
+dmz::Int32
+dmz::Config::get_attribute_count () const {
+
+   return _state.context ? _state.context->attrTable.get_count () : 0;
+}
+
+
+//! Returns the number child Config objects stored in the Config object.
+dmz::Int32
+dmz::Config::get_config_count () const {
+
+   return _state.context ? _state.context->configOrderTable.get_count () : 0;
+}
+
+
 /*!
 
 \brief Sets the formatted state of the config context.
@@ -315,6 +331,16 @@ dmz::Config::is_formatted () const {
 }
 
 
+/*!
+
+\brief Sets the array state of the config context.
+\details A config context may be flagged as being in an array. This flag is currently
+used by functions exporting a config context tree to a formatted file such as JSON
+that supports arrays.
+\param[in] IsInArray Boolean value set to True when config context is in an array.
+\sa dmz::format_config_to_json
+
+*/
 void
 dmz::Config::set_in_array (const Boolean IsInArray) {
 
@@ -325,7 +351,7 @@ dmz::Config::set_in_array (const Boolean IsInArray) {
    }
 }
 
-
+//! Returns True if config context is flagged as being in an array.
 dmz::Boolean
 dmz::Config::is_in_array () const {
 

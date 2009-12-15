@@ -275,8 +275,6 @@ dmz::ApplicationiPhone::load_config (const PathContainer &Files) {
    
    if (!_state.error) { _state.cache.configure (_state.global); }
    
-   //   format_config_to_xml (global, _state.log.debug, True);
-   
    return !_state.error;
 }
 
@@ -473,7 +471,7 @@ dmz::ApplicationiPhone::save_session () {
             
             write_xml_header (fs);
             
-            format_config_to_xml (session, fs);
+            format_config_to_xml (session, fs, XMLPrettyPrint);
             
             close_file (file); file = 0;
             

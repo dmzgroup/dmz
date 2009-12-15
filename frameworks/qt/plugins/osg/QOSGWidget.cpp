@@ -51,7 +51,7 @@ void QOSGWidget::createContext() {
     traits->samples = ds->getNumMultiSamples();
 
 #if defined(__APPLE__) || defined(MACOSX)
-    traits->inheritedWindowData = new WindowData((OpaqueWindowPtr*)winId());
+    traits->inheritedWindowData = new WindowData(winId());
 #else
     traits->inheritedWindowData = new WindowData(winId());
 #endif

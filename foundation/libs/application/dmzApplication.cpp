@@ -369,8 +369,6 @@ dmz::Application::process_command_line (const CommandLine &CL) {
 
    if (!_state.error) { _state.cache.configure (_state.global); }
 
-//   format_config_to_xml (global, _state.log.debug, True);
-
    return !_state.error;
 }
 
@@ -571,7 +569,7 @@ dmz::Application::save_session () {
 
             write_xml_header (fs);
 
-            format_config_to_xml (session, fs);
+            format_config_to_xml (session, fs, XMLPrettyPrint);
 
             close_file (file); file = 0;
 

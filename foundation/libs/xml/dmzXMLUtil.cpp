@@ -84,6 +84,11 @@ local_write_attributes (const dmz::Config &Data, dmz::Stream &stream) {
    }
 }
 
+static inline void
+local_endl (const dmz::Int32 Indent, dmz::Stream &stream) {
+
+   if (Indent >= 0) { stream << dmz::endl; }
+}
 
 static void
 local_write_config (
@@ -91,8 +96,8 @@ local_write_config (
       const dmz::Int32 Indent,
       dmz::Stream &stream) {
 
-   dmz::String padding;
-   padding.repeat (" ", Indent);
+   dmz::String padding ("");
+   if (Indent >= 0) { padding.repeat (" ", Indent); }
    dmz::ConfigIterator it;
 
    const dmz::String Name (Data.get_name ());
@@ -108,12 +113,14 @@ local_write_config (
 
          if (Data.is_formatted ()) {
 
-            stream << "<![CDATA[" << value << "]]>" << dmz::endl;
+            stream << "<![CDATA[" << value << "]]>";
+            local_endl (Indent, stream);
          }
          else {
 
             dmz::trim_ascii_white_space (value);
-            stream << padding << value << dmz::endl;
+            stream << padding << value;
+            local_endl (Indent, stream);
          }
       }
    }
@@ -125,7 +132,8 @@ local_write_config (
 
       if (HasChildren) {
 
-         stream << ">" << dmz::endl;
+         stream << ">";
+         local_endl (Indent, stream);
 
          dmz::Config nextData;
 
@@ -134,12 +142,13 @@ local_write_config (
                result;
                result = Data.get_next_config (it, nextData)) {
 
-            local_write_config (nextData, Indent + 3, stream);
+            local_write_config (nextData, (Indent >= 0) ? Indent + 3 : Indent, stream);
          }
 
-         stream << padding << "</" << Data.get_name () << ">" << dmz::endl;
+         stream << padding << "</" << Data.get_name () << ">";
+         local_endl (Indent, stream);
       }
-      else { stream << "/>" << dmz::endl; }
+      else { stream << "/>"; local_endl (Indent, stream); }
    }
 }
 
@@ -300,10 +309,10 @@ dmz::format_config_to_xml (
 
       while (result) {
 
-         local_write_config (data, 0, stream);
+         local_write_config (data, (XMLPrettyPrint & Mode) ? 0 : -1, stream);
          result = Data.get_next_config (it, data);
       }
    }
-   else { local_write_config (Data, 0, stream); }
+   else { local_write_config (Data, (XMLPrettyPrint & Mode) ? 0 : -1, stream); }
 }
 

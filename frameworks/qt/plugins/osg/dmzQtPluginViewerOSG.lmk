@@ -1,7 +1,7 @@
 require "lmkOSG"
 require "lmkQt"
 
-lmkOSG.set_name ("dmzQtPluginViewerOSG", lmkQt.get_flags ())
+--lmkOSG.set_name ("dmzQtPluginViewerOSG", lmkQt.get_flags ())
 
 lmk.set_type "plugin"
 

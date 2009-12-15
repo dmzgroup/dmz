@@ -58,6 +58,8 @@ namespace dmz {
          Definitions _defs;
          Undo _undo;
          Log _log;
+         Int32 _loadLimit;
+         Int32 _saveLimit;
          //! \endcond
 
       private:

@@ -45,7 +45,10 @@ main (int argc, char *argv[]) {
 
          dmz::Log log ("", rt.get_context ());
          dmz::write_xml_header (log.out);
-         dmz::format_config_to_xml (gdata, log.out, dmz::True);
+         dmz::format_config_to_xml (
+            gdata,
+            log.out,
+            dmz::XMLStripGlobal | dmz::XMLPrettyPrint);
 
          dmz::close_file (fd);
       }

@@ -36,7 +36,7 @@ namespace dmz {
          Boolean move (
             const Handle &Key,
             const Handle *TargetKey,
-            const Boolean SignleStep,
+            const Boolean SingleStep,
             const Boolean Before);
 
          void *get_next (HashTableHandleIterator &it, const Boolean Prev = False) const;

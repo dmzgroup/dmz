@@ -4,6 +4,7 @@
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeLogObserverBasic.h>
+#include <dmzSystem.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamFile.h>
 #include <dmzXMLUtil.h>
@@ -25,6 +26,9 @@ main (int argc, char *argv[]) {
    UInt32 jsonMask = 0;
    UInt32 xmlMask = 0;
 
+   Boolean convert (True);
+   Boolean doTime (False);
+
    CommandLineArgs arg;
 
    for (
@@ -40,9 +44,11 @@ main (int argc, char *argv[]) {
          split_path_file_ext (argv[0], path, file, ext);
          
          log.out << file << " help:" << endl;
-         log.out << "\t-p <true|false> Pretty print output." << endl;
-         log.out << "\t-o <path>       Output directory." << endl;
+         log.out << "\t-c <true|false> Convert." << endl;
          log.out << "\t-f <file list>  List of files to convert." << endl;
+         log.out << "\t-o <path>       Output directory." << endl;
+         log.out << "\t-p <true|false> Pretty print output." << endl;
+         log.out << "\t-t <true|false> Time file parse and write." << endl;
          log.out << "\t-h or --help    This help list." << endl;
 
          exit (0);
@@ -72,6 +78,28 @@ main (int argc, char *argv[]) {
             }
          }
       }
+      else if (Name == "c") {
+
+         String value;
+
+         if (arg.get_first_arg (value)) {
+
+            if (value == "false") { convert = False; }
+            else { convert = True; }
+         }
+         else { convert = True; }
+      }
+      else if (Name == "t") {
+
+         String value;
+
+         if (arg.get_first_arg (value)) {
+
+            if (value == "false") { doTime = False; }
+            else { doTime = True; }
+         }
+         else { doTime = True; }
+      }
       else if (Name == "o") {
 
          arg.get_first_arg (targetPath);
@@ -79,6 +107,7 @@ main (int argc, char *argv[]) {
       else if (Name == "f") {
 
          String fname;
+
          for (
                Boolean found = arg.get_first_arg (fname);
                found;
@@ -89,45 +118,65 @@ main (int argc, char *argv[]) {
             if (targetPath) { path = targetPath + "/"; }
             Config data ("global");
 
-            if (ext == ".json") {
+            Boolean toXML (True);
 
-               if (json_to_config (fname, data, &log)) {
+            if (ext == ".json") { toXML = True; }
+            else { toXML = False; }
 
-                  FILE *fp = open_file (path + file + ".xml", "wb");
+            if (!convert) { toXML = !toXML; }
 
-                  if (fp) {
+            if (!convert && !targetPath) { file << ".convert"; }
 
-                     StreamFile out (fp);
+            Boolean valid (False);
+
+            Float64 StartTime (doTime ? get_time () : 0.0);
+
+            if (ext == ".json") { valid = json_to_config (fname, data, &log); }
+            else { valid = xml_to_config (fname, data, &log); }
+
+            if (valid && doTime) {
+
+               const Float64 Delta = get_time () - StartTime;
+
+               log.out << fname << " parsed: " << Delta << " sec." << endl;
+            }
+
+            if (valid) {
+
+               String ftype (toXML ? ".xml" : ".json");
+
+               FILE *fp = open_file (path + file + ftype, "wb");
+
+               if (fp) {
+
+                  const Float64 StartTime (doTime ? get_time () : 0.0);
+
+                  StreamFile out (fp);
+
+                  if (toXML) {
 
                      write_xml_header (out);
                      format_config_to_xml (data, out, XMLStripGlobal | xmlMask, &log);
-                     close_file (fp); fp = 0;
                   }
                   else {
-
-                     log.error << "Failed to create file: " << path << file << ".xml"
-                        << endl;
-                  }
-               }
-            }
-            else {
-
-               if (xml_to_config (fname, data, &log)) {
-
-                  FILE *fp = open_file (path + file + ".json", "wb");
-
-                  if (fp) {
-
-                     StreamFile out (fp);
 
                      format_config_to_json (data, out, JSONStripGlobal | jsonMask, &log);
-                     close_file (fp); fp = 0;
                   }
-                  else {
 
-                     log.error << "Failed to create file: " << path << file << ".json"
-                        << endl;
+                  close_file (fp); fp = 0;
+
+                  if (doTime) {
+
+                     const Float64 Delta = get_time () - StartTime;
+
+                     log.out << path << file << ftype  << " written: " << Delta
+                        << " sec." << endl;
                   }
+               }
+               else {
+
+                  log.error << "Failed to create file: " << path << file << ftype
+                     << endl;
                }
             }
          }

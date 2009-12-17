@@ -17,8 +17,7 @@ function set_up (appName)
    lmk.add_libs {
       "dmzQtLogObserver",
       "dmzQtUtil",
-      "dmzApplication",
-      "dmzXML",
+      "dmzFoundation",
       "dmzKernel",
    }
 

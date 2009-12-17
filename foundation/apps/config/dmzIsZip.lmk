@@ -1,4 +1,4 @@
-lmk.set_name "dmzZipConfig"
+lmk.set_name "dmzIsZip"
 lmk.set_type "exe"
 lmk.add_libs {"dmzFoundation", "dmzKernel",}
-lmk.add_files {"dmzZipConfig.cpp"}
+lmk.add_files {"dmzIsZip.cpp"}

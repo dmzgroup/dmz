@@ -7,7 +7,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
-#include <dmzXMLBase64.h>
+#include <dmzBase64.h>
 #include <luacpp.h>
 #include <QtGui/QAction>
 #include <qdb.h>

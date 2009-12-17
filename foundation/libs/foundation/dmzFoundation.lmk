@@ -1,0 +1,48 @@
+lmk.set_name "dmzFoundation"
+lmk.set_type "shared"
+lmk.add_libs {"dmzKernel", "zip", "expat", "yajl",}
+
+lmk.add_files {
+   "dmzApplicationState.h",
+   "dmzAppShellExt.h",
+   "dmzApplication.h",
+   "dmzBase64.h",
+   "dmzCommandLine.h",
+   "dmzCommandLineConfig.h",
+   "dmzConfigFileIO.h",
+   "dmzFileCache.h",
+   "dmzFoundationExport.h",
+   "dmzJSONInterpreterConfig.h",
+   "dmzJSONParser.h",
+   "dmzJSONUtil.h",
+   "dmzStreamZip.h",
+   "dmzXMLInterpreterConfig.h",
+   "dmzXMLParser.h",
+   "dmzXMLUtil.h",
+   "dmzZip.h",
+}
+
+lmk.add_files {
+   "dmzApplication.cpp",
+   "dmzApplicationStateBasic.cpp",
+   "dmzBase64.cpp",
+   "dmzCommandLine.cpp",
+   "dmzCommandLineConfig.cpp",
+   "dmzConfigFileIO.cpp",
+   "dmzFileCacheLocal.cpp",
+   "dmzJSONInterpreter.cpp",
+   "dmzJSONInterpreterConfig.cpp",
+   "dmzJSONParserYAJL.cpp",
+   "dmzJSONUtil.cpp",
+   "dmzJSONUtilYAJL.cpp",
+   "dmzStreamZip.cpp",
+   "dmzXMLInterpreter.cpp",
+   "dmzXMLInterpreterConfig.cpp",
+   "dmzXMLParserExpat.cpp",
+   "dmzXMLUtil.cpp",
+   "dmzZip.cpp",
+}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_FOUNDATION_EXPORT",
+}, {win32 = true})

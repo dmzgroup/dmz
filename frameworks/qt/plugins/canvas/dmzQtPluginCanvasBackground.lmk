@@ -2,6 +2,6 @@ require "lmkQt"
 lmkQt.set_name "dmzQtPluginCanvasBackground"
 lmk.set_type "plugin"
 lmk.add_files {"dmzQtPluginCanvasBackground.cpp",}
-lmk.add_libs {"dmzKernel", "dmzArchiveUtil", "dmzXML", "dmzQtUtil"}
+lmk.add_libs {"dmzKernel", "dmzArchiveUtil", "dmzFoundation", "dmzQtUtil"}
 lmk.add_preqs {"dmzFoundation", "dmzArchiveFramework", "dmzQtFramework"}
 lmkQt.add_libs {"QtCore", "QtGui",}

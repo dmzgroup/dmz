@@ -9,7 +9,7 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamString.h>
-#include <dmzXMLBase64.h>
+#include <dmzBase64.h>
 #include <QtGui/QtGui>
 
 

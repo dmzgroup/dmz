@@ -1,4 +1,4 @@
 lmk.set_name ("dmzAppBasic")
 lmk.set_type ("exe")
 lmk.add_files {"dmzAppBasic.cpp"}
-lmk.add_libs {"dmzApplication", "dmzXML", "dmzKernel",}
+lmk.add_libs {"dmzFoundation", "dmzKernel",}

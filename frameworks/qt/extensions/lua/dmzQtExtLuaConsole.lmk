@@ -7,8 +7,8 @@ lmk.add_files {"dmzQtExtLuaConsole.cpp",}
 lmk.add_preqs {"dmzLuaFramework",}
 lmk.add_libs {
    "dmzQtUtil",
-   "dmzXML",
    "dmzLuaKernel",
+   "dmzFoundation",
    "dmzKernel",
    "lua",
 }

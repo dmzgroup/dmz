@@ -13,6 +13,6 @@ lmk.add_files {
    "dmzQtPluginMapProperties.cpp",
    "dmzQtPluginMapPropertiesMapAdapter.cpp",
 }
-lmk.add_libs {"dmzKernel", "dmzArchiveUtil", "dmzXML", "dmzQtUtil"}
+lmk.add_libs {"dmzFoundation", "dmzKernel", "dmzArchiveUtil", "dmzQtUtil"}
 lmk.add_preqs {"dmzFoundation", "dmzArchiveFramework", "dmzQtFramework"}
 lmkQMapControl.add_libs ()

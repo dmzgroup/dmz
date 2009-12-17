@@ -4,7 +4,7 @@ lmk.add_files {"dmzArchivePluginQuickSave.cpp",}
 lmk.add_libs {
    "dmzInputEvents",
    "dmzInputUtil",
-   "dmzXML",
+   "dmzFoundation",
    "dmzKernel",
 }
 lmk.add_preqs {"dmzArchiveFramework", "dmzInputFramework",}

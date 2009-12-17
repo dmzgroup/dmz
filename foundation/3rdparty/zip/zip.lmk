@@ -1,0 +1,36 @@
+lmk.set_name "zip"
+lmk.set_type "shared"
+lmk.add_files {
+   "ioapi.h",
+   "unzip.h",
+   "zconf.h",
+   "zip.h",
+   "zlib.h",
+}
+
+lmk.add_files {
+   "adler32.c",
+   "compress.c",
+   "crc32.c",
+   "deflate.c",
+   "gzio.c",
+   "infback.c",
+   "inffast.c",
+   "inflate.c",
+   "inftrees.c",
+   "ioapi.c",
+   "trees.c",
+   "uncompr.c",
+   "unzip.c",
+   "zip.c",
+   "zutil.c",
+}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)USE_MMAP",
+}, {win32 = false})
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)ZLIB_DLL $(lmk.defineFlag)ZLIB_INTERNAL",
+}, {win32 = true})
+

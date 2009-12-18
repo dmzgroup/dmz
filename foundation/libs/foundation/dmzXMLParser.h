@@ -1,6 +1,7 @@
 #ifndef DMZ_XML_PARSER_DOT_H
 #define DMZ_XML_PARSER_DOT_H
 
+#include <dmzParser.h>
 #include <dmzFoundationExport.h>
 #include <dmzTypesString.h>
 
@@ -34,7 +35,7 @@ namespace dmz {
          XMLInterpreter &operator= (const XMLInterpreter &Interpreter);
    };
 
-   class DMZ_FOUNDATION_LINK_SYMBOL XMLParser {
+   class DMZ_FOUNDATION_LINK_SYMBOL XMLParser : public Parser {
 
       public:
          XMLParser ();
@@ -42,14 +43,15 @@ namespace dmz {
 
          void set_interpreter (XMLInterpreter *interpreter);
 
-         void reset ();
+         // Parser Interface
+         virtual void reset ();
 
-         Boolean parse_buffer (
+         virtual Boolean parse_buffer (
             const char *buffer,
             const Int32 Length,
             const Boolean EndOfStream);
 
-         String get_error ();
+         virtual String get_error ();
 
       protected:
          struct State;

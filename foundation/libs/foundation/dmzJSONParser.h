@@ -2,6 +2,7 @@
 #define DMZ_JSON_PARSER_DOT_H
 
 #include <dmzFoundationExport.h>
+#include <dmzParser.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
 
@@ -32,7 +33,7 @@ namespace dmz {
          JSONInterpreter &operator= (const JSONInterpreter &Interpreter);
    };
 
-   class DMZ_FOUNDATION_LINK_SYMBOL JSONParser {
+   class DMZ_FOUNDATION_LINK_SYMBOL JSONParser : public Parser {
 
       public:
          JSONParser ();
@@ -40,14 +41,15 @@ namespace dmz {
 
          void set_interpreter (JSONInterpreter *interpreter);
 
-         void reset ();
+         // Parser Interface
+         virtual void reset ();
 
-         Boolean parse_buffer (
+         virtual Boolean parse_buffer (
             const char *buffer,
             const Int32 Length,
             const Boolean EndOfStream);
 
-         String get_error ();
+         virtual String get_error ();
 
       protected:
          struct State;

@@ -15,6 +15,7 @@ lmk.add_files {
    "dmzJSONInterpreterConfig.h",
    "dmzJSONParser.h",
    "dmzJSONUtil.h",
+   "dmzParser.h",
    "dmzStreamZip.h",
    "dmzXMLInterpreterConfig.h",
    "dmzXMLParser.h",

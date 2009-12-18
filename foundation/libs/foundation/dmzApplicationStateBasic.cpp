@@ -2,7 +2,7 @@
 
 //! \cond
 dmz::ApplicationStateBasic::ApplicationStateBasic (RuntimeContext *context) :
-      ApplicationState (context),
+      ApplicationStateInterface (context),
       _modeStack (0) {;}
 
 

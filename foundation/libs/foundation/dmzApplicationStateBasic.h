@@ -6,7 +6,7 @@
 namespace dmz {
 
    //! \cond
-   class ApplicationStateBasic : public ApplicationState {
+   class ApplicationStateBasic : public ApplicationStateInterface {
 
       public:
          ApplicationStateBasic (RuntimeContext *context);

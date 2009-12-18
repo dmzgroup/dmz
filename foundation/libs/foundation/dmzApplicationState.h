@@ -20,10 +20,10 @@ namespace dmz {
       ApplicationModeUnknown,
    };
 
-   class ApplicationState {
+   class ApplicationStateInterface {
 
       public:
-         static ApplicationState *get_interface (RuntimeContext *context);
+         static ApplicationStateInterface *get_interface (RuntimeContext *context);
 
          virtual void set_default_directory (const String &DirName) = 0;
          virtual String get_default_directory () const  = 0;
@@ -36,23 +36,23 @@ namespace dmz {
          virtual ApplicationModeEnum pop_mode () = 0;
 
       protected:
-         ApplicationState (RuntimeContext *context);
-         virtual ~ApplicationState ();
+         ApplicationStateInterface (RuntimeContext *context);
+         virtual ~ApplicationStateInterface ();
 
       private:
-         ApplicationState ();
-         ApplicationState (const ApplicationState &);
-         ApplicationState &operator= (const ApplicationState &);
+         ApplicationStateInterface ();
+         ApplicationStateInterface (const ApplicationStateInterface &);
+         ApplicationStateInterface &operator= (const ApplicationStateInterface &);
 
          RuntimeContext *__context;
    };
 
-   class ApplicationStateWrapper {
+   class ApplicationState {
 
       public:
-         ApplicationStateWrapper (const PluginInfo &Info);
-         ApplicationStateWrapper (RuntimeContext *context);
-         ~ApplicationStateWrapper ();
+         ApplicationState (const PluginInfo &Info);
+         ApplicationState (RuntimeContext *context);
+         ~ApplicationState ();
 
          void set_default_directory (const String &DirName);
          String get_default_directory () const;
@@ -66,11 +66,11 @@ namespace dmz {
          Boolean is_mode_normal ();
 
       private:
-         ApplicationStateWrapper ();
-         ApplicationStateWrapper (const ApplicationStateWrapper &);
-         ApplicationStateWrapper &operator= (const ApplicationStateWrapper &);
+         ApplicationState ();
+         ApplicationState (const ApplicationState &);
+         ApplicationState &operator= (const ApplicationState &);
 
-         ApplicationState *__ptr;
+         ApplicationStateInterface *__ptr;
    };
 };
 
@@ -83,10 +83,10 @@ namespace dmz {
 ApplicationState has not been created.
 
 */
-inline dmz::ApplicationState *
-dmz::ApplicationState::get_interface (RuntimeContext *context) {
+inline dmz::ApplicationStateInterface *
+dmz::ApplicationStateInterface::get_interface (RuntimeContext *context) {
 
-   return (ApplicationState *)lookup_rtti_named_interface (
+   return (ApplicationStateInterface *)lookup_rtti_named_interface (
       ApplicationStateInterfaceName,
       context);
 }
@@ -95,7 +95,8 @@ dmz::ApplicationState::get_interface (RuntimeContext *context) {
 
 //! Constructor.
 inline
-dmz::ApplicationState::ApplicationState (RuntimeContext *context) : __context (context) {
+dmz::ApplicationStateInterface::ApplicationStateInterface (RuntimeContext *context) :
+      __context (context) {
 
    store_rtti_named_interface (ApplicationStateInterfaceName, __context, (void *)this);
 }
@@ -103,7 +104,7 @@ dmz::ApplicationState::ApplicationState (RuntimeContext *context) : __context (c
 
 //! Destructor.
 inline
-dmz::ApplicationState::~ApplicationState () {
+dmz::ApplicationStateInterface::~ApplicationStateInterface () {
 
    remove_rtti_named_interface (ApplicationStateInterfaceName, __context, (void *)this);
    __context = 0;
@@ -111,74 +112,74 @@ dmz::ApplicationState::~ApplicationState () {
 
 
 inline
-dmz::ApplicationStateWrapper::ApplicationStateWrapper (const PluginInfo &Info) :
-      __ptr (ApplicationState::get_interface (Info.get_context ())) {
+dmz::ApplicationState::ApplicationState (const PluginInfo &Info) :
+      __ptr (ApplicationStateInterface::get_interface (Info.get_context ())) {
 
 }
 
 
 inline
-dmz::ApplicationStateWrapper::ApplicationStateWrapper (RuntimeContext *context) :
-      __ptr (ApplicationState::get_interface (context)) {
+dmz::ApplicationState::ApplicationState (RuntimeContext *context) :
+      __ptr (ApplicationStateInterface::get_interface (context)) {
 
 }
 
 
 inline
-dmz::ApplicationStateWrapper::~ApplicationStateWrapper () { __ptr = 0; }
+dmz::ApplicationState::~ApplicationState () { __ptr = 0; }
 
 
 inline void
-dmz::ApplicationStateWrapper::set_default_directory (const String &DirName) {
+dmz::ApplicationState::set_default_directory (const String &DirName) {
 
    if (__ptr) { __ptr->set_default_directory (DirName); }
 }
 
 
 inline dmz::String
-dmz::ApplicationStateWrapper::get_default_directory () const {
+dmz::ApplicationState::get_default_directory () const {
 
    return __ptr ? __ptr->get_default_directory () : "";
 }
 
 
 inline void
-dmz::ApplicationStateWrapper::set_autosave_file (const String &FileName) {
+dmz::ApplicationState::set_autosave_file (const String &FileName) {
 
    if (__ptr) { __ptr->set_autosave_file (FileName); }
 }
 
 
 inline dmz::String
-dmz::ApplicationStateWrapper::get_autosave_file () const {
+dmz::ApplicationState::get_autosave_file () const {
 
    return __ptr ? __ptr->get_autosave_file () : "";
 }
 
 
 inline void
-dmz::ApplicationStateWrapper::push_mode (const ApplicationModeEnum Mode) {
+dmz::ApplicationState::push_mode (const ApplicationModeEnum Mode) {
 
    if (__ptr) { __ptr->push_mode (Mode); }
 }
 
 
 inline dmz::ApplicationModeEnum
-dmz::ApplicationStateWrapper::get_mode () const {
+dmz::ApplicationState::get_mode () const {
 
    return __ptr ? __ptr->get_mode () : ApplicationModeNormal;
 }
 
 
 inline dmz::ApplicationModeEnum
-dmz::ApplicationStateWrapper::pop_mode () {
+dmz::ApplicationState::pop_mode () {
 
    return __ptr ? __ptr->pop_mode () : ApplicationModeNormal;
 }
 
 
 inline dmz::Boolean
-dmz::ApplicationStateWrapper::is_mode_normal () {
+dmz::ApplicationState::is_mode_normal () {
 
    return __ptr ? __ptr->get_mode () == ApplicationModeNormal : True;
 }

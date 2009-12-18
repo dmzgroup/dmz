@@ -7,7 +7,7 @@
 
 namespace dmz {
 
-   class ApplicationState;
+   class ApplicationStateInterface;
    class CommandLine;
    class Config;
    class RuntimeContext;
@@ -59,7 +59,7 @@ namespace dmz {
 
       public:
          Log &log; //!< Reference to application log
-         ApplicationState &state; //!< Application state.
+         ApplicationStateInterface &state; //!< Application state.
 
       private:
          Application ();

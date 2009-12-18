@@ -61,7 +61,7 @@ namespace dmz {
          Log _log;
          Definitions _defs;
          Config _global;
-         ApplicationStateWrapper _appState;
+         ApplicationState _appState;
          HashTableHandleTemplate<ArchiveStruct> _archiveTable;
          //! \endcond
 

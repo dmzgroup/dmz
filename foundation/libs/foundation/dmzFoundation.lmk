@@ -4,8 +4,8 @@ lmk.add_libs {"dmzKernel", "zip", "expat", "yajl",}
 
 lmk.add_files {
    "dmzApplicationState.h",
-   "dmzAppShellExt.h",
    "dmzApplication.h",
+   "dmzAppShellExt.h",
    "dmzBase64.h",
    "dmzCommandLine.h",
    "dmzCommandLineConfig.h",

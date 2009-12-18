@@ -1,5 +1,0 @@
---lmk.set_name "dmzFoundation"
-lmk.add_files {
-   "dmzApplicationState.h",
-   "dmzFileCache.h",
-}

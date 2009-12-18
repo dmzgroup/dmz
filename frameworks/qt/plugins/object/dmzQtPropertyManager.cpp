@@ -1,6 +1,9 @@
 #include "dmzQtPropertyManager.h"
+#include <dmzRuntimeDefinitions.h>
+#include <dmzTypesString.h>
 #include <qtpropertymanager.h>
 
+#include <QtCore/QDebug>
 
 namespace {
 
@@ -224,43 +227,45 @@ dmz::VectorPropertyManager::uninitializeProperty(QtProperty *property) {
     d_ptr->m_values.remove(property);
 }
 
-MaskPropertyManagerPrivate::MaskPropertyManagerPrivate(RuntimeContext *context) :
-      m_defs (context) {;}
+dmz::MaskPropertyManagerPrivate::MaskPropertyManagerPrivate(Definitions &defs) :
+      m_settingValue (false),
+      m_defs (defs) {;}
 
-void MaskPropertyManagerPrivate::slotBoolChanged(QtProperty *property, bool value)
-{
+void
+dmz::MaskPropertyManagerPrivate::slotBoolChanged(QtProperty *property, bool value) {
+   
+   if (m_settingValue)
+      return;
+      
     QtProperty *prop = m_maskToProperty.value(property, 0);
-    if (prop == 0)
+    if (prop == 0) {
         return;
 
-    QListIterator<QtProperty *> itProp(m_propertyToMasks[prop]);
-    int level = 0;
-    while (itProp.hasNext()) {
+    foreach (QtProperty *p, m_propertyToMasks[prop]) {
 
-        QtProperty *p = itProp.next();
-        if (p == property) {
-
-            Mask v = m_values[prop].val;
-
-            if (value) {
-                v |= (1 << level);
-            } else {
-                v &= ~(1 << level);
-            }
-
-            q_ptr->setValue(prop, v);
-
-            return;
-        }
-
-        level++;
+       if (p == property) {
+           
+          Mask state;
+          String name (qPrintable (p->propertyName ()));
+          m_defs.lookup_state (name, state);
+           
+          Mask v = m_values[prop];
+           
+          if (value) { v |= state; }
+          else { v.unset (state); }
+           
+          q_ptr->setValue (prop, v);
+          
+          return;
+       }
     }
 }
 
-void MaskPropertyManagerPrivate::slotPropertyDestroyed(QtProperty *property)
-{
+void
+dmz::MaskPropertyManagerPrivate::slotPropertyDestroyed(QtProperty *property) {
+   
     QtProperty *maskProperty = m_maskToProperty.value(property, 0);
-    if (flagProperty == 0)
+    if (maskProperty == 0)
         return;
 
     m_propertyToMasks[maskProperty].replace(m_propertyToMasks[maskProperty].indexOf(property), 0);
@@ -268,10 +273,10 @@ void MaskPropertyManagerPrivate::slotPropertyDestroyed(QtProperty *property)
 }
 
 
-MaskPropertyManager::MaskPropertyManager(RuntimeContext *context, QObject *parent)
-    : QtAbstractPropertyManager(parent)
-{
-    d_ptr = new MaskPropertyManagerPrivate (context);
+dmz::MaskPropertyManager::MaskPropertyManager(Definitions &defs, QObject *parent)
+    : QtAbstractPropertyManager(parent) {
+       
+    d_ptr = new MaskPropertyManagerPrivate (defs);
     d_ptr->q_ptr = this;
 
     d_ptr->m_boolPropertyManager = new QtBoolPropertyManager(this);
@@ -281,141 +286,112 @@ MaskPropertyManager::MaskPropertyManager(RuntimeContext *context, QObject *paren
                 this, SLOT(slotPropertyDestroyed(QtProperty *)));
 }
 
-MaskPropertyManager::~MaskPropertyManager()
-{
+dmz::MaskPropertyManager::~MaskPropertyManager() {
+   
     clear();
     delete d_ptr;
 }
 
-QtBoolPropertyManager *MaskPropertyManager::subBoolPropertyManager() const
-{
+QtBoolPropertyManager *
+dmz::MaskPropertyManager::subBoolPropertyManager() const {
+   
     return d_ptr->m_boolPropertyManager;
 }
 
-Mask MaskPropertyManager::value(const QtProperty *property) const
-{
-    return getValue<Mask>(d_ptr->m_values, property, 0);
+
+void
+dmz::MaskPropertyManager::setValueNames (const QStringList &NameList) {
+
+   d_ptr->m_nameList = NameList;
 }
 
-QStringList MaskPropertyManager::flagNames(const QtProperty *property) const
-{
-    return getData<QStringList>(d_ptr->m_values, &MaskPropertyManagerPrivate::Data::maskNames, property, QStringList());
+
+dmz::Mask
+dmz::MaskPropertyManager::value(const QtProperty *property) const {
+   
+    return d_ptr->m_values.value (property, Mask ());
 }
 
-QString MaskPropertyManager::valueText(const QtProperty *property) const
-{
+
+QString
+dmz::MaskPropertyManager::valueText(const QtProperty *property) const {
+   
     const MaskPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
-    const MaskPropertyManagerPrivate::Data &data = it.value();
-
     String name;
-    d_ptr->defs.lookup_state_name (data.val, name);
+    d_ptr->m_defs.lookup_state_name (it.value (), name);
 
-    QString str (name.get_buffer ());
-
-    return str;
+    return name.get_buffer ();
 }
 
-void MaskPropertyManager::setValue(QtProperty *property, const Mask val)
-{
+void
+dmz::MaskPropertyManager::setValue(QtProperty *property, const Mask &val) {
+   
     const MaskPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
-   MaskPropertyManagerPrivate::Data data = it.value();
-
-    if (data.val == val)
+    const Mask oldVal = it.value();
+    if (oldVal == val)
         return;
 
-    if (!data.is_valid ())
+    if (!val.is_set ())
        return;
 
-    data.val = val;
-
-    it.value() = data;
-
-    QListIterator<QtProperty *> itProp(d_ptr->m_propertyToMasks[property]);
-    int level = 0;
-    while (itProp.hasNext()) {
-        QtProperty *prop = itProp.next();
-        if (prop)
-            d_ptr->m_boolPropertyManager->setValue(prop,  val & (1 << level));
-        level++;
+    it.value() = val;
+    
+    d_ptr->m_settingValue = true;
+      
+    foreach (QtProperty *prop, d_ptr->m_propertyToMasks[property]) {
+       
+       if (prop) {
+          
+          Mask state;
+          String name (qPrintable (prop->propertyName ()));
+          d_ptr->m_defs.lookup_state (name, state);
+          d_ptr->m_boolPropertyManager->setValue(prop,  val.contains (state));
+       }
     }
-
+    
+    d_ptr->m_settingValue = false;
+    
     emit propertyChanged(property);
-    emit valueChanged(property, data.val);
+    emit valueChanged(property, val);
 }
 
 
-void MaskPropertyManager::setFlagNames(QtProperty *property, const QStringList &flagNames)
-{
-    const QtFlagPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
-    if (it == d_ptr->m_values.end())
-        return;
+void
+dmz::MaskPropertyManager::initializeProperty(QtProperty *property) {
+   
+    d_ptr->m_values[property] = Mask ();
+    
+    QList<QtProperty *>list;
+    
+    foreach (QString name, d_ptr->m_nameList) {
+       QtProperty *prop = d_ptr->m_boolPropertyManager->addProperty();
+       prop->setPropertyName(name);
+       list.append(prop);
+       property->addSubProperty(prop);
+       d_ptr->m_maskToProperty[prop] = property;
+    }
+    
+    d_ptr->m_propertyToMasks[property] = list;
+}
 
-    QtFlagPropertyManagerPrivate::Data data = it.value();
 
-    if (data.flagNames == flagNames)
-        return;
-
-    data.flagNames = flagNames;
-    data.val = 0;
-
-    it.value() = data;
-
-    QListIterator<QtProperty *> itProp(d_ptr->m_propertyToFlags[property]);
-    while (itProp.hasNext()) {
-        QtProperty *prop = itProp.next();
+void
+dmz::MaskPropertyManager::uninitializeProperty(QtProperty *property) {
+   
+    foreach (QtProperty *prop, d_ptr->m_propertyToMasks[property]) {
+       
         if (prop) {
-            delete prop;
-            d_ptr->m_flagToProperty.remove(prop);
+           d_ptr->m_maskToProperty.remove(prop);
+           delete prop;
         }
     }
-    d_ptr->m_propertyToFlags[property].clear();
-
-    QStringListIterator itFlag(flagNames);
-    while (itFlag.hasNext()) {
-        const QString flagName = itFlag.next();
-        QtProperty *prop = d_ptr->m_boolPropertyManager->addProperty();
-        prop->setPropertyName(flagName);
-        property->addSubProperty(prop);
-        d_ptr->m_propertyToFlags[property].append(prop);
-        d_ptr->m_flagToProperty[prop] = property;
-    }
-
-    emit flagNamesChanged(property, data.flagNames);
-
-    emit propertyChanged(property);
-    emit valueChanged(property, data.val);
-}
-
-/*!
-    \reimp
-*/
-void MaskPropertyManager::initializeProperty(QtProperty *property)
-{
-    d_ptr->m_values[property] = QtFlagPropertyManagerPrivate::Data();
-
-    d_ptr->m_propertyToFlags[property] = QList<QtProperty *>();
-}
-
-/*!
-    \reimp
-*/
-void MaskPropertyManager::uninitializeProperty(QtProperty *property)
-{
-    QListIterator<QtProperty *> itProp(d_ptr->m_propertyToFlags[property]);
-    while (itProp.hasNext()) {
-        QtProperty *prop = itProp.next();
-        if (prop) {
-            delete prop;
-            d_ptr->m_flagToProperty.remove(prop);
-        }
-    }
-    d_ptr->m_propertyToFlags.remove(property);
-
+    
+    d_ptr->m_propertyToMasks.remove(property);
     d_ptr->m_values.remove(property);
 }

@@ -81,6 +81,8 @@ struct dmz::QtObjectInspector::State {
    QtVariantPropertyManager *variantManagerRO;
    VectorPropertyManager *vectorManager;
    VectorPropertyManager *vectorManagerRO;
+   MaskPropertyManager *maskManager;
+   QtFlagPropertyManager *flagManager;
    QtVariantProperty *handleProperty;
    QtVariantProperty *typeProperty;
    QtProperty *localityProperty;
@@ -90,6 +92,7 @@ struct dmz::QtObjectInspector::State {
    QMap<QString, GroupStruct *> groupMap;
    Boolean ignoreUpdates;
    Boolean ignoreValueChanged;
+   QMap<QString, Mask>stateMap;
 
 
    State (const Handle TheHandle, ObjectObserverUtil &theObs, RuntimeContext *theContext) :
@@ -124,6 +127,11 @@ struct dmz::QtObjectInspector::State {
       const QString &GroupName,
       const Handle AttrHandle,
       const Vector &Value);
+
+   void update_mask_property (
+      const QString &GroupName,
+      const Handle AttrHandle,
+      const Mask &Value);
 
    QString handle_to_name (const Handle Object) {
 
@@ -209,6 +217,36 @@ dmz::QtObjectInspector::State::update_vector_property (
 }
 
 
+void
+dmz::QtObjectInspector::State::update_mask_property (
+      const QString &GroupName,
+      const Handle AttrHandle,
+      const Mask &Value) {
+
+   if (maskManager) {
+
+      ignoreValueChanged = true;
+
+      GroupStruct *group (get_group (GroupName));
+      if (group) {
+
+         QtProperty *property ( group->get_property (AttrHandle));
+         if (!property) {
+
+            const QString AttrName (handle_to_name (AttrHandle));
+            property = maskManager->addProperty (AttrName);
+            group->add_property (AttrHandle, property);
+            add_property (GroupName, AttrHandle, property);
+         }
+
+         if (property) { maskManager->setValue (property, Value); }
+      }
+   }
+
+   ignoreValueChanged = false;
+}
+
+
 dmz::QtObjectInspector::QtObjectInspector (
       const Handle ObjHandle,
       ObjectObserverUtil &observer,
@@ -224,6 +262,13 @@ dmz::QtObjectInspector::QtObjectInspector (
 dmz::QtObjectInspector::~QtObjectInspector () {
 
    delete &_state;
+}
+
+
+void
+dmz::QtObjectInspector::set_state_names (const QStringList &StateList) {
+
+   _state.maskManager->setValueNames (StateList);
 }
 
 
@@ -470,14 +515,16 @@ dmz::QtObjectInspector::update_object_state (
 
    if ((ObjectHandle == _state.ObjHandle) && !_state.ignoreUpdates) {
 
-      String name;
-      _state.defs.lookup_state_name (Value, name);
+      _state.update_mask_property (StateName, AttributeHandle, Value);
 
-      _state.update_variant_property (
-         StateName,
-         AttributeHandle,
-         QVariant::String,
-         QLatin1String (name.get_buffer ()));
+      // String name;
+      // _state.defs.lookup_state_name (Value, name);
+      // 
+      // _state.update_variant_property (
+      //    StateName,
+      //    AttributeHandle,
+      //    QVariant::String,
+      //    QLatin1String (name.get_buffer ()));
    }
 }
 
@@ -666,15 +713,6 @@ dmz::QtObjectInspector::_value_changed (QtProperty *property, const QVariant &Va
          const String Text (qPrintable (Value.toString ()));
          objMod->store_text (_state.ObjHandle, Attr, Text);
       }
-      else if (Group == StateName) {
-
-         Mask state;
-         const String Text (qPrintable (Value.toString ()));
-         if (_state.defs.lookup_state (Text, state)) {
-
-            objMod->store_state (_state.ObjHandle, Attr, state);
-         }
-      }
       else if (Group == FlagName) {
 
          objMod->store_flag (_state.ObjHandle, Attr, Value.toBool ());
@@ -752,6 +790,31 @@ dmz::QtObjectInspector::_value_changed (QtProperty *property, const Vector &Valu
 
 
 void
+dmz::QtObjectInspector::_value_changed (QtProperty *property, const Mask &Value) {
+
+String name;
+_state.defs.lookup_state_name (Value, name);
+_state.log.warn << "=-=-=-=-=-=-=-=-=-=-=-=-=- _value_changed: " << name << endl;
+
+   _state.ignoreUpdates = True;
+
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod) {
+
+      const QString Group (_state.propertyToGroupMap[property]);
+      const Handle Attr (_state.propertyToHandleMap[property]);
+
+      if (Group == StateName) {
+
+//         objMod->store_state (_state.ObjHandle, Attr, Value);
+      }
+   }
+
+   _state.ignoreUpdates = False;
+}
+
+
+void
 dmz::QtObjectInspector::closeEvent (QCloseEvent *event) {
 
    Q_EMIT finished (_state.ObjHandle);
@@ -774,6 +837,8 @@ dmz::QtObjectInspector::_init () {
    _state.enumManagerRO = new QtEnumPropertyManager (this);
    _state.vectorManager = new VectorPropertyManager (this);
    _state.vectorManagerRO = new VectorPropertyManager (this);
+   _state.maskManager = new MaskPropertyManager (_state.defs, this);
+   _state.flagManager = new QtFlagPropertyManager (this);
 
    connect (
       _state.variantManager, SIGNAL (valueChanged (QtProperty *, const QVariant &)),
@@ -782,6 +847,10 @@ dmz::QtObjectInspector::_init () {
    connect (
       _state.vectorManager, SIGNAL (valueChanged (QtProperty *, const Vector &)),
       this, SLOT (_value_changed (QtProperty *, const Vector &)));
+
+   connect (
+      _state.maskManager, SIGNAL (valueChanged (QtProperty *, const Mask &)),
+      this, SLOT (_value_changed (QtProperty *, const Mask &)));
 
    QtVariantEditorFactory *variantFactory = new QtVariantEditorFactory (this);
    QtEnumEditorFactory *comboBoxFactory = new QtEnumEditorFactory(this);

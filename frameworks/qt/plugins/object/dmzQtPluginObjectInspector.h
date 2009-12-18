@@ -4,6 +4,7 @@
 #include <dmzObjectObserverUtil.h>
 #include <dmzQtWidget.h>
 #include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimeDefinitionsObserver.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
@@ -23,6 +24,7 @@ namespace dmz {
          public QtWidget,
          public Plugin,
          public MessageObserver,
+         public DefinitionsObserver,
          public ObjectObserverUtil {
 
       Q_OBJECT
@@ -50,6 +52,12 @@ namespace dmz {
             const Handle TargetObserverHandle,
             const Data *InData,
             Data *outData);
+            
+         // Definitions Observer Interface
+         virtual void define_named_handle (const Handle TheHandle, const String &Name);
+         virtual void define_state (const Mask &TheState, const String &Name);
+         virtual void define_object_type (const ObjectType &Type) {;}
+         virtual void define_event_type (const EventType &Type) {;}
 
          // Object Observer Interface
          virtual void create_object (
@@ -233,6 +241,7 @@ namespace dmz {
          HashTableHandleTemplate<QtObjectInspector> _inspectorTable;
          HandleContainer _objects;
          QPoint _newWindowPos;
+         QStringList _stateList;
 
       private:
          QtPluginObjectInspector ();

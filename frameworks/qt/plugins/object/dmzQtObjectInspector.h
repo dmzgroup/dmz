@@ -25,6 +25,8 @@ namespace dmz {
             QWidget *parent = 0);
 
          ~QtObjectInspector ();
+         
+         void set_state_names (const QStringList &StateList);
 
          // Object Observer Interface
          virtual void create_object (
@@ -198,6 +200,7 @@ namespace dmz {
       protected slots:
          void _value_changed (QtProperty *property, const QVariant &value);
          void _value_changed (QtProperty *property, const Vector &Value);
+         void _value_changed (QtProperty *property, const Mask &Value);
 
       protected:
          virtual void closeEvent (QCloseEvent *event);

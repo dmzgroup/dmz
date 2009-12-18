@@ -30,6 +30,7 @@ dmz::QtPluginObjectInspector::QtPluginObjectInspector (
       QtWidget (Info),
       Plugin (Info),
       MessageObserver (Info),
+      DefinitionsObserver (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
@@ -136,6 +137,23 @@ dmz::QtPluginObjectInspector::receive_message (
       const Data *InData,
       Data *outData) {
 
+}
+
+
+// Definitions Observer Interface
+void
+dmz::QtPluginObjectInspector::define_named_handle (
+      const Handle TheHandle,
+      const String &Name) {
+
+   // _log.info << "Defined Named Handle: " << Name << "[" << TheHandle << "]" << endl;
+}
+
+
+void
+dmz::QtPluginObjectInspector::define_state (const Mask &TheState, const String &Name) {
+
+   _stateList.append (Name.get_buffer ());
 }
 
 
@@ -636,6 +654,8 @@ dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
             inspector, SIGNAL (finished (const Handle)),
             this, SLOT (_inspector_finished (const Handle)));
 
+         inspector->set_state_names (_stateList);
+
          objMod->dump_all_object_attributes (objHandle, *this);
 
          inspector->move (_newWindowPos);
@@ -655,7 +675,7 @@ void
 dmz::QtPluginObjectInspector::_inspector_finished (const Handle ObjectHandle) {
 
    QtObjectInspector *inspector = _inspectorTable.remove (ObjectHandle);
-   if (inspector) { delete inspector; inspector = 0; }
+   if (inspector) { inspector->deleteLater (); }
 }
 
 
@@ -681,6 +701,7 @@ dmz::QtPluginObjectInspector::_init (Config &local) {
    headerList << "Handle" << "ObjectType" << "Locality" << "UUID";
    _ui.objectTreeWidget->setHeaderLabels (headerList);
 
+   set_definitions_observer_callback_mask (RuntimeNamedHandleMask | RuntimeStateMask);
    activate_global_object_observer ();
 }
 

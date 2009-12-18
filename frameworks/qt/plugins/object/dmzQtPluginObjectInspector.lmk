@@ -1,5 +1,5 @@
 require "lmkQtPropertyBrowser"
---lmkQtPropertyBrowser.set_name "dmzQtPluginObjectInspector"
+lmkQtPropertyBrowser.set_name "dmzQtPluginObjectInspector"
 lmk.set_type "plugin"
 lmk.add_files {"ObjectInspectorForm.ui","ObjectListForm.ui",}
 lmk.add_files ({

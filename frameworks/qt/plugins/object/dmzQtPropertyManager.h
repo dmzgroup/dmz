@@ -87,13 +87,15 @@ namespace dmz {
    {
        Q_OBJECT
    public:
-       MaskPropertyManager(RuntimeContext *context, QObject *parent = 0);
+       MaskPropertyManager(Definitions &defs, QObject *parent = 0);
        ~MaskPropertyManager();
 
        QtBoolPropertyManager *subBoolPropertyManager() const;
 
+       void setValueNames (const QStringList &NameList);
+       
        Mask value(const QtProperty *property) const;
-
+       
    public Q_SLOTS:
        void setValue(QtProperty *property, const Mask &val);
 
@@ -106,7 +108,7 @@ namespace dmz {
        virtual void uninitializeProperty(QtProperty *property);
 
    private:
-       MaskPropertyManager *d_ptr;
+       MaskPropertyManagerPrivate *d_ptr;
        Q_DECLARE_PRIVATE(MaskPropertyManager)
        Q_DISABLE_COPY(MaskPropertyManager)
        Q_PRIVATE_SLOT(d_func(), void slotBoolChanged(QtProperty *, bool))
@@ -120,26 +122,19 @@ namespace dmz {
        MaskPropertyManager *q_ptr;
        Q_DECLARE_PUBLIC(MaskPropertyManager)
    public:
-       MaskPropertyManagerPrivate(RuntimeContext *context);
+       MaskPropertyManagerPrivate(Definitions &defs);
 
        void slotBoolChanged(QtProperty *property, bool value);
        void slotPropertyDestroyed(QtProperty *property);
-
-       struct Data
-       {
-           Mask val;
-           QStringList maskNames;
-       };
-
-       typedef QMap<const QtProperty *, Data> PropertyValueMap;
+       
+       typedef QMap<const QtProperty *, Mask> PropertyValueMap;
        PropertyValueMap m_values;
 
-       Definitions m_defs;
-
+       bool m_settingValue;
+       Definitions &m_defs;
+       QStringList m_nameList;
        QtBoolPropertyManager *m_boolPropertyManager;
-
        QMap<const QtProperty *, QList<QtProperty *> > m_propertyToMasks;
-
        QMap<const QtProperty *, QtProperty *> m_maskToProperty;
    };
 };

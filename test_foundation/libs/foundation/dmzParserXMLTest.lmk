@@ -1,0 +1,4 @@
+lmk.set_name "dmzParserXMLTest"
+lmk.set_type "exe"
+lmk.add_libs {"dmzFoundation", "dmzKernel",}
+lmk.add_files {"dmzParserXMLTest.cpp"}

@@ -1,11 +1,11 @@
-#include <dmzCommandLine.h>
+#include <dmzFoundationCommandLine.h>
+#include <dmzFoundationStreamZip.h>
+#include <dmzFoundationXMLUtil.h>
 #include <dmzRuntime.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeLogObserverBasic.h>
-#include <dmzStreamZip.h>
 #include <dmzSystemFile.h>
-#include <dmzXMLUtil.h>
 
 #include <stdlib.h>
 

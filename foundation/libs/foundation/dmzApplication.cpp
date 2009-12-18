@@ -1,7 +1,8 @@
 #include <dmzApplication.h>
 #include "dmzApplicationStateBasic.h"
-#include <dmzCommandLine.h>
-#include <dmzCommandLineConfig.h>
+#include <dmzFoundationCommandLine.h>
+#include <dmzFoundationCommandLineConfig.h>
+#include <dmzFoundationXMLUtil.h>
 #include "dmzFileCacheLocal.h"
 #include <dmzRuntime.h>
 #include <dmzRuntimeConfig.h>
@@ -17,7 +18,6 @@
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamFile.h>
 #include <dmzTypesBase.h>
-#include <dmzXMLUtil.h>
 
 namespace {
 

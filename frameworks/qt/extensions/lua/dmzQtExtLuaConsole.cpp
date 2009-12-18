@@ -1,3 +1,4 @@
+#include <dmzFoundationBase64.h>
 #include <dmzLuaKernelValidate.h>
 #include <dmzLuaModule.h>
 #include "dmzQtExtLuaConsole.h"
@@ -7,14 +8,11 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
-#include <dmzBase64.h>
 #include <luacpp.h>
 #include <QtGui/QAction>
-#include <qdb.h>
 
+// This header needs to go here in order to compile -rb
 #include "dmzLuaFunctions.h"
-
-static dmz::qdb out;
 
 using namespace dmz;
 

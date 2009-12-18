@@ -1,5 +1,6 @@
-#include <dmzCommandLine.h>
-#include <dmzJSONUtil.h>
+#include <dmzFoundationCommandLine.h>
+#include <dmzFoundationJSONUtil.h>
+#include <dmzFoundationXMLUtil.h>
 #include <dmzRuntime.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeLog.h>
@@ -7,7 +8,6 @@
 #include <dmzSystem.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamFile.h>
-#include <dmzXMLUtil.h>
 
 #include <stdlib.h>
 

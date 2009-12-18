@@ -1,5 +1,6 @@
 #include <dmzArchiveModule.h>
 #include "dmzArchivePluginQuickSave.h"
+#include <dmzFoundationXMLUtil.h>
 #include <dmzInputEventKey.h>
 #include <dmzInputEventMasks.h>
 #include <dmzRuntimeConfig.h>
@@ -9,7 +10,6 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamFile.h>
-#include <dmzXMLUtil.h>
 
 /*!
 

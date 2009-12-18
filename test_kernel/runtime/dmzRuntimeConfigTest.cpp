@@ -1,8 +1,8 @@
+#include <dmzFoundationXMLUtil.h>
 #include <dmzRuntime.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeLogObserverBasic.h>
-#include <dmzXMLUtil.h>
 
 int
 main (int argc, char *argv[]) {

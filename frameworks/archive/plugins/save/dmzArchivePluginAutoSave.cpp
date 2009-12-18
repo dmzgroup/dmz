@@ -1,5 +1,8 @@
 #include <dmzArchiveModule.h>
 #include "dmzArchivePluginAutoSave.h"
+#include <dmzFoundationInterpreterXMLConfig.h>
+#include <dmzFoundationParserXML.h>
+#include <dmzFoundationXMLUtil.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
@@ -7,9 +10,6 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamFile.h>
-#include <dmzXMLInterpreterConfig.h>
-#include <dmzXMLParser.h>
-#include <dmzXMLUtil.h>
 
 /*!
 
@@ -60,8 +60,8 @@ dmz::ArchivePluginAutoSave::update_plugin_state (
          _log.info << "Restoring from auto save archive: " << _saveFile << endl;
 
          Config global ("global");
-         XMLParser parser;
-         XMLInterpreterConfig interpreter (global);
+         ParserXML parser;
+         InterpreterXMLConfig interpreter (global);
          parser.set_interpreter (&interpreter);
 
          FILE *file = open_file (_saveFile, "rb");

@@ -1,5 +1,5 @@
 #include <dmzApplication.h>
-#include <dmzCommandLine.h>
+#include <dmzFoundationCommandLine.h>
 #include <dmzRuntimeLogObserverBasic.h>
 #include <dmzQtLogObserver.h>
 #include "dmzQtSplashScreen.h"

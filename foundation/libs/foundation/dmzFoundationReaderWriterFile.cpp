@@ -18,9 +18,7 @@ struct LocalShared {
 };
 
 
-struct dmz::ReaderFile::State : public LocalShared {
-
-};
+struct dmz::ReaderFile::State : public LocalShared {};
 
 
 dmz::ReaderFile::ReaderFile () : _state (*(new State)) {;}
@@ -33,6 +31,17 @@ dmz::Boolean
 dmz::ReaderFile::open_file (const String &FileName) {
 
    Boolean result (False);
+
+   _state.close ();
+
+   _state.fd = dmz::open_file (FileName, "rb");
+
+   if (_state.fd) {
+
+      result = True;
+      _state.fileName = FileName;
+   }
+   else { _state.error.flush () << "Failed opening file: " << FileName; }
 
    return result;
 }
@@ -54,6 +63,16 @@ dmz::ReaderFile::read_file (void *buffer, const Int32 Size) {
 
    Int32 result (0);
 
+   if (_state.fd) {
+
+      result = dmz::read_file (_state.fd, Size, (char *)buffer);
+   }
+   else {
+
+      result = -1;
+      _state.error.flush () << "No file open for reading.";
+   }
+
    return result;
 }
 
@@ -61,9 +80,9 @@ dmz::ReaderFile::read_file (void *buffer, const Int32 Size) {
 dmz::Boolean
 dmz::ReaderFile::close_file () {
 
-   Boolean result (False);
+   if (_state.fd) { _state.close (); }
 
-   return result;
+   return True;
 }
 
 
@@ -71,9 +90,7 @@ dmz::String
 dmz::ReaderFile::get_error () const { return _state.error; }
 
 
-struct dmz::WriterFile::State : public LocalShared {
-
-};
+struct dmz::WriterFile::State : public LocalShared {};
 
 
 dmz::WriterFile::WriterFile () : _state (*(new State))  {;}
@@ -86,6 +103,17 @@ dmz::Boolean
 dmz::WriterFile::open_file (const String &FileName) {
 
    Boolean result (False);
+
+   _state.close ();
+
+   _state.fd = dmz::open_file (FileName, "wb");
+
+   if (_state.fd) {
+
+      result = True;
+      _state.fileName = FileName;
+   }
+   else { _state.error.flush () << "Failed opening file: " << FileName; }
 
    return result;
 }
@@ -100,6 +128,12 @@ dmz::WriterFile::write_file (const void *Buffer, const Int32 Size) {
 
    Boolean result (False);
 
+   if (_state.fd && Buffer && (Size > 0)) {
+
+      result = (fwrite (Buffer, Size, sizeof (UInt8), _state.fd) == Size);
+   }
+   else { _state.error.flush () << "No file open for writing."; }
+
    return result;
 }
 
@@ -107,9 +141,9 @@ dmz::WriterFile::write_file (const void *Buffer, const Int32 Size) {
 dmz::Boolean
 dmz::WriterFile::close_file () {
 
-   Boolean result (False);
+   _state.close ();
 
-   return result;
+   return True;
 }
 
 

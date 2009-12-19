@@ -17,9 +17,11 @@ lmk.add_files {
    "dmzFoundationParser.h",
    "dmzFoundationParserJSON.h",
    "dmzFoundationParserXML.h",
+   "dmzFoundationReaderWriter.h",
+   "dmzFoundationReaderWriterFile.h",
+   "dmzFoundationReaderWriterZip.h",
    "dmzFoundationStreamZip.h",
    "dmzFoundationXMLUtil.h",
-   "dmzFoundationZip.h",
 -- Deprecated 
    "dmzFileCache.h",
 }
@@ -33,13 +35,14 @@ lmk.add_files {
    "dmzFoundationConfigFileIO.cpp",
    "dmzFoundationInterpreterJSONConfig.cpp",
    "dmzFoundationInterpreterXMLConfig.cpp",
-   "dmzFoundationParserJSONYAJL.cpp",
-   "dmzFoundationParserXMLExpat.cpp",
    "dmzFoundationJSONUtil.cpp",
    "dmzFoundationJSONUtilYAJL.cpp",
+   "dmzFoundationParserJSONYAJL.cpp",
+   "dmzFoundationParserXMLExpat.cpp",
+   "dmzFoundationReaderWriterFile.cpp",
+   "dmzFoundationReaderWriterZip.cpp",
    "dmzFoundationStreamZip.cpp",
    "dmzFoundationXMLUtil.cpp",
-   "dmzFoundationZip.cpp",
 -- Deprecated 
    "dmzFileCacheLocal.cpp",
 }

@@ -2,12 +2,12 @@
 #define DMZ_FOUNDATION_STREAM_ZIP_DOT_H
 
 #include <dmzFoundationExport.h>
-#include <dmzFoundationZip.h>
+#include <dmzFoundationReaderWriterZip.h>
 #include <dmzSystemStream.h>
 
 namespace dmz {
 
-class DMZ_FOUNDATION_LINK_SYMBOL StreamZip : public Stream, public ZipWriter {
+class DMZ_FOUNDATION_LINK_SYMBOL StreamZip : public Stream, public WriterZip {
 
    public:
       StreamZip ();

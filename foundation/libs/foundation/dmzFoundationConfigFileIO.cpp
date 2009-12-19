@@ -6,7 +6,7 @@
 #include <dmzFoundationParserXML.h>
 #include <dmzFoundationStreamZip.h>
 #include <dmzFoundationXMLUtil.h>
-#include <dmzFoundationZip.h>
+#include <dmzFoundationReaderWriterZip.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeLog.h>
 #include <dmzSystem.h>
@@ -97,7 +97,7 @@ dmz::read_config_files (
 
    if (SourceName) {
 
-      ZipReader zr;
+      ReaderZip zr;
 
       if (!zr.open_zip_file (SourceName)) {
 

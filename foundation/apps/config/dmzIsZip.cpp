@@ -1,4 +1,4 @@
-#include <dmzFoundationZip.h>
+#include <dmzFoundationReaderWriterZip.h>
 #include <qdb.h>
 
 using namespace dmz;

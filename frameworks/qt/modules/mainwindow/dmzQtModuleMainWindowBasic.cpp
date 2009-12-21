@@ -108,6 +108,7 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
       _exit (get_plugin_runtime_context ()),
       _log (Info),
       _exitAction (0),
+      _menuBar (0),
       _mainWidgetName (),
       _windowMenuName ("&Window"),
       _fileMenuName ("&File"),
@@ -118,9 +119,11 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
    _ui.setupUi (this);
 
 #ifdef Q_WS_MAC
-   QMenuBar *mb = new QMenuBar;
-   mb->setObjectName (objectName () + QLatin1String ("MainMenu"));
-   setMenuBar (mb);
+   _menuBar = new QMenuBar;
+   _menuBar->setObjectName (objectName () + QLatin1String ("MainMenu"));
+   setMenuBar (_menuBar);
+#else
+   _menuBar = menuBar ();
 #endif
 
    _init (local);
@@ -264,7 +267,7 @@ dmz::QtModuleMainWindowBasic::lookup_menu (const String &Text) {
 
    if (!menu) {
 
-      menu = menuBar ()->addMenu (Text.get_buffer ());
+      menu = _menuBar->addMenu (Text.get_buffer ());
       if (!_menuTable.store (Text, menu)) { delete menu; menu = 0; }
    }
 

@@ -16,7 +16,7 @@
 
 /*!
 
-\var dmz::AutoDetectFileType
+\var dmz::FileTypeAutoDetect
 \ingroup Foundation
 \brief Specifies that the Config file type should be auto detected.
 \details Defined in dmzFoundatioConfigFileIO.h
@@ -26,7 +26,7 @@
 
 /*!
 
-\var dmz::XMLFileType
+\var dmz::FileTypeXML
 \ingroup Foundation
 \brief Specifies that the Config file type should be XML.
 \details Defined in dmzFoundatioConfigFileIO.h
@@ -36,7 +36,7 @@
 
 /*!
 
-\var dmz::JSONFileType
+\var dmz::FileTypeJSON
 \ingroup Foundation
 \brief Specifies that the Config file type should be JSON.
 \details Defined in dmzFoundatioConfigFileIO.h
@@ -48,8 +48,8 @@ using namespace dmz;
 
 namespace {
 
-static const UInt32 MinType = XMLFileType;
-static const UInt32 MaxType = JSONFileType;
+static const UInt32 MinType = FileTypeXML;
+static const UInt32 MaxType = FileTypeJSON;
 static const Int32 BufferSize = 2048;
 
 static UInt32
@@ -66,14 +66,14 @@ local_file_type (const UInt32 Type, const String &FileName, Log *log) {
 
       // NOTE: If a new extension is added, be sure to increase MaxType defined above
       //       So that the new explicit type will work.
-      if (Type == ".xml") { result = XMLFileType; }
-      else if (Type == ".json") { result = JSONFileType; }
+      if (Type == ".xml") { result = FileTypeXML; }
+      else if (Type == ".json") { result = FileTypeJSON; }
       else if (log) {
 
          log->warn << "Unknown extension type: \"" << ext
             << "\". Defaulting to XML file type." << endl;
 
-         result = XMLFileType;
+         result = FileTypeXML;
       }
    }
 
@@ -128,7 +128,7 @@ and JSON Config files.
 \param[in] Type File type.
 \param[in] log Pointer to the Log to use for reporting.
 \return Returns dmz::True if the file was parsed without errors.
-\sa dmz::AutoDetectFileType \n dmz::XMLFileType \n dmz::JSONFileType
+\sa dmz::FileTypeAutoDetect \n dmz::FileTypeXML \n dmz::FileTypeJSON
 
 */
 dmz::Boolean
@@ -169,7 +169,7 @@ the file system.
 \param[in] Type File type.
 \param[in] log Pointer to the Log to use for reporting.
 \return Returns dmz::True if the file was parsed without errors.
-\sa dmz::AutoDetectFileType \n dmz::XMLFileType \n dmz::JSONFileType
+\sa dmz::FileTypeAutoDetect \n dmz::FileTypeXML \n dmz::FileTypeJSON
 
 */
 dmz::Boolean
@@ -200,7 +200,7 @@ the file system.
 \param[in] Type File type.
 \param[in] log Pointer to the Log to use for reporting.
 \return Returns dmz::True if the files were parsed without errors.
-\sa dmz::AutoDetectFileType \n dmz::XMLFileType \n dmz::JSONFileType
+\sa dmz::FileTypeAutoDetect \n dmz::FileTypeXML \n dmz::FileTypeJSON
 
 */
 dmz::Boolean
@@ -251,7 +251,7 @@ dmz::read_config_files (
 
          if (reader->open_file (file)) {
 
-            if (RType == XMLFileType) {
+            if (RType == FileTypeXML) {
 
                ParserXML parser;
                InterpreterXMLConfig interpreter (data);
@@ -259,7 +259,7 @@ dmz::read_config_files (
 
                result = local_read_file (ArchiveName, *reader, parser, log);
             }
-            else if (RType == JSONFileType) {
+            else if (RType == FileTypeJSON) {
 
                ParserJSON parser;
                InterpreterJSONConfig interpreter (data);
@@ -307,7 +307,7 @@ dmz::read_config_files (
 \param[in] Type File type.
 \param[in] log Pointer to the Log to use for reporting.
 \return Returns dmz::True if the file was written without errors.
-\sa dmz::ConfigPrettyPrint \n dmz::ConfigStripGlobal \n dmz::AutoDetectFileType \n dmz::XMLFileType \n dmz::JSONFileType 
+\sa dmz::ConfigPrettyPrint \n dmz::ConfigStripGlobal \n dmz::FileTypeAutoDetect \n dmz::FileTypeXML \n dmz::FileTypeJSON 
 */
 dmz::Boolean
 dmz::write_config_file (
@@ -358,11 +358,11 @@ dmz::write_config_file (
 
    if (out) {
 
-      if (RType == XMLFileType) {
+      if (RType == FileTypeXML) {
 
          result = format_config_to_xml (Data, *out, Mode);
       }
-      else if (RType == JSONFileType) {
+      else if (RType == FileTypeJSON) {
 
          result = format_config_to_json (Data, *out, Mode);
       }

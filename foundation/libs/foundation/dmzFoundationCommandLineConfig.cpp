@@ -97,7 +97,7 @@ dmz::CommandLineConfig::process_command_line (
 
             if (find_file (_state.paths, file, foundFile)) {
 
-               if (!read_config_file (foundFile, globalData, AutoDetectFileType, log)) {
+               if (!read_config_file (foundFile, globalData, FileTypeAutoDetect, log)) {
 
                   error = True;
                   _state.error.flush () << "Unable to read config file: "<< foundFile;

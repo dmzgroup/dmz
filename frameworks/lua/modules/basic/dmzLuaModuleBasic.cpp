@@ -7,6 +7,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeLoadPlugins.h>
+#include <dmzRuntimeConfigToPathContainer.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzSystem.h>
@@ -128,7 +129,6 @@ dmz::LuaModuleBasic::~LuaModuleBasic () {
    _extTable.clear ();
    _instanceTable.empty ();
    _pathTable.clear ();
-   _preloadTable.clear ();
    _scriptTable.empty ();
 
    _obsCallTable.clear ();
@@ -371,62 +371,6 @@ dmz::LuaModuleBasic::handle_lua_error (lua_State *L) {
 }
 
 
-// FileCacheAction Interface
-void
-dmz::LuaModuleBasic::process_file (
-      const FileCacheResultEnum RequestResult,
-      const String &LocalFilePath,
-      const String &RequestedFileLocation,
-      const String &RequestedFileName) {
-
-   LUA_START_VALIDATE (_luaState);
-
-   ScriptStruct *ss (_preloadTable.remove (RequestedFileLocation + RequestedFileName));
-
-   if (ss) {
-
-      if (RequestResult == CacheFileFound) {
-
-         ss->foundFile = LocalFilePath;
-
-         if (!_pathTable.store (ss->foundFile, ss)) {
-
-            ScriptStruct *prev (_pathTable.lookup (LocalFilePath));
-
-            _log.error << "Script file: " << LocalFilePath << " named: "
-               << ss->Name << " already bound to name: "
-               << (prev ? prev->Name : "<Unknown>") << ". Scripts may only be loaded"
-               << " once." << endl;
-
-            if (_scriptTable.remove (ss->Name)) { delete ss; ss = 0; }
-         }
-         else if (_started) { _load_script (*ss); }
-      }
-      else if (RequestResult == UnknownFileLocation) {
-
-         _log.error << "Unknown file location. Unable to load Lua script named: "
-            << ss->Name << " '" << ss->URL << ss->File << "'" << endl;
-      }
-      else if (RequestResult == FileNotFoundAtLocation) {
-
-         _log.error << "File not found. Unable to load Lua script named: "
-            << ss->Name << " '" << ss->URL << ss->File << "'" << endl;
-      }
-      else {
-
-         _log.error << "Unknown file cache error. Unable to load Lua script named: "
-            << ss->Name << " '" << ss->URL << ss->File << "'" << endl;
-      }
-   }
-   else {
-
-      _log.error << "Unable to process unknown Lua script: " << LocalFilePath << endl;
-   }
-
-   LUA_END_VALIDATE (_luaState, 0);
-}
-
-
 // LuaModuleBasic Interface
 void
 dmz::LuaModuleBasic::lua_hook_function (lua_State *L, lua_Debug *ar) {
@@ -596,7 +540,7 @@ dmz::LuaModuleBasic::_close_lua () {
 
          while (obs) {
 
-            obs->remove_lua_script (_luaState, ss->foundFile);
+            obs->remove_lua_script (_luaState, ss->File);
             obs = _obsScriptTable.get_next (it);
          }
 
@@ -649,7 +593,6 @@ dmz::LuaModuleBasic::_request_script (Config &script) {
 
    String name (config_to_string ("name", script));
    String file (config_to_string ("file", script));
-   String url (config_to_string ("url", script));
    Boolean globals (config_to_boolean ("globals", script, False));
 
    result = _scriptTable.lookup (name);
@@ -660,41 +603,37 @@ dmz::LuaModuleBasic::_request_script (Config &script) {
 
       if (_keywordTable.lookup (name)) {
 
-         _log.error << "Name: '" << name << "' for script: " << url << file
+         _log.error << "Name: '" << name << "' for script: " << file
             << " is a reserved Lua keyword." << endl;
 
          name.empty ();
       }
+      else {
 
-      FileCache *fc = FileCache::get_interface (get_plugin_runtime_context ());
+         String foundFile;
 
-      if (file && name && fc) {
+         if (find_file (_luaPaths, file, foundFile)) { file = foundFile; }
+         else {
 
-         result = new ScriptStruct (name, url, file, globals);
+            _log.error << "Unable to find script file: " << file << endl;
+            file.flush ();
+         }
+      }
+
+      if (file && name) {
+
+         result = new ScriptStruct (name, file, globals);
 
          if (result) {
 
-            if (_preloadTable.store (url + file, result)) {
+            if (_scriptTable.store (name, result)) {
 
-               if (_scriptTable.store (name, result)) {
-
-                  fc->add_file_request (url, file, *this);
-                  _log.info << "Adding file request for script: "
-                     << url << file << endl;
-               }
-               else {
-
-                  _preloadTable.remove (url + file);
-                  _log.error << "Unable to load Lua script: " << url + file
-                     << " because name: " << name << " is not unique." << endl;
-
-                  delete result; result = 0;
-               }
+               if (_started) { _load_script (*result); }
             }
             else {
 
-               _log.error << "Unable to request Lua script file: "
-                  << url + file << endl;
+               _log.error << "Unable to load Lua script: " << file
+                  << " because name: " << name << " is not unique." << endl;
 
                delete result; result = 0;
             }
@@ -729,12 +668,12 @@ dmz::LuaModuleBasic::_load_script (ScriptStruct &ss) {
 
    LUA_START_VALIDATE (_luaState);
 
-   if (_luaState && ss.foundFile && !ss.loaded) {
+   if (_luaState && ss.File && !ss.loaded) {
 
       lua_pushcfunction (_luaState, lua_error_handler);
       const int Handler = lua_gettop (_luaState);
 
-      Int32 Status = luaL_loadfile (_luaState, ss.foundFile.get_buffer ());
+      Int32 Status = luaL_loadfile (_luaState, ss.File.get_buffer ());
 
       if (Status) {
 
@@ -743,7 +682,7 @@ dmz::LuaModuleBasic::_load_script (ScriptStruct &ss) {
             const String ErrorMsg (lua_tostring (_luaState, -1));
             _log.error << ErrorMsg << endl;
          }
-         else { _log.error << "Unknown error while loading: " << ss.foundFile << endl; }
+         else { _log.error << "Unknown error while loading: " << ss.File << endl; }
 
          lua_pop (_luaState, 1);
       }
@@ -754,7 +693,7 @@ dmz::LuaModuleBasic::_load_script (ScriptStruct &ss) {
          if (lua_pcall (_luaState, 0, 0, Handler)) {
 
             _log.error << "Failed initializing script: " << ss.Name << " '"
-               << ss.URL << ss.File << "'" << " found at: " << ss.foundFile << endl;
+               << ss.File << "'" << endl;
             lua_pop (_luaState, 1); // pop error message
 
             lua_pushnil (_luaState);
@@ -764,13 +703,15 @@ dmz::LuaModuleBasic::_load_script (ScriptStruct &ss) {
 
             ss.loaded = True;
 
+            _log.info << "Loaded Lua script: " << ss.File << endl;
+
             HashTableHandleIterator it;
 
             LuaObserver *obs (_obsScriptTable.get_first (it));
 
             while (obs) {
 
-               obs->add_lua_script (_luaState, ss.foundFile);
+               obs->add_lua_script (_luaState, ss.File);
                obs = _obsScriptTable.get_next (it);
             }
 
@@ -948,6 +889,8 @@ dmz::LuaModuleBasic::_add_lua_paths () {
 
          while (found) {
 
+            if (path.get_char (-1) != '/') { path << "/"; }
+            path << "?.lua";
             pathStr << path << ";";
             found = _luaPaths.get_next (path);
          }
@@ -1010,20 +953,7 @@ dmz::LuaModuleBasic::_init (Config &local, Config &global) {
    _exitOnError = config_to_boolean ("error.exit", local, _exitOnError);
    _startOptimizer = config_to_boolean ("optimizer.start", local, _startOptimizer);
 
-   Config pathList;
-
-   if (local.lookup_all_config ("path", pathList)) {
-
-      ConfigIterator it;
-      Config path;
-
-      while (pathList.get_next_config (it, path)) {
-
-         const String PathName (config_to_string ("value", path));
-         _log.info << "Adding Lua path: " << PathName << endl;
-         _luaPaths.add_path (PathName);
-      }
-   }
+   _luaPaths = config_to_path_container (local);
 
    Config pluginList;
 
@@ -1091,7 +1021,7 @@ dmz::LuaModuleBasic::_init (Config &local, Config &global) {
             if (!defs.create_unique_name (InstanceName)) {
 
                _log.error << "Unable to create script instance: " << InstanceName
-                  << " of script: " << ss->Name << " [" << ss->URL << ss->File << "]"
+                  << " of script: " << ss->Name << " [" << ss->File << "]"
                   << endl << "Instance name is not unique." << endl;
 
                load = False;
@@ -1100,7 +1030,7 @@ dmz::LuaModuleBasic::_init (Config &local, Config &global) {
             if (load && Platform && (SystemName != Platform)) {
 
                _log.info << "Skipping script instance: " << InstanceName
-                  << " of script: " << ss->Name << " [" << ss->URL << ss->File << "]"
+                  << " of script: " << ss->Name << " [" << ss->File << "]"
                   << endl << "Target platform: " << Platform << endl;
                load = False;
             }
@@ -1114,7 +1044,7 @@ dmz::LuaModuleBasic::_init (Config &local, Config &global) {
                   if (!_instanceTable.store (InstanceName, is)) {
 
                      _log.error << "Multiple instances of script: " << InstanceName
-                        << " of script: " << ss->Name << " [" << ss->URL << ss->File
+                        << " of script: " << ss->Name << " [" << ss->File
                         << "]" << endl << "Instance name is not unique."
                         << endl;
 

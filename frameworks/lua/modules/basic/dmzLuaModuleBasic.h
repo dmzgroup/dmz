@@ -1,7 +1,6 @@
 #ifndef DMZ_LUA_MODULE_BASIC_DOT_H
 #define DMZ_LUA_MODULE_BASIC_DOT_H
 
-#include <dmzFileCache.h>
 #include <dmzLuaExt.h>
 #include <dmzLuaKernelErrorHandler.h>
 #include <dmzLuaModule.h>
@@ -23,8 +22,7 @@ namespace dmz {
          public Plugin,
          public TimeSlice,
          public LuaModule,
-         public LuaErrorHandler,
-         public FileCacheAction {
+         public LuaErrorHandler {
 
       public:
          //! \cond
@@ -61,13 +59,6 @@ namespace dmz {
          // LuaErrorHandler Interface
          virtual int handle_lua_error  (lua_State *L);
 
-         // FileCacheAction Interface
-         virtual void process_file (
-            const FileCacheResultEnum RequestResult,
-            const String &LocalFilePath,
-            const String &RequestedFileLocation,
-            const String &RequestedFileName);
-
          // LuaModuleBasic Interface
          void lua_hook_function (lua_State *L, lua_Debug *ar);
 
@@ -93,20 +84,16 @@ namespace dmz {
          struct ScriptStruct {
 
             const String Name;
-            const String URL;
             const String File;
             const Boolean Globals;
-            String foundFile;
             Boolean loaded;
             HashTableStringTemplate<InstanceStruct> instanceTable;
 
             ScriptStruct (
                   const String &TheName,
-                  const String &TheURL,
                   const String &TheFile,
                   const Boolean TheGlobals) :
                   Name (TheName),
-                  URL (TheURL),
                   File (TheFile),
                   Globals (TheGlobals),
                   loaded (False) {;}
@@ -143,7 +130,6 @@ namespace dmz {
          HashTableStringTemplate<InstanceStruct> _instanceTable;
          HashTableStringTemplate<ScriptStruct> _scriptTable;
          HashTableStringTemplate<ScriptStruct> _pathTable;
-         HashTableStringTemplate<ScriptStruct> _preloadTable;
 
          HashTableHandleTemplate<LuaObserver> _obsCallTable;
          HashTableHandleTemplate<LuaObserver> _obsReturnTable;

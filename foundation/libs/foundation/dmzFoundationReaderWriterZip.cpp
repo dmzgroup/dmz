@@ -7,6 +7,14 @@
 #include <unzip.h>
 #include <zip.h>
 
+/*!
+
+\brief Test if specified file is a zip archive.
+\ingroup Foundation
+\param[in] FileName String containing name of file to test.
+\return Returns dmz::True if the file is zip archive.
+
+*/
 dmz::Boolean
 dmz::is_zip_file (const String &FileName) {
 
@@ -29,6 +37,15 @@ dmz::is_zip_file (const String &FileName) {
    return result;
 }
 
+/*!
+
+\class dmz::ReaderZip
+\ingroup Foundation
+\brief Reads files from a zip archive.
+
+*/
+
+//! \cond
 struct dmz::ReaderZip::State {
 
    unzFile zf;
@@ -55,10 +72,14 @@ struct dmz::ReaderZip::State {
       return result;
    }
 };
+//! \endcond
 
+
+//! Constructor.
 dmz::ReaderZip::ReaderZip () : _state (*(new State)) {;}
 
 
+//! Destructor.
 dmz::ReaderZip::~ReaderZip () {
 
    close_zip_file ();
@@ -67,6 +88,14 @@ dmz::ReaderZip::~ReaderZip () {
 
 
 // ReaderZip Interface
+/*!
+
+\brief Opens zip archive for reading.
+\param[in] FileName String containing name of zip archive to open.
+\param[in] Mode Parameter for future functionality.
+\return Returns dmz::True if the zip archive was successfully opened.
+
+*/
 dmz::Boolean
 dmz::ReaderZip::open_zip_file (const String &FileName, const UInt32 Mode) {
 
@@ -86,10 +115,25 @@ dmz::ReaderZip::open_zip_file (const String &FileName, const UInt32 Mode) {
 }
 
 
+/*!
+
+\brief Gets the name of the currently opened zip archive.
+\return Returns a String containing the name of the opened zip archive. An empty
+string is returned if no zip archive is currently open.
+
+*/
 dmz::String
 dmz::ReaderZip::get_zip_file_name () const { return _state.zipFileName; }
 
 
+/*!
+
+\brief Gets a list of files stored in the zip archive.
+\param[out] container PathContainer used to store the list of file in the zip archive.
+\return Returns dmz::True if the container was successfully populated. Returns
+dmz::False if there is no open zip archive open.
+
+*/
 dmz::Boolean
 dmz::ReaderZip::get_file_list (PathContainer &container) const {
 
@@ -97,9 +141,11 @@ dmz::ReaderZip::get_file_list (PathContainer &container) const {
 
    if (_state.zf) {
 
+      result = True;
+
       int value = unzGoToFirstFile (_state.zf);
 
-      while (UNZ_OK == value) {
+      while (result && (UNZ_OK == value)) {
 
          unz_file_info info;
 
@@ -128,6 +174,7 @@ dmz::ReaderZip::get_file_list (PathContainer &container) const {
                delete []buffer; buffer = 0;
             }
          }
+         else { result = _state.zip_error (Found); }
 
          value = unzGoToNextFile (_state.zf);
       }
@@ -137,22 +184,12 @@ dmz::ReaderZip::get_file_list (PathContainer &container) const {
 }
 
 
-dmz::UInt64
-dmz::ReaderZip::get_file_size () const {
+/*!
 
-   UInt64 result (0);
-   unz_file_info info;
+\brief Closes current zip archive.
+\return Returns dmz::True if the zip archive was successfully closed.
 
-   if (_state.zip_error (
-         unzGetCurrentFileInfo (_state.zf, &info, 0, 0, 0, 0, 0, 0))) {
-
-      result = UInt64 (info.uncompressed_size);
-   }
-
-   return result;
-}
-
-
+*/
 dmz::Boolean
 dmz::ReaderZip::close_zip_file () {
 
@@ -171,6 +208,8 @@ dmz::ReaderZip::close_zip_file () {
    return result;
 }
 
+
+// Reader Interface.
 
 dmz::Boolean
 dmz::ReaderZip::open_file (const String &FileName) {
@@ -202,6 +241,22 @@ dmz::ReaderZip::open_file (const String &FileName) {
 dmz::String
 dmz::ReaderZip::get_file_name () const { return _state.fileName; }
  
+
+dmz::UInt64
+dmz::ReaderZip::get_file_size () const {
+
+   UInt64 result (0);
+   unz_file_info info;
+
+   if (_state.zip_error (
+         unzGetCurrentFileInfo (_state.zf, &info, 0, 0, 0, 0, 0, 0))) {
+
+      result = UInt64 (info.uncompressed_size);
+   }
+
+   return result;
+}
+
 
 dmz::Int32
 dmz::ReaderZip::read_file (void *buffer, const Int32 Size) {
@@ -235,7 +290,15 @@ dmz::ReaderZip::close_file () {
 dmz::String
 dmz::ReaderZip::get_error () const { return _state.error; }
 
+/*!
 
+\class dmz::WriterZip
+\ingroup Foundation
+\brief Writes files to a zip archive.
+
+*/
+
+//! \cond
 struct dmz::WriterZip::State {
 
    zipFile zf;
@@ -262,10 +325,13 @@ struct dmz::WriterZip::State {
       return result;
    }
 };
+//! \endcond
 
+//! Constructor.
 dmz::WriterZip::WriterZip () : _state (*(new State)) {;}
 
 
+//! Destructor.
 dmz::WriterZip::~WriterZip () {
 
    close_zip_file ();
@@ -274,6 +340,16 @@ dmz::WriterZip::~WriterZip () {
 
 
 // WriterZip Interface
+/*!
+
+\brief Creates zip archive for writing.
+\details Will close any open zip archive before opening a new archive. If a zip archive
+already exists with the same name, it will be overwritten.
+\param[in] FileName String containing the name of the new zip archive.
+\param[in] Mode Parameter for future functionality.
+\return Returns dmz::True if the archive was successfully created.
+
+*/
 dmz::Boolean
 dmz::WriterZip::open_zip_file (const String &FileName, const UInt32 Mode) {
 
@@ -293,10 +369,23 @@ dmz::WriterZip::open_zip_file (const String &FileName, const UInt32 Mode) {
 }
 
 
+/*!
+
+\brief Gets the name of the current zip archive.
+\return Returns a String containing the name of the open zip archive. Returns an
+empty string if no archive is open.
+
+*/
 dmz::String
 dmz::WriterZip::get_zip_file_name () const { return _state.zipFileName; }
 
 
+/*!
+
+\brief Closes current open zip archive.
+\return Returns dmz::True if the archive is successfully closed.
+
+*/
 dmz::Boolean
 dmz::WriterZip::close_zip_file () {
 
@@ -315,6 +404,16 @@ dmz::WriterZip::close_zip_file () {
 }
 
 
+/*!
+
+\brief Sets the zip compression level.
+\details The compress level must be between 0 and 9 with 9 being the highest compression
+level while also the slowest.
+\param[in] Level Specifies the compression level.
+\return Returns the level being used. If the level is out of range, it is clamped to the
+closest valid value.
+
+*/
 dmz::Int32
 dmz::WriterZip::set_level (const Int32 Level) {
 
@@ -326,6 +425,12 @@ dmz::WriterZip::set_level (const Int32 Level) {
 }
 
 
+/*!
+
+\brief Gets the current compression level.
+\return Returns the current compression level. Value will be between 0 and 9.
+
+*/
 dmz::Int32
 dmz::WriterZip::get_level () const { return _state.level; }
 

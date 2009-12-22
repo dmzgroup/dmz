@@ -23,7 +23,7 @@ read_config_file (
 
 DMZ_FOUNDATION_LINK_SYMBOL Boolean
 read_config_file (
-   const String &SourceName,
+   const String &ArchiveName,
    const String &FileName,
    Config &data,
    const UInt32 Type = AutoDetectFileType,
@@ -31,7 +31,7 @@ read_config_file (
 
 DMZ_FOUNDATION_LINK_SYMBOL Boolean
 read_config_files (
-   const String &SourceName,
+   const String &ArchiveName,
    const PathContainer &Files,
    Config &data,
    const UInt32 Type = AutoDetectFileType,
@@ -39,7 +39,7 @@ read_config_files (
 
 DMZ_FOUNDATION_LINK_SYMBOL Boolean
 write_config_file (
-   const String &SourceName,
+   const String &ArchiveName,
    const String &FileName,
    const Config &Data,
    const UInt32 Mode = 0,

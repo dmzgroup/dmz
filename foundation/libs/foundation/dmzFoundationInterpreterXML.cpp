@@ -31,6 +31,6 @@ that are passed in one at a time.
 \fn dmz::String dmz::InterpreterXML::get_error ()
 \brief Gets last error.
 \return Returns a dmz::String containing a description of the last error encountered.
-Will be an empty string if not error was encountered.
+Will be an empty string if no error was encountered.
 
 */

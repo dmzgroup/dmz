@@ -1,8 +1,6 @@
 #include <dmzFoundationCommandLine.h>
 #include <dmzFoundationCommandLineConfig.h>
 #include <dmzFoundationConfigFileIO.h>
-#include <dmzFoundationInterpreterXMLConfig.h>
-#include <dmzFoundationParserXML.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeLog.h>
 #include <dmzSystemFile.h>
@@ -12,7 +10,7 @@
 
 \class dmz::CommandLineConfig
 \brief Process the command line.
-\details Takes the parsed command line and parse the specified XML files and
+\details Takes the parsed command line and parse the specified config files and
 converts them into a config context tree.
 \sa dmz::Config \n dmz::ConfigContext
 
@@ -34,7 +32,7 @@ dmz::CommandLineConfig::CommandLineConfig () : _state (*(new State)) {
 /*!
 
 \brief Search path constructor.
-\param[in] Container PathContainer with paths to use in locating the XML files.
+\param[in] Container PathContainer with paths to use in locating the config files.
 
 */
 dmz::CommandLineConfig::CommandLineConfig (const PathContainer &Container) :
@@ -51,9 +49,9 @@ dmz::CommandLineConfig::~CommandLineConfig () { delete &_state; }
 /*!
 
 \brief Set file search paths.
-\details Sets the search path used to find XML files specified on the command line.
+\details Sets the search path used to find config files specified on the command line.
 Will overwrite any existing search path data.
-\param[in] Container PathContainer with paths to use in locating the XML files.
+\param[in] Container PathContainer with paths to use in locating the config files.
 
 */
 void
@@ -67,7 +65,7 @@ dmz::CommandLineConfig::set_search_path (const PathContainer &Container) {
 
 \brief Process command line.
 \details Process the command line and attempts to parse the specified
-XML files. The command line should be formatted as follows:
+config files. The command line should be formatted as follows:
 \verbatim
 % application -f <file 1> ... <file N>
 \endverbatim
@@ -83,9 +81,6 @@ dmz::CommandLineConfig::process_command_line (
       Config &globalData,
       Log *log) {
 
-   ParserXML parser;
-   InterpreterXMLConfig interpreter (globalData);
-   parser.set_interpreter (&interpreter);
    CommandLineArgs args;
    Boolean error (False);
    Boolean done (!Opts.get_first_option (args));
@@ -107,42 +102,6 @@ dmz::CommandLineConfig::process_command_line (
                   error = True;
                   _state.error.flush () << "Unable to read config file: "<< foundFile;
                }
-#if 0
-               FILE *ptr = open_file (foundFile, "rb");
-
-               if (ptr) {
-
-                  const Int32 BufferSize = 1024;
-                  char buffer[BufferSize];
-                  Boolean done = False;
-
-                  while (!done) {
-
-                     const Int32 Length = read_file (ptr, BufferSize, buffer);
-
-                     if (!parser.parse_buffer (buffer, Length, Length < BufferSize)) {
-
-                        done = True;
-                        error = True;
-                        _state.error.flush () << "In file: " << foundFile << " : "
-                           << parser.get_error ();
-                     }
-                     else if (Length < BufferSize) { done = True; }
-                  }
-
-                  close_file (ptr);
-
-                  if (!error && log) {
-
-                     log->info << "Parsed config file '" << foundFile << "'" << endl;
-                  }
-               }
-               else {
-
-                  error = True;
-                  _state.error.flush () << "Unable to open file: " << foundFile;
-               }
-#endif
             }
             else {
 

@@ -17,13 +17,25 @@ struct LocalShared {
 
 };
 
+/*!
 
+\class dmz::ReaderFile
+\ingroup Foundation
+\brief Reads file from the file system.
+
+*/
+
+
+//! \cond
 struct dmz::ReaderFile::State : public LocalShared {};
+//! \endcond
 
 
+//! Constructor.
 dmz::ReaderFile::ReaderFile () : _state (*(new State)) {;}
 
 
+//! Destructor.
 dmz::ReaderFile::~ReaderFile () { delete &_state; }
 
 
@@ -90,12 +102,25 @@ dmz::String
 dmz::ReaderFile::get_error () const { return _state.error; }
 
 
+//! \cond
 struct dmz::WriterFile::State : public LocalShared {};
+//! \endcond
 
 
+/*!
+
+\class dmz::WriterFile
+\ingroup Foundation
+\brief Writes files to the file system.
+
+*/
+
+
+//! Constructor.
 dmz::WriterFile::WriterFile () : _state (*(new State))  {;}
 
 
+//! Destructor.
 dmz::WriterFile::~WriterFile () { delete &_state; }
 
 

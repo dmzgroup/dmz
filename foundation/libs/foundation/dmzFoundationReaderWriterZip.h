@@ -32,8 +32,10 @@ class DMZ_FOUNDATION_LINK_SYMBOL ReaderZip : public Reader{
       virtual String get_error () const;
 
    protected:
+      //! \cond
       struct State;
       State &_state;
+      //! \endcond
 
    private:
       ReaderZip (const ReaderZip &);
@@ -62,8 +64,10 @@ class DMZ_FOUNDATION_LINK_SYMBOL WriterZip : public Writer {
       virtual String get_error () const;
 
    protected:
+      //! \cond
       struct State;
       State &_state;
+      //! \endcond
 
    private:
       WriterZip (const WriterZip &);

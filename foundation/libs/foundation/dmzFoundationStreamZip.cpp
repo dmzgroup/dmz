@@ -4,9 +4,20 @@
 #include <string.h>
 #include <time.h>
 
+/*!
+
+\class dmz::StreamZip
+\ingroup Foundation
+\brief Allows streaming of data to a zip archive.
+
+*/
+
+
+//! Constructor
 dmz::StreamZip::StreamZip () {;}
 
 
+//! Destructor.
 dmz::StreamZip::~StreamZip () {;}
 
 

@@ -14,9 +14,35 @@
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamFile.h>
 
-//const UInt32 AutoDetectFileType = 0;
-//const UInt32 XMLFileType = 1;
-//const UInt32 JSONFileType = 2;
+/*!
+
+\var dmz::AutoDetectFileType
+\ingroup Foundation
+\brief Specifies that the Config file type should be auto detected.
+\details Defined in dmzFoundatioConfigFileIO.h
+\sa dmz::read_config_file \n dmz::read_config_files
+
+*/
+
+/*!
+
+\var dmz::XMLFileType
+\ingroup Foundation
+\brief Specifies that the Config file type should be XML.
+\details Defined in dmzFoundatioConfigFileIO.h
+\sa dmz::read_config_file \n dmz::read_config_files
+
+*/
+
+/*!
+
+\var dmz::JSONFileType
+\ingroup Foundation
+\brief Specifies that the Config file type should be JSON.
+\details Defined in dmzFoundatioConfigFileIO.h
+\sa dmz::read_config_file \n dmz::read_config_files
+
+*/
 
 using namespace dmz;
 
@@ -56,7 +82,7 @@ local_file_type (const UInt32 Type, const String &FileName, Log *log) {
 
 
 static Boolean
-local_read_file (const String &SourceName, Reader &reader, Parser &parser, Log *log) {
+local_read_file (const String &ArchiveName, Reader &reader, Parser &parser, Log *log) {
 
    Boolean result (True);
 
@@ -76,7 +102,7 @@ local_read_file (const String &SourceName, Reader &reader, Parser &parser, Log *
          if (log) {
 
             log->error << "In file: " << reader.get_file_name ();
-            if (SourceName) { log->error << " in zip archive: " << SourceName; }
+            if (ArchiveName) { log->error << " in zip archive: " << ArchiveName; }
             log->error << " : " << parser.get_error () << endl;
          }
       }
@@ -89,6 +115,22 @@ local_read_file (const String &SourceName, Reader &reader, Parser &parser, Log *
 };
 
 
+/*!
+
+\brief Reads a Config file.
+\ingroup Foundation
+\details Parsers Config files and stores the result in the Config object data. Config
+files may be XML or JSON. If the file is a zip archive containing multiple Config files.
+All Config files contained in the zip archive are read. An archive may contain both XML
+and JSON Config files.
+\param[in] FileName String containing the name of the file to read.
+\param[out] data Config object used to store parsed Config data.
+\param[in] Type File type.
+\param[in] log Pointer to the Log to use for reporting.
+\return Returns dmz::True if the file was parsed without errors.
+\sa dmz::AutoDetectFileType \n dmz::XMLFileType \n dmz::JSONFileType
+
+*/
 dmz::Boolean
 dmz::read_config_file (
       const String &FileName,
@@ -114,29 +156,56 @@ dmz::read_config_file (
 }
 
 
+/*!
+
+\brief Reads a Config file.
+\ingroup Foundation
+\details Reads a single Config file. If an archive is specified, the file will attempted
+to be read from the archive. If no archive name is given. The file will be read from
+the file system.
+\param[in] ArchiveName String containing name of the archive to read from. Optional.
+\param[in] FileName String containing the name of the Config file to read.
+\param[out] data Config object used to store parsed Config data.
+\param[in] Type File type.
+\param[in] log Pointer to the Log to use for reporting.
+\return Returns dmz::True if the file was parsed without errors.
+\sa dmz::AutoDetectFileType \n dmz::XMLFileType \n dmz::JSONFileType
+
+*/
 dmz::Boolean
 dmz::read_config_file (
-      const String &SourceName,
+      const String &ArchiveName,
       const String &FileName,
       Config &data,
       const UInt32 Type,
       Log *log) {
 
-   const Boolean IsZip = is_zip_file (SourceName);
-
    PathContainer files;
-   files.add_path (IsZip ? FileName : SourceName);
+   files.add_path (FileName);
 
-   const String NullString;
-
-   return read_config_files (IsZip ? SourceName : NullString, files, data, Type, log);
+   return read_config_files (ArchiveName, files, data, Type, log);
 }
 
 
+/*!
 
+\brief Reads a list of Config files.
+\ingroup Foundation
+\details Reads a list of Config files. If an archive is specified, the file will attempted
+to be read from the archive. If no archive name is given. The file will be read from
+the file system.
+\param[in] ArchiveName String containing name of the archive to read from. Optional.
+\param[in] Files PathContainer containing the list of Config files to read.
+\param[out] data Config object used to store parsed Config data.
+\param[in] Type File type.
+\param[in] log Pointer to the Log to use for reporting.
+\return Returns dmz::True if the files were parsed without errors.
+\sa dmz::AutoDetectFileType \n dmz::XMLFileType \n dmz::JSONFileType
+
+*/
 dmz::Boolean
 dmz::read_config_files (
-      const String &SourceName,
+      const String &ArchiveName,
       const PathContainer &Files,
       Config &data,
       const UInt32 Type,
@@ -155,16 +224,16 @@ dmz::read_config_files (
 
    Reader *reader (0);
 
-   if (SourceName) {
+   if (ArchiveName) {
 
       ReaderZip *zr = new ReaderZip;
 
-      if (zr && zr->open_zip_file (SourceName)) { reader = zr; }
+      if (zr && zr->open_zip_file (ArchiveName)) { reader = zr; }
       else {
 
          if (log) {
 
-            log->error << "Failed opening zip archive: " << SourceName << endl;
+            log->error << "Failed opening zip archive: " << ArchiveName << endl;
          }
 
          result = False;
@@ -188,7 +257,7 @@ dmz::read_config_files (
                InterpreterXMLConfig interpreter (data);
                parser.set_interpreter (&interpreter);
 
-               result = local_read_file (SourceName, *reader, parser, log);
+               result = local_read_file (ArchiveName, *reader, parser, log);
             }
             else if (RType == JSONFileType) {
 
@@ -196,13 +265,13 @@ dmz::read_config_files (
                InterpreterJSONConfig interpreter (data);
                parser.set_interpreter (&interpreter);
 
-               result = local_read_file (SourceName, *reader, parser, log);
+               result = local_read_file (ArchiveName, *reader, parser, log);
             }
 
             if (result && log) {
 
                log->info << "Parsed file: " << file;
-               if (SourceName) { log->info << " from archive: " << SourceName; }
+               if (ArchiveName) { log->info << " from archive: " << ArchiveName; }
                log->info << " (" << get_time () - StartTime << "sec)" << endl;
             }
          }
@@ -211,9 +280,7 @@ dmz::read_config_files (
             if (log) {
 
                log->error << "Failed opening file: " << file;
-
-               if (SourceName) { log->error << " in zip archive: " << SourceName; }
-
+               if (ArchiveName) { log->error << " in zip archive: " << ArchiveName; }
                log->error  << endl;
             }
 
@@ -228,9 +295,23 @@ dmz::read_config_files (
 }
 
 
+/*!
+
+\brief Write Config object to a file.
+\ingroup Foundation
+\details If an archive name is specified, the file is stored in a zip archive.
+\param[in] ArchiveName String containing name of archive to store file. Optional.
+\param[in] FileName String containing the name of the file to store the Config data.
+\param[in] Data Config object to store in a file.
+\param[in] Mode Specifies how the Config object should be written out.
+\param[in] Type File type.
+\param[in] log Pointer to the Log to use for reporting.
+\return Returns dmz::True if the file was written without errors.
+\sa dmz::ConfigPrettyPrint \n dmz::ConfigStripGlobal \n dmz::AutoDetectFileType \n dmz::XMLFileType \n dmz::JSONFileType 
+*/
 dmz::Boolean
 dmz::write_config_file (
-      const String &SourceName,
+      const String &ArchiveName,
       const String &FileName,
       const Config &Data,
       const UInt32 Mode,
@@ -244,13 +325,13 @@ dmz::write_config_file (
    Stream *out (0);
    FILE *fd (0);
 
-   if (SourceName) {
+   if (ArchiveName) {
 
       StreamZip *sz = new StreamZip;
 
       if (sz) {
 
-         if (sz->open_zip_file (SourceName)) {
+         if (sz->open_zip_file (ArchiveName)) {
 
             sz->open_file (FileName);
             out = sz;
@@ -261,7 +342,7 @@ dmz::write_config_file (
 
             if (log) {
 
-               log->error << "Failed creating zip archive: " << SourceName
+               log->error << "Failed creating zip archive: " << ArchiveName
                   << " while attempting to store file: " << FileName << endl;
             }
          }
@@ -271,10 +352,7 @@ dmz::write_config_file (
 
       fd = open_file (FileName, "wb");
 
-      if (fd) {
-
-         out = new StreamFile (fd);
-      }
+      if (fd) { out = new StreamFile (fd); }
       else if (log) { log->error << "Failed creating file: " << FileName << endl; }
    }
 

@@ -22,8 +22,10 @@ class DMZ_FOUNDATION_LINK_SYMBOL ReaderFile : public Reader {
       virtual String get_error () const;
 
    protected:
+      //! \cond
       struct State;
       State &_state;
+      //! \endcond
 
    private:
       ReaderFile (const ReaderFile &);
@@ -44,8 +46,10 @@ class DMZ_FOUNDATION_LINK_SYMBOL WriterFile : public Writer {
       virtual String get_error () const;
 
    protected:
+      //! \cond
       struct State;
       State &_state;
+      //! \endcond
 
    private:
       WriterFile (const WriterFile &);

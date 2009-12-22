@@ -22,7 +22,7 @@ main (int argc, char *argv[]) {
    CommandLineArgs arg;
 
    String zipFile ("out.zip");
-   UInt32 xmlMask = XMLPrettyPrint;
+   UInt32 xmlMask = ConfigPrettyPrint;
 
    for (
          Boolean found = cl.get_first_option (arg);
@@ -71,8 +71,7 @@ main (int argc, char *argv[]) {
 
                if (out.open_file (fname)) {
 
-                  write_xml_header (out);
-                  format_config_to_xml (data, out, XMLStripGlobal | xmlMask, &log);
+                  format_config_to_xml (data, out, ConfigStripGlobal | xmlMask, &log);
                   out.close_file ();
                }
             }

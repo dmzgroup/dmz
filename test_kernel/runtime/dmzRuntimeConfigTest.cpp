@@ -27,7 +27,7 @@ main (int argc, char *argv[]) {
       root.add_config (tmp);
    }
 
-   dmz::format_config_to_xml (root, log.out, dmz::XMLPrettyPrint);
+   dmz::format_config_to_xml (root, log.out, dmz::ConfigPrettyPrint);
 
    log.out << dmz::endl;
 
@@ -36,7 +36,7 @@ main (int argc, char *argv[]) {
 
    if (root.lookup_all_config ("foo.bar.element", elData)) {
 
-      dmz::format_config_to_xml (elData, log.out, dmz::XMLPrettyPrint);
+      dmz::format_config_to_xml (elData, log.out, dmz::ConfigPrettyPrint);
    }
    else { log.error << "Unable to find elements" << dmz::endl; }
 
@@ -52,7 +52,7 @@ main (int argc, char *argv[]) {
       }
    }
 
-   dmz::format_config_to_xml (foo, log.out, dmz::XMLPrettyPrint);
+   dmz::format_config_to_xml (foo, log.out, dmz::ConfigPrettyPrint);
 
    return 0;
 }

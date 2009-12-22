@@ -10,6 +10,7 @@ lmk.add_files {
    "dmzFoundationCommandLine.h",
    "dmzFoundationCommandLineConfig.h",
    "dmzFoundationConfigFileIO.h",
+   "dmzFoundationConsts.h",
    "dmzFoundationExport.h",
    "dmzFoundationInterpreterJSONConfig.h",
    "dmzFoundationInterpreterXMLConfig.h",

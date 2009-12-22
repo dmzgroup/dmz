@@ -1,3 +1,4 @@
+#include <dmzFoundationConsts.h>
 #include <dmzFoundationInterpreterXMLConfig.h>
 #include <dmzFoundationParserXML.h>
 #include <dmzFoundationXMLUtil.h>
@@ -11,22 +12,21 @@
 
 /*!
 
-\var dmz::XMLStripGlobal
+\var dmz::ConfigStripGlobal
 \ingroup Foundation
-\brief Specifies that the global scope should be stripped when converting a Config tree
-to XML.
-\details Defined in dmzXMLUtil.h
-\sa dmz::format_config_to_xml
+\brief Specifies that the global scope should be stripped when converting a Config tree.
+\details Defined in dmzFoundationConsts.h
+\sa \n dmz::format_config_to_xml \n dmz::format_config_to_json
 
 */
 
 /*!
 
-\var dmz::XMLPrettyPrint
+\var dmz::ConfigPrettyPrint
 \ingroup Foundation
-\brief Specifies that the generated XML should be pretty printed.
-\details Defined in dmzXMLUtil.h
-\sa dmz::format_config_to_xml
+\brief Specifies that the generated file should be pretty printed.
+\details Defined in dmzFoundationConsts.h
+\sa \n dmz::format_config_to_xml \n dmz::format_config_to_json
 
 */
 
@@ -159,7 +159,7 @@ local_write_config (
 
 \ingroup Foundation
 \brief Converts an XML String to a config context tree.
-\details Defined in dmzXMLUtil.h.
+\details Defined in dmzFoundationXMLUtil.h.
 \param[in] Value String containing the XML  to parse.
 \param[out] data Config object to store parsed XML data.
 \param[in] log Pointer to Log for streaming log messages.
@@ -194,7 +194,7 @@ dmz::xml_string_to_config (const String &Value, Config &data, Log *log) {
 
 \ingroup Foundation
 \brief Converts an XML file to a config context tree.
-\details Defined in dmzXMLUtil.h.
+\details Defined in dmzFoundationXMLUtil.h.
 \param[in] FileName String containing name of XML file to parse.
 \param[out] data Config object to store parsed XML data.
 \param[in] log Pointer to Log for streaming log messages.
@@ -276,38 +276,25 @@ dmz::xml_to_version (const String &FileName, Version &value, Log *log) {
 /*!
 
 \ingroup Foundation
-\brief Write a standard XML 1.0 head to a stream.
-\details Defined in dmzXMLUtil.h.
-\param[in] stream Stream to write XML header.
-
-*/
-void
-dmz::write_xml_header (Stream &stream) {
-
-   stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
-}
-
-
-/*!
-
-\ingroup Foundation
 \brief Writes a config context tree to a stream as XML.
-\details Defined in dmzXMLUtil.h.
+\details Defined in dmzFoundationXMLUtil.h.
 \param[in] Data Config object containing config context to write as XML.
 \param[in] stream Stream to write XML.
 \param[in] Mode Mask specifying file generation mode.
 \param[in] log Pointer to Log used for error reporting.
-\sa dmz::XMLPrettyPrint\n dmz::XMLStripGlobal
+\sa dmz::ConfigPrettyPrint\n dmz::ConfigStripGlobal
 
 */
-void
+dmz::Boolean
 dmz::format_config_to_xml (
       const Config &Data,
       Stream &stream,
       const UInt32 Mode,
       Log *log) {
 
-   if (Mode & XMLStripGlobal) {
+   stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
+
+   if (Mode & ConfigStripGlobal) {
 
       ConfigIterator it;
       Config data;
@@ -316,10 +303,12 @@ dmz::format_config_to_xml (
 
       while (result) {
 
-         local_write_config (data, (XMLPrettyPrint & Mode) ? 0 : -1, stream);
+         local_write_config (data, (ConfigPrettyPrint & Mode) ? 0 : -1, stream);
          result = Data.get_next_config (it, data);
       }
    }
-   else { local_write_config (Data, (XMLPrettyPrint & Mode) ? 0 : -1, stream); }
+   else { local_write_config (Data, (ConfigPrettyPrint & Mode) ? 0 : -1, stream); }
+
+   return True;
 }
 

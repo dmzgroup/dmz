@@ -30,8 +30,11 @@ dmz::StreamZip::flush () {
 dmz::Stream &
 dmz::StreamZip::newline () {
 
-   static const UInt8 Data[3] = { 0x0D, 0x0A, 0 };
-   return write_raw_data (Data, 2);
+//   static const UInt8 Data[3] = { 0x0D, 0x0A, 0 };
+//   return write_raw_data (Data, 2);
+
+   static const UInt8 Data[3] = { 0x0A, 0 };
+   return write_raw_data (Data, 1);
 }
 
 

@@ -44,11 +44,11 @@ main (int argc, char *argv[]) {
          } while (size);
 
          dmz::Log log ("", rt.get_context ());
-         dmz::write_xml_header (log.out);
+
          dmz::format_config_to_xml (
             gdata,
             log.out,
-            dmz::XMLStripGlobal | dmz::XMLPrettyPrint);
+            dmz::ConfigStripGlobal | dmz::ConfigPrettyPrint);
 
          dmz::close_file (fd);
       }

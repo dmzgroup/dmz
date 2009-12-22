@@ -64,8 +64,8 @@ main (int argc, char *argv[]) {
 
       if (Name == "p") {
 
-         jsonMask |= JSONPrettyPrint;
-         xmlMask |= XMLPrettyPrint;
+         jsonMask |= ConfigPrettyPrint;
+         xmlMask |= ConfigPrettyPrint;
 
          String value;
 
@@ -73,8 +73,8 @@ main (int argc, char *argv[]) {
 
             if (value == "false") {
 
-               jsonMask &= ~JSONPrettyPrint;
-               xmlMask &= ~XMLPrettyPrint;
+               jsonMask &= ~ConfigPrettyPrint;
+               xmlMask &= ~ConfigPrettyPrint;
             }
          }
       }
@@ -155,12 +155,11 @@ main (int argc, char *argv[]) {
 
                   if (toXML) {
 
-                     write_xml_header (out);
-                     format_config_to_xml (data, out, XMLStripGlobal | xmlMask, &log);
+                     format_config_to_xml (data, out, ConfigStripGlobal | xmlMask, &log);
                   }
                   else {
 
-                     format_config_to_json (data, out, JSONStripGlobal | jsonMask, &log);
+                     format_config_to_json (data, out, ConfigStripGlobal | jsonMask, &log);
                   }
 
                   close_file (fp); fp = 0;

@@ -7,7 +7,6 @@
 #include <unzip.h>
 #include <zip.h>
 
-
 dmz::Boolean
 dmz::is_zip_file (const String &FileName) {
 
@@ -89,6 +88,53 @@ dmz::ReaderZip::open_zip_file (const String &FileName, const UInt32 Mode) {
 
 dmz::String
 dmz::ReaderZip::get_zip_file_name () const { return _state.zipFileName; }
+
+
+dmz::Boolean
+dmz::ReaderZip::get_file_list (PathContainer &container) const {
+
+   Boolean result (False);
+
+   if (_state.zf) {
+
+      int value = unzGoToFirstFile (_state.zf);
+
+      while (UNZ_OK == value) {
+
+         unz_file_info info;
+
+         const int Found = unzGetCurrentFileInfo (_state.zf, &info, 0, 0, 0, 0, 0, 0);
+
+         if (Found == UNZ_OK && (info.size_filename > 0)) {
+
+            char *buffer = new char[info.size_filename + 1];
+
+            if (buffer) {
+
+               buffer[0] = '\0';
+
+               if (UNZ_OK == unzGetCurrentFileInfo (
+                     _state.zf,
+                     0, // info struct
+                     buffer, info.size_filename,
+                     0, 0, // extra field
+                     0, 0)) { // comment field
+
+                  buffer[info.size_filename] = '\0';
+
+                  container.add_path (buffer);
+               }
+
+               delete []buffer; buffer = 0;
+            }
+         }
+
+         value = unzGoToNextFile (_state.zf);
+      }
+   }
+
+   return result;
+}
 
 
 dmz::UInt64

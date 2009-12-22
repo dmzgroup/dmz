@@ -7,6 +7,8 @@
 
 namespace dmz {
 
+class PathContainer;
+
 DMZ_FOUNDATION_LINK_SYMBOL Boolean is_zip_file (const String &FileName);
 
 class DMZ_FOUNDATION_LINK_SYMBOL ReaderZip : public Reader{
@@ -17,8 +19,10 @@ class DMZ_FOUNDATION_LINK_SYMBOL ReaderZip : public Reader{
 
       Boolean open_zip_file (const String &FileName, const UInt32 Mode = 0); 
       String get_zip_file_name () const;
+      Boolean get_file_list (PathContainer &container) const;
       Boolean close_zip_file ();
 
+      // Reader Interface
       virtual Boolean open_file (const String &FileName);
       virtual String get_file_name () const;
       virtual UInt64 get_file_size () const;

@@ -1,6 +1,7 @@
-#ifndef DMZ_XML_UTIL_DOT_H
-#define DMZ_XML_UTIL_DOT_H
+#ifndef DMZ_FOUNDATION_XML_UTIL_DOT_H
+#define DMZ_FOUNDATION_XML_UTIL_DOT_H
 
+#include <dmzFoundationConsts.h>
 #include <dmzFoundationExport.h>
 #include <dmzTypesBase.h>
 
@@ -10,9 +11,6 @@ namespace dmz {
    class Log;
    class Stream;
    class Version;
-
-   const UInt32 XMLStripGlobal = 0x01;
-   const UInt32 XMLPrettyPrint = 0x02;
 
    DMZ_FOUNDATION_LINK_SYMBOL Boolean xml_string_to_config (
       const String &Value,
@@ -29,9 +27,7 @@ namespace dmz {
       Version &value,
       Log *log = 0);
 
-   DMZ_FOUNDATION_LINK_SYMBOL void write_xml_header (Stream &stream);
-
-   DMZ_FOUNDATION_LINK_SYMBOL void format_config_to_xml (
+   DMZ_FOUNDATION_LINK_SYMBOL Boolean format_config_to_xml (
       const Config &Config,
       Stream &stream,
       const UInt32 Mode = 0,
@@ -39,4 +35,4 @@ namespace dmz {
 
 };
 
-#endif // DMZ_XML_UTIL_DOT_H
+#endif // DMZ_FOUNDATION_XML_UTIL_DOT_H

@@ -1,5 +1,6 @@
 #include <dmzFoundationCommandLine.h>
 #include <dmzFoundationCommandLineConfig.h>
+#include <dmzFoundationConfigFileIO.h>
 #include <dmzFoundationInterpreterXMLConfig.h>
 #include <dmzFoundationParserXML.h>
 #include <dmzRuntimeConfig.h>
@@ -101,6 +102,12 @@ dmz::CommandLineConfig::process_command_line (
 
             if (find_file (_state.paths, file, foundFile)) {
 
+               if (!read_config_file (foundFile, globalData, AutoDetectFileType, log)) {
+
+                  error = True;
+                  _state.error.flush () << "Unable to read config file: "<< foundFile;
+               }
+#if 0
                FILE *ptr = open_file (foundFile, "rb");
 
                if (ptr) {
@@ -135,6 +142,7 @@ dmz::CommandLineConfig::process_command_line (
                   error = True;
                   _state.error.flush () << "Unable to open file: " << foundFile;
                }
+#endif
             }
             else {
 

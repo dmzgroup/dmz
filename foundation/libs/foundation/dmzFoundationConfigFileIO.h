@@ -16,6 +16,13 @@ const UInt32 JSONFileType = 2;
 
 DMZ_FOUNDATION_LINK_SYMBOL Boolean
 read_config_file (
+   const String &FileName,
+   Config &data,
+   const UInt32 Type = AutoDetectFileType,
+   Log *log = 0);
+
+DMZ_FOUNDATION_LINK_SYMBOL Boolean
+read_config_file (
    const String &SourceName,
    const String &FileName,
    Config &data,
@@ -35,6 +42,7 @@ write_config_file (
    const String &SourceName,
    const String &FileName,
    const Config &Data,
+   const UInt32 Mode = 0,
    const UInt32 Type = AutoDetectFileType,
    Log *log = 0);
 

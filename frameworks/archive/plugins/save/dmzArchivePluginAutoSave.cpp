@@ -139,8 +139,7 @@ dmz::ArchivePluginAutoSave::update_time_slice (const Float64 TimeDelta) {
 
          Config config = _archiveMod->create_archive (_archiveHandle);
 
-         write_xml_header (out);
-         format_config_to_xml (config, out, XMLPrettyPrint);
+         format_config_to_xml (config, out, ConfigPrettyPrint);
 
          close_file (file);
       }

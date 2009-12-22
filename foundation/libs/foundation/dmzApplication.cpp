@@ -22,7 +22,7 @@
 namespace {
 
 static const dmz::String ApplicationName ("dmzApplication");
-static const dmz::String DirName ("default_directory");
+static const dmz::String DirName ("default-directory");
 static const dmz::String DefaultDirName (ApplicationName + "." + DirName);
 
 };
@@ -567,9 +567,7 @@ dmz::Application::save_session () {
 
             StreamFile fs (file);
 
-            write_xml_header (fs);
-
-            format_config_to_xml (session, fs, XMLPrettyPrint);
+            format_config_to_xml (session, fs, ConfigPrettyPrint);
 
             close_file (file); file = 0;
 

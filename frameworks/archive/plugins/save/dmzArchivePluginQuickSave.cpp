@@ -87,8 +87,7 @@ dmz::ArchivePluginQuickSave::receive_key_event (
 
          Config config = _archiveMod->create_archive (_defaultHandle);
 
-         write_xml_header (out);
-         format_config_to_xml (config, out, XMLPrettyPrint);
+         format_config_to_xml (config, out, ConfigPrettyPrint);
 
          _log.info << "Created object dump file: " << _dumpFile << endl;
 

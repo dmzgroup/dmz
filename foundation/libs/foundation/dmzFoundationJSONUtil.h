@@ -1,6 +1,7 @@
 #ifndef DMZ_FOUNDATION_JSON_UTIL_DOT_H
 #define DMZ_FOUNDATION_JSON_UTIL_DOT_H
 
+#include <dmzFoundationConsts.h>
 #include <dmzFoundationExport.h>
 #include <dmzTypesBase.h>
 
@@ -10,9 +11,6 @@ namespace dmz {
    class Log;
    class Stream;
    class Version;
-
-   const UInt32 JSONStripGlobal = 0x01;
-   const UInt32 JSONPrettyPrint = 0x02;
 
    DMZ_FOUNDATION_LINK_SYMBOL Boolean json_is_number (const String &Value);
 

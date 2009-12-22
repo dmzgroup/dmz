@@ -9,30 +9,6 @@
 #include <dmzSystemStream.h>
 #include <dmzTypesStringUtil.h>
 
-#include <qdb.h>
-static dmz::qdb out;
-
-/*!
-
-\var dmz::JSONStripGlobal
-\ingroup Foundation
-\brief Specifies that the global scope should be stripped when converting a Config tree
-to JSON.
-\details Defined in dmzJSONUtil.h
-\sa dmz::format_config_to_json
-
-*/
-
-/*!
-
-\var dmz::JSONPrettyPrint
-\ingroup Foundation
-\brief Specifies that the generated JSON should be pretty printed.
-\details Defined in dmzJSONUtil.h
-\sa dmz::format_config_to_json
-
-*/
-
 namespace {
 
 static inline dmz::Boolean
@@ -142,7 +118,7 @@ dmz::json_is_number (const String &Value) {
 
 \ingroup Foundation
 \brief Converts an JSON String to a config context tree.
-\details Defined in dmzJSONUtil.h.
+\details Defined in dmzFoundationJSONUtil.h.
 \param[in] Value String containing the JSON  to parse.
 \param[out] data Config object to store parsed JSON data.
 \param[in] log Pointer to Log for streaming log messages.
@@ -177,7 +153,7 @@ dmz::json_string_to_config (const String &Value, Config &data, Log *log) {
 
 \ingroup Foundation
 \brief Converts an JSON file to a config context tree.
-\details Defined in dmzJSONUtil.h.
+\details Defined in dmzFoundationJSONUtil.h.
 \param[in] FileName String containing name of JSON file to parse.
 \param[out] data Config object to store parsed JSON data.
 \param[in] log Pointer to Log for streaming log messages.

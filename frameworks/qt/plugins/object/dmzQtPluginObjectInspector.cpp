@@ -12,6 +12,7 @@
 #include <QtCore/QList>
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QDesktopWidget>
+#include "ui_ObjectListForm.h"
 
 namespace {
 
@@ -20,6 +21,28 @@ namespace {
    const dmz::UInt32 TypeCol (1);
    const dmz::UInt32 LocalityCol (2);
    const dmz::UInt32 UUIDCol (3);
+};
+
+
+struct dmz::QtPluginObjectInspector::State {
+  
+   Log log;
+   Definitions defs;
+   Ui::ObjectListForm ui;
+   Handle defaultAttrHandle;
+   HashTableHandleTemplate<QtObjectInspector> inspectorTable;
+   HandleContainer objects;
+   QPoint newWindowPos;
+   QStringList stateList;
+   
+   State (const PluginInfo &Info) :
+      log (Info),
+      defs (Info, &log),
+      defaultAttrHandle (0),
+      inspectorTable (),
+      objects (),
+      newWindowPos () {;}
+      
 };
 
 
@@ -32,24 +55,21 @@ dmz::QtPluginObjectInspector::QtPluginObjectInspector (
       MessageObserver (Info),
       DefinitionsObserver (Info),
       ObjectObserverUtil (Info, local),
-      _log (Info),
-      _defs (Info, &_log),
-      _defaultAttrHandle (0),
-      _inspectorTable (),
-      _objects (),
-      _newWindowPos () {
+      _state (*(new State (Info))) {
 
    _init (local);
 
    QDesktopWidget *desktop = QApplication::desktop ();
    QRect rect = desktop->availableGeometry (desktop->primaryScreen ());
-   _newWindowPos = rect.topLeft ();
+   _state.newWindowPos = rect.topLeft ();
 }
 
 
 dmz::QtPluginObjectInspector::~QtPluginObjectInspector () {
 
-   _inspectorTable.empty ();
+   _state.inspectorTable.empty ();
+   
+   delete &_state;
 }
 
 
@@ -104,7 +124,7 @@ dmz::QtPluginObjectInspector::update_plugin_state (
       HashTableHandleIterator it;
       QtObjectInspector *inspector (0);
 
-      while (_inspectorTable.get_next (it, inspector)) {
+      while (_state.inspectorTable.get_next (it, inspector)) {
 
          inspector->close ();
       }
@@ -153,7 +173,7 @@ dmz::QtPluginObjectInspector::define_named_handle (
 void
 dmz::QtPluginObjectInspector::define_state (const Mask &TheState, const String &Name) {
 
-   _stateList.append (Name.get_buffer ());
+   _state.stateList.append (Name.get_buffer ());
 }
 
 
@@ -165,33 +185,33 @@ dmz::QtPluginObjectInspector::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
-   if (!_objects.contains (ObjectHandle)) {
+   if (!_state.objects.contains (ObjectHandle)) {
 
       QTreeWidgetItem *item = new QTreeWidgetItem ();
-
+      
       item->setText (HandleCol, to_qstring (ObjectHandle));
       item->setData (HandleCol, HandleRole, (quint64)ObjectHandle);
-
+      
       item->setText (TypeCol, to_qstring (Type));
       item->setText (UUIDCol, to_qstring (Identity));
-
+      
       QLatin1String locality ("Unknown");
       if (Locality == ObjectLocal) { locality = QLatin1String ("Local"); }
       else if (Locality == ObjectRemote) { locality = QLatin1String ("Remote"); }
       item->setText (LocalityCol, locality);
-
-      _ui.objectTreeWidget->addTopLevelItem (item);
-
-      if (_ui.objectTreeWidget->topLevelItemCount () == 1) {
-
-         _ui.objectTreeWidget->setCurrentItem (item);
+      
+      _state.ui.objectTreeWidget->addTopLevelItem (item);
+      
+      if (_state.ui.objectTreeWidget->topLevelItemCount () == 1) {
+      
+         _state.ui.objectTreeWidget->setCurrentItem (item);
       }
-
-      _objects.add_handle (ObjectHandle);
+      
+      _state.objects.add_handle (ObjectHandle);
    }
    else {
 
-      QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+      QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
       if (inspector) {
 
          inspector->create_object (Identity, ObjectHandle, Type, Locality);
@@ -204,20 +224,20 @@ dmz::QtPluginObjectInspector::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->destroy_object (Identity, ObjectHandle);
    }
 
-   if (_objects.contains (ObjectHandle))  {
+   if (_state.objects.contains (ObjectHandle))  {
 
-      for (int ix = 0; ix < _ui.objectTreeWidget->topLevelItemCount (); ++ix) {
+      for (int ix = 0; ix < _state.ui.objectTreeWidget->topLevelItemCount (); ++ix) {
 
-         QTreeWidgetItem *item = _ui.objectTreeWidget->topLevelItem (ix);
+         QTreeWidgetItem *item = _state.ui.objectTreeWidget->topLevelItem (ix);
          if (ObjectHandle == _item_to_handle (item)) {
 
-            item = _ui.objectTreeWidget->takeTopLevelItem (ix);
+            item = _state.ui.objectTreeWidget->takeTopLevelItem (ix);
             delete item; item = 0;
             break;
          }
@@ -232,7 +252,7 @@ dmz::QtPluginObjectInspector::update_object_uuid (
       const UUID &Identity,
       const UUID &PrevIdentity) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_uuid (ObjectHandle, Identity, PrevIdentity);
@@ -247,7 +267,7 @@ dmz::QtPluginObjectInspector::remove_object_attribute (
       const Handle AttributeHandle,
       const Mask &AttrMask) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->remove_object_attribute (
@@ -263,7 +283,7 @@ dmz::QtPluginObjectInspector::update_object_locality (
       const ObjectLocalityEnum Locality,
       const ObjectLocalityEnum PrevLocality) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_locality (Identity, ObjectHandle, Locality, PrevLocality);
@@ -285,7 +305,7 @@ dmz::QtPluginObjectInspector::link_objects (
 
    foreach (Handle obj, handleList) {
 
-      QtObjectInspector *inspector = _inspectorTable.lookup (obj);
+      QtObjectInspector *inspector = _state.inspectorTable.lookup (obj);
       if (inspector) {
 
          inspector->link_objects (
@@ -309,7 +329,7 @@ dmz::QtPluginObjectInspector::unlink_objects (
    
    foreach (Handle obj, handleList) {
       
-      QtObjectInspector *inspector = _inspectorTable.lookup (obj);
+      QtObjectInspector *inspector = _state.inspectorTable.lookup (obj);
       if (inspector) {
 
          inspector->unlink_objects (
@@ -337,7 +357,7 @@ dmz::QtPluginObjectInspector::update_link_attribute_object (
 
    foreach (Handle obj, handleList) {
 
-      QtObjectInspector *inspector = _inspectorTable.lookup (obj);
+      QtObjectInspector *inspector = _state.inspectorTable.lookup (obj);
       if (inspector) {
       
          inspector->update_link_attribute_object (
@@ -364,7 +384,7 @@ dmz::QtPluginObjectInspector::update_object_counter (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_counter (
@@ -381,7 +401,7 @@ dmz::QtPluginObjectInspector::update_object_counter_minimum (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_counter_minimum (
@@ -398,7 +418,7 @@ dmz::QtPluginObjectInspector::update_object_counter_maximum (
       const Int64 Value,
       const Int64 *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_counter_maximum (
@@ -415,7 +435,7 @@ dmz::QtPluginObjectInspector::update_object_alternate_type (
       const ObjectType &Value,
       const ObjectType *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_alternate_type (
@@ -432,7 +452,7 @@ dmz::QtPluginObjectInspector::update_object_state (
       const Mask &Value,
       const Mask *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_state (
@@ -449,7 +469,7 @@ dmz::QtPluginObjectInspector::update_object_flag (
       const Boolean Value,
       const Boolean *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_flag (
@@ -466,7 +486,7 @@ dmz::QtPluginObjectInspector::update_object_time_stamp (
       const Float64 Value,
       const Float64 *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_time_stamp (
@@ -483,7 +503,7 @@ dmz::QtPluginObjectInspector::update_object_position (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_position (
@@ -500,7 +520,7 @@ dmz::QtPluginObjectInspector::update_object_orientation (
       const Matrix &Value,
       const Matrix *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_orientation (
@@ -517,7 +537,7 @@ dmz::QtPluginObjectInspector::update_object_velocity (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_velocity (
@@ -534,7 +554,7 @@ dmz::QtPluginObjectInspector::update_object_acceleration (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_acceleration (
@@ -551,7 +571,7 @@ dmz::QtPluginObjectInspector::update_object_scale (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_scale (
@@ -568,7 +588,7 @@ dmz::QtPluginObjectInspector::update_object_vector (
       const Vector &Value,
       const Vector *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_vector (
@@ -585,7 +605,7 @@ dmz::QtPluginObjectInspector::update_object_scalar (
       const Float64 Value,
       const Float64 *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_scalar (
@@ -602,7 +622,7 @@ dmz::QtPluginObjectInspector::update_object_text (
       const String &Value,
       const String *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_text (
@@ -619,7 +639,7 @@ dmz::QtPluginObjectInspector::update_object_data (
       const Data &Value,
       const Data *PreviousValue) {
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (ObjectHandle);
    if (inspector) {
 
       inspector->update_object_data (
@@ -636,7 +656,7 @@ dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
    ObjectModule *objMod (get_object_module ());
    Handle objHandle = _item_to_handle (item);
 
-   QtObjectInspector *inspector = _inspectorTable.lookup (objHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.lookup (objHandle);
 
    if (inspector) {
 
@@ -648,20 +668,20 @@ dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
       QtObjectInspector *inspector =
          new QtObjectInspector (objHandle, *this, get_plugin_runtime_context ());
 
-      if (_inspectorTable.store (objHandle, inspector)) {
+      if (_state.inspectorTable.store (objHandle, inspector)) {
 
          connect (
             inspector, SIGNAL (finished (const Handle)),
             this, SLOT (_inspector_finished (const Handle)));
 
-         inspector->set_state_names (_stateList);
+         inspector->set_state_names (_state.stateList);
 
          objMod->dump_all_object_attributes (objHandle, *this);
 
-         inspector->move (_newWindowPos);
+         inspector->move (_state.newWindowPos);
          inspector->show ();
 
-         _newWindowPos += QPoint (25, 25);
+         _state.newWindowPos += QPoint (25, 25);
       }
       else {
 
@@ -674,7 +694,7 @@ dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
 void
 dmz::QtPluginObjectInspector::_inspector_finished (const Handle ObjectHandle) {
 
-   QtObjectInspector *inspector = _inspectorTable.remove (ObjectHandle);
+   QtObjectInspector *inspector = _state.inspectorTable.remove (ObjectHandle);
    if (inspector) { inspector->deleteLater (); }
 }
 
@@ -693,13 +713,13 @@ dmz::QtPluginObjectInspector::_init (Config &local) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
-   _ui.setupUi (this);
+   _state.ui.setupUi (this);
 
    qframe_config_read ("frame", local, this);
 
    QStringList headerList;
    headerList << "Handle" << "ObjectType" << "Locality" << "UUID";
-   _ui.objectTreeWidget->setHeaderLabels (headerList);
+   _state.ui.objectTreeWidget->setHeaderLabels (headerList);
 
    set_definitions_observer_callback_mask (RuntimeNamedHandleMask | RuntimeStateMask);
    activate_global_object_observer ();

@@ -2,16 +2,16 @@
 #define DMZ_QT_OBJECT_INSPECTOR_DOT_H
 
 #include <dmzObjectObserverUtil.h>
-#include "dmzQtPropertyManager.h"
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
 #include <QtGui/QFrame>
 
-
-class QtProperty;
+class QTreeWidgetItem;
 
 
 namespace dmz {
+   
+   class GroupItem;
 
    class QtObjectInspector : public QFrame {
 
@@ -198,15 +198,16 @@ namespace dmz {
          void finished (const Handle);
 
       protected slots:
-         void _value_changed (QtProperty *property, const QVariant &value);
-         void _value_changed (QtProperty *property, const Vector &Value);
-         void _value_changed (QtProperty *property, const Mask &Value);
+         // void _value_changed (QtProperty *property, const QVariant &value);
+         // void _value_changed (QtProperty *property, const Vector &Value);
+         // void _value_changed (QtProperty *property, const Mask &Value);
 
       protected:
          virtual void closeEvent (QCloseEvent *event);
+         // GroupItem *_get_group (const QString &Name);
+         // QTreeWidgetItem *_get_attr (GroupItem *group, const Handle Attr);
          void _init ();
 
-         struct GroupStruct;
          struct State;
          State &_state;
 

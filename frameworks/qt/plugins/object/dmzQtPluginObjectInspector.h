@@ -11,7 +11,8 @@
 #include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <QtGui/QFrame>
-#include "ui_ObjectListForm.h"
+
+class QTreeWidgetItem;
 
 
 namespace dmz {
@@ -234,14 +235,8 @@ namespace dmz {
          Handle _item_to_handle (QTreeWidgetItem *item);
          void _init (Config &local);
 
-         Log _log;
-         Definitions _defs;
-         Ui::ObjectListForm _ui;
-         Handle _defaultAttrHandle;
-         HashTableHandleTemplate<QtObjectInspector> _inspectorTable;
-         HandleContainer _objects;
-         QPoint _newWindowPos;
-         QStringList _stateList;
+         struct State;
+         State &_state;
 
       private:
          QtPluginObjectInspector ();

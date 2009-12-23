@@ -23,8 +23,6 @@ lmk.add_files {
    "dmzFoundationReaderWriterZip.h",
    "dmzFoundationStreamZip.h",
    "dmzFoundationXMLUtil.h",
--- Deprecated 
-   "dmzFileCache.h",
 }
 
 lmk.add_files {
@@ -44,8 +42,6 @@ lmk.add_files {
    "dmzFoundationReaderWriterZip.cpp",
    "dmzFoundationStreamZip.cpp",
    "dmzFoundationXMLUtil.cpp",
--- Deprecated 
-   "dmzFileCacheLocal.cpp",
 }
 
 lmk.add_vars ({

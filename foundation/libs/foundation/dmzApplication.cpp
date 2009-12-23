@@ -3,7 +3,6 @@
 #include <dmzFoundationCommandLine.h>
 #include <dmzFoundationCommandLineConfig.h>
 #include <dmzFoundationXMLUtil.h>
-#include "dmzFileCacheLocal.h"
 #include <dmzRuntime.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
@@ -36,7 +35,7 @@ static const dmz::String DefaultDirName (ApplicationName + "." + DirName);
 \brief Simple DMZ application class.
 \details Class provides basic DMZ application functionality. The class
 will create the runtime context, parse the command line, load the XML configuration
-files, manage session data, create the file cache, and manage plugins.
+files, manage session data, and manage plugins.
 
 */
 
@@ -50,7 +49,6 @@ struct dmz::Application::State {
    Log log;
    Exit exit;
    ExitObserverBasic exitObs;
-   FileCacheLocal cache;
    ApplicationStateBasic appState;
    Config global;
    PluginContainer container;
@@ -72,7 +70,6 @@ struct dmz::Application::State {
          log (TheName, rt.get_context ()),
          exit (rt.get_context ()),
          exitObs (rt.get_context ()),
-         cache (rt.get_context ()),
          appState (rt.get_context ()),
          global ("global"),
          container (rt.get_context (), &log),
@@ -235,8 +232,6 @@ void
 dmz::Application::add_config (const String &Name, Config &data) {
 
    _state.global.add_config (Name, data);
-
-   _state.cache.configure (_state.global);
 }
 
 
@@ -367,8 +362,6 @@ dmz::Application::process_command_line (const CommandLine &CL) {
       _state.error = True;
    }
 
-   if (!_state.error) { _state.cache.configure (_state.global); }
-
    return !_state.error;
 }
 
@@ -440,10 +433,6 @@ dmz::Application::start () {
 
       _state.container.start_plugins ();
 //      _state.rt.update_time_slice ();
-
-      FileCache *fc (FileCache::get_interface (_state.rt.get_context ()));
-
-      if (fc) { fc->process_all_requests (); }
 
       _state.startTime = get_time ();
       _state.frameCount = 0.0;

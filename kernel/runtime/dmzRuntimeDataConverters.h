@@ -18,6 +18,8 @@ namespace dmz {
          DataConverterBoolean (RuntimeContext *context);
          ~DataConverterBoolean ();
 
+         Handle set_handle (const String &HandleName, RuntimeContext *context);
+
          Boolean to_boolean (const Data &Value);
          Boolean to_boolean (const Data *Value);
          Data to_data (const Boolean Value);
@@ -40,6 +42,8 @@ namespace dmz {
          DataConverterString (const PluginInfo &Info);
          DataConverterString (RuntimeContext *context);
          ~DataConverterString ();
+
+         Handle set_handle (const String &HandleName, RuntimeContext *context);
 
          String to_string (const Data &Value);
          String to_string (const Data *Value);
@@ -64,6 +68,8 @@ namespace dmz {
          DataConverterHandle (const PluginInfo &Info);
          DataConverterHandle (RuntimeContext *context);
          ~DataConverterHandle ();
+
+         Handle set_handle (const String &HandleName, RuntimeContext *context);
 
          Handle to_handle (const Data &Value);
          Handle to_handle (const Data *Value);

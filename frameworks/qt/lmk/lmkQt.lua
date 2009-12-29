@@ -22,7 +22,10 @@ function add_libs (list)
          end
          paths = paths .. "-framework " .. element
       end
-      lmk.add_vars { localLibPaths = paths, }
+      lmk.add_vars {
+         localLibPaths = "-F$(DMZ_QT_LIB_PATH) " .. paths,
+         localIncludes = "-F$(DMZ_QT_INCLUDE_PATH)",
+      }
    else
       local libNumber = ""
       local libDebug = ""

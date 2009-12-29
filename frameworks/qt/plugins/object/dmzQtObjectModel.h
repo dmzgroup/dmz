@@ -1,36 +1,26 @@
-#ifndef DMZ_QT_OBJECT_INSPECTOR_DOT_H
-#define DMZ_QT_OBJECT_INSPECTOR_DOT_H
+#ifndef DMZ_QT_OBJECT_MODULE_DOT_H
+#define DMZ_QT_OBJECT_MODULE_DOT_H
 
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
-#include <QtGui/QFrame>
+#include <QtGui/QStandardItemModel>
 
-// class QStandardItem;
-class QModelIndex;
 
 
 namespace dmz {
    
-   // class GroupItem;
-
-   class QtObjectInspector : public QFrame {
+   // class ObjectModule;
+   
+   class QtObjectModel : public QStandardItemModel {
 
       Q_OBJECT
 
       public:
-         QtObjectInspector (
-            const Handle ObjHandle,
-            ObjectObserverUtil &observer,
-            RuntimeContext *context,
-            QWidget *parent = 0);
-
-         ~QtObjectInspector ();
+         QtObjectModel (RuntimeContext *context, QObject *parent = 0);
+         ~QtObjectModel ();
          
-         void set_state_names (const QStringList &StateList);
-         
-         void expand_all ();
-         void collapse_all ();
+         // void set_state_names (const QStringList &StateList);
 
          // Object Observer Interface
          virtual void create_object (
@@ -39,22 +29,15 @@ namespace dmz {
             const ObjectType &Type,
             const ObjectLocalityEnum Locality);
             
-         virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
-
          virtual void update_object_uuid (
-            const Handle ObjectHandle,
             const UUID &Identity,
             const UUID &PrevIdentity);
 
          virtual void remove_object_attribute (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Mask &AttrMask);
 
          virtual void update_object_locality (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const ObjectLocalityEnum Locality,
             const ObjectLocalityEnum PrevLocality);
 
@@ -87,139 +70,96 @@ namespace dmz {
             const Handle PrevAttributeObjectHandle);
 
          virtual void update_object_counter (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Int64 Value,
             const Int64 *PreviousValue);
 
          virtual void update_object_counter_minimum (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Int64 Value,
             const Int64 *PreviousValue);
 
          virtual void update_object_counter_maximum (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Int64 Value,
             const Int64 *PreviousValue);
 
          virtual void update_object_alternate_type (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const ObjectType &Value,
             const ObjectType *PreviousValue);
 
          virtual void update_object_state (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Mask &Value,
             const Mask *PreviousValue);
 
          virtual void update_object_flag (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Boolean Value,
             const Boolean *PreviousValue);
 
          virtual void update_object_time_stamp (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Float64 Value,
             const Float64 *PreviousValue);
 
          virtual void update_object_position (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Vector &Value,
             const Vector *PreviousValue);
 
          virtual void update_object_orientation (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Matrix &Value,
             const Matrix *PreviousValue);
 
          virtual void update_object_velocity (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Vector &Value,
             const Vector *PreviousValue);
 
          virtual void update_object_acceleration (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Vector &Value,
             const Vector *PreviousValue);
 
          virtual void update_object_scale (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Vector &Value,
             const Vector *PreviousValue);
 
          virtual void update_object_vector (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Vector &Value,
             const Vector *PreviousValue);
 
          virtual void update_object_scalar (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Float64 Value,
             const Float64 *PreviousValue);
 
          virtual void update_object_text (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const String &Value,
             const String *PreviousValue);
 
          virtual void update_object_data (
-            const UUID &Identity,
-            const Handle ObjectHandle,
             const Handle AttributeHandle,
             const Data &Value,
             const Data *PreviousValue);
             
-      Q_SIGNALS:
-         void finished (const Handle);
-
-      protected Q_SLOTS:
-         void _item_activated (const QModelIndex &Index);
-      
-         // void _value_changed (QtProperty *property, const QVariant &value);
-         // void _value_changed (QtProperty *property, const Vector &Value);
-         // void _value_changed (QtProperty *property, const Mask &Value);
-
       protected:
-         virtual void closeEvent (QCloseEvent *event);
-         void _init ();
-
+         struct RowStruct;
+         struct GroupStruct;
          struct State;
          State &_state;
 
       private:
-         QtObjectInspector ();
-         QtObjectInspector (const QtObjectInspector &);
-         QtObjectInspector &operator= (const QtObjectInspector &);
+         QtObjectModel ();
+         QtObjectModel (const QtObjectModel &);
+         QtObjectModel &operator= (const QtObjectModel &);
    };
 };
 
-#endif // DMZ_QT_OBJECT_INSPECTOR_DOT_H
+#endif // DMZ_QT_OBJECT_MODULE_DOT_H

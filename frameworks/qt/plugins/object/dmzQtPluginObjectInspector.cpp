@@ -679,6 +679,7 @@ dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
          objMod->dump_all_object_attributes (objHandle, *this);
 
          inspector->move (_state.newWindowPos);
+         inspector->expand_all ();
          inspector->show ();
 
          _state.newWindowPos += QPoint (25, 25);

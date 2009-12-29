@@ -2,6 +2,7 @@
 #include <dmzObjectModule.h>
 #include <dmzQtConfigRead.h>
 #include "dmzQtObjectInspector.h"
+#include "dmzQtObjectModel.h"
 #include <dmzQtUtil.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
@@ -9,62 +10,9 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesUUID.h>
+#include <dmzTypesVector.h>
 #include <QtGui/QtGui>
 #include "ui_ObjectInspectorForm.h"
-
-
-namespace {
-
-   const QLatin1String HandleName ("Handle");
-   const QLatin1String UUIDName ("UUID");
-   const QLatin1String LocalityName ("Locality");
-   const QLatin1String TimeStampName ("Time Stamp");
-   const QLatin1String FlagName ("Flag");
-   const QLatin1String PositionName ("Position");
-   const QLatin1String TextName ("Text");
-   const QLatin1String StateName ("State");
-   const QLatin1String ObjectTypeName ("Object Type");
-   const QLatin1String VelocityName ("Velocity");
-   const QLatin1String AccelerationName ("Acceleration");
-   const QLatin1String ScaleName ("Scale");
-   const QLatin1String ScalarName ("Scalar");
-   const QLatin1String CounterName ("Counter");
-   const QLatin1String CounterMinimumName ("Counter Minimum");
-   const QLatin1String CounterMaximumName ("Counter Maximum");
-   const QLatin1String AlternateTypeName ("Alternate Object Type");
-   const QLatin1String VectorName ("Vector");
-
-   const dmz::Int32 GroupItemType (QStandardItem::UserType + 1);
-//   const dmz::Int32 AttrHandleRole (Qt::UserRole + 1);
-};
-
-namespace dmz {
-   
-   class GroupItem : public QStandardItem {
-      
-      public:
-//         GroupItem (const QString &Text) : QStandardItem (Text) {;}
-         
-         int type () const { return GroupItemType; }
-         
-         QStandardItem *get_child_for_attribute (const Handle AttrHandle) {
-            
-            QStandardItem *retVal (0);
-            
-            for (int ix = 0; ix < rowCount (); ix++) {
-               
-               QStandardItem *item = child (ix, 0);
-               if (AttrHandle == item->data ().toULongLong ()) {
-               
-                  retVal = item;
-                  break;
-               }
-            }
-            
-            return retVal;
-         }
-   };
-};
 
 
 struct dmz::QtObjectInspector::State {
@@ -74,17 +22,10 @@ struct dmz::QtObjectInspector::State {
    Log log;
    Definitions defs;
    Ui::ObjectInspectorForm ui;
-   QStandardItemModel model;
+   QtObjectModel model;
    QStringList stateNameList;
    Boolean ignoreUpdates;
    QMap<QString, Mask> stateMap;
-   QStandardItem *handleItem;
-   QStandardItem *typeItem;
-   QStandardItem *localityItem;
-   QStandardItem *uuidItem;
-   QMap<QStandardItem *, QString> itemToGroupMap;
-   QMap<QStandardItem *, Handle> itemToHandleMap;
-   QMap<QString, GroupItem *> groupToItemMap;
 
    State (const Handle TheHandle, ObjectObserverUtil &theObs, RuntimeContext *theContext) :
          ObjHandle (TheHandle),
@@ -92,10 +33,7 @@ struct dmz::QtObjectInspector::State {
          log ("QtObjectInspector", theContext),
          defs (theContext),
          ignoreUpdates (false),
-         handleItem (0),
-         typeItem (0),
-         localityItem (0),
-         uuidItem (0) {;}
+         model (theContext) {;}
 
    ~State () {;}
 
@@ -104,53 +42,6 @@ struct dmz::QtObjectInspector::State {
       return QLatin1String (defs.lookup_named_handle_name (Object).get_buffer ());
    }
 };
-
-
-// dmz::QtObjectInspector::GroupStruct *
-// dmz::QtObjectInspector::State::get_group (const QString &GroupName) {
-// 
-//    GroupStruct *group (groupMap[GroupName]);
-//    if (!group && groupManager) {
-// 
-//       group = new GroupStruct (GroupName);
-//       group->add_property (groupManager->addProperty (GroupName));
-//       groupMap[GroupName] = group;
-//       ui.propertyEditor->addProperty (group->get_property ());
-//    }
-// 
-//    return group;
-// }
-
-
-// void
-// dmz::QtObjectInspector::State::update_variant_property (
-//       const QString &GroupName,
-//       const Handle AttrHandle,
-//       const int PropertyType,
-//       const QVariant Value) {
-// 
-//    if (variantManager) {
-// 
-//       ignoreValueChanged = true;
-// 
-//       GroupStruct *group (get_group (GroupName));
-//       if (group) {
-// 
-//          QtProperty *property (group->get_property (AttrHandle));
-//          if (!property) {
-// 
-//             const QString AttrName (handle_to_name (AttrHandle));
-//             property = variantManager->addProperty (PropertyType, AttrName);
-//             group->add_property (AttrHandle, property);
-//             add_property (GroupName, AttrHandle, property);
-//          }
-// 
-//          if (property) { variantManager->setValue (property, Value); }
-//       }
-// 
-//       ignoreValueChanged = false;
-//    }
-// }
 
 
 dmz::QtObjectInspector::QtObjectInspector (
@@ -178,6 +69,21 @@ dmz::QtObjectInspector::set_state_names (const QStringList &StateList) {
 }
 
 
+void
+dmz::QtObjectInspector::expand_all () {
+   
+   _state.ui.treeView->expandAll ();
+}
+
+
+void
+dmz::QtObjectInspector::collapse_all () {
+   
+   _state.ui.treeView->collapseAll ();
+}
+
+
+
 // Object Observer Interface
 void
 dmz::QtObjectInspector::create_object (
@@ -191,25 +97,7 @@ dmz::QtObjectInspector::create_object (
       const QString HandleStr (to_qstring (ObjectHandle));
       setWindowTitle (tr ("%1 (%2)").arg (windowTitle ()).arg (HandleStr));
 
-      QStandardItem *parentItem = _state.model.invisibleRootItem ();
-      
-      QStandardItem *item (0);
-      QList<QStandardItem *>row;
-      
-      item = new QStandardItem (HandleName); row << item;
-      item = new QStandardItem (HandleStr); row << item;
-      _state.handleItem = item;
-      
-      parentItem->appendRow (row);
-      row.clear ();
-      
-      item = new QStandardItem (ObjectTypeName); row << item;
-      item = new QStandardItem (to_qstring (Type)); row << item;
-      _state.typeItem = item;
-      
-      parentItem->appendRow (row);
-
-      update_object_locality (Identity, ObjectHandle, Locality, Locality);
+      _state.model.create_object (Identity, ObjectHandle, Type, Locality);
    }
 }
 
@@ -253,24 +141,7 @@ dmz::QtObjectInspector::update_object_uuid (
 
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
 
-      QStandardItem *item = _state.uuidItem;
-      
-      if (!item) {
-         
-         QStandardItem *parentItem = _state.model.invisibleRootItem ();
-         QList<QStandardItem *> row; 
-
-         item = new QStandardItem (UUIDName); row << item;
-         item = new QStandardItem (); row << item;
-         _state.uuidItem = item;
-
-         parentItem->appendRow (row);
-      }
-
-      if (item) {
-         
-         item->setText (to_qstring (Identity));
-      }
+      _state.model.update_object_uuid (Identity, PrevIdentity);
    }
 }
 
@@ -294,29 +165,7 @@ dmz::QtObjectInspector::update_object_locality (
 
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
 
-      QStandardItem *item = _state.localityItem;
-      
-      if (!item) {
-         
-         QStandardItem *parentItem = _state.model.invisibleRootItem ();
-
-         QStandardItem *item (0);
-         QList<QStandardItem *> row; 
-
-         item = new QStandardItem (LocalityName); row << item;
-         item = new QStandardItem (); row << item;
-         _state.localityItem = item;
-
-         parentItem->appendRow (row);
-      }
-
-      if (item) {
-         
-         QStringList localityNames;
-         localityNames << "Unknown" << "Local" << "Remote";
-         
-         item->setText (localityNames[Locality]);
-      }
+      _state.model.update_object_locality (Locality, PrevLocality);
    }
 }
 
@@ -372,8 +221,7 @@ dmz::QtObjectInspector::update_object_counter (
 
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
 
-      // _state.update_variant_property (
-      //    CounterName, AttributeHandle, QVariant::Int, Value);
+      _state.model.update_object_counter (AttributeHandle, Value, PreviousValue);
    }
 }
 
@@ -388,8 +236,7 @@ dmz::QtObjectInspector::update_object_counter_minimum (
 
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
 
-      // _state.update_variant_property (
-      //    CounterMinimumName, AttributeHandle, QVariant::Int, Value);
+      _state.model.update_object_counter_minimum (AttributeHandle, Value, PreviousValue); 
    }
 }
 
@@ -404,8 +251,7 @@ dmz::QtObjectInspector::update_object_counter_maximum (
 
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
 
-      // _state.update_variant_property (
-      //    CounterMaximumName, AttributeHandle, QVariant::Int, Value);
+      _state.model.update_object_counter_maximum (AttributeHandle, Value, PreviousValue);
    }
 }
 
@@ -420,8 +266,7 @@ dmz::QtObjectInspector::update_object_alternate_type (
 
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
 
-      // _state.update_variant_property (
-      //    AlternateTypeName, AttributeHandle, QVariant::String, to_qstring (Value));
+      _state.model.update_object_alternate_type (AttributeHandle, Value, PreviousValue);
    }
 }
 
@@ -435,17 +280,8 @@ dmz::QtObjectInspector::update_object_state (
       const Mask *PreviousValue) {
 
    if ((ObjectHandle == _state.ObjHandle) && !_state.ignoreUpdates) {
-
-//      _state.update_mask_property (StateName, AttributeHandle, Value);
-
-      // String name;
-      // _state.defs.lookup_state_name (Value, name);
-      // 
-      // _state.update_variant_property (
-      //    StateName,
-      //    AttributeHandle,
-      //    QVariant::String,
-      //    QLatin1String (name.get_buffer ()));
+      
+      _state.model.update_object_state (AttributeHandle, Value, PreviousValue);
    }
 }
 
@@ -460,15 +296,7 @@ dmz::QtObjectInspector::update_object_flag (
 
    if (ObjectHandle == _state.ObjHandle && !_state.ignoreUpdates) {
 
-      // GroupItem *group = _get_group (FlagName);
-      // if (group) {
-      // 
-      //    QTreeWidgetItem *item = _get_attr (group, AttributeHandle);
-      //    if (item) {
-      //       
-      //       item->setData (1, Qt::DisplayRole, Value);
-      //    }
-      // }
+      _state.model.update_object_flag (AttributeHandle, Value, PreviousValue);
    }
 }
 
@@ -483,15 +311,7 @@ dmz::QtObjectInspector::update_object_time_stamp (
 
    if (ObjectHandle == _state.ObjHandle && !_state.ignoreUpdates) {
 
-      // GroupItem *group = _get_group (TimeStampName);
-      // if (group) {
-      // 
-      //    QTreeWidgetItem *item = _get_attr (group, AttributeHandle);
-      //    if (item) {
-      //       
-      //       item->setData (1, Qt::DisplayRole, Value);
-      //    }
-      // }
+      _state.model.update_object_time_stamp (AttributeHandle, Value, PreviousValue);
    }
 }
 
@@ -506,7 +326,7 @@ dmz::QtObjectInspector::update_object_position (
 
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
 
-       // _state.update_vector_property (PositionName, AttributeHandle, Value);
+      _state.model.update_object_position (AttributeHandle, Value, PreviousValue);
    }
 }
 
@@ -596,8 +416,7 @@ dmz::QtObjectInspector::update_object_scalar (
 
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
 
-      // _state.update_variant_property (
-      //    ScalarName, AttributeHandle, QVariant::Double, Value);
+      _state.model.update_object_scalar (AttributeHandle, Value, PreviousValue);
    }
 }
 
@@ -612,11 +431,7 @@ dmz::QtObjectInspector::update_object_text (
 
    if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
 
-      // _state.update_variant_property (
-      //    TextName,
-      //    AttributeHandle,
-      //    QVariant::String,
-      //    QLatin1String (Value.get_buffer ()));
+      _state.model.update_object_text (AttributeHandle, Value, PreviousValue);
    }
 }
 
@@ -629,6 +444,22 @@ dmz::QtObjectInspector::update_object_data (
       const Data &Value,
       const Data *PreviousValue) {
 
+   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
+
+      _state.model.update_object_data (AttributeHandle, Value, PreviousValue);
+   }
+}
+
+
+void
+dmz::QtObjectInspector::_item_activated (const QModelIndex &Index) {
+
+   QStandardItem *item = _state.model.itemFromIndex (Index);
+   
+   if (item) {
+
+      _state.log.warn << "item_activated: " << (Int32)Index.row () << " " << (Int32)Index.column () << endl;
+   }
 }
 
 
@@ -731,46 +562,66 @@ dmz::QtObjectInspector::closeEvent (QCloseEvent *event) {
    Q_EMIT finished (_state.ObjHandle);
 }
 
-/*
+#if 0
+
 dmz::GroupItem *
 dmz::QtObjectInspector::_get_group (const QString &Name) {
 
    GroupItem *group = _state.groupToItemMap[Name];
    if (!group) {
    
-      group = new GroupItem (_state.ui.treeWidget);
-      group->setFirstColumnSpanned (True);
-      group->setText (0, Name);
+      group = new GroupItem ();
+      group->setText (Name);
       _state.groupToItemMap[Name] = group;
+      
+      QStandardItem *parentItem = _state.model.invisibleRootItem ();
+      parentItem->appendRow (group);
    }
    
    return group;
 }
 
 
-QTreeWidgetItem *
+QStandardItem *
 dmz::QtObjectInspector::_get_attr (GroupItem *group, const Handle Attr) {
    
-   QTreeWidgetItem *item (0);
+   QStandardItem *item (0);
    
    if (group) {
    
-      item = group->get_attribute (Attr);
+_state.log.warn << "group rowCount: " << (Int32)group->rowCount () << " checking for " << Attr << endl;
+//      item = group->get_child_with_attribute (Attr);
+      
+      for (Int32 ix = 0; ix < group->rowCount (); ix++) {
+         
+         QStandardItem *childItem = group->child (ix, 0);
+         
+         _state.log.warn << "child: " << ix << " : " << (Handle)(childItem->data ().toLongLong ()) << endl;
+         if (Attr == childItem->data ().toLongLong ()) {
+         
+            item = childItem;
+            break;
+         }
+      }
       
       if (!item) {
          
          const QString AttrName (_state.handle_to_name (Attr));
+         QList<QStandardItem *> row; 
          
-         item = new QTreeWidgetItem (group);
-         item->setText (0, AttrName);
-         item->setData (0, Qt::UserRole, (qlonglong)Attr);
-         group->store_attribute (Attr, item);
+         item = new QStandardItem (AttrName); row << item;
+         item = new QStandardItem (); row << item;
+         item->setData ((qlonglong)Attr);
+         
+         group->appendRow (row);
       }
    }
    
    return item;
 }
-*/
+
+#endif
+
 
 void
 dmz::QtObjectInspector::_init () {
@@ -792,8 +643,8 @@ dmz::QtObjectInspector::_init () {
       header->setResizeMode (0, QHeaderView::ResizeToContents);
       header->setResizeMode (1, QHeaderView::ResizeToContents);
    }
-
-   // connect (
-   //    _state.variantManager, SIGNAL (valueChanged (QtProperty *, const QVariant &)),
-   //    this, SLOT (_value_changed (QtProperty *, const QVariant &)));
+   
+   connect (
+      _state.ui.treeView, SLOT (activated (const QModelIndex &)),
+      this, SLOT (_item_ativated (const QModelIndex &)));
 }

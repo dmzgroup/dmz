@@ -3,10 +3,12 @@ lmkQt.set_name "dmzQtPluginObjectInspector"
 lmk.set_type "plugin"
 lmk.add_files {"ObjectInspectorForm.ui","ObjectListForm.ui",}
 lmk.add_files ({
+   "dmzQtObjectModel.h",
    "dmzQtObjectInspector.h",
    "dmzQtPluginObjectInspector.h",
 },{src="moc"})
 lmk.add_files {
+   "dmzQtObjectModel.cpp",
    "dmzQtObjectInspector.cpp",
    "dmzQtPluginObjectInspector.cpp",
 }

@@ -909,7 +909,7 @@ dmz::LuaModuleBasic::_add_lua_paths () {
 void
 dmz::LuaModuleBasic::_start_optimizer () {
 
-#ifdef DMZ_LUA_USING_JIT
+#ifdef DMZ_LUA_USING_JIT_1
   if (_luaState) {
 
      lua_getglobal(_luaState, "require");
@@ -943,7 +943,30 @@ dmz::LuaModuleBasic::_start_optimizer () {
         _log.info << "Unable to load optimizer: " << ErrorMsg << endl;
      }
   }
+#endif // DMZ_LUA_USING_JIT_1
+//#ifdef DMZ_LUA_USING_JIT
+#if 0
+   if (_luaState) {
+
+      lua_pushcfunction (_luaState, lua_error_handler);
+      const int Handler (lua_gettop (_luaState));
+      lua_getfield(_luaState, LUA_REGISTRYINDEX, "_LOADED");
+      lua_getfield(_luaState, -1, "jit.opt");  // Get jit.opt.* module table.
+      lua_remove(_luaState, -2); // Remove _LOADED
+      lua_getfield(_luaState, -1, "start");
+      lua_remove(_luaState, -2); // Remove jit.opt
+
+      if (lua_pcall (_luaState, 1, 0, Handler)) {
+
+         lua_pop (_luaState, 1); // pop error message
+         _log.error << "Failed to run jit.opt.start function." << endl;
+      }
+      else { _log.info << "Called jit.opt.start." << endl; }
+
+      lua_pop (_luaState, 1); // pop lua_error_handler
+   }
 #endif // DMZ_LUA_USING_JIT
+
 }
 
 

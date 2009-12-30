@@ -1,3 +1,4 @@
+require "lmkLua"
 lmk.set_name "dmzLuaExtInput"
 lmk.set_type "plugin"
 lmk.add_files {"dmzLuaExtInput.cpp", "dmzLuaExtInputObserver.cpp",}
@@ -6,6 +7,6 @@ lmk.add_libs {
    "dmzInputUtil",
    "dmzLuaKernel",
    "dmzKernel",
-   "lua",
 }
+lmkLua.add_lib ()
 lmk.add_preqs {"dmzLuaFramework", "dmzInputFramework",}

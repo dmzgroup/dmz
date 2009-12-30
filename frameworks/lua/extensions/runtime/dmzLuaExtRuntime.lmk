@@ -1,8 +1,9 @@
+require "lmkLua"
 lmk.set_name "dmzLuaExtRuntime"
 lmk.set_type "plugin"
 lmk.add_files {"dmzLuaExtRuntime.cpp",}
+lmkLua.add_lib ()
 lmk.add_libs {
-   "lua",
    "dmzKernel",
    "dmzLuaKernel",
 }

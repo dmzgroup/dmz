@@ -27,7 +27,12 @@ namespace dmz {
 
 
 dmz::QtCanvasLayer::QtCanvasLayer (QGraphicsItem *parent) :
-      QGraphicsItem (parent) {;}
+      QGraphicsItem (parent) {
+         
+   setFlag (ItemHasNoContents, true);
+   setFlag (ItemIgnoresParentOpacity, true);
+   setFlag (ItemDoesntPropagateOpacityToChildren, true);
+}
 
 
 dmz::QtCanvasLayer::~QtCanvasLayer () {;}

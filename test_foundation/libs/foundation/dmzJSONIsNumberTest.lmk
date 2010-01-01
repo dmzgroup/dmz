@@ -1,0 +1,5 @@
+lmk.set_name ("dmzJSONIsNumberTest")
+lmk.set_type ("exe")
+lmk.add_files {"dmzJSONIsNumberTest.cpp"}
+lmk.add_libs {"dmzFoundation", "dmzTest", "dmzKernel",}
+lmk.add_vars { test = {"$(localBinTarget)"} }

@@ -1,3 +1,4 @@
+#include <dmzFoundationXMLUtil.h>
 #include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginAppUpdater.h"
 #include <dmzQtUtil.h>
@@ -9,7 +10,6 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzSystem.h>
-#include <dmzXMLUtil.h>
 #include <QtCore/QtCore>
 #include <QtGui/QtGui>
 #include <QtNetwork/QtNetwork>

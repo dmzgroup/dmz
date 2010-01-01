@@ -14,6 +14,7 @@
 
 using namespace dmz;
 
+//! \cond
 namespace {
 
    typedef ObjectModuleBasic::ObsUpdateStruct ostruct;

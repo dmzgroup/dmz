@@ -234,12 +234,12 @@ dmz::QtPluginCanvasObjectBasic::QtPluginCanvasObjectBasic (
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
+      _rc (Info, &_log),
       _defaultAttributeHandle (0),
       _itemIgnoresTransformations (False),
       _zValue (10),
       _canvasModule (0),
       _canvasModuleName (),
-      _fileRequestTable (),
       _svgRendererTable (),
       _modelTable (),
       _masterModelTable (),
@@ -255,7 +255,6 @@ dmz::QtPluginCanvasObjectBasic::~QtPluginCanvasObjectBasic () {
    _modelTable.empty ();
    _objectTable.empty ();
    _svgRendererTable.empty ();
-   _fileRequestTable.clear ();
 }
 
 
@@ -356,89 +355,6 @@ dmz::QtPluginCanvasObjectBasic::update_object_text (
    }
 }
 
-
-void
-dmz::QtPluginCanvasObjectBasic::process_file (
-      const FileCacheResultEnum RequestResult,
-      const String &LocalFilePath,
-      const String &RequestedFileLocation,
-      const String &RequestedFileName) {
-
-   QGraphicsItem *item (
-      _fileRequestTable.remove (RequestedFileLocation + RequestedFileName));
-
-   if (item) {
-
-      if (RequestResult == CacheFileFound) {
-
-         QGraphicsPixmapItem *pixmapItem (
-            qgraphicsitem_cast<QGraphicsPixmapItem *> (item));
-
-         if (pixmapItem) {
-
-            QPixmap pixmap;
-
-            //_log.info << "Loading pixmap file: " << LocalFilePath << endl;
-
-            if (pixmap.load (LocalFilePath.get_buffer ())) {
-
-               pixmapItem->setPixmap (pixmap);
-            }
-            else {
-
-               _log.error << "Pixmap failed to load: " << LocalFilePath << endl;
-            }
-         }
-
-         QGraphicsSvgItem *svgItem (qgraphicsitem_cast<QGraphicsSvgItem *> (item));
-
-         if (svgItem) {
-
-            QSvgRenderer *renderer (
-               _svgRendererTable.lookup (RequestedFileLocation + RequestedFileName));
-
-            if (!renderer) {
-
-               renderer = new QSvgRenderer ();
-
-               //_log.info << "Loading SVG file: " << LocalFilePath << endl;
-
-               if (renderer->load (QString (LocalFilePath.get_buffer ()))) {
-
-                  _svgRendererTable.store (
-                     RequestedFileLocation + RequestedFileName, renderer);
-               }
-               else {
-
-                  _log.error << "SVG failed to load: " << LocalFilePath << endl;
-                  delete renderer; renderer = 0;
-               }
-            }
-
-            if (renderer) { svgItem->setSharedRenderer (renderer); }
-         }
-      }
-      else if (RequestResult == UnknownFileLocation) {
-
-         _log.error << "Unknown file location: "
-            << RequestedFileLocation << " " << RequestedFileName << endl;
-      }
-      else if (RequestResult == FileNotFoundAtLocation) {
-
-         _log.error << "File not found: "
-            << RequestedFileLocation << " " << RequestedFileName << endl;
-      }
-      else {
-
-         _log.error << "Unknown file cache error for: "
-            << RequestedFileLocation << " " << RequestedFileName << endl;
-      }
-   }
-   else {
-
-      _log.error << "Unable to process unknown file: " << LocalFilePath << endl;
-   }
-}
 
 
 dmz::Boolean
@@ -714,7 +630,7 @@ dmz::QtPluginCanvasObjectBasic::_create_image_item (
 
    QGraphicsItem *item (0);
 
-   const String File (config_to_string ("file", Data).to_lower ());
+   const String File = _rc.find_file (config_to_string ("resource", Data)).to_lower ();
    QFileInfo fi (File.get_buffer ());
 
    if (fi.suffix () == QLatin1String ("svg")) {
@@ -1014,22 +930,77 @@ dmz::QtPluginCanvasObjectBasic::_process_item_state (
 dmz::Boolean
 dmz::QtPluginCanvasObjectBasic::_file_request (QGraphicsItem *item, const Config &Data) {
 
-   Boolean retVal (False);
-   const String Url (config_to_string ("url", Data));
-   const String File (config_to_string ("file", Data));
+   Boolean result (False);
+   const String Resource (config_to_string ("resource", Data));
 
-   FileCache *fc = FileCache::get_interface (get_plugin_runtime_context ());
+   if (Resource && item) {
 
-   if (File && item && fc) {
+      const String File = _rc.find_file (Resource);
 
-      if (_fileRequestTable.store (Url + File, item)) {
+      if (File) {
 
-         fc->add_file_request (Url, File, *this);
-         retVal = True;
+         QGraphicsPixmapItem *pixmapItem (
+            qgraphicsitem_cast<QGraphicsPixmapItem *> (item));
+
+         if (pixmapItem) {
+
+            QPixmap pixmap;
+
+            //_log.info << "Loading pixmap file: " << LocalFilePath << endl;
+
+            if (pixmap.load (File.get_buffer ())) {
+
+               pixmapItem->setPixmap (pixmap);
+               result = True;
+            }
+            else {
+
+               _log.error << "Pixmap failed to load: " << File << endl;
+            }
+         }
+
+         QGraphicsSvgItem *svgItem (qgraphicsitem_cast<QGraphicsSvgItem *> (item));
+
+         if (svgItem) {
+
+            QSvgRenderer *renderer (
+               _svgRendererTable.lookup (File));
+
+            if (!renderer) {
+
+               renderer = new QSvgRenderer ();
+
+               //_log.info << "Loading SVG file: " << LocalFilePath << endl;
+
+               if (renderer->load (QString (File.get_buffer ()))) {
+
+                  _svgRendererTable.store (File, renderer);
+               }
+               else {
+
+                  _log.error << "SVG failed to load: " << File << endl;
+                  delete renderer; renderer = 0;
+               }
+            }
+
+            if (renderer) {
+
+               svgItem->setSharedRenderer (renderer);
+               result = True;
+            }
+         }
+      }
+      else {
+
+         _log.error << "Resource not found: " << Resource << endl;
       }
    }
+   else {
 
-   return retVal;
+      _log.error << "Unable to process unknown resource." << endl;
+   }
+
+   return result;
 }
 
 

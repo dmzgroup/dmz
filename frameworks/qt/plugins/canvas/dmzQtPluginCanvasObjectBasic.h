@@ -1,12 +1,12 @@
 #ifndef DMZ_QT_PLUGIN_CANVAS_OBJECT_BASIC_DOT_H
 #define DMZ_QT_PLUGIN_CANVAS_OBJECT_BASIC_DOT_H
 
-#include <dmzFileCache.h>
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeObjectType.h>
+#include <dmzRuntimeResources.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableUInt32Template.h>
@@ -74,8 +74,7 @@ namespace dmz {
 
    class QtPluginCanvasObjectBasic :
       public Plugin,
-      public ObjectObserverUtil,
-      public FileCacheAction {
+      public ObjectObserverUtil {
 
       public:
          QtPluginCanvasObjectBasic (const PluginInfo &Info, Config &local);
@@ -112,13 +111,6 @@ namespace dmz {
             const Handle AttributeHandle,
             const String &Value,
             const String *PreviousValue);
-
-         // FileCacheAction Interface
-         virtual void process_file (
-            const FileCacheResultEnum RequestResult,
-            const String &LocalFilePath,
-            const String &RequestedFileLocation,
-            const String &RequestedFileName);
 
       protected:
          struct ModelStruct {
@@ -270,6 +262,8 @@ namespace dmz {
             QGraphicsItem *parent,
             const Config &Data);
 
+         void _process_file (const String &LocalFilePath);
+
          void _process_item_text (ObjectStruct &os, const Config &TextList);
 
          void _process_item_switch (
@@ -301,12 +295,12 @@ namespace dmz {
 
          Log _log;
          Definitions _defs;
+         Resources _rc;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
          Handle _defaultAttributeHandle;
          Boolean _itemIgnoresTransformations;
          Int32 _zValue;
-         HashTableStringTemplate<QGraphicsItem> _fileRequestTable;
          HashTableStringTemplate<QSvgRenderer> _svgRendererTable;
          HashTableHandleTemplate<ModelStruct> _modelTable;
          HashTableHandleTemplate<ModelStruct> _masterModelTable;

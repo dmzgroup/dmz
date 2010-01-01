@@ -9,7 +9,7 @@
 
 */
 
-//! cond
+//! \cond
 struct dmz::HandleContainerIterator::State {
 
    HashTableHandleIterator it;

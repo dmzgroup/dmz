@@ -2,6 +2,28 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginInfo.h>
 
+using namespace dmz;
+
+namespace {
+
+struct CommonStruct {
+
+   Handle handle;
+
+   Handle set_handle (const String &HandleName, RuntimeContext *context) {
+
+      Definitions defs (context);
+
+      handle = defs.create_named_handle (HandleName);
+
+      return handle;
+   }
+
+   CommonStruct () : handle (0) {;}
+};
+
+};
+
 /*!
 
 \class dmz::DataConverterBoolean
@@ -12,15 +34,11 @@ a simple way to package a string into a Data object and then extract that Boolea
 
 */
 
-struct dmz::DataConverterBoolean::State {
+struct dmz::DataConverterBoolean::State : public CommonStruct {
 
-   Handle handle;
+   State (RuntimeContext *context) {
 
-   State (RuntimeContext *context) : handle (0)  {
-
-      Definitions defs (context);
-
-      handle = defs.create_named_handle (base_type_enum_to_string (BaseTypeBoolean));
+      set_handle (base_type_enum_to_string (BaseTypeBoolean), context);
    }
 };
 
@@ -47,6 +65,23 @@ dmz::DataConverterBoolean::DataConverterBoolean (RuntimeContext *context) :
 
 //! Destructor.
 dmz::DataConverterBoolean::~DataConverterBoolean () { delete &_state; }
+
+
+/*!
+
+\brief Sets the attribute handle used to store and retrieve the value in the Data object.
+\param[in] HandleName String containing the name of the attribute handle.
+\param[in] context Pointer to the runtime context.
+\return Returns the Handle being used.
+
+*/
+dmz::Handle
+dmz::DataConverterBoolean::set_handle (
+      const String &HandleName,
+      RuntimeContext *context) {
+
+   return _state.set_handle (HandleName, context);
+}
 
 
 /*!
@@ -119,15 +154,11 @@ a simple way to package a string into a Data object and then extract that String
 
 */
 
-struct dmz::DataConverterString::State {
+struct dmz::DataConverterString::State : public CommonStruct {
 
-   Handle handle;
+   State (RuntimeContext *context)  {
 
-   State (RuntimeContext *context) : handle (0)  {
-
-      Definitions defs (context);
-
-      handle = defs.create_named_handle (base_type_enum_to_string (BaseTypeString));
+      set_handle (base_type_enum_to_string (BaseTypeString), context);
    }
 };
 
@@ -154,6 +185,23 @@ dmz::DataConverterString::DataConverterString (RuntimeContext *context) :
 
 //! Destructor.
 dmz::DataConverterString::~DataConverterString () { delete &_state; }
+
+
+/*!
+
+\brief Sets the attribute handle used to store and retrieve the value in the Data object.
+\param[in] HandleName String containing the name of the attribute handle.
+\param[in] context Pointer to the runtime context.
+\return Returns the Handle being used.
+
+*/
+dmz::Handle
+dmz::DataConverterString::set_handle (
+      const String &HandleName,
+      RuntimeContext *context) {
+
+   return _state.set_handle (HandleName, context);
+}
 
 
 /*!
@@ -243,15 +291,9 @@ object and then extract that Handle.
 
 */
 
-struct dmz::DataConverterHandle::State {
+struct dmz::DataConverterHandle::State : public CommonStruct {
 
-   Handle handle;
-
-   State (RuntimeContext *context) : handle (0)  {
-
-      Definitions defs (context);
-      handle = defs.create_named_handle ("handle");
-   }
+   State (RuntimeContext *context) { set_handle ("handle", context); }
 };
 
 
@@ -277,6 +319,23 @@ dmz::DataConverterHandle::DataConverterHandle (RuntimeContext *context) :
 
 //! Destructor.
 dmz::DataConverterHandle::~DataConverterHandle () { delete &_state; }
+
+
+/*!
+
+\brief Sets the attribute handle used to store and retrieve the value in the Data object.
+\param[in] HandleName String containing the name of the attribute handle.
+\param[in] context Pointer to the runtime context.
+\return Returns the Handle being used.
+
+*/
+dmz::Handle
+dmz::DataConverterHandle::set_handle (
+      const String &HandleName,
+      RuntimeContext *context) {
+
+   return _state.set_handle (HandleName, context);
+}
 
 
 /*!

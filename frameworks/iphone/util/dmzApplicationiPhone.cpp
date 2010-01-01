@@ -471,7 +471,7 @@ dmz::ApplicationiPhone::save_session () {
             
             write_xml_header (fs);
             
-            format_config_to_xml (session, fs, XMLPrettyPrint);
+            format_config_to_xml (session, fs, ConfigPrettyPrint);
             
             close_file (file); file = 0;
             

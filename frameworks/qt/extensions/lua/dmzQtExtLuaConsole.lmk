@@ -1,4 +1,5 @@
 require "lmkQt"
+require "lmkLua"
 lmkQt.set_name "dmzQtExtLuaConsole"
 lmk.set_type "plugin"
 lmk.add_files {"dmzQtLuaConsole.ui"}
@@ -7,9 +8,9 @@ lmk.add_files {"dmzQtExtLuaConsole.cpp",}
 lmk.add_preqs {"dmzLuaFramework",}
 lmk.add_libs {
    "dmzQtUtil",
-   "dmzXML",
    "dmzLuaKernel",
+   "dmzFoundation",
    "dmzKernel",
-   "lua",
 }
+lmkLua.add_lib ()
 lmkQt.add_libs {"QtCore", "QtGui",}

@@ -2,7 +2,7 @@ lmk.set_name "dmzArchivePluginAutoSave"
 lmk.set_type "plugin"
 lmk.add_files {"dmzArchivePluginAutoSave.cpp",}
 lmk.add_libs {
-   "dmzXML",
+   "dmzFoundation",
    "dmzKernel",
 }
 lmk.add_preqs {

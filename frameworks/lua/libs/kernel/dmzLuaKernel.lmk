@@ -1,3 +1,4 @@
+require "lmkLua"
 lmk.set_name "dmzLuaKernel"
 lmk.set_type "shared"
 
@@ -35,8 +36,9 @@ lmk.add_files {
    "dmzLuaKernelVector.cpp",
 }
 
+lmkLua.add_lib ()
+
 lmk.add_libs {
-   "lua",
    "dmzKernel",
 }
 

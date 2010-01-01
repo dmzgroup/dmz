@@ -1,3 +1,4 @@
+#include <dmzFoundationXMLUtil.h>
 #include <dmzObjectAttributeMasks.h>
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginArticulateOSG.h"
@@ -7,7 +8,6 @@
 #include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
-#include <dmzXMLUtil.h>
 
 #include <osg/Group>
 #include <osg/Transform>

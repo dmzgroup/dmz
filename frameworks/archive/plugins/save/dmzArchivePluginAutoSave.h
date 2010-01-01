@@ -47,7 +47,7 @@ namespace dmz {
       protected:
          void _init (Config &local);
 
-         ApplicationStateWrapper _appState;
+         ApplicationState _appState;
          ArchiveModule *_archiveMod;
          Handle _archiveHandle;
          String _saveFile;

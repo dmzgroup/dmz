@@ -1,0 +1,4 @@
+lmk.set_name "dmzInterpreterJSONConfigTest"
+lmk.set_type "exe"
+lmk.add_libs {"dmzFoundation", "dmzTest", "dmzKernel",}
+lmk.add_files {"dmzInterpreterJSONConfigTest.cpp"}

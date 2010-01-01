@@ -1,7 +1,6 @@
 #ifndef DMZ_QT_PLUGIN_MAP_OBJECT_BASIC_DOT_H
 #define DMZ_QT_PLUGIN_MAP_OBJECT_BASIC_DOT_H
 
-#include <dmzFileCache.h>
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
@@ -72,8 +71,7 @@ namespace dmz {
 
    class QtPluginMapObjectBasic :
       public Plugin,
-      public ObjectObserverUtil,
-      public FileCacheAction {
+      public ObjectObserverUtil {
 
       public:
          QtPluginMapObjectBasic (const PluginInfo &Info, Config &local);
@@ -299,12 +297,12 @@ namespace dmz {
 
          Log _log;
          Definitions _defs;
+         Resources _rc;
          QpModuleMap *_canvasModule;
          String _canvasModuleName;
          Handle _defaultAttributeHandle;
          Boolean _itemIgnoresTransformations;
          Int32 _zValue;
-         HashTableStringTemplate<QGraphicsItem> _fileRequestTable;
          HashTableStringTemplate<QSvgRenderer> _svgRendererTable;
          HashTableHandleTemplate<ModelStruct> _modelTable;
          HashTableHandleTemplate<ModelStruct> _masterModelTable;

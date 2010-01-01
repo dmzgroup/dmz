@@ -1,10 +1,11 @@
+require "lmkLua"
 lmk.set_name "dmzLuaExtAudio"
 lmk.set_type "plugin"
 lmk.add_files {"dmzLuaExtAudio.cpp",}
+lmkLua.add_lib ()
 lmk.add_libs {
    "dmzAudioBase",
    "dmzLuaKernel",
-   "lua",
    "dmzKernel",
 }
 lmk.add_preqs { "dmzLuaFramework", "dmzAudioFramework", }

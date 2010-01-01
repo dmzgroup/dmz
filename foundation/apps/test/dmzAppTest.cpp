@@ -1,4 +1,4 @@
-#include <dmzCommandLine.h>
+#include <dmzFoundationCommandLine.h>
 #include <dmzApplication.h>
 #include <dmzRuntimeLogObserverBasic.h>
 #include <dmzSystem.h>

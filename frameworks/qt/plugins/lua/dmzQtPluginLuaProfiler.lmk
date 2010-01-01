@@ -1,4 +1,5 @@
 require "lmkQt"
+require "lmkLua"
 lmkQt.set_name "dmzQtPluginLuaProfiler"
 lmk.set_type "plugin"
 lmk.add_files {"dmzQtLuaProfiler.ui", "dmzQtLuaProfilerTable.ui"}
@@ -8,7 +9,7 @@ lmk.add_preqs {"dmzLuaFramework",}
 lmk.add_libs {
    "dmzQtUtil",
    "dmzKernel",
-   "lua",
 }
+lmkLua.add_lib ()
 lmkQt.add_libs {"QtCore", "QtGui",}
 

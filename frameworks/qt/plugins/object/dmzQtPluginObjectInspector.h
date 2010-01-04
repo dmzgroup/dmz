@@ -4,13 +4,15 @@
 #include <dmzObjectObserverUtil.h>
 #include <dmzQtWidget.h>
 #include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimeDefinitionsObserver.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <QtGui/QFrame>
-#include "ui_ObjectListForm.h"
+
+class QTreeWidgetItem;
 
 
 namespace dmz {
@@ -23,6 +25,7 @@ namespace dmz {
          public QtWidget,
          public Plugin,
          public MessageObserver,
+         public DefinitionsObserver,
          public ObjectObserverUtil {
 
       Q_OBJECT
@@ -50,6 +53,12 @@ namespace dmz {
             const Handle TargetObserverHandle,
             const Data *InData,
             Data *outData);
+            
+         // Definitions Observer Interface
+         virtual void define_named_handle (const Handle TheHandle, const String &Name);
+         virtual void define_state (const Mask &TheState, const String &Name);
+         virtual void define_object_type (const ObjectType &Type) {;}
+         virtual void define_event_type (const EventType &Type) {;}
 
          // Object Observer Interface
          virtual void create_object (
@@ -226,13 +235,8 @@ namespace dmz {
          Handle _item_to_handle (QTreeWidgetItem *item);
          void _init (Config &local);
 
-         Log _log;
-         Definitions _defs;
-         Ui::ObjectListForm _ui;
-         Handle _defaultAttrHandle;
-         HashTableHandleTemplate<QtObjectInspector> _inspectorTable;
-         HandleContainer _objects;
-         QPoint _newWindowPos;
+         struct State;
+         State &_state;
 
       private:
          QtPluginObjectInspector ();

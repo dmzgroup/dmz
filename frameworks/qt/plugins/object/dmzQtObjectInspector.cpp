@@ -1,130 +1,171 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectModule.h>
 #include <dmzQtConfigRead.h>
+#include "dmzQtMaskInputDialog.h"
+#include "dmzQtObjectConsts.h"
 #include "dmzQtObjectInspector.h"
 #include <dmzQtUtil.h>
+#include "dmzQtVectorInputDialog.h"
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesUUID.h>
-#include <QtCore/QMap>
-#include <qteditorfactory.h>
-#include <qtpropertymanager.h>
-#include <qttreepropertybrowser.h>
-#include <qtvariantproperty.h>
+#include <dmzTypesVector.h>
+#include <QtGui/QtGui>
 #include "ui_ObjectInspectorForm.h"
 
 
 namespace {
+   
+   const char *ObjectAttrName[dmz::MaxObjectAttr] = {
+      "Create Object",
+      "Destroy Object",
+      "Handle",
+      "Object Type",
+      "Locality",
+      "UUID",
+      "Remove",
+      "Link",
+      "Unlink",
+      "Link Object",
+      "Counter",
+      "Counter Min",
+      "Counter Max",
+      "Alternate Object Type",
+      "State",
+      "Flag",
+      "TimeStamp",
+      "Position",
+      "Orientation",
+      "Velocity",
+      "Acceleration",
+      "Scale",
+      "Vector",
+      "Scalar",
+      "Text",
+      "Data"
+   };
+   
+   class AttributeItem : public QTreeWidgetItem {
+      
+      public:
+         AttributeItem (const dmz::ObjectAttrEnum Type) :
+               QTreeWidgetItem (Type + QTreeWidgetItem::UserType) {
+         
+            Qt::ItemFlags flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+            if (Type == dmz::ObjectAttrFlag) { flags |= Qt::ItemIsUserCheckable; }
+            setFlags (flags);
+         }
+         
+         void set_value (const dmz::Vector &Value) {
+            
+            QString data = QString ("[%1, %2, %3]")
+               .arg (Value.get_x (), 0, 'f', 2)
+               .arg (Value.get_y (), 0, 'f', 2)
+               .arg (Value.get_z (), 0, 'f', 2);
 
-   const QLatin1String HandleName ("Handle");
-   const QLatin1String UUIDName ("UUID");
-   const QLatin1String LocalityName ("Locality");
-   const QLatin1String TimeStampName ("Time Stamp");
-   const QLatin1String FlagName ("Flag");
-   const QLatin1String PositionName ("Position");
-   const QLatin1String TextName ("Text");
-   const QLatin1String StateName ("State");
-   const QLatin1String ObjectTypeName ("Object Type");
-   const QLatin1String VelocityName ("Velocity");
-   const QLatin1String AccelerationName ("Acceleration");
-   const QLatin1String ScaleName ("Scale");
-   const QLatin1String ScalarName ("Scalar");
-   const QLatin1String CounterName ("Counter");
-   const QLatin1String CounterMinimumName ("Counter Minimum");
-   const QLatin1String CounterMaximumName ("Counter Maximum");
-   const QLatin1String AlternateTypeName ("Alternate Object Type");
-   const QLatin1String VectorName ("Vector");
-};
-
-
-class dmz::QtObjectInspector::GroupStruct {
-
-   public:
-      GroupStruct (const QString &Name) : _Name (Name), _property (0) {;}
-
-      ~GroupStruct () {;}
-
-      void add_property (QtProperty *property) { _property = property; }
-      void add_property (const dmz::Handle AttrHandle, QtProperty *property) {
-
-         _handleMap[property] = AttrHandle;
-         _propertyMap[AttrHandle] = property;
-         if (_property) { _property->addSubProperty (property); }
-      }
-
-      QtProperty *get_property () { return _property; }
-      QtProperty *get_property (const Handle AttrHandle) { return _propertyMap[AttrHandle]; }
-      Handle get_handle (QtProperty *property) { return _handleMap[property]; }
-
-   protected:
-      const QString _Name;
-      QtProperty *_property;
-      QMap<QtProperty *, dmz::Handle> _handleMap;
-      QMap<dmz::Handle, QtProperty *> _propertyMap;
+            setText (dmz::ValueCol, data);
+         }
+   };
+   
+   class GroupItem : public QTreeWidgetItem {
+   
+      public:
+         GroupItem (QTreeWidget *parent, const dmz::ObjectAttrEnum Type) :
+               QTreeWidgetItem (parent, Type + QTreeWidgetItem::UserType) {
+                  
+            setText (dmz::AttributeCol, ObjectAttrName[Type]);
+            setFlags (Qt::ItemIsEnabled);
+            setFirstColumnSpanned (true);
+            setExpanded (true);  
+         }
+         
+         void add_item (const dmz::Handle AttrHandle, AttributeItem *item) {
+         
+            _handleMap[item] = AttrHandle;
+            _itemMap[AttrHandle] = item;
+            addChild (item);
+         }
+      
+         AttributeItem *get_item (const dmz::Handle AttrHandle) {
+         
+            return _itemMap[AttrHandle];
+         }
+         
+         dmz::Handle get_handle (QTreeWidgetItem *item) {
+            
+            return _handleMap[item];
+         }
+      
+      protected:
+         QMap<QTreeWidgetItem *, dmz::Handle> _handleMap;
+         QMap<dmz::Handle, AttributeItem *> _itemMap;
+   };
 };
 
 
 struct dmz::QtObjectInspector::State {
 
-   const Handle ObjHandle;
    ObjectObserverUtil &obs;
    Log log;
    Definitions defs;
+   RuntimeContext *context;
+   Handle handle;
+   Handle attrHandle;
    Ui::ObjectInspectorForm ui;
-   QtGroupPropertyManager *groupManager;
-   QtEnumPropertyManager *enumManager;
-   QtEnumPropertyManager *enumManagerRO;
-   QtVariantPropertyManager *variantManager;
-   QtVariantPropertyManager *variantManagerRO;
-   VectorPropertyManager *vectorManager;
-   VectorPropertyManager *vectorManagerRO;
-   QtVariantProperty *handleProperty;
-   QtVariantProperty *typeProperty;
-   QtProperty *localityProperty;
-   QtVariantProperty *uuidProperty;
-   QMap<QtProperty *, QString> propertyToGroupMap;
-   QMap<QtProperty *, Handle> propertyToHandleMap;
-   QMap<QString, GroupStruct *> groupMap;
-   Boolean ignoreUpdates;
-   Boolean ignoreValueChanged;
-   
+   QStringList stateNameList;
+   QMap<QString, Mask> stateMap;
+   QMap<QTreeWidgetItem *, ObjectAttrEnum> itemToGroupMap;
+   QMap<QTreeWidgetItem *, Handle> itemToHandleMap;
+   QMap<ObjectAttrEnum, GroupItem *> groupMap;
 
-   State (const Handle TheHandle, ObjectObserverUtil &theObs, RuntimeContext *theContext) :
-         ObjHandle (TheHandle),
+   State (ObjectObserverUtil &theObs, RuntimeContext *theContext) :
          obs (theObs),
          log ("QtObjectInspector", theContext),
-         defs (theContext, &log),
-         handleProperty (0),
-         typeProperty (0),
-         localityProperty (0),
-         uuidProperty (0),
-         ignoreUpdates (False),
-         ignoreValueChanged (False) {;}
+         defs (theContext),
+         context (theContext),
+         handle (0),
+         attrHandle (0) {;}
 
    ~State () {;}
-
-   void add_property (const QString &GroupName, const Handle AttrHandle, QtProperty *property) {
-
-      propertyToGroupMap[property] = GroupName;
-      propertyToHandleMap[property] = AttrHandle;
+   
+   GroupItem *get_group (const ObjectAttrEnum Type) {
+      
+      GroupItem *group = groupMap[Type];
+      if (!group) {
+         
+         group = new GroupItem (ui.treeWidget, Type);
+         groupMap[Type] = group;
+      }
+      
+      return group;
    }
+   
+   AttributeItem *get_item (const ObjectAttrEnum Type, const Handle AttrHandle) {
 
-   GroupStruct *get_group (const QString &GroupName);
+      AttributeItem *item (0);
+      
+      GroupItem *group = get_group (Type);
+      if (group) {
 
-   void update_variant_property (
-      const QString &GroupName,
-      const Handle AttrHandle,
-      const int PropertyType,
-      const QVariant Value);
+         item = group->get_item (AttrHandle);
+         if (!item) {
 
-   void update_vector_property (
-      const QString &GroupName,
-      const Handle AttrHandle,
-      const Vector &Value);
+            item = new AttributeItem (Type);
+            item->setText (AttributeCol, handle_to_name (AttrHandle));
 
+            group->add_item (AttrHandle, item);
+
+            itemToGroupMap[item] = Type;
+            itemToHandleMap[item] = AttrHandle;
+         }
+      }
+      
+      return item;
+   }
+   
    QString handle_to_name (const Handle Object) {
 
       return QLatin1String (defs.lookup_named_handle_name (Object).get_buffer ());
@@ -132,90 +173,12 @@ struct dmz::QtObjectInspector::State {
 };
 
 
-dmz::QtObjectInspector::GroupStruct *
-dmz::QtObjectInspector::State::get_group (const QString &GroupName) {
-
-   GroupStruct *group (groupMap[GroupName]);
-   if (!group && groupManager) {
-
-      group = new GroupStruct (GroupName);
-      group->add_property (groupManager->addProperty (GroupName));
-      groupMap[GroupName] = group;
-      ui.propertyEditor->addProperty (group->get_property ());
-   }
-
-   return group;
-}
-
-
-void
-dmz::QtObjectInspector::State::update_variant_property (
-      const QString &GroupName,
-      const Handle AttrHandle,
-      const int PropertyType,
-      const QVariant Value) {
-
-   if (variantManager) {
-
-      ignoreValueChanged = true;
-      
-      GroupStruct *group (get_group (GroupName));
-      if (group) {
-
-         QtProperty *property (group->get_property (AttrHandle));
-         if (!property) {
-
-            const QString AttrName (handle_to_name (AttrHandle));
-            property = variantManager->addProperty (PropertyType, AttrName);
-            group->add_property (AttrHandle, property);
-            add_property (GroupName, AttrHandle, property);
-         }
-
-         if (property) { variantManager->setValue (property, Value); }
-      }
-      
-      ignoreValueChanged = false;
-   }
-}
-
-
-void
-dmz::QtObjectInspector::State::update_vector_property (
-      const QString &GroupName,
-      const Handle AttrHandle,
-      const Vector &Value) {
-
-   if (vectorManager) {
-
-      ignoreValueChanged = true;
-
-      GroupStruct *group (get_group (GroupName));
-      if (group) {
-
-         QtProperty *property ( group->get_property (AttrHandle));
-         if (!property) {
-
-            const QString AttrName (handle_to_name (AttrHandle));
-            property = vectorManager->addProperty (AttrName);
-            group->add_property (AttrHandle, property);
-            add_property (GroupName, AttrHandle, property);
-         }
-
-         if (property) { vectorManager->setValue (property, Value); }
-      }
-   }
-   
-   ignoreValueChanged = false;
-}
-
-
 dmz::QtObjectInspector::QtObjectInspector (
-      const Handle ObjHandle,
       ObjectObserverUtil &observer,
       RuntimeContext *context,
       QWidget *parent) :
       QFrame (parent),
-      _state (*(new State (ObjHandle, observer, context))) {
+      _state (*(new State (observer, context))) {
 
    _init ();
 }
@@ -227,6 +190,13 @@ dmz::QtObjectInspector::~QtObjectInspector () {
 }
 
 
+void
+dmz::QtObjectInspector::set_state_names (const QStringList &StateList) {
+
+   _state.stateNameList = StateList;
+}
+
+
 // Object Observer Interface
 void
 dmz::QtObjectInspector::create_object (
@@ -235,123 +205,55 @@ dmz::QtObjectInspector::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
-   if (ObjectHandle == _state.ObjHandle && !_state.ignoreUpdates) {
+   if (!_state.handle) {
+      
+      QString title = QString ("Object %1").arg (to_qstring (ObjectHandle));
+      setWindowTitle (title);
+      
+      _state.handle = ObjectHandle;
+      AttributeItem *item (0);
+      
+      item = new AttributeItem (ObjectAttrUUID);
+      item->setText (AttributeCol, ObjectAttrName[ObjectAttrUUID]);
+      item->setText (ValueCol, to_qstring (Identity));
+      item->setFlags (Qt::ItemIsEnabled);      
+      _state.ui.treeWidget->addTopLevelItem (item);
 
-      if (_state.variantManagerRO) {
+      item = new AttributeItem (ObjectAttrHandle);
+      item->setText (AttributeCol, ObjectAttrName[ObjectAttrHandle]);
+      item->setText (ValueCol, to_qstring (ObjectHandle));
+      item->setFlags (Qt::ItemIsEnabled);
+      _state.ui.treeWidget->addTopLevelItem (item);
 
-         const QString HandleStr (to_qstring (ObjectHandle));
-         setWindowTitle (tr ("%1 (%2)").arg (windowTitle ()).arg (HandleStr));
+      item = new AttributeItem (ObjectAttrObjectType);
+      item->setText (AttributeCol, ObjectAttrName[ObjectAttrObjectType]);
+      item->setText (ValueCol, to_qstring (Type));
+      item->setFlags (Qt::ItemIsEnabled);
+      _state.ui.treeWidget->addTopLevelItem (item);
 
-         _state.handleProperty =
-            _state.variantManagerRO->addProperty (QVariant::String, HandleName);
-
-         _state.handleProperty->setValue (HandleStr);
-         _state.ui.propertyEditor->addProperty (_state.handleProperty);
-
-         _state.typeProperty =
-            _state.variantManagerRO->addProperty (QVariant::String, ObjectTypeName);
-
-         _state.typeProperty->setValue (to_qstring (Type));
-         _state.ui.propertyEditor->addProperty (_state.typeProperty);
-
-         update_object_locality (Identity, ObjectHandle, Locality, Locality);
-      }
+      char *localityNames[3] = { "Unknown", "Local", "Remote" };
+      item = new AttributeItem (ObjectAttrLocality);
+      item->setText (AttributeCol, ObjectAttrName[ObjectAttrLocality]);
+      item->setText (ValueCol, localityNames[Locality]);
+      item->setFlags (Qt::ItemIsEnabled);
+      _state.ui.treeWidget->addTopLevelItem (item);
    }
 }
 
 
 void
-dmz::QtObjectInspector::destroy_object (
-      const UUID &Identity,
-      const Handle ObjectHandle) {
+dmz::QtObjectInspector::destroy_object () {
 
-   if (ObjectHandle == _state.ObjHandle && !_state.ignoreUpdates) {
-
-      QMap<QtProperty *, Handle>::ConstIterator itProp =
-         _state.propertyToHandleMap.constBegin ();
-
-      while (itProp != _state.propertyToHandleMap.constEnd ()) {
-
-         itProp.key ()->setEnabled (False);
-         itProp++;
-      }
-
-      _state.handleProperty->setEnabled (False);
-      _state.typeProperty->setEnabled (False);
-      _state.localityProperty->setEnabled (False);
-      _state.uuidProperty->setEnabled (False);
-      
-      _state.ui.addAttributeButton->setEnabled (False);
-      _state.ui.removeAttributeButton->setEnabled (False);
-      
-      _state.ignoreUpdates = true;
-      _state.ignoreValueChanged = true;
-   }
-}
-
-
-void
-dmz::QtObjectInspector::update_object_uuid (
-      const Handle ObjectHandle,
-      const UUID &Identity,
-      const UUID &PrevIdentity) {
-
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      QtVariantProperty *property = _state.uuidProperty;
-
-      if (!property && _state.variantManagerRO) {
-
-         property =  _state.variantManagerRO->addProperty (QVariant::String, UUIDName);
-         _state.uuidProperty = property;
-         _state.ui.propertyEditor->addProperty (property);
-      }
-
-      if (property) { property->setValue (to_qstring (Identity)); }
-   }
+   QString title = QString ("Object %1 (Destroyed)").arg (to_qstring (_state.handle));
+   setWindowTitle (title);
 }
 
 
 void
 dmz::QtObjectInspector::remove_object_attribute (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
       const Mask &AttrMask) {
 
-}
-
-
-void
-dmz::QtObjectInspector::update_object_locality (
-      const UUID &Identity,
-      const Handle ObjectHandle,
-      const ObjectLocalityEnum Locality,
-      const ObjectLocalityEnum PrevLocality) {
-
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      if (_state.enumManagerRO) {
-
-         QtProperty *property = _state.localityProperty;
-
-         if (!property) {
-
-            property = _state.enumManagerRO->addProperty (LocalityName);
-            _state.localityProperty = property;
-            _state.ui.propertyEditor->addProperty (property);
-
-            QStringList enumNames;
-            enumNames << "Unknown" << "Local" << "Remote";
-            _state.enumManagerRO->setEnumNames (property, enumNames);
-         }
-
-         if (property) {
-
-            _state.enumManagerRO->setValue (property, Locality);
-         }
-      }
-   }
 }
 
 
@@ -388,9 +290,7 @@ dmz::QtObjectInspector::update_link_attribute_object (
       const UUID &SubIdentity,
       const Handle SubHandle,
       const UUID &AttributeIdentity,
-      const Handle AttributeObjectHandle,
-      const UUID &PrevAttributeIdentity,
-      const Handle PrevAttributeObjectHandle) {
+      const Handle AttributeObjectHandle) {
 
 
 }
@@ -398,398 +298,559 @@ dmz::QtObjectInspector::update_link_attribute_object (
 
 void
 dmz::QtObjectInspector::update_object_counter (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Int64 Value,
-      const Int64 *PreviousValue) {
+      const Int64 Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      _state.update_variant_property (
-         CounterName, AttributeHandle, QVariant::Int, Value);
-   }
+   AttributeItem *item = _state.get_item (ObjectAttrCounter, AttributeHandle);
+   if (item) { item->setText (ValueCol, QString::number (Value)); }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_counter_minimum (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Int64 Value,
-      const Int64 *PreviousValue) {
+      const Int64 Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      _state.update_variant_property (
-         CounterMinimumName, AttributeHandle, QVariant::Int, Value);
-   }
+   AttributeItem *item = _state.get_item (ObjectAttrCounterMin, AttributeHandle);
+   if (item) { item->setText (ValueCol, QString::number (Value)); }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_counter_maximum (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Int64 Value,
-      const Int64 *PreviousValue) {
+      const Int64 Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      _state.update_variant_property (
-         CounterMaximumName, AttributeHandle, QVariant::Int, Value);
-   }
+   AttributeItem *item = _state.get_item (ObjectAttrCounterMax, AttributeHandle);
+   if (item) { item->setText (ValueCol, QString::number (Value)); }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_alternate_type (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const ObjectType &Value,
-      const ObjectType *PreviousValue) {
+      const ObjectType &Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      _state.update_variant_property (
-         AlternateTypeName, AttributeHandle, QVariant::String, to_qstring (Value));
-   }
+   AttributeItem *item = _state.get_item (ObjectAttrAltObjectType, AttributeHandle);
+   if (item) { item->setText (ValueCol, to_qstring (Value)); }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_state (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Mask &Value,
-      const Mask *PreviousValue) {
+      const Mask &Value) {
 
-   if ((ObjectHandle == _state.ObjHandle) && !_state.ignoreUpdates) {
-
+   AttributeItem *item = _state.get_item (ObjectAttrState, AttributeHandle);
+   if (item) {
+      
       String name;
       _state.defs.lookup_state_name (Value, name);
-
-      _state.update_variant_property (
-         StateName,
-         AttributeHandle,
-         QVariant::String,
-         QLatin1String (name.get_buffer ()));
+      
+      item->setText (ValueCol, name.get_buffer ());
    }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_flag (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Boolean Value,
-      const Boolean *PreviousValue) {
+      const Boolean Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      _state.update_variant_property (
-         FlagName, AttributeHandle, QVariant::Bool, Value);
+   AttributeItem *item = _state.get_item (ObjectAttrFlag, AttributeHandle);
+   if (item) {
+      
+      item->setCheckState (ValueCol, Value ? Qt::Checked : Qt::Unchecked);
    }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_time_stamp (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Float64 Value,
-      const Float64 *PreviousValue) {
+      const Float64 Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      _state.update_variant_property (
-         TimeStampName, AttributeHandle, QVariant::Double, Value);
-   }
+   AttributeItem *item = _state.get_item (ObjectAttrTimeStamp, AttributeHandle);
+   if (item) { item->setText (ValueCol, QString::number (Value, 'f', 2)); }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_position (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Vector &Value,
-      const Vector *PreviousValue) {
+      const Vector &Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-       _state.update_vector_property (PositionName, AttributeHandle, Value);
-   }
+   AttributeItem *item = _state.get_item (ObjectAttrPosition, AttributeHandle);
+   if (item) { item->set_value (Value); }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_orientation (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Matrix &Value,
-      const Matrix *PreviousValue) {
+      const Matrix &Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-//      _update_vector_property (PositionName, AttributeHandle, Value);
-   }
+   // AttributeItem *item = _state.get_item (ObjectAttrOrientation, AttributeHandle);
+   // if (item) {
+   // 
+   //    QString text = QString ("[%1, %2, %3]")
+   //       .arg (Value.get_x (), 0, 'f', 2)
+   //       .arg (Value.get_y (), 0, 'f', 2)
+   //       .arg (Value.get_z (), 0, 'f', 2);
+   // 
+   //    item->setText (ValueCol, text);
+   // }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_velocity (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Vector &Value,
-      const Vector *PreviousValue) {
+      const Vector &Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      _state.update_vector_property (VelocityName, AttributeHandle, Value);
-   }
+   AttributeItem *item = _state.get_item (ObjectAttrVelocity, AttributeHandle);
+   if (item) { item->set_value (Value); }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_acceleration (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Vector &Value,
-      const Vector *PreviousValue) {
+      const Vector &Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      _state.update_vector_property (AccelerationName, AttributeHandle, Value);
-   }
+   AttributeItem *item = _state.get_item (ObjectAttrVelocity, AttributeHandle);
+   if (item) { item->set_value (Value); }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_scale (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Vector &Value,
-      const Vector *PreviousValue) {
+      const Vector &Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      _state.update_vector_property (ScaleName, AttributeHandle, Value);
-   }
+   AttributeItem *item = _state.get_item (ObjectAttrScale, AttributeHandle);
+   if (item) { item->set_value (Value); }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_vector (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Vector &Value,
-      const Vector *PreviousValue) {
+      const Vector &Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      _state.update_vector_property (VectorName, AttributeHandle, Value);
-   }
+   AttributeItem *item = _state.get_item (ObjectAttrVector, AttributeHandle);
+   if (item) { item->set_value (Value); }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_scalar (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Float64 Value,
-      const Float64 *PreviousValue) {
+      const Float64 Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      _state.update_variant_property (
-         ScalarName, AttributeHandle, QVariant::Double, Value);
-   }
+   AttributeItem *item = _state.get_item (ObjectAttrScalar, AttributeHandle);
+   if (item) { item->setText (ValueCol, QString::number (Value, 'f', 2)); }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_text (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const String &Value,
-      const String *PreviousValue) {
+      const String &Value) {
 
-   if (ObjectHandle ==  _state.ObjHandle && !_state.ignoreUpdates) {
-
-      _state.update_variant_property (
-         TextName,
-         AttributeHandle,
-         QVariant::String,
-         QLatin1String (Value.get_buffer ()));
-   }
+   AttributeItem *item = _state.get_item (ObjectAttrText, AttributeHandle);
+   if (item) { item->setText (ValueCol, Value.get_buffer ()); }
 }
 
 
 void
 dmz::QtObjectInspector::update_object_data (
-      const UUID &Identity,
-      const Handle ObjectHandle,
       const Handle AttributeHandle,
-      const Data &Value,
-      const Data *PreviousValue) {
+      const Data &Value) {
 
 }
 
 
 void
-dmz::QtObjectInspector::_value_changed (QtProperty *property, const QVariant &Value) {
-
-   _state.ignoreUpdates = True;
-
-   ObjectModule *objMod (_state.obs.get_object_module ());
-   if (objMod && !_state.ignoreValueChanged) {
-
-      const QString Group (_state.propertyToGroupMap[property]);
-      const Handle Attr (_state.propertyToHandleMap[property]);
-
-      if (Group == TextName) {
-
-         const String Text (qPrintable (Value.toString ()));
-         objMod->store_text (_state.ObjHandle, Attr, Text);
-      }
-      else if (Group == StateName) {
-
-         Mask state;
-         const String Text (qPrintable (Value.toString ()));
-         if (_state.defs.lookup_state (Text, state)) {
-
-            objMod->store_state (_state.ObjHandle, Attr, state);
-         }
-      }
-      else if (Group == FlagName) {
-
-         objMod->store_flag (_state.ObjHandle, Attr, Value.toBool ());
-      }
-      else if (Group == TimeStampName) {
-
-         objMod->store_time_stamp (_state.ObjHandle, Attr, Value.toDouble ());
-      }
-      else if (Group == ScalarName) {
-
-         objMod->store_scalar (_state.ObjHandle, Attr, Value.toDouble ());
-      }
-      else if (Group == CounterName) {
-
-         objMod->store_counter (_state.ObjHandle, Attr, Value.toLongLong ());
-      }
-      else if (Group == CounterMinimumName) {
-
-         objMod->store_counter_minimum (_state.ObjHandle, Attr, Value.toLongLong ());
-      }
-      else if (Group == CounterMaximumName) {
-
-         objMod->store_counter_maximum (_state.ObjHandle, Attr, Value.toLongLong ());
-      }
-      else if (Group == AlternateTypeName) {
-
-         ObjectType type;
-         const String Text (qPrintable (Value.toString ()));
-         if (_state.defs.lookup_object_type (Text, type)) {
-
-            objMod->store_alternate_object_type (_state.ObjHandle, Attr, type);
-         }
-      }
-   }
-
-   _state.ignoreUpdates = False;
-}
-
-
-void
-dmz::QtObjectInspector::_value_changed (QtProperty *property, const Vector &Value) {
-
-   _state.ignoreUpdates = True;
+dmz::QtObjectInspector::on_treeWidget_itemDoubleClicked (
+      QTreeWidgetItem *item,
+      int column) {
 
    ObjectModule *objMod (_state.obs.get_object_module ());
    if (objMod) {
+      
+      if (item && (column == ValueCol)) {
 
-      const QString Group (_state.propertyToGroupMap[property]);
-      const Handle Attr (_state.propertyToHandleMap[property]);
+         _state.attrHandle = _state.defs.lookup_named_handle (
+            qPrintable (item->text (AttributeCol)));
+            
+         const int Type (item->type () - QTreeWidgetItem::UserType);
 
-      if (Group == PositionName) {
+         switch (Type) {
 
-         objMod->store_position (_state.ObjHandle, Attr, Value);
-      }
-      else if (Group == VelocityName) {
+            case ObjectAttrCounter: {
+               
+               Int64 value (0);
+               if (objMod->lookup_counter (_state.handle, _state.attrHandle, value)) {
+                  
+                  QInputDialog *dialog = new QInputDialog (this);
+                  dialog->setAttribute (Qt::WA_DeleteOnClose);
+                  dialog->setWindowTitle (ObjectAttrName[Type]);
+                  dialog->setLabelText (item->text (AttributeCol));
+                  dialog->setIntRange (-2147483647, 2147483647);
+                  dialog->setIntValue (value);
+                  dialog->open (this, SLOT (_update_object_counter (int)));
+               }
+               
+               break;
+            }
+               
+            case ObjectAttrCounterMin: {
+               Int64 value (0);
+               if (objMod->lookup_counter_minimum (_state.handle, _state.attrHandle, value)) {
+                  
+                  QInputDialog *dialog = new QInputDialog (this);
+                  dialog->setAttribute (Qt::WA_DeleteOnClose);
+                  dialog->setWindowTitle (ObjectAttrName[Type]);
+                  dialog->setLabelText (item->text (AttributeCol));
+                  dialog->setIntRange (-2147483647, 2147483647);
+                  dialog->setIntValue (value);
+                  dialog->open (this, SLOT (_update_object_counter_minimum (int)));
+               }
 
-         objMod->store_velocity (_state.ObjHandle, Attr, Value);
-      }
-      else if (Group == AccelerationName) {
+               break;
+            }
+               
+            case ObjectAttrCounterMax: {
+               Int64 value (0);
+               if (objMod->lookup_counter_maximum (_state.handle, _state.attrHandle, value)) {
+                  
+                  QInputDialog *dialog = new QInputDialog (this);
+                  dialog->setAttribute (Qt::WA_DeleteOnClose);
+                  dialog->setWindowTitle (ObjectAttrName[Type]);
+                  dialog->setLabelText (item->text (AttributeCol));
+                  dialog->setIntRange (-2147483647, 2147483647);
+                  dialog->setIntValue (value);
+                  dialog->open (this, SLOT (_update_object_counter_maximum (int)));
+               }
 
-         objMod->store_acceleration (_state.ObjHandle, Attr, Value);
-      }
-      else if (Group == ScaleName) {
+               break;
+            }
 
-         objMod->store_scale (_state.ObjHandle, Attr, Value);
-      }
-      else if (Group == VectorName) {
+            case ObjectAttrState: {
+               Mask value;
+               if (objMod->lookup_state (_state.handle, _state.attrHandle, value)) {
+                  
+                  String mask;
+                  _state.defs.lookup_state_name (value, mask);
+                  
+                  QtMaskInputDialog *dialog = new QtMaskInputDialog (this);
+                  
+                  connect (
+                     dialog, SIGNAL (maskChanged (const QString &)),
+                     this, SLOT (_update_object_state (const QString &)));
+                     
+                  dialog->setAttribute (Qt::WA_DeleteOnClose);
+                  dialog->setWindowTitle (ObjectAttrName[Type]);
+                  dialog->setLabelText (item->text (AttributeCol));
+                  dialog->setMaskItems (_state.stateNameList);
+                  dialog->setMask (mask.get_buffer ());
 
-         objMod->store_vector (_state.ObjHandle, Attr, Value);
+                  dialog->open ();
+               }
+               
+               break;
+            }
+
+            case ObjectAttrPosition: {
+               Vector value (1.0, 2.0, 3.0);
+               if (objMod->lookup_position (_state.handle, _state.attrHandle, value)) {
+                  
+                  QtVectorInputDialog *dialog = new QtVectorInputDialog (this);
+                  
+                  connect (
+                     dialog, SIGNAL (vectorChanged (const Vector &)),
+                     this, SLOT (_update_object_position (const Vector &)));
+                     
+                  dialog->setAttribute (Qt::WA_DeleteOnClose);
+                  dialog->setWindowTitle (ObjectAttrName[Type]);
+                  dialog->setLabelText (item->text (AttributeCol));
+                  dialog->setVector (value);
+
+                  dialog->open ();
+               }
+            
+               break;
+            }
+            
+            case ObjectAttrVelocity: {
+               Vector value (1.0, 2.0, 3.0);
+               if (objMod->lookup_velocity (_state.handle, _state.attrHandle, value)) {
+               
+                  QtVectorInputDialog *dialog = new QtVectorInputDialog (this);
+               
+                  connect (
+                     dialog, SIGNAL (vectorChanged (const Vector &)),
+                     this, SLOT (_update_object_velocity (const Vector &)));
+                  
+                  dialog->setAttribute (Qt::WA_DeleteOnClose);
+                  dialog->setWindowTitle (ObjectAttrName[Type]);
+                  dialog->setLabelText (item->text (AttributeCol));
+                  dialog->setVector (value);
+
+                  dialog->open ();
+               }
+               
+               break;
+            }
+               
+            case ObjectAttrAcceleration: {
+               Vector value (1.0, 2.0, 3.0);
+               if (objMod->lookup_acceleration (_state.handle, _state.attrHandle, value)) {
+               
+                  QtVectorInputDialog *dialog = new QtVectorInputDialog (this);
+               
+                  connect (
+                     dialog, SIGNAL (vectorChanged (const Vector &)),
+                     this, SLOT (_update_object_acceleration (const Vector &)));
+                  
+                  dialog->setAttribute (Qt::WA_DeleteOnClose);
+                  dialog->setWindowTitle (ObjectAttrName[Type]);
+                  dialog->setLabelText (item->text (AttributeCol));
+                  dialog->setVector (value);
+
+                  dialog->open ();
+               }
+               
+               break;
+            }
+            
+            case ObjectAttrScale: {
+               Vector value (1.0, 2.0, 3.0);
+               if (objMod->lookup_scale (_state.handle, _state.attrHandle, value)) {
+               
+                  QtVectorInputDialog *dialog = new QtVectorInputDialog (this);
+               
+                  connect (
+                     dialog, SIGNAL (vectorChanged (const Vector &)),
+                     this, SLOT (_update_object_scale (const Vector &)));
+                  
+                  dialog->setAttribute (Qt::WA_DeleteOnClose);
+                  dialog->setWindowTitle (ObjectAttrName[Type]);
+                  dialog->setLabelText (item->text (AttributeCol));
+                  dialog->setVector (value);
+
+                  dialog->open ();
+               }
+               
+               break;
+            }
+            
+            case ObjectAttrVector: {
+               Vector value (1.0, 2.0, 3.0);
+               if (objMod->lookup_vector (_state.handle, _state.attrHandle, value)) {
+               
+                  QtVectorInputDialog *dialog = new QtVectorInputDialog (this);
+               
+                  connect (
+                     dialog, SIGNAL (vectorChanged (const Vector &)),
+                     this, SLOT (_update_object_vector (const Vector &)));
+                  
+                  dialog->setAttribute (Qt::WA_DeleteOnClose);
+                  dialog->setWindowTitle (ObjectAttrName[Type]);
+                  dialog->setLabelText (item->text (AttributeCol));
+                  dialog->setVector (value);
+
+                  dialog->open ();
+               }
+               
+               break;
+            }
+
+            case ObjectAttrOrientation: {
+               // Orientation value;
+               // if (objMod->lookup_orientation (_state.handle, _state.attrHandle, value)) {
+               // 
+               // }
+            
+               break;
+            }
+
+            case ObjectAttrScalar: {
+               Float64 value (0.0);
+               if (objMod->lookup_scalar (_state.handle, _state.attrHandle, value)) {
+                  
+                  QInputDialog *dialog = new QInputDialog (this);
+                  dialog->setAttribute (Qt::WA_DeleteOnClose);
+                  dialog->setWindowTitle (ObjectAttrName[Type]);
+                  dialog->setLabelText (item->text (AttributeCol));
+                  dialog->setDoubleRange (-2147483647, 2147483647);
+                  dialog->setDoubleDecimals (4);
+                  dialog->setDoubleValue (value);
+                  dialog->open (this, SLOT (_update_object_scalar (double)));
+               }
+
+               break;
+            }
+
+            case ObjectAttrText: {
+               String value;
+               if (objMod->lookup_text (_state.handle, _state.attrHandle, value)) {
+                  
+                  QInputDialog *dialog = new QInputDialog (this);
+                  dialog->setAttribute (Qt::WA_DeleteOnClose);
+                  dialog->setWindowTitle (ObjectAttrName[Type]);
+                  dialog->setLabelText (item->text (AttributeCol));
+                  dialog->setTextValue (value.get_buffer ());
+                  dialog->open (this, SLOT (_update_object_text (const QString &)));
+               }
+
+               break;
+            }
+
+            default:
+               break;
+         }
       }
    }
+}
 
-   _state.ignoreUpdates = False;
+
+void
+dmz::QtObjectInspector::on_treeWidget_itemChanged (QTreeWidgetItem *item, int column) {
+
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod && item && (column == ValueCol)) {
+      
+      const int Type (item->type () - QTreeWidgetItem::UserType);
+      if (Type == ObjectAttrFlag) {
+         
+         Handle attrHandle = _state.defs.lookup_named_handle (
+            qPrintable (item->text (AttributeCol)));
+         
+         if (_state.handle && attrHandle) {
+
+            Boolean flag (item->checkState (ValueCol) == Qt::Checked ? True : False);
+            objMod->store_flag (_state.handle, attrHandle, flag);
+         }
+      }
+   }
+}
+
+
+void
+dmz::QtObjectInspector::_update_object_counter (int value) {
+ 
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod) { objMod->store_counter (_state.handle, _state.attrHandle, value); }
+}
+
+
+void
+dmz::QtObjectInspector::_update_object_counter_minimum (int value) {
+   
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod) { objMod->store_counter_minimum (_state.handle, _state.attrHandle, value); }
+}
+
+
+void
+dmz::QtObjectInspector::_update_object_counter_maximum (int value) {
+   
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod) { objMod->store_counter_maximum (_state.handle, _state.attrHandle, value); }
+}
+
+
+void
+dmz::QtObjectInspector::_update_object_scalar (double value) {
+   
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod) { objMod->store_scalar (_state.handle, _state.attrHandle, value); }
+}
+
+
+void
+dmz::QtObjectInspector::_update_object_text (const QString &Value) {
+   
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod) { objMod->store_text (_state.handle, _state.attrHandle, qPrintable (Value)); }
+}
+
+
+void
+dmz::QtObjectInspector::_update_object_position (const Vector &Value) {
+   
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod) { objMod->store_position (_state.handle, _state.attrHandle, Value); }
+}
+
+
+void
+dmz::QtObjectInspector::_update_object_velocity (const Vector &Value) {
+   
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod) { objMod->store_velocity (_state.handle, _state.attrHandle, Value); }
+}
+
+
+void
+dmz::QtObjectInspector::_update_object_acceleration (const Vector &Value) {
+   
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod) { objMod->store_acceleration (_state.handle, _state.attrHandle, Value); }
+}
+
+
+void
+dmz::QtObjectInspector::_update_object_scale (const Vector &Value) {
+   
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod) { objMod->store_scale (_state.handle, _state.attrHandle, Value); }
+}
+
+
+void
+dmz::QtObjectInspector::_update_object_vector (const Vector &Value) {
+   
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod) { objMod->store_vector (_state.handle, _state.attrHandle, Value); }
+}
+
+
+void
+dmz::QtObjectInspector::_update_object_state (const QString &Value) {
+   
+   String maskStr (qPrintable (Value));
+   Mask mask;
+   
+   _state.defs.lookup_state (maskStr, mask);
+   
+   ObjectModule *objMod (_state.obs.get_object_module ());
+   if (objMod) { objMod->store_state (_state.handle, _state.attrHandle, mask); }
 }
 
 
 void
 dmz::QtObjectInspector::closeEvent (QCloseEvent *event) {
 
-   Q_EMIT finished (_state.ObjHandle);
+   Q_EMIT finished (_state.handle);
 }
 
 
 void
 dmz::QtObjectInspector::_init () {
 
-   // QString name ("%1-%2");
-   // name.arg (_obs.get_plugin_name ().get_buffer (),  _state.ObjHandle);
-   // setObjectName (name);
-
    _state.ui.setupUi (this);
-
-   _state.groupManager = new QtGroupPropertyManager (this);
-   _state.variantManager = new QtVariantPropertyManager (this);
-   _state.variantManagerRO = new QtVariantPropertyManager (this);
-   _state.enumManager = new QtEnumPropertyManager (this);
-   _state.enumManagerRO = new QtEnumPropertyManager (this);
-   _state.vectorManager = new VectorPropertyManager (this);
-   _state.vectorManagerRO = new VectorPropertyManager (this);
-
-   connect (
-      _state.variantManager, SIGNAL (valueChanged (QtProperty *, const QVariant &)),
-      this, SLOT (_value_changed (QtProperty *, const QVariant &)));
-
-   connect (
-      _state.vectorManager, SIGNAL (valueChanged (QtProperty *, const Vector &)),
-      this, SLOT (_value_changed (QtProperty *, const Vector &)));
-
-   QtVariantEditorFactory *variantFactory = new QtVariantEditorFactory (this);
-   QtEnumEditorFactory *comboBoxFactory = new QtEnumEditorFactory(this);
-   QtDoubleSpinBoxFactory *doubleSpinBoxFactory = new QtDoubleSpinBoxFactory(this);
-
-   _state.ui.propertyEditor->setFactoryForManager ( _state.variantManager, variantFactory);
-   _state.ui.propertyEditor->setFactoryForManager (_state.enumManager, comboBoxFactory);
-
-   _state.ui.propertyEditor->setFactoryForManager (
-      _state.vectorManager->subDoublePropertyManager (), doubleSpinBoxFactory);
+   
+   QStringList labels;
+   labels << "Property" << "Value";
+   _state.ui.treeWidget->setHeaderLabels (labels);
+   
+   QHeaderView *header (_state.ui.treeWidget->header ());
+   if (header) {
+   
+      header->setResizeMode (0, QHeaderView::ResizeToContents);
+      header->setResizeMode (1, QHeaderView::ResizeToContents);
+   }
 }

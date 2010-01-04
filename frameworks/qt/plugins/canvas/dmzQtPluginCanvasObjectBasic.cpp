@@ -17,6 +17,13 @@
 dmz::QtCanvasObjectGroup::QtCanvasObjectGroup (QGraphicsItem *parent) :
       QGraphicsItem (parent) {
 
+#if (QT_VERSION >= QT_VERSION_CHECK(4, 6, 0))
+   setFlag (QGraphicsItem::ItemHasNoContents, true);
+#endif
+
+   setFlag (QGraphicsItem::ItemIgnoresParentOpacity, true);
+   setFlag (QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
+
 //   setHandlesChildEvents (true);
 }
 
@@ -587,6 +594,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
 
             item = _create_image_item (os, group, cd);
             item->setData (QtCanvasObjectHandleIndex, (quint64)os.ObjHandle);
+            
 //item->setFlag (QGraphicsItem::ItemIgnoresTransformations, false);
          }
          else if (DataName == "text") {
@@ -603,6 +611,9 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
 
          if (item) {
 
+            item->setFlag (QGraphicsItem::ItemIgnoresParentOpacity, true);
+            item->setFlag (QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
+            
             item->setZValue (z++);
 
             if (ItemName) {

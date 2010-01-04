@@ -2,7 +2,6 @@
 #include <dmzObjectModule.h>
 #include <dmzQtConfigRead.h>
 #include "dmzQtMaskInputDialog.h"
-#include "dmzQtObjectAttributeEditor.h"
 #include "dmzQtObjectConsts.h"
 #include "dmzQtObjectInspector.h"
 #include <dmzQtUtil.h>

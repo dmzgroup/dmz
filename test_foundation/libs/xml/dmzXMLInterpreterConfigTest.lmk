@@ -1,4 +1,0 @@
-lmk.set_name "dmzXMLInterpreterConfigTest"
-lmk.set_type "exe"
-lmk.add_libs {"dmzXML", "dmzTest", "dmzKernel",}
-lmk.add_files {"dmzXMLInterpreterConfigTest.cpp"}

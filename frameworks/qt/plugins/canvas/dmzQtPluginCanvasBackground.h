@@ -69,7 +69,7 @@ namespace dmz {
          Log _log;
          Undo _undo;
          DataConverterString _dataConverter;
-         ApplicationStateWrapper _appState;
+         ApplicationState _appState;
          QtModuleMainWindow *_mainWindowModule;
          String _mainWindowModuleName;
          QtModuleCanvas *_canvasModule;

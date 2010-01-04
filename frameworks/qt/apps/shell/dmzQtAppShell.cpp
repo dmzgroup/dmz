@@ -1,7 +1,8 @@
 #include <dmzApplication.h>
 #include <dmzApplicationState.h>
 #include <dmzAppShellExt.h>
-#include <dmzCommandLine.h>
+#include <dmzFoundationCommandLine.h>
+#include <dmzFoundationXMLUtil.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
@@ -14,7 +15,6 @@
 #include <dmzSystem.h>
 #include <dmzSystemDynamicLibrary.h>
 #include <dmzSystemFile.h>
-#include <dmzXMLUtil.h>
 #include <QtGui/QtGui>
 #include <time.h>
 

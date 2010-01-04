@@ -1,7 +1,7 @@
-#include <dmzTest.h>
-#include <dmzCommandLine.h>
-#include <dmzCommandLineConfig.h>
+#include <dmzFoundationCommandLine.h>
+#include <dmzFoundationCommandLineConfig.h>
 #include <dmzSystem.h>
+#include <dmzTest.h>
 
 /*!
 

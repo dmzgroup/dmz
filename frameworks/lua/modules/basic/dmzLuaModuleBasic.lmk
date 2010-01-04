@@ -1,8 +1,9 @@
+require "lmkLua"
 lmk.set_name "dmzLuaModuleBasic"
 lmk.set_type "plugin"
 lmk.add_files {"dmzLuaModuleBasic.cpp",}
+lmkLua.add_lib ()
 lmk.add_libs {
-   "lua",
    "dmzKernel",
    "dmzLuaKernel",
 }

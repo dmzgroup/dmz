@@ -1,0 +1,49 @@
+lmk.set_name "dmzFoundation"
+lmk.set_type "shared"
+lmk.add_libs {"dmzKernel", "zip", "expat", "yajl",}
+
+lmk.add_files {
+   "dmzApplicationState.h",
+   "dmzApplication.h",
+   "dmzAppShellExt.h",
+   "dmzFoundationBase64.h",
+   "dmzFoundationCommandLine.h",
+   "dmzFoundationCommandLineConfig.h",
+   "dmzFoundationConfigFileIO.h",
+   "dmzFoundationConsts.h",
+   "dmzFoundationExport.h",
+   "dmzFoundationInterpreterJSONConfig.h",
+   "dmzFoundationInterpreterXMLConfig.h",
+   "dmzFoundationJSONUtil.h",
+   "dmzFoundationParser.h",
+   "dmzFoundationParserJSON.h",
+   "dmzFoundationParserXML.h",
+   "dmzFoundationReaderWriter.h",
+   "dmzFoundationReaderWriterFile.h",
+   "dmzFoundationReaderWriterZip.h",
+   "dmzFoundationStreamZip.h",
+   "dmzFoundationXMLUtil.h",
+}
+
+lmk.add_files {
+   "dmzApplication.cpp",
+   "dmzApplicationStateBasic.cpp",
+   "dmzFoundationBase64.cpp",
+   "dmzFoundationCommandLine.cpp",
+   "dmzFoundationCommandLineConfig.cpp",
+   "dmzFoundationConfigFileIO.cpp",
+   "dmzFoundationInterpreterJSONConfig.cpp",
+   "dmzFoundationInterpreterXMLConfig.cpp",
+   "dmzFoundationJSONUtil.cpp",
+   "dmzFoundationJSONUtilYAJL.cpp",
+   "dmzFoundationParserJSONYAJL.cpp",
+   "dmzFoundationParserXMLExpat.cpp",
+   "dmzFoundationReaderWriterFile.cpp",
+   "dmzFoundationReaderWriterZip.cpp",
+   "dmzFoundationStreamZip.cpp",
+   "dmzFoundationXMLUtil.cpp",
+}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_FOUNDATION_EXPORT",
+}, {win32 = true})

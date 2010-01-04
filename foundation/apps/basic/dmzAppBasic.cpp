@@ -1,5 +1,5 @@
-#include <dmzCommandLine.h>
 #include <dmzApplication.h>
+#include <dmzFoundationCommandLine.h>
 #include <dmzRuntimeLogObserverBasic.h>
 #include <dmzSystem.h>
 #include <dmzSystemDynamicLibrary.h>

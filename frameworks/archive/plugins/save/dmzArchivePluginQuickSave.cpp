@@ -1,5 +1,6 @@
 #include <dmzArchiveModule.h>
 #include "dmzArchivePluginQuickSave.h"
+#include <dmzFoundationXMLUtil.h>
 #include <dmzInputEventKey.h>
 #include <dmzInputEventMasks.h>
 #include <dmzRuntimeConfig.h>
@@ -9,7 +10,6 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamFile.h>
-#include <dmzXMLUtil.h>
 
 /*!
 
@@ -87,8 +87,7 @@ dmz::ArchivePluginQuickSave::receive_key_event (
 
          Config config = _archiveMod->create_archive (_defaultHandle);
 
-         write_xml_header (out);
-         format_config_to_xml (config, out, XMLPrettyPrint);
+         format_config_to_xml (config, out, ConfigPrettyPrint);
 
          _log.info << "Created object dump file: " << _dumpFile << endl;
 

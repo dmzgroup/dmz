@@ -1289,16 +1289,15 @@ PREDEFINED             = DMZ_ARCHIVE_UTIL_LINK_SYMBOL= \
                          DMZ_AUDIO_BASE_LINK_SYMBOL= \
                          DMZ_BOOLEAN_OPERATOR= \
                          DMZ_EVENT_UTIL_LINK_SYMBOL= \
+                         DMZ_FOUNDATION_LINK_SYMBOL= \
                          DMZ_INPUT_UTIL_LINK_SYMBOL= \
                          DMZ_INPUT_EVENTS_LINK_SYMBOL= \
-                         DMZ_JSON_LINK_SYMBOL= \
                          DMZ_KERNEL_LINK_SYMBOL= \
                          DMZ_LUA_KERNEL_LINK_SYMBOL= \
                          DMZ_OBJECT_UTIL_LINK_SYMBOL= \
                          DMZ_RENDER_ISECT_LINK_SYMBOL= \
                          DMZ_RENDER_PORTAL_LINK_SYMBOL= \
-                         DMZ_RENDER_UTIL_LINK_SYMBOL= \
-                         DMZ_XML_LINK_SYMBOL=
+                         DMZ_RENDER_UTIL_LINK_SYMBOL=
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then 
 # this tag can be used to specify a list of macro names that should be expanded. 

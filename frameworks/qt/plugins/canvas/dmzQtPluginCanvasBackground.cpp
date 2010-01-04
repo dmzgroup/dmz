@@ -1,4 +1,5 @@
 #include <dmzArchiveModule.h>
+#include <dmzFoundationBase64.h>
 #include <dmzQtModuleCanvas.h>
 #include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginCanvasBackground.h"
@@ -9,7 +10,6 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamString.h>
-#include <dmzXMLBase64.h>
 #include <QtGui/QtGui>
 
 

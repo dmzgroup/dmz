@@ -165,7 +165,7 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
-         ApplicationStateWrapper _appState;
+         ApplicationState _appState;
          Definitions _defs;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;

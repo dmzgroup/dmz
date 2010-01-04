@@ -8,7 +8,7 @@
 
 */
 
-//! cond
+//! \cond
 struct dmz::StringContainerIterator::State {
 
    HashTableStringIterator it;

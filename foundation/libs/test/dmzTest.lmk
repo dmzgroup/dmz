@@ -1,6 +1,6 @@
 lmk.set_name "dmzTest"
 lmk.set_type "shared"
-lmk.add_libs {"dmzApplication", "dmzKernel",}
+lmk.add_libs {"dmzFoundation", "dmzKernel",}
 
 lmk.add_files {
    "dmzTest.h",

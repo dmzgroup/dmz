@@ -17,7 +17,10 @@
 dmz::QtCanvasObjectGroup::QtCanvasObjectGroup (QGraphicsItem *parent) :
       QGraphicsItem (parent) {
 
+#if (QT_VERSION >= QT_VERSION_CHECK(4, 6, 0))
    setFlag (QGraphicsItem::ItemHasNoContents, true);
+#endif
+
    setFlag (QGraphicsItem::ItemIgnoresParentOpacity, true);
    setFlag (QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
 

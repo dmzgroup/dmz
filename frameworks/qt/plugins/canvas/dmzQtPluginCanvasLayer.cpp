@@ -29,7 +29,10 @@ namespace dmz {
 dmz::QtCanvasLayer::QtCanvasLayer (QGraphicsItem *parent) :
       QGraphicsItem (parent) {
          
-   setFlag (ItemHasNoContents, true);
+#if (QT_VERSION >= QT_VERSION_CHECK(4, 6, 0))
+   setFlag (QGraphicsItem::ItemHasNoContents, true);
+#endif
+
    setFlag (ItemIgnoresParentOpacity, true);
    setFlag (ItemDoesntPropagateOpacityToChildren, true);
 }

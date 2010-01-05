@@ -31,6 +31,6 @@ lmk.add_vars ({
 }, {win32 = false})
 
 lmk.add_vars ({
-   localDefines = "$(lmk.defineFlag)ZLIB_DLL $(lmk.defineFlag)ZLIB_INTERNAL",
+   localDefines = "$(lmk.defineFlag)ZLIB_DLL $(lmk.defineFlag)_CRT_SECURE_NO_WARNINGS $(lmk.defineFlag)WIN32 /DZLIB_INTERNAL",
 }, {win32 = true})
 

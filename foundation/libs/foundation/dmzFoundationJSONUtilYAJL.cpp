@@ -13,33 +13,6 @@ using namespace dmz;
 
 namespace {
 
-void
-local_escape_string (const dmz::String &Value, dmz::String &result) {
-
-   const dmz::Int32 Length (Value.get_length ());
-   const dmz::Int32 NewSize (Length * 2);
-   if (NewSize < result.get_size ()) { result.set_buffer (0, NewSize); }
-
-   const char *Buffer (Value.get_buffer ());
-
-   if (Buffer && Length) {
-
-      char charArray[2] = { '\0', '\0' };
-
-      for (dmz::Int32 ix = 0; ix < Length; ix++) {
-
-         const char C = Buffer[ix];
-
-         if (C == '"') { result << "\\\""; }
-         else if (C == '\'') { result << "\\'"; }
-         else if (C == '\\') { result << "\\\\"; }
-         else { charArray[0] = C; result << charArray; }
-      }
-   }
-   else { result << ""; }
-}
-
-
 static inline Boolean
 local_flush (yajl_gen gen, Stream &stream) {
 
@@ -86,6 +59,35 @@ local_write_string (yajl_gen gen, const String &Str, Log *log) {
 }
 
 
+static inline Boolean
+local_write_value (yajl_gen gen, const String &Value, Log *log) {
+
+   Boolean result (False);
+
+   if (json_is_number (Value)) {
+
+      result = local_ok (
+         yajl_gen_number (
+            gen,
+            Value.get_buffer (),
+            (unsigned int)Value.get_length ()));
+   }
+   else {
+
+      if (Value.get_length ()) {
+
+         result = local_ok (yajl_gen_string (
+            gen,
+            (const unsigned char *)Value.get_buffer (),
+            (unsigned int)Value.get_length ()));
+      }
+      else { result = local_ok (yajl_gen_null (gen)); }
+   }
+
+   return result;
+}
+
+
 static void *TableValue ((void *)1);
 
 static Boolean
@@ -93,7 +95,7 @@ local_write_config (yajl_gen gen, Stream &stream, const Config &Data, Log *log) 
 
    Boolean result (True);
 
-   result - local_ok (yajl_gen_map_open (gen));
+   result = local_ok (yajl_gen_map_open (gen));
 
    ConfigIterator it;
    String name;
@@ -104,26 +106,7 @@ local_write_config (yajl_gen gen, Stream &stream, const Config &Data, Log *log) 
       if (local_is_unique (Data, name)) {
 
          local_write_string (gen, name, log);
-
-         if (json_is_number (value)) {
-
-            result = local_ok (
-               yajl_gen_number (
-                  gen,
-                  value.get_buffer (),
-                  (unsigned int)value.get_length ()));
-         }
-         else {
-
-            if (value.get_length ()) {
-
-               result = local_ok (yajl_gen_string (
-                  gen,
-                  (const unsigned char *)value.get_buffer (),
-                  (unsigned int)value.get_length ()));
-            }
-            else { result = local_ok (yajl_gen_null (gen)); }
-         }
+         result = local_write_value (gen, value, log);
       }
       else if (log) {
 
@@ -169,10 +152,36 @@ local_write_config (yajl_gen gen, Stream &stream, const Config &Data, Log *log) 
 
             ConfigIterator git;
             Config obj;
+            String tmp;
 
-            while (group.get_next_config (git, obj) && result) {
+            Boolean singleValue = True;
 
-               result = local_write_config (gen, stream, obj, log);
+            while (group.get_next_config (git, obj) && singleValue) {
+
+               if ((obj.get_config_count () != 0) || (obj.get_attribute_count () != 1) ||
+                     !obj.lookup_attribute ("value", tmp)) { singleValue = False; }
+            }
+
+            git.reset ();
+
+            if (singleValue) {
+
+               String value;
+
+               while (group.get_next_config (git, obj) && result) {
+
+                  value.flush ();
+                  obj.lookup_attribute ("value", value);
+
+                  result = local_write_value (gen, value, log);
+               }
+            }
+            else {
+
+               while (group.get_next_config (git, obj) && result) {
+
+                  result = local_write_config (gen, stream, obj, log);
+               }
             }
 
             result = local_ok (yajl_gen_array_close (gen));
@@ -224,37 +233,20 @@ dmz::format_config_to_json (
 
       if (Mode & ConfigStripGlobal) {
 
-         Boolean isArray (False);
-
-         ConfigIterator it;
-         Config data;
-         Config merged;
-
-         if (Data.get_first_config (it, data)) {
-
-            isArray = data.is_in_array ();
-            Config tmp (data.get_name ());
-            merged = tmp;
-         }
-
-         it.reset ();
-
-         if (isArray) { yajl_gen_array_open (gen); }
-
-         while (Data.get_next_config (it, data)) {
-
-            merged.copy_attributes (data);
-            merged.add_children (data);
-         }
-
-         result = local_write_config (gen, stream, merged, log);
-
-         if (isArray) { yajl_gen_array_close (gen); }
+         result = local_write_config (gen, stream, Data, log);
       }
       else {
 
          yajl_gen_map_open (gen);
-         result = local_write_config (gen, stream, Data, log);
+
+         if (Data.get_name ()) {
+
+            local_write_string (gen, Data.get_name (), log);
+            yajl_gen_map_open (gen);
+            result = local_write_config (gen, stream, Data, log);
+            yajl_gen_map_close (gen);
+         }
+
          yajl_gen_map_close (gen);
       }
 

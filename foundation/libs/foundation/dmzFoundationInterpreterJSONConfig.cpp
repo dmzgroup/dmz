@@ -40,12 +40,9 @@ struct dmz::InterpreterJSONConfig::State {
 
    String error;
    Stack *stack;
+   Config root;
 
-   State (const Config &RootConfig) : stack (0) {
-
-      stack = new Stack (RootConfig);
-      if (stack) { stack->name = "dmz"; }
-   }
+   State (const Config &RootConfig) : stack (0), root (RootConfig) {;}
 
    ~State () {
 
@@ -169,6 +166,7 @@ dmz::InterpreterJSONConfig::interpret_start_map () {
          _state.stack = next;
       }
    }
+   else { _state.stack = new Stack (_state.root); }
 
    return True;
 }
@@ -196,6 +194,8 @@ dmz::InterpreterJSONConfig::interpret_end_map () {
 
 dmz::Boolean
 dmz::InterpreterJSONConfig::interpret_start_array () {
+
+   if (!_state.stack) { _state.stack = new Stack (_state.root); }
 
    if (_state.stack) { _state.stack->inArray = True; }
 

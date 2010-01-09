@@ -19,6 +19,8 @@ main (int argc, char *argv[]) {
 
    Q_INIT_RESOURCE (dmzAppQt);
 
+//   QCoreApplication::setAttribute (Qt::AA_MacPluginApplication);
+
    QApplication qtApp (argc, argv);
 
    Application app ("dmzAppQt", "dmz");

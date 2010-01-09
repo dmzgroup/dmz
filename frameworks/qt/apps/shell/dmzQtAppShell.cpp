@@ -114,11 +114,9 @@ local_find_working_dir (const Application &App) {
 
       CFURLRef pluginRef = CFBundleCopyBundleURL (CFBundleGetMainBundle ());
 
-      CFStringRef macPath =
-      CFURLCopyFileSystemPath (pluginRef, kCFURLPOSIXPathStyle);
+      CFStringRef macPath = CFURLCopyFileSystemPath (pluginRef, kCFURLPOSIXPathStyle);
 
-      result =
-         CFStringGetCStringPtr (macPath, CFStringGetSystemEncoding ());
+      result = CFStringGetCStringPtr (macPath, CFStringGetSystemEncoding ());
 
       if (result) {
 
@@ -373,6 +371,8 @@ main (int argc, char *argv[]) {
 
    String path, name, ext;
    split_path_file_ext (argv[0], path, name, ext);
+
+   //QCoreApplication::setAttribute (Qt::AA_MacPluginApplication);
 
    Application app (name.get_lower (), OrganizationName);
 

@@ -118,7 +118,8 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
 
    _ui.setupUi (this);
 
-#ifdef Q_WS_MAC
+#if 0
+   // Not working.
    _menuBar = new QMenuBar;
    _menuBar->setObjectName (objectName () + QLatin1String ("MainMenu"));
    setMenuBar (_menuBar);

@@ -1,29 +1,7 @@
 #include <dmzRuntimeDataConverters.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginInfo.h>
-
-using namespace dmz;
-
-namespace {
-
-struct CommonStruct {
-
-   Handle handle;
-
-   Handle set_handle (const String &HandleName, RuntimeContext *context) {
-
-      Definitions defs (context);
-
-      handle = defs.create_named_handle (HandleName);
-
-      return handle;
-   }
-
-   CommonStruct () : handle (0) {;}
-};
-
-};
-
+#include "dmzRuntimeDataConverterCommon.h"
 /*!
 
 \class dmz::DataConverterBoolean
@@ -34,7 +12,7 @@ a simple way to package a string into a Data object and then extract that Boolea
 
 */
 
-struct dmz::DataConverterBoolean::State : public CommonStruct {
+struct dmz::DataConverterBoolean::State : public DataConverterCommonStruct {
 
    State (RuntimeContext *context) {
 
@@ -154,7 +132,7 @@ a simple way to package a string into a Data object and then extract that String
 
 */
 
-struct dmz::DataConverterString::State : public CommonStruct {
+struct dmz::DataConverterString::State : public DataConverterCommonStruct {
 
    State (RuntimeContext *context)  {
 
@@ -291,7 +269,7 @@ object and then extract that Handle.
 
 */
 
-struct dmz::DataConverterHandle::State : public CommonStruct {
+struct dmz::DataConverterHandle::State : public DataConverterCommonStruct {
 
    State (RuntimeContext *context) { set_handle ("handle", context); }
 };

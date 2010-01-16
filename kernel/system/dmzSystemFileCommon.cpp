@@ -5,6 +5,7 @@
 /*!
 
 \file dmzSystemFile.h
+\ingroup System
 \brief Contains basic file system functions.
 
 \class dmz::PushDirectory
@@ -19,6 +20,7 @@ Defined in dmzSystemFile.h.
 /*!
 
 \brief Validates all paths.
+\ingroup System
 \details Defined in dmzSystemFile.h.
 \param[in] Container dmz::StringContainer of the paths to be validated.
 \return Returns a dmz::StringContainer with the absolute path for all valid
@@ -50,6 +52,7 @@ dmz::validate_path_container (const StringContainer &Container) {
 /*!
 
 \brief Finds file on file system.
+\ingroup System
 \details Defined in dmzSystemFile.h.
 This function takes three steps to locate the file. First it attempts to validate the
 file as it is passed in. If the file is not found. All leading path information is
@@ -123,6 +126,7 @@ dmz::find_file (
 /*!
 
 \brief Converts back slashes to forward slashes.
+\ingroup System
 \details Defined in dmzSystemFile.h.
 This function converts all back slashes to forward slashes and then converts
 multiple forward slashes into a single forward slash. The one exception is that
@@ -155,6 +159,7 @@ dmz::format_path (const String &Path) {
 /*!
 
 \brief Splits a path into the directory, file name, and file extension.
+\ingroup System
 \details Defined in dmzSystemFile.h.
 The \a FullPath is formatted before processing. The file extension is returned with
 the leading period. If either a path or extension is not found in the \a FullPath,
@@ -226,6 +231,7 @@ dmz::split_path_file_ext (
 /*!
 
 \brief Read a block of data and store it in a String.
+\ingroup System
 \details Defined in dmzSystemFile.h.
 Attempts to read \a Size number of bytes from \a File and store them in \a buffer.
 \param[in] File C FILE * to read from.
@@ -251,6 +257,7 @@ dmz::read_file (const FILE *File, const Int32 Size, char *buffer) {
 /*!
 
 \brief Read a block of data and store it in a String.
+\ingroup System
 \details Defined in dmzSystemFile.h.
 Attempts to read \a Size number of bytes from \a File and store them in \a buffer.
 \param[in] File C FILE * to read from.
@@ -282,6 +289,7 @@ dmz::read_file (const FILE *File, const Int32 Size, String &buffer) {
 /*!
 
 \brief Wrapper around Standard C fclose function.
+\ingroup System
 \details Defined in dmzSystemFile.h.
 
 */

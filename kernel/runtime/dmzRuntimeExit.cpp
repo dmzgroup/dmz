@@ -20,6 +20,15 @@
 \brief Exit status enumerations.
 \details Defined in dmzRuntimeExit.h.
 
+\var dmz::ExitStatusEnum dmz::ExitStatusError
+\brief Exit requested due to error condition.
+
+\var dmz::ExitStatusEnum dmz::ExitStatusNormal
+\brief Standard exit requested.
+
+\var dmz::ExitStatusEnum dmz::ExitStatusForced
+\brief Forced exit requested.
+
 */
 
 namespace {

@@ -78,9 +78,9 @@ const dmz::Int64 dmz::MaxInt64 = LLONG_MAX;
 //! Maximum UInt64 Value
 const dmz::UInt64 dmz::MaxUInt64 = ULLONG_MAX;
 
-//! Constant true value.
-const dmz::Boolean dmz::False = false;
 //! Constant false value.
+const dmz::Boolean dmz::False = false;
+//! Constant true value.
 const dmz::Boolean dmz::True = true;
 
 //! Auto grow mask used by hash tables.

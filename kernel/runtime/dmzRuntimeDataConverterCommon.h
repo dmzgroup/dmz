@@ -3,6 +3,7 @@
 
 namespace dmz {
 
+//! \cond
 struct DataConverterCommonStruct {
 
    Handle handle;
@@ -18,6 +19,7 @@ struct DataConverterCommonStruct {
 
     DataConverterCommonStruct () : handle (0) {;}
 };
+//! \endcond
 
 };
 

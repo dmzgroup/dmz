@@ -256,7 +256,7 @@ dmz::ApplicationiPhone::load_session () {
  
  */
 dmz::Boolean
-dmz::ApplicationiPhone::load_config (const PathContainer &Files) {
+dmz::ApplicationiPhone::load_config (const StringContainer &Files) {
 
    String file;
    _state.error = False;

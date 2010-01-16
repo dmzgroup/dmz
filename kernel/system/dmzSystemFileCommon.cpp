@@ -2,36 +2,6 @@
 #include <dmzTypesHashTableStringTemplate.h>
 #include <stdio.h>
 
-//! \cond
-struct dmz::PathContainerIterator::State {
-
-   dmz::HashTableStringIterator it;
-};
-//! \endcond
-
-
-/*!
-
-\class dmz::PathContainerIterator
-\ingroup System
-\brief Iterator used to traverse a PathContainer.
-
-*/
-
-
-//! Constructor.
-dmz::PathContainerIterator::PathContainerIterator () : state (*(new State)) {;}
-
-
-//! Destructor.
-dmz::PathContainerIterator::~PathContainerIterator () { delete &state; }
-
-
-//! Resets iterator.
-void
-dmz::PathContainerIterator::reset () { state.it.reset (); }
-
-
 /*!
 
 \file dmzSystemFile.h
@@ -46,205 +16,19 @@ Defined in dmzSystemFile.h.
 
 */
 
-struct dmz::PathContainer::State {
-
-   dmz::HashTableStringTemplate<String> paths;
-   dmz::HashTableStringIterator it;
-   ~State () { paths.empty (); }
-};
-
-/*!
-
-\class dmz::PathContainer
-\ingroup System
-\brief Container class for storing Strings containing paths.
-\details Defined in dmzSystemFile.h.
-
-*/
-
-//! Base constructor.
-dmz::PathContainer::PathContainer () : _state (*(new State)) {;}
-
-
-//! Copy constructor.
-dmz::PathContainer::PathContainer (const PathContainer &Container) :
-      _state (*(new State)) {
-
-   *this = Container;
-}
-
-
-//! Destructor.
-dmz::PathContainer::~PathContainer () { delete &_state; }
-
-
-/*!
-
-\brief Assignment operator.
-\param[in] Container PathContainer to copy.
-\return Returns reference to self.
-
-*/
-dmz::PathContainer &
-dmz::PathContainer::operator= (const PathContainer &Container) {
-
-   _state.paths.copy (Container._state.paths);
-
-   return *this;
-}
-
-
-//! Empties container.
-void
-dmz::PathContainer::empty () { _state.paths.empty (); }
-
-
-/*!
-
-\brief Adds \a Path to list.
-\details Appends path to end of the path list stored in the container.
-\param[in] Path String containing path to be added.
-
-*/
-void
-dmz::PathContainer::add_path (const String &Path) {
-
-   if (!_state.paths.lookup (Path)) {
-
-      _state.paths.store (Path, new String (Path));
-   }
-}
-
-
-/*!
-
-\brief Get number of paths stored in container.
-\return Returns the number of paths stored in the container.
-*/
-dmz::Int32
-dmz::PathContainer::get_count () const { return _state.paths.get_count (); }
-
-
-/*!
-
-\brief Gets first \a path stored in container.
-\param[out] path String containing first path in the list.
-\return Returns dmz::True if a value is stored in \a path.
-
-*/
-dmz::Boolean
-dmz::PathContainer::get_first (String &path) const {
-
-   Boolean result (False);
-   String *ptr =  _state.paths.get_first (_state.it);
-   if (ptr) { path.flush () << *ptr; result = True; }
-   return result;
-}
-
-
-/*!
-
-\brief Gets next \a path stored in container.
-\param[out] path String containing next path in the list.
-\return Returns dmz::True if a value is stored in \a path.
-
-*/
-dmz::Boolean
-dmz::PathContainer::get_next (String &path) const {
-
-   Boolean result (False);
-   String *ptr =  _state.paths.get_next (_state.it);
-   if (ptr) { path.flush () << *ptr; result = True; }
-   return result;
-}
-
-
-/*!
-
-\brief Gets first \a path stored in container.
-\param[in] it PathContainerIterator used to iterate over the container.
-\param[out] path String containing first path in the list.
-\return Returns dmz::True if a value is stored in \a path.
-
-*/
-dmz::Boolean
-dmz::PathContainer::get_first (PathContainerIterator &it, String &path) const {
-
-   it.state.it.reset ();
-   return get_next (it, path);
-}
-
-
-/*!
-
-\brief Gets next \a path stored in container.
-\param[in] it PathContainerIterator used to iterate over the container.
-\param[out] path String containing first path in the list.
-\return Returns dmz::True if a value was returned. Returns dmz::False if there are no
-more paths to return.
-
-*/
-dmz::Boolean
-dmz::PathContainer::get_next (PathContainerIterator &it, String &path) const {
-
-   Boolean result (False);
-   String *ptr =  _state.paths.get_next (it.state.it);
-   if (ptr) { path.flush () << *ptr; result = True; }
-   return result;
-}
-
-
-/*!
-
-\brief Gets previous \a path stored in container.
-\param[in] it PathContainerIterator used to iterate over the container.
-\param[out] path String containing first path in the list.
-\return Returns dmz::True if a value was returned. Returns dmz::False if there are no
-more paths to return.
-
-*/
-dmz::Boolean
-dmz::PathContainer::get_prev (PathContainerIterator &it, String &path) const {
-
-   Boolean result (False);
-   String *ptr =  _state.paths.get_prev (it.state.it);
-   if (ptr) { path.flush () << *ptr; result = True; }
-   return result;
-}
-
-
-/*!
-
-\brief Gets last \a path stored in container.
-\param[in] it PathContainerIterator used to iterate over the container.
-\param[out] path String containing first path in the list.
-\return Returns dmz::True if a value is stored in \a path.
-
-*/
-dmz::Boolean
-dmz::PathContainer::get_last (PathContainerIterator &it, String &path) const {
-
-   it.state.it.reset ();
-   return get_prev (it, path);
-}
-
-
-//! \addtogroup System
-//! @{
-
 /*!
 
 \brief Validates all paths.
 \details Defined in dmzSystemFile.h.
-\param[in] Container dmz::PathContainer of the paths to be validated.
-\return Returns a dmz::PathContainer with the absolute path for all valid
+\param[in] Container dmz::StringContainer of the paths to be validated.
+\return Returns a dmz::StringContainer with the absolute path for all valid
 paths in \a Container.
 
 */
-dmz::PathContainer
-dmz::validate_path_container (const PathContainer &Container) {
+dmz::StringContainer
+dmz::validate_path_container (const StringContainer &Container) {
 
-   PathContainer result;
+   StringContainer result;
 
    String path;
 
@@ -254,7 +38,7 @@ dmz::validate_path_container (const PathContainer &Container) {
 
       const String CleanPath (format_path (path));
 
-      if (get_absolute_path (CleanPath, path)) { result.add_path (path); }
+      if (get_absolute_path (CleanPath, path)) { result.append (path); }
 
       found = Container.get_next (path);
    }
@@ -269,10 +53,10 @@ dmz::validate_path_container (const PathContainer &Container) {
 \details Defined in dmzSystemFile.h.
 This function takes three steps to locate the file. First it attempts to validate the
 file as it is passed in. If the file is not found. All leading path information is
-stripped from the file and then each path in the PathContainer is used to try
-and locate the file. If the file is not found, each path in the PathContainer is
+stripped from the file and then each path in the StringContainer is used to try
+and locate the file. If the file is not found, each path in the StringContainer is
 searched with out the leading path information stripped from the \a FileName.
-\param[in] Container PathContainer with list of paths to use in the file search.
+\param[in] Container StringContainer with list of paths to use in the file search.
 \param[in] FileName String containing the name of the file to search for.
 \param[out] foundFile String containing the absolute path to the found file.
 \return Returns dmz::True if the file is found.
@@ -280,7 +64,7 @@ searched with out the leading path information stripped from the \a FileName.
 */
 dmz::Boolean
 dmz::find_file (
-      const PathContainer &Container,
+      const StringContainer &Container,
       const String &FileName,
       String &foundFile) {
 

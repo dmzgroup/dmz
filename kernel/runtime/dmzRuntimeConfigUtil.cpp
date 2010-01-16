@@ -6,7 +6,6 @@
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfigToMatrix.h>
 #include <dmzRuntimeConfigToNamedHandle.h>
-#include <dmzRuntimeConfigToPathContainer.h>
 #include <dmzRuntimeConfigToState.h>
 #include <dmzRuntimeConfigToStringContainer.h>
 #include <dmzRuntimeConfigToVector.h>
@@ -16,6 +15,7 @@
 #include <dmzTypesBase.h>
 #include <dmzTypesMatrix.h>
 #include <dmzTypesString.h>
+#include <dmzTypesStringContainer.h>
 #include <dmzTypesVector.h>
 
 /*!
@@ -460,11 +460,11 @@ dmz::config_to_state (
 
 /*!
 
-\fn dmz::PathContainer dmz::config_to_path_container (const dmz::Config &Source)
-\brief Converts Config to a PathContainer.
-\details Defined in dmzRuntimeConfigToPathContainer.h.
+\fn dmz::StringContainer dmz::config_to_path_string_container (const dmz::Config &Source)
+\brief Converts Config to a StringContainer.
+\details Defined in dmzRuntimeConfigToStringContainer.h.
 \code
-dmz::PathContainer value = dmz::config_to_path_container (global);
+dmz::StringContainer value = dmz::config_to_path_container (global);
 \endcode
 The Config for the above example would be formatted as follows:
 \code
@@ -472,50 +472,9 @@ The Config for the above example would be formatted as follows:
 <path value="/a/path/of/another/sort"/>
 \endcode
 \param[in] Source Config containing config context to convert.
-\return Returns dmz::PathContainer of the path values.
+\return Returns dmz::StringContainer of the path values.
 
 */
-
-/*!
-
-\brief Converts Config to a PathContainer.
-\details Defined in dmzRuntimeConfigToPathContainer.h.
-\code
-dmz::PathContainer value = dmz::config_to_path_container ("dmz.path", global);
-\endcode
-The Config for the above example would be formatted as follows:
-\code
-<dmz>
-   <path value="/a/path/of/some/sort"/>
-   <path value="/a/path/of/another/sort"/>
-</dmz>
-\endcode
-\param[in] Name String containing name of config context to convert.
-\param[in] Source Config containing config context to convert.
-\return Returns dmz::PathContainer of the path values.
-
-*/
-dmz::PathContainer
-dmz::config_to_path_container (const String &Name, const Config &Source) {
-
-   PathContainer result;
-
-   Config pathList;
-
-   if (Name) { Source.lookup_all_config (Name, pathList); }
-   else { Source.lookup_all_config ("path", pathList); }
-
-   ConfigIterator it;
-   Config path;
-
-   while (pathList.get_next_config (it, path)) {
-
-      result.add_path (config_to_string ("value", path));
-   }
-
-   return result;
-}
-
 
 /*!
 
@@ -569,7 +528,7 @@ dmz::config_to_string_container (const String &Name, const Config &Source) {
 
    while (stringList.get_next_config (it, string)) {
 
-      result.add_string (config_to_string ("value", string));
+      result.append (config_to_string ("value", string));
    }
 
    return result;

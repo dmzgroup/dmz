@@ -176,7 +176,7 @@ dmz::ArchiveObserverUtil::init_archive_scope (const Config &Init) {
 void
 dmz::ArchiveObserverUtil::add_archive_scope (const String &Scope) {
 
-   __state.scope.add_string (Scope);
+   __state.scope.append (Scope);
 }
 
 
@@ -329,7 +329,7 @@ dmz::ArchiveObserverUtil::get_archive_scope (const Handle ArchiveHandle) {
    StringContainer result;
 
    if (__state.scope.get_count () != 0) { result = __state.scope; }
-   else { result.add_string (get_archive_observer_name ()); }
+   else { result.append (get_archive_observer_name ()); }
 
    return result;
 }

@@ -2,6 +2,7 @@
 #define DMZ_RUNTIME_RESOURCES_DOT_H
 
 #include <dmzKernelExport.h>
+#include <dmzSystemFile.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
 
@@ -9,7 +10,6 @@ namespace dmz {
 
    class Config;
    class Log;
-   class PathContainer;
    class PluginInfo;
    class RuntimeContext;
    class RuntimeContextResources;
@@ -37,11 +37,11 @@ namespace dmz {
 
          Boolean store_search_path (
             const String &SearchPathName,
-            const PathContainer &SearchPath);
+            const StringContainer &SearchPath);
 
          Boolean lookup_search_path (
             const String &SearchPathName,
-            PathContainer &searchPath) const;
+            StringContainer &searchPath) const;
 
          Boolean remove_search_path (const String &SearchPathName);
 

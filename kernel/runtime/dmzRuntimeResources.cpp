@@ -95,10 +95,10 @@ dmz::Resources::find_file (const String &ResourceName) const {
 
       if (rc) {
 
-         PathContainer searchPath;
+         StringContainer searchPath;
          const String FileName = config_to_string ("file", *rc);
          const String PathName = config_to_string ("path", *rc);
-         PathContainer *path = _context->pathTable.lookup (PathName);
+         StringContainer *path = _context->pathTable.lookup (PathName);
          if (path) { searchPath = *path; }
 
          if (!dmz::find_file (searchPath, FileName, result) && _log) {
@@ -207,7 +207,7 @@ dmz::Resources::remove_resource_config (const String &ResourceName) {
 \details Existing search paths can not be overwritten. They must be removed first before
 a new search path with the same name may be stored.
 \param[in] SearchPathName String containing the name of the search path.
-\param[in] SearchPath PathContainer containing the search paths to store.
+\param[in] SearchPath StringContainer containing the search paths to store.
 \return Returns dmz::True if the search path was stored. Will return dmz::False
 if there is already a search path with the same name.
 
@@ -215,13 +215,13 @@ if there is already a search path with the same name.
 dmz::Boolean
 dmz::Resources::store_search_path (
       const String &SearchPathName,
-      const PathContainer &SearchPath) {
+      const StringContainer &SearchPath) {
 
    Boolean result (False);
 
    if (_context) {
 
-      PathContainer *pc = new PathContainer (SearchPath);
+      StringContainer *pc = new StringContainer (SearchPath);
 
       result = _context->pathTable.store (SearchPathName, pc);
 
@@ -236,20 +236,20 @@ dmz::Resources::store_search_path (
 
 \brief Lookup a search path.
 \param[in] SearchPathName String containing the name of the search path.
-\param[out] searchPath PathContainer used to return the found search path.
+\param[out] searchPath StringContainer used to return the found search path.
 \return Returns dmz::True if the named search path was found.
 
 */
 dmz::Boolean
 dmz::Resources::lookup_search_path (
       const String &SearchPathName,
-      PathContainer &searchPath) const {
+      StringContainer &searchPath) const {
 
    Boolean result (False);
 
    if (_context) {
 
-      PathContainer *pc = _context->pathTable.lookup (SearchPathName);
+      StringContainer *pc = _context->pathTable.lookup (SearchPathName);
 
       if (pc) { searchPath = *pc; result = True; }
    }
@@ -272,7 +272,7 @@ dmz::Resources::remove_search_path (const String &SearchPathName) {
 
    if (_context) {
 
-      PathContainer *pc = _context->pathTable.remove (SearchPathName);
+      StringContainer *pc = _context->pathTable.remove (SearchPathName);
 
       if (pc) { delete pc; pc = 0; result = True; }
    }

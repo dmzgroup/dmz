@@ -7,7 +7,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeLoadPlugins.h>
-#include <dmzRuntimeConfigToPathContainer.h>
+#include <dmzRuntimeConfigToStringContainer.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzSystem.h>
@@ -212,7 +212,7 @@ dmz::LuaModuleBasic::update_time_slice (const Float64 DeltaTime) {
 void
 dmz::LuaModuleBasic::add_lua_path (const String &Path) {
 
-   _luaPaths.add_path (Path);
+   _luaPaths.append (Path);
    _add_lua_paths ();
 }
 
@@ -976,7 +976,7 @@ dmz::LuaModuleBasic::_init (Config &local, Config &global) {
    _exitOnError = config_to_boolean ("error.exit", local, _exitOnError);
    _startOptimizer = config_to_boolean ("optimizer.start", local, _startOptimizer);
 
-   _luaPaths = config_to_path_container (local);
+   _luaPaths = config_to_path_string_container (local);
 
    Config pluginList;
 

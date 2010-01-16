@@ -4,53 +4,10 @@
 #include <dmzKernelExport.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
+#include <dmzTypesStringContainer.h>
 #include <stdio.h> // For FILE
 
 namespace dmz {
-
-   class DMZ_KERNEL_LINK_SYMBOL PathContainerIterator {
-
-      public:
-         PathContainerIterator ();
-         ~PathContainerIterator ();
-
-         void reset ();
-
-         //! \cond
-         struct State;
-         State &state;
-         //! \endcond
-   };
-
-   class DMZ_KERNEL_LINK_SYMBOL PathContainer {
-
-      public:
-         PathContainer ();
-         PathContainer (const PathContainer &Container);
-         ~PathContainer ();
-
-         PathContainer &operator= (const PathContainer &Container);
-
-         void empty ();
-         void add_path (const String &Path);
-
-         Int32 get_count () const;
-         Boolean get_first (String &path) const;
-         Boolean get_next (String &path) const;
-
-         Boolean get_first (PathContainerIterator &it, String &path) const;
-         Boolean get_next (PathContainerIterator &it, String &path) const;
-         Boolean get_prev (PathContainerIterator &it, String &path) const;
-         Boolean get_last (PathContainerIterator &it, String &path) const;
-
-      protected:
-         //! \cond
-         struct State;
-         State &_state;
-         //! \endcond
-
-      private:
-   };
 
    class PushDirectory {
 
@@ -71,11 +28,11 @@ namespace dmz {
          PushDirectory &operator= (const PushDirectory &);
    };
 
-   DMZ_KERNEL_LINK_SYMBOL PathContainer validate_path_container (
-      const PathContainer &Container);
+   DMZ_KERNEL_LINK_SYMBOL StringContainer validate_path_container (
+      const StringContainer &Container);
 
    DMZ_KERNEL_LINK_SYMBOL Boolean find_file (
-      const PathContainer &Container,
+      const StringContainer &Container,
       const String &FileName,
       String &foundFile);
 
@@ -89,11 +46,11 @@ namespace dmz {
 
    DMZ_KERNEL_LINK_SYMBOL Boolean get_file_list (
       const String &Path,
-      PathContainer &container);
+      StringContainer &container);
 
    DMZ_KERNEL_LINK_SYMBOL Boolean get_directory_list (
       const String &Path,
-      PathContainer &container);
+      StringContainer &container);
 
    DMZ_KERNEL_LINK_SYMBOL Boolean is_valid_path (const String &Path);
    DMZ_KERNEL_LINK_SYMBOL Boolean is_directory (const String &Path);

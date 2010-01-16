@@ -554,7 +554,7 @@ dmz::QtPluginMapProperties::_update_cache_info () {
       Int64 count (0);
 
       String file;
-      PathContainer fileList;
+      StringContainer fileList;
 
       if (get_file_list (CacheDir, fileList)) {
       

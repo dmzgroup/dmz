@@ -17,7 +17,7 @@ namespace dmz {
          RuntimeContextResources () {;}
 
          HashTableStringTemplate<Config> rcTable;
-         HashTableStringTemplate<PathContainer> pathTable;
+         HashTableStringTemplate<StringContainer> pathTable;
 
       private:
          ~RuntimeContextResources ();

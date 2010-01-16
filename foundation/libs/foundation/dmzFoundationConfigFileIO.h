@@ -8,7 +8,7 @@ namespace dmz {
 
 class Config;
 class Log;
-class PathContainer;
+class StringContainer;
 
 const UInt32 FileTypeAutoDetect = 0;
 const UInt32 FileTypeXML = 1;
@@ -32,7 +32,7 @@ read_config_file (
 DMZ_FOUNDATION_LINK_SYMBOL Boolean
 read_config_files (
    const String &ArchiveName,
-   const PathContainer &Files,
+   const StringContainer &Files,
    Config &data,
    const UInt32 Type = FileTypeAutoDetect,
    Log *log = 0);

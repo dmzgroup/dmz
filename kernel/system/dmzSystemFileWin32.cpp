@@ -10,11 +10,11 @@
 dmz::Boolean
 dmz::get_file_list (
       const String &Path,
-      PathContainer &container) {
+      StringContainer &container) {
 
    Boolean result (False);
 
-   container.empty ();
+   container.clear ();
 
    if (is_valid_path (Path)) {
 
@@ -29,7 +29,7 @@ dmz::get_file_list (
 
             if (!(data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
 
-               container.add_path (data.cFileName);
+               container.append (data.cFileName);
             }
          } while (FindNextFile (handle, &data));
 
@@ -44,11 +44,11 @@ dmz::get_file_list (
 dmz::Boolean
 dmz::get_directory_list (
       const String &Path,
-      PathContainer &container) {
+      StringContainer &container) {
 
    Boolean result (False);
 
-   container.empty ();
+   container.clear ();
 
    if (is_valid_path (Path)) {
 
@@ -74,7 +74,7 @@ dmz::get_directory_list (
                   }
                }
 
-               if (store) { container.add_path (data.cFileName); }
+               if (store) { container.append (data.cFileName); }
             }
          } while (FindNextFile (handle, &data));
       }

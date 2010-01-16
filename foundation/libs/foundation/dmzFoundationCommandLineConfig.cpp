@@ -19,7 +19,7 @@ converts them into a config context tree.
 struct dmz::CommandLineConfig::State {
 
    String error;
-   PathContainer paths;
+   StringContainer paths;
 };
 
 
@@ -32,10 +32,10 @@ dmz::CommandLineConfig::CommandLineConfig () : _state (*(new State)) {
 /*!
 
 \brief Search path constructor.
-\param[in] Container PathContainer with paths to use in locating the config files.
+\param[in] Container StringContainer with paths to use in locating the config files.
 
 */
-dmz::CommandLineConfig::CommandLineConfig (const PathContainer &Container) :
+dmz::CommandLineConfig::CommandLineConfig (const StringContainer &Container) :
       _state (*(new State)) {
 
    _state.paths = Container;
@@ -51,11 +51,11 @@ dmz::CommandLineConfig::~CommandLineConfig () { delete &_state; }
 \brief Set file search paths.
 \details Sets the search path used to find config files specified on the command line.
 Will overwrite any existing search path data.
-\param[in] Container PathContainer with paths to use in locating the config files.
+\param[in] Container StringContainer with paths to use in locating the config files.
 
 */
 void
-dmz::CommandLineConfig::set_search_path (const PathContainer &Container) {
+dmz::CommandLineConfig::set_search_path (const StringContainer &Container) {
 
    _state.paths = Container;
 }

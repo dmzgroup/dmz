@@ -97,7 +97,7 @@ dmz::StringContainer::get_count () const { return _state.table.get_count (); }
 
 */
 dmz::Boolean
-dmz::StringContainer::contains (const String &Value) {
+dmz::StringContainer::contains (const String &Value) const {
 
    return _state.table.lookup (Value) != 0;
 }
@@ -105,14 +105,14 @@ dmz::StringContainer::contains (const String &Value) {
 
 /*!
 
-\brief Adds String to container.
-\param[in] Value String to be added.
+\brief Appends String to container.
+\param[in] Value String to be appended.
 \return Returns dmz::True if the \a String was added. Returns dmz::False if the
 \a String was not added or it is already in the container.
 
 */
 dmz::Boolean
-dmz::StringContainer::add_string (const String &Value) {
+dmz::StringContainer::append (const String &Value) {
 
    Boolean result (False);
 
@@ -124,13 +124,13 @@ dmz::StringContainer::add_string (const String &Value) {
 
 /*!
 
-\brief Remove handle from container.
+\brief Removes String from container.
 \param[in] Value String to remove from container.
 \return Returns dmz::True if the \a String was removed.
 
 */
 dmz::Boolean
-dmz::StringContainer::remove_string (const String &Value) {
+dmz::StringContainer::remove (const String &Value) {
 
    return (_state.table.remove (Value) != 0);
 }

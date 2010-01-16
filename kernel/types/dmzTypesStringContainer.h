@@ -39,10 +39,10 @@ namespace dmz {
 
          Int32 get_count () const;
 
-         Boolean contains (const String &Value);
+         Boolean contains (const String &Value) const;
 
-         Boolean add_string (const String &Value);
-         Boolean remove_string (const String &Value);
+         Boolean append (const String &Value);
+         Boolean remove (const String &Value);
 
          Boolean get_first (String &value) const;
          Boolean get_next (String &value) const;

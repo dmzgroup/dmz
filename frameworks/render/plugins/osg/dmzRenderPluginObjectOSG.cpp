@@ -3,7 +3,7 @@
 #include "dmzRenderPluginObjectOSG.h"
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
-#include <dmzRuntimeConfigToPathContainer.h>
+#include <dmzRuntimeConfigToStringContainer.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 

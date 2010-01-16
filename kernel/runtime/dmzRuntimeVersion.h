@@ -18,6 +18,8 @@ class DMZ_KERNEL_LINK_SYMBOL Version {
       ~Version ();
 
       Version &operator= (const Version &Value);
+      Boolean operator< (const Version &Value) const;
+      Boolean operator> (const Version &Value) const;
 
       String get_version () const;
       String get_name () const;

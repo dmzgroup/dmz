@@ -1,5 +1,5 @@
-#ifndef DMZ_RUNTIME_DATA_CONVERTERS_DOT_H
-#define DMZ_RUNTIME_DATA_CONVERTERS_DOT_H
+#ifndef DMZ_RUNTIME_DATA_CONVERTER_TYPES_BASE_DOT_H
+#define DMZ_RUNTIME_DATA_CONVERTER_TYPES_BASE_DOT_H
 
 #include <dmzRuntimeData.h>
 #include <dmzKernelExport.h>
@@ -20,9 +20,10 @@ namespace dmz {
 
          Handle set_handle (const String &HandleName, RuntimeContext *context);
 
-         Boolean to_boolean (const Data &Value);
-         Boolean to_boolean (const Data *Value);
+         Boolean to_boolean (const Data &Value, const Int32 Element = 0);
+         Boolean to_boolean (const Data *Value, const Int32 Element = 0);
          Data to_data (const Boolean Value);
+         void write_data (const Boolean Value, Data &data, const Int32 Element = 0);
 
       protected:
          //! \cond
@@ -36,6 +37,33 @@ namespace dmz {
          DataConverterBoolean &operator= (const DataConverterBoolean &);
    };
 
+   class DMZ_KERNEL_LINK_SYMBOL DataConverterFloat64 {
+
+      public:
+         DataConverterFloat64 (const PluginInfo &Info);
+         DataConverterFloat64 (RuntimeContext *context);
+         ~DataConverterFloat64 ();
+
+         Handle set_handle (const String &HandleName, RuntimeContext *context);
+
+         Float64 to_float64 (const Data &Value, const Int32 Element = 0);
+         Float64 to_float64 (const Data *Value, const Int32 Element = 0);
+         Data to_data (const Float64 Value);
+         void write_data (const Float64 Value, Data &data, const Int32 Element = 0);
+
+      protected:
+         //! \cond
+         struct State;
+         State &_state;
+         //! \endcond
+
+      private:
+         DataConverterFloat64 ();
+         DataConverterFloat64 (const DataConverterFloat64 &);
+         DataConverterFloat64 &operator= (const DataConverterFloat64 &);
+   };
+
+
    class DMZ_KERNEL_LINK_SYMBOL DataConverterString {
 
       public:
@@ -45,10 +73,11 @@ namespace dmz {
 
          Handle set_handle (const String &HandleName, RuntimeContext *context);
 
-         String to_string (const Data &Value);
-         String to_string (const Data *Value);
+         String to_string (const Data &Value, const Int32 Element = 0);
+         String to_string (const Data *Value, const Int32 Element = 0);
          Data to_data (const String &Value);
          Data to_data (const String *Value);
+         void write_data (const String &Value, Data &data, const Int32 Element = 0);
 
       protected:
          //! \cond
@@ -71,9 +100,10 @@ namespace dmz {
 
          Handle set_handle (const String &HandleName, RuntimeContext *context);
 
-         Handle to_handle (const Data &Value);
-         Handle to_handle (const Data *Value);
+         Handle to_handle (const Data &Value, const Int32 Element = 0);
+         Handle to_handle (const Data *Value, const Int32 Element = 0);
          Data to_data (const Handle &Value);
+         void write_data (const Handle Value, Data &data, const Int32 Element = 0);
 
       protected:
          //! \cond
@@ -88,4 +118,4 @@ namespace dmz {
    };
 };
 
-#endif // DMZ_RUNTIME_DATA_CONVERTERS_DOT_H
+#endif // DMZ_RUNTIME_DATA_CONVERTER_TYPES_BASE_DOT_H

@@ -123,18 +123,7 @@ dmz::DataConverterStringContainer::to_data (const StringContainer &Value) {
 
    Data result;
 
-   if (_state.handle) {
-
-      Int32 count (0);
-      StringContainerIterator it;
-      String str;
-
-      while (Value.get_next (it, str)) {
-
-         result.store_string (_state.handle, count, str);
-         count++;
-      }
-   }
+   write_data (Value, result);
 
    return result;
 }
@@ -155,5 +144,30 @@ dmz::DataConverterStringContainer::to_data (const StringContainer *Value) {
    if (Value) { result = to_data (*Value); }
 
    return result;
+}
+
+
+/*!
+
+\brief Writes a StringContainer to a Data object.
+\param[in] Value StringContainer to store in the Data object.
+\param[out] data Data object used to store the \a Value
+
+*/
+void
+dmz::DataConverterStringContainer::write_data (const StringContainer &Value, Data &data) {
+
+   if (_state.handle) {
+
+      Int32 count (0);
+      StringContainerIterator it;
+      String str;
+
+      while (Value.get_next (it, str)) {
+
+         data.store_string (_state.handle, count, str);
+         count++;
+      }
+   }
 }
 

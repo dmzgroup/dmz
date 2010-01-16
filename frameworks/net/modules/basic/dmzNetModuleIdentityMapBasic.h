@@ -2,7 +2,7 @@
 #define DMZ_NET_MODULE_IDENTITY_MAP_BASIC_DOT_H
 
 #include <dmzNetModuleIdentityMap.h>
-#include <dmzRuntimeDataConverters.h>
+#include <dmzRuntimeDataConverterTypesBase.h>
 #include <dmzRuntimeHandleAllocator.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>

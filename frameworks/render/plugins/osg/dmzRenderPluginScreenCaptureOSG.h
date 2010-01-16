@@ -1,7 +1,7 @@
 #ifndef DMZ_RENDER_PLUGIN_SCREEN_CAPTURE_OSG_DOT_H
 #define DMZ_RENDER_PLUGIN_SCREEN_CAPTURE_OSG_DOT_H
 
-#include <dmzRuntimeDataConverters.h>
+#include <dmzRuntimeDataConverterTypesBase.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>

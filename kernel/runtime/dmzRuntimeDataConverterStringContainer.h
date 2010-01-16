@@ -23,6 +23,7 @@ namespace dmz {
          StringContainer to_string_container (const Data *Value);
          Data to_data (const StringContainer &Value);
          Data to_data (const StringContainer *Value);
+         void write_data (const StringContainer &Value, Data &data);
 
       protected:
          //! \cond

@@ -3,7 +3,7 @@
 
 #include <dmzObjectModule.h>
 #include <dmzObjectObserver.h>
-#include <dmzRuntimeDataConverters.h>
+#include <dmzRuntimeDataConverterTypesBase.h>
 #include <dmzRuntimeHandle.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>

@@ -117,7 +117,7 @@ dmz::DataConverterBoolean::to_boolean (const Data *Value, const Int32 Element) {
 dmz::Data
 dmz::DataConverterBoolean::to_data (const Boolean Value) {
 
-   Data result;
+   Data result (_state.context);
 
    if (_state.handle) { result.store_boolean (_state.handle, 0, Value); }
 
@@ -255,7 +255,7 @@ dmz::DataConverterFloat64::to_float64 (const Data *Value, const Int32 Element) {
 dmz::Data
 dmz::DataConverterFloat64::to_data (const Float64 Value) {
 
-   Data result;
+   Data result (_state.context);
 
    if (_state.handle) { result.store_float64 (_state.handle, 0, Value); }
 
@@ -395,7 +395,7 @@ dmz::DataConverterString::to_string (const Data *Value, const Int32 Element) {
 dmz::Data
 dmz::DataConverterString::to_data (const String &Value) {
 
-   Data result;
+   Data result (_state.context);
 
    if (_state.handle) { result.store_string (_state.handle, 0, Value); }
 
@@ -413,7 +413,7 @@ dmz::DataConverterString::to_data (const String &Value) {
 dmz::Data
 dmz::DataConverterString::to_data (const String *Value) {
 
-   Data result;
+   Data result (_state.context);
 
    if (Value) { result = to_data (*Value); }
 
@@ -550,7 +550,7 @@ dmz::DataConverterHandle::to_handle (const Data *Value, const Int32 Element) {
 dmz::Data
 dmz::DataConverterHandle::to_data (const Handle &Value) {
 
-   Data result;
+   Data result (_state.context);
 
    if (_state.handle) { result.store_uint32 (_state.handle, 0, Value); }
 

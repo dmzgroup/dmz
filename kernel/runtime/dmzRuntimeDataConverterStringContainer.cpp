@@ -121,7 +121,7 @@ dmz::DataConverterStringContainer::to_string_container (const Data *Value) {
 dmz::Data
 dmz::DataConverterStringContainer::to_data (const StringContainer &Value) {
 
-   Data result;
+   Data result (_state.context);
 
    write_data (Value, result);
 
@@ -139,7 +139,7 @@ dmz::DataConverterStringContainer::to_data (const StringContainer &Value) {
 dmz::Data
 dmz::DataConverterStringContainer::to_data (const StringContainer *Value) {
 
-   Data result;
+   Data result (_state.context);
 
    if (Value) { result = to_data (*Value); }
 

@@ -1,0 +1,10 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginRenderScreenCapture"
+lmk.set_type "plugin"
+lmk.add_files {"ScreenCapturePreview.ui",}
+lmk.add_files ({"dmzQtPluginRenderScreenCapture.h",}, {src="moc",})
+lmk.add_files {"dmzQtPluginRenderScreenCapture.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+}
+lmkQt.add_libs {"QtGui", "QtCore",}

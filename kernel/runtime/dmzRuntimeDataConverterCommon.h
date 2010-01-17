@@ -17,7 +17,7 @@ struct DataConverterCommonStruct {
 
    Handle set_handle (const String &HandleName, RuntimeContext *theContext) {
 
-      Definitions defs (context);
+      Definitions defs (theContext);
 
       handle = defs.create_named_handle (HandleName);
 

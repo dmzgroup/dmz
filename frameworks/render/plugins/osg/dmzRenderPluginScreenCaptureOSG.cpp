@@ -141,7 +141,8 @@ dmz::RenderPluginScreenCaptureOSG::receive_message (
       const Data *InData,
       Data *outData) {
 
-   if (Type == _screenCaptureMsg) { _fileName = _convert.to_string (InData); }
+   if (Type == _screenCaptureMsg) { _fileName = _convert.to_string (InData);
+}
 }
 
 

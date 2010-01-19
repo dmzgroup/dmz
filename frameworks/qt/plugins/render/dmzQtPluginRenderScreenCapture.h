@@ -6,19 +6,49 @@
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
+#include <dmzTypesHashTableStringTemplate.h>
 
+#include <QtGui/QFileDialog>
 #include <QtGui/QWidget>
 #include <ui_ScreenCapturePreview.h>
 
 namespace dmz {
 
+   class QtScreenCaptureSave : public QWidget {
+
+      Q_OBJECT
+
+      public:
+         QtScreenCaptureSave (const QString &FileName, const QString &TmpFile, Log &log);
+         ~QtScreenCaptureSave ();
+
+         Boolean update ();
+
+         QString get_file_name ();
+
+         void closeEvent (QCloseEvent *);
+ 
+      protected slots:
+         void do_accepted ();
+         void do_rejected ();
+         void on_buttonBox_accepted ();
+         void on_buttonBox_rejected ();
+
+      protected:
+         const QString _FileName;
+         const QString _TmpName;
+         Log &_log;
+			Ui::ScreenCapturePreview _ui;
+         QFileDialog *_qsave;
+         Boolean _done;
+         Boolean _watchForFile;
+         QString _savedFileName;
+  };
+
    class QtPluginRenderScreenCapture :
-         public QWidget,
          public Plugin,
          public TimeSlice,
          public MessageObserver {
-
-      Q_OBJECT
 
       public:
          QtPluginRenderScreenCapture (const PluginInfo &Info, Config &local);
@@ -44,26 +74,20 @@ namespace dmz {
             const Data *InData,
             Data *outData);
 
-         void closeEvent (QCloseEvent *);
-
-      protected slots:
-         void on_buttonBox_accepted ();
-         void on_buttonBox_rejected ();
-
       protected:
+         String _find_target_name ();
          void _init (Config &local);
 
          Log _log;
          DataConverterString _convert;
 
-         Boolean _watchForFile;
-         Boolean _saveFile;
+         String _savePath;
+         String _fileRoot;
          String _fileExt;
-         String _fileName;
          Message _startCaptureMsg;
          Message _screenCaptureMsg;
 
-         Ui::ScreenCapturePreview _ui;
+         HashTableStringTemplate<QtScreenCaptureSave> _saveTable;
 
       private:
          QtPluginRenderScreenCapture ();

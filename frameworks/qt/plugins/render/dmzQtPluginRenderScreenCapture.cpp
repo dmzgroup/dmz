@@ -1,6 +1,8 @@
 #include "dmzQtPluginRenderScreenCapture.h"
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzRuntimeSession.h>
 #include <dmzSystem.h>
 #include <dmzSystemFile.h>
 #include <dmzTypesUUID.h>
@@ -8,6 +10,125 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtGui/QFileDialog>
+
+dmz::QtScreenCaptureSave::QtScreenCaptureSave (
+      const QString &FileName,
+      const QString &TmpName,
+      Log &log) :
+      _FileName (FileName),
+      _TmpName (TmpName),
+      _log (log),
+      _qsave (0),
+      _done (False),
+      _watchForFile (True) {
+
+   _ui.setupUi (this);
+}
+
+
+dmz::QtScreenCaptureSave::~QtScreenCaptureSave () {
+
+   if (QFile::exists (_TmpName)) { QFile::remove (_TmpName); }
+}
+
+
+dmz::Boolean
+dmz::QtScreenCaptureSave::update () {
+
+   Boolean result (True);
+
+   if (_watchForFile) {
+
+      if (QFile::exists (_TmpName)) {
+
+         _watchForFile = False;
+
+         QString title (windowTitle ());
+         title += ": ";
+         QPixmap img (_TmpName);
+         title += QString::number (img.width ());
+         title += "x";
+         title += QString::number (img.height ());
+
+         if (img.width () > 800) {
+
+            img = img.scaledToWidth (800, Qt::SmoothTransformation);
+         }
+
+         if (img.height () > 600) {
+
+            img = img.scaledToHeight (600, Qt::SmoothTransformation);
+         }
+
+         _ui.imgLabel->setPixmap (img);
+         setWindowTitle (title);
+         adjustSize ();
+         show ();
+      }
+      else if (_TmpName.isEmpty ()) { _watchForFile = False; _done = True; }
+   }
+   else if (_done) { result = False; }
+
+   return result;
+}
+
+
+QString
+dmz::QtScreenCaptureSave::get_file_name () { return _savedFileName; }
+
+
+void
+dmz::QtScreenCaptureSave::closeEvent (QCloseEvent *) {
+
+   _done = True;
+}
+
+
+void
+dmz::QtScreenCaptureSave::do_accepted () {
+
+   QStringList list = _qsave->selectedFiles ();
+
+   if (!list.isEmpty ()) {
+
+      QString file = list.first ();
+
+      if (!file.isEmpty ()) {
+
+         QFile::rename (_TmpName, file);
+         _savedFileName = file;
+      }
+   }
+
+   close ();
+}
+
+
+void
+dmz::QtScreenCaptureSave::do_rejected () {
+
+   close ();
+}
+
+void
+dmz::QtScreenCaptureSave::on_buttonBox_accepted () {
+
+   _qsave = new QFileDialog (this, "Save Screen Capture");
+   _qsave->setAcceptMode (QFileDialog::AcceptSave);
+   QStringList filters;
+   _qsave->selectFile (_FileName);
+   connect (_qsave, SIGNAL (accepted ()), this, SLOT (do_accepted ()));
+   connect (_qsave, SIGNAL (rejected ()), this, SLOT (do_rejected ()));
+   _qsave->open ();
+}
+
+
+void
+dmz::QtScreenCaptureSave::on_buttonBox_rejected () {
+
+   close ();
+}
+
 
 dmz::QtPluginRenderScreenCapture::QtPluginRenderScreenCapture (
       const PluginInfo &Info,
@@ -17,12 +138,7 @@ dmz::QtPluginRenderScreenCapture::QtPluginRenderScreenCapture (
       MessageObserver (Info),
       _log (Info),
       _convert (Info),
-      _watchForFile (False),
-      _saveFile (False),
       _fileExt (".png") {
-
-   _ui.setupUi (this);
-   close ();
 
    _init (local);
 }
@@ -50,6 +166,13 @@ dmz::QtPluginRenderScreenCapture::update_plugin_state (
    }
    else if (State == PluginStateShutdown) {
 
+      Config session (get_plugin_name ());
+
+      session.store_attribute ("save-path.value", _savePath );
+
+      set_session_config (get_plugin_runtime_context (), session);
+
+      _saveTable.empty ();
    }
 }
 
@@ -72,19 +195,24 @@ dmz::QtPluginRenderScreenCapture::discover_plugin (
 void
 dmz::QtPluginRenderScreenCapture::update_time_slice (const Float64 TimeDelta) {
 
-   if (_watchForFile) {
+   HashTableStringIterator it;
+   QtScreenCaptureSave *save (0);
 
-      if (is_valid_path (_fileName)) {
+   while (_saveTable.get_next (it, save)) {
 
-         _watchForFile = False;
+      if (!save->update ()) {
 
-         QPixmap img (_fileName.get_buffer ());
-         _ui.imgLabel->setPixmap (img);
-         adjustSize ();
-         show ();
-         raise ();
+         String file = qPrintable (save->get_file_name ());
+
+         if (file) {
+
+            String path, f, e;
+
+            split_path_file_ext (file, path, f, e);
+            _savePath = path;
+         }
+         if (_saveTable.remove (it.get_hash_key ()) == save) { delete save; save = 0; }
       }
-      else if (!_fileName) { _watchForFile = False; }
    }
 }
 
@@ -100,61 +228,44 @@ dmz::QtPluginRenderScreenCapture::receive_message (
 
    if (Type == _startCaptureMsg) {
 
-      _fileName = qPrintable (QDir::tempPath ());
+      String fileName = qPrintable (QDir::tempPath ());
       UUID fileUUID;
       create_uuid (fileUUID);
-      _fileName << "/" << fileUUID.to_string (UUID::NotFormatted) << _fileExt;
-      Data out = _convert.to_data (_fileName);
+      fileName << "/" << fileUUID.to_string (UUID::NotFormatted) << _fileExt;
+      Data out = _convert.to_data (fileName);
       _screenCaptureMsg.send (&out);
-      _watchForFile = True;
+
+      String target = _find_target_name ();
+
+      QtScreenCaptureSave *save = new QtScreenCaptureSave (
+         target.get_buffer (),
+         fileName.get_buffer (),
+         _log);
+
+      if (!_saveTable.store (fileName, save)) { delete save; save = 0; }
    }
 }
 
-void
-dmz::QtPluginRenderScreenCapture::closeEvent (QCloseEvent *) {
 
-   if (_saveFile) {
+dmz::String
+dmz::QtPluginRenderScreenCapture::_find_target_name () {
 
-      QString file = QFileDialog::getSaveFileName (
-         this,
-         "Save Screen Capture");
+   String result;
 
-      String p, f, ext;
+   Boolean done = False;
+   Int32 count = 1;
 
-      split_path_file_ext (qPrintable (file), p, f, ext);
+   while (!done) {
 
-      if (ext != _fileExt) { file += _fileExt.get_buffer (); }
+      String test = _savePath + _fileRoot + "-" + String::number (count) + _fileExt;
 
-      if (!file.isEmpty ()) {
-
-         QFile::rename (_fileName.get_buffer (), file);
-      }
-         
-      _saveFile = False;
+      if (!is_valid_path (test)) { done = True; result = test; }
+      else { count++; }
    }
 
-   if (is_valid_path (_fileName)) {
+   if (!result) { result = _savePath + _fileRoot + _fileExt; }
 
-      QFile::remove (_fileName.get_buffer ());
-   }
-
-   _fileName.flush ();
-}
-
-
-void
-dmz::QtPluginRenderScreenCapture::on_buttonBox_accepted () {
-
-   _saveFile = True;
-   close ();
-}
-
-
-void
-dmz::QtPluginRenderScreenCapture::on_buttonBox_rejected () {
-
-   _saveFile = False;
-   close ();
+   return result;
 }
 
 
@@ -176,6 +287,12 @@ dmz::QtPluginRenderScreenCapture::_init (Config &local) {
       local,
       "Capture_Render_Screen_Message",
       context);
+
+   _fileRoot = config_to_string ("file-root.name", local, "DMZ-Screen-Capture");
+
+   Config session (get_session_config (get_plugin_name (), context));
+
+   _savePath = config_to_string ("save-path.value", session);
 }
 
 

@@ -1,0 +1,6 @@
+lmk.set_name "dmzPluginMessageToUniqueFileName"
+lmk.set_type "plugin"
+lmk.add_files {"dmzPluginMessageToUniqueFileName.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+}

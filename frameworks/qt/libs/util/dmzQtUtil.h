@@ -21,10 +21,10 @@ namespace dmz {
    QSizeF to_qsizef (const Vector &Source);
    Vector to_dmz_vector (const QSizeF &Source);
 
-   DMZ_QT_UTIL_LINK_SYMBOL QLatin1String to_qstring (const String &Text);
-   DMZ_QT_UTIL_LINK_SYMBOL QLatin1String to_qstring (const Handle &ObjectHandle);
-   DMZ_QT_UTIL_LINK_SYMBOL QLatin1String to_qstring (const UUID &Identity);
-   DMZ_QT_UTIL_LINK_SYMBOL QLatin1String to_qstring (const ObjectType &Type);
+   DMZ_QT_UTIL_LINK_SYMBOL QString to_qstring (const String &Text);
+   DMZ_QT_UTIL_LINK_SYMBOL QString to_qstring (const Handle &ObjectHandle);
+   DMZ_QT_UTIL_LINK_SYMBOL QString to_qstring (const UUID &Identity);
+   DMZ_QT_UTIL_LINK_SYMBOL QString to_qstring (const ObjectType &Type);
 
    DMZ_QT_UTIL_LINK_SYMBOL Float64 get_qmatrix_scale (const QMatrix &Source);
 

@@ -5,7 +5,7 @@
 #include <QtGui/QtGui>
 
 
-QLatin1String
+QString
 dmz::to_qstring (const Handle &ObjectHandle) {
 
    String result; result << ObjectHandle;
@@ -13,26 +13,26 @@ dmz::to_qstring (const Handle &ObjectHandle) {
 }
 
 
-QLatin1String
+QString
 dmz::to_qstring (const String &Text) {
 
-   QLatin1String result (Text.get_buffer ());
+   QString result (Text.get_buffer ());
    return result;
 }
 
 
-QLatin1String
+QString
 dmz::to_qstring (const UUID &Identity) {
 
-   QLatin1String result (Identity.to_string ().get_buffer ());
+   QString result (Identity.to_string ().get_buffer ());
    return result;
 }
 
 
-QLatin1String
+QString
 dmz::to_qstring (const ObjectType &Type) {
 
-   QLatin1String result (Type.get_name ().get_buffer ());
+   QString result (Type.get_name ().get_buffer ());
    return result;
 }
 
@@ -89,7 +89,7 @@ dmz::set_qwidget_stylesheet (const String &Name, const Config &Source, QWidget *
          QFile file (qss.get_buffer ());
          if (file.open (QFile::ReadOnly)) {
 
-            QString styleSheet (QLatin1String (file.readAll ()));
+            QString styleSheet (file.readAll ());
             widget->setStyleSheet (styleSheet);
 
             qDebug () << widget->objectName () << "Style Sheet:" << qss.get_buffer ();

@@ -1,6 +1,6 @@
 #include "dmzRuntimeContext.h"
 #include "dmzRuntimeContextMessaging.h"
-#include <dmzRuntimeDataConverters.h>
+#include <dmzRuntimeDataConverterTypesBase.h>
 #include <dmzRuntimeExit.h>
 #include "dmzRuntimeMessageContext.h"
 #include <dmzRuntimeMessaging.h>
@@ -18,6 +18,30 @@
 \enum ExitStatusEnum
 \ingroup Runtime
 \brief Exit status enumerations.
+\details Defined in dmzRuntimeExit.h.
+
+*/
+
+/*!
+
+\var dmz::ExitStatusEnum dmz::ExitStatusError
+\brief Exit requested due to error condition.
+\details Defined in dmzRuntimeExit.h.
+
+*/
+
+/*!
+
+\var dmz::ExitStatusEnum dmz::ExitStatusNormal
+\brief Standard exit requested.
+\details Defined in dmzRuntimeExit.h.
+
+*/
+
+/*!
+
+\var dmz::ExitStatusEnum dmz::ExitStatusForced
+\brief Forced exit requested.
 \details Defined in dmzRuntimeExit.h.
 
 */

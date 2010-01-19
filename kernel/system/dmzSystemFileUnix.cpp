@@ -20,7 +20,7 @@
 \brief Gets a list of files found at the specified path.
 \details Defined in dmzSystemFile.h.
 \param[in] Path String containing path used to find the file list.
-\param[out] container dmz::PathContainer used to store files found at the specified
+\param[out] container dmz::StringContainer used to store files found at the specified
 \a Path
 \return Returns dmz::True if the specified \a Path is valid.
 \sa dmz::get_directory_list
@@ -29,11 +29,11 @@
 dmz::Boolean
 dmz::get_file_list (
       const String &Path,
-      PathContainer &container) {
+      StringContainer &container) {
 
    Boolean result (False);
 
-   container.empty ();
+   container.clear ();
 
    if (is_valid_path (Path)) {
 
@@ -49,7 +49,7 @@ dmz::get_file_list (
 
             if (current->d_type != DT_DIR) {
 
-               container.add_path (current->d_name);
+               container.append (current->d_name);
             }
 
             current = readdir (dir);
@@ -68,7 +68,7 @@ dmz::get_file_list (
 \brief Gets a list of directories found at the specified path.
 \details Defined in dmzSystemFile.h.
 \param[in] Path String containing path used to find the directory list.
-\param[out] container dmz::PathContainer used to store directories found at the specified
+\param[out] container dmz::StringContainer used to store directories found at the specified
 \a Path
 \return Returns dmz::True if the specified \a Path is valid.
 \sa dmz::get_file_list
@@ -77,11 +77,11 @@ dmz::get_file_list (
 dmz::Boolean
 dmz::get_directory_list (
       const String &Path,
-      PathContainer &container) {
+      StringContainer &container) {
 
    Boolean result (False);
 
-   container.empty ();
+   container.clear ();
 
    if (is_valid_path (Path)) {
 
@@ -109,7 +109,7 @@ dmz::get_directory_list (
                   }
                }
 
-               if (store) { container.add_path (current->d_name); }
+               if (store) { container.append (current->d_name); }
             }
 
             current = readdir (dir);

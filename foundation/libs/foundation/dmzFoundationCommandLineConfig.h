@@ -9,16 +9,16 @@ namespace dmz {
    class CommandLine;
    class Config;
    class Log;
-   class PathContainer;
+   class StringContainer;
 
    class DMZ_FOUNDATION_LINK_SYMBOL CommandLineConfig {
 
       public:
          CommandLineConfig ();
-         CommandLineConfig (const PathContainer &Container);
+         CommandLineConfig (const StringContainer &Container);
          ~CommandLineConfig ();
 
-         void set_search_path (const PathContainer &Container);
+         void set_search_path (const StringContainer &Container);
 
          Boolean process_command_line (
             const CommandLine &Opts,

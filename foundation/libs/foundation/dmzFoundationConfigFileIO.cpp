@@ -140,7 +140,7 @@ dmz::read_config_file (
 
    const Boolean IsZip = is_zip_file (FileName);
 
-   PathContainer files;
+   StringContainer files;
 
    if (IsZip) {
 
@@ -148,7 +148,7 @@ dmz::read_config_file (
 
       if (rz.open_zip_file (FileName)) { rz.get_file_list (files); }
    }
-   else { files.add_path (FileName); }
+   else { files.append (FileName); }
 
    const String NullString;
 
@@ -180,8 +180,8 @@ dmz::read_config_file (
       const UInt32 Type,
       Log *log) {
 
-   PathContainer files;
-   files.add_path (FileName);
+   StringContainer files;
+   files.append (FileName);
 
    return read_config_files (ArchiveName, files, data, Type, log);
 }
@@ -195,7 +195,7 @@ dmz::read_config_file (
 to be read from the archive. If no archive name is given. The file will be read from
 the file system.
 \param[in] ArchiveName String containing name of the archive to read from. Optional.
-\param[in] Files PathContainer containing the list of Config files to read.
+\param[in] Files StringContainer containing the list of Config files to read.
 \param[out] data Config object used to store parsed Config data.
 \param[in] Type File type.
 \param[in] log Pointer to the Log to use for reporting.
@@ -206,7 +206,7 @@ the file system.
 dmz::Boolean
 dmz::read_config_files (
       const String &ArchiveName,
-      const PathContainer &Files,
+      const StringContainer &Files,
       Config &data,
       const UInt32 Type,
       Log *log) {
@@ -219,7 +219,7 @@ dmz::read_config_files (
       data = tmp;
    }
 
-   PathContainerIterator it;
+   StringContainerIterator it;
    String file;
 
    Reader *reader (0);

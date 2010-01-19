@@ -141,7 +141,7 @@ namespace dmz {
 
          HashTableHandleTemplate<LuaExt> _extTable;
 
-         PathContainer _luaPaths;
+         StringContainer _luaPaths;
 
          Config _global;
 

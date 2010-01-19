@@ -5,7 +5,7 @@
 #include <dmzRenderUtilOSG.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
-#include <dmzRuntimeConfigToPathContainer.h>
+#include <dmzRuntimeConfigToStringContainer.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeLoadPlugins.h>

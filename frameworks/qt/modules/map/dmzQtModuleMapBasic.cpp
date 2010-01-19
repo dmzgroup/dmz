@@ -174,7 +174,7 @@ void
 dmz::QtModuleMapBasic::empty_tile_cache () {
 
    String file;
-   PathContainer fileList;
+   StringContainer fileList;
 
    if (get_file_list (_cacheDir, fileList)) {
       

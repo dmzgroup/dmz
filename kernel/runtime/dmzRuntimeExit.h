@@ -11,9 +11,9 @@ namespace dmz {
    class PluginInfo;
 
    enum ExitStatusEnum {
-      ExitStatusError = 0, //!< Exit requested due to error condition.
-      ExitStatusNormal, //!< Standard exit requested.
-      ExitStatusForced, //!< Forced exit requested.
+      ExitStatusError = 0,
+      ExitStatusNormal,
+      ExitStatusForced,
    };
 
    class DMZ_KERNEL_LINK_SYMBOL Exit {
@@ -26,8 +26,10 @@ namespace dmz {
          void request_exit (const ExitStatusEnum Status, const String &ExitReason);
 
       protected:
+         //! \cond
          struct State;
-         State &_state; //!< Internal state.
+         State &_state;
+         //! \endcond
 
       private:
          Exit ();

@@ -487,11 +487,11 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
 
             const String Name = config_to_string ("name", search);
 
-            PathContainer *pc = rc->pathTable.lookup (Name);
+            StringContainer *pc = rc->pathTable.lookup (Name);
 
             if (!pc) {
 
-               pc = new PathContainer;
+               pc = new StringContainer;
                if (!rc->pathTable.store (Name, pc)) { delete pc; pc = 0; }
             }
 
@@ -504,7 +504,7 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
 
                   if (path.get_name () == "path") {
 
-                     pc->add_path (config_to_string ("value", path));
+                     pc->append (config_to_string ("value", path));
                   }
                }
             }

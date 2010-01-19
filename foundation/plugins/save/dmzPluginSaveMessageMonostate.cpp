@@ -150,7 +150,7 @@ dmz::PluginSaveMessageMonostate::_init_messages (Config &list) {
       
       if (_defs.lookup_message (Name, message)) {
          
-         _messages.add_string (message.get_name ());
+         _messages.append (message.get_name ());
       }
    }
 }

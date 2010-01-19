@@ -129,13 +129,13 @@ dmz::ReaderZip::get_zip_file_name () const { return _state.zipFileName; }
 /*!
 
 \brief Gets a list of files stored in the zip archive.
-\param[out] container PathContainer used to store the list of file in the zip archive.
+\param[out] container StringContainer used to store the list of file in the zip archive.
 \return Returns dmz::True if the container was successfully populated. Returns
 dmz::False if there is no open zip archive open.
 
 */
 dmz::Boolean
-dmz::ReaderZip::get_file_list (PathContainer &container) const {
+dmz::ReaderZip::get_file_list (StringContainer &container) const {
 
    Boolean result (False);
 
@@ -168,7 +168,7 @@ dmz::ReaderZip::get_file_list (PathContainer &container) const {
 
                   buffer[info.size_filename] = '\0';
 
-                  container.add_path (buffer);
+                  container.append (buffer);
                }
 
                delete []buffer; buffer = 0;

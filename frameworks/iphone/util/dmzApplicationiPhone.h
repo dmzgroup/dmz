@@ -8,7 +8,7 @@ namespace dmz {
 
    class ApplicationState;
    class Config;
-   class PathContainer;
+   class StringContainer;
    class RuntimeContext;
 
    class ApplicationiPhone {
@@ -28,7 +28,7 @@ namespace dmz {
          void add_config (const String &Name, Config &data);
 
          Boolean load_session ();
-         Boolean load_config (const PathContainer &Files);
+         Boolean load_config (const StringContainer &Files);
          Boolean load_plugins ();
          Boolean start ();
          Boolean update_time_slice ();

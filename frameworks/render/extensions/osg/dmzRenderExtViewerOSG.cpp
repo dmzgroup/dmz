@@ -59,24 +59,31 @@ dmz::RenderExtViewerOSG::update_plugin_state (
 
          _viewer->realize ();
 
-         osgViewer::ViewerBase::Windows w;
-         _viewer->getWindows (w);
+         if (!_viewer->isRealized ()) {
 
-         osgViewer::GraphicsWindow *gw = w.front ();
+            _log.error << "Failed to realize OSG viewer." << endl;
+         }
+         else {
 
-         if (gw) {
+            osgViewer::ViewerBase::Windows w;
+            _viewer->getWindows (w);
+
+            osgViewer::GraphicsWindow *gw = w.front ();
+
+            if (gw) {
 
 #if defined(__APPLE__) || defined(MACOSX)
-            // WARNING This call does not seem to work under Win32. Fortunately
-            // The OSG window comes up in focus under Win32. For the Mac, this
-            // gives the window focus on startup
-            gw->grabFocus ();
+               // WARNING This call does not seem to work under Win32. Fortunately
+               // The OSG window comes up in focus under Win32. For the Mac, this
+               // gives the window focus on startup
+               gw->grabFocus ();
 #endif
-            gw->setWindowName (_title.get_buffer ());
+               gw->setWindowName (_title.get_buffer ());
 
-            int width (0), height (0), extra (0);
-            gw->getWindowRectangle (extra, extra, width, height);
-            _eventHandler->set_portal_size (width, height);
+               int width (0), height (0), extra (0);
+               gw->getWindowRectangle (extra, extra, width, height);
+               _eventHandler->set_portal_size (width, height);
+            }
          }
       }
    }
@@ -153,7 +160,13 @@ void
 dmz::RenderExtViewerOSG::_init (const Config &Local) {
 
    osg::DisplaySettings *ds = osg::DisplaySettings::instance ();
-   if (ds) { ds->setNumMultiSamples (config_to_int32 ("aa.samples", Local, 0)); }
+
+   if (ds) {
+
+      const Int32 Samples = config_to_int32 ("aa.samples", Local, 0);
+      _log.info << "Using: " << Samples << " AA samples." << endl;
+      ds->setNumMultiSamples (Samples);
+   }
 
    _viewerName = config_to_string ("portal.name", Local, _viewerName);
 

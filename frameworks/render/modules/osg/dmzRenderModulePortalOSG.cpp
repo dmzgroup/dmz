@@ -90,8 +90,8 @@ dmz::RenderModulePortalOSG::set_view (const Vector &Pos, const Matrix &Ori) {
 
       _pos = Pos;
       _ori = Ori;
-     _camera->setViewMatrix (
-        osg::Matrix::translate (to_osg_vector (-Pos)) * to_osg_inverse_matrix (Ori));
+      _camera->setViewMatrix (
+         osg::Matrix::translate (to_osg_vector (-Pos)) * to_osg_inverse_matrix (Ori));
    }
    else { _log.error << "No camera available." << endl; }
 }

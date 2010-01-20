@@ -478,7 +478,7 @@ dmz::InputPluginMouseEventToMessage::_create_attributes (
       ConfigIterator it;
       Config attrConfig;
 
-      AttrStruct *current;
+      AttrStruct *current (0);
 
       while (attrList.get_next_config (it, attrConfig)) {
 

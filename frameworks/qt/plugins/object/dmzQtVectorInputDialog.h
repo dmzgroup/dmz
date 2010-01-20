@@ -30,7 +30,7 @@ namespace dmz {
          Ui::VectorInputDialog _ui;
 
       private:
-         QtVectorInputDialog ();
+         // QtVectorInputDialog ();
          QtVectorInputDialog (const QtVectorInputDialog &);
          QtVectorInputDialog &operator= (const QtVectorInputDialog &);
    };

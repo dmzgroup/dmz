@@ -28,6 +28,9 @@ function set_up (appName)
    lmkQt.add_libs {"QtCore", "QtGui"}
    lmk.add_vars ({localLibPaths = "-framework CoreFoundation"},{macos = true})
    lmk.add_vars (
+      {localDefines="/D_CRT_SECURE_NO_WARNINGS"},
+      {win32=true})
+   lmk.add_vars (
       {localLibPaths="/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"},
       {win32=true, opt=true})
 end

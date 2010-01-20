@@ -30,7 +30,7 @@ namespace dmz {
          Ui::MaskInputDialog _ui;
 
       private:
-         QtMaskInputDialog ();
+         // QtMaskInputDialog (); Already defined by constructor.
          QtMaskInputDialog (const QtMaskInputDialog &);
          QtMaskInputDialog &operator= (const QtMaskInputDialog &);
    };

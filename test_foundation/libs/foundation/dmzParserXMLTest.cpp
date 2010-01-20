@@ -1,4 +1,5 @@
 #include <dmzFoundationParserXML.h>
+#include <dmzSystemFile.h>
 #include <dmzTypesHashTableStringTemplate.h>
 
 #include <stdio.h>
@@ -90,7 +91,7 @@ main (int argc, char *argv[]) {
 
    if (argc == 2) {
 
-      FILE *fd = fopen (argv[1], "rb");
+      FILE *fd = dmz::open_file (argv[1], "rb");
 
       if (fd) {
 

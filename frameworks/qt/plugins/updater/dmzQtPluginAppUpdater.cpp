@@ -180,10 +180,12 @@ dmz::QtPluginAppUpdater::_slot_get_version_finished () {
 
                _updateVersion = Version (cd);
 
-               QString latestBuild (_updateVersion.get_build ().get_buffer ());
-               QString currentBuild (_version.get_build ().get_buffer ());
+               if (!_forceUpdate) {
 
-               if (_forceUpdate || (latestBuild > currentBuild)) {
+                  _forceUpdate = config_to_boolean ("dmz.update.force.value", cd);
+               }
+
+               if (_forceUpdate || (_updateVersion > _version)) {
 
                   _get_changelog ();
 

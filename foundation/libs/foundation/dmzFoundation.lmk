@@ -45,5 +45,5 @@ lmk.add_files {
 }
 
 lmk.add_vars ({
-   localDefines = "$(lmk.defineFlag)DMZ_FOUNDATION_EXPORT",
+   localDefines = "$(lmk.defineFlag)DMZ_FOUNDATION_EXPORT /D_CRT_SECURE_NO_WARNINGS",
 }, {win32 = true})

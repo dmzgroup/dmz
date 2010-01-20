@@ -1,6 +1,6 @@
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeVersion.h>
-
+#include <stdlib.h>
 /*!
 
 \class dmz::Version
@@ -31,9 +31,11 @@ struct dmz::Version::State {
    String minor;
    String bug;
    String build;
+   Int32 buildDate;
+   Int32 buildTime;
    String release;
    String image;
-
+   
    State &operator= (const State &Value) {
 
       name = Value.name;
@@ -41,10 +43,28 @@ struct dmz::Version::State {
       minor = Value.minor;
       bug = Value.bug;
       build = Value.build;
+      buildDate = Value.buildDate;
+      buildTime = Value.buildTime;
       release = Value.release;
       image = Value.image;
 
       return *this;
+   }
+   
+   Boolean operator< (const State &Value) const {
+
+      Boolean result;
+      if (buildDate == Value.buildDate) { result = (buildTime < Value.buildTime); }
+      else { result = buildDate < Value.buildDate; }
+      return result;
+   }
+
+   Boolean operator> (const State &Value) const {
+
+      Boolean result;
+      if (buildDate == Value.buildDate) { result = buildTime > Value.buildTime; }
+      else { result = buildDate > Value.buildDate; }
+      return result;
    }
 
    State (const Config &Source, const String &Prefix) {
@@ -56,6 +76,21 @@ struct dmz::Version::State {
       build = config_to_string (Prefix + ".build.value", Source);
       release = config_to_string (Prefix + ".release.value", Source);
       image = config_to_string (Prefix + ".image.value", Source);
+      
+      Int32 index (0);
+      if (build.find_sub ("INTERNAL", index)) {
+         
+         buildDate = buildTime = 99999999;
+      }
+      else if (build.find_sub ("-", index)) {
+         
+         buildDate = atoi (build.get_sub (0, index - 1).get_buffer ());
+         buildTime = atoi (build.get_sub (index + 1, -1).get_buffer ());
+      }
+      else {
+         
+         buildDate = buildTime = atoi (build.get_buffer ());
+      }
    }
 
    State (const State &Value) { *this = Value; }
@@ -97,6 +132,23 @@ dmz::Version::operator= (const Version &Value) {
 
    return *this;
 }
+
+
+//! Less than operator
+dmz::Boolean
+dmz::Version::operator< (const Version &Value) const {
+	
+   return _state < Value._state;
+}
+
+
+//! Greater than operator
+dmz::Boolean
+dmz::Version::operator> (const Version &Value) const {
+	
+   return _state > Value._state;
+}
+
 
 //! \brief Gets a formatted version string.
 //! \return Returns a String with the contents formatted: major.minor.bug release
@@ -164,4 +216,3 @@ dmz::Version::get_release () const { return _state.release; }
 //! \return Returns a String containing name of the image to use in the about box.
 dmz::String
 dmz::Version::get_image_name () const { return _state.image; }
-

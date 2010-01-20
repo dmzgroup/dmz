@@ -1,0 +1,9 @@
+lmk.set_name "sha2"
+lmk.set_type "shared"
+lmk.add_files {"sha2.h",}
+lmk.add_files {"sha2.c",}
+
+lmk.add_vars ({
+   localLibPaths = "/DEF:libsha2.def",
+}, {win32 = true})
+

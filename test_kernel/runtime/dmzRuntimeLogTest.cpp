@@ -1,6 +1,7 @@
 #include <dmzRuntime.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeLogObserverBasic.h>
+#include <dmzTypesString.h>
 
 int
 main (int argc, char *argv[]) {

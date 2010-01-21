@@ -1,3 +1,4 @@
+#include <dmzTypesString.h>
 #include <osg/Node>
 #include <osg/NodeVisitor>
 #include <osgDB/ReadFile>

@@ -47,9 +47,10 @@ extern "C" {
  * file.
  */
 #ifdef _WIN32
-typedef unsigned char u_int8_t;        /* 1-byte  (8-bits)  */
-typedef unsigned int  u_int32_t;       /* 4-bytes (32-bits) */
-typedef unsigned __int64 u_int64_t;  /* 8-bytes (64-bits) */
+#   define SHA2_USE_INTTYPES_H
+typedef unsigned char uint8_t;        /* 1-byte  (8-bits)  */
+typedef unsigned int  uint32_t;       /* 4-bytes (32-bits) */
+typedef unsigned __int64 uint64_t;  /* 8-bytes (64-bits) */
 #   define ULL ui64
 #   define BYTE_ORDER LITTLE_ENDIAN
 #else

@@ -3,6 +3,7 @@
 #include <dmzLuaKernelValidate.h>
 #include <dmzTypesConsts.h>
 #include <dmzTypesMath.h>
+#include <dmzTypesString.h>
 #include <dmzTypesVector.h>
 
 #include <luacpp.h>

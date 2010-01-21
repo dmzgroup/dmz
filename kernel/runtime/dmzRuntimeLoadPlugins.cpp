@@ -32,6 +32,13 @@ once.
 specified.
 - \b factory Name of the factory function used to create the Plugin. Will use the \b name
 attribute with the prefix "create_" added to the front if not specified.
+- \b scope Controls the scope of which Config is passed into the factory function as the
+local Config. Will override the \b name and \b unique attributes for Config scope.
+- \b additional-scope.name Adds additional Config scopes to the local Config passed
+into the factory function.
+- \b level.value Specifies what level the dmz::Plugin::update_plugin_state() call is
+made. Multiple levels may be specified. Level may be positive or negative. The default
+level is one.
 - \b platform Specifies the platform the Plugin supports. Compares the value of the
 attribute to the result of dmz::get_system_name. If the values are equal, the Plugin
 is loaded. Multiple platforms may be specified. Platform names should be delineated with

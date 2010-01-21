@@ -1,5 +1,6 @@
 #include <dmzSystemStream.h>
 #include <dmzTypesString.h>
+#include <dmzTypesStringContainer.h>
 #include <dmzTypesUUID.h>
 
 /*!
@@ -80,6 +81,15 @@ operator<< (dmz::Stream &stream, const dmz::Quaternion &Value) {
    return stream;
 }
 
+
+//! Converts dmz::StingContainer to a dmz::String and appends it to the \a stream.
+dmz::Stream &
+operator<< (dmz::Stream &stream, const dmz::StringContainer &Value) {
+
+   dmz::String result;
+   stream << (result << Value);
+   return stream;
+}
 
 //! Converts dmz::UUID to a dmz::String and appends it to the \a stream.
 dmz::Stream &

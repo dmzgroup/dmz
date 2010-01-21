@@ -1,6 +1,6 @@
 lmk.set_name "dmzFoundation"
 lmk.set_type "shared"
-lmk.add_libs {"dmzKernel", "zip", "expat", "yajl",}
+lmk.add_libs {"dmzKernel", "sha2", "zip", "expat", "yajl",}
 
 lmk.add_files {
    "dmzApplicationState.h",
@@ -21,6 +21,7 @@ lmk.add_files {
    "dmzFoundationReaderWriter.h",
    "dmzFoundationReaderWriterFile.h",
    "dmzFoundationReaderWriterZip.h",
+   "dmzFoundationSHA.h",
    "dmzFoundationStreamZip.h",
    "dmzFoundationXMLUtil.h",
 }
@@ -40,6 +41,7 @@ lmk.add_files {
    "dmzFoundationParserXMLExpat.cpp",
    "dmzFoundationReaderWriterFile.cpp",
    "dmzFoundationReaderWriterZip.cpp",
+   "dmzFoundationSHA.cpp",
    "dmzFoundationStreamZip.cpp",
    "dmzFoundationXMLUtil.cpp",
 }

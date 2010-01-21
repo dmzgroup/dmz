@@ -3,7 +3,6 @@
 
 #include <dmzKernelExport.h>
 #include <dmzTypesBase.h>
-#include <dmzTypesString.h>
 
 namespace dmz {
 
@@ -11,6 +10,8 @@ namespace dmz {
    class Matrix;
    class Quaternion;
    class Stream;
+   class String;
+   class StringContainer;
    class UUID;
    class Vector;
 
@@ -79,6 +80,9 @@ operator<< (dmz::Stream &stream, const dmz::Matrix &Value);
 
 DMZ_KERNEL_LINK_SYMBOL dmz::Stream &
 operator<< (dmz::Stream &stream, const dmz::Quaternion &Value);
+
+DMZ_KERNEL_LINK_SYMBOL dmz::Stream &
+operator<< (dmz::Stream &stream, const dmz::StringContainer &Value);
 
 DMZ_KERNEL_LINK_SYMBOL dmz::Stream &
 operator<< (dmz::Stream &stream, const dmz::UUID &Value);

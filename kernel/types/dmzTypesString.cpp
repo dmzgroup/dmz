@@ -4,6 +4,7 @@
 #include <dmzTypesVector.h>
 #include <dmzTypesMatrix.h>
 #include <dmzTypesQuaternion.h>
+#include <dmzTypesStringContainer.h>
 #include <dmzTypesUUID.h>
 
 #include <ctype.h> // toupper tolower
@@ -1237,6 +1238,27 @@ operator<< (dmz::String &str, const dmz::Quaternion &Value) {
       << Value.get_y () << ", "
       << Value.get_z () << ", "
       << Value.get_w () << "]";
+
+   return str;
+}
+
+
+dmz::String &
+operator<< (dmz::String &str, const dmz::StringContainer &Value) {
+
+   dmz::StringContainerIterator it;
+   dmz::String next;
+   dmz::Boolean first (dmz::True);
+   str << "[";
+
+   while (Value.get_next (it, next)) {
+
+      if (!first) { str << ", "; }
+      else { first = dmz::False; }
+      str << "\"" << next << "\"";
+   }
+
+   str << "]";
 
    return str;
 }

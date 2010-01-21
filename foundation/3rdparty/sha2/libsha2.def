@@ -1,0 +1,27 @@
+LIBRARY SHA2
+EXPORTS
+  SHA1_Init @1
+  SHA1_Update @2
+  SHA1_Final @3
+  SHA1_End @4
+  SHA1_Data @5
+  SHA224_Init @6
+  SHA224_Update @7
+  SHA224_Final @8
+  SHA224_End @9
+  SHA224_Data @10
+  SHA256_Init @11
+  SHA256_Update @12
+  SHA256_Final @13
+  SHA256_End @14
+  SHA256_Data @15
+  SHA384_Init @16
+  SHA384_Update @17
+  SHA384_Final @18
+  SHA384_End @19
+  SHA384_Data @20
+  SHA512_Init @21
+  SHA512_Update @22
+  SHA512_Final @23
+  SHA512_End @24
+  SHA512_Data @25

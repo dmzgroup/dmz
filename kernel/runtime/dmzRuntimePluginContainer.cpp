@@ -147,7 +147,7 @@ struct LevelStruct {
 \brief Class for storing Plugin instances.
 \details Container class for storing and manipulating a collection of Plugins.
 This class provide the necessary functionality to manage extensions.
-\sa dmz::PluginLoader
+\sa dmz::load_plugins()
 
 */
 

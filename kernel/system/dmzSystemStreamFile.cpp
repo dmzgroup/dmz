@@ -1,4 +1,5 @@
 #include <dmzSystemStreamFile.h>
+#include <dmzTypesString.h>
 
 /*!
 

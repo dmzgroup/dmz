@@ -9,14 +9,17 @@ namespace dmz {
 
 enum SHATypeEnum { SHA1, SHA224, SHA256, SHA384, SHA512 };
 
+DMZ_FOUNDATION_LINK_SYMBOL String
+sha_from_file (const String &FileName, const SHATypeEnum Type = SHA1);
+
 class DMZ_FOUNDATION_LINK_SYMBOL SHA {
 
    public:
-      SHA (const SHATypeEnum Type = SHA512);
+      SHA (const SHATypeEnum Type = SHA1);
       ~SHA ();
 
       SHATypeEnum get_type () const;
-      void init (const SHATypeEnum Type = SHA512);
+      void init (const SHATypeEnum Type = SHA1);
       void add_data (const char *buffer, const Int32 Size);
       String finish ();
 

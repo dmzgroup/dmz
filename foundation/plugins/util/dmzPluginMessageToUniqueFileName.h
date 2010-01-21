@@ -42,6 +42,7 @@ namespace dmz {
          Message _inMsg;
          Message _outMsg;
          Handle _target;
+         Int32 _index;
          String _filePath;
          String _fileRoot;
          String _fileExt;

@@ -139,11 +139,7 @@ local_write_config (yajl_gen gen, Stream &stream, const Config &Data, Log *log) 
          if (Data.lookup_all_config (Name, group)) {
 
             if (group.get_config_count () > 1) { isArray = True; }
-            else if (next.is_in_array ()) {
-
-               isArray = True;
-               group.add_config (next);
-            }
+            else if (next.is_in_array ()) { isArray = True; }
          }
 
          if (isArray) {

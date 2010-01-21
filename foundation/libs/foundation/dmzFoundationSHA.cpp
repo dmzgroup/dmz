@@ -1,3 +1,4 @@
+#include <dmzFoundationReaderWriterFile.h>
 #include <dmzFoundationSHA.h>
 #include <sha2.h>
 
@@ -53,6 +54,34 @@
 \brief SHA-512 Algorithm.
 
 */
+
+
+dmz::String
+dmz::sha_from_file (const String &FileName, const SHATypeEnum Type) {
+
+   String result;
+
+   ReaderFile read;
+
+   if (read.open_file (FileName)) {
+
+      SHA sha (Type);
+
+      char buffer[64];
+      Int32 size = read.read_file (buffer, 64);
+
+      while (size > 0) {
+
+         sha.add_data (buffer, size);
+         size = read.read_file (buffer, 64);
+      }
+
+      result = sha.finish ();
+   }
+
+   return result;
+}
+
 
 namespace {
 

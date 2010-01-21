@@ -11,7 +11,8 @@ dmz::PluginMessageToUniqueFileName::PluginMessageToUniqueFileName (
       MessageObserver (Info),
       _log (Info),
       _convert (Info),
-      _target (0) {
+      _target (0),
+      _index (1) {
 
    _init (local);
 }
@@ -68,17 +69,17 @@ dmz::PluginMessageToUniqueFileName::receive_message (
 
    if (Type == _inMsg) {
 
-      Int32 count = 0;
       Boolean done = False;
       String file;
 
       while (!done) {
 
          String testFile (_filePath);
-         testFile << _fileRoot << "-" << String::number (count) << _fileExt;
+         testFile << _fileRoot << "-" << String::number (_index) << _fileExt;
 
          if (!is_valid_path (testFile)) { done = True; file = testFile; }
-         else { count++; }
+
+         _index++;
       }
 
       Data out = _convert.to_data (file);

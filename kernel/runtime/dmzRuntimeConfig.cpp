@@ -464,7 +464,10 @@ dmz::Config::get_first_attribute (
 
          name = it.state.it.get_hash_key ();
 
-         if (name == "") { result = get_next_attribute (it, name, value); }
+         if ((name == "") || (!value.get_buffer ())) {
+
+            result = get_next_attribute (it, name, value);
+         }
          else { result = True; }
       }
    }
@@ -503,7 +506,10 @@ dmz::Config::get_next_attribute (
 
          name = it.state.it.get_hash_key ();
 
-         if (name == "") { result = get_next_attribute (it, name, value); }
+         if ((name == "") || (!value.get_buffer ())) {
+
+            result = get_next_attribute (it, name, value);
+         }
          else { result = True; }
       }
    }
@@ -676,7 +682,44 @@ dmz::Config::lookup_attribute (const String &Name, String &value) const {
                value = ac->value;
             ac->lock.unlock ();
 
-            result = True;
+            if (value.get_buffer ()) { result = True; }
+         }
+      }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::Config::remove_attribute (const String &Name, String &value) {
+
+   Boolean result (False);
+
+   if (_state.context) {
+
+      String dataName;
+      String attrName;
+
+      if (!pop_last_config_scope_element (Name, dataName, attrName)) { attrName = Name; }
+
+      Config cd;
+
+      if (dataName) { lookup_config (dataName, cd); }
+      else { cd = *this; }
+
+      if (cd) {
+
+         ConfigAttributeContext *ac = cd._state.context->attrTable.lookup (attrName);
+
+         if (ac) {
+
+            ac->lock.lock ();
+               value = ac->value;
+               ac->value.empty ();
+            ac->lock.unlock ();
+
+            if (value.get_buffer ()) { result = True; }
          }
       }
    }

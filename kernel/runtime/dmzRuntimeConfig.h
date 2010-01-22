@@ -68,6 +68,13 @@ namespace dmz {
          Boolean store_attribute (const String &Name, const String &Value);
          void copy_attributes (const Config &Data);
          Boolean lookup_attribute (const String &Name, String &value) const;
+         Boolean remove_attribute (const String &Name, String &value);
+
+         Boolean remove_attribute (const String &Name) {
+
+            String empty;
+            return remove_attribute (Name, empty);
+         }
 
          Boolean set_value (const String &Value);
          Boolean append_value (const String &Value, const Boolean IsFormatted);

@@ -44,10 +44,14 @@ function add_libs (list)
          end
          libs = libs .. "$(lmk.libPrefix)" .. element .. libDebug .. "$(lmk.libSuffix)"
       end
-      lmk.add_vars {
-         localIncludes = "$(lmk.includePathFlag)$(DMZ_OSG_INCLUDE_PATH)",
-         localLibPaths = "$(lmk.libPathFlag)$(DMZ_OSG_LIB_PATH)",
-         localLibs = libs,
-      }
+      lmk.add_vars { localLibs = libs, }
+      local inc = resolve "$(DMZ_OSG_INCLUDE_PATH)"
+      if inc and inc ~= "" then
+         lmk.add_vars { localIncludes = "$(lmk.includePathFlag)" .. inc, }
+      end
+      local lpath = resolve "$(DMZ_OSG_LIB_PATH)"
+      if lpath and lpath ~= "" then
+         lmk.add_vars { localLibPaths = "$(lmk.libPathFlag)" .. lpath, }
+      end
    end
 end

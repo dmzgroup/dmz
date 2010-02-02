@@ -33,7 +33,8 @@ dmz::QtModuleCanvasBasic::QtModuleCanvasBasic (const PluginInfo &Info, Config &l
       _zoomMin (0.01f),
       _zoomMax (10.0f),
       _zoomStep (1.5f),
-      _zoomDefault (1.0f) {
+      _zoomDefault (1.0f),
+      _drawGrid (True) {
 
    _init (local);
 }
@@ -105,7 +106,7 @@ dmz::QtModuleCanvasBasic::set_background_transparent (const Boolean Value) {
    }
    else {
       
-      _scene.enableGrid (True);
+      _scene.enableGrid (_drawGrid);
 
       QPalette palette = _canvas->palette ();
       palette.setBrush (QPalette::Base, Qt::white);
@@ -515,7 +516,7 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
       _scene.setItemIndexMethod (QGraphicsScene::NoIndex);
    }
    
-   _scene.enableGrid (config_to_boolean ("scene.background.grid", local, True));
+   _drawGrid = config_to_boolean ("scene.background.grid", local, _drawGrid);
 
    _canvas = new QtCanvasView (this);
    _canvas->setMouseTracking (true);

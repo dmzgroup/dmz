@@ -112,7 +112,8 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
       _mainWidgetName (),
       _windowMenuName ("&Window"),
       _fileMenuName ("&File"),
-      _dockWidgetTable () {
+      _dockWidgetTable (),
+      _fixedSize (False) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
@@ -314,8 +315,7 @@ dmz::QtModuleMainWindowBasic::_save_session () {
 
    Config session (get_plugin_name ());
 
-   session.add_config (
-      qbytearray_to_config ("geometry", saveGeometry ()));
+   session.add_config (qbytearray_to_config ("geometry", saveGeometry ()));
 
    session.add_config (qbytearray_to_config ("state", saveState (LocalSessionVersion)));
 
@@ -518,6 +518,17 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
    _fileMenuName = config_to_string ("file-menu.text", local, _fileMenuName);
 
    _windowMenuName = config_to_string ("window-menu.text", local, _windowMenuName);
+
+   Config fixed;
+
+   if (local.lookup_config ("fixed-size", fixed)) {
+
+      _fixedSize = True;
+      const int TheX = (int)config_to_int32 ("x", fixed, 800);
+      const int TheY = (int)config_to_int32 ("y", fixed, 600);
+      setFixedSize (TheX, TheY);
+      statusBar ()->setSizeGripEnabled (false);
+   }
 
    _init_dock_windows (local);
 }

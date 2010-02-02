@@ -104,6 +104,7 @@ namespace dmz {
          String _fileMenuName;
          HashTableStringTemplate<QMenu> _menuTable;
          HashTableStringTemplate<DockWidgetStruct> _dockWidgetTable;
+         Boolean _fixedSize;
 
       private:
          QtModuleMainWindowBasic ();

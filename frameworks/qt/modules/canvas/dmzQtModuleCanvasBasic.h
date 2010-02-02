@@ -104,6 +104,7 @@ namespace dmz {
          Float32 _zoomMax;
          Float32 _zoomStep;
          Float32 _zoomDefault;
+         Boolean _drawGrid;
 
       private:
          QtModuleCanvasBasic ();

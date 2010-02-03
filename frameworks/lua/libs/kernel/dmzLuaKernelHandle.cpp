@@ -372,6 +372,12 @@ dmz::lua_handle_container_to_table (lua_State *L, const HandleContainer &Contain
          count++;
       }
 
+      if (lua_create_handle (L, value)) {
+
+         lua_pushboolean (L, 1);
+         lua_rawset (L, Table);
+      }
+
       value = Container.get_next ();
    }
 

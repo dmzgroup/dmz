@@ -368,7 +368,7 @@ dmz::QtPluginCanvasLink::_init (Config &local) {
       ObjectPositionMask);
 
    Handle attrHandle = activate_object_attribute (
-     ObjectAttributeNodeLinkName,
+     config_to_string ("link.name", local, ObjectAttributeNodeLinkName),
      ObjectLinkMask | ObjectUnlinkMask | ObjectLinkAttributeMask);
 
    _linkAttrTable.store (attrHandle, this);
@@ -376,7 +376,6 @@ dmz::QtPluginCanvasLink::_init (Config &local) {
    Config colorList;
 
    if (local.lookup_all_config ("state-color-list.state-color", colorList)) {
-
 
       QColor defaultColor (Qt::black);
       defaultColor.setAlphaF (0.75);

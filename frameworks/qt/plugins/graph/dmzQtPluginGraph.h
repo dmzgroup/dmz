@@ -145,6 +145,7 @@ namespace dmz {
 
          Boolean _graphDirty;
          Boolean _showPowerLaw;
+         Boolean _showPercents;
 
          Int32 _maxCount;
          Int32 _totalCount;

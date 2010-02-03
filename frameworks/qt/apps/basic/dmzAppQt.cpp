@@ -25,7 +25,9 @@ main (int argc, char *argv[]) {
 
    Application app ("dmzAppQt", "dmz");
 
-   qsrand (QTime (0,0,0).secsTo (QTime::currentTime ()));
+   //qsrand (QTime (0,0,0).secsTo (QTime::currentTime ()));
+   srand (QDateTime::currentDateTime ().toTime_t ());
+   //sranddev ();
 
    QPixmap iconPixmap (
       is_valid_path (LocalIconFile) ? LocalIconFile : ":/AppQt/DMZ-Splash.png");

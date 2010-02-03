@@ -28,6 +28,7 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       _powerLabel (0),
       _graphDirty (False),
       _showPowerLaw (False),
+      _showPercents (False),
       _maxCount (0),
       _totalCount (0),
       _maxBarCount (0),
@@ -369,8 +370,10 @@ void
 dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
 
    // Note: _totalCount was _maxBarCount
-   bar.height = ((_totalCount > 0) ?
-      -(_barHeight * ((Float32)bar.count / (Float32)_totalCount)) : 0.0f);
+   const Float32 Percent = (_totalCount > 0) ?
+      (Float32)bar.count / (Float32)_totalCount : 0.0f;
+
+   bar.height = -(_barHeight * Percent);
 
    if (bar.bar) {
 
@@ -388,7 +391,15 @@ dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
    if (bar.countText) {
 
       QRectF rect = bar.countText->boundingRect ();
-      bar.countText->setPlainText (QString::number (bar.count));
+      if (_showPercents) {
+
+         bar.countText->setPlainText (QString::number (Percent * 100.0, 'f', 0));
+      }
+      else {
+
+         bar.countText->setPlainText (QString::number (bar.count));
+      }
+
       bar.countText->setPos (
          bar.offset + ((_barWidth * 0.5) - (rect.width () * 0.5)),
          bar.height - rect.height ());
@@ -698,6 +709,7 @@ dmz::QtPluginGraph::_init (Config &local) {
    _maxCount = config_to_int32 ("start.value", local, _maxCount);
 
    _showPowerLaw = config_to_boolean ("power-law.show", local, _showPowerLaw);
+   _showPercents = config_to_boolean ("percents.show", local, _showPercents);
    _powerStroke = config_to_qpen ("power-law.stroke", local, _powerStroke);
    _barStroke = config_to_qpen ("bar.stroke", local, _barStroke);
    _barFill = config_to_qbrush ("bar.fill", local, _barFill);

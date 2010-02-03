@@ -429,7 +429,8 @@ main (int argc, char *argv[]) {
    app.state.set_autosave_file (
       get_home_directory () + "/." + app.get_prefix () + "_AUTO_SAVE_FILE");
 
-   qsrand (QTime (0,0,0).secsTo (QTime::currentTime ()));
+   //qsrand (QTime (0,0,0).secsTo (QTime::currentTime ()));
+   srand (QDateTime::currentDateTime ().toTime_t ());
 
    LogObserverFile *logFile = local_create_log_file (app);
 

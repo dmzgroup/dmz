@@ -76,7 +76,7 @@ dmz::PluginSaveMessageMonostate::update_plugin_state (
             
             const Data *data (message.get_monostate ());
 
-            if (data) {
+            if (data && *data) {
 
                Config config ("message");
                config.store_attribute ("name", message.get_name ());
@@ -127,7 +127,7 @@ dmz::PluginSaveMessageMonostate::_restore_messages (Config &list) {
             
             if (config_to_data ("data", cd, context, data, &_log)) {
                
-               message.send (&data);
+               if (data) { message.send (&data); }
             }
          }
       }

@@ -18,6 +18,7 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       ObjectObserverUtil (Info, local),
       QtWidget (Info),
       _log (Info),
+      _convert (Info),
       _mainWindowModule (0),
       _mainWindowModuleName (),
       _scene (0),
@@ -29,6 +30,7 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       _graphDirty (False),
       _showPowerLaw (False),
       _showPercents (False),
+      _countHandle (0),
       _maxCount (0),
       _totalCount (0),
       _maxBarCount (0),
@@ -227,11 +229,23 @@ dmz::QtPluginGraph::update_object_counter (
 
    if (os) {
 
-      const Int32 Diff (Value - (PreviousValue ? *PreviousValue : 0));
+      if (AttributeHandle == _countHandle) {
 
-      _update_object_count (Diff, *os);
+         if (os->bar) {
 
-      _graphDirty = True;
+            os->bar->count += (Value - (PreviousValue ? *PreviousValue : 0 ));
+
+            _graphDirty = True;
+         }
+      }
+      else {
+
+         const Int32 Diff (Value - (PreviousValue ? *PreviousValue : 0));
+
+         _update_object_count (Diff, *os);
+
+         _graphDirty = True;
+      }
    }
 }
 
@@ -292,6 +306,28 @@ dmz::QtPluginGraph::on_exportButton_clicked () {
 }
 
 
+void
+dmz::QtPluginGraph::showEvent (QShowEvent *event) {
+
+   if (_visibleMsg) {
+
+      Data out = _convert.to_data (True);
+      _visibleMsg.send (&out);
+   }
+}
+
+
+void
+dmz::QtPluginGraph::hideEvent (QHideEvent *event) {
+
+   if (_visibleMsg) {
+
+      Data out = _convert.to_data (False);
+      _visibleMsg.send (&out);
+   }
+}
+
+
 QPixmap
 dmz::QtPluginGraph::_screen_grab () {
    
@@ -314,11 +350,11 @@ dmz::QtPluginGraph::_update_object_count (const Int32 Value, ObjectStruct &obj) 
 
    obj.count += Value;
 
-   if (obj.bar) { obj.bar->count--; }
+   if (obj.bar && !_countHandle) { obj.bar->count--; }
 
    obj.bar = _lookup_bar (obj.count - (obj.count % _steps));
 
-   if (obj.bar) { obj.bar->count++; }
+   if (obj.bar && !_countHandle) { obj.bar->count++; }
 }
 
 
@@ -370,8 +406,9 @@ void
 dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
 
    // Note: _totalCount was _maxBarCount
-   const Float32 Percent = (_totalCount > 0) ?
-      (Float32)bar.count / (Float32)_totalCount : 0.0f;
+   const Float32 Percent = _countHandle ?
+      ((_maxBarCount > 0) ? (Float32)bar.count / (Float32)_maxBarCount : 0.0f) :
+      ((_totalCount > 0) ? (Float32)bar.count / (Float32)_totalCount : 0.0f);
 
    bar.height = -(_barHeight * Percent);
 
@@ -382,6 +419,7 @@ dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
 
    if (bar.text) {
 
+      // Use height if rotated -rb
       QRectF rect = bar.text->boundingRect ();
       bar.text->setPos (
          bar.offset + ((_barWidth * 0.5) - (rect.width () * 0.5)),
@@ -390,7 +428,6 @@ dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
 
    if (bar.countText) {
 
-      QRectF rect = bar.countText->boundingRect ();
       if (_showPercents) {
 
          bar.countText->setPlainText (QString::number (Percent * 100.0, 'f', 0));
@@ -399,6 +436,8 @@ dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
 
          bar.countText->setPlainText (QString::number (bar.count));
       }
+
+      QRectF rect = bar.countText->boundingRect ();
 
       bar.countText->setPos (
          bar.offset + ((_barWidth * 0.5) - (rect.width () * 0.5)),
@@ -588,6 +627,8 @@ dmz::QtPluginGraph::_update_graph () {
 
                bar->text = new QGraphicsTextItem (QString::number (bar->Id));
                bar->text->setZValue (0.0f);
+//               QRectF rect = bar->text->boundingRect ();
+//               bar->text->setTransform (QTransform ().rotate (90.0).translate (0, -rect.height ()));
                if (_scene) { _scene->addItem (bar->text); }
             }
 
@@ -704,6 +745,13 @@ dmz::QtPluginGraph::_init (Config &local) {
       }
    }
 
+   _countHandle = defs.create_named_handle (config_to_string ("counter-handle.name", local));
+
+   if (_countHandle) {
+
+      activate_object_attribute (_countHandle, ObjectCounterMask);
+   }
+
    _ascendingOrder = config_to_boolean ("ascending.value", local, _ascendingOrder);
 
    _maxCount = config_to_int32 ("start.value", local, _maxCount);
@@ -743,6 +791,8 @@ dmz::QtPluginGraph::_init (Config &local) {
 
       _scene->addItem (line);
    }
+
+   _visibleMsg = config_create_message ("visible-message.name", local, "", context, &_log);
 }
 
 

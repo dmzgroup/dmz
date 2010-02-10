@@ -3,7 +3,9 @@
 
 #include <dmzObjectObserverUtil.h>
 #include <dmzQtWidget.h>
+#include <dmzRuntimeDataConverterTypesBase.h>
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
@@ -119,6 +121,9 @@ namespace dmz {
             ObjectStruct () : count (0), bar (0) {;}
          };
 
+         void showEvent (QShowEvent *event);
+         void hideEvent (QHideEvent *event);
+
          QPixmap _screen_grab ();
          void _update_object_count (const Int32 Value, ObjectStruct &obj);
          BarStruct *_lookup_bar (const Int32 Count);
@@ -129,6 +134,7 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+         DataConverterBoolean _convert;
          Ui::GraphForm _ui;
          QtModuleMainWindow *_mainWindowModule;
          String _mainWindowModuleName;
@@ -147,9 +153,13 @@ namespace dmz {
          Boolean _showPowerLaw;
          Boolean _showPercents;
 
+         Handle _countHandle;
+
          Int32 _maxCount;
          Int32 _totalCount;
          Int32 _maxBarCount;
+
+         Message _visibleMsg;
 
          Boolean _ascendingOrder;
          Float32 _barWidth;

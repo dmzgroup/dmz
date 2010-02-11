@@ -86,6 +86,13 @@ namespace dmz {
             const Int64 Value,
             const Int64 *PreviousValue);
 
+         virtual void update_object_text (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const String &Value,
+            const String *PreviousValue);
+
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();
 
@@ -96,6 +103,7 @@ namespace dmz {
          struct BarStruct {
 
             const Int32 Id;
+            HashTableHandleTemplate<String> labels;
             Int32 count;
             Float32 offset;
             Float32 height;
@@ -111,14 +119,34 @@ namespace dmz {
                bar (0),
                text (0),
                countText (0) {;}
+
+            ~BarStruct () { labels.empty (); }
+
+            void update_label () {
+
+               HashTableHandleIterator it;
+               String *ptr = labels.get_last (it);
+               if (ptr && *ptr && text) { text->setPlainText (ptr->get_buffer ()); }
+            }
+
+            String *remove_label (const Handle Object) {
+
+               String *result = labels.remove (Object);
+               update_label ();
+               return result;
+            }
          };
 
          struct ObjectStruct {
 
+            const Handle Object;
             Int32 count;
             BarStruct *bar;
 
-            ObjectStruct () : count (0), bar (0) {;}
+            ObjectStruct (const Handle TheObject) :
+                  Object (TheObject),
+                  count (0),
+                  bar (0) {;}
          };
 
          void showEvent (QShowEvent *event);
@@ -152,8 +180,10 @@ namespace dmz {
          Boolean _graphDirty;
          Boolean _showPowerLaw;
          Boolean _showPercents;
+         Boolean _rotateLabel;
 
          Handle _countHandle;
+         Handle _labelHandle;
 
          Int32 _maxCount;
          Int32 _totalCount;

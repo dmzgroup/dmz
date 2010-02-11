@@ -30,7 +30,9 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       _graphDirty (False),
       _showPowerLaw (False),
       _showPercents (False),
+      _rotateLabel (False),
       _countHandle (0),
+      _labelHandle (0),
       _maxCount (0),
       _totalCount (0),
       _maxBarCount (0),
@@ -138,7 +140,7 @@ dmz::QtPluginGraph::create_object (
 
    if (_typeSet.contains_type (Type)) {
 
-      ObjectStruct *os = new ObjectStruct;
+      ObjectStruct *os = new ObjectStruct (ObjectHandle);
 
       if (_objTable.store (ObjectHandle, os)) {
 
@@ -148,7 +150,7 @@ dmz::QtPluginGraph::create_object (
 
          if (os->bar) {
 
-            os->bar->count++;
+            if (!_countHandle) { os->bar->count++; }
             _graphDirty = True;
          }
       }
@@ -170,7 +172,16 @@ dmz::QtPluginGraph::destroy_object (
 
       if (os->bar) {
 
-         os->bar->count--;
+         if (_countHandle) {
+
+            os->bar->count -= os->count;
+
+            _graphDirty = True;
+         }
+
+         String *ptr = os->bar->remove_label (ObjectHandle);
+         if (ptr) { delete ptr; ptr = 0; }
+         if (!_countHandle) { os->bar->count--; }
          _graphDirty = True;
       }
 
@@ -231,6 +242,8 @@ dmz::QtPluginGraph::update_object_counter (
 
       if (AttributeHandle == _countHandle) {
 
+         os->count = (Int32)Value;
+
          if (os->bar) {
 
             os->bar->count += (Value - (PreviousValue ? *PreviousValue : 0 ));
@@ -246,6 +259,36 @@ dmz::QtPluginGraph::update_object_counter (
 
          _graphDirty = True;
       }
+   }
+}
+
+
+void
+dmz::QtPluginGraph::update_object_text (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const String &Value,
+      const String *PreviousValue) {
+
+   ObjectStruct *os (_objTable.lookup (ObjectHandle));
+
+   if (os && os->bar) {
+
+      String *ptr = os->bar->labels.lookup (ObjectHandle);
+
+      if (ptr) { *ptr = Value; }
+      else {
+
+         ptr = new String (Value);
+
+         if (!os->bar->labels.store (ObjectHandle, ptr)) {
+
+            delete ptr; ptr = 0;
+         }
+      }
+
+      os->bar->update_label ();
    }
 }
 
@@ -350,11 +393,27 @@ dmz::QtPluginGraph::_update_object_count (const Int32 Value, ObjectStruct &obj) 
 
    obj.count += Value;
 
-   if (obj.bar && !_countHandle) { obj.bar->count--; }
+   String *label (0);
+
+   if (obj.bar) {
+
+      if (!_countHandle) { obj.bar->count--; }
+
+      label = obj.bar->remove_label (obj.Object);
+   }
 
    obj.bar = _lookup_bar (obj.count - (obj.count % _steps));
 
-   if (obj.bar && !_countHandle) { obj.bar->count++; }
+   if (obj.bar) {
+
+      if (!_countHandle) { obj.bar->count++; }
+
+      if (label) {
+
+         if (!obj.bar->labels.store (obj.Object, label)) { delete label; label = 0; }
+         else { obj.bar->update_label (); }
+      }
+   }
 }
 
 
@@ -419,10 +478,11 @@ dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
 
    if (bar.text) {
 
-      // Use height if rotated -rb
       QRectF rect = bar.text->boundingRect ();
+
       bar.text->setPos (
-         bar.offset + ((_barWidth * 0.5) - (rect.width () * 0.5)),
+         bar.offset + (
+            (_barWidth * 0.5) - ((_rotateLabel ? rect.height () : rect.width ()) * 0.5)),
          5.0);
    }
 
@@ -626,9 +686,17 @@ dmz::QtPluginGraph::_update_graph () {
             if (!bar->text) {
 
                bar->text = new QGraphicsTextItem (QString::number (bar->Id));
+               bar->update_label ();
                bar->text->setZValue (0.0f);
-//               QRectF rect = bar->text->boundingRect ();
-//               bar->text->setTransform (QTransform ().rotate (90.0).translate (0, -rect.height ()));
+
+               if (_rotateLabel) {
+
+                  QRectF rect = bar->text->boundingRect ();
+
+                  bar->text->setTransform (
+                     QTransform ().rotate (90.0).translate (0, -rect.height ()));
+               }
+
                if (_scene) { _scene->addItem (bar->text); }
             }
 
@@ -745,11 +813,20 @@ dmz::QtPluginGraph::_init (Config &local) {
       }
    }
 
-   _countHandle = defs.create_named_handle (config_to_string ("counter-handle.name", local));
+   _countHandle =
+      defs.create_named_handle (config_to_string ("counter-handle.name", local));
 
    if (_countHandle) {
 
       activate_object_attribute (_countHandle, ObjectCounterMask);
+   }
+
+   _labelHandle =
+      defs.create_named_handle (config_to_string ("label-handle.name", local));
+
+   if (_labelHandle) {
+
+      activate_object_attribute (_labelHandle, ObjectTextMask);
    }
 
    _ascendingOrder = config_to_boolean ("ascending.value", local, _ascendingOrder);
@@ -758,6 +835,7 @@ dmz::QtPluginGraph::_init (Config &local) {
 
    _showPowerLaw = config_to_boolean ("power-law.show", local, _showPowerLaw);
    _showPercents = config_to_boolean ("percents.show", local, _showPercents);
+   _rotateLabel = config_to_boolean ("rotate-label.value", local, _rotateLabel);
    _powerStroke = config_to_qpen ("power-law.stroke", local, _powerStroke);
    _barStroke = config_to_qpen ("bar.stroke", local, _barStroke);
    _barFill = config_to_qbrush ("bar.fill", local, _barFill);
@@ -792,7 +870,12 @@ dmz::QtPluginGraph::_init (Config &local) {
       _scene->addItem (line);
    }
 
-   _visibleMsg = config_create_message ("visible-message.name", local, "", context, &_log);
+   _visibleMsg = config_create_message (
+      "visible-message.name",
+      local,
+      "",
+      context,
+      &_log);
 }
 
 

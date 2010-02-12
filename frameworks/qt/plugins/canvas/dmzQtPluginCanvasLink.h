@@ -10,6 +10,7 @@
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesMask.h>
 #include <QtGui/QGraphicsItem>
+#include <QtGui/QGraphicsPolygonItem>
 
 
 namespace dmz {
@@ -29,6 +30,9 @@ namespace dmz {
 
          Handle get_link_handle () const;
 
+         void set_arrow_state (const Boolean State);
+         void set_rotation_offset (const Float32 RotationOffset);
+
          void update (const Handle ObjHandle, const Vector &Value);
 
          virtual void paint (
@@ -37,9 +41,13 @@ namespace dmz {
             QWidget *widget);
 
       protected:
+         void _set_arrow_transform ();
          Handle _LinkHandle;
          Handle _SuperHandle;
          Handle _SubHandle;
+         Float32 _rotation;
+         QGraphicsPolygonItem *_arrow1;
+         QGraphicsPolygonItem *_arrow2;
    };
 
    class QtPluginCanvasLink :
@@ -169,7 +177,12 @@ namespace dmz {
          Definitions _defs;
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
+         Handle _defaultAttrHandle;
          Handle _positionAttrHandle;
+         Handle _flowAttrHandle;
+         Mask _forwardState;
+         Mask _reverseState;
+         Mask _flowStateMask;
          HashTableHandle _linkAttrTable;
          HashTableHandleTemplate<LinkStruct> _linkTable;
          HashTableHandleTemplate<NodeStruct> _nodeTable;

@@ -11,11 +11,11 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesMask.h>
+#include <dmzTypesMath.h>
 #include <dmzTypesUUID.h>
 #include <QtGui/QtGui>
 
 #include <QtCore/QDebug>
-
 
 dmz::QtCanvasLink::QtCanvasLink (
       const Handle LinkHandle,
@@ -25,7 +25,10 @@ dmz::QtCanvasLink::QtCanvasLink (
       QGraphicsLineItem (parent),
       _LinkHandle (LinkHandle),
       _SuperHandle (SuperHandle),
-      _SubHandle (SubHandle) {
+      _SubHandle (SubHandle),
+      _rotation (0.0f),
+      _arrow1 (0),
+      _arrow2 (0) {
 
    setFlag (ItemIsSelectable, true);
 
@@ -48,6 +51,57 @@ dmz::QtCanvasLink::get_link_handle () const { return _LinkHandle; }
 
 
 void
+dmz::QtCanvasLink::set_arrow_state (const Boolean State) {
+
+   if (_arrow1) { delete _arrow1; _arrow1 = 0; }
+   if (_arrow2) { delete _arrow2; _arrow2 = 0; }
+
+   if (State) {
+
+      _arrow1 = new QGraphicsPolygonItem (this);
+      _arrow2 = new QGraphicsPolygonItem (this);
+   }
+
+   QPolygon poly (3);
+   poly.putPoints (0, 3, 0, -10, 10, 10, -10, 10);
+
+   if (_arrow1) {
+
+      _arrow1->setZValue (zValue () - 1.0f);
+      _arrow1->setPolygon (poly);
+      _arrow1->setBrush (QBrush (Qt::SolidPattern));
+   }
+
+   if (_arrow2) {
+
+      _arrow2->setZValue (zValue () - 1.0f);
+      _arrow2->setPolygon (poly);
+      _arrow2->setBrush (QBrush (Qt::SolidPattern));
+   }
+
+   _set_arrow_transform ();
+}
+
+
+void
+dmz::QtCanvasLink::set_rotation_offset (const Float32 RotationOffset) {
+
+   _rotation = RotationOffset;
+   _set_arrow_transform ();
+}
+
+
+dmz::Float32
+local_angle (QPointF p) {
+
+   dmz::Vector v1 (0.0, 1.0, 0.0);
+   dmz::Vector v2 ((float)p.x (), (float)p.y (), 0.0);
+
+   return dmz::to_degrees (-dmz::get_rotation_angle (v1, v2));
+}
+
+
+void
 dmz::QtCanvasLink::update (const Handle ObjHandle, const Vector &Value) {
 
    QPointF point (Value.get_x (), Value.get_z ());
@@ -60,6 +114,8 @@ dmz::QtCanvasLink::update (const Handle ObjHandle, const Vector &Value) {
 
       setLine (QLineF (line ().p1 (), point));
    }
+
+   _set_arrow_transform ();
 }
 
 
@@ -87,6 +143,26 @@ dmz::QtCanvasLink::paint (
    painter->drawLine (line ());
 }
 
+void
+dmz::QtCanvasLink::_set_arrow_transform () {
+
+   if (_arrow1) {
+
+      _arrow1->resetTransform ();
+      _arrow1->setZValue (zValue () - 1.0f);
+      _arrow1->rotate (local_angle (line ().p1 () - line ().p2 ()) + _rotation);
+      _arrow1->setPos (((line ().p1 () - line ().p2 ()) * 0.3) + line ().p2 ());
+   }
+
+   if (_arrow2) {
+
+      _arrow2->resetTransform ();
+      _arrow2->setZValue (zValue () - 1.0f);
+      _arrow2->rotate (local_angle (line ().p1 () - line ().p2 ()) + _rotation);
+      _arrow2->setPos (((line ().p1 () - line ().p2 ()) * 0.7) + line ().p2 ());
+   }
+}
+
 
 dmz::QtPluginCanvasLink::QtPluginCanvasLink (
       const PluginInfo &Info,
@@ -96,7 +172,9 @@ dmz::QtPluginCanvasLink::QtPluginCanvasLink (
       _log (Info),
       _appState (Info),
       _defs (Info, &_log),
+      _defaultAttrHandle (0),
       _positionAttrHandle (0),
+      _flowAttrHandle (0),
       _canvasModule (0),
       _canvasModuleName (),
       _linkAttrTable (),
@@ -232,6 +310,26 @@ dmz::QtPluginCanvasLink::update_link_attribute_object (
       LinkStruct *ls = _linkTable.lookup (LinkHandle);
 
       if (ls) { _attrObjTable.store (AttributeObjectHandle, ls); }
+
+      if (_flowAttrHandle) {
+
+         ObjectModule *objMod (get_object_module ());
+
+         if (objMod) {
+
+            Mask state;
+
+            if (objMod->lookup_state (AttributeObjectHandle, _flowAttrHandle, state)) {
+
+               update_object_state (
+                  UUID (),
+                  AttributeObjectHandle,
+                  _flowAttrHandle,
+                  state,
+                  0);
+            }
+         }
+      }
    }
 
    if (PrevAttributeObjectHandle) { _attrObjTable.remove (PrevAttributeObjectHandle); }
@@ -250,23 +348,47 @@ dmz::QtPluginCanvasLink::update_object_state (
 
    if (ls) {
 
-      ColorStruct *current (_stateList);
+      if (AttributeHandle == _defaultAttrHandle) {
 
-      ColorStruct *cs (0);
+         ColorStruct *current (_stateList);
 
-      while (current && !cs) {
+         ColorStruct *cs (0);
 
-         if (Value.contains (current->State)) { cs = current; }
-         else { current = current->next; }
+         while (current && !cs) {
+
+            if (Value.contains (current->State)) { cs = current; }
+            else { current = current->next; }
+         }
+
+         QColor color (Qt::black);
+         color.setAlphaF (0.75f);
+
+         if (cs) { color = cs->Color; }
+
+         QBrush b (color);
+         ls->item->setPen (QPen (b, 4));
       }
+      else if (AttributeHandle == _flowAttrHandle) {
 
-      QColor color (Qt::black);
-      color.setAlphaF (0.75f);
+         if (Value & _flowStateMask) {
 
-      if (cs) { color = cs->Color; }
+            const Boolean Forward = Value & _forwardState;
+            const Boolean Reverse = Value & _reverseState;
 
-      QBrush b (color);
-      ls->item->setPen (QPen (b, 4));
+            if (Forward && !Reverse) {
+
+               ls->item->set_arrow_state (True);
+               ls->item->set_rotation_offset (0.0f);
+            }
+            else if (!Forward && Reverse) {
+
+               ls->item->set_arrow_state (True);
+               ls->item->set_rotation_offset (180.0f);
+            }
+            else { ls->item->set_arrow_state (False); }
+         }
+         else { ls->item->set_arrow_state (False); }
+      }
    }
 }
 
@@ -361,11 +483,28 @@ dmz::QtPluginCanvasLink::_init (Config &local) {
    const String PosAttrName (
       config_to_string ("attribute.position.name", local, ObjectAttributeDefaultName));
    
-   activate_default_object_attribute (ObjectStateMask);
+   _defaultAttrHandle = activate_default_object_attribute (ObjectStateMask);
 
    _positionAttrHandle = activate_object_attribute (
       PosAttrName,
       ObjectPositionMask);
+
+   const String FlowAttrName = config_to_string ("flow-attribute.name", local);
+
+   if (FlowAttrName) {
+
+      _flowAttrHandle = activate_object_attribute (FlowAttrName, ObjectStateMask);
+   }
+
+   _defs.lookup_state (
+      config_to_string ("forward-flow-state.name", local),
+      _forwardState);
+
+   _defs.lookup_state (
+      config_to_string ("reverse-flow-state.name", local),
+      _reverseState);
+
+   _flowStateMask = _forwardState | _reverseState;
 
    Handle attrHandle = activate_object_attribute (
      config_to_string ("link.name", local, ObjectAttributeNodeLinkName),

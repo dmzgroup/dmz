@@ -53,33 +53,41 @@ dmz::QtCanvasLink::get_link_handle () const { return _LinkHandle; }
 void
 dmz::QtCanvasLink::set_arrow_state (const Boolean State) {
 
-   if (_arrow1) { delete _arrow1; _arrow1 = 0; }
-   if (_arrow2) { delete _arrow2; _arrow2 = 0; }
-
    if (State) {
 
-      _arrow1 = new QGraphicsPolygonItem (this);
-      _arrow2 = new QGraphicsPolygonItem (this);
+      if (!_arrow1) { _arrow1 = new QGraphicsPolygonItem (this); }
+      if (!_arrow2) { _arrow2 = new QGraphicsPolygonItem (this); }
+
+      QPolygon poly (4);
+
+      poly.putPoints (0, 4,
+         0, -9,
+         9, 5,
+         0, 0,
+         -9, 5);
+
+      if (_arrow1) {
+
+         _arrow1->setPolygon (poly);
+         _arrow1->setZValue (zValue () - 1.0f);
+         _arrow1->setBrush (QBrush (Qt::SolidPattern));
+      }
+
+      if (_arrow2) {
+
+         _arrow2->setPolygon (poly);
+         _arrow2->setZValue (zValue () - 1.0f);
+         _arrow2->setBrush (QBrush (Qt::SolidPattern));
+      }
+
+      setColorAll (pen ());
+      _set_arrow_transform ();
    }
+   else {
 
-   QPolygon poly (3);
-   poly.putPoints (0, 3, 0, -10, 10, 10, -10, 10);
-
-   if (_arrow1) {
-
-      _arrow1->setZValue (zValue () - 1.0f);
-      _arrow1->setPolygon (poly);
-      _arrow1->setBrush (QBrush (Qt::SolidPattern));
+      if (_arrow1) { delete _arrow1; _arrow1 = 0; }
+      if (_arrow2) { delete _arrow2; _arrow2 = 0; }
    }
-
-   if (_arrow2) {
-
-      _arrow2->setZValue (zValue () - 1.0f);
-      _arrow2->setPolygon (poly);
-      _arrow2->setBrush (QBrush (Qt::SolidPattern));
-   }
-
-   _set_arrow_transform ();
 }
 
 
@@ -120,6 +128,29 @@ dmz::QtCanvasLink::update (const Handle ObjHandle, const Vector &Value) {
 
 
 void
+dmz::QtCanvasLink::setColorAll (QPen pen) {
+
+   setPen (pen);
+
+   if (_arrow1) {
+
+      QPen apen = _arrow1->pen ();
+      apen.setColor (pen.color ());
+      _arrow1->setPen (apen);
+      _arrow1->setBrush (QBrush (pen.color ()));
+   }
+
+   if (_arrow2) {
+
+      QPen apen = _arrow2->pen ();
+      apen.setColor (pen.color ());
+      _arrow2->setPen (apen);
+      _arrow2->setBrush (QBrush (pen.color ()));
+   }
+}
+
+
+void
 dmz::QtCanvasLink::paint (
       QPainter *painter,
       const QStyleOptionGraphicsItem *option,
@@ -146,20 +177,23 @@ dmz::QtCanvasLink::paint (
 void
 dmz::QtCanvasLink::_set_arrow_transform () {
 
-   if (_arrow1) {
+   if (_arrow1 && _arrow2) {
+
+      const float ZValue = zValue () - 1.0f;
+      const float Rotate = local_angle (line ().p1 () - line ().p2 ()) + _rotation;
+      const QPointF P1 = line ().p1 ();
+      const QPointF P2 = line ().p2 ();
+      const QPointF Dir = P1 - P2;
 
       _arrow1->resetTransform ();
-      _arrow1->setZValue (zValue () - 1.0f);
-      _arrow1->rotate (local_angle (line ().p1 () - line ().p2 ()) + _rotation);
-      _arrow1->setPos (((line ().p1 () - line ().p2 ()) * 0.3) + line ().p2 ());
-   }
-
-   if (_arrow2) {
+      _arrow1->rotate (Rotate);
+      _arrow1->setPos ((Dir * 0.3) + P2);
+      _arrow1->setZValue (ZValue);
 
       _arrow2->resetTransform ();
-      _arrow2->setZValue (zValue () - 1.0f);
-      _arrow2->rotate (local_angle (line ().p1 () - line ().p2 ()) + _rotation);
-      _arrow2->setPos (((line ().p1 () - line ().p2 ()) * 0.7) + line ().p2 ());
+      _arrow2->rotate (Rotate);
+      _arrow2->setPos ((Dir * 0.7) + P2);
+      _arrow2->setZValue (ZValue);
    }
 }
 
@@ -366,7 +400,7 @@ dmz::QtPluginCanvasLink::update_object_state (
          if (cs) { color = cs->Color; }
 
          QBrush b (color);
-         ls->item->setPen (QPen (b, 4));
+         ls->item->setColorAll (QPen (b, 4));
       }
       else if (AttributeHandle == _flowAttrHandle) {
 

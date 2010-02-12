@@ -35,6 +35,8 @@ namespace dmz {
 
          void update (const Handle ObjHandle, const Vector &Value);
 
+         void setColorAll (QPen pen);
+
          virtual void paint (
             QPainter *painter,
             const QStyleOptionGraphicsItem *option,

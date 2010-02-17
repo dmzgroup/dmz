@@ -13,7 +13,7 @@ lmk.add_vars ({
 
 lmk.add_vars ({
    localDefines = "$(lmk.defineFlag)COMPILED_FROM_DSP",
-   localLibPaths = "/DEF:libexpat.def",
+   localLibPaths = "/DEF:$(localPwd)/libexpat.def",
 }, {win32 = true})
 
 lmk.add_vars { localIncludes = "$(lmk.includePathFlag)." }

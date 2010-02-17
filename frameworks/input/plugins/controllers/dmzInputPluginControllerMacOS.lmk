@@ -18,5 +18,5 @@ lmk.add_vars {
    localDefines = "-DkBuildingLibrary=1", 
    localIncludes = '-fno-common -fpascal-strings -pipe "-fmessage-length=0" ' ..
       '-Wno-four-char-constants -Wno-unknown-pragmas',
-   localLibPaths = "-framework IOKit -framework CoreFoundation"
+   localLibs = "-framework IOKit -framework CoreFoundation"
 }

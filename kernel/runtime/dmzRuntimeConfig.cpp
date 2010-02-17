@@ -691,6 +691,27 @@ dmz::Config::lookup_attribute (const String &Name, String &value) const {
 }
 
 
+/*!
+
+\fn dmz::Boolean dmz::Config::remove_attribute (const String &Name)
+\brief Removes an attribute from the Config.
+\details
+The \a Name parameter may be scoped.
+\param[in] Name String containing name of attribute to remove.
+\return Returns dmz::True if an attribute with \a Name is removed.
+
+*/
+
+/*!
+
+\brief Removes an attribute from the Config.
+\details
+The \a Name parameter may be scoped.
+\param[in] Name String containing name of attribute to remove.
+\param[out] value String used to return value of attribute if removed.
+\return Returns dmz::True if an attribute with \a Name is removed.
+
+*/
 dmz::Boolean
 dmz::Config::remove_attribute (const String &Name, String &value) {
 

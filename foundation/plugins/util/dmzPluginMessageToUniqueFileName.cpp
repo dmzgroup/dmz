@@ -5,6 +5,29 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::PluginMessageToUniqueFileName
+\ingroup Foundation
+\brief Converts a message to a message with a unique file name as its payload.
+\details
+When the incoming message is received, the plugin creates a new file name of the form
+$HOME/Desktop/\<root\>-\<number\>\<extension\> and sends that name as the payload in the
+outgoing message. The plugin insures a file of the generated name does not exist before
+sending the outgoing message. If the file name is not unique, the \<number\> is
+incremented until a unique name is found.
+\code
+<local>
+   <in-message name="Name of incoming message"/>
+   <out-message name="Name of outgoing message"/>
+   <target name="Name of outgoing message target"/>
+   <file root="File root name [Defaults to 'DMZ File']" ext="File extensions"/>
+</local>
+\endcode
+
+*/
+
+//! \cond
 dmz::PluginMessageToUniqueFileName::PluginMessageToUniqueFileName (
       const PluginInfo &Info, Config &local) :
       Plugin (Info),
@@ -108,6 +131,7 @@ dmz::PluginMessageToUniqueFileName::_init (Config &local) {
    String desktop = _filePath + "Desktop/";
    if (is_valid_path (desktop)) { _filePath = desktop; }
 }
+//! \endcond
 
 
 extern "C" {

@@ -13,6 +13,7 @@ namespace dmz {
          public MessageObserver {
 
       public:
+         //! \cond
          PluginMessageToUniqueFileName (const PluginInfo &Info, Config &local);
          ~PluginMessageToUniqueFileName ();
 
@@ -46,6 +47,7 @@ namespace dmz {
          String _filePath;
          String _fileRoot;
          String _fileExt;
+         //! \endcond
 
       private:
          PluginMessageToUniqueFileName ();

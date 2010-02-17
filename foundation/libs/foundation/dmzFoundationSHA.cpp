@@ -56,6 +56,16 @@
 */
 
 
+/*!
+
+\brief Calculates the SHA for a specified file.
+\ingroup Foundation
+\param[in] FileName String containing name of file to calculated SHA.
+\param[in] Type Specifies type of SHA to calculate.
+\return Returns a string containing the calculated SHA of the file. If the
+\a FileName is invalid, an empty string is returned.
+
+*/
 dmz::String
 dmz::sha_from_file (const String &FileName, const SHATypeEnum Type) {
 

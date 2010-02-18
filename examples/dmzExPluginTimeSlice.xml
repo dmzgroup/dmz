@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dmz>
+<runtime>
+   <time>
+      <frequency value="60.0"/>
+   </time>
+</runtime>
 <plugin-list>
    <plugin name="dmzPluginTermExit"/>
    <plugin name="dmzExPluginTimeSlice"/>

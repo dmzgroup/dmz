@@ -20,7 +20,7 @@ dmz::ExPluginTimeSlice::~ExPluginTimeSlice () {
 void
 dmz::ExPluginTimeSlice::update_time_slice (const Float64 DeltaTime) {
 
-   _log.out << "[sync_timed_event]: " << DeltaTime << endl;
+   _log.out << "update_time_slice called with DeltaTime = " << DeltaTime << endl;
 }
 
 

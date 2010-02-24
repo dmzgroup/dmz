@@ -1031,53 +1031,6 @@ dmz::Config::get_prev_config (ConfigIterator &it, Config &data) const {
 
 /*!
 
-\brief Overwrites config contexts found at the specified scope path.
-\param[in] Scope String containing scope to use when overwriting.
-\param[in] Data Config containing config context to use in the over write.
-\return Returns dmz::True if config context was successfully overwritten.
-
-*/
-dmz::Boolean
-dmz::Config::overwrite_config (const String &Scope, const Config &Data) {
-
-   if (!Scope) {
-
-      if (_state.context) { _state.context->remove_config (Data.get_name ()); }
-   }
-   else {
-
-      Config list;
-
-      lookup_all_config (Scope, list);
-
-      ConfigIterator it;
-      Config cd;
-
-      while (list.get_next_config (it, cd)) {
-
-         ConfigContext *context (cd.get_config_context ());
-
-         if (context) { context->remove_config (Data.get_name ()); }
-      }
-   }
-
-   return add_config (Scope, Data);
-}
-
-
-/*!
-
-\fn dmz::Config::overwrite_config (const Config &Data)
-\brief Overwrite config contexts.
-\details The is the same as calling overwrite_config ("", Data)
-\return Returns dmz::True if the config contexts are over written.
-\sa dmz::Config::overwrite_config (const String &Scope, const Config &Data)
-
-*/
-
-
-/*!
-
 \brief Adds a config context.
 \details The \a Scope parameter may be used to add a config context to child config
 contexts. For example the following code snippet:
@@ -1297,6 +1250,94 @@ dmz::Config::lookup_all_config_merged (const String &Name, Config &data) const {
          data.copy_attributes (tmp);
          data.add_children (tmp);
       }
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Overwrites config contexts found at the specified scope path.
+\param[in] Scope String containing scope to use when overwriting.
+\param[in] Data Config containing config context to use in the over write.
+\return Returns dmz::True if config context was successfully overwritten.
+
+*/
+dmz::Boolean
+dmz::Config::overwrite_config (const String &Scope, const Config &Data) {
+
+   if (!Scope) {
+
+      if (_state.context) { _state.context->remove_config (Data.get_name ()); }
+   }
+   else {
+
+      Config list;
+
+      lookup_all_config (Scope, list);
+
+      ConfigIterator it;
+      Config cd;
+
+      while (list.get_next_config (it, cd)) {
+
+         ConfigContext *context (cd.get_config_context ());
+
+         if (context) { context->remove_config (Data.get_name ()); }
+      }
+   }
+
+   return add_config (Scope, Data);
+}
+
+
+/*!
+
+\fn dmz::Config::overwrite_config (const Config &Data)
+\brief Overwrite config contexts.
+\details The is the same as calling overwrite_config ("", Data)
+\return Returns dmz::True if the config contexts are over written.
+\sa dmz::Config::overwrite_config (const String &Scope, const Config &Data)
+
+*/
+
+
+/*!
+
+\brief Removes config contexts found at the specified scope path.
+\param[in] Scope String containing scope to use when overwriting.
+\return Returns dmz::True if config context was successfully removed.
+
+*/
+dmz::Boolean
+dmz::Config::remove_config (const String &Scope) {
+
+   Boolean result = False;
+
+   if (Scope) {
+
+      result = True;
+
+      String value, remainder;
+
+      if (pop_last_config_scope_element (Scope, value, remainder)) {
+
+         Config list;
+
+         lookup_all_config (remainder, list);
+
+         ConfigIterator it;
+         Config cd;
+
+         while (list.get_next_config (it, cd)) {
+
+            ConfigContext *context (cd.get_config_context ());
+
+            if (context) { context->remove_config (value); }
+         }
+      }
+      else if (_state.context) { _state.context->remove_config (Scope); }
    }
 
    return result;

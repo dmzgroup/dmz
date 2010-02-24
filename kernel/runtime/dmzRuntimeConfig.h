@@ -85,14 +85,6 @@ namespace dmz {
          Boolean get_next_config (ConfigIterator &it, Config &data) const;
          Boolean get_prev_config (ConfigIterator &it, Config &data) const;
 
-         Boolean overwrite_config (const String &Scope, const Config &Data);
-
-         Boolean overwrite_config (const Config &Data) {
-
-            const String Null;
-            return overwrite_config (Null, Data);
-         }
-
          Boolean add_config (const String &Scope, const Config &Data);
 
          Boolean add_config (const Config &Data) {
@@ -106,6 +98,16 @@ namespace dmz {
          Boolean lookup_config (const String &Name, Config &data) const;
          Boolean lookup_all_config (const String &Name, Config &data) const;
          Boolean lookup_all_config_merged (const String &Name, Config &data) const;
+
+         Boolean remove_config (const String &Scope);
+
+         Boolean overwrite_config (const String &Scope, const Config &Data);
+
+         Boolean overwrite_config (const Config &Data) {
+
+            const String Null;
+            return overwrite_config (Null, Data);
+         }
 
          // For internal use
          void set_config_context (ConfigContext *context);

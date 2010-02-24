@@ -1194,15 +1194,22 @@ operator<< (dmz::String &str, const dmz::Vector &Value) {
 dmz::String &
 operator<< (dmz::String &str, const dmz::Mask &Value) {
 
-   const dmz::Int32 Size ((Value.get_size () * 32) - 1);
+   const dmz::Int32 Size (Value.get_size ());
 
    str << "[";
 
-   for (dmz::Int32 place = Size; place >= 0; place--) {
+   for (dmz::Int32 place = 0; place < Size; place++) {
 
-      if (place && !((place + 1) % 32) && (str.get_length ()!= 1)) { str << " | "; }
-      else if (place && !((place + 1) % 4) && (str.get_length () != 1)) { str << " "; }
-      str << (Value.get_bit (place) ? "1" : "0");
+      if (place > 0) { str << " | "; }
+
+      const dmz::UInt32 SubMask = Value.get_sub_mask (place);
+
+      for (dmz::Int32 bit = 31; bit >= 0; bit--) {
+
+         if ((bit < 31) && (((bit + 1) % 4) == 0)) { str << " "; }
+
+         str << ((SubMask & (1 << bit)) ? "1" : "0");
+      }
    }
 
    return str << "]";

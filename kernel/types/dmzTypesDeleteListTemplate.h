@@ -4,8 +4,8 @@
 namespace dmz {
 
 //! \cond
-template <class T>
-void delete_list (T *&ptr) {
+template <class T> void
+delete_list (T *&ptr) {
 
    while (ptr) {
 

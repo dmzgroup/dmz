@@ -341,10 +341,7 @@ local_init_state (
    ConfigIterator it;
    Config maskInit;
 
-   for (
-         Boolean found = Init.get_first_config (it, maskInit);
-         found;
-         found = Init.get_next_config (it, maskInit)) {
+   while (Init.get_next_config (it, maskInit)) {
 
       const String Name = config_to_string ("name", maskInit);
 
@@ -1220,7 +1217,7 @@ dmz::Definitions::lookup_state (const String &Name, Mask &state) const {
       StringTokenizer st (Name, '|');
       String value = st.get_next ();
 
-      result = True;
+      result = value;
 
       while (value) {
 

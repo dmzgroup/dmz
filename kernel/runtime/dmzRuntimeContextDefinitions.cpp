@@ -8,7 +8,7 @@ dmz::RuntimeContextDefinitions::RuntimeContextDefinitions () :
       eventNameTable (&eventNameLock),
       objectHandleTable (&objectHandleLock),
       objectNameTable (&objectNameLock),
-      maskShift (1),
+      maskShift (0),
       maskTable (&maskLock) {;}
 
 

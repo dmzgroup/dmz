@@ -34,11 +34,16 @@ dmz::PluginMsgDump::receive_message (
 
    Definitions defs (get_plugin_runtime_context ());
 
+   String target ("GLOBAL");
+
+   if (TargetObserverHandle) {
+
+      target = defs.lookup_named_handle_name (TargetObserverHandle);
+      if (!target) { target = defs.lookup_runtime_name (TargetObserverHandle); }
+   }
+
    _log.debug << "-=-=-=-=-=-=-=-=-=- START MESSAGE -=-=-=-=-=-=-=-=-=-" << endl;
-   _log.debug << "Target: "
-      << (TargetObserverHandle ?
-         defs.lookup_runtime_name (TargetObserverHandle) : "GLOBAL")
-      << endl;
+   _log.debug << "Target" << "[" << TargetObserverHandle << "]: " << target << endl;
    _log.debug << "Message[" << MessageSendHandle << "]: " << Msg.get_name () << endl;
    if (InData) { _log.debug << "Sent data:" << endl << *InData << endl; }
    if (outData) { _log.debug << "Returned data:" << endl << *outData << endl; }

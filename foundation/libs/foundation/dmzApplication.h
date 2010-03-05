@@ -46,6 +46,7 @@ namespace dmz {
 
          Boolean load_session ();
          Boolean process_command_line (const CommandLine &CL);
+         Boolean init_runtime ();
          Boolean load_plugins ();
          Boolean start ();
          Boolean update_time_slice ();

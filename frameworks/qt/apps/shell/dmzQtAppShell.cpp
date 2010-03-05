@@ -32,6 +32,7 @@ const char OrganizationName[] = "dmz";
 const char OrganizationDomain[] = "dmzdev.org";
 
 static const String LocalInitPrefix ("dmz_init_");
+static const String LocalResourcesFactory ("dmz_resources_validate");
 
 static void
 local_starup_error (const QString &Msg) {
@@ -363,6 +364,14 @@ local_parse_manifest (String &launchFile, Application &app) {
    }
 }
 
+
+static void
+local_validate_resources (Application &app) {
+
+   // implementation in dmzAppQt local_validate_resources for now -ss
+   // will be pasted in here when finished.
+}
+
 };
 
 
@@ -443,6 +452,8 @@ main (int argc, char *argv[]) {
    local_find_working_dir (app);
 
    local_parse_manifest (launchFile, app);
+
+   local_validate_resources (app);
 
    if (app.is_running ()) {
 

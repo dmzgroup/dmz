@@ -57,11 +57,16 @@ namespace dmz {
 
          virtual Boolean dump_object_attributes (
             const Handle ObjectHandle,
-            ObjectObserver &Observer) = 0;
+            ObjectObserver &observer) = 0;
 
          virtual Boolean dump_all_object_attributes (
             const Handle ObjectHandle,
-            ObjectObserver &Observer) = 0;
+            ObjectObserver &observer) = 0;
+
+         virtual void dump_attributes (
+            const Handle AttribueHandle,
+            const Mask &AttributeMask,
+            ObjectObserver &observer) = 0;
 
          virtual Handle create_object (
             const ObjectType &Type,

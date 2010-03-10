@@ -126,26 +126,38 @@ not been activated yet will \b not be in the list.
 
 \fn dmz::Boolean dmz::ObjectModule::dump_object_attributes (
 const dmz::Handle ObjectHandle,
-dmz::ObjectObserver &Observer)
+dmz::ObjectObserver &observer)
 \brief Dumps subscribed object attributes.
 \details This function will dump all attributes for which the ObjectObserver has
 a subscription. If the object observer has not subscribed to any attributes, nothing
 will be dumped. This function may be used to force the object module push all
 object attribute values to the object observer even if they have not changed.
 \param[in] ObjectHandle Object handle for object to dump to observer.
-\param[in] Observer ObjectObserver to receive object attribute values.
+\param[in] observer ObjectObserver to receive object attribute values.
 \return Returns dmz::True if any attributes were dumped.
 
 \fn dmz::Boolean dmz::ObjectModule::dump_all_object_attributes (
 const dmz::Handle ObjectHandle,
-dmz::ObjectObserver &Observer)
+dmz::ObjectObserver &observer)
 \brief Dumps all object attributes.
 \details This function does not check if the observer has subscribed for any specific
 attributes but will instead dump the values of any attribute that has been stored
 with the object.
 \param[in] ObjectHandle Object handle for object to dump to observer.
-\param[in] Observer ObjectObserver to receive \b all object attribute values.
+\param[in] observer ObjectObserver to receive \b all object attribute values.
 \return Returns dmz::True if any attributes were dumped.
+
+\fn void dmz::ObjectModule::dump_attributes (
+const Handle AttributeHandle,
+const Mask &AttributeMask,
+ObjectObserver &observer)
+\brief Dumps all specified attributes for all objects in the ObjectModule.
+\details This function does not check if the observer has subscribed for any specific
+attribute but will instead dump the specified attributes for all objects stored in
+the ObjectModule.
+\param[in] AttributeHandle Handle of the attribute to dump.
+\param[in] AttributeMask Mask containing the attribute types to dump.
+\param[in] observer ObjectObserver to receive the attribute dump.
 
 \fn dmz::Handle dmz::ObjectModule::create_object (
 const dmz::ObjectType &Type,

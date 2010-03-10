@@ -437,6 +437,36 @@ dmz::ObjectModuleBasic::dump_all_object_attributes (
 }
 
 
+void
+dmz::ObjectModuleBasic::dump_attributes (
+      const Handle AttribueHandle,
+      const Mask &AttributeMask,
+      ObjectObserver &observer) {
+
+   HandleContainer objects;
+
+   if (get_object_handles (objects)) {
+
+      HandleContainerIterator it;
+      Handle handle (0);
+
+      while (objects.get_next (it, handle)) {
+
+         ObjectStruct *obj (_lookup_object (handle));
+
+         if (obj) {
+
+            _dump_object_attributes_to_observer (
+               *obj,
+               AttribueHandle,
+               AttributeMask,
+               observer);
+         }
+      }
+   }
+}
+
+
 dmz::Handle
 dmz::ObjectModuleBasic::create_object (
       const ObjectType &Type,

@@ -24,6 +24,7 @@ namespace dmz {
             const Handle LinkHandle,
             const Handle SuberHandle,
             const Handle SubHandle,
+            const Float32 PenWidth,
             QGraphicsItem *parent = 0);
 
          ~QtCanvasLink ();
@@ -125,12 +126,13 @@ namespace dmz {
                const Handle TheHandle,
                const Handle TheAttrHandle,
                const Handle TheSuperHandle,
-               const Handle TheSubHandle) :
+               const Handle TheSubHandle,
+               const Float32 PenWidth) :
                ObjHandle (TheHandle),
                AttrHandle (TheAttrHandle),
                SuperHandle (TheSuperHandle),
                SubHandle (TheSubHandle),
-               item (new QtCanvasLink (ObjHandle, SuperHandle, SubHandle)) {;}
+               item (new QtCanvasLink (ObjHandle, SuperHandle, SubHandle, PenWidth)) {;}
 
             ~LinkStruct () { if (item) { delete item; item = 0; } }
          };
@@ -191,6 +193,8 @@ namespace dmz {
          HashTableHandleTemplate<LinkStruct> _attrObjTable;
 
          ColorStruct *_stateList;
+
+         Float32 _penWidth;
 
       private:
          QtPluginCanvasLink ();

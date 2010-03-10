@@ -21,6 +21,7 @@ dmz::QtCanvasLink::QtCanvasLink (
       const Handle LinkHandle,
       const Handle SuperHandle,
       const Handle SubHandle,
+      const Float32 PenWidth,
       QGraphicsItem *parent) :
       QGraphicsLineItem (parent),
       _LinkHandle (LinkHandle),
@@ -39,7 +40,7 @@ dmz::QtCanvasLink::QtCanvasLink (
    QColor c (Qt::black);
    c.setAlphaF (0.75);
    QBrush b (c);
-   setPen (QPen (b, 4));
+   setPen (QPen (b, PenWidth));
 }
 
 
@@ -214,7 +215,8 @@ dmz::QtPluginCanvasLink::QtPluginCanvasLink (
       _linkAttrTable (),
       _linkTable (),
       _nodeTable (),
-      _stateList (0) {
+      _stateList (0),
+      _penWidth (4.0f) {
 
    _init (local);
 }
@@ -274,8 +276,12 @@ dmz::QtPluginCanvasLink::link_objects (
 
          if (superItem && subItem) {
 
-            LinkStruct *os (
-               new LinkStruct (LinkHandle, AttributeHandle, SuperHandle, SubHandle));
+            LinkStruct *os (new LinkStruct (
+               LinkHandle,
+               AttributeHandle,
+               SuperHandle,
+               SubHandle,
+               _penWidth));
 
             if (_linkTable.store (LinkHandle, os)) {
 
@@ -568,6 +574,8 @@ dmz::QtPluginCanvasLink::_init (Config &local) {
          }
       }
    }
+
+   _penWidth = config_to_float32 ("pen-width.value", local, _penWidth);
 }
 
 

@@ -1,5 +1,8 @@
 #include <dmzApplication.h>
+#include <dmzAppShellExt.h>
 #include <dmzFoundationCommandLine.h>
+#include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeLogObserverBasic.h>
 #include <dmzQtLogObserver.h>
 #include "dmzQtSplashScreen.h"
@@ -11,7 +14,72 @@
 
 using namespace dmz;
 
+namespace {
+   
 const char LocalIconFile[] = "./assets/DMZ-Icon.png";
+static const String LocalResourcesFactory ("dmz_resources_validate");
+
+static void
+local_starup_error (const QString &Msg) {
+
+   QString errorMsg (Msg + "\n\nStart up errors encountered.\nShutting down.");
+   QMessageBox::critical (0, "Start Up Error", errorMsg);
+}
+
+static void
+local_validate_resources (Application &app) {
+
+   Config global;
+
+   app.get_global_config (global);
+
+// <resources>
+//    <extension name="dmzQtExtAppShellResources" factory="dmz_validate_resources"/>
+// </resources>
+
+   const String LibName = config_to_string ("dmz.resources.extension.name", global);
+
+   if (LibName) {
+
+      DynamicLibrary dl (LibName, DynamicLibraryModeKeep);
+
+      if (dl.is_loaded ()) {
+
+         const String FuncName = config_to_string (
+            "dmz.resources.extension.factory", global, LocalResourcesFactory);
+
+         validate_resources_extension validate =
+            (validate_resources_extension)dl.get_function_ptr (FuncName);
+
+         if (validate) {
+
+            app.log.info << "Validating Resoruces using: " << FuncName << " from "
+               << LibName << endl;
+
+            AppShellResourcesStruct resources (LibName, app);
+
+            validate (resources);
+         }
+         else {
+            
+            String msg ("Resource extension function: ");
+            msg << FuncName << " not found.";
+            
+            app.log.error << msg << endl;
+            app.quit (msg);
+         }
+      }
+      else {
+
+         String msg ("Resource extension library: ");
+         msg << LibName << " not found.";
+         app.log.error << msg << endl;
+         app.quit (msg);
+      }
+   }
+}
+
+};
 
 
 int
@@ -44,60 +112,70 @@ main (int argc, char *argv[]) {
    app.load_session ();
    qtLogObs.load_session ();
 
-   QtSplashScreen *splash = new QtSplashScreen (app.get_context ());
-   splash->show ();
-   splash->raise ();
-
    CommandLine cl (argc, argv);
 
    app.process_command_line (cl);
-   app.load_plugins ();
-   app.start ();
-
-   qtLogObs.set_process_updates (False);
-
-   splash->close ();
-   delete splash;
-   splash = 0;
-
-   // This little hack is needed to get the main menubar to
-   // show up correctly under OSX when using Qt 4.6 -ss
-   QEventLoop dummyLoop;
-   QTimer::singleShot(0, &dummyLoop, SLOT (quit ()));
-   dummyLoop.exec ();
+   app.init_runtime ();
    
-   do {
+   local_validate_resources (app);
    
-      QCoreApplication::sendPostedEvents (0, 0);
-      QCoreApplication::processEvents (QEventLoop::AllEvents);
+   if (app.is_running ()) {
       
-   } while (app.update_time_slice ());
+      QtSplashScreen *splash = new QtSplashScreen (app.get_context ());
+      splash->show ();
+      splash->raise ();
 
-   app.stop ();
-   app.unload_plugins ();
+      app.load_plugins ();
+      app.start ();
 
-   if (app.is_error ()) {
+      qtLogObs.set_process_updates (False);
 
-      String errorMsg (app.get_error ());
-      errorMsg << "\n\nStart up errors encountered.\nShutting down.";
+      splash->close ();
+      delete splash;
+      splash = 0;
 
-      QMessageBox::critical (0, "Start Up Error", errorMsg.get_buffer ());
+      // This little hack is needed to get the main menubar to
+      // show up correctly under OSX when using Qt 4.6 -ss
+      QEventLoop dummyLoop;
+      QTimer::singleShot(0, &dummyLoop, SLOT (quit ()));
+      dummyLoop.exec ();
+
+      do {
+
+         QCoreApplication::sendPostedEvents (0, 0);
+         QCoreApplication::processEvents (QEventLoop::AllEvents);
+
+      } while (app.update_time_slice ());
+
+      app.stop ();
+      app.unload_plugins ();
+
+      if (app.is_error ()) {
+         
+         app.log.error << app.get_error () << endl;
+         local_starup_error (app.get_error ().get_buffer ());
+      }
+      else {
+
+         qtLogObs.save_session ();
+         app.save_session ();
+      }
+
+      DynamicLibrary::dump_loaded (app.log.info);
+
+      while (qtLogObs.isVisible ()) {
+
+         // wait for log window to close
+         QCoreApplication::sendPostedEvents (0, 0);
+         QCoreApplication::processEvents (QEventLoop::WaitForMoreEvents);
+      }
    }
-   else {
-
-      qtLogObs.save_session ();
-      app.save_session ();
+   else if (app.is_error ()) {
+      
+      app.log.error << app.get_error () << endl;
+      local_starup_error (app.get_error ().get_buffer ());
    }
-
-   DynamicLibrary::dump_loaded (app.log.info);
-
-   while (qtLogObs.isVisible ()) {
-
-      // wait for log window to close
-      QCoreApplication::sendPostedEvents (0, 0);
-      QCoreApplication::processEvents (QEventLoop::WaitForMoreEvents);
-   }
-
+   
    qtApp.quit ();
 
    return app.is_error () ? -1 : 0;

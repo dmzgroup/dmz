@@ -61,18 +61,21 @@ local_validate_resources (Application &app) {
             validate (resources);
          }
          else {
-
-            app.log.error << "Init extension function: " << FuncName << " not found."
-               << endl;
+            
+            String msg ("Resource extension function: ");
+            msg << FuncName << " not found.";
+            
+            app.log.error << msg << endl;
+            app.quit (msg);
          }
       }
       else {
 
-         app.log.info << "Init extension library: " << LibName << " not found." << endl;
+         String msg ("Resource extension library: ");
+         msg << LibName << " not found.";
+         app.log.error << msg << endl;
+         app.quit (msg);
       }
-   }
-   else {
-      app.quit ("Resource Extension LibName not found!!!");
    }
 }
 

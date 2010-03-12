@@ -32,6 +32,7 @@ const char OrganizationName[] = "dmz";
 const char OrganizationDomain[] = "dmzdev.org";
 
 static const String LocalInitPrefix ("dmz_init_");
+static const String LocalResourcesFactory ("dmz_resources_validate");
 
 static void
 local_starup_error (const QString &Msg) {
@@ -326,6 +327,7 @@ local_parse_manifest (String &launchFile, Application &app) {
                   CommandLine cl;
                   cl.add_args (fileList);
                   app.process_command_line (cl);
+                  app.init_runtime ();
                }
             }
 
@@ -360,6 +362,60 @@ local_parse_manifest (String &launchFile, Application &app) {
       String msg ("Unable to find manifest file: ");
       msg << manifestFile;
       app.set_error (msg);
+   }
+}
+
+
+static void
+local_validate_resources (Application &app) {
+
+   Config global;
+
+   app.get_global_config (global);
+
+// <resources>
+//    <extension name="dmzQtExtAppShellResources" factory="dmz_validate_resources"/>
+// </resources>
+
+   const String LibName = config_to_string ("dmz.resources.extension.name", global);
+
+   if (LibName) {
+
+      DynamicLibrary dl (LibName, DynamicLibraryModeKeep);
+
+      if (dl.is_loaded ()) {
+
+         const String FuncName = config_to_string (
+            "dmz.resources.extension.factory", global, LocalResourcesFactory);
+
+         validate_resources_extension validate =
+            (validate_resources_extension)dl.get_function_ptr (FuncName);
+
+         if (validate) {
+
+            app.log.info << "Validating Resoruces using: " << FuncName << " from "
+               << LibName << endl;
+
+            AppShellResourcesStruct resources (LibName, app);
+
+            validate (resources);
+         }
+         else {
+
+            String msg ("Resource extension function: ");
+            msg << FuncName << " not found.";
+
+            app.log.error << msg << endl;
+            app.quit (msg);
+         }
+      }
+      else {
+
+         String msg ("Resource extension library: ");
+         msg << LibName << " not found.";
+         app.log.error << msg << endl;
+         app.quit (msg);
+      }
    }
 }
 
@@ -443,6 +499,8 @@ main (int argc, char *argv[]) {
    local_find_working_dir (app);
 
    local_parse_manifest (launchFile, app);
+
+   local_validate_resources (app);
 
    if (app.is_running ()) {
 

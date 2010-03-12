@@ -61,6 +61,7 @@ struct dmz::Application::State {
    Float64 startTime;
    Float64 frameCount;
    Boolean quiet;
+   Boolean runtimeInitialized;
 
    State (const String &TheName, const String &TheDomain) :
          Name (TheName),
@@ -77,7 +78,8 @@ struct dmz::Application::State {
          forced (False),
          startTime (0.0),
          frameCount (0.0),
-         quiet (False) {;}
+         quiet (False),
+         runtimeInitialized (False) {;}
 };
 
 
@@ -365,6 +367,40 @@ dmz::Application::process_command_line (const CommandLine &CL) {
    return !_state.error;
 }
 
+/*!
+
+\brief Initializes the runtime.
+\details Initializes the runtime specified by the configuration files.
+\return Returns dmz::True if runtime get intialized.
+
+*/
+dmz::Boolean
+dmz::Application::init_runtime () {
+   
+   dmz::Boolean result (False);
+   
+   if (!_state.runtimeInitialized){
+      
+      Config runtimeData;
+
+      if (!_state.error && !_state.quiet &&
+            !_state.global.lookup_all_config_merged ("dmz.runtime", runtimeData)) {
+
+         _state.log.warn << "dmz.runtime not found" << endl;
+      }
+
+      if (!_state.error) {
+
+         runtime_init (runtimeData, _state.rt.get_context (), &(_state.log));
+
+         result = True;
+         _state.runtimeInitialized = True;
+      }
+   }
+   
+   return result;
+}
+
 
 /*!
 
@@ -377,18 +413,7 @@ discovery.
 dmz::Boolean
 dmz::Application::load_plugins () {
 
-   Config runtimeData;
-
-   if (!_state.error && !_state.quiet &&
-         !_state.global.lookup_all_config_merged ("dmz.runtime", runtimeData)) {
-
-      _state.log.warn << "dmz.runtime not found" << endl;
-   }
-
-   if (!_state.error) {
-
-      runtime_init (runtimeData, _state.rt.get_context (), &(_state.log));
-   }
+   if (!_state.runtimeInitialized) { init_runtime (); }
 
    Config pluginList;
 

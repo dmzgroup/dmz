@@ -9,6 +9,7 @@ namespace dmz {
 class Application;
 class CommandLineArgs;
 class Config;
+class RuntimeContext;
 
 /*!
 
@@ -45,11 +46,44 @@ struct AppShellInitStruct {
 
 /*!
 
-\brief Typedef of function pointer used to invoke  the shell initialization extension.
+\brief Typedef of function pointer used to invoke the shell initialization extension.
 \ingroup Foundation
 
 */
 typedef void *(*init_shell_extension) (AppShellInitStruct &init);
+
+
+/*!
+
+\brief Struct used in shell resources extension.
+\ingroup Foundation
+
+*/
+struct AppShellResourcesStruct {
+   
+   const String &ExtName; //!< Name of extension library name.
+   Application &app; //!< Reference to the Application object.
+   //! Return value to indicate if all resources were validated by the
+   //! resources extension.
+   Boolean validated;
+   
+   //! \cond
+   AppShellResourcesStruct (
+      const String &TheExtName,
+      Application &theApp) :
+      ExtName (TheExtName),
+      app (theApp),
+      validated (False) {;}
+   //! \endcond
+};
+
+/*!
+
+\brief Typedef of function pointer used to invoke the shell resources extension.
+\ingroup Foundation
+
+*/
+typedef void *(*validate_resources_extension) (AppShellResourcesStruct &resources);
 
 };
 

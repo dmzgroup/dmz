@@ -233,6 +233,7 @@ dmz::ObjectModuleBasic::register_object_observer (
    const Handle ObsHandle (obs.get_object_observer_handle ());
    const Boolean IsGlobal (_globalTable.lookup (ObsHandle) == &obs);
    SubscriptionStruct *sub (_subscriptionTable.lookup (ObsHandle));
+   Mask origMask;
 
    if (!sub) {
 
@@ -257,14 +258,17 @@ dmz::ObjectModuleBasic::register_object_observer (
             }
          }
       }
-      else { *attrMaskPtr |= AttributeMask; }
+      else { origMask = *attrMaskPtr; *attrMaskPtr |= AttributeMask; }
 
       if (!IsGlobal && attrMaskPtr) {
 
          result = True;
 
-         _update_subscription (AttributeHandle, AttributeMask, AddObserver, obs);
-         _dump_all_objects (AttributeHandle, AttributeMask, obs);
+         Mask modMask (AttributeMask);
+         // remove all masks that have been previously activated
+         modMask.unset (origMask);
+         _update_subscription (AttributeHandle, modMask, AddObserver, obs);
+         _dump_all_objects (AttributeHandle, modMask, obs);
       }
    }
 

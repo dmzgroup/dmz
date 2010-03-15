@@ -11,10 +11,11 @@ module (...)
 function add_lib ()
    if sys == "macos" then
       if resolve "$(DMZ_USE_LUA_JIT)" == "true" then
-      lmk.add_vars {
-         localLibPaths = "-L$(DMZ_LUA_JIT_LIB_PATH) -lluajit",
-         localIncludes = "-I$(DMZ_LUA_JIT_INCLUDE_PATH)",
-      }
+         lmk.add_vars {
+            localDefines = "-DDMZ_USE_LUA_JIT",
+            localLibPaths = "-L$(DMZ_LUA_JIT_LIB_PATH) -lluajit",
+            localIncludes = "-I$(DMZ_LUA_JIT_INCLUDE_PATH)",
+         }
       else
          lmk.add_libs {"lua"}
       end

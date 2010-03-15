@@ -13,7 +13,12 @@
 #include <dmzSystem.h>
 #include <dmzSystemFile.h>
 
+#ifdef DMZ_USE_LUA_JIT
+#include <luajit.h>
+#endif
+
 #include <qdb.h>
+
 static dmz::qdb out;
 
 /*!
@@ -972,6 +977,12 @@ dmz::LuaModuleBasic::_start_optimizer () {
 
 void
 dmz::LuaModuleBasic::_init (Config &local, Config &global) {
+
+#ifdef DMZ_USE_LUA_JIT
+   _log.info << "Using: " << LUAJIT_VERSION << endl;
+#else
+   _log.info << "Using: " << LUA_VERSION << endl;
+#endif
 
    _exitOnError = config_to_boolean ("error.exit", local, _exitOnError);
    _startOptimizer = config_to_boolean ("optimizer.start", local, _startOptimizer);

@@ -37,6 +37,8 @@ namespace dmz {
 
          void deactivate_default_object_attribute (const Mask &AttributeMask);
 
+         void deactivate_all_object_attributes ();
+
          ObjectModule *get_object_module ();
 
          // ObjectObserver Interface.

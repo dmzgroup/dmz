@@ -70,6 +70,15 @@ struct dmz::ObjectObserverUtil::State {
          as.mask.unset (EventMask);
       }
    }
+
+
+   void release_all (ObjectObserver &obs) {
+
+      if (module) {
+
+         if (module->release_object_observer_all (obs)) { handleTable.empty (); }
+      }
+   }
 };
 
 
@@ -298,6 +307,13 @@ void
 dmz::ObjectObserverUtil::deactivate_default_object_attribute (const Mask &AttributeMask) {
 
    deactivate_object_attribute (ObjectAttributeDefaultName, AttributeMask);
+}
+
+
+void
+dmz::ObjectObserverUtil::deactivate_all_object_attributes () {
+
+   __state.release_all (*this);
 }
 
 

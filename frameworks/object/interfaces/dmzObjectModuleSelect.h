@@ -9,10 +9,6 @@
 
 namespace dmz {
 
-   //! \cond
-   const char ObjectModuleSelectInterfaceName[] = "ObjectModuleSelectInterface";
-   //! \endcond
-
    class ObjectModuleSelect {
 
       public:
@@ -44,6 +40,10 @@ namespace dmz {
 
          const PluginInfo &__Info;
    };
+
+   //! \cond
+   const char ObjectModuleSelectInterfaceName[] = "ObjectModuleSelectInterface";
+   //! \endcond
 };
 
 

@@ -171,6 +171,7 @@ namespace dmz {
          Int32 get_result_count () const;
 
          void clear ();
+         void reset ();
 
          void add_result (const IsectResult &value);
 

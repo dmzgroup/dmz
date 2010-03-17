@@ -66,7 +66,7 @@ struct dmz::IsectTestContainer::State {
 
    State () : count (0) {;}
    ~State () { table.empty (); }
-   void clear () { count = 0; table.empty (); }
+   void clear () { it.reset (); count = 0; table.empty (); }
 };
 
 
@@ -776,9 +776,19 @@ dmz::Int32
 dmz::IsectResultContainer::get_result_count () const { return _state.table.get_count (); }
 
 
+//! Resets the iterator.
+void
+dmz::IsectResultContainer::reset () { _state.it.reset (); }
+
+
 //! Clears the container.
 void
-dmz::IsectResultContainer::clear () { _state.table.empty (); _state.count = 0; }
+dmz::IsectResultContainer::clear () {
+
+   _state.it.reset ();
+   _state.table.empty ();
+   _state.count = 0;
+}
 
 
 //! Adds a result to the container.

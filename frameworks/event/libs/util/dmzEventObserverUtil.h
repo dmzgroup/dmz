@@ -22,6 +22,8 @@ namespace dmz {
             const EventType &Type,
             const Mask &CallbackMask);
 
+         void deactivate_all_event_callbacks ();
+
          EventModule *get_event_module ();
 
          virtual void store_event_module (const String &Name, EventModule &module);
@@ -40,6 +42,9 @@ namespace dmz {
       protected:
          EventObserverUtil (const PluginInfo &Info, const Config &Init);
          ~EventObserverUtil ();
+
+         virtual void _store_event_module (EventModule &eventMod) {;}
+         virtual void _remove_event_module (EventModule &eventMod) {;}
 
       private:
          struct State;

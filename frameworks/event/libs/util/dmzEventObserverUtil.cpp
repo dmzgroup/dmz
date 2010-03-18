@@ -71,6 +71,13 @@ struct dmz::EventObserverUtil::State {
 
       ts.mask.unset (EventMask);
    }
+
+   void release_all (EventObserver &obs) {
+
+      if (module) { module->release_event_observer_all (obs); }
+
+      table.empty ();
+   }
 };
 
 
@@ -187,6 +194,23 @@ dmz::EventObserverUtil::deactivate_event_callback (
 
 /*!
 
+\brief Deactivates callbacks for a specific event type.
+\param[in] Type EventType of callback to deactivate.
+\param[in] CallbackMask Mask containing the callbacks to deactivate. The masks defined
+in dmzEventCallbackMasks.h should be used to compose \a CallbackMask.
+\note The EventType must be the exact type used to activate callbacks. Sub EventTypes may
+not be used to deactivate callbacks to subtypes of activate EventTypes.
+
+*/
+void
+dmz::EventObserverUtil::deactivate_all_event_callbacks () {
+
+   __state.release_all (*this);
+}
+
+
+/*!
+
 \brief Gets event module with which the observer is registered.
 \return Returns a pointer to the EventModule with which the observer is registered.
 Returns NULL if the observer is not registered with any EventModule.
@@ -214,6 +238,8 @@ dmz::EventObserverUtil::store_event_module (const String &Name, EventModule &mod
             __state.register_obs (*ts, *this);
             ts = __state.table.get_next (it);
          }
+
+         _store_event_module (module);
       }
    }
 }
@@ -224,16 +250,8 @@ dmz::EventObserverUtil::remove_event_module (const String &Name, EventModule &mo
 
    if (__state.module == &module) {
 
-      HashTableHandleIterator it;
-
-      typeStruct *ts (__state.table.get_first (it));
-
-      while (ts) {
-
-         __state.release_obs (EventAllMask, *ts, *this);
-         ts = __state.table.get_next (it);
-      }
-
+      _remove_event_module (module);
+      __state.release_all (*this);
       __state.module = 0;
    }
 }

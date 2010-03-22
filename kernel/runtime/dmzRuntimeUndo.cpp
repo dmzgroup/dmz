@@ -5,11 +5,11 @@
 #include <dmzTypesBase.h>
 #include <dmzTypesHashTableUInt32Template.h>
 #include <dmzTypesString.h>
-#include <qdb.h>
 
 // #define DMZ_RUNTIME_UNDO_DEBUG
 
 #ifdef DMZ_RUNTIME_UNDO_DEBUG
+#include <qdb.h>
 static dmz::qdb out;
 #endif
 

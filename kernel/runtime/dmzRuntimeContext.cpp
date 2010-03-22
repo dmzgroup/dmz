@@ -57,7 +57,10 @@ dmz::RuntimeContext::~RuntimeContext () {
    _msgContainerLock.unlock ();
 
    _msgLock.lock ();
-   if (_messagingContext) { _messagingContext->unref (); _messagingContext = 0; }
+   if (_messagingContext) {
+      _messagingContext->globalType.set_message_context (0);
+      _messagingContext->unref (); _messagingContext = 0;
+   }
    _msgLock.unlock ();
 
    _rcLock.lock ();

@@ -69,7 +69,6 @@ namespace {
                "",
                context,
                context->get_messaging_context ());
-               
          }
       }
 

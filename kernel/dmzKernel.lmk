@@ -112,6 +112,7 @@ lmk.add_files {
    "runtime/dmzRuntimeLog.cpp",
    "runtime/dmzRuntimeLogObserverBasic.cpp",
    "runtime/dmzRuntimeLogObserverFile.cpp",
+   "runtime/dmzRuntimeMessageContext.cpp",
    "runtime/dmzRuntimeMessaging.cpp",
    "runtime/dmzRuntimeObjectType.cpp",
    "runtime/dmzRuntimePluginContainer.cpp",

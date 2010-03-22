@@ -2,8 +2,6 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
 
-#include <qdb.h>
-
 /*!
 
 \file dmzRuntimeSession.h

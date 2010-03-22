@@ -8,7 +8,6 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesHandleContainer.h>
 
-
 /*!
 
 \file dmzRuntimeMessaging.h

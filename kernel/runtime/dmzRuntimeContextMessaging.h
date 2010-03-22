@@ -35,8 +35,9 @@ namespace dmz {
          ConfigContextLock messageNameLock; //!< Lock.
          HashTableStringTemplate<Message> messageNameTable; //!< Table.
 
+
       protected:
-         ~RuntimeContextMessageContainer ();
+         virtual ~RuntimeContextMessageContainer ();
 
       private:
          RuntimeContextMessageContainer (const RuntimeContextMessageContainer &);
@@ -106,8 +107,9 @@ namespace dmz {
          ConfigContextLock monostateErrorLock; //!< Lock.
          HashTableHandleTemplate<MessageContext> monostateErrorTable; //!< Table.
 
+         Int32 ref () { return RefCountDeleteOnZero::ref (); }
       protected:
-         ~RuntimeContextMessaging ();
+         virtual ~RuntimeContextMessaging ();
 
       private:
          RuntimeContextMessaging (const RuntimeContextMessaging &);

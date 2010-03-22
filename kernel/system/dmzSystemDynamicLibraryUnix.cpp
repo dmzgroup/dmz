@@ -87,13 +87,16 @@ dmz::DynamicLibrary::DynamicLibrary (
       char *error = dlerror ();
       if (error) { _state.error << error << "\n"; }
 
-      CFURLRef pluginRef = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+      CFURLRef pluginRef = CFBundleCopyBundleURL (CFBundleGetMainBundle ());
 
       CFStringRef macPath =
-         CFURLCopyFileSystemPath(pluginRef, kCFURLPOSIXPathStyle);
+         CFURLCopyFileSystemPath (pluginRef, kCFURLPOSIXPathStyle);
 
       String soName;
-      soName << CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding());
+      soName << CFStringGetCStringPtr (macPath, CFStringGetSystemEncoding());
+
+      CFRelease (macPath);
+      CFRelease (pluginRef);
 
       soName << "/Contents/Frameworks/";
       soName << LibName << ".plugin";

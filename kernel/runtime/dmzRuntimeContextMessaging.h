@@ -107,7 +107,6 @@ namespace dmz {
          ConfigContextLock monostateErrorLock; //!< Lock.
          HashTableHandleTemplate<MessageContext> monostateErrorTable; //!< Table.
 
-         Int32 ref () { return RefCountDeleteOnZero::ref (); }
       protected:
          virtual ~RuntimeContextMessaging ();
 

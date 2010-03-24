@@ -5,6 +5,7 @@
 #include <dmzRenderModuleCoreOSG.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRenderConfigToOSG.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
@@ -35,6 +36,7 @@ dmz::RenderExtViewerOSG::RenderExtViewerOSG (
    _viewer->addEventHandler (_eventHandler.get ());
    _viewer->setKeyEventSetsDone (0);
    _viewer->setQuitEventSetsDone (true);
+
 
    _init (local);
 }
@@ -158,6 +160,10 @@ dmz::RenderExtViewerOSG::update_time_slice (const Float64 TimeDelta) {
 
 void
 dmz::RenderExtViewerOSG::_init (const Config &Local) {
+
+   const osg::Vec4 DefaultColor = _viewer->getCamera ()->getClearColor ();
+   const osg::Vec4 Color = config_to_osg_vec4_color ("clear-color", Local, DefaultColor);
+   _viewer->getCamera ()->setClearColor (Color);
 
    osg::DisplaySettings *ds = osg::DisplaySettings::instance ();
 

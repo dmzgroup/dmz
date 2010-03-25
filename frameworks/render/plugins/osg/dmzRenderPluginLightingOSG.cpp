@@ -110,16 +110,19 @@ dmz::RenderPluginLightingOSG::_add_lights () {
             }
          }
       }
+      else {
 
-      HashTableUInt32Iterator it;
-      LightStruct *ls (0);
+         HashTableUInt32Iterator it;
+         LightStruct *ls (0);
 
-      while (_lightTable.get_next (it, ls)) {
+         while (_lightTable.get_next (it, ls)) {
 
-         scene->addChild (ls->source.get ());
+            scene->addChild (ls->source.get ());
+         }
+
+         _log.info << "Created " << _lightTable.get_size () << " Light"
+            << (_lightTable.get_size () == 1 ? "." : "s.") << endl;
       }
-
-      _log.info << "Created " << _lightTable.get_size () << " Lights." << endl;
    }
 }
 

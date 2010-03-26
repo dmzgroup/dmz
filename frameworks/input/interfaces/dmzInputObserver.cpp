@@ -22,7 +22,7 @@ const String &PluginName)
 InputObserver interface of the Plugin is returned.
 \param[in] PluginPtr Pointer to the Plugin.
 \param[in] PluginName String containing name of desired InputObserver.
-\return Returns a ointer to the InputObserver. Returns NULL if the Plugin does not
+\return Returns a pointer to the InputObserver. Returns NULL if the Plugin does not
 implement the InputObserver interface or the \a PluginName is not empty and not
 equal to the Plugin's name.
 

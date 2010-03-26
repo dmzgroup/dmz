@@ -221,8 +221,6 @@ dmz::QtPluginCanvasLayerModel::create_layer (
       ObjectType layerType;
       _defs.lookup_object_type ("layer", layerType);
 
-      Handle nameAttrHandle (_defs.create_named_handle (ObjectAttributeLayerName));
-
       layerHandle = _objectModule->create_object (layerType, ObjectLocal);
 
       if (layerHandle) {

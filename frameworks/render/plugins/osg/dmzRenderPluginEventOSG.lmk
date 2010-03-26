@@ -1,0 +1,16 @@
+require "lmkOSG"
+
+lmkOSG.set_name "dmzRenderPluginEventOSG"
+lmk.set_type "plugin"
+lmk.add_files {"dmzRenderPluginEventOSG.cpp",}
+
+lmk.add_libs {
+   "dmzRenderUtilOSG",
+   "dmzEventUtil",
+   "dmzKernel",
+}
+
+lmk.add_preqs {"dmzRenderModuleCoreOSG", "dmzEventFramework",}
+
+lmkOSG.add_libs {"osgDB", "osg", "OpenThreads",}
+

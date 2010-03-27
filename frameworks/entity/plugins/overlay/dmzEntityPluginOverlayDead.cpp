@@ -31,6 +31,7 @@ dmz::EntityPluginOverlayDead::EntityPluginOverlayDead (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
+      TimeSlice (Info),
       ObjectObserverUtil (Info, local),
       PortalSizeObserver (Info, local),
       _log (Info),
@@ -40,8 +41,11 @@ dmz::EntityPluginOverlayDead::EntityPluginOverlayDead (
       _overlaySwitchName ("dead overlay switch"),
       _overlaySwitch (0),
       _overlayScaleName ("dead overlay transform"),
-      _overlayScale (0) {
+      _overlayScale (0),
+      _currentRed (0.0),
+      _currentAlpha (0.0) {
 
+   stop_time_slice ();
    _init (local);
 }
 
@@ -102,6 +106,21 @@ dmz::EntityPluginOverlayDead::discover_plugin (
 }
 
 
+// Time Slice Interface
+void
+dmz::EntityPluginOverlayDead::update_time_slice (const Float64 DeltaTime) {
+
+   if (_overlaySwitch) {
+
+      _currentRed -= DeltaTime * 0.33333;
+      _currentAlpha += DeltaTime * 0.16666666;
+      if (_currentRed < 0.0) { _currentRed = 0.0; }
+      if (_currentAlpha > 1.0) { _currentAlpha = 1.0; }
+      _overlay->store_color (_overlaySwitch, _currentRed, 0.0, 0.0, _currentAlpha);
+   }
+}
+
+
 // Object Observer Interface
 void
 dmz::EntityPluginOverlayDead::update_object_state (
@@ -122,6 +141,9 @@ dmz::EntityPluginOverlayDead::update_object_state (
          if (_overlaySwitch) {
 
             _overlay->enable_switch_state_single (_overlaySwitch, 1);
+            _currentRed = 1.0;
+            _currentAlpha = 0.5;
+            _overlay->store_color (_overlaySwitch, _currentRed, 0.0, 0.0, _currentAlpha);
          }
 
          if (_overlayScale) {
@@ -131,8 +153,12 @@ dmz::EntityPluginOverlayDead::update_object_state (
                Float64 (get_portal_x ()),
                Float64 (get_portal_y ()));
          }
+
+         start_time_slice ();
       }
       else if (!IsDead && WasDead) {
+
+         stop_time_slice ();
 
          if (_overlaySwitch) {
 

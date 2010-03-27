@@ -155,6 +155,7 @@ namespace dmz {
          Float64 _rangeMax;
          Float64 _rangeRate;
          Int32 _rangeCount;
+         Boolean _onPlane;
 
          HashTableHandleTemplate<ObjectDefStruct> _defTable;
          HashTableHandleTemplate<ObjectDefStruct> _defMasterTable;

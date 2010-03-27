@@ -94,6 +94,21 @@ namespace dmz {
 
          virtual Boolean destroy_node (const Handle Overlay);
 
+         // Overlay Node API
+         virtual Boolean store_color (
+            const Handle Overlay,
+            const Float64 Red,
+            const Float64 Green,
+            const Float64 Blue,
+            const Float64 Alpha);
+
+         virtual Boolean lookup_color (
+            const Handle Overlay,
+            Float64 &red,
+            Float64 &green,
+            Float64 &blue,
+            Float64 &alpha);
+
          // Overlay Text API
          virtual Boolean store_text (const Handle Overlay, const String &Value);
          virtual Boolean lookup_text (const Handle Overlay, String &value);
@@ -365,6 +380,8 @@ namespace dmz {
          Boolean _remove_group (const Handle Overlay);
          Boolean _remove_switch (const Handle Overlay);
          Boolean _remove_transform (const Handle Overlay);
+
+         void _set_color (const osg::Vec4 &Color, osg::Node *node);
 
          void _init_colors (Config &local);
          void _init_templates (Config &local);

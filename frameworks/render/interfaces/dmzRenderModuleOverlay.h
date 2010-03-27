@@ -14,6 +14,7 @@ namespace dmz {
       RenderOverlayUnknown, //!< Unknown node type.
       RenderOverlayNode, //!< Basic node.
       RenderOverlayText, //!< Text node.
+      RenderOverlayBox, //!< Box node.
       RenderOverlayGroup, //!< Group node.
       RenderOverlaySwitch, //!< Switch node.
       RenderOverlayTransform, //!< Transform node.
@@ -46,6 +47,21 @@ namespace dmz {
          virtual Handle clone_template (const String &Name) = 0;
 
          virtual Boolean destroy_node (const Handle Overlay) = 0;
+
+         // Overlay Node API
+         virtual Boolean store_color (
+            const Handle Overlay,
+            const Float64 Red,
+            const Float64 Green,
+            const Float64 Blue,
+            const Float64 Alpha) = 0;
+
+         virtual Boolean lookup_color (
+            const Handle Overlay,
+            Float64 &Red,
+            Float64 &Green,
+            Float64 &Blue,
+            Float64 &Alpha) = 0;
 
          // Overlay Text API
          virtual Boolean store_text (const Handle Overlay, const String &Value) = 0;

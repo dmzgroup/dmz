@@ -85,11 +85,13 @@ dmz::RenderPluginEventOSG::update_time_slice (const Float64 TimeDelta) {
 
    HashTableHandleIterator it;
    EventStruct *event (0);
-   osg::Group *group = _core ? _core->get_static_objects () : 0;
+   osg::Group *group = _core ? _core->get_dynamic_objects () : 0;
 
    while (_eventTable.get_next (it, event)) {
 
       event->scalar += event->Type.Rate * TimeDelta;
+
+//_log.warn << "Processing: " << it.get_hash_key () << " " << event->scalar << " " << event->Type.Scale << endl;
 
       if (event->scalar > event->Type.Scale) {
 
@@ -166,46 +168,43 @@ dmz::RenderPluginEventOSG::_create_type (const EventType &Type) {
 
    Config info = Type.get_config ();
 
-   if (info) {
+   const String ImageRc = config_to_string ("render.image.resource", info);
+   const Float64 Offset = config_to_float64 ("render.offset.value", info, 10);
+   const Float64 Scale = config_to_float64 ("render.scale.value", info, 1.1);
+   const Float64 Rate = config_to_float64 ("render.scale.rate", info, 0.1);
 
-      const String ImageRc = config_to_string ("render.image.resource", info);
-      const Float64 Offset = config_to_float64 ("render.offset.value", info, 2);
-      const Float64 Scale = config_to_float64 ("render.scale.value", info, 1.1);
-      const Float64 Rate = config_to_float64 ("render.scale.rate", info, 0.1);
+   if (ImageRc) {
 
-      if (ImageRc) {
+      const String ImageName = _rc.find_file (ImageRc);
 
-         const String ImageName = _rc.find_file (ImageRc);
+      if (ImageName) {
 
-         if (ImageName) {
+         result = new TypeStruct (Offset, Scale, Rate);
 
-            result = new TypeStruct (Offset, Scale, Rate);
+         if (result) {
 
-            if (result) {
+            result->image = osgDB::readImageFile (ImageName.get_buffer ());
 
-               result->image = osgDB::readImageFile (ImageName.get_buffer ());
+            if (result->image.valid ()) {
 
-               if (result->image.valid ()) {
+               if (_typeTable.store (Type.get_handle (), result)) {
 
-                  if (_typeTable.store (Type.get_handle (), result)) {
-
-                     _typeMap.store (Type.get_handle (), result);
-                  }
-                  else { delete result; result = 0; }
+                  _typeMap.store (Type.get_handle (), result);
                }
-               else {
+               else { delete result; result = 0; }
+            }
+            else {
 
-                  _log.error << "Failed to load image resource: " << ImageRc
-                     << " -> " << ImageName << endl;
-                  _ignore.add_handle (Type.get_handle ());
-               }
+               _log.error << "Failed to load image resource: " << ImageRc
+                  << " -> " << ImageName << endl;
+               _ignore.add_handle (Type.get_handle ());
             }
          }
-         else {
+      }
+      else {
 
-            _log.error << "Failed to find image resource: " << ImageRc << endl;
-            _ignore.add_handle (Type.get_handle ());
-         }
+         _log.error << "Failed to find image resource: " << ImageRc << endl;
+         _ignore.add_handle (Type.get_handle ());
       }
    }
 
@@ -220,6 +219,13 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, EventStruct 
    event.scale = new osg::MatrixTransform;
    event.root->addChild (event.scale);
 
+   if (_core) {
+
+      UInt32 mask = event.root->getNodeMask ();
+      mask &= ~(_core->get_isect_mask ());
+      event.root->setNodeMask (mask);
+   }
+
    EventModule *module = get_event_module ();
 
    if (module) {
@@ -232,6 +238,8 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, EventStruct 
    }
 
    osg::Billboard* geode = new osg::Billboard ();
+   geode->setMode (osg::Billboard::POINT_ROT_EYE);
+   //osg::Geode* geode = new osg::Geode;
 
    osg::Geometry* geom = new osg::Geometry;
 
@@ -242,6 +250,10 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, EventStruct 
 
    osg::StateSet *stateset = geom->getOrCreateStateSet ();
    stateset->setMode (GL_BLEND, osg::StateAttribute::ON);
+
+   osg::ref_ptr<osg::Material> material = new osg::Material;
+   material->setEmission (osg::Material::FRONT_AND_BACK, osg::Vec4 (1.0, 1.0, 1.0, 1.0));
+   stateset->setAttributeAndModes (material.get (), osg::StateAttribute::ON);
 
    osg::Texture2D *tex = new osg::Texture2D (event.Type.image.get ());
    tex->setWrap (osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT);
@@ -255,13 +267,12 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, EventStruct 
 
    osg::Vec3 v1 (-Off, 0.0, -Off);
    osg::Vec3 v2 ( Off, 0.0, -Off);
-   osg::Vec3 v3 ( Off, 0.0, -Off);
-   osg::Vec3 v4 (-Off, 0.0, -Off);
+   osg::Vec3 v3 ( Off, 0.0,  Off);
+   osg::Vec3 v4 (-Off, 0.0,  Off);
 
-   osg::Vec3 n1 ( 1.0,  1.0,  0.0);
-   n1.normalize ();
+   osg::Vec3 n1 (0.0, -1.0, 0.0);
 
-   const float F1 (1.0f);
+   const float F1 (0.0f);
    const float F2 (1.0f);
 
    osg::Vec3Array *vertices = new osg::Vec3Array;
@@ -289,7 +300,7 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, EventStruct 
 
    if (_eventTable.store (EventHandle, &event)) {
 
-      osg::Group *group = _core ? _core->get_static_objects () : 0;
+      osg::Group *group = _core ? _core->get_dynamic_objects () : 0;
 
       if (group) { group->addChild (event.root.get ()); }
       else { _log.error << "Failed to add geode!" << endl; }

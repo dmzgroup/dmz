@@ -16,6 +16,14 @@
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
 
+#include <math.h>
+
+namespace {
+
+static const dmz::Float64 SubRootThree = 1 / sqrt (3.0);
+
+};
+
 /*!
 
 \class dmz::RenderPluginRadarOverlay
@@ -74,7 +82,8 @@ dmz::RenderPluginRadarOverlay::RenderPluginRadarOverlay (
       _rangeMin (0.0001),
       _rangeMax (1.0e100),
       _rangeRate (1000.0),
-      _rangeCount (0) {
+      _rangeCount (0),
+      _onPlane (True) {
 
    _init (local);
 }
@@ -123,6 +132,11 @@ dmz::RenderPluginRadarOverlay::discover_plugin (
          if (_overlay) {
 
             _root = _overlay->lookup_node_handle (_rootName);
+
+            if (!_root) {
+
+               _log.error << "Unable to find radar root: " << _rootName << endl;
+            }
          }
       }
 
@@ -181,8 +195,10 @@ dmz::RenderPluginRadarOverlay::update_time_slice (const Float64 TimeDelta) {
          else { objMod->lookup_orientation (_hil, _defaultAttrHandle, hilOri); }
       }
 
-      const Float64 Heading = get_heading (hilOri);
-      const Matrix XForm (Vector (0.0, 1.0, 0.0), -Heading);
+      const Matrix XForm (
+         _onPlane ?
+            Matrix (Vector (0.0, 1.0, 0.0), -get_heading (hilOri)) :
+            hilOri.transpose ());
 
       HashTableHandleIterator it;
       ObjectStruct *os (0);
@@ -193,10 +209,36 @@ dmz::RenderPluginRadarOverlay::update_time_slice (const Float64 TimeDelta) {
          else {
 
             Vector pos = (os->pos - hilPos) * scale;
-            pos.set_y (0.0);
+            if (_onPlane) { pos.set_y (0.0); }
             XForm.transform_vector (pos);
 
-            if (pos.magnitude () <= _radius) { _set_visiblity (True, *os); }
+            if (pos.magnitude () <= _radius) {
+
+               _set_visiblity (True, *os);
+
+               if (!_onPlane) {
+
+                  //static const Float64 Max (10.0);
+                  const Float64 TheX = pos.get_x ();
+                  const Float64 TheY = pos.get_z ();
+                  const Float64 Max (sqrt ((TheX * TheX) + (TheY * TheY)) * SubRootThree);
+                  Float64 scalar = pos.get_y ();
+              
+                  if (scalar > Max) { scalar = Max; }
+                  else if (scalar < -Max) { scalar = -Max; }
+                  Float64 norm = 1.0 - ((scalar < 0 ? -scalar : scalar) / Max);
+                  norm = norm * norm;
+
+                  if (scalar < 0.0) {
+
+                     _overlay->store_color (os->xformHandle, 1.0, norm, norm, 1.0);
+                  }
+                  else {
+
+                     _overlay->store_color (os->xformHandle, norm, norm, 1.0, 1.0);
+                  }
+               }
+            }
             else { _set_visiblity (False, *os); }
 
             _overlay->store_transform_position (
@@ -501,6 +543,7 @@ dmz::RenderPluginRadarOverlay::_init (Config &local) {
    _rangeMin = config_to_float64 ("range.min", local, _rangeMin);
    _rangeMax = config_to_float64 ("range.max", local, _rangeMax);
    _rangeRate = config_to_float64 ("range.rate", local, _rangeRate);
+   _onPlane = config_to_boolean ("on-plane.value", local, _onPlane);
 }
 //! \endcond
 

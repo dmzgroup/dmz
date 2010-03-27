@@ -439,6 +439,44 @@ dmz::RenderModuleOverlayOSG::destroy_node (const Handle Overlay) {
    return result;
 }
 
+         // Overlay Node API
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::store_color (
+      const Handle Overlay,
+      const Float64 Red,
+      const Float64 Green,
+      const Float64 Blue,
+      const Float64 Alpha) {
+
+   Boolean result (False);
+
+   NodeStruct *ns = _nodeTable.lookup (Overlay);
+
+   if (ns) {
+
+      result = True;
+      const osg::Vec4 Color (Red, Green, Blue, Alpha);
+      _set_color (Color, ns->node.get ());
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::lookup_color (
+      const Handle Overlay,
+      Float64 &red,
+      Float64 &green,
+      Float64 &blue,
+      Float64 &alpha) {
+
+   Boolean result (False);
+
+   return result;
+}
+
+
 // Overlay Text API
 dmz::Boolean
 dmz::RenderModuleOverlayOSG::store_text (const Handle Overlay, const String &Value) {
@@ -1590,6 +1628,57 @@ dmz::RenderModuleOverlayOSG::_remove_transform (const Handle Overlay) {
    }
 
    return Result && _remove_group (Overlay);
+}
+
+
+void
+dmz::RenderModuleOverlayOSG::_set_color (const osg::Vec4 &Color, osg::Node *node) {
+
+   if (node) {
+
+      osg::Group *group = dynamic_cast<osg::Group *> (node);
+
+      if (group) {
+
+         const unsigned int Count = group->getNumChildren ();
+
+         for (unsigned int ix = 0; ix < Count; ix++) {
+
+            osg::Node *child = group->getChild (ix);
+
+            _set_color (Color, child);
+         }
+      }
+      else {
+
+         osg::Geode *geode = dynamic_cast<osg::Geode *> (node);
+
+         if (geode) {
+
+            const unsigned int Count = geode->getNumDrawables ();
+
+            for (unsigned int ix = 0; ix < Count; ix++) {
+
+               osg::Drawable *child = geode->getDrawable (ix);
+
+               osg::Geometry *geom = dynamic_cast<osg::Geometry *> (child);
+
+               if (geom) {
+
+                  osg::Vec4Array* colors = new osg::Vec4Array;
+                  colors->push_back (Color);
+                  geom->setColorArray (colors);
+               }
+               else {
+
+                  osgText::Text *text = dynamic_cast<osgText::Text *> (child);
+
+                  if (text) { text->setColor (Color); }
+               }
+            }
+         }
+      }
+   }
 }
 
 

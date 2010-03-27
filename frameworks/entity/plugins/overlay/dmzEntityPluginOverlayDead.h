@@ -5,6 +5,7 @@
 #include <dmzRenderPortalSize.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesMask.h>
 
 namespace dmz {
@@ -13,6 +14,7 @@ namespace dmz {
 
    class EntityPluginOverlayDead :
          public Plugin,
+         public TimeSlice,
          public ObjectObserverUtil,
          public PortalSizeObserver {
 
@@ -29,6 +31,9 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
+
+         // Time Slice Interface
+         virtual void update_time_slice (const Float64 DeltaTime);
 
          // Object Observer Interface
          virtual void update_object_state (
@@ -65,6 +70,9 @@ namespace dmz {
          String _overlayScaleName;
          Handle _overlayScale;
          Mask _deadState;
+
+         Float64 _currentRed;
+         Float64 _currentAlpha;
          //! \endcond
 
       private:

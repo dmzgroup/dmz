@@ -83,6 +83,8 @@ namespace dmz {
          Definitions _defs;
          Resources _rc;
 
+         UInt32 _isectMask;
+
          RenderModuleCoreOSG *_core;
 
          Handle _defaultHandle;

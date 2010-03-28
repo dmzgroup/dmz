@@ -30,6 +30,7 @@ dmz::RenderPluginEventOSG::RenderPluginEventOSG (const PluginInfo &Info, Config 
       _log (Info),
       _defs (Info),
       _rc (Info),
+      _isectMask (0),
       _core (0),
       _defaultHandle (0) {
 
@@ -70,7 +71,12 @@ dmz::RenderPluginEventOSG::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_core) { _core = RenderModuleCoreOSG::cast (PluginPtr); }
+      if (!_core) {
+
+         _core = RenderModuleCoreOSG::cast (PluginPtr);
+
+         if (_core) { _isectMask = _core->get_isect_mask (); }
+      }
    }
    else if (Mode == PluginDiscoverRemove) {
 
@@ -219,12 +225,9 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, EventStruct 
    event.scale = new osg::MatrixTransform;
    event.root->addChild (event.scale);
 
-   if (_core) {
-
-      UInt32 mask = event.root->getNodeMask ();
-      mask &= ~(_core->get_isect_mask ());
-      event.root->setNodeMask (mask);
-   }
+   UInt32 mask = event.root->getNodeMask ();
+   mask &= ~(_isectMask);
+   event.root->setNodeMask (mask);
 
    EventModule *module = get_event_module ();
 
@@ -239,7 +242,7 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, EventStruct 
 
    osg::Billboard* geode = new osg::Billboard ();
    geode->setMode (osg::Billboard::POINT_ROT_EYE);
-   //osg::Geode* geode = new osg::Geode;
+//   geode->setMode (osg::Billboard::POINT_ROT_WORLD);
 
    osg::Geometry* geom = new osg::Geometry;
 

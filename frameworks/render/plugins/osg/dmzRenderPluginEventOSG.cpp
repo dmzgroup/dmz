@@ -4,8 +4,10 @@
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginEventOSG.h"
 #include <dmzRenderUtilOSG.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeEventType.h>
+#include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
@@ -129,38 +131,80 @@ dmz::RenderPluginEventOSG::close_event (
 
    if (!_ignore.contains (TypeHandle)) {
 
-      TypeStruct *ts = _get_type (Type);
+      TypeStruct *ts = _get_type (EventHandle, Type);
 
-      if (ts) {
-
-         EventStruct *es = new EventStruct (*ts);
-
-         if (es) { _create_event (EventHandle, *es); }
-      }
+      if (ts) { _create_event (EventHandle, *ts); }
    }
 }
 
 
 // RenderPluginEventOSG Interface
 dmz::RenderPluginEventOSG::TypeStruct *
-dmz::RenderPluginEventOSG::_get_type (const EventType &Type) {
+dmz::RenderPluginEventOSG::_get_type (
+      const Handle EventHandle,
+      const EventType &Type) {
 
    TypeStruct *result (0);
-   EventType current (Type);
-   Boolean created (False);
 
-   while (current && !result) {
+   EventModule *module = get_event_module ();
 
-      result = _typeMap.lookup (current.get_handle ());
+   TypeTable *table (0);
 
-      if (!result) { result = _create_type (current); }
+   EventType event (Type);
 
-      if (!result) { current.become_parent (); }
+   while (event && !result) {
+
+      TypeTable *table = _get_type_table (Type);
+
+      if (table) {
+
+         ObjectType current;
+
+         if (module) {
+
+            module->lookup_object_type (EventHandle, table->TypeAttr, current);
+         }
+
+         const ObjectType Start (current);
+
+         while (current && !result) {
+
+            result = table->map.lookup (current.get_handle ());
+
+            if (!result) {
+
+               result = _create_type (EventHandle, event, current, *table);
+            }
+
+            if (!result) { current.become_parent (); }
+         }
+
+         if (result && (current != Start)) {
+
+            table->map.store (Start.get_handle (), result);
+         }
+      }
+
+      if (!result) { event.become_parent (); }
    }
 
-   if (result && (current != Type)) {
+   return result;
+}
 
-      _typeMap.store (Type.get_handle (), result);
+
+dmz::RenderPluginEventOSG::TypeTable *
+dmz::RenderPluginEventOSG::_get_type_table (const EventType &Type) {
+
+   TypeTable *result (_typeTable.lookup (Type.get_handle ()));
+
+   if (!result) {
+
+      result = new TypeTable (
+         config_to_named_handle (
+            "render.type-attribute",
+            Type.get_config (),
+            EventAttributeMunitionsName,
+            get_plugin_runtime_context ()));
    }
 
    return result;
@@ -168,49 +212,71 @@ dmz::RenderPluginEventOSG::_get_type (const EventType &Type) {
 
 
 dmz::RenderPluginEventOSG::TypeStruct *
-dmz::RenderPluginEventOSG::_create_type (const EventType &Type) {
+dmz::RenderPluginEventOSG::_create_type (
+      const Handle EventHandle,
+      const EventType &Event,
+      const ObjectType &Object,
+      TypeTable &table) {
 
    TypeStruct *result (0);
 
-   Config info = Type.get_config ();
+   Config info;
 
-   const String ImageRc = config_to_string ("render.image.resource", info);
-   const Float64 Offset = config_to_float64 ("render.offset.value", info, 10);
-   const Float64 Scale = config_to_float64 ("render.scale.value", info, 1.1);
-   const Float64 Rate = config_to_float64 ("render.scale.rate", info, 0.1);
+   Config list;
 
-   if (ImageRc) {
+   if (Object.get_config ().lookup_all_config ("render.event", list)) {
 
-      const String ImageName = _rc.find_file (ImageRc);
+      ConfigIterator it;
+      Config next;
 
-      if (ImageName) {
+      const String EventName = Event.get_name ();
 
-         result = new TypeStruct (Offset, Scale, Rate);
+      while (!info && list.get_next_config (it, next)) {
 
-         if (result) {
+         if (EventName == config_to_string ("name", next)) { info = next; }
+      }
+   }
 
-            result->image = osgDB::readImageFile (ImageName.get_buffer ());
+   if (info) {
 
-            if (result->image.valid ()) {
+      const String ImageRc = config_to_string ("image.resource", info);
+      const Float64 Offset = config_to_float64 ("offset.value", info, 10);
+      const Float64 Scale = config_to_float64 ("scale.value", info, 1.1);
+      const Float64 Rate = config_to_float64 ("rate.value", info, 0.1);
 
-               if (_typeTable.store (Type.get_handle (), result)) {
+      if (ImageRc) {
 
-                  _typeMap.store (Type.get_handle (), result);
+         const String ImageName = _rc.find_file (ImageRc);
+
+         if (ImageName) {
+
+            result = new TypeStruct (Offset, Scale, Rate);
+
+            if (result) {
+
+               result->image = osgDB::readImageFile (ImageName.get_buffer ());
+
+               if (result->image.valid ()) {
+
+                  if (table.table.store (Object.get_handle (), result)) {
+
+                     table.map.store (Object.get_handle (), result);
+                  }
+                  else { delete result; result = 0; }
                }
-               else { delete result; result = 0; }
-            }
-            else {
+               else {
 
-               _log.error << "Failed to load image resource: " << ImageRc
-                  << " -> " << ImageName << endl;
-               _ignore.add_handle (Type.get_handle ());
+                  _log.error << "Failed to load image resource: " << ImageRc
+                     << " -> " << ImageName << endl;
+                  _ignore.add_handle (Object.get_handle ());
+               }
             }
          }
-      }
-      else {
+         else {
 
-         _log.error << "Failed to find image resource: " << ImageRc << endl;
-         _ignore.add_handle (Type.get_handle ());
+            _log.error << "Failed to find image resource: " << ImageRc << endl;
+            _ignore.add_handle (Object.get_handle ());
+         }
       }
    }
 
@@ -219,96 +285,105 @@ dmz::RenderPluginEventOSG::_create_type (const EventType &Type) {
 
 
 void
-dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, EventStruct &event) {
+dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, TypeStruct &ts) {
 
-   event.root = new osg::MatrixTransform;
-   event.scale = new osg::MatrixTransform;
-   event.root->addChild (event.scale);
+   EventStruct *event = new EventStruct (ts);
 
-   UInt32 mask = event.root->getNodeMask ();
-   mask &= ~(_isectMask);
-   event.root->setNodeMask (mask);
+   if (event) {
 
-   EventModule *module = get_event_module ();
+      event->root = new osg::MatrixTransform;
+      event->scale = new osg::MatrixTransform;
+      event->root->addChild (event->scale);
 
-   if (module) {
+      UInt32 mask = event->root->getNodeMask ();
+      mask &= ~(_isectMask);
+      event->root->setNodeMask (mask);
 
-      Vector pos;
-      module->lookup_position (EventHandle, _defaultHandle, pos);
-      osg::Matrix mat;
-      mat.makeTranslate (to_osg_vector (pos));
-      event.root->setMatrix (mat);
+      EventModule *module = get_event_module ();
+
+      if (module) {
+
+         Vector pos;
+         module->lookup_position (EventHandle, _defaultHandle, pos);
+         osg::Matrix mat;
+         mat.makeTranslate (to_osg_vector (pos));
+         event->root->setMatrix (mat);
+      }
+
+      osg::Billboard* geode = new osg::Billboard ();
+      geode->setMode (osg::Billboard::POINT_ROT_EYE);
+//      geode->setMode (osg::Billboard::POINT_ROT_WORLD);
+
+      osg::Geometry* geom = new osg::Geometry;
+
+      osg::Vec4Array* colors = new osg::Vec4Array;
+      colors->push_back (osg::Vec4 (1.0f, 1.0f, 1.0f, 1.0f));
+      geom->setColorArray (colors);
+      geom->setColorBinding (osg::Geometry::BIND_OVERALL);
+
+      osg::StateSet *stateset = geom->getOrCreateStateSet ();
+      stateset->setMode (GL_BLEND, osg::StateAttribute::ON);
+
+      osg::ref_ptr<osg::Material> material = new osg::Material;
+
+      material->setEmission (
+         osg::Material::FRONT_AND_BACK,
+         osg::Vec4 (1.0, 1.0, 1.0, 1.0));
+
+      stateset->setAttributeAndModes (material.get (), osg::StateAttribute::ON);
+
+      osg::Texture2D *tex = new osg::Texture2D (event->Type.image.get ());
+      tex->setWrap (osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT);
+      tex->setWrap (osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT);
+
+      stateset->setTextureAttributeAndModes (0, tex, osg::StateAttribute::ON);
+
+      stateset->setAttributeAndModes (new osg::CullFace (osg::CullFace::BACK));
+
+      const float Off (event->Type.Offset);
+
+      osg::Vec3 v1 (-Off, 0.0, -Off);
+      osg::Vec3 v2 ( Off, 0.0, -Off);
+      osg::Vec3 v3 ( Off, 0.0,  Off);
+      osg::Vec3 v4 (-Off, 0.0,  Off);
+
+      osg::Vec3 n1 (0.0, -1.0, 0.0);
+
+      const float F1 (0.0f);
+      const float F2 (1.0f);
+
+      osg::Vec3Array *vertices = new osg::Vec3Array;
+      osg::Vec2Array *tcoords = new osg::Vec2Array;
+      osg::Vec3Array* normals = new osg::Vec3Array;
+
+      vertices->push_back (v1);
+      vertices->push_back (v2);
+      vertices->push_back (v3);
+      vertices->push_back (v4);
+      tcoords->push_back (osg::Vec2 (F1, F1));
+      tcoords->push_back (osg::Vec2 (F1, F2));
+      tcoords->push_back (osg::Vec2 (F2, F2));
+      tcoords->push_back (osg::Vec2 (F2, F1));
+      normals->push_back (n1);
+
+      geom->setNormalArray (normals);
+      geom->setNormalBinding (osg::Geometry::BIND_OVERALL);
+      geom->addPrimitiveSet (new osg::DrawArrays (GL_QUADS, 0, 4));
+      geom->setVertexArray (vertices);
+      geom->setTexCoordArray (0, tcoords);
+      geode->addDrawable (geom);
+
+      event->scale->addChild (geode);
+
+      if (_eventTable.store (EventHandle, event)) {
+
+         osg::Group *group = _core ? _core->get_dynamic_objects () : 0;
+
+         if (group) { group->addChild (event->root.get ()); }
+         else { _log.error << "Failed to add geode!" << endl; }
+      }
+      else { delete event; event = 0; }
    }
-
-   osg::Billboard* geode = new osg::Billboard ();
-   geode->setMode (osg::Billboard::POINT_ROT_EYE);
-//   geode->setMode (osg::Billboard::POINT_ROT_WORLD);
-
-   osg::Geometry* geom = new osg::Geometry;
-
-   osg::Vec4Array* colors = new osg::Vec4Array;
-   colors->push_back (osg::Vec4 (1.0f, 1.0f, 1.0f, 1.0f));
-   geom->setColorArray (colors);
-   geom->setColorBinding (osg::Geometry::BIND_OVERALL);
-
-   osg::StateSet *stateset = geom->getOrCreateStateSet ();
-   stateset->setMode (GL_BLEND, osg::StateAttribute::ON);
-
-   osg::ref_ptr<osg::Material> material = new osg::Material;
-   material->setEmission (osg::Material::FRONT_AND_BACK, osg::Vec4 (1.0, 1.0, 1.0, 1.0));
-   stateset->setAttributeAndModes (material.get (), osg::StateAttribute::ON);
-
-   osg::Texture2D *tex = new osg::Texture2D (event.Type.image.get ());
-   tex->setWrap (osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT);
-   tex->setWrap (osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT);
-
-   stateset->setTextureAttributeAndModes (0, tex, osg::StateAttribute::ON);
-
-   stateset->setAttributeAndModes (new osg::CullFace (osg::CullFace::BACK));
-
-   const float Off (event.Type.Offset);
-
-   osg::Vec3 v1 (-Off, 0.0, -Off);
-   osg::Vec3 v2 ( Off, 0.0, -Off);
-   osg::Vec3 v3 ( Off, 0.0,  Off);
-   osg::Vec3 v4 (-Off, 0.0,  Off);
-
-   osg::Vec3 n1 (0.0, -1.0, 0.0);
-
-   const float F1 (0.0f);
-   const float F2 (1.0f);
-
-   osg::Vec3Array *vertices = new osg::Vec3Array;
-   osg::Vec2Array *tcoords = new osg::Vec2Array;
-   osg::Vec3Array* normals = new osg::Vec3Array;
-
-   vertices->push_back (v1);
-   vertices->push_back (v2);
-   vertices->push_back (v3);
-   vertices->push_back (v4);
-   tcoords->push_back (osg::Vec2 (F1, F1));
-   tcoords->push_back (osg::Vec2 (F1, F2));
-   tcoords->push_back (osg::Vec2 (F2, F2));
-   tcoords->push_back (osg::Vec2 (F2, F1));
-   normals->push_back (n1);
-
-   geom->setNormalArray (normals);
-   geom->setNormalBinding (osg::Geometry::BIND_OVERALL);
-   geom->addPrimitiveSet (new osg::DrawArrays (GL_QUADS, 0, 4));
-   geom->setVertexArray (vertices);
-   geom->setTexCoordArray (0, tcoords);
-   geode->addDrawable (geom);
-
-   event.scale->addChild (geode);
-
-   if (_eventTable.store (EventHandle, &event)) {
-
-      osg::Group *group = _core ? _core->get_dynamic_objects () : 0;
-
-      if (group) { group->addChild (event.root.get ()); }
-      else { _log.error << "Failed to add geode!" << endl; }
-   }
-   else { delete &event; }
 }
 
 
@@ -317,7 +392,9 @@ dmz::RenderPluginEventOSG::_init (Config &local) {
 
    RuntimeContext *context = get_plugin_runtime_context ();
 
-   EventTypeSet set = config_to_event_type_set ("events", local, context);
+   _defaultHandle = _defs.create_named_handle (EventAttributeDefaultName);
+
+   EventTypeSet set = config_to_event_type_set ("event-list", local, context);
 
    if (set.get_count () == 0) {
 
@@ -334,8 +411,6 @@ dmz::RenderPluginEventOSG::_init (Config &local) {
          activate_event_callback (type, EventCloseMask);
       }
    }
-
-   _defaultHandle = _defs.create_named_handle (EventAttributeDefaultName);
 }
 
 

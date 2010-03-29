@@ -63,6 +63,16 @@ namespace dmz {
                   Rate (TheRate) {;}
          };
 
+         struct TypeTable {
+
+            const Handle TypeAttr;
+            HashTableHandleTemplate<TypeStruct> map;
+            HashTableHandleTemplate<TypeStruct> table;
+
+            TypeTable (const Handle TheTypeAttr) : TypeAttr (TheTypeAttr) {;}
+            ~TypeTable () { map.clear (); table.empty (); }
+         };
+
          struct EventStruct {
 
             const TypeStruct &Type;
@@ -74,9 +84,16 @@ namespace dmz {
             EventStruct (const TypeStruct &TheType) : Type (TheType), scalar (1.0) {;}
          };
 
-         TypeStruct *_get_type (const EventType &Type);
-         TypeStruct *_create_type (const EventType &Type);
-         void _create_event (const Handle EventHandle, EventStruct &event);
+         TypeStruct *_get_type (const Handle EventHandle, const EventType &Type);
+         TypeTable *_get_type_table (const EventType &Type);
+
+         TypeStruct *_create_type (
+            const Handle EventHandle,
+            const EventType &Event,
+            const ObjectType &Object,
+            TypeTable &table);
+
+         void _create_event (const Handle EventHandle, TypeStruct &ts);
          void _init (Config &local);
 
          Log _log;
@@ -91,8 +108,7 @@ namespace dmz {
 
          HandleContainer _ignore;
 
-         HashTableHandleTemplate<TypeStruct> _typeMap;
-         HashTableHandleTemplate<TypeStruct> _typeTable;
+         HashTableHandleTemplate<TypeTable> _typeTable;
 
          HashTableHandleTemplate<EventStruct> _eventTable;
 

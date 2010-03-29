@@ -7,6 +7,7 @@
 #include <dmzEventModule.h>
 #include <dmzObjectModule.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -75,112 +76,150 @@ dmz::AudioPluginEvent::close_event (
       const EventType &Type,
       const EventLocalityEnum Locality) {
 
-   if (!_ignoredEventTypes.contains_exact_type (Type) && _audioMod && _eventMod) {
+   if (_audioMod && _eventMod) {
 
-      EventStruct *es = _create_event_struct (Type);
+      const Handle Sound = _get_sound (EventHandle, Type);
 
-      if (!es) {
+      if (Sound) {
 
-         EventType current (Type);
+         Vector pos;
 
-         while (!es && current.become_parent ()) {
+         _eventMod->lookup_position (EventHandle, _defaultEventHandle, pos);
 
-            es = _create_event_struct (current);
-         }
+         SoundInit si;
+         SoundAttributes sa;
+         sa.set_position (pos);
+
+         _audioMod->play_sound (Sound, si, sa);
       }
-
-      if (es) {
-
-         Handle sound (es->Sound);
-
-         AttrStruct *attr = es->attr;
-         ObjectTypeStruct *ots = es->types;
-
-         while (ots && attr) {
-
-            ObjectType type;
-
-            if (!_eventMod->lookup_object_type (EventHandle, attr->Attr, type) &&
-                  (_objMod != 0)) {
-
-               Handle obj (0);
-
-               if (_eventMod->lookup_object_handle (EventHandle, attr->Attr, obj)) {
-
-                  type = _objMod->lookup_object_type (obj);
-               }
-            }
-
-            if (type) {
-
-               ObjectTypeStruct *next = ots->table.lookup (type.get_handle ());
-
-               while (!next && type.become_parent ()) {
-
-                  next = ots->table.lookup (type.get_handle ());
-               }
-
-               if (next) { ots = next; attr = attr->next; }
-
-               if (ots->Sound) { sound = ots->Sound; }
-            }
-            else { ots = 0; attr = 0; }
-         }
-
-         if (sound) {
-
-            Vector pos;
-
-            _eventMod->lookup_position (EventHandle, _defaultEventHandle, pos);
-
-            SoundInit si;
-            SoundAttributes sa;
-            sa.set_position (pos);
-
-            _audioMod->play_sound (sound, si, sa);
-         }
-      }
-      else { _ignoredEventTypes.add_event_type (Type); }
    }
 }
 
 
-dmz::AudioPluginEvent::EventStruct *
-dmz::AudioPluginEvent::_create_event_struct (const EventType &Type) {
+dmz::Handle
+dmz::AudioPluginEvent::_get_sound (
+      const Handle EventHandle,
+      const EventType &Type) {
 
-   EventStruct *result (_eventTable.lookup (Type.get_handle ()));
+   Handle result (0);
 
-   if (!result && _audioMod) {
+   TypeStruct *ts (0);
 
-      Config audio;
+   TypeTable *table (0);
 
-      if (Type.get_config ().lookup_all_config_merged ("audio", audio)) {
+   EventType event (Type);
 
-         const String SoundName = config_to_string ("resource", audio);
+   while (event && !result) {
 
-         const Handle Sound = _create_sound (SoundName);
+      TypeTable *table = _get_type_table (Type);
 
-         result = new EventStruct (Sound);
+      if (table) {
 
-         if (result && !_eventTable.store (Type.get_handle (), result)) {
+         ObjectType current;
 
-            delete result; result = 0;
-         }
+         if (_eventMod) {
 
-         if (result) {
+            if (!_eventMod->lookup_object_type (EventHandle, table->TypeAttr, current)) {
 
-            _create_attr_list (Type, audio, *result);
+               Handle obj (_eventMod->lookup_object_handle (
+                  EventHandle,
+                  table->TypeAttr,
+                  obj));
 
-            ObjectTypeStruct *types = new ObjectTypeStruct (0);
-
-            if (types) {
-
-               _create_obj_types (Type, audio, *types);
-
-               if (types->table.get_count ()) { result->types = types; }
-               else { delete types; types = 0; }
+               if (_objMod && obj) { current = _objMod->lookup_object_type (obj); }
             }
          }
+
+         const ObjectType Start (current);
+
+         while (current && !ts) {
+
+            ts = table->map.lookup (current.get_handle ());
+
+            if (!ts) { ts = _create_type (EventHandle, event, current, *table); }
+
+            if (!ts) { current.become_parent (); }
+         }
+
+         if (ts) {
+
+            result = ts->Sound;
+
+            if (current != Start) {
+
+               table->map.store (Start.get_handle (), ts);
+            }
+         }
+
+         if (!result) { result = table->Sound; }
+      }
+
+      if (!result) { event.become_parent (); }
+   }
+
+   return result;
+}
+
+
+dmz::AudioPluginEvent::TypeTable *
+dmz::AudioPluginEvent::_get_type_table (const EventType &Type) {
+
+   TypeTable *result (_typeTable.lookup (Type.get_handle ()));
+
+   if (!result) {
+
+      result = new TypeTable (
+         _create_sound (config_to_string ("audio.resource", Type.get_config ())),
+         config_to_named_handle (
+            "audio.type-attribute",
+            Type.get_config (),
+            EventAttributeMunitionsName,
+            get_plugin_runtime_context ()));
+   }
+
+   return result;
+}
+
+
+dmz::AudioPluginEvent::TypeStruct *
+dmz::AudioPluginEvent::_create_type (
+      const Handle EventHandle,
+      const EventType &Event,
+      const ObjectType &Object,
+      TypeTable &table) {
+
+   TypeStruct *result (0);
+
+   Config info;
+
+   Config list;
+
+   if (Object.get_config ().lookup_all_config ("audio.event", list)) {
+
+      ConfigIterator it;
+      Config next;
+
+      const String EventName = Event.get_name ();
+
+      while (!info && list.get_next_config (it, next)) {
+
+         if (EventName == config_to_string ("name", next)) { info = next; }
+      }
+   }
+
+   if (info) {
+
+      const Handle Sound = _create_sound (config_to_string ("resource", info));
+
+      result = new TypeStruct (Sound);
+
+      if (result) {
+
+         if (table.table.store (Object.get_handle (), result)) {
+
+            table.map.store (Object.get_handle (), result);
+         }
+         else { delete result; result = 0; }
       }
    }
 
@@ -218,102 +257,6 @@ dmz::AudioPluginEvent::_create_sound (const String &Name) {
    }
 
    return result;
-}
-
-
-void
-dmz::AudioPluginEvent::_create_attr_list (
-      const EventType &Type,
-      const Config &Source,
-      EventStruct &event) {
-
-   Config AttrList;
-
-   if (Source.lookup_all_config ("attribute", AttrList)) {
-
-      AttrStruct *first (0);
-      AttrStruct *current (0);
-
-      ConfigIterator it;
-      Config attr;
-
-      while (AttrList.get_next_config (it, attr)) {
-
-         String attrName;
-
-         if (config_to_boolean ("source", attr)) { attrName = EventAttributeSourceName; }
-         else if (config_to_boolean ("target", attr)) {
-
-            attrName = EventAttributeTargetName;
-         }
-         else if (config_to_boolean ("munitions", attr)) {
-
-            attrName = EventAttributeMunitionsName;
-         }
-         else { attrName = config_to_string ("name", attr); }
-
-         Handle attrHandle (0);
-
-         if (attrName) { attrHandle = _defs.create_named_handle (attrName); }
-         else {
-
-            _log.error << "Unable to find attribute name for audio event: "
-               << Type.get_name () << endl;
-         }
-
-         AttrStruct *as = new AttrStruct (attrHandle);
-
-         if (!current) { current = first = as; }
-         else { current->next = as; current = as; }
-      }
-
-      if (event.attr) { delete (event.attr); event.attr = 0; }
-      event.attr = first;
-   }
-}
-
-
-void
-dmz::AudioPluginEvent::_create_obj_types (
-      const EventType &Event,
-      const Config &Source,
-      ObjectTypeStruct &types) {
-
-   Config list;
-
-   if (Source.lookup_all_config ("object-type", list)) {
-
-      ConfigIterator it;
-      Config data;
-
-      while (list.get_next_config (it, data)) {
-
-         const String TypeName = config_to_string ("name", data);
-
-         ObjectType type;
-
-         if (_defs.lookup_object_type (TypeName, type)) {
-
-            const String SoundName = config_to_string ("resource", data);
-
-            const Handle Sound = _create_sound (SoundName);
-
-            ObjectTypeStruct *ots = new ObjectTypeStruct (Sound);
-
-            if (ots && !types.table.store (type.get_handle (), ots)) {
-
-               delete ots; ots = types.table.lookup (type.get_handle ());
-            }
-
-            if (ots) { _create_obj_types (Event, data, *ots); }
-         }
-         else {
-
-            _log.error << "Unknown Object Type: " << TypeName << " in audio event: "
-               << Event.get_name () << endl;
-         }
-      }
-   }
 }
 
 
@@ -360,7 +303,7 @@ dmz::AudioPluginEvent::_clear () {
 
    _soundTable.empty ();
 
-   _eventTable.empty ();
+   _typeTable.empty ();
 }
 //! \endcond
 

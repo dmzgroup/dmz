@@ -42,56 +42,39 @@ namespace dmz {
             const EventLocalityEnum Locality);
 
      protected:
-         struct ObjectTypeStruct {
+         struct TypeStruct {
 
             const Handle Sound;
 
-            HashTableHandleTemplate<ObjectTypeStruct> table;
-
-            ObjectTypeStruct (const Handle TheSound) : Sound (TheSound) {;}
-            ~ObjectTypeStruct () { table.empty (); }
+            TypeStruct (const Handle TheSound) : Sound (TheSound) {;}
          };
 
-         struct AttrStruct {
-
-            const Handle Attr;
-            AttrStruct *next;
-            AttrStruct (const Handle TheAttr) : Attr (TheAttr), next (0) {;}
-            ~AttrStruct () { if (next) { delete next; next = 0; } }
-         };
-
-         struct EventStruct {
+         struct TypeTable {
 
             const Handle Sound;
+            const Handle TypeAttr;
 
-            AttrStruct *attr;
-            ObjectTypeStruct *types;
+            HashTableHandleTemplate<TypeStruct> map;
+            HashTableHandleTemplate<TypeStruct> table;
 
-            EventStruct (const Handle TheSound) :
+            TypeTable (const Handle TheSound, const Handle TheTypeAttr) :
                   Sound (TheSound),
-                  attr (0),
-                  types (0) {;}
+                  TypeAttr (TheTypeAttr) {;}
 
-            ~EventStruct () {
-
-               if (attr) { delete attr; attr = 0; }
-               if (types) { delete types; types = 0; }
-            }
+            ~TypeTable () { map.clear (); table.empty (); }
          };
 
-         EventStruct *_create_event_struct (const EventType &Type);
+         Handle _get_sound (const Handle EventHandle, const EventType &Type);
+
+         TypeTable *_get_type_table (const EventType &Type);
+
+         TypeStruct *_create_type (
+            const Handle EventHandle,
+            const EventType &Event,
+            const ObjectType &Object,
+            TypeTable &table);
+
          Handle _create_sound (const String &Name);
-
-         void _create_attr_list (
-            const EventType &Type,
-            const Config &Source,
-            EventStruct &event);
-
-         void _create_obj_types (
-            const EventType &Type,
-            const Config &Source,
-            ObjectTypeStruct &types);
-
          void _init (Config &local);
          void _clear ();
 
@@ -106,7 +89,7 @@ namespace dmz {
          EventTypeSet _eventTypes;
          EventTypeSet _ignoredEventTypes;
          HashTableStringTemplate<Handle> _soundTable;
-         HashTableHandleTemplate<EventStruct> _eventTable;
+         HashTableHandleTemplate<TypeTable> _typeTable;
          //! \endcond
 
       private:

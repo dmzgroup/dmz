@@ -212,6 +212,9 @@ dmz::QtPluginAppUpdater::_slot_get_version_finished () {
             }
          }
       }
+      
+      reply->deleteLater ();
+      reply = 0;
    }
 }
 
@@ -385,7 +388,7 @@ dmz::QtPluginAppUpdater::_slot_download_finished () {
             break;
       }
 
-      delete _downloadReply;
+      _downloadReply->deleteLater ();
       _downloadReply = 0;
    }
    else if (_updateDialog) { _updateDialog->reject (); }

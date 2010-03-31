@@ -323,6 +323,7 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, TypeStruct &
 
       osg::StateSet *stateset = geom->getOrCreateStateSet ();
       stateset->setMode (GL_BLEND, osg::StateAttribute::ON);
+      stateset->setRenderingHint (osg::StateSet::TRANSPARENT_BIN);
 
       osg::ref_ptr<osg::Material> material = new osg::Material;
 

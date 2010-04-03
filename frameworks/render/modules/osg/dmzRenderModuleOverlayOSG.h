@@ -77,6 +77,13 @@ namespace dmz {
             const Plugin *PluginPtr);
 
          // RenderModuleOverlay Interface
+         virtual Boolean lookup_named_color (
+            const String &Name,
+            Float64 &red,
+            Float64 &green,
+            Float64 &blue,
+            Float64 &alpha);
+
          virtual Handle lookup_node_handle (const String &Name);
 
          virtual Handle lookup_node_clone_sub_handle (

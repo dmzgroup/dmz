@@ -31,6 +31,13 @@ namespace dmz {
          Handle get_render_module_overlay_handle () const;
 
          // RenderModuleOverlay Interface
+         virtual Boolean lookup_named_color (
+            const String &Name,
+            Float64 &red,
+            Float64 &green,
+            Float64 &blue,
+            Float64 &alpha) = 0;
+
          virtual Handle lookup_node_handle (const String &Name) = 0;
 
          virtual Handle lookup_node_clone_sub_handle (

@@ -284,6 +284,32 @@ dmz::RenderModuleOverlayOSG::discover_plugin (
 
 
 // RenderModuleOverlay Interface
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::lookup_named_color (
+      const String &Name,
+      Float64 &red,
+      Float64 &green,
+      Float64 &blue,
+      Float64 &alpha) {
+
+   Boolean result (False);
+
+   osg::Vec4 *color = _colorTable.lookup (Name);
+
+   if (color) {
+
+      result = True;
+
+      red = color->r ();
+      green = color->g ();
+      blue = color->b ();
+      alpha = color->a ();
+   }
+
+   return result;
+}
+
+
 dmz::Handle
 dmz::RenderModuleOverlayOSG::lookup_node_handle (const String &Name) {
 
@@ -1366,6 +1392,7 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
       ts ? Float64 (ts->img->t ()) : 1.0,
       0.0);
 
+   const String Name = config_to_string ("name", node);
    const Vector Min = config_to_vector ("min", node);
    const Vector Max = config_to_vector ("max", node, Min + DefaultSize);
    const Int32 Depth = config_to_int32 ("depth.value", node);
@@ -1428,6 +1455,13 @@ dmz::RenderModuleOverlayOSG::_add_box (osg::ref_ptr<osg::Group> &parent, Config 
    geode->addDrawable (geom);
 
    parent->addChild (geode);
+
+   if (Name) {
+
+      NodeStruct *ns = new NodeStruct (Name, get_plugin_runtime_context (), geode);
+
+      if (!_register_node (ns)) { delete ns; ns = 0; }
+   }
 }
 
 

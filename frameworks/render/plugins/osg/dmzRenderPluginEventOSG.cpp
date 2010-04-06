@@ -291,7 +291,13 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, TypeStruct &
 
    if (event) {
 
+
+#ifdef DMZ_USE_BILLBOARD
       event->root = new osg::MatrixTransform;
+#else
+      event->root = new osg::AutoTransform ();
+      event->root->setAutoRotateMode (osg::AutoTransform::ROTATE_TO_SCREEN);
+#endif
       event->scale = new osg::MatrixTransform;
       event->root->addChild (event->scale);
 
@@ -305,14 +311,21 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, TypeStruct &
 
          Vector pos;
          module->lookup_position (EventHandle, _defaultHandle, pos);
+#ifdef DMZ_USE_BILLBOARD
          osg::Matrix mat;
          mat.makeTranslate (to_osg_vector (pos));
          event->root->setMatrix (mat);
+#else
+         event->root->setPosition (to_osg_vector (pos));
+#endif
       }
 
+#ifdef DMZ_USE_BILLBOARD
       osg::Billboard* geode = new osg::Billboard ();
       geode->setMode (osg::Billboard::POINT_ROT_EYE);
-//      geode->setMode (osg::Billboard::POINT_ROT_WORLD);
+#else
+      osg::Geode* geode = new osg::Geode ();
+#endif
 
       osg::Geometry* geom = new osg::Geometry;
 
@@ -343,10 +356,17 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, TypeStruct &
 
       const float Off (event->Type.Offset);
 
+#ifdef DMZ_USE_BILLBOARD
       osg::Vec3 v1 (-Off, 0.0, -Off);
       osg::Vec3 v2 ( Off, 0.0, -Off);
       osg::Vec3 v3 ( Off, 0.0,  Off);
       osg::Vec3 v4 (-Off, 0.0,  Off);
+#else
+      osg::Vec3 v1 (-Off, -Off, 0.0);
+      osg::Vec3 v2 ( Off, -Off, 0.0);
+      osg::Vec3 v3 ( Off,  Off, 0.0);
+      osg::Vec3 v4 (-Off,  Off, 0.0);
+#endif
 
       osg::Vec3 n1 (0.0, -1.0, 0.0);
 

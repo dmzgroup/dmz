@@ -12,6 +12,7 @@
 namespace dmz {
  
    class RenderModuleIsect;
+   class EventModuleCommon;
 
 // MOVE once plugin is finished.
 //! \cond
@@ -46,16 +47,54 @@ namespace dmz {
          virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
 
       protected:
-         void _store_speed (const Handle ObjectHandle, const ObjectType &Type);
+         struct TypeStruct {
+
+            const Float64 MaxTurn;
+            const Float64 MaxSpeed;
+            const Float64 Acceleration;
+
+            TypeStruct (
+                  const Float64 TheMaxTurn,
+                  const Float64 TheMaxSpeed,
+                  const Float64 TheAcceleration) :
+                  MaxTurn (TheMaxTurn),
+                  MaxSpeed (TheMaxSpeed),
+                  Acceleration (TheAcceleration) {;}
+         };
+
+         struct ObjectStruct {
+
+            const TypeStruct &Info;
+            const Handle Object;
+            const Handle Source;
+            Handle target;
+
+            ObjectStruct (
+                  const TypeStruct &TheInfo,
+                  const Handle TheObject,
+                  const Handle TheSource,
+                  const Handle TheTarget) :
+                  Info (TheInfo),
+                  Object (TheObject),
+                  Source (TheSource),
+                  target (TheTarget) {;}
+         };
+
+         void _register (const Handle ObjectHandle, const ObjectType &Type);
+         TypeStruct *_get_type_info (const ObjectType &Type);
          void _init (Config &local);
 
          Log _log;
-         Float64 _defaultSpeed;
          Handle _defaultHandle;
+         Handle _targetLockHandle;
+         Handle _sourceHandle;
+         ObjectTypeSet _ignoreSet;
          ObjectTypeSet _typeSet;
-         RenderModuleIsect *_isectMod;
-         HashTableHandleTemplate<Float64> _objectTable;
-         HashTableHandleTemplate<Float64> _speedTable;
+         RenderModuleIsect *_isect;
+         EventModuleCommon *_common;
+         HashTableHandleTemplate<TypeStruct> _typeMap;
+         HashTableHandleTemplate<TypeStruct> _typeTable;
+         HashTableHandleTemplate<ObjectStruct> _objectTable;
          //! \endcond
 
       private:

@@ -10,9 +10,12 @@
 #include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 
+#include <osg/AutoTransform>
 #include <osg/Image>
 #include <osg/MatrixTransform>
 #include <osg/ref_ptr>
+
+//#define DMZ_USE_BILLBOARD
 
 namespace dmz {
 
@@ -78,7 +81,11 @@ namespace dmz {
             const TypeStruct &Type;
 
             Float64 scalar;
+#ifdef DMZ_USE_BILLBOARD
             osg::ref_ptr<osg::MatrixTransform> root;
+#else
+            osg::ref_ptr<osg::AutoTransform> root;
+#endif
             osg::ref_ptr<osg::MatrixTransform> scale;
 
             EventStruct (const TypeStruct &TheType) : Type (TheType), scalar (1.0) {;}

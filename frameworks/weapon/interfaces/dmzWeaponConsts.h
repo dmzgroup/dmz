@@ -16,7 +16,8 @@ namespace dmz {
 
 //! \addtogroup Weapon
 //! @{
-
+   //! Weapon lock attribute handle name. Defined in dmzWeaponsConsts.h
+   const char WeaponAttributeTargetLockName[] = "Weapon_Target_Lock";
    String create_weapon_attribute_name (const Int32 Which);
 //! @}
 };

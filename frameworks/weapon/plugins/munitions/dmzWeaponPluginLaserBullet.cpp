@@ -158,9 +158,9 @@ dmz::WeaponPluginLaserBullet::update_time_slice (const Float64 TimeDelta) {
 
             objMod->store_position (obj, _defaultHandle, NewPos);
             objMod->store_velocity (obj, _defaultHandle, vel);
-         }
 
-         _isectMod->enable_isect (obj);
+            _isectMod->enable_isect (obj);
+         }
          
          speedPtr = _objectTable.get_next (it);
       }

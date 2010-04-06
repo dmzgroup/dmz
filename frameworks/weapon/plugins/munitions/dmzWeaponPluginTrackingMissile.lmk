@@ -6,4 +6,9 @@ lmk.add_libs {
    "dmzObjectUtil",
    "dmzKernel",
 }
-lmk.add_preqs {"dmzRenderFramework", "dmzObjectFramework",}
+lmk.add_preqs {
+   "dmzWeaponFramework",
+   "dmzEventFramework",
+   "dmzRenderFramework",
+   "dmzObjectFramework",
+}

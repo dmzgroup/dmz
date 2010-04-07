@@ -3,6 +3,7 @@
 
 #include <dmzInputObserverUtil.h>
 #include <dmzObjectObserverUtil.h>
+#include <dmzRuntimeDataConverterTypesBase.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimeObjectType.h>
@@ -104,6 +105,7 @@ namespace dmz {
 
          Log _log;
          Time _time;
+         DataConverterHandle _convert;
          WeaponAmmoUtil _ammo;
 
          HashTableHandleTemplate<LaunchStruct> _launchTable;

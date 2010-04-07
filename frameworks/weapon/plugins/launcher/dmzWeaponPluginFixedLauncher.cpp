@@ -48,6 +48,7 @@ dmz::WeaponPluginFixedLauncher::WeaponPluginFixedLauncher (
       ObjectObserverUtil (Info, local),
       _log (Info),
       _time (Info),
+      _convert (Info),
       _ammo (Info, local, &_log),
       _delay (0.5),
       _hilActive (True),
@@ -133,6 +134,23 @@ dmz::WeaponPluginFixedLauncher::receive_message (
       const Data *InData,
       Data *outData) {
 
+   const Handle Source = _convert.to_handle (InData);
+
+   if (Source) {
+
+      LaunchStruct *ls (_get_struct (Source));
+
+      if (ls) {
+
+         const Float64 CTime (_time.get_frame_time ());
+
+         if (CTime > (ls->lastLaunchTime + _delay)) {
+
+            _create_munition (ls->Source);
+            ls->lastLaunchTime = CTime;
+         }
+      }
+   }
 }
 
 
@@ -342,6 +360,9 @@ dmz::WeaponPluginFixedLauncher::_init (Config &local) {
       InputEventButtonMask | InputEventChannelStateMask,
       &_log);
 
+   Message launch = config_create_message ("launch-message.name", local, "", context);
+
+   if (launch) { subscribe_to_message (launch); }
 }
 //! \endcond
 

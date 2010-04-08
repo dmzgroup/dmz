@@ -1068,15 +1068,22 @@ operator<< (dmz::String &str, const unsigned int Value) {
 }
 
 
+#ifdef _WIN32
+static const char localUInt32Format[] = "%u";
+#else
+static const char localUInt32Format[] = "%lu";
+#endif
+
 dmz::String &
 operator<< (dmz::String &str, const unsigned long Value) {
 
    char buf[sizeof (Value) * 4];
-   const dmz::Int32 Len = sprintf_n (buf, sizeof (buf), "%u", Value);
+   const dmz::Int32 Len = sprintf_n (buf, sizeof (buf), localUInt32Format, Value);
    dmz::String tmp (buf, Len);
    str.append (tmp);
    return str;
 }
+
 
 #ifdef _WIN32
 static const char localUInt64Format[] = "%I64u";

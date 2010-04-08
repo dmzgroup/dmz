@@ -121,10 +121,12 @@ dmz::AudioPluginEvent::_get_sound (
 
             if (!_eventMod->lookup_object_type (EventHandle, table->TypeAttr, current)) {
 
-               Handle obj (_eventMod->lookup_object_handle (
+               Handle obj (0);
+
+               _eventMod->lookup_object_handle (
                   EventHandle,
                   table->TypeAttr,
-                  obj));
+                  obj);
 
                if (_objMod && obj) { current = _objMod->lookup_object_type (obj); }
             }

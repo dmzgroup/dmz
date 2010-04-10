@@ -48,7 +48,7 @@ namespace dmz {
 
    typedef signed char Int8; //!< 8 Bit signed integer.
    typedef short Int16; //!< 16 Bit signed integer.
-   typedef long Int32; //!< 32 Bit signed integer.
+   typedef int Int32; //!< 32 Bit signed integer.
 
 #ifdef _WIN32
    typedef __int64 Int64;
@@ -58,7 +58,7 @@ namespace dmz {
 
    typedef unsigned char UInt8; //!< 8 Bit unsigned integer.
    typedef unsigned short UInt16; //!< 16 Bit unsigned integer.
-   typedef unsigned long UInt32; //!< 32 Bit unsigned integer.
+   typedef unsigned int UInt32; //!< 32 Bit unsigned integer.
 
 #if _WIN32
    typedef unsigned __int64 UInt64;
@@ -86,7 +86,7 @@ namespace dmz {
    DMZ_KERNEL_LINK_SYMBOL extern const Boolean False;
    DMZ_KERNEL_LINK_SYMBOL extern const Boolean True;
 
-   typedef unsigned long Handle; //!< Handle type.
+   typedef unsigned int Handle; //!< Handle type.
 
    DMZ_KERNEL_LINK_SYMBOL BaseTypeEnum string_to_base_type_enum  (const String &Value);
    DMZ_KERNEL_LINK_SYMBOL String base_type_enum_to_string  (const BaseTypeEnum Value);

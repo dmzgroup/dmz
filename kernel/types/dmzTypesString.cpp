@@ -1069,16 +1069,16 @@ operator<< (dmz::String &str, const unsigned int Value) {
 
 
 #ifdef _WIN32
-static const char localUInt32Format[] = "%u";
+static const char localULongFormat[] = "%u";
 #else
-static const char localUInt32Format[] = "%lu";
+static const char localULongFormat[] = "%lu";
 #endif
 
 dmz::String &
 operator<< (dmz::String &str, const unsigned long Value) {
 
    char buf[sizeof (Value) * 4];
-   const dmz::Int32 Len = sprintf_n (buf, sizeof (buf), localUInt32Format, Value);
+   const dmz::Int32 Len = sprintf_n (buf, sizeof (buf), localULongFormat, Value);
    dmz::String tmp (buf, Len);
    str.append (tmp);
    return str;
@@ -1124,11 +1124,18 @@ operator<< (dmz::String &str, const int Value) {
 }
 
 
+
+#ifdef _WIN32
+static const char localLongFormat[] = "%d";
+#else
+static const char localLongFormat[] = "%ld";
+#endif
+
 dmz::String &
 operator<< (dmz::String &str, const long Value) {
 
    char buf[sizeof (Value) * 4];
-   const dmz::Int32 Len = sprintf_n (buf, sizeof (buf), "%d", Value);
+   const dmz::Int32 Len = sprintf_n (buf, sizeof (buf), localLongFormat, Value);
    dmz::String tmp (buf, Len);
    str.append (tmp);
    return str;

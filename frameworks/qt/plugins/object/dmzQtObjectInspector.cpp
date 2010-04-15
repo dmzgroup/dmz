@@ -231,7 +231,7 @@ dmz::QtObjectInspector::create_object (
       item->setFlags (Qt::ItemIsEnabled);
       _state.ui.treeWidget->addTopLevelItem (item);
 
-      char *localityNames[3] = { "Unknown", "Local", "Remote" };
+      const char *localityNames[3] = { "Unknown", "Local", "Remote" };
       item = new AttributeItem (ObjectAttrLocality);
       item->setText (AttributeCol, ObjectAttrName[ObjectAttrLocality]);
       item->setText (ValueCol, localityNames[Locality]);

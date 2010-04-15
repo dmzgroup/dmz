@@ -195,7 +195,7 @@ dmz::QtPluginObjectInspector::create_object (
       item->setText (TypeCol, to_qstring (Type));
       item->setText (UUIDCol, to_qstring (Identity));
       
-      char *localityNames[3] = { "Unknown", "Local", "Remote" };
+      const char *localityNames[3] = { "Unknown", "Local", "Remote" };
       item->setText (LocalityCol, localityNames[Locality]);
       
       _state.ui.objectTreeWidget->addTopLevelItem (item);

@@ -33,19 +33,19 @@ main (int argc, char *argv[]) {
          (Str3Len == 6) &&
          (Str3Len < str3.get_size ()));
 
-   char *charData = "Test String Value";
-   const int CharDataLength = strlen (charData);
-   String inputValue (charData);
+   const char *CharData = "Test String Value";
+   const int CharDataLength = strlen (CharData);
+   String inputValue (CharData);
    String copyCtrResult (inputValue);
    test.validate (
       "String copy constructor contains valid string.",
       (copyCtrResult.get_length () == CharDataLength) &&
-      (!strcmp (copyCtrResult.get_buffer (), charData)));
+      (!strcmp (copyCtrResult.get_buffer (), CharData)));
 
    String str5 ("..a...b....c.....d...");
    str5.replace_sub ("..", ".");
    test.validate (
-      "String replace_sub squential pattern.",
+      "String replace_sub sequential pattern.",
       !strcmp (str5.get_buffer (), ".a.b.c.d.") &&
          (str5.get_length () == 9) &&
          (str5.get_length () < str5.get_size ()));

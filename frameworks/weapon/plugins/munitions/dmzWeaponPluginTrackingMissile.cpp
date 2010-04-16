@@ -217,6 +217,7 @@ dmz::WeaponPluginTrackingMissile::create_object (
          _typeSet.contains_type (Type)) {
 
       _register (ObjectHandle, Type);
+      if (_common) { _common->create_launch_event (ObjectHandle, 0); }
    }
 }
 

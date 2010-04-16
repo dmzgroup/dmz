@@ -213,7 +213,6 @@ dmz::EntityPluginFreeFly::receive_button_event (
       const Handle Channel,
       const InputEventButton &Value) {
 
-   _log.out << "B" << endl;
 }
 
 

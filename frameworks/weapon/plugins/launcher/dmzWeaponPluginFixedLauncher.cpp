@@ -353,6 +353,15 @@ dmz::WeaponPluginFixedLauncher::_init (Config &local) {
    _launcherRotation.pitch_in_place (HPR.get_x ());
    _launcherRotation.yaw_in_place (HPR.get_y ());
 
+   Config convergeConfig;
+
+   if (local.lookup_config ("converge", convergeConfig)) {
+
+      const Vector Converge = config_to_vector (convergeConfig);
+      const Vector Dir = (Converge - _launcherOffset);
+      _launcherRotation.from_two_vectors (Vector (0, 0, -1), Dir.normalize ());
+   }
+
    _launchButton = config_to_uint32 ("button.value", local, _launchButton);
 
    init_input_channels (

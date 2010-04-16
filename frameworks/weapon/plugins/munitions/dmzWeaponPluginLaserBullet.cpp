@@ -210,7 +210,21 @@ dmz::WeaponPluginLaserBullet::_store_speed (
       }
    }
 
-   if (ptr) { _objectTable.store (ObjectHandle, ptr); }
+   if (ptr) {
+
+      _objectTable.store (ObjectHandle, ptr);
+
+      ObjectModule *objMod (get_object_module ());
+
+      if (objMod) {
+
+         Matrix ori;
+         objMod->lookup_orientation (ObjectHandle, _defaultHandle, ori);
+         Vector vel (0.0, 0.0, -(*ptr));
+         ori.transform_vector (vel);
+         objMod->store_velocity (ObjectHandle, _defaultHandle, vel);
+      }
+   }
 }
 
 

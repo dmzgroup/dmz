@@ -152,7 +152,6 @@ dmz::NetModulePacketCodecBasic::discover_plugin (
 
 
 // NetModulePacketCodec Interface
-
 void
 dmz::NetModulePacketCodecBasic::get_supported_objects (ObjectTypeSet &objects) {
 
@@ -350,15 +349,11 @@ dmz::NetModulePacketCodecBasic::_discover_codec (const Plugin *PluginPtr) {
                if (eos && _objEncodeTable.store (hs->PacketID, eos)) {
 
                   ObjectTypeIterator it;
-
                   ObjectType type;
 
-                  Boolean found (hs->objects.get_first (it, type));
-
-                  while (found) {
+                  while (hs->objects.get_next (it, type)) {
 
                      _objTypeTable.store (type.get_handle (), eos);
-                     found = hs->objects.get_next (it, type);
                   }
                }
                else if (eos) { delete eos; eos = 0; }
@@ -458,6 +453,7 @@ dmz::NetModulePacketCodecBasic::_remove_codec (const Plugin *PluginPtr) {
    }
 }
 
+
 void
 dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
@@ -466,12 +462,9 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
    if (local.lookup_all_config ("packet", packetList)) {
 
       ConfigIterator it;
-
       Config packet;
 
-      Boolean found (packetList.get_first_config (it, packet));
-
-      while (found) {
+      while (packetList.get_next_config (it, packet)) {
 
          const String Name (config_to_string ("name", packet));
          const Handle PacketID (config_to_uint32 ("id", packet));
@@ -490,9 +483,7 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
                Config object;
 
-               Boolean objectFound (objectList.get_first_config (objectIt, object));
-
-               while (objectFound) {
+               while (objectList.get_next_config (objectIt, object)) {
 
                   const String TypeName (config_to_string ("name", object));
 
@@ -504,8 +495,6 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
                         << ". Unable to bind to codec: " << Name
                         << " with id: " << PacketID << endl;
                   }
-
-                  objectFound = objectList.get_next_config (objectIt, object);
                }
 
                Config eventList;
@@ -516,9 +505,7 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
                Config event;
 
-               Boolean eventFound (eventList.get_first_config (eventIt, event));
-
-               while (eventFound) {
+               while (eventList.get_next_config (eventIt, event)) {
 
                   const String TypeName (config_to_string ("name", event));
 
@@ -530,8 +517,6 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
                         << ". Unable to bind to codec: " << Name
                         << " with id: " << PacketID << endl;
                   }
-
-                  eventFound = eventList.get_next_config (eventIt, event);
                }
             }
             else if (ps) {
@@ -539,8 +524,6 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
                delete ps; ps = 0;
             }
          }
-
-         found = packetList.get_next_config (it, packet);
       }
 
       _build_header_codec (local);

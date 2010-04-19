@@ -360,6 +360,12 @@ dmz::InputPluginControllerMacOS::_init_controller (Config &controller) {
 
    if (!ds) { ds = _deviceHandleTable.lookup (DeviceHandle); }
 
+   if (!ds && !DeviceName && !DeviceHandle) {
+
+      HashTableStringIterator it;
+      ds = _deviceNameTable.get_first (it);
+   }
+
    if (ds) {
 
       _log.info  << "Mapping controller[" << ControllerName

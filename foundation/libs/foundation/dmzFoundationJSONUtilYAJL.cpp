@@ -14,6 +14,14 @@ using namespace dmz;
 namespace {
 
 static inline Boolean
+is_boolean (const String &Value) { return (Value == "true") || (Value == "false"); }
+
+
+static inline Boolean
+to_boolean (const String &Value) { return Value == "true"; }
+
+
+static inline Boolean
 local_flush (yajl_gen gen, Stream &stream) {
 
    Boolean result (True);
@@ -71,6 +79,10 @@ local_write_value (yajl_gen gen, const String &Value, Log *log) {
             gen,
             Value.get_buffer (),
             (unsigned int)Value.get_length ()));
+   }
+   else if (is_boolean (Value)) {
+
+      result = local_ok (yajl_gen_bool (gen, to_boolean (Value)));
    }
    else {
 

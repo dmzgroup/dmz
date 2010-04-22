@@ -1,5 +1,13 @@
 #include <dmzTypesMatrix.h>
-#include <dmzTypesQuaternion.h>
+#include <dmzTypesMath.h>
+
+namespace {
+
+static const dmz::Vector Forward (0.0, 0.0, -1.0);
+static const dmz::Vector Right (1.0, 0.0, 0.0);
+static const dmz::Vector Up (0.0, 1.0, 0.0);
+
+};
 
 /*!
 
@@ -16,45 +24,46 @@ The indices are as follows:
 \endhtmlonly
 
 */
-
-
 void
-dmz::Matrix::from_quaternion (const Quaternion &Quat) {
+dmz::Matrix::from_euler_angles (const Float64 Hy, const Float64 Px, const Float64 Rz) {
 
-   Float64 x (0.0), y (0.0), z (0.0), w (0.0);
-
-   Quat.get_xyzw (x, y, z, w);
-
-   const Float64 XX = x * x;
-   const Float64 XY = x * y;
-   const Float64 XZ = x * z;
-   const Float64 XW = x * w;
-
-   const Float64 YY = y * y;
-   const Float64 YZ = y * z;
-   const Float64 YW = y * w;
-
-   const Float64 ZZ = z * z;
-   const Float64 ZW = z * w;
-
-   //Row 1
-   _data[0] = 1.0 - 2.0 * (YY + ZZ);
-   _data[1] = 2.0 * (XY - ZW);
-   _data[2] = 2.0 * (XZ + YW);
-
-   //Row 2
-   _data[3] = 2.0 * (XY + ZW);
-   _data[4] = 1.0 - 2.0 * (XX + ZZ);
-   _data[5] = 2.0 * (YZ - XW);
-
-   //Row 3
-   _data[6] = 2.0 * (XZ - YW);
-   _data[7] = 2.0 * (YZ + XW);
-   _data[8] = 1.0 - 2.0 * (XX + YY);
+   *this = Matrix (Up, Hy) * Matrix (Right, Px) * Matrix (Forward, Rz);
 }
 
 
 void
-dmz::Matrix::to_quaternion (Quaternion &quat) const {
-   quat = Quaternion (*this);
+dmz::Matrix::to_euler_angles (Float64 &hy, Float64 &px, Float64 &rz)  const {
+
+   Vector hvec (Forward), pvec (Forward), rvec (Up);
+   transform_vector(hvec);
+   Matrix cmat (*this), hmat, pmat, rmat;
+
+   hvec.set_y (0.0);
+
+   if (hvec.is_zero ()) { hy = 0.0; }
+   else {
+
+      hvec.normalize_in_place ();
+      hy = get_rotation_angle (Forward, hvec);
+      hmat.from_axis_and_angle (Up, hy);
+      hmat.transpose_in_place ();
+      cmat = hmat * cmat;
+   }
+
+   cmat.transform_vector (pvec);
+
+   if (is_zero64 (pvec.get_y ())) { px = 0.0; }
+   else {
+
+      px = get_rotation_angle (Forward, pvec);
+      pmat.from_axis_and_angle (Right, px);
+      pmat.transpose_in_place ();
+      cmat = pmat * cmat;
+   }
+
+   cmat.transform_vector (rvec);
+
+   if (is_zero64 (rvec.get_x ())) { rz = 0.0; }
+   else { rz = get_rotation_angle (Up, rvec); }
 }
+

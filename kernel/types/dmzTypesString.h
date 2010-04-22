@@ -10,7 +10,6 @@ namespace dmz {
    class Vector;
    class Mask;
    class Matrix;
-   class Quaternion;
    class StringContainer;
    class UUID;
 
@@ -160,10 +159,6 @@ operator<< (dmz::String &str, const dmz::Mask &Value);
 //! Converts dmz::Matrix to string and concatenates it to end of buffer.
 DMZ_KERNEL_LINK_SYMBOL dmz::String &
 operator<< (dmz::String &str, const dmz::Matrix &Value);
-
-//! Converts dmz::Quaternion to string and concatenates it to end of buffer.
-DMZ_KERNEL_LINK_SYMBOL dmz::String &
-operator<< (dmz::String &str, const dmz::Quaternion &Value);
 
 //! Converts dmz::StringContainer to string and concatenates it to end of buffer.
 DMZ_KERNEL_LINK_SYMBOL dmz::String &

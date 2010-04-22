@@ -2,7 +2,6 @@
 #include <dmzSystemUnmarshal.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesMatrix.h>
-#include <dmzTypesQuaternion.h>
 #include <dmzTypesString.h>
 #include <dmzTypesUUID.h>
 #include <dmzTypesVector.h>
@@ -413,24 +412,6 @@ dmz::Unmarshal::get_next_matrix32 (Matrix &value) {
 }
 
 
-/*!
-
-\brief Unmarshals a dmz::Quaternion from the current place in the storage buffer.
-\details This function unmarshals the four 32 bit values and store them in a
-dmz::Quaternion.
-\param[out] value Quaternion to store unmarshalled data.
-
-*/
-void
-dmz::Unmarshal::get_next_quaternion32 (Quaternion &value) {
-
-   value.set_x (get_next_float32 ());
-   value.set_y (get_next_float32 ());
-   value.set_z (get_next_float32 ());
-   value.set_w (get_next_float32 ());
-}
-
-
 //! Unmarshals next dmz::Vector in the buffer.
 void
 dmz::Unmarshal::get_next_vector (Vector &value) {
@@ -448,16 +429,5 @@ dmz::Unmarshal::get_next_matrix (Matrix &value) {
    Float64 data[9];
    for (Int32 ix = 0; ix < 9; ix++) { data[ix] = get_next_float64 (); }
    value.from_array (data);
-}
-
-
-//! Unmarshals next dmz::Quaternion in the buffer.
-void
-dmz::Unmarshal::get_next_quaternion (Quaternion &value) {
-
-   value.set_x (get_next_float64 ());
-   value.set_y (get_next_float64 ());
-   value.set_z (get_next_float64 ());
-   value.set_w (get_next_float64 ());
 }
 

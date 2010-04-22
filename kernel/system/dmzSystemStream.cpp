@@ -72,16 +72,6 @@ operator<< (dmz::Stream &stream, const dmz::Matrix &Value) {
 }
 
 
-//! Converts dmz::Quaternion to a dmz::String and appends it to the \a stream.
-dmz::Stream &
-operator<< (dmz::Stream &stream, const dmz::Quaternion &Value) {
-
-   dmz::String result;
-   stream << (result << Value);
-   return stream;
-}
-
-
 //! Converts dmz::StingContainer to a dmz::String and appends it to the \a stream.
 dmz::Stream &
 operator<< (dmz::Stream &stream, const dmz::StringContainer &Value) {

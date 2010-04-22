@@ -1,6 +1,7 @@
 #ifndef DMZ_APPLICATION_STATE_DOT_H
 #define DMZ_APPLICATION_STATE_DOT_H
 
+#include <dmzRuntimeContainer.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeRTTINamed.h>
 #include <dmzTypesBase.h>
@@ -44,7 +45,7 @@ namespace dmz {
          ApplicationStateInterface (const ApplicationStateInterface &);
          ApplicationStateInterface &operator= (const ApplicationStateInterface &);
 
-         RuntimeContext *__context;
+         RuntimeContainer __context;
    };
 
    class ApplicationState {
@@ -98,7 +99,10 @@ inline
 dmz::ApplicationStateInterface::ApplicationStateInterface (RuntimeContext *context) :
       __context (context) {
 
-   store_rtti_named_interface (ApplicationStateInterfaceName, __context, (void *)this);
+   store_rtti_named_interface (
+      ApplicationStateInterfaceName,
+      __context.get_context (),
+      (void *)this);
 }
 
 
@@ -106,8 +110,10 @@ dmz::ApplicationStateInterface::ApplicationStateInterface (RuntimeContext *conte
 inline
 dmz::ApplicationStateInterface::~ApplicationStateInterface () {
 
-   remove_rtti_named_interface (ApplicationStateInterfaceName, __context, (void *)this);
-   __context = 0;
+   remove_rtti_named_interface (
+      ApplicationStateInterfaceName,
+      __context.get_context (),
+      (void *)this);
 }
 
 

@@ -1,5 +1,4 @@
 #include <dmzTypesMatrix.h>
-#include <dmzTypesQuaternion.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesConsts.h>
 #include <dmzTest.h>

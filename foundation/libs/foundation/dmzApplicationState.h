@@ -25,6 +25,8 @@ namespace dmz {
       public:
          static ApplicationStateInterface *get_interface (RuntimeContext *context);
 
+         virtual String get_app_name () const = 0;
+         
          virtual void set_default_directory (const String &DirName) = 0;
          virtual String get_default_directory () const  = 0;
 
@@ -53,6 +55,8 @@ namespace dmz {
          ApplicationState (const PluginInfo &Info);
          ApplicationState (RuntimeContext *context);
          ~ApplicationState ();
+
+         String get_app_name () const;
 
          void set_default_directory (const String &DirName);
          String get_default_directory () const;
@@ -127,6 +131,13 @@ dmz::ApplicationState::ApplicationState (RuntimeContext *context) :
 
 inline
 dmz::ApplicationState::~ApplicationState () { __ptr = 0; }
+
+
+inline dmz::String
+dmz::ApplicationState::get_app_name () const {
+
+   return __ptr ? __ptr->get_app_name () : "dmz";
+}
 
 
 inline void

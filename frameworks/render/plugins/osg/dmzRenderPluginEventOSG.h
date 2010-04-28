@@ -15,8 +15,6 @@
 #include <osg/MatrixTransform>
 #include <osg/ref_ptr>
 
-//#define DMZ_USE_BILLBOARD
-
 namespace dmz {
 
    class EventType;
@@ -55,6 +53,7 @@ namespace dmz {
             const Float64 Offset;
             const Float64 Scale;
             const Float64 Rate;
+            osg::ref_ptr<osg::Node> model;
             osg::ref_ptr<osg::Image> image;
 
             TypeStruct (
@@ -81,11 +80,7 @@ namespace dmz {
             const TypeStruct &Type;
 
             Float64 scalar;
-#ifdef DMZ_USE_BILLBOARD
-            osg::ref_ptr<osg::MatrixTransform> root;
-#else
             osg::ref_ptr<osg::AutoTransform> root;
-#endif
             osg::ref_ptr<osg::MatrixTransform> scale;
 
             EventStruct (const TypeStruct &TheType) : Type (TheType), scalar (1.0) {;}
@@ -101,6 +96,7 @@ namespace dmz {
             TypeTable &table);
 
          void _create_event (const Handle EventHandle, TypeStruct &ts);
+         void _create_model (TypeStruct &ts);
          void _init (Config &local);
 
          Log _log;

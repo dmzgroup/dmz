@@ -10,92 +10,81 @@
 
 namespace dmz {
 
-   class Quaternion;
+class Matrix {
 
-   class Matrix {
+   public:
+      Matrix ();
+      Matrix (
+         const Float64 V0, const Float64 V1, const Float64 V2,
+         const Float64 V3, const Float64 V4, const Float64 V5,
+         const Float64 V6, const Float64 V7, const Float64 V8);
+      Matrix (const Float64 Array[9]);
+      Matrix (const Float32 Array[9]);
+      Matrix (const Float64 RadiansX, const Float64 RadiansY, const Float64 RadiansZ);
+      Matrix (const Vector &Axis, const Float64 AngleRadians);
+      Matrix (const Vector &FromValue, const Vector &ToValue);
+      Matrix (const Matrix &Mat);
+      ~Matrix () {;}
 
-      public:
-         Matrix ();
-         Matrix (
-            const Float64 V0, const Float64 V1, const Float64 V2,
-            const Float64 V3, const Float64 V4, const Float64 V5,
-            const Float64 V6, const Float64 V7, const Float64 V8);
-         Matrix (const Float64 Array[9]);
-         Matrix (const Float32 Array[9]);
-         Matrix (const Float64 RadiansX, const Float64 RadiansY, const Float64 RadiansZ);
-         Matrix (const Vector &Axis, const Float64 AngleRadians);
-         Matrix (const Vector &FromValue, const Vector &ToValue);
-         Matrix (const Quaternion &Quat);
-         Matrix (const Matrix &Mat);
-         ~Matrix () {;}
+      Matrix &operator= (const Matrix &Mat);
 
-         Matrix &operator= (const Matrix &Mat);
-         Matrix &operator= (const Quaternion &Quat);
+      Matrix &operator+= (const Matrix &Mat);
+      Matrix operator+ (const Matrix &Mat) const;
 
-         Matrix &operator+= (const Matrix &Mat);
-         Matrix operator+ (const Matrix &Mat) const;
+      Matrix operator- () const;
 
-         Matrix operator- () const;
+      Matrix &operator-= (const Matrix &Mat);
+      Matrix operator- (const Matrix &Mat) const;
 
-         Matrix &operator-= (const Matrix &Mat);
-         Matrix operator- (const Matrix &Mat) const;
+      Matrix &operator*= (const Matrix &Mat);
+      Matrix &operator*= (const Float64 Scalar);
 
-         Matrix &operator*= (const Matrix &Mat);
-         Matrix &operator*= (const Float64 Scalar);
+      Matrix operator* (const Matrix &Mat) const;
+      Matrix operator* (const Float64 Scalar) const;
 
-         Matrix operator* (const Matrix &Mat) const;
-         Matrix operator* (const Float64 Scalar) const;
+      Boolean operator== (const Matrix &Mat) const;
+      Boolean operator!= (const Matrix &Mat) const;
 
-         Boolean operator== (const Matrix &Mat) const;
-         Boolean operator!= (const Matrix &Mat) const;
+      Matrix transpose () const;
+      Matrix &transpose_in_place ();
+      Matrix negate () const;
+      Matrix &negate_in_place ();
+      Boolean invert (Matrix &value) const;
+      Boolean invert_in_place ();
 
-         Matrix transpose () const;
-         Matrix &transpose_in_place ();
-         Matrix negate () const;
-         Matrix &negate_in_place ();
-         Boolean invert (Matrix &value) const;
-         Boolean invert_in_place ();
+      Matrix &yaw_in_place (const Float64 Angle);
+      Matrix &pitch_in_place (const Float64 Angle);
+      Matrix &roll_in_place (const Float64 Angle);
 
-         Matrix &yaw_in_place (const Float64 Angle);
-         Matrix &pitch_in_place (const Float64 Angle);
-         Matrix &roll_in_place (const Float64 Angle);
+      Vector &transform_vector (Vector &Vec) const;
 
-         void transform_vector (Vector &Vec) const;
+      Boolean set_element (const Int32 Row, const Int32 Col, const Float64 Data);
+      Boolean get_element (const Int32 Row, const Int32 Col, Float64 &data) const;
 
-         Boolean set_element (const Int32 Row, const Int32 Col, const Float64 Data);
-         Boolean get_element (const Int32 Row, const Int32 Col, Float64 &data) const;
+      void from_array (const Float64 Array[9]);
+      void to_array (Float64 array[9]) const;
+      void from_array32 (const Float32 Array[9]);
+      void to_array32 (Float32 array[9]) const;
 
-         void from_array (const Float64 Array[9]);
-         void to_array (Float64 array[9]) const;
-         void from_array32 (const Float32 Array[9]);
-         void to_array32 (Float32 array[9]) const;
+      void from_euler_angles (const Float64 Hy, const Float64 Px, const Float64 Rz);
 
-         void from_euler_angles_radians (
-            const Float64 Rx,
-            const Float64 Ry,
-            const Float64 Rz);
+      void to_euler_angles (Float64 &hy, Float64 &px, Float64 &rz) const;
 
-         void to_euler_angles_radians (Float64 &rx, Float64 &ry, Float64 &rz)  const;
+      void from_axis_and_angle (
+         const Vector &Axis,
+         const Float64 AngleRadians);
 
-         void from_axis_and_angle_radians (
-            const Vector &Axis,
-            const Float64 AngleRadians);
+      void to_axis_and_angle (Vector &axis, Float64 &angleRadians) const;
 
-         void to_axis_and_angle_radians (Vector &axis, Float64 &angleRadians) const;
+      void from_two_vectors (const Vector &FromValue, const Vector &ToValue);
 
-         //! \b Not currently working.
-         DMZ_KERNEL_LINK_SYMBOL void from_quaternion (const Quaternion &Quat);
-         //! \b Not currently working.
-         DMZ_KERNEL_LINK_SYMBOL void to_quaternion (Quaternion &quat) const;
+      void set_identity ();
+      Boolean is_identity () const;
 
-         void from_two_vectors (const Vector &FromValue, const Vector &ToValue);
+   protected:
+      Float64 _data[9]; //!< Matrix elements.
+};
 
-         void set_identity ();
-         Boolean is_identity () const;
-
-      protected:
-         Float64 _data[9]; //!< Matrix elements.
-   };
 };
 
 
@@ -182,7 +171,7 @@ dmz::Matrix::Matrix (
       const Float64 RadiansY,
       const Float64 RadiansZ) {
 
-   from_euler_angles_radians (RadiansX, RadiansY, RadiansZ);
+   from_euler_angles (RadiansX, RadiansY, RadiansZ);
 }
 
 
@@ -196,7 +185,7 @@ dmz::Matrix::Matrix (
 inline
 dmz::Matrix::Matrix (const Vector &Axis, const Float64 AngleRadians) {
 
-   from_axis_and_angle_radians (Axis, AngleRadians);
+   from_axis_and_angle (Axis, AngleRadians);
 }
 
 
@@ -214,15 +203,6 @@ dmz::Matrix::Matrix (const Vector &FromValue, const Vector &ToValue) {
 }
 
 
-/*!
-
-\brief \b Not currently working.
-
-*/
-inline
-dmz::Matrix::Matrix (const Quaternion &Quat) { from_quaternion (Quat); }
-
-
 //! Copy constructor.
 inline
 dmz::Matrix::Matrix (const Matrix &Mat) { Mat.to_array (_data); }
@@ -237,15 +217,6 @@ dmz::Matrix::operator= (const Matrix &Mat) {
       _data[count] = Mat._data[count];
    }
 
-   return *this;
-}
-
-
-//! \b Not currently working.
-inline dmz::Matrix &
-dmz::Matrix::operator= (const Quaternion &Quat) {
-
-   from_quaternion (Quat);
    return *this;
 }
 
@@ -590,7 +561,7 @@ dmz::Matrix::roll_in_place (const Float64 Angle) {
 
 
 //! Applies transform to Vector.
-inline void
+inline dmz::Vector &
 dmz::Matrix::transform_vector (Vector &vec) const {
 
    Float64 vx (0.0), vy (0.0), vz (0.0);
@@ -601,6 +572,8 @@ dmz::Matrix::transform_vector (Vector &vec) const {
       (_data[0] * vx) + (_data[1] * vy) + (_data[2] * vz),
       (_data[3] * vx) + (_data[4] * vy) + (_data[5] * vz),
       (_data[6] * vx) + (_data[7] * vy) + (_data[8] * vz));
+
+   return vec;
 }
 
 
@@ -712,9 +685,10 @@ dmz::Matrix::to_array32 (Float32 array[9]) const {
 }
 
 
+/*
 //! \b Not currently working.
 inline void
-dmz::Matrix::from_euler_angles_radians (
+dmz::Matrix::from_euler_angles (
       const Float64 Rx,
       const Float64 Ry,
       const Float64 Rz) {
@@ -747,7 +721,7 @@ dmz::Matrix::from_euler_angles_radians (
 
 //! \b Not currently working.
 inline void
-dmz::Matrix::to_euler_angles_radians (Float64 &rx, Float64 &ry, Float64 &rz)  const {
+dmz::Matrix::to_euler_angles (Float64 &rx, Float64 &ry, Float64 &rz)  const {
 
    // Calculate Y-axis angle
    ry = asin (_data[2]);
@@ -775,11 +749,12 @@ dmz::Matrix::to_euler_angles_radians (Float64 &rx, Float64 &ry, Float64 &rz)  co
    if (ry < 0.0) { ry += TwoPi64; }
    if (rz < 0.0) { rz += TwoPi64; }
 }
+*/
 
 
 //! Sets Matrix from arbitrary axis and rotation angle in radians.
 inline void
-dmz::Matrix::from_axis_and_angle_radians (
+dmz::Matrix::from_axis_and_angle (
       const Vector &Axis,
       const Float64 AngleRadians) {
 
@@ -812,7 +787,7 @@ dmz::Matrix::from_axis_and_angle_radians (
 
 //! Converts matrix to arbitrary axis and an angle of rotation in radians.
 inline void
-dmz::Matrix::to_axis_and_angle_radians (Vector &axis, Float64 &angleRadians) const {
+dmz::Matrix::to_axis_and_angle (Vector &axis, Float64 &angleRadians) const {
 
    Float64 resultAngle (0.0), resultX (0.0), resultY (0.0), resultZ (0.0);
 
@@ -898,7 +873,7 @@ dmz::Matrix::from_two_vectors (const Vector &FromValue, const Vector &ToValue) {
    const Vector Cross (FromValue.cross (ToValue).normalize ());
    const Float64 Angle (ToValue.get_angle (FromValue));
 
-   from_axis_and_angle_radians (Cross, Angle);
+   from_axis_and_angle (Cross, Angle);
 }
 
 

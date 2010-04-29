@@ -3,7 +3,6 @@
 #include <dmzTypesString.h>
 #include <dmzTypesVector.h>
 #include <dmzTypesMatrix.h>
-#include <dmzTypesQuaternion.h>
 #include <dmzTypesStringContainer.h>
 #include <dmzTypesUUID.h>
 
@@ -1246,19 +1245,6 @@ operator<< (dmz::String &str, const dmz::Matrix &Value) {
       << 2 << "["
       << matrixData[6] << ", " << matrixData[7] << ", " << matrixData[8]
       << "])";
-
-   return str;
-}
-
-
-dmz::String &
-operator<< (dmz::String &str, const dmz::Quaternion &Value) {
-
-   str << "["
-      << Value.get_x () << ", "
-      << Value.get_y () << ", "
-      << Value.get_z () << ", "
-      << Value.get_w () << "]";
 
    return str;
 }

@@ -8,7 +8,6 @@ namespace dmz {
 
    class Mask;
    class Matrix;
-   class Quaternion;
    class Stream;
    class String;
    class StringContainer;
@@ -77,9 +76,6 @@ operator<< (dmz::Stream &stream, const dmz::Mask &Value);
 
 DMZ_KERNEL_LINK_SYMBOL dmz::Stream &
 operator<< (dmz::Stream &stream, const dmz::Matrix &Value);
-
-DMZ_KERNEL_LINK_SYMBOL dmz::Stream &
-operator<< (dmz::Stream &stream, const dmz::Quaternion &Value);
 
 DMZ_KERNEL_LINK_SYMBOL dmz::Stream &
 operator<< (dmz::Stream &stream, const dmz::StringContainer &Value);

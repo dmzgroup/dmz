@@ -114,7 +114,7 @@ matrix_new (lua_State *L) {
          else if (vec1) {
 
             lua_Number angle = luaL_checknumber (L, 2);
-            ptr->from_axis_and_angle_radians (*vec1, angle);
+            ptr->from_axis_and_angle (*vec1, angle);
          }
       }
       else if (9 == stackCount) {
@@ -433,7 +433,7 @@ matrix_from_axis_and_angle (lua_State *L) {
 
    if (mat && *mat && axis) {
 
-      (*mat)->from_axis_and_angle_radians (*axis, angle);
+      (*mat)->from_axis_and_angle (*axis, angle);
       lua_pushvalue (L, 1);
       result = 1;
    }

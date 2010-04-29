@@ -1,7 +1,6 @@
 #include <dmzSystem.h>
 #include <dmzSystemMarshal.h>
 #include <dmzTypesMatrix.h>
-#include <dmzTypesQuaternion.h>
 #include <dmzTypesString.h>
 #include <dmzTypesUUID.h>
 #include <dmzTypesVector.h>
@@ -476,24 +475,6 @@ dmz::Marshal::set_next_matrix32 (const Matrix &Value) {
 }
 
 
-/*!
-
-\brief Marshals a dmz::Quaternion at the current place in the storage buffer.
-\details This function takes the four 64 bit values and marshals them as four 32 bit
-values.
-\param[in] Value Quaternion to be marshalled.
-
-*/
-void
-dmz::Marshal::set_next_quaternion32 (const Quaternion &Value) {
-
-   set_next_float32 ((Float32)Value.get_x ());
-   set_next_float32 ((Float32)Value.get_y ());
-   set_next_float32 ((Float32)Value.get_z ());
-   set_next_float32 ((Float32)Value.get_w ());
-}
-
-
 //! Marshals a dmz::Vector at the current place in the storage buffer.
 void
 dmz::Marshal::set_next_vector (const Vector &Value) {
@@ -511,16 +492,5 @@ dmz::Marshal::set_next_matrix (const Matrix &Value) {
    Float64 data[9];
    Value.to_array (data);
    for (Int32 ix = 0; ix < 9; ix++) { set_next_float64 (data[ix]); }
-}
-
-
-//! Marshals a dmz::Quaternion at the current place in the storage buffer.
-void
-dmz::Marshal::set_next_quaternion (const Quaternion &Value) {
-
-   set_next_float64 (Value.get_x ());
-   set_next_float64 (Value.get_y ());
-   set_next_float64 (Value.get_z ());
-   set_next_float64 (Value.get_w ());
 }
 

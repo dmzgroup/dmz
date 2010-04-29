@@ -1,0 +1,14 @@
+lmk.set_name "dmzEntityPluginPortalFollow3D"
+lmk.set_type "plugin"
+lmk.add_files {"dmzEntityPluginPortalFollow3D.cpp",}
+lmk.add_libs {
+   "dmzInputUtil",
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {
+   "dmzInputFramework",
+   "dmzObjectFramework",
+	"dmzRenderFramework", 
+	"dmzAudioFramework",
+}

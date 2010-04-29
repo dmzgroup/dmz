@@ -8,7 +8,6 @@
 namespace dmz {
 
    class Matrix;
-   class Quaternion;
    class String;
    class UUID;
    class Vector;
@@ -56,12 +55,10 @@ namespace dmz {
          // Unmarshals data as 32 bit floats
          void get_next_vector32 (Vector &value);
          void get_next_matrix32 (Matrix &value);
-         void get_next_quaternion32 (Quaternion &value);
 
          // Unmarshals data as native 64 bit floats
          void get_next_vector (Vector &value);
          void get_next_matrix (Matrix &value);
-         void get_next_quaternion (Quaternion &value);
 
       protected:
          struct State;
@@ -110,8 +107,6 @@ namespace dmz {
          void get_next (Vector &value) { _data.get_next_vector (value); }
          //! Wraps dmz::Unmarshal::get_next_matrix.
          void get_next (Matrix &value) { _data.get_next_matrix (value); }
-         //! Wraps dmz::Unmarshal::get_next_quaternion.
-         void get_next (Quaternion &value) { _data.get_next_quaternion (value); }
 
       private:
          UnmarshalWrap ();

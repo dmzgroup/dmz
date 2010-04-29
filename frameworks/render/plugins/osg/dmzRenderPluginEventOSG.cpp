@@ -260,6 +260,7 @@ dmz::RenderPluginEventOSG::_create_type (
 
                   if (table.table.store (Object.get_handle (), result)) {
 
+                     _create_model (*result);
                      table.map.store (Object.get_handle (), result);
                   }
                   else { delete result; result = 0; }
@@ -291,13 +292,8 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, TypeStruct &
 
    if (event) {
 
-
-#ifdef DMZ_USE_BILLBOARD
-      event->root = new osg::MatrixTransform;
-#else
       event->root = new osg::AutoTransform ();
       event->root->setAutoRotateMode (osg::AutoTransform::ROTATE_TO_SCREEN);
-#endif
       event->scale = new osg::MatrixTransform;
       event->root->addChild (event->scale);
 
@@ -311,90 +307,10 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, TypeStruct &
 
          Vector pos;
          module->lookup_position (EventHandle, _defaultHandle, pos);
-#ifdef DMZ_USE_BILLBOARD
-         osg::Matrix mat;
-         mat.makeTranslate (to_osg_vector (pos));
-         event->root->setMatrix (mat);
-#else
          event->root->setPosition (to_osg_vector (pos));
-#endif
       }
 
-#ifdef DMZ_USE_BILLBOARD
-      osg::Billboard* geode = new osg::Billboard ();
-      geode->setMode (osg::Billboard::POINT_ROT_EYE);
-#else
-      osg::Geode* geode = new osg::Geode ();
-#endif
-
-      osg::Geometry* geom = new osg::Geometry;
-
-      osg::Vec4Array* colors = new osg::Vec4Array;
-      colors->push_back (osg::Vec4 (1.0f, 1.0f, 1.0f, 1.0f));
-      geom->setColorArray (colors);
-      geom->setColorBinding (osg::Geometry::BIND_OVERALL);
-
-      osg::StateSet *stateset = geom->getOrCreateStateSet ();
-      stateset->setMode (GL_BLEND, osg::StateAttribute::ON);
-      stateset->setRenderingHint (osg::StateSet::TRANSPARENT_BIN);
-
-      osg::ref_ptr<osg::Material> material = new osg::Material;
-
-      material->setEmission (
-         osg::Material::FRONT_AND_BACK,
-         osg::Vec4 (1.0, 1.0, 1.0, 1.0));
-
-      stateset->setAttributeAndModes (material.get (), osg::StateAttribute::ON);
-
-      osg::Texture2D *tex = new osg::Texture2D (event->Type.image.get ());
-      tex->setWrap (osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT);
-      tex->setWrap (osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT);
-
-      stateset->setTextureAttributeAndModes (0, tex, osg::StateAttribute::ON);
-
-      stateset->setAttributeAndModes (new osg::CullFace (osg::CullFace::BACK));
-
-      const float Off (event->Type.Offset);
-
-#ifdef DMZ_USE_BILLBOARD
-      osg::Vec3 v1 (-Off, 0.0, -Off);
-      osg::Vec3 v2 ( Off, 0.0, -Off);
-      osg::Vec3 v3 ( Off, 0.0,  Off);
-      osg::Vec3 v4 (-Off, 0.0,  Off);
-#else
-      osg::Vec3 v1 (-Off, -Off, 0.0);
-      osg::Vec3 v2 ( Off, -Off, 0.0);
-      osg::Vec3 v3 ( Off,  Off, 0.0);
-      osg::Vec3 v4 (-Off,  Off, 0.0);
-#endif
-
-      osg::Vec3 n1 (0.0, -1.0, 0.0);
-
-      const float F1 (0.0f);
-      const float F2 (1.0f);
-
-      osg::Vec3Array *vertices = new osg::Vec3Array;
-      osg::Vec2Array *tcoords = new osg::Vec2Array;
-      osg::Vec3Array* normals = new osg::Vec3Array;
-
-      vertices->push_back (v1);
-      vertices->push_back (v2);
-      vertices->push_back (v3);
-      vertices->push_back (v4);
-      tcoords->push_back (osg::Vec2 (F1, F1));
-      tcoords->push_back (osg::Vec2 (F1, F2));
-      tcoords->push_back (osg::Vec2 (F2, F2));
-      tcoords->push_back (osg::Vec2 (F2, F1));
-      normals->push_back (n1);
-
-      geom->setNormalArray (normals);
-      geom->setNormalBinding (osg::Geometry::BIND_OVERALL);
-      geom->addPrimitiveSet (new osg::DrawArrays (GL_QUADS, 0, 4));
-      geom->setVertexArray (vertices);
-      geom->setTexCoordArray (0, tcoords);
-      geode->addDrawable (geom);
-
-      event->scale->addChild (geode);
+      event->scale->addChild (ts.model.get ());
 
       if (_eventTable.store (EventHandle, event)) {
 
@@ -407,6 +323,74 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, TypeStruct &
    }
 }
 
+
+void
+dmz::RenderPluginEventOSG::_create_model (TypeStruct &ts) {
+
+   osg::Geode* geode = new osg::Geode ();
+
+   osg::Geometry* geom = new osg::Geometry;
+
+   osg::Vec4Array* colors = new osg::Vec4Array;
+   colors->push_back (osg::Vec4 (1.0f, 1.0f, 1.0f, 1.0f));
+   geom->setColorArray (colors);
+   geom->setColorBinding (osg::Geometry::BIND_OVERALL);
+
+   osg::StateSet *stateset = geom->getOrCreateStateSet ();
+   stateset->setMode (GL_BLEND, osg::StateAttribute::ON);
+   stateset->setRenderingHint (osg::StateSet::TRANSPARENT_BIN);
+
+   osg::ref_ptr<osg::Material> material = new osg::Material;
+
+   material->setEmission (
+      osg::Material::FRONT_AND_BACK,
+      osg::Vec4 (1.0, 1.0, 1.0, 1.0));
+
+   stateset->setAttributeAndModes (material.get (), osg::StateAttribute::ON);
+
+   osg::Texture2D *tex = new osg::Texture2D (ts.image.get ());
+   tex->setWrap (osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT);
+   tex->setWrap (osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT);
+
+   stateset->setTextureAttributeAndModes (0, tex, osg::StateAttribute::ON);
+
+   stateset->setAttributeAndModes (new osg::CullFace (osg::CullFace::BACK));
+
+   const float Off (ts.Offset);
+
+   osg::Vec3 v1 (-Off, -Off, 0.0);
+   osg::Vec3 v2 ( Off, -Off, 0.0);
+   osg::Vec3 v3 ( Off,  Off, 0.0);
+   osg::Vec3 v4 (-Off,  Off, 0.0);
+
+   osg::Vec3 n1 (0.0, -1.0, 0.0);
+
+   const float F1 (0.0f);
+   const float F2 (1.0f);
+
+   osg::Vec3Array *vertices = new osg::Vec3Array;
+   osg::Vec2Array *tcoords = new osg::Vec2Array;
+   osg::Vec3Array* normals = new osg::Vec3Array;
+
+   vertices->push_back (v1);
+   vertices->push_back (v2);
+   vertices->push_back (v3);
+   vertices->push_back (v4);
+   tcoords->push_back (osg::Vec2 (F1, F1));
+   tcoords->push_back (osg::Vec2 (F1, F2));
+   tcoords->push_back (osg::Vec2 (F2, F2));
+   tcoords->push_back (osg::Vec2 (F2, F1));
+   normals->push_back (n1);
+
+   geom->setNormalArray (normals);
+   geom->setNormalBinding (osg::Geometry::BIND_OVERALL);
+   geom->addPrimitiveSet (new osg::DrawArrays (GL_QUADS, 0, 4));
+   geom->setVertexArray (vertices);
+   geom->setTexCoordArray (0, tcoords);
+   geode->addDrawable (geom);
+
+   ts.model = geode;
+}
 
 void
 dmz::RenderPluginEventOSG::_init (Config &local) {

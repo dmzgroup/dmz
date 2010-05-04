@@ -362,12 +362,17 @@ dmz::WeaponPluginFixedLauncher::_init (Config &local) {
       _launcherRotation.from_two_vectors (Vector (0, 0, -1), Dir.normalize ());
    }
 
-   _launchButton = config_to_uint32 ("button.value", local, _launchButton);
+   const Int32 Button = config_to_int32 ("button.value", local, (Int32)_launchButton);
 
-   init_input_channels (
-      local,
-      InputEventButtonMask | InputEventChannelStateMask,
-      &_log);
+   if (Button >= 0) {
+
+      _launchButton = (UInt32)Button;
+
+      init_input_channels (
+         local,
+         InputEventButtonMask | InputEventChannelStateMask,
+         &_log);
+   }
 
    Message launch = config_create_message ("launch-message.name", local, "", context);
 

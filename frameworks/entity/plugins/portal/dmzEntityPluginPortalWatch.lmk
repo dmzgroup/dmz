@@ -1,0 +1,10 @@
+lmk.set_name "dmzEntityPluginPortalWatch"
+lmk.set_type "plugin"
+lmk.add_files {"dmzEntityPluginPortalWatch.cpp",}
+lmk.add_libs {
+   "dmzInputEvents",
+   "dmzInputUtil",
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzRenderFramework", "dmzAudioFramework", "dmzObjectFramework", "dmzInputFramework",}

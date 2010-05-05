@@ -67,3 +67,27 @@ dmz::Matrix::to_euler_angles (Float64 &hy, Float64 &px, Float64 &rz)  const {
    else { rz = get_rotation_angle (Up, rvec); }
 }
 
+
+void
+dmz::Matrix::from_vector (const Vector &Direction) {
+
+   Vector hvec (Direction), pvec (Direction);
+   Matrix hmat, pmat;
+
+   hvec.set_y (0.0);
+
+   if (!hvec.is_zero ()) {
+
+      hvec.normalize_in_place ();
+      hmat.from_axis_and_angle (Up, get_rotation_angle (Forward, hvec));
+   }
+
+   hmat.transpose ().transform_vector (pvec);
+
+   if (!is_zero64 (pvec.get_y ())) {
+
+      pmat.from_axis_and_angle (Right, get_rotation_angle (Forward, pvec));
+   }
+
+   *this = hmat * pmat;
+}

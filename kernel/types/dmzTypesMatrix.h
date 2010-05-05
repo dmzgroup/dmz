@@ -21,6 +21,7 @@ class Matrix {
       Matrix (const Float64 Array[9]);
       Matrix (const Float32 Array[9]);
       Matrix (const Float64 RadiansX, const Float64 RadiansY, const Float64 RadiansZ);
+      Matrix (const Vector &Direction);
       Matrix (const Vector &Axis, const Float64 AngleRadians);
       Matrix (const Vector &FromValue, const Vector &ToValue);
       Matrix (const Matrix &Mat);
@@ -76,6 +77,7 @@ class Matrix {
 
       void to_axis_and_angle (Vector &axis, Float64 &angleRadians) const;
 
+      void from_vector (const Vector &Direction);
       void from_two_vectors (const Vector &FromValue, const Vector &ToValue);
 
       void set_identity ();
@@ -173,6 +175,10 @@ dmz::Matrix::Matrix (
 
    from_euler_angles (RadiansX, RadiansY, RadiansZ);
 }
+
+
+inline
+dmz::Matrix::Matrix (const Vector &Direction) { from_vector (Direction); }
 
 
 /*!

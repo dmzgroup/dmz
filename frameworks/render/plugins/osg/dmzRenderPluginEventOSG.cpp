@@ -201,10 +201,15 @@ dmz::RenderPluginEventOSG::_get_type_table (const EventType &Type) {
 
       result = new TypeTable (
          config_to_named_handle (
-            "render.type-attribute",
+            "render.event.type-attribute.name",
             Type.get_config (),
             EventAttributeMunitionsName,
             get_plugin_runtime_context ()));
+
+      if (result && !_typeTable.store (Type.get_handle (), result)) {
+
+         delete result; result = 0;
+      }
    }
 
    return result;

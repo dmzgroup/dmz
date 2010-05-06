@@ -71,7 +71,7 @@ struct dmz::Application::State {
          log (TheName, rt.get_context ()),
          exit (rt.get_context ()),
          exitObs (rt.get_context ()),
-         appState (rt.get_context ()),
+         appState (TheName, rt.get_context ()),
          global ("global"),
          container (rt.get_context (), &log),
          error (False),

@@ -1,4 +1,5 @@
 #include <dmzAudioModulePortal.h>
+#include <dmzEntityConsts.h>
 #include "dmzEntityPluginPortalWatch.h"
 #include <dmzInputEventMasks.h>
 #include <dmzObjectAttributeMasks.h>
@@ -164,7 +165,7 @@ dmz::EntityPluginPortalWatch::_init (Config &local) {
    _targetMessage = config_create_message (
       "target-message.name",
       local,
-      "Portal_Watch_Target_Message",
+      EntityMessageAttachName,
       get_plugin_runtime_context ());
 
    if (_targetMessage) { subscribe_to_message (_targetMessage); }

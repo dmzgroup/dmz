@@ -1,3 +1,4 @@
+#include <dmzEntityConsts.h>
 #include "dmzEntityPluginFollow.h"
 #include <dmzInputEventMasks.h>
 #include <dmzObjectAttributeMasks.h>
@@ -150,7 +151,7 @@ dmz::EntityPluginFollow::_init (Config &local) {
    _targetMessage = config_create_message (
       "target-message.name",
       local,
-      "Follow_Target_Message",
+      EntityMessageAttachName,
       get_plugin_runtime_context ());
 
    if (_targetMessage) { subscribe_to_message (_targetMessage); }

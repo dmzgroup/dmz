@@ -327,9 +327,9 @@ dmz::RenderPluginEventOSG::_create_event (const Handle EventHandle, TypeStruct &
 void
 dmz::RenderPluginEventOSG::_create_model (TypeStruct &ts) {
 
-   osg::Geode* geode = new osg::Geode ();
+   osg::ref_ptr<osg::Geode> geode = new osg::Geode ();
 
-   osg::Geometry* geom = new osg::Geometry;
+   osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
 
    osg::Vec4Array* colors = new osg::Vec4Array;
    colors->push_back (osg::Vec4 (1.0f, 1.0f, 1.0f, 1.0f));
@@ -387,9 +387,9 @@ dmz::RenderPluginEventOSG::_create_model (TypeStruct &ts) {
    geom->addPrimitiveSet (new osg::DrawArrays (GL_QUADS, 0, 4));
    geom->setVertexArray (vertices);
    geom->setTexCoordArray (0, tcoords);
-   geode->addDrawable (geom);
+   geode->addDrawable (geom.get ());
 
-   ts.model = geode;
+   ts.model = geode.get ();
 }
 
 void

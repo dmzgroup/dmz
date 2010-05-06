@@ -27,7 +27,7 @@ equal to the Plugin's name.
 
 \fn void dmz::InputModule::register_input_observer (
 const Handle Channel,
-const Mask &EventMask,
+const Mask EventMask,
 InputObserver &observer)
 \brief Registers input observer.
 \param[in] Channel Channel Handle.
@@ -36,7 +36,7 @@ InputObserver &observer)
 
 \fn void dmz::InputModule::release_input_observer (
 const Handle Channel,
-const Mask &EventMask,
+const Mask EventMask,
 InputObserver &observer)
 \brief Releases input observer.
 \param[in] Channel Channel Handle.

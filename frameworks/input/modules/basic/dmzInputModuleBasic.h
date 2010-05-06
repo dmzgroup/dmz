@@ -45,12 +45,12 @@ namespace dmz {
          // Input Module Interface
          virtual void register_input_observer (
             const Handle Channel,
-            const Mask &EventMask,
+            const Mask EventMask,
             InputObserver &obs);
 
          virtual void release_input_observer (
             const Handle Channel,
-            const Mask &EventMask,
+            const Mask EventMask,
             InputObserver &obs);
 
          virtual Boolean create_channel (const Handle Channel);
@@ -134,12 +134,12 @@ namespace dmz {
 
          void _increment_active_count (
             const Handle Channel,
-            const Mask &EventMask,
+            const Mask EventMask,
             ObsStruct &os);
 
          void _decrement_active_count (
             const Handle Channel,
-            const Mask &EventMask,
+            const Mask EventMask,
             ObsStruct &os);
 
          void _que_event (EventQueStruct *event);

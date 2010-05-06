@@ -179,7 +179,7 @@ dmz::InputModuleBasic::discover_plugin (
 void
 dmz::InputModuleBasic::register_input_observer (
       const Handle Channel,
-      const Mask &EventMask,
+      const Mask EventMask,
       InputObserver &obs) {
 
    ChannelStruct *cs (_create_channel (Channel));
@@ -218,7 +218,6 @@ dmz::InputModuleBasic::register_input_observer (
 
                if (cs->stateTable.store (ObsHandle, &obs)) {
 
-                  if (cs->active) { obs.update_channel_state (Channel, True); }
                   *obsMask |= LocalStateMask;
                }
             }
@@ -291,6 +290,13 @@ dmz::InputModuleBasic::register_input_observer (
                delete obsMask; obsMask = 0;
                cs->activeTable.remove (os->ObsHandle);
             }
+
+            // This call need to be last because the observer may be removed in this
+            // call.
+            if (EventMask & LocalStateMask) {
+
+               if (cs->active) { obs.update_channel_state (Channel, True); }
+            }
          }
       }
    }
@@ -300,7 +306,7 @@ dmz::InputModuleBasic::register_input_observer (
 void
 dmz::InputModuleBasic::release_input_observer (
       const Handle Channel,
-      const Mask &EventMask,
+      const Mask EventMask,
       InputObserver &obs) {
 
    if (_inEvent) { _que_event (new ReleaseObserverStruct (Channel, EventMask, obs)); } 
@@ -848,7 +854,7 @@ dmz::InputModuleBasic::send_data_event (const Handle Source, const Data &Event) 
 void
 dmz::InputModuleBasic::_increment_active_count (
       const Handle Channel,
-      const Mask &EventMask,
+      const Mask EventMask,
       ObsStruct &os) {
 
    if (EventMask & LocalAxisMask) {
@@ -984,7 +990,7 @@ dmz::InputModuleBasic::_increment_active_count (
 void
 dmz::InputModuleBasic::_decrement_active_count (
       const Handle Channel,
-      const Mask &EventMask,
+      const Mask EventMask,
       ObsStruct &os) {
 
    if (EventMask & LocalAxisMask) {

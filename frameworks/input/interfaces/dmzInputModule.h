@@ -29,12 +29,12 @@ namespace dmz {
 
          virtual void register_input_observer (
             const Handle Channel,
-            const Mask &EventMask,
+            const Mask EventMask,
             InputObserver &observer) = 0;
 
          virtual void release_input_observer (
             const Handle Channel,
-            const Mask &EventMask,
+            const Mask EventMask,
             InputObserver &observer) = 0;
 
          virtual Boolean create_channel (const Handle Channel) = 0;

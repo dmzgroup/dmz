@@ -9,9 +9,11 @@ namespace dmz {
    class ApplicationStateBasic : public ApplicationStateInterface {
 
       public:
-         ApplicationStateBasic (RuntimeContext *context);
+         ApplicationStateBasic (const String &AppName, RuntimeContext *context);
          virtual ~ApplicationStateBasic ();
 
+         virtual String get_app_name () const;
+         
          virtual void set_default_directory (const String &DirName);
          virtual String get_default_directory () const;
 
@@ -32,6 +34,7 @@ namespace dmz {
             ~ModeStruct () { if (next) { delete next; next = 0; } }
          };
 
+         const String _AppName;
          String _defaultDir;
          String _autosaveFile;
          ModeStruct *_modeStack;

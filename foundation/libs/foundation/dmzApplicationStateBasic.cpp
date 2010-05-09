@@ -1,8 +1,11 @@
 #include "dmzApplicationStateBasic.h"
 
 //! \cond
-dmz::ApplicationStateBasic::ApplicationStateBasic (RuntimeContext *context) :
+dmz::ApplicationStateBasic::ApplicationStateBasic (
+      const String &AppName,
+      RuntimeContext *context) :
       ApplicationStateInterface (context),
+      _AppName (AppName),
       _modeStack (0) {;}
 
 
@@ -10,6 +13,10 @@ dmz::ApplicationStateBasic::~ApplicationStateBasic () {
 
    if (_modeStack) { delete _modeStack; _modeStack = 0; }
 }
+
+
+dmz::String
+dmz::ApplicationStateBasic::get_app_name () const { return _AppName; }
 
 
 void

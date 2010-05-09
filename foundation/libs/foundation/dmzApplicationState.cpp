@@ -9,12 +9,17 @@
 \ingroup Foundation
 \brief Maintains basic application state.
 
-\fn dmz::ApplicationStateInterface::ApplicationStateInterface (RuntimeContext *context)
+\fn dmz::ApplicationStateInterface::ApplicationStateInterface (const String &AppName, RuntimeContext *context)
 \brief Constructor.
+\param[in] AppName String containing the application name.
 \param[in] context Pointer to the runtime context.
 
 \fn dmz::ApplicationStateInterface::~ApplicationStateInterface ()
 \brief Destructor.
+
+\fn dmz::String dmz::ApplicationStateInterface::get_app_name () const
+\brief Gets the application name.
+\return Returns a String containing the name of the application.
 
 \fn void dmz::ApplicationStateInterface::set_default_directory (const String &DirName)
 \brief Sets default directory used for file open and save.

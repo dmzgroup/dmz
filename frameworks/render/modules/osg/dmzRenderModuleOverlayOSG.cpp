@@ -1590,13 +1590,13 @@ dmz::RenderModuleOverlayOSG::_remove_node (const Handle Overlay) {
 
    if (ns && ns->node.valid ()) {
 
-      const unsigned int ParentCount = ns->node->getNumParents ();
+      const int ParentCount = (int)ns->node->getNumParents ();
 
       if (ParentCount) {
 
-         for (unsigned int ix = 0; ix < ParentCount; ix--) {
+         for (int ix = (ParentCount - 1); ix >= 0; ix--) {
 
-            osg::Group *parent = ns->node->getParent (ix);
+            osg::Group *parent = ns->node->getParent ((unsigned int)ix);
 
             if (parent) { parent->removeChild (ns->node.get ()); }
          }

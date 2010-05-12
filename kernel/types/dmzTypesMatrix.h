@@ -1,6 +1,7 @@
 #ifndef DMZ_TYPES_MATRIX_DOT_H
 #define DMZ_TYPES_MATRIX_DOT_H
 
+#include <dmzKernelExport.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesConsts.h>
 #include <dmzTypesVector.h>
@@ -67,9 +68,15 @@ class Matrix {
       void from_array32 (const Float32 Array[9]);
       void to_array32 (Float32 array[9]) const;
 
-      void from_euler_angles (const Float64 Hy, const Float64 Px, const Float64 Rz);
+      DMZ_KERNEL_LINK_SYMBOL void from_euler_angles (
+         const Float64 Hy,
+         const Float64 Px,
+         const Float64 Rz);
 
-      void to_euler_angles (Float64 &hy, Float64 &px, Float64 &rz) const;
+      DMZ_KERNEL_LINK_SYMBOL void to_euler_angles (
+         Float64 &hy,
+         Float64 &px,
+         Float64 &rz) const;
 
       void from_axis_and_angle (
          const Vector &Axis,
@@ -77,7 +84,7 @@ class Matrix {
 
       void to_axis_and_angle (Vector &axis, Float64 &angleRadians) const;
 
-      void from_vector (const Vector &Direction);
+      DMZ_KERNEL_LINK_SYMBOL void from_vector (const Vector &Direction);
       void from_two_vectors (const Vector &FromValue, const Vector &ToValue);
 
       void set_identity ();

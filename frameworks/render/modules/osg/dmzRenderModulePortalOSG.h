@@ -10,7 +10,7 @@
 #include <dmzTypesVector.h>
 
 #include <osg/ref_ptr>
-#include <osgViewer/Viewer>
+#include <osgViewer/View>
 
 namespace osg { class Camera; }
 
@@ -51,7 +51,7 @@ namespace dmz {
 
          String _portalName;
          RenderModuleCoreOSG *_core;
-         osg::ref_ptr<osgViewer::Viewer> _viewer;
+         osg::ref_ptr<osgViewer::View> _view;
          osg::ref_ptr<osg::Camera> _camera;
          Log _log;
          Vector _pos;

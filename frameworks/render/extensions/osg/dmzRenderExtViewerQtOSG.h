@@ -7,9 +7,8 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
 
-#include <osg/Camera>
-#include <osgViewer/Viewer>
-#include <osgViewer/ViewerEventHandlers>
+#include <osgViewer/CompositeViewer>
+#include <osgViewer/View>
 
 #include <QtGui/QFrame>
 
@@ -21,11 +20,14 @@ namespace dmz {
    class RenderCameraManipulatorOSG;
    class RenderEventHandlerOSG;
 
+
    class RenderExtViewerQtOSG :
          public QFrame,
-         public osgViewer::CompositeViewer,
          public Plugin,
+         public QtWidget,
          public TimeSlice {
+
+      Q_OBJECT
 
       public:
          RenderExtViewerQtOSG (const PluginInfo &Info, Config &local);
@@ -47,32 +49,37 @@ namespace dmz {
          virtual void update_time_slice (const Float64 TimeDelta);
 
       protected:
-         void _init (const Config &Local);
+         virtual void paintEvent (QPaintEvent *event);
+         virtual void resizeEvent (QResizeEvent* event);
+         
+         void _init (Config &local);
 
          Log _log;
          String _title;
          RenderModuleCoreOSG *_core;
          InputModule *_channels;
+         QLayout *_layout;
          String _viewerName;
          osg::ref_ptr<RenderEventHandlerOSG> _eventHandler;
-         osg::ref_ptr<osgViewer::Viewer> _viewer;
+         osg::ref_ptr<osgViewer::CompositeViewer> _viewer;
+         osg::ref_ptr<osgViewer::View> _view;
 
       private:
-         void __init_centered (
-            const UInt32 Screen,
-            const UInt32 WindowWidth,
-            const UInt32 WindowHeight,
-            Int32 &windowLeft,
-            Int32 &windowTop);
-
-         void __init_viewer_window (
-               const Int32 WindowLeft,
-               const Int32 WindowTop,
-               const UInt32 WindowWidth,
-               const UInt32 WindowHeight,
-               const UInt32 Screen);
-
-         void __init_viewer_fullscreen (UInt32 screen);
+         // void __init_centered (
+         //    const UInt32 Screen,
+         //    const UInt32 WindowWidth,
+         //    const UInt32 WindowHeight,
+         //    Int32 &windowLeft,
+         //    Int32 &windowTop);
+         // 
+         // void __init_viewer_window (
+         //       const Int32 WindowLeft,
+         //       const Int32 WindowTop,
+         //       const UInt32 WindowWidth,
+         //       const UInt32 WindowHeight,
+         //       const UInt32 Screen);
+         // 
+         // void __init_viewer_fullscreen (UInt32 screen);
          
          RenderExtViewerQtOSG ();
          RenderExtViewerQtOSG (const RenderExtViewerQtOSG &);

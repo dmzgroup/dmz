@@ -18,7 +18,7 @@
 
 #include <osgDB/ReadFile>
 
-#include <osgViewer/Viewer>
+#include <osgViewer/View>
 
 
 dmz::RenderPluginLogoOSG::RenderPluginLogoOSG (const PluginInfo &Info, Config &local) :
@@ -71,8 +71,8 @@ dmz::RenderPluginLogoOSG::discover_plugin (
 
          if (_core) {
   
-            osgViewer::Viewer *viewer = _core->lookup_viewer (RenderMainPortalName);
-            _masterCamera = viewer ? viewer->getCamera () : 0;
+            osgViewer::View *view = _core->lookup_view (RenderMainPortalName);
+            _masterCamera = view ? view->getCamera () : 0;
             _create_logo ();
          }
       }

@@ -11,7 +11,7 @@
  * OpenSceneGraph Public License for more details.
 */
 
-#include "GraphicsWindowQt"
+#include "GraphicsWindowQt.h"
 
 
 GraphWidget::GraphWidget( const QGLFormat& format, QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags f )

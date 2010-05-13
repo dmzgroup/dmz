@@ -277,7 +277,7 @@ dmz::AudioModuleFMOD::play_sound (
 
                         if (_error_check (errorHeader, fmodResult)) {
 
-                           _log.info << errorHeader << endl;
+                           //_log.info << errorHeader << endl;
                            result = instanceHandle;
                         }
                      }

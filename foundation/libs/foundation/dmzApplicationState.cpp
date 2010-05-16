@@ -9,9 +9,8 @@
 \ingroup Foundation
 \brief Maintains basic application state.
 
-\fn dmz::ApplicationStateInterface::ApplicationStateInterface (const String &AppName, RuntimeContext *context)
+\fn dmz::ApplicationStateInterface::ApplicationStateInterface (RuntimeContext *context)
 \brief Constructor.
-\param[in] AppName String containing the application name.
 \param[in] context Pointer to the runtime context.
 
 \fn dmz::ApplicationStateInterface::~ApplicationStateInterface ()
@@ -19,7 +18,7 @@
 
 \fn dmz::String dmz::ApplicationStateInterface::get_app_name () const
 \brief Gets the application name.
-\return Returns a String containing the name of the application.
+\return Returns a String containing the name of the Application.
 
 \fn void dmz::ApplicationStateInterface::set_default_directory (const String &DirName)
 \brief Sets default directory used for file open and save.
@@ -64,6 +63,10 @@ It does \b not return the mode that was popped off the stack.
 
 \fn dmz::ApplicationState::~ApplicationState ()
 \brief Destructor.
+
+\fn dmz::String dmz::ApplicationState::get_app_name () const
+\brief Gets the name of the application.
+\return Returns a String containing the name of the Application.
 
 \fn void dmz::ApplicationState::set_default_directory (const String &DirName)
 \brief Sets default directory used for file open and save.

@@ -192,16 +192,7 @@ dmz::EventObserverUtil::deactivate_event_callback (
 }
 
 
-/*!
-
-\brief Deactivates callbacks for a specific event type.
-\param[in] Type EventType of callback to deactivate.
-\param[in] CallbackMask Mask containing the callbacks to deactivate. The masks defined
-in dmzEventCallbackMasks.h should be used to compose \a CallbackMask.
-\note The EventType must be the exact type used to activate callbacks. Sub EventTypes may
-not be used to deactivate callbacks to subtypes of activate EventTypes.
-
-*/
+//! Deactivates all callbacks.
 void
 dmz::EventObserverUtil::deactivate_all_event_callbacks () {
 
@@ -286,3 +277,12 @@ dmz::EventObserverUtil::close_event (
    }
 }
 
+
+//! Callback made when EventModule is discovered.
+void
+dmz::EventObserverUtil::_store_event_module (EventModule &) {;}
+
+
+//! Callback made when EventModule is removed.
+void
+dmz::EventObserverUtil::_remove_event_module (EventModule &) {;}

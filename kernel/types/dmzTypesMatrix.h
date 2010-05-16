@@ -184,6 +184,13 @@ dmz::Matrix::Matrix (
 }
 
 
+/*!
+
+\brief Creates a Matrix from a single Vector.
+\param[in] Direction Vector pointing in the direction to look.
+\sa dmz::Matrix::from_vector()
+
+*/
 inline
 dmz::Matrix::Matrix (const Vector &Direction) { from_vector (Direction); }
 
@@ -696,73 +703,6 @@ dmz::Matrix::to_array32 (Float32 array[9]) const {
       array[count] =  Float32 (_data[count]);
    }
 }
-
-
-/*
-//! \b Not currently working.
-inline void
-dmz::Matrix::from_euler_angles (
-      const Float64 Rx,
-      const Float64 Ry,
-      const Float64 Rz) {
-
-   const Float64 A  = cos (Rx);
-   const Float64 B  = sin (Rx);
-   const Float64 C  = cos (Ry);
-   const Float64 D  = sin (Ry);
-   const Float64 E  = cos (Rz);
-   const Float64 F  = sin (Rz);
-   const Float64 AD = A * D;
-   const Float64 BD = B * D;
-
-   //Row 1
-   _data[0] =  C * E;
-   _data[1] = -C * F;
-   _data[2] =  D;
-
-   //Row 2
-   _data[3] =  (BD * E) + (A * F);
-   _data[4] = (-BD * F) + (A * E);
-   _data[5] =  -B * C;
-
-   //Row 3
-   _data[6] = (-AD * E) + (B * F);
-   _data[7] =  (AD * F) + (B * E);
-   _data[8] =   A * C;
-}
-
-
-//! \b Not currently working.
-inline void
-dmz::Matrix::to_euler_angles (Float64 &rx, Float64 &ry, Float64 &rz)  const {
-
-   // Calculate Y-axis angle
-   ry = asin (_data[2]);
-
-   const Float64 C (cos (ry));
-
-   // Gimbal lock?
-   if (fabs (C) > Epsilon64) {
-
-      // No, so get X-axis angle
-      rx = atan2 (-_data[5] / C, _data[8] / C);
-      // Get Z-axis angle
-      rz = atan2 (-_data[1] / C, _data[0] / C);
-   }
-   else {
-      // Gimbal lock has occurred
-
-      // Set X-axis angle to zero and calculate Z-axis angle
-      rx  = 0;
-      rz = atan2 (_data[3], _data[4]);
-   }
-
-   // return only positive angles in [0,2*PI]
-   if (rx < 0.0) { rx += TwoPi64; }
-   if (ry < 0.0) { ry += TwoPi64; }
-   if (rz < 0.0) { rz += TwoPi64; }
-}
-*/
 
 
 //! Sets Matrix from arbitrary axis and rotation angle in radians.

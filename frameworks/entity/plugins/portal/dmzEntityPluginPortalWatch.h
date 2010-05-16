@@ -22,6 +22,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginPortalWatch (const PluginInfo &Info, Config &local);
          ~EntityPluginPortalWatch ();
 
@@ -71,6 +72,7 @@ namespace dmz {
          Handle _defaultAttrHandle;
 
          Int32 _active;
+         //! \endcond
 
       private:
          EntityPluginPortalWatch ();

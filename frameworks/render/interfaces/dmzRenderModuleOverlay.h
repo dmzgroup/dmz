@@ -63,13 +63,6 @@ namespace dmz {
             const Float64 Blue,
             const Float64 Alpha) = 0;
 
-         virtual Boolean lookup_color (
-            const Handle Overlay,
-            Float64 &Red,
-            Float64 &Green,
-            Float64 &Blue,
-            Float64 &Alpha) = 0;
-
          // Overlay Text API
          virtual Boolean store_text (const Handle Overlay, const String &Value) = 0;
          virtual Boolean lookup_text (const Handle Overlay, String &value) = 0;

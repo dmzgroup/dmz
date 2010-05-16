@@ -39,6 +39,16 @@ and not equal to the Plugin's name.
 \fn dmz::Handle dmz::RenderModuleOverlay::get_render_module_overlay_handle () const
 \brief Gets the render overlay module's handle.
 
+\fn dmz::Boolean dmz::RenderModuleOverlay::lookup_named_color (const String &Name, Float64 &red, Float64 &green, Float64 &blue, Float64 &alpha)
+\brief Looks up named color.
+\details. All color components are in the range 0.0 to 1.0.
+\param[in] Name String containing color name.
+\param[out] red Float64 containing the red component.
+\param[out] green Float64 containing the green component.
+\param[out] blue Float64 containing the blue component.
+\param[out] alpha Float64 containing the alpha component.
+\return Returns dmz::True if the named color was found.
+
 \fn dmz::Handle dmz::RenderModuleOverlay::lookup_node_handle (const String &Name)
 \brief Looks up the handle of a named overlay node.
 \param[in] Name String containing the name of the node.
@@ -85,6 +95,15 @@ const RenderOverlayTypeEnum Type)
 \brief Destroys the node and all children.
 \param[in] Overlay Handle of the node to destroy.
 \return Returns dmz::True if the node was destroyed.
+
+\fn dmz:: Boolean dmz::RenderModuleOverlay::store_color (const Handle Overlay, const Float64 Red, const Float64 Green, const Float64 Blue, const Float64 Alpha)
+\brief Sets the color recursively starting at the specified node.
+\param[in] Overlay Handle of the node.
+\param[in] Red Float64 containing the red color component.
+\param[in] Green Float64 containing the green color component.
+\param[in] Blue Float64 containing the blue color component.
+\param[in] Alpha Float64 containing the alpha color component.
+\return Returns dmz:True if the color was successfully set.
 
 \fn dmz::Boolean dmz::RenderModuleOverlay::store_text (const Handle Overlay, const String &Value)
 \brief Sets the text value of the text node.

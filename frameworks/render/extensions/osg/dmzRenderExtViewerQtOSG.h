@@ -49,38 +49,18 @@ namespace dmz {
          virtual void update_time_slice (const Float64 TimeDelta);
 
       protected:
-         virtual void paintEvent (QPaintEvent *event);
-         virtual void resizeEvent (QResizeEvent* event);
-         
          void _init (Config &local);
 
          Log _log;
          String _title;
          RenderModuleCoreOSG *_core;
          InputModule *_channels;
-         QLayout *_layout;
          String _viewerName;
          osg::ref_ptr<RenderEventHandlerOSG> _eventHandler;
          osg::ref_ptr<osgViewer::CompositeViewer> _viewer;
          osg::ref_ptr<osgViewer::View> _view;
 
       private:
-         // void __init_centered (
-         //    const UInt32 Screen,
-         //    const UInt32 WindowWidth,
-         //    const UInt32 WindowHeight,
-         //    Int32 &windowLeft,
-         //    Int32 &windowTop);
-         // 
-         // void __init_viewer_window (
-         //       const Int32 WindowLeft,
-         //       const Int32 WindowTop,
-         //       const UInt32 WindowWidth,
-         //       const UInt32 WindowHeight,
-         //       const UInt32 Screen);
-         // 
-         // void __init_viewer_fullscreen (UInt32 screen);
-         
          RenderExtViewerQtOSG ();
          RenderExtViewerQtOSG (const RenderExtViewerQtOSG &);
          RenderExtViewerQtOSG &operator= (const RenderExtViewerQtOSG &);

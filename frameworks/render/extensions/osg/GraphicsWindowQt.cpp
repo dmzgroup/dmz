@@ -17,6 +17,9 @@
 GraphWidget::GraphWidget( const QGLFormat& format, QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags f )
 : QGLWidget(format, parent, shareWidget, f)
 {
+    setAttribute (Qt::WA_PaintOnScreen);
+    setAttribute (Qt::WA_OpaquePaintEvent);
+    
     setAutoBufferSwap( false );
     setMouseTracking( true );
 }
@@ -108,8 +111,9 @@ void GraphWidget::wheelEvent( QWheelEvent* event )
         event->delta()>0 ? osgGA::GUIEventAdapter::SCROLL_UP : osgGA::GUIEventAdapter::SCROLL_DOWN );
 }
 
-GraphicsWindowQt::GraphicsWindowQt( osg::GraphicsContext::Traits* traits )
-:   _widget(0),
+GraphicsWindowQt::GraphicsWindowQt( osg::GraphicsContext::Traits* traits, QWidget *parent )
+:  _parent (parent),
+   _widget(0),
     _initialized(false),
     _realized(false)
 {
@@ -163,11 +167,11 @@ bool GraphicsWindowQt::init()
         GraphicsWindowQt* sharedContextQt = dynamic_cast<GraphicsWindowQt*>(_traits->sharedContext);
         QGLWidget* shareWidget = sharedContextQt ? sharedContextQt->getGraphWidget() : 0;
         
-        Qt::WindowFlags flags = Qt::Window|Qt::CustomizeWindowHint;//|Qt::WindowStaysOnTopHint;
-        if ( _traits->windowDecoration )
-            flags |= Qt::WindowTitleHint|Qt::WindowMinMaxButtonsHint|Qt::WindowSystemMenuHint;
+        // Qt::WindowFlags flagg = Qt::Window|Qt::CustomizeWindowHint;//|Qt::WindowStaysOnTopHint;
+        // if ( _traits->windowDecoration )
+        //     flags |= Qt::WindowTitleHint|Qt::WindowMinMaxButtonsHint|Qt::WindowSystemMenuHint;
         
-        _widget = new GraphWidget( format, 0, shareWidget, flags );
+        _widget = new GraphWidget( format, _parent, shareWidget, 0); //flags );
     }
     
     _widget->setWindowTitle( _traits->windowName.c_str() );

@@ -209,8 +209,12 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
          const String Name = w->get_qt_widget_name ();
          QWidget *widget = w->get_qt_widget ();
 
+_log.error << "widget: " << Name << endl;
+_log.error << "central widget: " << _mainWidgetName << endl;
+
          if (Name == _mainWidgetName) {
 
+_log.error << "Found central widget: " << _mainWidgetName << endl;
             setCentralWidget (widget);
          }
          else {

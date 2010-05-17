@@ -37,6 +37,8 @@ public:
     virtual void mouseMoveEvent( QMouseEvent* event );
     virtual void wheelEvent( QWheelEvent* event );
     
+    // QPaintEngine* paintEngine () const { return 0; }
+    
 protected:
     osgViewer::GraphicsWindow* _gw;
 };
@@ -44,7 +46,7 @@ protected:
 class GraphicsWindowQt : public osgViewer::GraphicsWindow
 {
 public:
-    GraphicsWindowQt( osg::GraphicsContext::Traits* traits );
+    GraphicsWindowQt( osg::GraphicsContext::Traits* traits, QWidget *parent = 0 );
     virtual ~GraphicsWindowQt();
     
     inline GraphWidget* getGraphWidget() { return _widget; }
@@ -81,6 +83,7 @@ public:
     virtual void requestWarpPointer( float x, float y );
     
 protected:
+    QWidget *_parent;
     GraphWidget* _widget;
     QCursor _currentCursor;
     bool _initialized;

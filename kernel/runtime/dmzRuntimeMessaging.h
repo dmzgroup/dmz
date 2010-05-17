@@ -143,6 +143,13 @@ namespace dmz {
       const String &DefaultValue,
       RuntimeContext *context,
       Log *log = 0);
+
+   DMZ_KERNEL_LINK_SYMBOL Message config_create_monostate_message (
+      const String &Name,
+      const Config &Source,
+      const String &DefaultValue,
+      RuntimeContext *context,
+      Log *log = 0);
 };
 
 #endif // DMZ_RUNTIME_MESSAGING_DOT_H

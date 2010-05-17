@@ -1,0 +1,8 @@
+lmk.set_name "dmzEntityPluginDetach"
+lmk.set_type "plugin"
+lmk.add_files {"dmzEntityPluginDetach.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzEntityFramework", "dmzObjectFramework",}

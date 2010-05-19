@@ -1051,6 +1051,44 @@ dmz::config_create_message (
 
 /*!
 
+\brief Creates a monostate dmz::Message from dmz::Config.
+\details Defined in dmzRuntimeMessaging.h.
+This function converts the named attribute to a dmz::Message. It is assumed that the
+last part of the \a Name variable specifies the attribute name. If the String
+"type.name" is passed in as \a Name, it will try to find a  config context called
+"type" and the attribute "name" stored in the "type" config context. If the named
+Message does not exist, it is created.
+\code
+dmz::Message type = dmz::config_create_monostate_message ("dmz.type.name", global, "DefaultMessage", get_plugin_runtime_context (), &_log);
+\endcode
+\param[in] Name String containing name of the attribute in the config context to convert.
+\param[in] Source Config containing config context to convert.
+\param[in] DefaultValue String containing default name of Message to use if not found
+int the Config.
+\param[in] context Pointer to the runtime context.
+\param[in] log Pointer to the dmz::Log to use for log reporting.
+\return Returns dmz::Message containing the message type. Returns an empty
+dmz::Message if no message name is specified in either the Config or the \a DefaultValue.
+
+*/
+dmz::Message
+dmz::config_create_monostate_message (
+      const String &Name,
+      const Config &Source,
+      const String &DefaultValue,
+      RuntimeContext *context,
+      Log *log) {
+
+   Message result = config_create_message (Name, Source, DefaultValue, context, log);
+
+   if (result) { result.set_monostate_mode (MessageMonostateOn); }
+
+   return result;
+}
+
+
+/*!
+
 \brief Converts Config to name Handle.
 \details Defined in dmzRuntimeConfigToNamedHandle.h.
 This function converts the named attribute to a named Handle It is assumed that the
@@ -1088,6 +1126,7 @@ dmz::config_to_named_handle (
 
    return result;
 }
+
 
 /*!
 

@@ -1,30 +1,26 @@
-#ifndef DMZ_ENTITY_PLUGIN_PORTAL_WATCH_DOT_H
-#define DMZ_ENTITY_PLUGIN_PORTAL_WATCH_DOT_H
+#ifndef DMZ_ENTITY_PLUGIN_AUTO_ATTACH_DOT_H
+#define DMZ_ENTITY_PLUGIN_AUTO_ATTACH_DOT_H
 
 #include <dmzInputObserverUtil.h>
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeDataConverterTypesBase.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
+#include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeTimeSlice.h>
+#include <dmzTypesHandleContainer.h>
 
 namespace dmz {
 
-   class AudioModulePortal;
-   class RenderModulePortal;
-
-   class EntityPluginPortalWatch :
+   class EntityPluginAutoAttach :
          public Plugin,
-         public TimeSlice,
          public MessageObserver,
          public InputObserverUtil,
          public ObjectObserverUtil {
 
       public:
-         //! \cond
-         EntityPluginPortalWatch (const PluginInfo &Info, Config &local);
-         ~EntityPluginPortalWatch ();
+         EntityPluginAutoAttach (const PluginInfo &Info, Config &local);
+         ~EntityPluginAutoAttach ();
 
          // Plugin Interface
          virtual void update_plugin_state (
@@ -34,9 +30,6 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
-
-         // TimeSlice Interface
-         virtual void update_time_slice (const Float64 TimeDelta);
 
          // Message Observer Interface
          virtual void receive_message (
@@ -50,36 +43,35 @@ namespace dmz {
          virtual void update_channel_state (const Handle Channel, const Boolean State);
 
          // Object Observer Interface
-         virtual void update_object_flag (
+         virtual void create_object (
             const UUID &Identity,
             const Handle ObjectHandle,
-            const Handle AttributeHandle,
-            const Boolean Value,
-            const Boolean *PreviousValue);
+            const ObjectType &Type,
+            const ObjectLocalityEnum Locality);
+
+         virtual void destroy_object (const UUID &Identity, const Handle ObjectHandle);
 
       protected:
+         void _find_object ();
          void _init (Config &local);
 
          Log _log;
          DataConverterHandle _convert;
 
-         Message _targetMessage;
-
-         RenderModulePortal *_render;
-         AudioModulePortal *_audio;
-         Handle _hil;
-         Handle _target;
-         Handle _defaultAttrHandle;
-
          Int32 _active;
-         //! \endcond
+
+         Message _nextMsg;
+         Message _attachMsg;
+         Handle _attached;
+         ObjectTypeSet _types;
+         HandleContainer _list;
 
       private:
-         EntityPluginPortalWatch ();
-         EntityPluginPortalWatch (const EntityPluginPortalWatch &);
-         EntityPluginPortalWatch &operator= (const EntityPluginPortalWatch &);
+         EntityPluginAutoAttach ();
+         EntityPluginAutoAttach (const EntityPluginAutoAttach &);
+         EntityPluginAutoAttach &operator= (const EntityPluginAutoAttach &);
 
    };
 };
 
-#endif // DMZ_ENTITY_PLUGIN_PORTAL_WATCH_DOT_H
+#endif // DMZ_ENTITY_PLUGIN_AUTO_ATTACH_DOT_H

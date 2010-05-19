@@ -22,6 +22,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginFollow (const PluginInfo &Info, Config &local);
          ~EntityPluginFollow ();
 
@@ -71,6 +72,7 @@ namespace dmz {
          Float64 _range;
 
          Int32 _active;
+         //! \endcond
 
       private:
          EntityPluginFollow ();

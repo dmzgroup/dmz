@@ -43,8 +43,8 @@ namespace dmz {
          EventObserverUtil (const PluginInfo &Info, const Config &Init);
          ~EventObserverUtil ();
 
-         virtual void _store_event_module (EventModule &eventMod) {;}
-         virtual void _remove_event_module (EventModule &eventMod) {;}
+         virtual void _store_event_module (EventModule &eventMod);
+         virtual void _remove_event_module (EventModule &eventMod);
 
       private:
          struct State;

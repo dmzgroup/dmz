@@ -21,7 +21,7 @@ namespace dmz {
    const char EntityAttributeHealthName[] = "Entity_Health_Value";
 
    //! \brief Name of entity attach message. Defined in dmzEntityConsts.h.
-   const char EntityMessageAttachName[] = "Entity_Attach_Message";
+   const char EntityMessageAttachName[] = "DMZ_Entity_Attach_Message";
 //! @}
 };
 

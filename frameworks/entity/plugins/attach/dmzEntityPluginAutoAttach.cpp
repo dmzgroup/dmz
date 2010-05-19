@@ -5,6 +5,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginAutoAttach
+\ingroup Entity
+\brief Automatically attaches to entities.
+
+*/
+
+//! \cond
 dmz::EntityPluginAutoAttach::EntityPluginAutoAttach (
       const PluginInfo &Info,
       Config &local) :
@@ -193,6 +202,7 @@ dmz::EntityPluginAutoAttach::_init (Config &local) {
 
    _types = config_to_object_type_set (local, context);
 }
+//! \endcond
 
 
 extern "C" {

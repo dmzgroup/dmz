@@ -19,6 +19,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginAutoAttach (const PluginInfo &Info, Config &local);
          ~EntityPluginAutoAttach ();
 
@@ -65,6 +66,7 @@ namespace dmz {
          Handle _attached;
          ObjectTypeSet _types;
          HandleContainer _list;
+         //! \endcond
 
       private:
          EntityPluginAutoAttach ();

@@ -7,4 +7,5 @@ lmk.add_files {
    "dmzNetModuleIdentityMap.h",
    "dmzNetModulePacketCodec.h",
    "dmzNetModulePacketIO.h",
+   "dmzNetPacketStatsObserver.h",
 }

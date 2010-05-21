@@ -8,10 +8,6 @@
 
 namespace dmz {
 
-   //! \cond
-   const char NetModulePacketIOInterfaceName[] = "NetModulePacketIOInterface";
-   //! \endcond
-
    class NetPacketObserver {
 
       public:
@@ -47,6 +43,10 @@ namespace dmz {
       private:
          const PluginInfo &__Info;
    };
+
+   //! \cond
+   const char NetModulePacketIOInterfaceName[] = "NetModulePacketIOInterface";
+   //! \endcond
 };
 
 

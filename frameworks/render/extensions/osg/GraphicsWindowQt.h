@@ -37,6 +37,8 @@ public:
     virtual void mouseMoveEvent( QMouseEvent* event );
     virtual void wheelEvent( QWheelEvent* event );
     
+    void handleKeyEvent (QKeyEvent *event, const bool KeyState);
+    
     // QPaintEngine* paintEngine () const { return 0; }
     
 protected:

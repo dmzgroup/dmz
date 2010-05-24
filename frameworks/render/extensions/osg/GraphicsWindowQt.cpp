@@ -43,14 +43,12 @@ void GraphWidget::resizeEvent( QResizeEvent* event )
 
 void GraphWidget::keyPressEvent( QKeyEvent* event )
 {
-    setKeyboardModifiers( event );
-    _gw->getEventQueue()->keyPress( (osgGA::GUIEventAdapter::KeySymbol) *(event->text().toAscii().data()) );
+    handleKeyEvent (event, true);
 }
 
 void GraphWidget::keyReleaseEvent( QKeyEvent* event )
 {
-    setKeyboardModifiers( event );
-    _gw->getEventQueue()->keyRelease( (osgGA::GUIEventAdapter::KeySymbol) *(event->text().toAscii().data()) );
+    handleKeyEvent (event, false);
 }
 
 void GraphWidget::mousePressEvent( QMouseEvent* event )
@@ -110,6 +108,72 @@ void GraphWidget::wheelEvent( QWheelEvent* event )
     _gw->getEventQueue()->mouseScroll(
         event->delta()>0 ? osgGA::GUIEventAdapter::SCROLL_UP : osgGA::GUIEventAdapter::SCROLL_DOWN );
 }
+
+
+void GraphWidget::handleKeyEvent (
+      QKeyEvent *event,
+      const bool KeyState) {
+
+   setKeyboardModifiers( event );
+
+   if (event && !event->isAutoRepeat ()) {
+
+      qint32 theKey (0);
+
+      switch (event->key ()) {
+
+         case Qt::Key_F1: theKey = osgGA::GUIEventAdapter::KEY_F1; break;
+         case Qt::Key_F2: theKey = osgGA::GUIEventAdapter::KEY_F2; break;
+         case Qt::Key_F3: theKey = osgGA::GUIEventAdapter::KEY_F3; break;
+         case Qt::Key_F4: theKey = osgGA::GUIEventAdapter::KEY_F4; break;
+         case Qt::Key_F5: theKey = osgGA::GUIEventAdapter::KEY_F5; break;
+         case Qt::Key_F6: theKey = osgGA::GUIEventAdapter::KEY_F6; break;
+         case Qt::Key_F7: theKey = osgGA::GUIEventAdapter::KEY_F7; break;
+         case Qt::Key_F8: theKey = osgGA::GUIEventAdapter::KEY_F8; break;
+         case Qt::Key_F9: theKey = osgGA::GUIEventAdapter::KEY_F9; break;
+         case Qt::Key_F10: theKey = osgGA::GUIEventAdapter::KEY_F10; break;
+         case Qt::Key_F11: theKey = osgGA::GUIEventAdapter::KEY_F11; break;
+         case Qt::Key_F12: theKey = osgGA::GUIEventAdapter::KEY_F12; break;
+         case Qt::Key_Left: theKey = osgGA::GUIEventAdapter::KEY_Left; break;
+         case Qt::Key_Up: theKey = osgGA::GUIEventAdapter::KEY_Up; break;
+         case Qt::Key_Right: theKey = osgGA::GUIEventAdapter::KEY_Right; break;
+         case Qt::Key_Down: theKey = osgGA::GUIEventAdapter::KEY_Down; break;
+         case Qt::Key_PageUp: theKey = osgGA::GUIEventAdapter::KEY_Page_Up; break;
+         case Qt::Key_PageDown: theKey = osgGA::GUIEventAdapter::KEY_Page_Down; break;
+         case Qt::Key_Home: theKey = osgGA::GUIEventAdapter::KEY_Home; break;
+         case Qt::Key_End: theKey = osgGA::GUIEventAdapter::KEY_End; break;
+         case Qt::Key_Insert: theKey = osgGA::GUIEventAdapter::KEY_Insert; break;
+         case Qt::Key_Space: theKey = osgGA::GUIEventAdapter::KEY_Space; break;
+         case Qt::Key_Escape: theKey = osgGA::GUIEventAdapter::KEY_Escape; break;
+         case Qt::Key_Tab: theKey = osgGA::GUIEventAdapter::KEY_Tab; break;
+         case Qt::Key_Backspace: theKey = osgGA::GUIEventAdapter::KEY_BackSpace; break;
+         case Qt::Key_Enter: theKey = osgGA::GUIEventAdapter::KEY_Return; break;
+         case Qt::Key_Return: theKey = osgGA::GUIEventAdapter::KEY_Return; break;
+         case Qt::Key_Delete: theKey = osgGA::GUIEventAdapter::KEY_Delete; break;
+         case Qt::Key_Shift : theKey = osgGA::GUIEventAdapter::KEY_Shift_L; break;
+         case Qt::Key_Control : theKey = osgGA::GUIEventAdapter::KEY_Control_L; break;
+         case Qt::Key_Meta : theKey = osgGA::GUIEventAdapter::KEY_Meta_L; break;
+         case Qt::Key_Alt : theKey = osgGA::GUIEventAdapter::KEY_Alt_L; break;
+
+         default:
+
+            if (!(event->text ().isEmpty ())) {
+
+               theKey = event->text ().at (0).toAscii ();
+            }
+      }
+
+      if (KeyState) {
+         
+         _gw->getEventQueue()->keyPress( (osgGA::GUIEventAdapter::KeySymbol) (theKey) );
+      }
+      else {
+         
+         _gw->getEventQueue()->keyRelease( (osgGA::GUIEventAdapter::KeySymbol) (theKey) );
+      }
+   }
+}
+
 
 GraphicsWindowQt::GraphicsWindowQt( osg::GraphicsContext::Traits* traits, QWidget *parent )
 :  _parent (parent),

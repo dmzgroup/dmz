@@ -108,24 +108,25 @@ dmz::RenderPluginScreenCaptureOSG::update_time_slice (const Float64 TimeDelta) {
 
       if (_core) {
 
-//FIXME needs to be updated, this broke when lookup_viewer changed to lookup_view
-         // osgViewer::ViewerBase *viewer = _core->lookup_viewer (RenderMainPortalName);
-         // 
-         // if (viewer) {
-         // 
-         //    // A new handler is created before each usage because if the same
-         //    // handler is used more than once, each subsequent image capture is
-         //    // corrupt.
-         //    _handler = new osgViewer::ScreenCaptureHandler;
-         // 
-         //    if (_handler.valid ()) {
-         // 
-         //       _handler->setKeyEventTakeScreenShot (0);
-         //       osg::ref_ptr<WriteImage> writer = new WriteImage (_fileName, _log);
-         //       _handler->setCaptureOperation (writer.get ());
-         //       _handler->captureNextFrame (*viewer);
-         //    }
-         // }
+         osgViewer::View *view = _core->lookup_view (RenderMainPortalName);
+         if (view) {
+            
+            osgViewer::ViewerBase *viewer = view->getViewerBase ();
+            if (viewer) {
+            
+               // A new handler is created before each usage because if the same
+               // handler is used more than once, each subsequent image capture is
+               // corrupt.
+               _handler = new osgViewer::ScreenCaptureHandler;
+               if (_handler.valid ()) {
+            
+                  _handler->setKeyEventTakeScreenShot (0);
+                  osg::ref_ptr<WriteImage> writer = new WriteImage (_fileName, _log);
+                  _handler->setCaptureOperation (writer.get ());
+                  _handler->captureNextFrame (*viewer);
+               }
+            }
+         }
       }
 
       _fileName.flush ();

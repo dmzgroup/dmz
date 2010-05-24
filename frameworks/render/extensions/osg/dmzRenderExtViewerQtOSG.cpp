@@ -140,7 +140,7 @@ dmz::RenderExtViewerQtOSG::_init (Config &local) {
 
    setAttribute (Qt::WA_PaintOnScreen);
    setAttribute (Qt::WA_OpaquePaintEvent);
-
+   
    qframe_config_read ("frame", local, this);
 
    _eventHandler = new RenderEventHandlerOSG (get_plugin_runtime_context (), local);

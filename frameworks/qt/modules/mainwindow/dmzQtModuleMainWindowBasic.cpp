@@ -129,8 +129,6 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
 #endif
 
    _init (local);
-
-   statusBar()->showMessage (tr ("Ready"), 2000);
 }
 
 
@@ -166,13 +164,13 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
       _load_session ();
 
       show ();
-      raise ();
-      activateWindow ();
 
       _restore_state ();
    }
    else if (State == PluginStateStart) {
 
+      raise ();
+      activateWindow ();
    }
    else if (State == PluginStateStop) {
 
@@ -209,12 +207,8 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
          const String Name = w->get_qt_widget_name ();
          QWidget *widget = w->get_qt_widget ();
 
-_log.error << "widget: " << Name << endl;
-_log.error << "central widget: " << _mainWidgetName << endl;
-
          if (Name == _mainWidgetName) {
 
-_log.error << "Found central widget: " << _mainWidgetName << endl;
             setCentralWidget (widget);
          }
          else {
@@ -343,7 +337,6 @@ dmz::QtModuleMainWindowBasic::_load_session () {
 
       QRect grect = QApplication::desktop ()->availableGeometry (this);
       move(grect.center () - rect ().center ());
-
 
       HashTableStringIterator it;
       DockWidgetStruct *dws (_dockWidgetTable.get_first (it));
@@ -535,6 +528,8 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
    }
 
    _init_dock_windows (local);
+
+   statusBar ()->setHidden (config_to_boolean ("statusbar-hidden.value", local, False));
 }
 
 

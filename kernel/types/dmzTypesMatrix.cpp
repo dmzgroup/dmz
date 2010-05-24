@@ -24,6 +24,16 @@ The indices are as follows:
 \endhtmlonly
 
 */
+
+/*!
+
+\brief Creates a Matrix from three Euler angles.
+\details The angles are applied Heading * Pitch * Roll.
+\param[in] Hy Heading in radians.
+\param[in] Px Pitch in radians.
+\param[in] Rz Roll in radians.
+
+*/
 void
 dmz::Matrix::from_euler_angles (const Float64 Hy, const Float64 Px, const Float64 Rz) {
 
@@ -31,6 +41,14 @@ dmz::Matrix::from_euler_angles (const Float64 Hy, const Float64 Px, const Float6
 }
 
 
+/*!
+
+\brief Decomposes the Matrix into three Euler angles.
+\param[out] hy Heading in radians.
+\param[out] px Pitch in radians.
+\param[out] rz Roll in radians.
+
+*/
 void
 dmz::Matrix::to_euler_angles (Float64 &hy, Float64 &px, Float64 &rz)  const {
 
@@ -68,6 +86,14 @@ dmz::Matrix::to_euler_angles (Float64 &hy, Float64 &px, Float64 &rz)  const {
 }
 
 
+/*!
+
+\brief Creates a Matrix from a single Vector.
+\details The Matrix will look in the direction of the given vector. The Matrix will
+only update heading a pitch and will not contain a roll component.
+\param[in] Direction Vector pointing in the direction to look.
+
+*/
 void
 dmz::Matrix::from_vector (const Vector &Direction) {
 

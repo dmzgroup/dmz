@@ -310,6 +310,7 @@ dmz::ObjectObserverUtil::deactivate_default_object_attribute (const Mask &Attrib
 }
 
 
+//! Deactivates all object attribute callbacks.
 void
 dmz::ObjectObserverUtil::deactivate_all_object_attributes () {
 

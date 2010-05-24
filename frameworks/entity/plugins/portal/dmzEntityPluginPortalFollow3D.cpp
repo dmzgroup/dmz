@@ -14,7 +14,7 @@
 
 /*!
 
-\class dmz::EntityPluginPortalFollow
+\class dmz::EntityPluginPortalFollow3D
 \ingroup Entity
 \brief Follows human-in-th-loop object with the render and audio portals.
 

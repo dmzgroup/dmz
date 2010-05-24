@@ -11,6 +11,17 @@
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::EntityPluginPortalWatch
+\ingroup Entity
+\brief Keeps the portal pointed towards the selected object.
+\details. Updates the views heading and pitch so that it is always facing the
+selected object.
+
+*/
+
+//! \cond
 dmz::EntityPluginPortalWatch::EntityPluginPortalWatch (
       const PluginInfo &Info,
       Config &local) :
@@ -170,6 +181,7 @@ dmz::EntityPluginPortalWatch::_init (Config &local) {
 
    if (_targetMessage) { subscribe_to_message (_targetMessage); }
 }
+//! \endcond
 
 
 extern "C" {

@@ -9,18 +9,46 @@
 
 namespace dmz {
 
-   //! ApplicationState interface name.
-   const char ApplicationStateInterfaceName[] = "ApplicationStateInterface";
-
    enum ApplicationModeEnum {
 
-      ApplicationModeNormal,
-      ApplicationModeSaving,
-      ApplicationModeLoading,
-      ApplicationModeUndoing,
-      ApplicationModeUnknown,
+      ApplicationModeNormal,  //!< Normal Mode
+      ApplicationModeSaving,  //!< Saving Mode
+      ApplicationModeLoading, //!< Loading Mode
+      ApplicationModeUndoing, //!< Undoing Mode
+      ApplicationModeUnknown, //!< Unknown Mode
    };
 
+   class ApplicationStateInterface;
+
+   class ApplicationState {
+
+      public:
+         ApplicationState (const PluginInfo &Info);
+         ApplicationState (RuntimeContext *context);
+         ~ApplicationState ();
+
+         String get_app_name () const;
+
+         void set_default_directory (const String &DirName);
+         String get_default_directory () const;
+
+         void set_autosave_file (const String &FileName);
+         String get_autosave_file () const;
+
+         void push_mode (const ApplicationModeEnum Mode);
+         ApplicationModeEnum get_mode () const;
+         ApplicationModeEnum pop_mode ();
+         Boolean is_mode_normal ();
+
+      private:
+         ApplicationState ();
+         ApplicationState (const ApplicationState &);
+         ApplicationState &operator= (const ApplicationState &);
+
+         ApplicationStateInterface *__ptr;
+   };
+
+   //! \cond
    class ApplicationStateInterface {
 
       public:
@@ -50,75 +78,9 @@ namespace dmz {
          RuntimeContainer __context;
    };
 
-   class ApplicationState {
-
-      public:
-         ApplicationState (const PluginInfo &Info);
-         ApplicationState (RuntimeContext *context);
-         ~ApplicationState ();
-
-         String get_app_name () const;
-
-         void set_default_directory (const String &DirName);
-         String get_default_directory () const;
-
-         void set_autosave_file (const String &FileName);
-         String get_autosave_file () const;
-
-         void push_mode (const ApplicationModeEnum Mode);
-         ApplicationModeEnum get_mode () const;
-         ApplicationModeEnum pop_mode ();
-         Boolean is_mode_normal ();
-
-      private:
-         ApplicationState ();
-         ApplicationState (const ApplicationState &);
-         ApplicationState &operator= (const ApplicationState &);
-
-         ApplicationStateInterface *__ptr;
-   };
+   const char ApplicationStateInterfaceName[] = "ApplicationStateInterface";
+   //! \endcond
 };
-
-
-/*!
-
-\brief Returns interface to the dmz::ApplicationState.
-\param[in] context Pointer to runtime context.
-\return Returns a pointer to the ApplicationState. Will return NULL if a
-ApplicationState has not been created.
-
-*/
-inline dmz::ApplicationStateInterface *
-dmz::ApplicationStateInterface::get_interface (RuntimeContext *context) {
-
-   return (ApplicationStateInterface *)lookup_rtti_named_interface (
-      ApplicationStateInterfaceName,
-      context);
-}
-
-
-
-//! Constructor.
-inline
-dmz::ApplicationStateInterface::ApplicationStateInterface (RuntimeContext *context) :
-      __context (context) {
-
-   store_rtti_named_interface (
-      ApplicationStateInterfaceName,
-      __context.get_context (),
-      (void *)this);
-}
-
-
-//! Destructor.
-inline
-dmz::ApplicationStateInterface::~ApplicationStateInterface () {
-
-   remove_rtti_named_interface (
-      ApplicationStateInterfaceName,
-      __context.get_context (),
-      (void *)this);
-}
 
 
 inline
@@ -201,4 +163,35 @@ dmz::ApplicationState::is_mode_normal () {
    return __ptr ? __ptr->get_mode () == ApplicationModeNormal : True;
 }
 
+
+//! \cond
+inline dmz::ApplicationStateInterface *
+dmz::ApplicationStateInterface::get_interface (RuntimeContext *context) {
+
+   return (ApplicationStateInterface *)lookup_rtti_named_interface (
+      ApplicationStateInterfaceName,
+      context);
+}
+
+
+inline
+dmz::ApplicationStateInterface::ApplicationStateInterface (RuntimeContext *context) :
+      __context (context) {
+
+   store_rtti_named_interface (
+      ApplicationStateInterfaceName,
+      __context.get_context (),
+      (void *)this);
+}
+
+
+inline
+dmz::ApplicationStateInterface::~ApplicationStateInterface () {
+
+   remove_rtti_named_interface (
+      ApplicationStateInterfaceName,
+      __context.get_context (),
+      (void *)this);
+}
+//! \endcond
 #endif // DMZ_APPLICATION_STATE_DOT_H

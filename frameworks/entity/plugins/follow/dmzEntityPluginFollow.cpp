@@ -10,6 +10,17 @@
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::EntityPluginFollow
+\ingroup Entity
+\brief Follows the selected object.
+\details Maintains a maximum distance. Plugin does not account for terrain and is best
+suited for airborne objects.
+
+*/
+
+//! \cond
 dmz::EntityPluginFollow::EntityPluginFollow (
       const PluginInfo &Info,
       Config &local) :
@@ -158,6 +169,7 @@ dmz::EntityPluginFollow::_init (Config &local) {
 
    _range = config_to_float64 ("range.value", local, _range);
 }
+//! \endcond
 
 
 extern "C" {

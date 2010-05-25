@@ -15,7 +15,7 @@ dmz::RenderPluginPickOSG::RenderPluginPickOSG (const PluginInfo &Info, Config &l
       _log (Info),
       _core (0),
       _isectMask (0),
-      _viewerName (RenderMainPortalName) {
+      _viewName (RenderMainPortalName) {
 
    _init (local);
 }
@@ -37,12 +37,12 @@ dmz::RenderPluginPickOSG::update_plugin_state (
    }
    else if (State == PluginStateStart) {
 
-      if (!_viewer.valid () && _core) {
+      if (!_view.valid () && _core) {
 
-         _viewer = _core->lookup_viewer (_viewerName);
-         if (_viewer.valid ()) {
+         _view = _core->lookup_view (_viewName);
+         if (_view.valid ()) {
 
-            osg::Camera *camera = _viewer->getCamera ();
+            osg::Camera *camera = _view->getCamera ();
 
             if (camera) { _viewport = camera->getViewport (); }
          }
@@ -50,7 +50,7 @@ dmz::RenderPluginPickOSG::update_plugin_state (
    }
    else if (State == PluginStateStop) {
 
-      if (_viewer.valid ()) { _viewer = 0; _viewport = 0; }
+      if (_view.valid ()) { _view = 0; _viewport = 0; }
    }
    else if (State == PluginStateShutdown) {
 
@@ -120,13 +120,13 @@ dmz::RenderPluginPickOSG::source_to_world (
 
    Boolean result (False);
 
-   if (_core && _viewer.valid () && _viewport.valid ()) {
+   if (_core && _view.valid () && _viewport.valid ()) {
 
       const float Height = _viewport->height ();
 
       osgUtil::LineSegmentIntersector::Intersections isect;
 
-      if (_viewer->computeIntersections (
+      if (_view->computeIntersections (
             (float)SourcePosX,
             Height - (float)SourcePosY,
             isect,
@@ -192,7 +192,7 @@ dmz::RenderPluginPickOSG::world_to_source (
 void
 dmz::RenderPluginPickOSG::_init (Config &local) {
 
-   _viewerName = config_to_string ("portal.name", local, _viewerName);
+   _viewName = config_to_string ("portal.name", local, _viewName);
 }
 
 

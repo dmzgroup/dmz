@@ -66,7 +66,7 @@ dmz::RenderModuleCoreOSGBasic::~RenderModuleCoreOSGBasic () {
    _extensions.remove_plugins ();
    _extensions.delete_plugins ();
    _objectTable.empty ();
-   _viewerTable.empty ();
+   _viewTable.empty ();
 
    osg::DeleteHandler *dh (osg::Referenced::getDeleteHandler ());
 
@@ -89,6 +89,8 @@ dmz::RenderModuleCoreOSGBasic::update_plugin_state (
          osgUtil::Optimizer optimizer;
          optimizer.optimize(_staticObjects.get());
       }
+      
+      _extensions.init_plugins ();
    }
    else if (State == PluginStateStart) {
 
@@ -309,21 +311,21 @@ dmz::RenderModuleCoreOSGBasic::lookup_dynamic_object (const Handle ObjectHandle)
 
 
 dmz::Boolean
-dmz::RenderModuleCoreOSGBasic::add_viewer (
-      const String &ViewerName,
-      osgViewer::Viewer *viewer) {
+dmz::RenderModuleCoreOSGBasic::add_view (
+      const String &ViewName,
+      osgViewer::View *view) {
 
    Boolean result (False);
 
-   ViewerStruct *vs = new ViewerStruct (ViewerName, viewer);
+   ViewStruct *vs = new ViewStruct (ViewName, view);
 
-   if (vs && _viewerTable.store (ViewerName, vs)) {
+   if (vs && _viewTable.store (ViewName, vs)) {
 
       result = True;
 
-      if (viewer) {
+      if (view) {
 
-         osg::Camera *camera = viewer->getCamera ();
+         osg::Camera *camera = view->getCamera ();
 
          if (camera) { camera->setCullMask (_cullMask); }
       }
@@ -334,24 +336,24 @@ dmz::RenderModuleCoreOSGBasic::add_viewer (
 }
 
 
-osgViewer::Viewer *
-dmz::RenderModuleCoreOSGBasic::lookup_viewer (const String &ViewerName) {
+osgViewer::View *
+dmz::RenderModuleCoreOSGBasic::lookup_view (const String &ViewName) {
 
-   ViewerStruct *vs (_viewerTable.lookup (ViewerName));
+   ViewStruct *vs (_viewTable.lookup (ViewName));
 
-   return vs ? vs->viewer.get () : 0;
+   return vs ? vs->view.get () : 0;
 }
 
 
-osgViewer::Viewer *
-dmz::RenderModuleCoreOSGBasic::remove_viewer (const String &ViewerName) {
+osgViewer::View *
+dmz::RenderModuleCoreOSGBasic::remove_view (const String &ViewName) {
 
-   osgViewer::Viewer *result (0);
-   ViewerStruct *vs (_viewerTable.remove (ViewerName));
+   osgViewer::View *result (0);
+   ViewStruct *vs (_viewTable.remove (ViewName));
 
    if (vs) {
 
-      result = vs->viewer.get ();
+      result = vs->view.get ();
       delete vs; vs = 0;
    }
 

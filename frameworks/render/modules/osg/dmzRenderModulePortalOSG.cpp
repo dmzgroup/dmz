@@ -8,7 +8,7 @@
 #include <dmzTypesMatrix.h>
 
 #include <osg/Camera>
-#include <osgViewer/Viewer>
+#include <osgViewer/View>
 #include <osg/Depth>
 #include <iostream>
 
@@ -21,7 +21,7 @@ dmz::RenderModulePortalOSG::RenderModulePortalOSG (
       _portalName (RenderMainPortalName),
       _core (0),
       _log (Info),
-      _viewer (0),
+      _view (0),
       _camera (0),
       _nearClip (0.0),
       _farClip (0.0),
@@ -48,9 +48,9 @@ dmz::RenderModulePortalOSG::discover_plugin (
          _core = RenderModuleCoreOSG::cast (PluginPtr);
          if (_core) {
 
-            _viewer = _core->lookup_viewer (_portalName);
+            _view = _core->lookup_view (_portalName);
 
-            if (_viewer.valid ()) { _camera = _viewer->getCamera (); }
+            if (_view.valid ()) { _camera = _view->getCamera (); }
 
             if (_camera.valid ()) {
 
@@ -68,7 +68,7 @@ dmz::RenderModulePortalOSG::discover_plugin (
 
          _core = 0;
          _camera = 0;
-         _viewer = 0;
+         _view = 0;
       }
    }
 }

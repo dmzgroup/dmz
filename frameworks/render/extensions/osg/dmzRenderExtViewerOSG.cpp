@@ -108,7 +108,7 @@ dmz::RenderExtViewerOSG::discover_plugin (
 
             if (scene.valid ()) { _viewer->setSceneData (scene.get ()); }
 
-            _core->add_viewer (_viewerName, _viewer.get ());
+            _core->add_view (_viewerName, _viewer.get ());
          }
       }
 
@@ -127,7 +127,7 @@ dmz::RenderExtViewerOSG::discover_plugin (
 
       if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
 
-         _core->remove_viewer (_viewerName);
+         _core->remove_view (_viewerName);
          osg::ref_ptr<osg::Group> scene = new osg::Group;
          if (scene.valid ()) { _viewer->setSceneData (scene.get ()); }
          _core = 0;

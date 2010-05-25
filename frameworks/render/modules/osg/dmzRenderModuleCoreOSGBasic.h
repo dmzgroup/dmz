@@ -21,7 +21,7 @@
 #include <osg/MatrixTransform>
 #include <osg/Node>
 #include <osg/Transform>
-#include <osgViewer/Viewer>
+#include <osgViewer/View>
 
 
 namespace dmz {
@@ -85,21 +85,21 @@ namespace dmz {
          virtual osg::Group *create_dynamic_object (const Handle ObjectHandle);
          virtual osg::Group *lookup_dynamic_object (const Handle ObjectHandle);
 
-         virtual Boolean add_viewer (const String &ViewerName, osgViewer::Viewer *viewer);
-         virtual osgViewer::Viewer *lookup_viewer (const String &ViewerName);
-         virtual osgViewer::Viewer *remove_viewer (const String &ViewerName);
+         virtual Boolean add_view (const String &ViewName, osgViewer::View *view);
+         virtual osgViewer::View *lookup_view (const String &ViewName);
+         virtual osgViewer::View *remove_view (const String &ViewName);
 
       protected:
-         struct ViewerStruct {
+         struct ViewStruct {
 
             const String Name;
-            osg::ref_ptr<osgViewer::Viewer> viewer;
+            osg::ref_ptr<osgViewer::View> view;
 
-            ViewerStruct (const String &TheName, osgViewer::Viewer *theViewer) :
+            ViewStruct (const String &TheName, osgViewer::View *theView) :
                   Name (TheName),
-                  viewer (theViewer) {;} 
+                  view (theView) {;} 
 
-            ~ViewerStruct () { viewer = 0; }
+            ~ViewStruct () { view = 0; }
          };
 
          struct ObjectStruct {
@@ -132,7 +132,7 @@ namespace dmz {
          osg::ref_ptr<osg::Group> _isect;
          osg::ref_ptr<osg::Group> _staticObjects;
          osg::ref_ptr<osg::Group> _dynamicObjects;
-         HashTableStringTemplate<ViewerStruct> _viewerTable;
+         HashTableStringTemplate<ViewStruct> _viewTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
          ObjectStruct *_dirtyObjects;
    };

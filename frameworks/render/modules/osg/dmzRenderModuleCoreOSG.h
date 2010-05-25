@@ -6,7 +6,7 @@
 #include <dmzTypesBase.h>
 
 namespace osg { class Group; class Transform; class Camera; }
-namespace osgViewer { class Viewer; }
+namespace osgViewer { class View; }
 
 namespace dmz {
 
@@ -32,12 +32,12 @@ namespace dmz {
          virtual osg::Group *create_dynamic_object (const Handle ObjectHandle) = 0;
          virtual osg::Group *lookup_dynamic_object (const Handle ObjectHandle) = 0;
 
-         virtual Boolean add_viewer (
+         virtual Boolean add_view (
             const String &ViewerName,
-            osgViewer::Viewer *viewer) = 0;
+            osgViewer::View *view) = 0;
 
-         virtual osgViewer::Viewer *lookup_viewer (const String &ViewerName) = 0;
-         virtual osgViewer::Viewer *remove_viewer (const String &ViewerName) = 0;
+         virtual osgViewer::View *lookup_view (const String &ViewName) = 0;
+         virtual osgViewer::View *remove_view (const String &ViewName) = 0;
 
       protected:
          RenderModuleCoreOSG (const PluginInfo &Info);

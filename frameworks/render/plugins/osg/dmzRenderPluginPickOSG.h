@@ -6,7 +6,7 @@
 #include <dmzRuntimePlugin.h>
 
 #include <osg/Viewport>
-#include <osgViewer/Viewer>
+#include <osgViewer/View>
 
 namespace dmz {
 
@@ -60,9 +60,9 @@ namespace dmz {
          Log _log;
          UInt32 _isectMask;
          RenderModuleCoreOSG *_core;
-         osg::ref_ptr<osgViewer::Viewer> _viewer;
+         osg::ref_ptr<osgViewer::View> _view;
          osg::ref_ptr<osg::Viewport> _viewport;
-         String _viewerName;
+         String _viewName;
 
       private:
          RenderPluginPickOSG ();

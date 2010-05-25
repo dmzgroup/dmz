@@ -6,6 +6,7 @@
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
+#include <dmzTypesHashTableStringTemplate.h>
 
 #include <QtGui/QFrame>
 #include <QtGui/QBrush>
@@ -67,6 +68,9 @@ namespace dmz {
             const Data *InData,
             Data *outData);
 
+      protected slots:
+         void on_rateComboBox_currentIndexChanged (const QString &Text);
+
       protected:
          struct SampleStruct {
 
@@ -74,6 +78,7 @@ namespace dmz {
             Float64 outRate;
 
             SampleStruct () : inRate (0.0), outRate (0.0) {;}
+            void reset () { inRate = outRate = 0.0; }
          };
 
          void _update_graph ();
@@ -81,9 +86,13 @@ namespace dmz {
 
          Log _log;
 
+         Message _showMsg;
+
          QGraphicsScene *_scene;
          QGraphicsPathItem *_inPath;
          QGraphicsPathItem *_outPath;
+
+         HashTableStringTemplate<Float64> _rateTable;
 
          Float64 _readCount;
          Float64 _readSize;

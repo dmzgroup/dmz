@@ -1,20 +1,22 @@
-#ifndef DMZ_INPUT_PLUGIN_TERM_IO_DOT_H
-#define DMZ_INPUT_PLUGIN_TERM_IO_DOT_H
+#ifndef DMZ_PLUGIN_CONSOLE_DOT_H
+#define DMZ_PLUGIN_CONSOLE_DOT_H
 
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
+#include <dmzTypesHashTableStringTemplate.h>
 
 namespace dmz {
 
-   class PluginTermExit :
+   class PluginConsole :
          public Plugin,
          public TimeSlice {
 
       public:
          //! \cond
-         PluginTermExit (const PluginInfo &Info, Config &local);
-         ~PluginTermExit ();
+         PluginConsole (const PluginInfo &Info, Config &local);
+         ~PluginConsole ();
 
          // Plugin Interface
          virtual void update_plugin_state (
@@ -31,13 +33,15 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
+
+         HashTableStringTemplate<Message> _msgTable;
          //! \endcond
       private:
-         PluginTermExit ();
-         PluginTermExit (const PluginTermExit &);
-         PluginTermExit &operator= (const PluginTermExit &);
+         PluginConsole ();
+         PluginConsole (const PluginConsole &);
+         PluginConsole &operator= (const PluginConsole &);
 
    };
 };
 
-#endif // DMZ_INPUT_PLUGIN_TERM_IO_DOT_H
+#endif // DMZ_PLUGIN_CONSOLE_DOT_H

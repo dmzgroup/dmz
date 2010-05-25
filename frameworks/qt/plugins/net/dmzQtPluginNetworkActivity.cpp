@@ -1,12 +1,17 @@
+#include <dmzQtConfigRead.h>
+#include <dmzQtConfigWrite.h>
 #include "dmzQtPluginNetworkActivity.h"
+#include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigWrite.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzRuntimeSession.h>
 
 dmz::QtPluginNetworkActivity::QtPluginNetworkActivity (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
-      TimeSlice (Info, TimeSliceTypeSystemTime, TimeSliceModeRepeating, 2.0),
+      TimeSlice (Info, TimeSliceTypeSystemTime, TimeSliceModeRepeating, 1.0),
       NetPacketStatsObserver (Info),
       MessageObserver (Info),
       _log (Info),
@@ -27,13 +32,12 @@ dmz::QtPluginNetworkActivity::QtPluginNetworkActivity (
    _ui.setupUi (this);
 
    _init (local);
-
-   show ();
 }
 
 
 dmz::QtPluginNetworkActivity::~QtPluginNetworkActivity () {
 
+   _rateTable.empty ();
 }
 
 
@@ -54,6 +58,26 @@ dmz::QtPluginNetworkActivity::update_plugin_state (
    }
    else if (State == PluginStateShutdown) {
 
+      RuntimeContext *context (get_plugin_runtime_context ());
+
+      if (context) {
+
+         Config session (get_plugin_name ());
+
+         session.add_config (qbytearray_to_config ("geometry", saveGeometry ()));
+
+         if (isVisible ()) {
+
+            session.add_config (boolean_to_config ("window", "visible", True));
+         }
+
+
+         const int Index = _ui.rateComboBox->currentIndex ();
+
+         session.add_config (int32_to_config ("index", "value", Index));
+
+         set_session_config (context, session);
+      }
    }
 }
 
@@ -136,11 +160,11 @@ dmz::QtPluginNetworkActivity::update_time_slice (const Float64 DeltaTime) {
          _maxRate = _samples[_currentSample].outRate;
       }
 
-_log.warn << _maxRate << endl;
+      _ui.peakLabel->setText (format_size (_maxRate) + "/sec");
+
       _cWriteSize = _cWriteCount = _cReadSize = _cReadCount = 0.0;
 
-      _update_graph ();
-
+      if (isVisible ()) { _update_graph (); }
    }
 }
 
@@ -182,6 +206,23 @@ dmz::QtPluginNetworkActivity::receive_message (
       const Data *InData,
       Data *outData) {
 
+   if (Type == _showMsg) { show (); activateWindow (); }
+}
+
+
+void
+dmz::QtPluginNetworkActivity::on_rateComboBox_currentIndexChanged (const QString &Text) {
+
+   const Float64 *Sec = _rateTable.lookup (qPrintable (Text));
+
+   if (Sec) {
+
+      set_time_slice_interval (*Sec);
+
+      for (Int32 ix = 0; ix < SampleCount; ix++) { _samples[ix].reset (); }
+
+      _maxRate = 0.0;
+   }
 }
 
 
@@ -193,9 +234,11 @@ dmz::QtPluginNetworkActivity::_update_graph () {
 
    Int32 place (_currentSample);
 
+   static const int Offset (8);
+
    const QSize Size = _ui.graphView->size ();
-   const QPointF Min = _ui.graphView->mapToScene (0, 0);
-   const QPointF Max = _ui.graphView->mapToScene (Size.width (), Size.height ());
+   const QPointF Min = _ui.graphView->mapToScene (0, Offset);
+   const QPointF Max = _ui.graphView->mapToScene (Size.width (), Size.height () - Offset);
 
    const Float64 MinX = Min.x ();
    const Float64 MinY = Min.y ();
@@ -210,18 +253,25 @@ dmz::QtPluginNetworkActivity::_update_graph () {
 
    Float64 count (0.0);
 
+   Float64 newMax (0.0);
+
    while (count < SampleCount) {
+
+      const Float64 InRate (_samples[place].inRate), OutRate (_samples[place].outRate);
 
       if (!count) {
 
-         inPath.moveTo (MaxX, MaxY - (_samples[place].inRate * Unit));
-         outPath.moveTo (MaxX, MaxY - (_samples[place].outRate * Unit));
+         inPath.moveTo (MaxX, MaxY - (InRate * Unit));
+         outPath.moveTo (MaxX, MaxY - (OutRate * Unit));
       }
       else {
 
-         inPath.lineTo (MaxX - (count * Space), MaxY - (_samples[place].inRate * Unit));
-         outPath.lineTo (MaxX - (count * Space), MaxY - (_samples[place].outRate * Unit));
+         inPath.lineTo (MaxX - (count * Space), MaxY - (InRate * Unit));
+         outPath.lineTo (MaxX - (count * Space), MaxY - (OutRate * Unit));
       }
+ 
+      if (newMax < InRate) { newMax = InRate; }
+      if (newMax < OutRate) { newMax = OutRate; }
 
       count++;
       place--;
@@ -230,18 +280,81 @@ dmz::QtPluginNetworkActivity::_update_graph () {
 
    _inPath->setPath (inPath);
    _outPath->setPath (outPath);
+
+   _maxRate = newMax;
 }
 
 
 void
 dmz::QtPluginNetworkActivity::_init (Config &local) {
 
+   RuntimeContext *context (get_plugin_runtime_context ());
+
    _scene = new QGraphicsScene (this);
    _ui.graphView->setScene (_scene);
    _inPath = new QGraphicsPathItem;
    _outPath = new QGraphicsPathItem;
+   const QColor Green (0, 255, 0);
+   const QColor Red (255, 0, 0);
+   QPen inStroke (Green);
+   inStroke.setWidth (2);
+   QPen outStroke (Red);
+   outStroke.setWidth (2);
+//   inStroke = config_to_qpen ("in.stroke", local, inStroke);
+//   outStroke = config_to_qpen ("out.stroke", local, outStroke);
+   _inPath->setPen (inStroke);
+   _outPath->setPen (outStroke);
    _scene->addItem (_inPath);
    _scene->addItem (_outPath);
+
+   _ui.graphView->setRenderHint (QPainter::Antialiasing, true);
+
+   const QColor Black (0, 0, 0);
+   QBrush bg (Black);
+   _ui.graphView->setBackgroundBrush (bg);
+
+   _rateTable.store ("Realtime", new Float64 (0.0));
+   _rateTable.store ("1 sec", new Float64 (1.0));
+   _rateTable.store ("2 sec", new Float64 (2.0));
+   _rateTable.store ("3 sec", new Float64 (3.0));
+   _rateTable.store ("4 sec", new Float64 (4.0));
+   _rateTable.store ("5 sec", new Float64 (5.0));
+   _rateTable.store ("10 sec", new Float64 (10.0));
+   _rateTable.store ("30 sec", new Float64 (30.0));
+
+   HashTableStringIterator it;
+   Float64 *ptr (0);
+
+   while (_rateTable.get_next (it, ptr)) {
+
+      _ui.rateComboBox->addItem (it.get_hash_key ().get_buffer ());
+   }
+
+   if (context) {
+
+      Config session (get_session_config (get_plugin_name (), context));
+
+      Config gdata;
+
+      if (session.lookup_config ("geometry", gdata)) {
+
+         restoreGeometry (config_to_qbytearray (gdata));
+      }
+
+      if (config_to_boolean ("window.visible", session, False)) { show (); }
+
+      const int Index = config_to_int32 ("index.value", session, 2);
+
+      _ui.rateComboBox->setCurrentIndex (Index);
+   }
+
+   _showMsg = config_create_message (
+      "show.name",
+      local,
+      "DMZ_Show_Network_Activity_Console",
+      context);
+
+   subscribe_to_message (_showMsg);
 }
 
 

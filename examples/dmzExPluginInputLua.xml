@@ -3,7 +3,7 @@
 <plugin-list>
    <plugin name="dmzInputModuleBasic"/>
    <plugin name="dmzArchivePluginInput"/>
-   <plugin name="dmzPluginTermExit"/>
+   <plugin name="dmzPluginConsole"/>
    <plugin name="dmzLuaModuleBasic"/>
    <!-- <plugin name="dmzExPluginInput"/> -->
 </plugin-list>

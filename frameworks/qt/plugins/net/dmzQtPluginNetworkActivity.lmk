@@ -1,0 +1,9 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginNetworkActivity"
+lmk.set_type "plugin"
+lmk.add_files {"NetworkActivity.ui",}
+lmk.add_files ({"dmzQtPluginNetworkActivity.h",}, {src="moc"})
+lmk.add_files {"dmzQtPluginNetworkActivity.cpp",}
+lmk.add_libs {"dmzQtUtil", "dmzKernel",}
+lmk.add_preqs {"dmzQtFramework", "dmzNetFramework",}
+lmkQt.add_libs {"QtCore", "QtGui",}

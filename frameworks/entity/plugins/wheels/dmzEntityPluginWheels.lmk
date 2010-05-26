@@ -1,0 +1,8 @@
+lmk.set_name "dmzEntityPluginWheels"
+lmk.set_type "plugin"
+lmk.add_files {"dmzEntityPluginWheels.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzObjectFramework",}

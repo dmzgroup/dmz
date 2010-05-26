@@ -1,3 +1,4 @@
+#include <dmzEntityConsts.h>
 #include "dmzEntityPluginWheels.h"
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectConsts.h>
@@ -171,43 +172,56 @@ dmz::EntityPluginWheels::_create_wheels_def (const ObjectType &Type) {
 
    WheelStruct *result (0);
 
-   Config list;
+   Config wheels;
 
-   if (Type.get_config ().lookup_all_config ("wheels.attribute", list)) {
+   if (Type.get_config ().lookup_all_config_merged ("wheels", wheels)) {
 
-      ConfigIterator it;
-      Config attr;
+      const Float64 Radius = config_to_float64 ("radius", wheels, 0.25);
+      const Float64 Mod = config_to_float64 ("modifier", wheels, 1.0);
+      const String Root = config_to_string ("root", wheels, EntityWheelRootName);
+      const Int32 Pairs = config_to_int32 ("pairs", wheels, 0);
 
-      const Float64 DefaultRadius = config_to_float64 (
-         "wheels.radius",
-         Type.get_config (),
-         1.0);
+      if (Radius > 0.0) {
 
-      while (list.get_next_config (it, attr)) {
+         const Float64 InvertRadius = 1.0 / Radius;
 
-         const Handle ScalarAttr = _defs.create_named_handle (
-            config_to_string ("name", attr));
+         if (Pairs > 0) {
 
-         const Float64 Radius = config_to_float64 ("radius", attr, DefaultRadius);
-         const Float64 Mod = config_to_float64 ("modifier", attr, 1.0);
+            for (Int32 ix = 1; ix <= Pairs; ix++) {
 
-         if (Radius > 0.0) {
+               Handle attr = _defs.create_named_handle (
+                  create_wheel_attribute_name (Root, EntityWheelLeft, ix));
 
-            WheelStruct *ws = new WheelStruct (ScalarAttr, 1.0 / Radius, Mod);
+               WheelStruct *ws = new WheelStruct (attr, InvertRadius, Mod);
 
-            if (ws) {
+               if (ws) {
 
-               ws->next = result;
-               result = ws;
+                  ws->next = result;
+                  result = ws;
+               }
+
+               attr = _defs.create_named_handle (
+                  create_wheel_attribute_name (Root, EntityWheelRight, ix));
+
+               ws = new WheelStruct (attr, InvertRadius, Mod);
+
+               if (ws) {
+
+                  ws->next = result;
+                  result = ws;
+               }
             }
          }
          else {
 
-            _log.error << "Radius of wheel: "
-               << _defs.lookup_named_handle_name (ScalarAttr)
-               << " of type: " << Type.get_name ()
-               << " is less than or equal to zero: " << Radius << endl;
+            _log.error << "Must have at least one wheel pair in type: "
+               << Type.get_name () << endl;
          }
+      }
+      else {
+
+         _log.error << "Radius of wheel of type: " << Type.get_name ()
+            << " is less than or equal to zero: " << Radius << endl;
       }
    }
 

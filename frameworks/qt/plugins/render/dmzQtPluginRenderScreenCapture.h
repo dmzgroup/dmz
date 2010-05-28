@@ -38,12 +38,12 @@ namespace dmz {
          const QString _FileName;
          const QString _TmpName;
          Log &_log;
-			Ui::ScreenCapturePreview _ui;
+         Ui::ScreenCapturePreview _ui;
          QFileDialog *_qsave;
          Boolean _done;
          Boolean _watchForFile;
          QString _savedFileName;
-  };
+   };
 
    class QtPluginRenderScreenCapture :
          public Plugin,

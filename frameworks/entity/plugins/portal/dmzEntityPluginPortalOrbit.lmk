@@ -1,0 +1,10 @@
+lmk.set_name "dmzEntityPluginPortalOrbit"
+lmk.set_type "plugin"
+lmk.add_files {"dmzEntityPluginPortalOrbit.cpp",}
+lmk.add_libs {
+   "dmzInputEvents",
+   "dmzInputUtil",
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzEntityFramework", "dmzObjectFramework", "dmzInputFramework",}

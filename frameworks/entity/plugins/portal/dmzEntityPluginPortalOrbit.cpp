@@ -1,3 +1,4 @@
+#include <dmzEntityConsts.h>
 #include "dmzEntityPluginPortalOrbit.h"
 #include <dmzEntityModulePortal.h>
 #include <dmzInputEventMasks.h>
@@ -6,6 +7,7 @@
 #include <dmzObjectConsts.h>
 #include <dmzObjectModule.h>
 #include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesMatrix.h>
@@ -16,14 +18,16 @@ dmz::EntityPluginPortalOrbit::EntityPluginPortalOrbit (
       Config &local) :
       Plugin (Info),
       TimeSlice (Info),
+      MessageObserver (Info),
       InputObserverUtil (Info, local),
       ObjectObserverUtil (Info, local),
       _log (Info),
+      _convert (Info),
       _portal (0),
       _active (0),
       _hil (0),
       _defaultAttrHandle (0),
-      _bvRadiusAttrHandle (0),
+      _bvrAttrHandle (0),
       _heading (0.0),
       _pitch (0.0),
       _radius (20.0) {
@@ -103,6 +107,21 @@ dmz::EntityPluginPortalOrbit::update_time_slice (const Float64 TimeDelta) {
 }
 
 
+// Message Observer Interface
+void
+dmz::EntityPluginPortalOrbit::receive_message (
+      const Message &Type,
+      const Handle MessageSendHandle,
+      const Handle TargetObserverHandle,
+      const Data *InData,
+      Data *outData) {
+
+   _target = _convert.to_handle (InData);
+
+   _update_radius ();
+}
+
+
 // Input Observer Interface
 void
 dmz::EntityPluginPortalOrbit::update_channel_state (
@@ -111,7 +130,11 @@ dmz::EntityPluginPortalOrbit::update_channel_state (
 
    _active += State ? 1 : -1;
 
-   if (_active == 1) { start_time_slice (); }
+   if (_active == 1) {
+
+      start_time_slice ();
+      _update_radius ();
+   }
    else if (_active == 0) { stop_time_slice (); }
 }
 
@@ -177,11 +200,44 @@ dmz::EntityPluginPortalOrbit::update_object_flag (
 
 
 void
+dmz::EntityPluginPortalOrbit::_update_radius () {
+
+   if (_target) {
+
+      ObjectModule *module (get_object_module ());
+
+      if (module) {
+
+         Float64 radius (0.0);
+
+         if (module->lookup_scalar (_target, _bvrAttrHandle, radius)) {
+
+            _radius = radius * 2.0;
+         }
+      }
+   }
+}
+
+
+void
 dmz::EntityPluginPortalOrbit::_init (Config &local) {
 
    Definitions defs (get_plugin_runtime_context ());
 
    _defaultAttrHandle = defs.create_named_handle (ObjectAttributeDefaultName);
+
+   _bvrAttrHandle = defs.create_named_handle (ObjectAttributeBoundingVolumeRaidusName);
+
+   if (config_to_boolean ("update-radius-on-attach.value", local, True)) {
+
+      Message msg = config_create_message (
+         "attach-message.name",
+         local,
+         EntityMessageAttachName,
+         get_plugin_runtime_context ());
+
+      subscribe_to_message (msg);
+   }
 
    init_input_channels (
       local,

@@ -3,7 +3,9 @@
 
 #include <dmzInputObserverUtil.h>
 #include <dmzObjectObserverUtil.h>
+#include <dmzRuntimeDataConverterTypesBase.h>
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesVector.h>
@@ -15,6 +17,7 @@ namespace dmz {
    class EntityPluginPortalOrbit :
          public Plugin,
          public TimeSlice,
+         public MessageObserver,
          public InputObserverUtil,
          public ObjectObserverUtil {
 
@@ -33,6 +36,14 @@ namespace dmz {
 
          // TimeSlice Interface
          virtual void update_time_slice (const Float64 TimeDelta);
+
+         // Message Observer Interface
+         virtual void receive_message (
+            const Message &Type,
+            const Handle MessageSendHandle,
+            const Handle TargetObserverHandle,
+            const Data *InData,
+            Data *outData);
 
          // Input Observer Interface
          virtual void update_channel_state (const Handle Channel, const Boolean State);
@@ -54,14 +65,17 @@ namespace dmz {
             const Boolean *PreviousValue);
 
       protected:
+         void _update_radius ();
          void _init (Config &local);
 
          Log _log;
+         DataConverterHandle _convert;
 
          Int32 _active;
          Handle _hil;
+         Handle _target;
          Handle _defaultAttrHandle;
-         Handle _bvRadiusAttrHandle;
+         Handle _bvrAttrHandle;
 
          Float64 _heading;
          Float64 _pitch;

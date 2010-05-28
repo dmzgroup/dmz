@@ -11,8 +11,7 @@
 
 namespace dmz {
 
-   class AudioModulePortal;
-   class RenderModulePortal;
+   class EntityModulePortal;
 
    class EntityPluginPortalWatch :
          public Plugin,
@@ -65,8 +64,7 @@ namespace dmz {
 
          Message _targetMessage;
 
-         RenderModulePortal *_render;
-         AudioModulePortal *_audio;
+         EntityModulePortal *_portal;
          Handle _hil;
          Handle _target;
          Handle _defaultAttrHandle;

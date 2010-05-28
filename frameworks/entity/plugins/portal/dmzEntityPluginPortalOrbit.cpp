@@ -26,12 +26,11 @@ dmz::EntityPluginPortalOrbit::EntityPluginPortalOrbit (
       _bvRadiusAttrHandle (0),
       _heading (0.0),
       _pitch (0.0),
-      _dir (0.0, 0.0, -1.0),
       _radius (20.0) {
 
-   _init (local);
-
    stop_time_slice ();
+
+   _init (local);
 }
 
 
@@ -91,29 +90,16 @@ dmz::EntityPluginPortalOrbit::update_time_slice (const Float64 TimeDelta) {
 
       module->lookup_velocity (_hil, _defaultAttrHandle, vel);
 
-      Matrix ori (_dir);
+      Matrix ori (_heading, _pitch, 0.0);
 
-      Float64 hy (0.0), px (0.0), rz (0.0);
+      Vector dir (0.0, 0.0, -1.0);
 
-      ori.to_euler_angles (hy, px, rz);
+      ori.transform_vector (dir);
 
-      hy = normalize_angle (hy + _heading);
-      px = normalize_angle (px + _pitch);
+      Vector pos (hilPos + (dir * -_radius));
 
-      ori.from_euler_angles (hy, px, 0.0);
-
-      _dir.set_xyz (0.0, 0.0, -1.0);
-
-      ori.transform_vector (_dir);
-
-      Vector portalPos (hilPos + (_dir * -_radius));
-
-      Matrix portalOri (_dir);
-
-      _portal->set_view (portalPos, portalOri, vel);
+      _portal->set_view (pos, ori, vel);
    }
-
-   _heading = _pitch = 0.0f;
 }
 
 
@@ -155,8 +141,8 @@ dmz::EntityPluginPortalOrbit::receive_mouse_event (
       const Float64 PercentY =
          Float64 (Value.get_mouse_delta_y ()) / (SizeY > 0.0 ? SizeY : 0.0);
 
-      _heading -= PercentX * Pi64;
-      _pitch -= PercentY * Pi64;
+      _heading = normalize_angle (_heading - (PercentX * Pi64));
+      _pitch = normalize_angle (_pitch - (PercentY * Pi64));
    }
 
    if (Value.is_button_pressed (3)) {
@@ -164,7 +150,7 @@ dmz::EntityPluginPortalOrbit::receive_mouse_event (
       const Float64 PercentY =
          Float64 (Value.get_mouse_delta_y ()) / (SizeY > 0.0 ? SizeY : 0.0);
 
-      _radius += PercentY * 5.0;
+      _radius += PercentY * _radius * 2.0;
    }
 
    const Int32 ZoomInt = Value.get_scroll_delta_y ();

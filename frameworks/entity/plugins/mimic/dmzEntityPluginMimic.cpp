@@ -23,9 +23,9 @@ dmz::EntityPluginMimic::EntityPluginMimic (const PluginInfo &Info, Config &local
       _defaultAttrHandle (0),
       _active (0) {
 
-   _init (local);
-
    stop_time_slice ();
+
+   _init (local);
 }
 
 

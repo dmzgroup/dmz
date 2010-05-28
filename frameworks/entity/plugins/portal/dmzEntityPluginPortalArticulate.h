@@ -13,8 +13,7 @@
 
 namespace dmz {
 
-   class AudioModulePortal;
-   class RenderModulePortal;
+   class EntityModulePortal;
 
    class EntityPluginPortalArticulate :
          public Plugin,
@@ -83,8 +82,7 @@ namespace dmz {
 
          Log _log;
 
-         AudioModulePortal *_audioPortal;
-         RenderModulePortal *_renderPortal;
+         EntityModulePortal *_portal;
 
          HashTableHandleTemplate<ComponentStruct> _componentTable;
          ComponentStruct *_transform;

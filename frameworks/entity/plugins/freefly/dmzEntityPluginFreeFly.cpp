@@ -38,6 +38,8 @@ dmz::EntityPluginFreeFly::EntityPluginFreeFly (
       _active (0),
       _log (Info.get_name (), Info.get_context ()) {
 
+   stop_time_slice ();
+
    _init (local);
 }
 
@@ -70,7 +72,7 @@ dmz::EntityPluginFreeFly::update_time_slice (const Float64 TimeDelta) {
 
    ObjectModule *objMod (get_object_module ());
 
-   if ((_active > 0) && objMod && _handle && _defaultHandle) {
+   if (objMod && _handle && _defaultHandle) {
 
       Vector pos, vel;
       Matrix ori;
@@ -178,8 +180,10 @@ dmz::EntityPluginFreeFly::update_channel_state (
       const Handle Channel,
       const Boolean State) {
 
-   if (State) { _active++; }
-   else { _active--; }
+   _active += State ? 1 : - 1;
+
+   if (_active == 1) { start_time_slice (); }
+   else if (_active == 0) { stop_time_slice (); }
 }
 
 

@@ -1,4 +1,4 @@
-#include <dmzAudioModulePortal.h>
+#include <dmzEntityModulePortal.h>
 #include "dmzEntityPluginPortalArticulate.h"
 #include <dmzEventConsts.h>
 #include <dmzInputEventMasks.h>
@@ -6,7 +6,6 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectConsts.h>
 #include <dmzObjectModule.h>
-#include <dmzRenderModulePortal.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimeDefinitions.h>
@@ -40,13 +39,14 @@ dmz::EntityPluginPortalArticulate::EntityPluginPortalArticulate (
       InputObserverUtil (Info, local),
       ObjectObserverUtil (Info, local),
       _log (Info),
-      _audioPortal (0),
-      _renderPortal (0),
+      _portal (0),
       _transform (0),
       _active (0),
       _defaultAttrHandle (0),
       _hilAttrHandle (0),
       _hil (0) {
+
+   stop_time_slice ();
 
    _init (local);
 }
@@ -88,20 +88,11 @@ dmz::EntityPluginPortalArticulate::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_audioPortal) { _audioPortal = AudioModulePortal::cast (PluginPtr); }
-      if (!_renderPortal) { _renderPortal = RenderModulePortal::cast (PluginPtr); }
+      if (!_portal) { _portal = EntityModulePortal::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_audioPortal && (_audioPortal == AudioModulePortal::cast (PluginPtr))) {
-
-         _audioPortal = 0;
-      }
-
-      if (_renderPortal && (_renderPortal == RenderModulePortal::cast (PluginPtr))) {
-
-         _renderPortal = 0;
-      }
+      if (_portal && (_portal == EntityModulePortal::cast (PluginPtr))) { _portal = 0; }
    }
 }
 
@@ -112,7 +103,7 @@ dmz::EntityPluginPortalArticulate::update_time_slice (const Float64 TimeDelta) {
 
    ObjectModule *objMod (get_object_module ());
 
-   if (_active && _hil && objMod) {
+   if (_hil && objMod) {
 
       Vector pos, vel;
       Matrix ori;
@@ -143,8 +134,7 @@ dmz::EntityPluginPortalArticulate::update_time_slice (const Float64 TimeDelta) {
       pos += offset;
       ori = ori * rot;
 
-      if (_renderPortal) { _renderPortal->set_view (pos, ori); }
-      if (_audioPortal) { _audioPortal->set_view (pos, ori, vel); }
+      if (_portal) { _portal->set_view (pos, ori, vel); }
    }
 }
 
@@ -156,6 +146,9 @@ dmz::EntityPluginPortalArticulate::update_channel_state (
       const Boolean State) {
 
    _active += (State ? 1 : -1);
+
+   if (_active == 1) { start_time_slice (); }
+   else if (_active == 0) { stop_time_slice (); }
 }
 
 

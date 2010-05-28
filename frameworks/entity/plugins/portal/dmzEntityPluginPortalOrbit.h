@@ -65,7 +65,6 @@ namespace dmz {
 
          Float64 _heading;
          Float64 _pitch;
-         Vector _dir;
          Float64 _radius;
 
          EntityModulePortal *_portal;

@@ -121,13 +121,9 @@ dmz::EntityPluginAutoAttach::update_channel_state (
       const Handle Channel,
       const Boolean State) {
 
-   if (State) {
+   _active += State ? 1 : -1;
 
-      _active++;
-
-     if (_active == 1) { _find_object (); }
-   }
-   else { _active--; }
+  if (_active == 1) { _find_object (); }
 }
 
 

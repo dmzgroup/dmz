@@ -28,6 +28,7 @@ dmz::EntityPluginPortalOrbit::EntityPluginPortalOrbit (
       _hil (0),
       _defaultAttrHandle (0),
       _bvrAttrHandle (0),
+      _updateRadius (False),
       _heading (0.0),
       _pitch (0.0),
       _radius (20.0) {
@@ -88,6 +89,8 @@ dmz::EntityPluginPortalOrbit::update_time_slice (const Float64 TimeDelta) {
 
    if (_portal && module && _hil) {
 
+      if (_updateRadius) { _update_radius (); }
+
       Vector hilPos;
       module->lookup_position (_hil, _defaultAttrHandle, hilPos);
       Vector vel;
@@ -118,7 +121,7 @@ dmz::EntityPluginPortalOrbit::receive_message (
 
    _target = _convert.to_handle (InData);
 
-   _update_radius ();
+   _updateRadius = True;
 }
 
 
@@ -133,7 +136,7 @@ dmz::EntityPluginPortalOrbit::update_channel_state (
    if (_active == 1) {
 
       start_time_slice ();
-      _update_radius ();
+      _updateRadius = True;
    }
    else if (_active == 0) { stop_time_slice (); }
 }
@@ -213,7 +216,9 @@ dmz::EntityPluginPortalOrbit::_update_radius () {
          if (module->lookup_scalar (_target, _bvrAttrHandle, radius)) {
 
             _radius = radius * 2.0;
+            _updateRadius = False;
          }
+         else { _updateRadius = True; }
       }
    }
 }

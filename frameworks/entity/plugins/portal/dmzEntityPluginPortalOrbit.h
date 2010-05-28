@@ -76,6 +76,7 @@ namespace dmz {
          Handle _target;
          Handle _defaultAttrHandle;
          Handle _bvrAttrHandle;
+         Handle _updateRadius;
 
          Float64 _heading;
          Float64 _pitch;

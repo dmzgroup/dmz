@@ -104,8 +104,8 @@ dmz::EntityPluginWheels::update_time_slice (const Float64 DeltaTime) {
                module->lookup_scalar (os->Object, wheel->Attr, value);
 
                value -= (Distance * wheel->InvertRadius * wheel->Mod);
-               if (value > Pi64) { value -= TwoPi64; }
-               else if (value < -Pi64) { value += TwoPi64; }
+
+               value = normalize_angle (value);
 
                module->store_scalar (os->Object, wheel->Attr, value);
 

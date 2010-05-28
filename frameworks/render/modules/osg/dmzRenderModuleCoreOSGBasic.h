@@ -104,6 +104,7 @@ namespace dmz {
 
          struct ObjectStruct {
 
+            const Handle Object;
             ObjectStruct *next;
             osg::ref_ptr<osg::MatrixTransform> transform;
             Matrix ori;
@@ -111,7 +112,11 @@ namespace dmz {
             Boolean dirty;
             Boolean destroyed;
 
-            ObjectStruct () : next (0), dirty (False), destroyed (False) {
+            ObjectStruct (const Handle TheObject) :
+                  Object (TheObject),
+                  next (0),
+                  dirty (False),
+                  destroyed (False) {
 
                transform =  new osg::MatrixTransform;
             }
@@ -127,6 +132,7 @@ namespace dmz {
          UInt32 _isectMask;
          UInt32 _overlayMask;
          Handle _defaultHandle;
+         Handle _bvrHandle;
          osg::ref_ptr<osg::Group> _scene;
          osg::ref_ptr<osg::Group> _overlay;
          osg::ref_ptr<osg::Group> _isect;

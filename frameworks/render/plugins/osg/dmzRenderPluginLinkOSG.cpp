@@ -3,11 +3,18 @@
 #include <dmzRenderConfigToOSG.h>
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginLinkOSG.h"
+#include <dmzRenderUtilOSG.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzTypesMatrix.h>
+
+#include <osg/CullFace>
+#include <osg/Geode>
+#include <osg/Geometry>
+#include <osg/Material>
 
 dmz::RenderPluginLinkOSG::RenderPluginLinkOSG (const PluginInfo &Info, Config &local) :
       Plugin (Info),
@@ -58,7 +65,23 @@ dmz::RenderPluginLinkOSG::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_render) { _render = RenderModuleCoreOSG::cast (PluginPtr); }
+      if (!_render) {
+
+         _render = RenderModuleCoreOSG::cast (PluginPtr);
+
+         if (_render) {
+
+            HashTableHandleIterator it;
+            LinkDefStruct *def (0);
+
+            while (_defTable.get_next (it, def)) { _create_geometry (*def); }
+
+            it.reset ();
+            LinkStruct *link (0);
+
+            while (_linkTable.get_next (it, link)) { _create_link (*link); }
+         }
+      }
    }
    else if (Mode == PluginDiscoverRemove) {
 
@@ -141,6 +164,13 @@ dmz::RenderPluginLinkOSG::unlink_objects (
 
    if (ls) {
 
+      if (ls->root.valid () && _render) {
+
+         osg::ref_ptr<osg::Group> scene = _render->get_dynamic_objects ();
+
+         if (scene.valid ()) { scene->removeChild (ls->root.get ()); }
+      }
+
       delete ls; ls = 0;
    }
 }
@@ -197,6 +227,14 @@ dmz::RenderPluginLinkOSG::update_object_position (
    if (os) {
 
       os->pos = Value;
+
+      HashTableHandleIterator it;
+      LinkStruct *link (0);
+
+      while (os->superTable.get_next (it, link)) { _update_link (*link); }
+      it.reset ();
+      link = 0;
+      while (os->subTable.get_next (it, link)) { _update_link (*link); }
    }
 }
 
@@ -254,8 +292,90 @@ dmz::RenderPluginLinkOSG::_create_link (LinkStruct &ls) {
 
    if (_render) {
 
-      osg::ref_ptr<osg::Group> root = _render->get_dynamic_objects ();
+      ls.root = new osg::MatrixTransform;
+
+      ls.root->addChild (ls.Def.model.get ());
+
+      osg::ref_ptr<osg::Group> scene = _render->get_dynamic_objects ();
+
+      if (scene.valid ()) { scene->addChild (ls.root.get ()); }
+
+      _update_link (ls);
    }
+}
+
+
+void
+dmz::RenderPluginLinkOSG::_update_link (LinkStruct &ls) {
+
+   if (ls.root.valid ()) {
+
+      Vector dir = ls.super.pos - ls.sub.pos;
+      const Vector Scale (1.0, 1.0, dir.magnitude ());
+      dir.normalize_in_place ();
+      Matrix rot (dir);
+
+      ls.root->setMatrix (to_osg_matrix (rot, ls.sub.pos, Scale));
+   }
+}
+
+
+void
+dmz::RenderPluginLinkOSG::_create_geometry (LinkDefStruct &def) {
+
+   def.model = new osg::Geode ();
+
+   osg::Geometry* geom = new osg::Geometry;
+
+   osg::Vec4Array* colors = new osg::Vec4Array;
+   colors->push_back (def.Color);
+   geom->setColorArray (colors);
+   geom->setColorBinding (osg::Geometry::BIND_OVERALL);
+
+   osg::StateSet *stateset = geom->getOrCreateStateSet ();
+
+   stateset->setAttributeAndModes (new osg::CullFace (osg::CullFace::BACK));
+
+#if 0
+   osg::ref_ptr<osg::Material> material = new osg::Material;
+   material->setEmission (osg::Material::FRONT_AND_BACK, def.Color);
+   stateset->setAttributeAndModes (material.get (), osg::StateAttribute::ON);
+#endif
+
+   osg::Vec3Array *vertices = new osg::Vec3Array;
+   osg::Vec3Array* normals = new osg::Vec3Array;
+
+   const Vector Offset (0.0, 0.0, -1.0);
+   const Vector Forward (0.0, 0.0, -1.0);
+
+   Float64 Angle = TwoPi64 / (Float64 (def.Sides));
+
+   int count (0);
+
+   for (Int32 ix = 0; ix <= def.Sides; ix++) {
+
+      Matrix xform;
+      Vector vec (0.0, 1.0, 0.0);
+
+      if ((ix > 0) && (ix < def.Sides)) {
+
+         Matrix xform (Forward, Angle * (Float64)ix);
+         xform.transform_vector (vec);
+      }
+
+      Vector radius (vec * def.Radius);
+
+      vertices->push_back (to_osg_vector (radius + Offset)); count++;
+      vertices->push_back (to_osg_vector (radius)); count++;
+      normals->push_back (to_osg_vector (vec));
+      normals->push_back (to_osg_vector (vec));
+   }
+
+   geom->setNormalArray (normals);
+   geom->setNormalBinding (osg::Geometry::BIND_PER_VERTEX);
+   geom->addPrimitiveSet (new osg::DrawArrays (GL_TRIANGLE_STRIP, 0, count));
+   geom->setVertexArray (vertices);
+   def.model->addDrawable (geom);
 }
 
 
@@ -282,9 +402,11 @@ dmz::RenderPluginLinkOSG::_init (Config &local) {
             link,
             osg::Vec4 (1.0, 1.0, 1.0, 1.0));
 
-         const Float64 Radius = config_to_float64 ("radius", link, 0.1);
+         const Float64 Radius = config_to_float64 ("radius", link, 0.15);
 
-         LinkDefStruct *lds = new LinkDefStruct (Attr, Color, Radius);
+         const Int32 Sides = config_to_int32 ("sides", link, 4);
+
+         LinkDefStruct *lds = new LinkDefStruct (Attr, Color, Radius, Sides);
 
          if (lds && _defTable.store (Attr, lds)) {
 

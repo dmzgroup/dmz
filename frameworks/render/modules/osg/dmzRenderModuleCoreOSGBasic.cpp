@@ -11,6 +11,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeLoadPlugins.h>
+#include <dmzTypesUUID.h>
 #include <dmzSystem.h>
 #include <dmzSystemFile.h>
 #include <osg/DeleteHandler>
@@ -130,6 +131,8 @@ dmz::RenderModuleCoreOSGBasic::discover_plugin (
 void
 dmz::RenderModuleCoreOSGBasic::update_time_slice (const Float64 DeltaTime) {
 
+   static const Vector Scale (1.0, 1.0, 1.0);
+
    ObjectModule *objMod (get_object_module ());
 
    while (_dirtyObjects) {
@@ -137,7 +140,7 @@ dmz::RenderModuleCoreOSGBasic::update_time_slice (const Float64 DeltaTime) {
       ObjectStruct *os (_dirtyObjects);
       _dirtyObjects = os->next;
 
-      os->transform->setMatrix (to_osg_matrix (os->ori, os->pos));
+      os->transform->setMatrix (to_osg_matrix (os->ori, os->pos, Scale));
 
       if (objMod) {
 
@@ -266,6 +269,8 @@ dmz::RenderModuleCoreOSGBasic::get_dynamic_objects () { return _dynamicObjects.g
 osg::Group *
 dmz::RenderModuleCoreOSGBasic::create_dynamic_object (const Handle ObjectHandle) {
 
+   static const Vector Scale (1.0, 1.0, 1.0);
+
    osg::Group *result (0);
 
    ObjectStruct *os (_objectTable.lookup (ObjectHandle));
@@ -287,7 +292,7 @@ dmz::RenderModuleCoreOSGBasic::create_dynamic_object (const Handle ObjectHandle)
 
             objMod->lookup_position (ObjectHandle, _defaultHandle, os->pos);
             objMod->lookup_orientation (ObjectHandle, _defaultHandle, os->ori);
-            os->transform->setMatrix (to_osg_matrix (os->ori, os->pos));
+            os->transform->setMatrix (to_osg_matrix (os->ori, os->pos, Scale));
          }
          else {
 
@@ -306,6 +311,14 @@ dmz::RenderModuleCoreOSGBasic::create_dynamic_object (const Handle ObjectHandle)
    if (os) { result = os->transform.get (); }
 
    return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleCoreOSGBasic::destroy_dynamic_object (const Handle ObjectHandle) {
+
+   static const UUID Empty;
+   destroy_object (Empty, ObjectHandle);
 }
 
 

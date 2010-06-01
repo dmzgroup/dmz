@@ -9,6 +9,8 @@
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesVector.h>
 
+#include <osg/MatrixTransform>
+#include <osg/Geode>
 #include <osg/Group>
 #include <osg/Node>
 #include <osg/Vec4>
@@ -119,14 +121,18 @@ namespace dmz {
             const Handle AttrHandle;
             const osg::Vec4 Color;
             const Float64 Radius;
+            const Int32 Sides;
+            osg::ref_ptr<osg::Geode> model;
 
             LinkDefStruct (
                   const Handle TheAttrHandle,
                   const osg::Vec4 &TheColor,
-                  const Float64 TheRadius) :
+                  const Float64 TheRadius,
+                  const Int32 TheSides) :
                   AttrHandle (TheAttrHandle),
                   Color (TheColor),
-                  Radius (TheRadius) {;}
+                  Radius (TheRadius),
+                  Sides (TheSides >= 3 ? TheSides : 3) {;}
          };
 
          struct ObjectStruct;
@@ -137,7 +143,7 @@ namespace dmz {
             const LinkDefStruct &Def;
             ObjectStruct &super;
             ObjectStruct &sub;
-            osg::ref_ptr<osg::Node> root;
+            osg::ref_ptr<osg::MatrixTransform> root;
 
             LinkStruct (
                   const Handle TheLink,
@@ -172,6 +178,8 @@ namespace dmz {
 
          ObjectStruct *_lookup_object (const Handle Object);
          void _create_link (LinkStruct &ls);
+         void _update_link (LinkStruct &ls);
+         void _create_geometry (LinkDefStruct &def);
          void _init (Config &local);
 
          Log _log;

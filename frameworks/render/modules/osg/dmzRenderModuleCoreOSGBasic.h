@@ -84,6 +84,7 @@ namespace dmz {
 
          virtual osg::Group *create_dynamic_object (const Handle ObjectHandle);
          virtual osg::Group *lookup_dynamic_object (const Handle ObjectHandle);
+         virtual Boolean destroy_dynamic_object (const Handle ObjectHandle);
 
          virtual Boolean add_view (const String &ViewName, osgViewer::View *view);
          virtual osgViewer::View *lookup_view (const String &ViewName);

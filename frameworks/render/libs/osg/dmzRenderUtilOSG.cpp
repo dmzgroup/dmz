@@ -36,9 +36,9 @@ to_osg_matrix_y_up (const Matrix &Source, const Vector &Trans, const Vector &Sca
    Source.to_array (data);
 
    osg::Matrixd result (
-      data[0] * ScaleX, data[3] * ScaleY, data[6] * ScaleZ, 0.0,
-      data[1] * ScaleX, data[4] * ScaleY, data[7] * ScaleZ, 0.0,
-      data[2] * ScaleX, data[5] * ScaleY, data[8] * ScaleZ, 0.0,
+      data[0] * ScaleX, data[3] * ScaleX, data[6] * ScaleX, 0.0,
+      data[1] * ScaleY, data[4] * ScaleY, data[7] * ScaleY, 0.0,
+      data[2] * ScaleZ, data[5] * ScaleZ, data[8] * ScaleZ, 0.0,
       Trans.get_x (),   Trans.get_y (),   Trans.get_z (),   1.0);
 
    return result;

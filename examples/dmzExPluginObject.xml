@@ -5,7 +5,7 @@
    <plugin name="dmzArchivePluginAutoLoad"/>
    <plugin name="dmzArchivePluginObject"/>
    <plugin name="dmzObjectModuleBasic"/>
-   <plugin name="dmzPluginTermExit"/>
+   <plugin name="dmzPluginConsole"/>
    <plugin name="dmzExPluginObject"/>
 </plugin-list>
 <runtime>

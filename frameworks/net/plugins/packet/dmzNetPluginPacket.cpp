@@ -36,6 +36,8 @@ dmz::NetPluginPacket::NetPluginPacket (
       _drMod (0),
       _codecMod (0),
       _ioMod (0),
+      _ioModHandle (0),
+      _statsList (0),
       _outData (Endian),
       _inData (Endian) {
 
@@ -63,9 +65,9 @@ dmz::NetPluginPacket::update_plugin_state (
 
       HashTableHandleIterator it;
 
-      ObjStruct *ptr (_preRegObjTable.get_first (it));
+      ObjStruct *ptr (0);
 
-      while (ptr) {
+      while (_preRegObjTable.get_next (it, ptr)) {
 
          _outData.reset ();
 
@@ -74,6 +76,7 @@ dmz::NetPluginPacket::update_plugin_state (
             if (_objTable.store (ptr->ObjectHandle, ptr)) {
 
                _ioMod->write_packet (_outData.get_length (), _outData.get_buffer ());
+               if (_statsList) { _add_write_stat (ptr->ObjectHandle); }
             }
             else {
 
@@ -82,8 +85,6 @@ dmz::NetPluginPacket::update_plugin_state (
                delete ptr; ptr = 0;
             }
          }
-
-         ptr = _preRegObjTable.get_next (it);
       }
 
       _preRegObjTable.clear ();
@@ -91,15 +92,11 @@ dmz::NetPluginPacket::update_plugin_state (
    else if (State == PluginStateShutdown) {
 
       // Sends deactivation packet for all object that haven't been destroyed yet.
-      HashTableHandleIterator it;
       UUID empty;
-      ObjStruct *ptr (_objTable.get_first (it));
+      HashTableHandleIterator it;
+      ObjStruct *ptr (0);
 
-      while (ptr) {
-
-         destroy_object (empty, ptr->ObjectHandle);
-         ptr = _objTable.get_next (it);
-      }
+      while (_objTable.get_next (it, ptr)) { destroy_object (empty, ptr->ObjectHandle); }
    }
 }
 
@@ -136,7 +133,20 @@ dmz::NetPluginPacket::discover_plugin (
 
          _ioMod = NetModulePacketIO::cast (PluginPtr);
 
-         if (_ioMod) { _ioMod->register_packet_observer (*this); }
+         if (_ioMod) {
+
+            _ioMod->register_packet_observer (*this);
+            _ioModHandle = PluginPtr->get_plugin_handle ();
+         }
+      }
+
+      NetPacketStatsObserver *obs = NetPacketStatsObserver::cast (PluginPtr);
+
+      if (obs) {
+
+         StatsStruct *ss = new StatsStruct (*obs);
+
+         if (ss) { ss->next = _statsList; _statsList = ss; }
       }
    }
    else if (Mode == PluginDiscoverRemove) {
@@ -146,14 +156,11 @@ dmz::NetPluginPacket::discover_plugin (
       if (_codecMod && (_codecMod == NetModulePacketCodec::cast (PluginPtr))) {
 
          HashTableHandleIterator it;
+         ObjStruct *os (0);
 
-         ObjStruct *os (_objTable.get_first (it));
-
-         while (os) {
+         while (_objTable.get_next (it, os)) {
 
             if (!_preRegObjTable.store (os->ObjectHandle, os)) { delete os; os = 0; }
-
-            os = _objTable.get_next (it);
          }
 
          _objTable.clear ();
@@ -176,6 +183,26 @@ dmz::NetPluginPacket::discover_plugin (
 
          _ioMod->release_packet_observer (*this);
          _ioMod = 0;
+         _ioModHandle = 0;
+      }
+
+      NetPacketStatsObserver *obs = NetPacketStatsObserver::cast (PluginPtr);
+
+      if (obs) {
+
+         StatsStruct *prev (0);
+         StatsStruct *current = _statsList;
+
+         while (current) {
+
+            if (&(current->obs) == obs) {
+
+               if (prev) { prev->next = current->next; }
+               else { _statsList = current->next; }
+               delete current; current = 0;
+            }
+            else { prev = current; current = current->next; }
+         }
       }
    }
 }
@@ -189,9 +216,9 @@ dmz::NetPluginPacket::update_time_slice (const Float64 TimeDelta) {
 
       HashTableHandleIterator it;
 
-      ObjStruct *os (_objTable.get_first (it));
+      ObjStruct *os (0);
 
-      while (os) {
+      while (_objTable.get_next (it, os)) {
 
          _outData.reset ();
 
@@ -200,9 +227,8 @@ dmz::NetPluginPacket::update_time_slice (const Float64 TimeDelta) {
          if (update && _codecMod->encode_object (os->ObjectHandle, _outData)) {
 
             _ioMod->write_packet (_outData.get_length (), _outData.get_buffer ());
+            if (_statsList) { _add_write_stat (os->ObjectHandle); }
          }
-
-         os = _objTable.get_next (it);
       }
    }
 }
@@ -217,6 +243,7 @@ dmz::NetPluginPacket::read_packet (const Int32 Size, char *buffer) {
       _inData.set_buffer (Size, buffer);
       Boolean isLoopback (False);
       _codecMod->decode (_inData, isLoopback);
+      if (_statsList && !isLoopback) { _add_read_stat (); }
    }
 }
 
@@ -237,6 +264,7 @@ dmz::NetPluginPacket::close_event (
          if (_codecMod->encode_event (Type, EventHandle, _outData)) {
 
             _ioMod->write_packet (_outData.get_length (), _outData.get_buffer ());
+            if (_statsList) { _add_write_stat (EventHandle); }
          }
       }
    }
@@ -265,6 +293,7 @@ dmz::NetPluginPacket::create_object (
             else if (ptr) {
 
                _ioMod->write_packet (_outData.get_length (), _outData.get_buffer ());
+               if (_statsList) { _add_write_stat (ObjectHandle); }
             }
          }
       }
@@ -292,6 +321,7 @@ dmz::NetPluginPacket::destroy_object (
       if (_codecMod && _ioMod && _codecMod->release_object (ObjectHandle, _outData)) {
 
          _ioMod->write_packet (_outData.get_length (), _outData.get_buffer ());
+         if (_statsList) { _add_write_stat (ObjectHandle); }
       }
 
       delete ptr; ptr = 0;
@@ -316,6 +346,36 @@ dmz::NetPluginPacket::update_object_locality (
 
 
 // Internal Interface
+void
+dmz::NetPluginPacket::_add_write_stat (const Handle Source) {
+
+   StatsStruct *current (_statsList);
+   const Int32 Size = _outData.get_length ();
+   const char *Buffer = _outData.get_buffer ();
+
+   while (current) {
+
+      current->obs.add_write_packet_stat (Source, _ioModHandle, Size, Buffer);
+      current = current->next;
+   }
+}
+
+
+void
+dmz::NetPluginPacket::_add_read_stat () {
+
+   StatsStruct *current (_statsList);
+   const Int32 Size = _inData.get_length ();
+   const char *Buffer = _inData.get_buffer ();
+
+   while (current) {
+
+      current->obs.add_read_packet_stat (_ioModHandle, Size, Buffer);
+      current = current->next;
+   }
+}
+
+
 void
 dmz::NetPluginPacket::_init (Config &local) {
 

@@ -1,0 +1,4 @@
+lmk.set_name ("dmzPluginConsole")
+lmk.set_type "plugin"
+lmk.add_files {"dmzPluginConsole.cpp",}
+lmk.add_libs {"dmzKernel",}

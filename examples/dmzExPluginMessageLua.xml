@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dmz>
 <plugin-list>
-   <plugin name="dmzPluginTermExit"/>
+   <plugin name="dmzPluginConsole"/>
    <plugin name="dmzLuaModuleBasic"/>
    <plugin name="dmzLuaPluginTimedReset"/>
 <!--   <plugin name="dmzExPluginMessageSend"/> -->

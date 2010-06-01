@@ -1,3 +1,4 @@
+#include <dmzEntityModulePortal.h>
 #include "dmzEntityPluginPortalFollow.h"
 #include <dmzInputEventMasks.h>
 #include <dmzObjectAttributeMasks.h>
@@ -29,12 +30,13 @@ dmz::EntityPluginPortalFollow::EntityPluginPortalFollow (
       _defaultHandle (0),
       _hilHandle (0),
       _offset (0.0, 2.5, 10.0),
-      _renderPortal (0),
-      _audioPortal (0),
+      _portal (0),
       _lastHeadVec (0.0, 0.0, -1.0),
       _lastPitchVec (0.0, 0.0, -1.0),
       _active (0),
       _log (Info) {
+
+   stop_time_slice ();
 
    _init (local);
 }
@@ -53,20 +55,11 @@ dmz::EntityPluginPortalFollow::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_renderPortal) { _renderPortal = RenderModulePortal::cast (PluginPtr); }
-      if (!_audioPortal) { _audioPortal = AudioModulePortal::cast (PluginPtr); }
+      if (!_portal) { _portal = EntityModulePortal::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_renderPortal && (_renderPortal == RenderModulePortal::cast (PluginPtr))) { 
-      
-         _renderPortal = 0; 
-      }
-
-      if (_audioPortal && (_audioPortal == AudioModulePortal::cast (PluginPtr))) { 
-      
-         _audioPortal = 0; 
-      }
+      if (_portal && (_portal == EntityModulePortal::cast (PluginPtr))) { _portal = 0; }
    }
 }
 
@@ -77,7 +70,7 @@ dmz::EntityPluginPortalFollow::update_time_slice (const Float64 TimeDelta) {
 
    ObjectModule *objMod (get_object_module ());
 
-   if ((_active > 0) && objMod && _handle && _defaultHandle) {
+   if (objMod && _handle && _defaultHandle) {
 
       Vector pos, vel;
       Matrix ori; ori.set_identity ();
@@ -177,8 +170,7 @@ dmz::EntityPluginPortalFollow::update_time_slice (const Float64 TimeDelta) {
 
       pos += forward;
 
-      if (_renderPortal) { _renderPortal->set_view (pos, ori); }
-      if (_audioPortal) { _audioPortal->set_view (pos, ori, Velocity); }
+      if (_portal) { _portal->set_view (pos, ori, Velocity); }
    }
 }
 
@@ -201,8 +193,10 @@ dmz::EntityPluginPortalFollow::update_channel_state (
       const Handle Channel,
       const Boolean State) {
 
-   if (State) { _active++; }
-   else { _active--; }
+   _active += State ? 1 : -1;
+
+   if (_active == 1) { start_time_slice (); }
+   else if (_active == 0) { stop_time_slice (); }
 }
 
 

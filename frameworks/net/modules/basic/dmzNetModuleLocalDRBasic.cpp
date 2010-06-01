@@ -7,6 +7,7 @@
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzRuntimeTime.h>
 #include <dmzTypesMask.h>
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
@@ -60,6 +61,28 @@ namespace {
 
    enum TestTypeEnum { TestPosition, TestVelocity, TestAcceleration, TestVector };
 
+   class debugWrapperTest : public dmz::NetModuleLocalDRBasic::ObjectUpdate {
+
+      public:
+         debugWrapperTest (
+            const dmz::String &Name,
+            dmz::NetModuleLocalDRBasic::ObjectUpdate &test,
+            dmz::Stream &stream);
+
+         virtual ~debugWrapperTest ();
+
+         virtual dmz::Boolean update_object (
+            const dmz::Handle ObjectHandle,
+            dmz::ObjectModule &module,
+            dmz::Boolean &limitRate);
+
+      protected:
+         const dmz::String _Name;
+         dmz::NetModuleLocalDRBasic::ObjectUpdate &_test;
+         dmz::Stream &_stream;
+
+   };
+ 
    class valueTest : public dmz::NetModuleLocalDRBasic::ObjectUpdate {
 
       public:
@@ -226,6 +249,33 @@ namespace {
 };
 
 
+debugWrapperTest::debugWrapperTest (
+      const dmz::String &Name,
+      dmz::NetModuleLocalDRBasic::ObjectUpdate &test,
+      dmz::Stream &stream) :
+      _Name (Name),
+      _test (test),
+      _stream (stream) {;}
+
+
+debugWrapperTest::~debugWrapperTest () { delete &_test; }
+
+
+dmz::Boolean
+debugWrapperTest::update_object (
+      const dmz::Handle ObjectHandle,
+      dmz::ObjectModule &module,
+      dmz::Boolean &limitRate) {
+
+   dmz::Boolean result = _test.update_object (ObjectHandle, module, limitRate);
+
+   if (result) { _stream << _Name << " update: " << ObjectHandle << dmz::endl; }
+//   if (limitRate) { _stream << _Name << " limit rate: " << ObjectHandle << dmz::endl; }
+
+   return result;
+}
+
+
 valueTest::valueTest (
       const dmz::Handle AttributeHandle,
       const dmz::Handle LNVHandle,
@@ -361,6 +411,7 @@ posSkewTest::update_object (
 
       const dmz::Float64 CalcDiff ((pos - lnvPos).magnitude ());
 
+      // out << CalcDiff << dmz::endl;
       if (CalcDiff > _Diff) { result = dmz::True; }
    }
 
@@ -561,6 +612,7 @@ dmz::NetModuleLocalDRBasic::NetModuleLocalDRBasic (
       _log (Info),
       _time (Info),
       _objMod (0),
+      _debug (False),
       _defaultHandle (0) {
 
    _init (local);
@@ -613,11 +665,6 @@ dmz::NetModuleLocalDRBasic::update_object (const Handle ObjectHandle) {
          while (test && !result && !limitRate) {
 
             result = test->update_object (ObjectHandle, *_objMod, limitRate);
-#if 0
-if (result) {
-_log.error << typeid (*test).name () << endl;
-}
-#endif
             test = test->next;
          }
       }
@@ -631,6 +678,8 @@ void
 dmz::NetModuleLocalDRBasic::_init (Config &local) {
 
    Definitions defs (get_plugin_runtime_context (), &_log);
+
+   _debug = config_to_boolean ("debug-test.value", local, _debug);
 
    _defaultHandle = defs.create_named_handle (ObjectAttributeDefaultName);
 
@@ -793,9 +842,6 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
       }
       else if (Type == "skew") {
 
-         _log.warn << "Skew may not provide the expected results. Use with caution."
-            << endl;
-
          next = new posSkewTest (
             AttributeHandle,
             LNVHandle,
@@ -819,6 +865,8 @@ dmz::NetModuleLocalDRBasic::_create_update_list (Config &listData) {
       }
 
       if (next) {
+
+         if (_debug) { next = new debugWrapperTest (Type, *next, _log.error); }
 
          _log.info << "Adding rule: " << Type << endl;
          if (current) { current->next = next; current = next; }

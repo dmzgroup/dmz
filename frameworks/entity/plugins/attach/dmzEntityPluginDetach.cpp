@@ -4,6 +4,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginDetach
+\ingroup Entity
+\brief Detaches entity.
+
+*/
+
+//! \cond
 dmz::EntityPluginDetach::EntityPluginDetach (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       MessageObserver (Info),
@@ -96,6 +105,7 @@ dmz::EntityPluginDetach::_init (Config &local) {
 
    activate_default_object_attribute (ObjectDestroyMask);
 }
+//! \endcond
 
 
 extern "C" {

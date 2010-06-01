@@ -1,11 +1,10 @@
 #ifndef DMZ_ENTITY_PLUGIN_PORTAL_FOLLOW_3D_DOT_H
 #define DMZ_ENTITY_PLUGIN_PORTAL_FOLLOW_3D_DOT_H
 
-#include <dmzAudioModulePortal.h>
+#include <dmzEntityModulePortal.h>
 #include <dmzInputObserverUtil.h>
 #include <dmzObjectModule.h>
 #include <dmzObjectObserverUtil.h>
-#include <dmzRenderModulePortal.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
@@ -13,6 +12,8 @@
 #include <dmzTypesVector.h>
 
 namespace dmz {
+
+   class EntityModulePortal;
 
    class EntityPluginPortalFollow3D :
          public Plugin,
@@ -52,8 +53,7 @@ namespace dmz {
          void _init (Config &local);
 
          const Int32 _HistoryCount;
-         RenderModulePortal *_renderPortal;
-         AudioModulePortal *_audioPortal;
+         EntityModulePortal *_portal;
          Handle _hil;
          Handle _defaultHandle;
          Handle _hilAttrHandle;

@@ -55,6 +55,9 @@ namespace dmz {
    const char ObjectAttributeSelectName[] = "Object_Select_Attribute";
    //! Hidden object attribute handle name. Defined in dmzObjectConsts.h.
    const char ObjectAttributeHideName[] = "Object_Hide_Attribute";
+   //! Object bounding volume radius attribute handle name. Defined in dmzObjectConsts.h.
+   const char ObjectAttributeBoundingVolumeRaidusName[] =
+      "Object_Bounding_Volume_Radius_Attribute";
 
    String create_last_network_value_name (const String &Value);
 };

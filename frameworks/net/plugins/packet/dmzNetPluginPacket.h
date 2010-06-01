@@ -5,6 +5,7 @@
 #include <dmzNetModuleLocalDR.h>
 #include <dmzNetModulePacketCodec.h>
 #include <dmzNetModulePacketIO.h>
+#include <dmzNetPacketStatsObserver.h>
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
@@ -70,6 +71,16 @@ namespace dmz {
             const ObjectLocalityEnum PrevLocality);
 
       protected:
+         struct StatsStruct {
+
+            StatsStruct *next;
+            NetPacketStatsObserver &obs;
+
+            StatsStruct (NetPacketStatsObserver &theObs) :
+               next (0),
+               obs (theObs) {;}
+         };
+
          struct ObjStruct {
 
             const Handle ObjectHandle;
@@ -82,6 +93,8 @@ namespace dmz {
                type (TheType) {;}
          };
 
+         void _add_write_stat (const Handle Source);
+         void _add_read_stat ();
          void _init (Config &local);
 
          Log _log;
@@ -89,6 +102,8 @@ namespace dmz {
         NetModuleLocalDR *_drMod;
         NetModulePacketCodec *_codecMod;
         NetModulePacketIO *_ioMod;
+        Handle _ioModHandle;
+        StatsStruct *_statsList;
 
         Marshal _outData;
         Unmarshal _inData;

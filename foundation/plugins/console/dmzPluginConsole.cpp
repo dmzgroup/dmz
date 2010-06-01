@@ -1,4 +1,6 @@
-#include "dmzPluginTermExit.h"
+#include "dmzPluginConsole.h"
+#include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeExit.h>
@@ -56,7 +58,7 @@ local_sig_handler (int sig) {
 
 /*!
 
-\class dmz::PluginTermExit
+\class dmz::PluginConsole
 \ingroup Foundation
 \brief Exit plugin.
 \details This Plugin reads the terminal I/O. When the specified key is presses
@@ -67,7 +69,7 @@ serves no purpose. The default key to request an exit is the "esc" key.
 
 
 //! \cond
-dmz::PluginTermExit::PluginTermExit (const PluginInfo &Info, Config &local) :
+dmz::PluginConsole::PluginConsole (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (Info),
       _log (Info) {
@@ -76,7 +78,7 @@ dmz::PluginTermExit::PluginTermExit (const PluginInfo &Info, Config &local) :
 }
 
 
-dmz::PluginTermExit::~PluginTermExit () {
+dmz::PluginConsole::~PluginConsole () {
 
 #ifdef _WIN32
 #else
@@ -92,12 +94,14 @@ dmz::PluginTermExit::~PluginTermExit () {
       localInit = False;
    }
 #endif
+
+   _msgTable.empty ();
 }
 
 
 // TimeSlice Interface
 void
-dmz::PluginTermExit::update_time_slice (const Float64 TimeDelta) {
+dmz::PluginConsole::update_time_slice (const Float64 TimeDelta) {
 
 #ifdef _WIN32
    DWORD eventCount (0);
@@ -123,6 +127,12 @@ dmz::PluginTermExit::update_time_slice (const Float64 TimeDelta) {
                   Exit exit (get_plugin_runtime_context ());
                   exit.request_exit (ExitStatusNormal, "Exit key pressed");
                }
+               else {
+
+                  char key[2] = { iRec.Event.KeyEvent.uChar.AsciiChar, 0 };
+                  Message *msg = _msgTable.lookup (key);
+                  if (msg) { msg->send (); }
+               }
             }
          }
       }
@@ -144,6 +154,12 @@ dmz::PluginTermExit::update_time_slice (const Float64 TimeDelta) {
             Exit exit (get_plugin_runtime_context ());
             exit.request_exit (ExitStatusNormal, "Exit key pressed");
          }
+         else {
+
+            char key[2] = { buf[0], 0 };
+            Message *msg = _msgTable.lookup (key);
+            if (msg) { msg->send (); }
+         }
       }
    } while (!done);
 #endif
@@ -152,7 +168,7 @@ dmz::PluginTermExit::update_time_slice (const Float64 TimeDelta) {
 
 //! Init function.
 void
-dmz::PluginTermExit::_init (Config &local) {
+dmz::PluginConsole::_init (Config &local) {
 
    // This function sets the terminal I/O to be non-blocking.
 
@@ -216,6 +232,29 @@ dmz::PluginTermExit::_init (Config &local) {
       }
    }
 #endif
+
+   RuntimeContext *context = get_plugin_runtime_context ();
+
+   Config list;
+
+   if (local.lookup_all_config ("message", list)) {
+
+      ConfigIterator it;
+      Config data;
+
+      while (list.get_next_config (it, data)) {
+
+         const String Key = config_to_string ("key", data);
+         Message msg = config_create_message ("name", data, "", context);
+
+         if (Key && msg) {
+
+            Message *ptr = new Message (msg);
+
+            if (!_msgTable.store (Key, ptr)) { delete ptr; ptr = 0; }
+         }
+      }
+   }
 }
 //! \endcond
 
@@ -223,12 +262,12 @@ dmz::PluginTermExit::_init (Config &local) {
 extern "C" {
 
 DMZ_PLUGIN_FACTORY_LINK_SYMBOL dmz::Plugin *
-create_dmzPluginTermExit (
+create_dmzPluginConsole (
       const dmz::PluginInfo &Info,
       dmz::Config &local,
       dmz::Config &global) {
 
-   return localInit ? 0 : new dmz::PluginTermExit (Info, local);
+   return localInit ? 0 : new dmz::PluginConsole (Info, local);
 }
 
 };

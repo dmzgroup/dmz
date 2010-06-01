@@ -5,6 +5,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityPluginAutoAttach
+\ingroup Entity
+\brief Automatically attaches to entities.
+
+*/
+
+//! \cond
 dmz::EntityPluginAutoAttach::EntityPluginAutoAttach (
       const PluginInfo &Info,
       Config &local) :
@@ -112,13 +121,9 @@ dmz::EntityPluginAutoAttach::update_channel_state (
       const Handle Channel,
       const Boolean State) {
 
-   if (State) {
+   _active += State ? 1 : -1;
 
-      _active++;
-
-     if (_active == 1) { _find_object (); }
-   }
-   else { _active--; }
+  if (_active == 1) { _find_object (); }
 }
 
 
@@ -193,6 +198,7 @@ dmz::EntityPluginAutoAttach::_init (Config &local) {
 
    _types = config_to_object_type_set (local, context);
 }
+//! \endcond
 
 
 extern "C" {

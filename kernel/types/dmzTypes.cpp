@@ -502,4 +502,22 @@ dmz::to_degrees (const Float64 Value) { return (Value / Pi64) * 180.0; }
 dmz::Float64
 dmz::to_radians (const Float64 Value) { return (Value / 180.0) * Pi64; }
 
+
+dmz::Float64
+dmz::normalize_angle (const Float64 Value, const Float64 Min) {
+
+   Float64 result (Value);
+
+   const Float64 Max = Min + TwoPi64;
+
+   while (result > Max) { result -= TwoPi64; }
+   while (result < Min) { result += TwoPi64; }
+
+   return result;
+}
+
+
+dmz::Float64
+dmz::normalize_angle (const Float64 Value) { return normalize_angle (Value, -Pi64); }
+
 //! @}

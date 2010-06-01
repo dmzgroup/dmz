@@ -6,7 +6,7 @@
    </time>
 </runtime>
 <plugin-list>
-   <plugin name="dmzPluginTermExit"/>
+   <plugin name="dmzPluginConsole"/>
    <plugin name="dmzExPluginTimeSlice"/>
 </plugin-list>
 <dmzExPluginTimeSlice>

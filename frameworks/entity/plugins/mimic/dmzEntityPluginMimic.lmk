@@ -1,0 +1,10 @@
+lmk.set_name "dmzEntityPluginMimic"
+lmk.set_type "plugin"
+lmk.add_files {"dmzEntityPluginMimic.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzInputEvents",
+   "dmzInputUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzEntityFramework", "dmzObjectFramework", "dmzInputFramework",}

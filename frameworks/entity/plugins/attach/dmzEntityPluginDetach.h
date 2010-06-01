@@ -15,6 +15,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginDetach (const PluginInfo &Info, Config &local);
          ~EntityPluginDetach ();
 
@@ -46,6 +47,7 @@ namespace dmz {
          Handle _attached;
 
          Message _attachMsg;
+         //! \endcond
 
       private:
          EntityPluginDetach ();

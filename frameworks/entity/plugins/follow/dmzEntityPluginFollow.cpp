@@ -37,6 +37,8 @@ dmz::EntityPluginFollow::EntityPluginFollow (
       _range (50.0),
       _active (0) {
 
+   stop_time_slice ();
+
    _init (local);
 }
 
@@ -87,7 +89,7 @@ dmz::EntityPluginFollow::update_time_slice (const Float64 TimeDelta) {
 
    ObjectModule *module (get_object_module ());
 
-   if ((_active > 0) && _hil && _target && module) {
+   if (_hil && _target && module) {
 
       Vector pos, targetPos;
 
@@ -129,8 +131,10 @@ dmz::EntityPluginFollow::update_channel_state (
       const Handle Channel,
       const Boolean State) {
 
-   if (State) { _active++; }
-   else { _active--; }
+   _active += State ? 1 : -1;
+
+   if (_active == 1) { start_time_slice (); }
+   else if (_active == 0) { stop_time_slice (); }
 }
 
 

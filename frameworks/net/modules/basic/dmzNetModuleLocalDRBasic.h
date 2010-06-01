@@ -6,6 +6,7 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTime.h>
 #include <dmzTypesHashTableUInt32Template.h>
+#include <dmzTypesDeleteListTemplate.h>
 
 namespace dmz {
 
@@ -23,7 +24,7 @@ namespace dmz {
             public:
                ObjectUpdate *next;
 
-               virtual ~ObjectUpdate () { if (next) { delete next; next = 0; } }
+               virtual ~ObjectUpdate () { delete_list (next); }
 
                virtual Boolean update_object (
                   const Handle ObjectHandle,
@@ -68,6 +69,7 @@ namespace dmz {
 
          ObjectModule *_objMod;
 
+         Boolean _debug;
          UInt32 _defaultHandle;
          //! \endcond
 

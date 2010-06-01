@@ -246,7 +246,7 @@ dmz::NetExtPacketCodecObjectNative::encode_object (
             _objMod->store_time_stamp (
                ObjectHandle,
                _lnvHandle,
-               _time.get_last_frame_time ());
+               _time.get_frame_time ());
          }
       }
    }

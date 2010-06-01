@@ -1,10 +1,9 @@
-#include <dmzAudioModulePortal.h>
 #include <dmzEntityConsts.h>
+#include <dmzEntityModulePortal.h>
 #include "dmzEntityPluginPortalWatch.h"
 #include <dmzInputEventMasks.h>
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectModule.h>
-#include <dmzRenderModulePortal.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
@@ -32,12 +31,13 @@ dmz::EntityPluginPortalWatch::EntityPluginPortalWatch (
       ObjectObserverUtil (Info, local),
       _log (Info),
       _convert (Info),
-      _render (0),
-      _audio (0),
+      _portal (0),
       _hil (0),
       _target (0),
       _defaultAttrHandle (0),
       _active (0) {
+
+   stop_time_slice ();
 
    _init (local);
 }
@@ -76,13 +76,11 @@ dmz::EntityPluginPortalWatch::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_render) { _render = RenderModulePortal::cast (PluginPtr); }
-      if (!_audio) { _audio = AudioModulePortal::cast (PluginPtr); }
+      if (!_portal) { _portal = EntityModulePortal::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_render && (_render == RenderModulePortal::cast (PluginPtr))) { _render = 0; }
-      if (_audio && (_audio == AudioModulePortal::cast (PluginPtr))) { _audio = 0; }
+      if (_portal && (_portal == EntityModulePortal::cast (PluginPtr))) { _portal = 0; }
    }
 }
 
@@ -91,7 +89,7 @@ dmz::EntityPluginPortalWatch::discover_plugin (
 void
 dmz::EntityPluginPortalWatch::update_time_slice (const Float64 TimeDelta) {
 
-   if ((_active > 0) && _hil) {
+   if (_hil) {
 
       Vector pos, vel;
       Matrix ori;
@@ -118,8 +116,7 @@ dmz::EntityPluginPortalWatch::update_time_slice (const Float64 TimeDelta) {
          if (!_target) { module->lookup_orientation (_hil, _defaultAttrHandle, ori); }
       }
 
-      if (_render) { _render->set_view (pos, ori); }
-      if (_audio) { _audio->set_view (pos, ori, vel); }
+      if (_portal) { _portal->set_view (pos, ori, vel); }
    }
 }
 
@@ -143,8 +140,10 @@ dmz::EntityPluginPortalWatch::update_channel_state (
       const Handle Channel,
       const Boolean State) {
 
-   if (State) { _active++; }
-   else { _active--; }
+   _active += State ? 1 : -1;
+
+   if (_active == 1) { start_time_slice (); }
+   else if (_active == 0) { stop_time_slice (); }
 }
 
 

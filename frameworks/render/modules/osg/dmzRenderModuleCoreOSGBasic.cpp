@@ -1,9 +1,11 @@
 #include "dmzRenderModuleCoreOSGBasic.h"
+#include <dmzObjectConsts.h>
 #include <dmzObjectModule.h>
 #include <dmzObjectAttributeMasks.h>
 #include <dmzRenderObjectDataOSG.h>
 #include <dmzRenderUtilOSG.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfigToStringContainer.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
@@ -33,6 +35,7 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
       _isectMask (0x010),
       _overlayMask (0x100),
       _defaultHandle (0),
+      _bvrHandle (0),
       _dirtyObjects (0) {
 
    _log.info << "Built using Open Scene Graph v"
@@ -127,12 +130,21 @@ dmz::RenderModuleCoreOSGBasic::discover_plugin (
 void
 dmz::RenderModuleCoreOSGBasic::update_time_slice (const Float64 DeltaTime) {
 
+   ObjectModule *objMod (get_object_module ());
+
    while (_dirtyObjects) {
 
       ObjectStruct *os (_dirtyObjects);
       _dirtyObjects = os->next;
 
       os->transform->setMatrix (to_osg_matrix (os->ori, os->pos));
+
+      if (objMod) {
+
+         const osg::BoundingSphere &Bvs = os->transform->getBound ();
+         const Float64 Radius = Bvs.radius ();
+         objMod->store_scalar (os->Object, _bvrHandle, Radius);
+      }
 
       if (os->destroyed) { 
 
@@ -260,7 +272,7 @@ dmz::RenderModuleCoreOSGBasic::create_dynamic_object (const Handle ObjectHandle)
 
    if (!os) {
 
-      os = new ObjectStruct;
+      os = new ObjectStruct (ObjectHandle);
 
       if (os && !_objectTable.store (ObjectHandle, os)) { delete os; os = 0; }
 
@@ -408,6 +420,12 @@ dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
 
    _defaultHandle = activate_default_object_attribute (
       ObjectDestroyMask | ObjectPositionMask | ObjectOrientationMask);
+
+   _bvrHandle = config_to_named_handle (
+      "bounding-volume-radius-attribute.name",
+      local,
+      ObjectAttributeBoundingVolumeRaidusName,
+      get_plugin_runtime_context ());
 }
 
 

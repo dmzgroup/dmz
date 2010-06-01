@@ -109,6 +109,13 @@ namespace dmz {
 
    DMZ_KERNEL_LINK_SYMBOL Float64 to_degrees (const Float64 Value);
    DMZ_KERNEL_LINK_SYMBOL Float64 to_radians (const Float64 Value);
+
+   DMZ_KERNEL_LINK_SYMBOL Float64 normalize_angle (
+      const Float64 Value,
+      const Float64 Min);
+
+   DMZ_KERNEL_LINK_SYMBOL Float64 normalize_angle (const Float64 Value);
+
 //! @}
 };
 

@@ -1,4 +1,5 @@
 lmk.set_name "dmzEntityFramework"
 lmk.add_files {
    "dmzEntityConsts.h",
+   "dmzEntityModulePortal.h",
 }

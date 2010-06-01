@@ -36,10 +36,11 @@ dmz::EntityPluginPortalFollow3D::EntityPluginPortalFollow3D (
       _history (0),
       _which (0),
       _offset (0.0, 2.5, 10.0),
-      _renderPortal (0),
-      _audioPortal (0),
+      _portal (0),
       _active (0),
       _log (Info) {
+
+   stop_time_slice ();
 
    _init (local);
 }
@@ -59,20 +60,11 @@ dmz::EntityPluginPortalFollow3D::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_renderPortal) { _renderPortal = RenderModulePortal::cast (PluginPtr); }
-      if (!_audioPortal) { _audioPortal = AudioModulePortal::cast (PluginPtr); }
+      if (!_portal) { _portal = EntityModulePortal::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_renderPortal && (_renderPortal == RenderModulePortal::cast (PluginPtr))) { 
-      
-         _renderPortal = 0; 
-      }
-
-      if (_audioPortal && (_audioPortal == AudioModulePortal::cast (PluginPtr))) { 
-      
-         _audioPortal = 0; 
-      }
+      if (_portal && (_portal == EntityModulePortal::cast (PluginPtr))) { _portal = 0; }
    }
 }
 
@@ -83,7 +75,7 @@ dmz::EntityPluginPortalFollow3D::update_time_slice (const Float64 TimeDelta) {
 
    ObjectModule *objMod (get_object_module ());
 
-   if (_history && (_active > 0) && objMod && _hil && _defaultHandle) {
+   if (_history && objMod && _hil && _defaultHandle) {
 
       Vector pos, vel, tmp;
       Matrix ori, cmat (_history[_which]);
@@ -99,8 +91,7 @@ dmz::EntityPluginPortalFollow3D::update_time_slice (const Float64 TimeDelta) {
       Vector value (_offset);
       pos += cmat.transform_vector (value);
 
-      if (_renderPortal) { _renderPortal->set_view (pos, cmat); }
-      if (_audioPortal) { _audioPortal->set_view (pos, cmat, vel); }
+      if (_portal) { _portal->set_view (pos, cmat, vel); }
    }
 }
 
@@ -123,8 +114,7 @@ dmz::EntityPluginPortalFollow3D::update_channel_state (
       const Handle Channel,
       const Boolean State) {
 
-   if (State) { _active++; }
-   else { _active--; }
+   _active += State ? 1 : -1;
 
    if (_active == 1) {
 
@@ -142,7 +132,10 @@ dmz::EntityPluginPortalFollow3D::update_channel_state (
 
          for (Int32 ix = 0; ix < _HistoryCount; ix++) { _history[ix] = ori; }
       }
+
+      start_time_slice ();
    }
+   else if (_active == 0) { stop_time_slice (); }
 }
 
 

@@ -1,3 +1,4 @@
+#include <dmzEntityModulePortal.h>
 #include "dmzEntityPluginPortalTether.h"
 #include <dmzInputEventMasks.h>
 #include <dmzObjectAttributeMasks.h>
@@ -29,10 +30,11 @@ dmz::EntityPluginPortalTether::EntityPluginPortalTether (
       _defaultHandle (0),
       _hilHandle (0),
       _offset (0.0, 2.5, 10.0),
-      _renderPortal (0),
-      _audioPortal (0),
+      _portal (0),
       _active (0),
       _log (Info) {
+
+   stop_time_slice ();
 
    _init (local);
 }
@@ -51,18 +53,13 @@ dmz::EntityPluginPortalTether::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_renderPortal) { _renderPortal = RenderModulePortal::cast (PluginPtr); }
-      if (!_audioPortal) { _audioPortal = AudioModulePortal::cast (PluginPtr); }
+      if (!_portal) { _portal = EntityModulePortal::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_renderPortal && (_renderPortal == RenderModulePortal::cast (PluginPtr))) { 
-      
-         _renderPortal = 0; 
-      }
-      if (_audioPortal && (_audioPortal == AudioModulePortal::cast (PluginPtr))) { 
+      if (_portal && (_portal == EntityModulePortal::cast (PluginPtr))) { 
 
-         _audioPortal = 0; 
+         _portal = 0; 
       }
    }
 }
@@ -72,27 +69,23 @@ dmz::EntityPluginPortalTether::discover_plugin (
 void
 dmz::EntityPluginPortalTether::update_time_slice (const Float64 TimeDelta) {
 
-   if (_active > 0) {
+   ObjectModule *objMod (get_object_module ());
 
-      ObjectModule *objMod (get_object_module ());
+   if (objMod && _handle && _defaultHandle) {
 
-      if (objMod && _handle && _defaultHandle) {
+      Vector pos, vel;
+      Matrix ori; ori.set_identity ();
 
-         Vector pos, vel;
-         Matrix ori; ori.set_identity ();
+      objMod->lookup_position (_handle, _defaultHandle, pos);
+      objMod->lookup_orientation (_handle, _defaultHandle, ori);
+      objMod->lookup_velocity (_handle, _defaultHandle, vel);
 
-         objMod->lookup_position (_handle, _defaultHandle, pos);
-         objMod->lookup_orientation (_handle, _defaultHandle, ori);
-         objMod->lookup_velocity (_handle, _defaultHandle, vel);
-   
-         Vector forward (_offset);
-         ori.transform_vector (forward);
+      Vector forward (_offset);
+      ori.transform_vector (forward);
 
-         pos += forward;
+      pos += forward;
 
-         if (_renderPortal) { _renderPortal->set_view (pos, ori); }
-         if (_audioPortal) { _audioPortal->set_view (pos, ori, vel); }
-      }
+      if (_portal) { _portal->set_view (pos, ori, vel); }
    }
 }
 
@@ -115,8 +108,10 @@ dmz::EntityPluginPortalTether::update_channel_state (
       const Handle Channel,
       const Boolean State) {
 
-   if (State) { _active++; }
-   else { _active--; }
+   _active += State ? 1 : -1;
+
+   if (_active == 1) { start_time_slice (); }
+   else if (_active == 0) { stop_time_slice (); }
 }
 
 

@@ -13,7 +13,6 @@
 
 #include "GraphicsWindowQt.h"
 
-
 GraphWidget::GraphWidget( const QGLFormat& format, QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags f )
 : QGLWidget(format, parent, shareWidget, f)
 {
@@ -104,9 +103,19 @@ void GraphWidget::mouseMoveEvent( QMouseEvent* event )
 
 void GraphWidget::wheelEvent( QWheelEvent* event )
 {
+ 
     setKeyboardModifiers( event );
-    _gw->getEventQueue()->mouseScroll(
-        event->delta()>0 ? osgGA::GUIEventAdapter::SCROLL_UP : osgGA::GUIEventAdapter::SCROLL_DOWN );
+    
+    if (event->orientation () == Qt::Horizontal) {
+       
+       _gw->getEventQueue()->mouseScroll(
+           event->delta()>0 ? osgGA::GUIEventAdapter::SCROLL_LEFT : osgGA::GUIEventAdapter::SCROLL_RIGHT );
+    }
+    else {
+       
+       _gw->getEventQueue()->mouseScroll(
+           event->delta()>0 ? osgGA::GUIEventAdapter::SCROLL_UP : osgGA::GUIEventAdapter::SCROLL_DOWN );
+    }
 }
 
 

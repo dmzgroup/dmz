@@ -6,6 +6,7 @@
 #include <dmzRenderUtilOSG.h>
 #include <dmzRuntimeExit.h>
 
+
 struct dmz::RenderEventHandlerOSG::State {
 
    Exit exit;
@@ -82,11 +83,34 @@ dmz::RenderEventHandlerOSG::handle (
                Event.getX (),
                Height - Event.getY ());
 
-            _state.mouseEvent.set_scroll_delta (
-               Event.getScrollingDeltaX (),
-               Event.getScrollingDeltaY ());
+            osgGA::GUIEventAdapter::ScrollingMotion scrollMotion =
+               Event.getScrollingMotion ();
+            
+            UInt32 deltaX (0);
+            UInt32 deltaY (0);
+            
+            switch (scrollMotion) {
+            
+               case osgGA::GUIEventAdapter::SCROLL_LEFT: deltaX = -120; break;
+
+               case osgGA::GUIEventAdapter::SCROLL_RIGHT: deltaX = 120; break;
+
+               case osgGA::GUIEventAdapter::SCROLL_UP: deltaY = 120; break;
+
+               case osgGA::GUIEventAdapter::SCROLL_DOWN: deltaY = -120; break;
+
+               case osgGA::GUIEventAdapter::SCROLL_2D:
+                  deltaX = Event.getScrollingDeltaX ();
+                  deltaY = Event.getScrollingDeltaY ();
+                  break;
+
+               default: break;
+            }
+            
+            _state.mouseEvent.set_scroll_delta (deltaX, deltaY);
 
             _state.channels->send_mouse_event (_state.mouseEvent);
+
             result = true;
             break;
          }

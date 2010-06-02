@@ -64,6 +64,13 @@ namespace dmz {
             const Vector &Value,
             const Vector *PreviousValue);
 
+         virtual void update_object_scale (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Vector &Value,
+            const Vector *PreviousValue);
+
          virtual void update_object_orientation (
             const UUID &Identity,
             const Handle ObjectHandle,
@@ -84,6 +91,7 @@ namespace dmz {
 
          virtual osg::Group *create_dynamic_object (const Handle ObjectHandle);
          virtual osg::Group *lookup_dynamic_object (const Handle ObjectHandle);
+         virtual Boolean destroy_dynamic_object (const Handle ObjectHandle);
 
          virtual Boolean add_view (const String &ViewName, osgViewer::View *view);
          virtual osgViewer::View *lookup_view (const String &ViewName);
@@ -109,12 +117,14 @@ namespace dmz {
             osg::ref_ptr<osg::MatrixTransform> transform;
             Matrix ori;
             Vector pos;
+            Vector scale;
             Boolean dirty;
             Boolean destroyed;
 
             ObjectStruct (const Handle TheObject) :
                   Object (TheObject),
                   next (0),
+                  scale (1.0, 1.0, 1.0),
                   dirty (False),
                   destroyed (False) {
 

@@ -11,6 +11,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeLoadPlugins.h>
+#include <dmzTypesUUID.h>
 #include <dmzSystem.h>
 #include <dmzSystemFile.h>
 #include <osg/DeleteHandler>
@@ -137,7 +138,7 @@ dmz::RenderModuleCoreOSGBasic::update_time_slice (const Float64 DeltaTime) {
       ObjectStruct *os (_dirtyObjects);
       _dirtyObjects = os->next;
 
-      os->transform->setMatrix (to_osg_matrix (os->ori, os->pos));
+      os->transform->setMatrix (to_osg_matrix (os->ori, os->pos, os->scale));
 
       if (objMod) {
 
@@ -197,6 +198,30 @@ dmz::RenderModuleCoreOSGBasic::update_object_position (
    if (os) {
 
       os->pos = Value;
+
+      if (!os->dirty) {
+
+         os->dirty = True;
+         os->next = _dirtyObjects;
+         _dirtyObjects = os;
+      }
+   }
+}
+
+
+void
+dmz::RenderModuleCoreOSGBasic::update_object_scale (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Vector &Value,
+      const Vector *PreviousValue) {
+
+   ObjectStruct *os (_objectTable.lookup (ObjectHandle));
+
+   if (os) {
+
+      os->scale = Value;
 
       if (!os->dirty) {
 
@@ -286,15 +311,14 @@ dmz::RenderModuleCoreOSGBasic::create_dynamic_object (const Handle ObjectHandle)
          if (objMod) {
 
             objMod->lookup_position (ObjectHandle, _defaultHandle, os->pos);
+            objMod->lookup_scale (ObjectHandle, _defaultHandle, os->scale);
             objMod->lookup_orientation (ObjectHandle, _defaultHandle, os->ori);
-            os->transform->setMatrix (to_osg_matrix (os->ori, os->pos));
+            os->transform->setMatrix (to_osg_matrix (os->ori, os->pos, os->scale));
          }
-         else {
 
-            os->dirty = True;
-            os->next = _dirtyObjects;
-            _dirtyObjects = os;
-         }
+         os->dirty = True;
+         os->next = _dirtyObjects;
+         _dirtyObjects = os;
 
          if (_dynamicObjects.valid ()) {
 
@@ -306,6 +330,14 @@ dmz::RenderModuleCoreOSGBasic::create_dynamic_object (const Handle ObjectHandle)
    if (os) { result = os->transform.get (); }
 
    return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleCoreOSGBasic::destroy_dynamic_object (const Handle ObjectHandle) {
+
+   static const UUID Empty;
+   destroy_object (Empty, ObjectHandle);
 }
 
 
@@ -419,7 +451,7 @@ dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
    }
 
    _defaultHandle = activate_default_object_attribute (
-      ObjectDestroyMask | ObjectPositionMask | ObjectOrientationMask);
+      ObjectDestroyMask | ObjectPositionMask | ObjectScaleMask | ObjectOrientationMask);
 
    _bvrHandle = config_to_named_handle (
       "bounding-volume-radius-attribute.name",

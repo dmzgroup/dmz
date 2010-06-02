@@ -26,15 +26,20 @@ to_dmz_vector_y_up (const osg::Vec3d &Source) {
 
 
 static osg::Matrixd
-to_osg_matrix_y_up (const Matrix &Source, const Vector &Trans) {
+to_osg_matrix_y_up (const Matrix &Source, const Vector &Trans, const Vector &Scale) {
+
+   const Float64 ScaleX (Scale.get_x ());
+   const Float64 ScaleY (Scale.get_y ());
+   const Float64 ScaleZ (Scale.get_z ());
 
    Float64 data[9];
    Source.to_array (data);
+
    osg::Matrixd result (
-      data[0], data[3], data[6], 0.0,
-      data[1], data[4], data[7], 0.0,
-      data[2], data[5], data[8], 0.0,
-      Trans.get_x (), Trans.get_y (), Trans.get_z (), 1.0);
+      data[0] * ScaleX, data[3] * ScaleX, data[6] * ScaleX, 0.0,
+      data[1] * ScaleY, data[4] * ScaleY, data[7] * ScaleY, 0.0,
+      data[2] * ScaleZ, data[5] * ScaleZ, data[8] * ScaleZ, 0.0,
+      Trans.get_x (),   Trans.get_y (),   Trans.get_z (),   1.0);
 
    return result;
 }
@@ -72,15 +77,20 @@ to_dmz_vector_z_up (const osg::Vec3d &Source) {
 
 
 static osg::Matrixd
-to_osg_matrix_z_up (const Matrix &Source, const Vector &Trans) {
+to_osg_matrix_z_up (const Matrix &Source, const Vector &Trans, const Vector &Scale) {
+
+   const Float64 ScaleX (Scale.get_x ());
+   const Float64 ScaleY (Scale.get_y ());
+   const Float64 ScaleZ (Scale.get_z ());
 
    Float64 data[9];
    Source.to_array (data);
+
    osg::Matrixd result (
-      data[0], -data[6], data[3], 0.0,
-      -data[2], data[8],-data[5],  0.0,
-      data[1], -data[7], data[4], 0.0,
-      Trans.get_x (), -Trans.get_z (), Trans.get_y (), 1.0);
+       data[0] * ScaleX, -data[6] * ScaleX,  data[3] * ScaleX, 0.0,
+      -data[2] * ScaleZ,  data[8] * ScaleZ, -data[5] * ScaleZ, 0.0,
+       data[1] * ScaleY, -data[7] * ScaleY,  data[4] * ScaleY, 0.0,
+       Trans.get_x (),   -Trans.get_z (),    Trans.get_y (),   1.0);
 
    return result;
 }

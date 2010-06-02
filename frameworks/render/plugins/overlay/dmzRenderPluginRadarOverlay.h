@@ -138,6 +138,7 @@ namespace dmz {
 
          RenderModuleOverlay *_overlay;
          RenderModulePortal *_portal;
+         Boolean _usePortal;
 
          Message _rangeMsg;
 

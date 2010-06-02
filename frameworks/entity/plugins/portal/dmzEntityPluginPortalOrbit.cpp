@@ -183,8 +183,10 @@ dmz::EntityPluginPortalOrbit::receive_mouse_event (
 
    if (ZoomInt != 0) {
 
-      _radius += Float64 (ZoomInt) * 0.2;
+      _radius += _radius * 0.2 * (ZoomInt > 0 ? 1.0 : -1.0);
    }
+
+   if (_radius < 0.001) { _radius = 0.001; }
 }
 
 

@@ -776,7 +776,12 @@ dmz::InputModuleBasic::send_mouse_event (const InputEventMouse &Event) {
 
       ChannelStruct *cs (_channelTable.get_first (it));
 
-      if (_mouseCache != Event) { _mouseCache = Event; }
+      if ((_mouseCache != Event) ||
+            Event.get_scroll_delta_x () ||
+            Event.get_scroll_delta_y ()) {
+
+         _mouseCache = Event;
+       }
       else { cs = 0; } // don't send duplicate events
 
       while (cs) {

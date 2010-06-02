@@ -69,6 +69,7 @@ dmz::RenderPluginRadarOverlay::RenderPluginRadarOverlay (
       _log (Info),
       _overlay (0),
       _portal (0),
+      _usePortal (False),
       _rootName ("radar"),
       _root (0),
       _defaultAttrHandle (0),
@@ -140,7 +141,7 @@ dmz::RenderPluginRadarOverlay::discover_plugin (
          }
       }
 
-      if (!_portal) { _portal = RenderModulePortal::cast (PluginPtr); }
+      if (_usePortal && !_portal) { _portal = RenderModulePortal::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
@@ -181,18 +182,17 @@ dmz::RenderPluginRadarOverlay::update_time_slice (const Float64 TimeDelta) {
       Vector hilPos;
       Matrix hilOri;
 
-      ObjectModule *objMod (get_object_module ());
 
-      if (objMod) {
+      if (_portal) { _portal->get_view (hilPos, hilOri); }
+      else {
 
-         objMod->lookup_position (_hil, _defaultAttrHandle, hilPos);
+         ObjectModule *objMod (get_object_module ());
 
-         if (_portal) {
+         if (objMod) {
 
-            Vector vec;
-            _portal->get_view (vec, hilOri);
+            objMod->lookup_position (_hil, _defaultAttrHandle, hilPos);
+            objMod->lookup_orientation (_hil, _defaultAttrHandle, hilOri);
          }
-         else { objMod->lookup_orientation (_hil, _defaultAttrHandle, hilOri); }
       }
 
       const Matrix XForm (
@@ -515,6 +515,8 @@ void
 dmz::RenderPluginRadarOverlay::_init (Config &local) {
 
    init_input_channels (local, InputEventKeyMask);
+
+   _usePortal = config_to_boolean ("use-portal.value", local, _usePortal);
 
    _rangeMsg = config_create_message (
       "range.message.name",

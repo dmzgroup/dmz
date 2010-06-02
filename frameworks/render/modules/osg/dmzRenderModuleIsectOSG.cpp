@@ -1,7 +1,9 @@
+#include <dmzRenderConsts.h>
 #include "dmzRenderModuleIsectOSG.h"
 #include <dmzRenderUtilOSG.h>
 #include <dmzRenderObjectDataOSG.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesVector.h>
 #include <dmzTypesString.h>
 
@@ -20,7 +22,7 @@ dmz::RenderModuleIsectOSG::RenderModuleIsectOSG (
       RenderModuleIsect (Info),
       _log (Info),
       _core (0),
-      _isectMask (0) {
+      _defaultIsectMask (0) {
 
    _init (Local);
 }
@@ -42,7 +44,11 @@ dmz::RenderModuleIsectOSG::discover_plugin (
 
          _core = RenderModuleCoreOSG::cast (PluginPtr);
 
-         if (_core) { _isectMask = _core->get_isect_mask (); }
+         if (_core) {
+
+            _defaultIsectMask = _core->lookup_isect_mask (RenderIsectStaticName);
+            _defaultIsectMask |= _core->lookup_isect_mask (RenderIsectEntityName);
+         }
       }
    }
    else if (Mode == PluginDiscoverRemove) {
@@ -50,7 +56,7 @@ dmz::RenderModuleIsectOSG::discover_plugin (
       if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
 
          _core = 0;
-         _isectMask = 0;
+         _defaultIsectMask = 0;
       }
    }
 }
@@ -71,8 +77,22 @@ dmz::RenderModuleIsectOSG::do_isect (
 
       std::vector<osg::LineSegment*> lsList;// = new osg::LineSegment[TestValues];
 
+      UInt32 mask (_defaultIsectMask);
+
+      HandleContainer attrList;
+
+      if (Parameters.get_isect_attributes (attrList)) {
+
+         mask = 0;
+
+         HandleContainerIterator it;
+         Handle attr (0);
+
+         while (attrList.get_next (it, attr)) { mask |= _core->lookup_isect_mask (attr); }
+      }
+
       osgUtil::IntersectVisitor visitor;
-      visitor.setTraversalMask (_isectMask);
+      visitor.setTraversalMask (mask);
 
       UInt32 testHandle;
       IsectTestTypeEnum testType;
@@ -287,7 +307,7 @@ dmz::RenderModuleIsectOSG::enable_isect (const Handle ObjectHandle) {
          if (0 == result) {
 
             UInt32 mask = g->getNodeMask ();
-            mask |= _isectMask;
+            mask |= _defaultIsectMask;
             g->setNodeMask (mask);
          }
       }
@@ -316,7 +336,7 @@ dmz::RenderModuleIsectOSG::disable_isect (const Handle ObjectHandle) {
          if (1 == result) {
 
             UInt32 mask = g->getNodeMask ();
-            mask &= (~_isectMask);
+            mask &= (~_defaultIsectMask);
             g->setNodeMask (mask);
          }
       }

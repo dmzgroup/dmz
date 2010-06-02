@@ -122,17 +122,20 @@ namespace dmz {
             const osg::Vec4 Color;
             const Float64 Radius;
             const Int32 Sides;
+            const Boolean Glyph;
             osg::ref_ptr<osg::Geode> model;
 
             LinkDefStruct (
                   const Handle TheAttrHandle,
                   const osg::Vec4 &TheColor,
                   const Float64 TheRadius,
-                  const Int32 TheSides) :
+                  const Int32 TheSides,
+                  const Boolean IsGlyph) :
                   AttrHandle (TheAttrHandle),
                   Color (TheColor),
                   Radius (TheRadius),
-                  Sides (TheSides >= 3 ? TheSides : 3) {;}
+                  Sides (TheSides >= 3 ? TheSides : 3),
+                  Glyph (IsGlyph) {;}
          };
 
          struct ObjectStruct;
@@ -187,6 +190,10 @@ namespace dmz {
          Handle _defaultAttrHandle;
 
          RenderModuleCoreOSG *_render;
+
+         UInt32 _masterMask;
+         UInt32 _glyphMask;
+         UInt32 _entityMask;
 
          HashTableHandleTemplate<LinkDefStruct> _defTable;
          HashTableHandleTemplate<LinkStruct> _linkTable;

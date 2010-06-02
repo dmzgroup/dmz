@@ -1,6 +1,7 @@
 #include <dmzObjectAttributeMasks.h>
 #include <dmzObjectModule.h>
 #include <dmzRenderConfigToOSG.h>
+#include <dmzRenderConsts.h>
 #include <dmzRenderModuleCoreOSG.h>
 #include <dmzRenderObjectDataOSG.h>
 #include "dmzRenderPluginLinkOSG.h"
@@ -24,7 +25,10 @@ dmz::RenderPluginLinkOSG::RenderPluginLinkOSG (const PluginInfo &Info, Config &l
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defaultAttrHandle (0),
-      _render (0) {
+      _render (0),
+      _masterMask (0),
+      _glyphMask (0),
+      _entityMask (0) {
 
    _init (local);
 }
@@ -72,6 +76,10 @@ dmz::RenderPluginLinkOSG::discover_plugin (
 
          if (_render) {
 
+            _masterMask = _render->get_master_isect_mask ();
+            _glyphMask = _render->lookup_isect_mask (RenderIsectGlyphName);
+            _entityMask = _render->lookup_isect_mask (RenderIsectEntityName);
+
             HashTableHandleIterator it;
             LinkDefStruct *def (0);
 
@@ -86,7 +94,13 @@ dmz::RenderPluginLinkOSG::discover_plugin (
    }
    else if (Mode == PluginDiscoverRemove) {
 
-      if (_render && (_render == RenderModuleCoreOSG::cast (PluginPtr))) { _render = 0; }
+      if (_render && (_render == RenderModuleCoreOSG::cast (PluginPtr))) {
+
+         _masterMask = 0;
+         _glyphMask = 0;
+         _entityMask = 0;
+         _render = 0;
+      }
    }
 }
 
@@ -299,6 +313,10 @@ dmz::RenderPluginLinkOSG::_create_link (LinkStruct &ls) {
       ls.root->setDataVariance (osg::Object::DYNAMIC);
       ls.root->addChild (ls.Def.model.get ());
 
+      ls.root->setNodeMask (
+         (ls.root->getNodeMask () & ~_masterMask) |
+            (ls.Def.Glyph ? _glyphMask : _entityMask));
+
       osg::ref_ptr<osg::Group> scene = _render->get_dynamic_objects ();
 
       if (scene.valid ()) { scene->addChild (ls.root.get ()); }
@@ -409,7 +427,9 @@ dmz::RenderPluginLinkOSG::_init (Config &local) {
 
          const Int32 Sides = config_to_int32 ("sides", link, 4);
 
-         LinkDefStruct *lds = new LinkDefStruct (Attr, Color, Radius, Sides);
+         const Boolean Glyph = config_to_boolean ("glyph", link, True);
+
+         LinkDefStruct *lds = new LinkDefStruct (Attr, Color, Radius, Sides, Glyph);
 
          if (lds && _defTable.store (Attr, lds)) {
 

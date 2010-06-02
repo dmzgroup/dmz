@@ -3,6 +3,7 @@
 
 #include <dmzObjectObserverUtil.h>
 #include <dmzRenderModuleCoreOSG.h>
+#include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimePluginContainer.h>
@@ -80,8 +81,8 @@ namespace dmz {
 
          // RenderModuloeCoreOSG Interface
          virtual UInt32 get_cull_mask ();
-         virtual UInt32 get_isect_mask ();
-         virtual UInt32 get_overlay_mask ();
+         virtual UInt32 get_master_isect_mask ();
+         virtual UInt32 lookup_isect_mask (const String &AttributeName);
          virtual UInt32 lookup_isect_mask (const Handle Attribute);
 
          virtual osg::Group *get_scene ();
@@ -138,10 +139,10 @@ namespace dmz {
          void _init (Config &local, Config &global);
 
          Log _log;
+         Definitions _defs;
          PluginContainer _extensions;
          UInt32 _cullMask;
          UInt32 _isectMask;
-         UInt32 _overlayMask;
          Handle _defaultHandle;
          Handle _bvrHandle;
          osg::ref_ptr<osg::Group> _scene;

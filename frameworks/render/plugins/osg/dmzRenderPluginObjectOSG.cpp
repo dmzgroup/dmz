@@ -1,4 +1,5 @@
 #include <dmzObjectAttributeMasks.h>
+#include <dmzRenderConsts.h>
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginObjectOSG.h"
 #include <dmzRuntimeConfig.h>
@@ -19,7 +20,10 @@ dmz::RenderPluginObjectOSG::RenderPluginObjectOSG (
       _defs (Info, &_log),
       _rc (Info, &_log),
       _core (0),
-      _cullMask (0) {
+      _cullMask (0),
+      _masterIsectMask (0),
+      _entityIsectMask (0),
+      _glyphIsectMask (0) {
 
    _noModel.model = new osg::Group;
    _init (local);
@@ -66,7 +70,15 @@ dmz::RenderPluginObjectOSG::discover_plugin (
 
       if (!_core) { _core = RenderModuleCoreOSG::cast (PluginPtr);
 
-         if (_core) { _cullMask = _core->get_cull_mask (); _add_models ();  }
+         if (_core) {
+
+            _cullMask = _core->get_cull_mask ();
+            _masterIsectMask = _core->get_master_isect_mask ();
+            _entityIsectMask = _core->lookup_isect_mask (RenderIsectEntityName);
+            _glyphIsectMask = _core->lookup_isect_mask (RenderIsectGlyphName);
+
+            _add_models ();
+         }
       }
    }
    else if (Mode == PluginDiscoverRemove) {
@@ -76,6 +88,9 @@ dmz::RenderPluginObjectOSG::discover_plugin (
          _remove_models ();
          _core = 0;
          _cullMask = 0;
+         _masterIsectMask = 0;
+         _entityIsectMask = 0;
+         _glyphIsectMask = 0;
       }
    }
 }
@@ -107,7 +122,14 @@ dmz::RenderPluginObjectOSG::create_object (
 
                osg::Group *group (_core->create_dynamic_object (ObjectHandle));
 
-               if (group) { group->addChild (os->model.get ()); }
+               if (group) {
+
+                  os->model->setNodeMask (
+                     (os->model->getNodeMask () & ~_masterIsectMask) |
+                        (os->Def.Glyph ? _glyphIsectMask : _entityIsectMask));
+
+                  group->addChild (os->model.get ());
+               }
             }
          }
       }
@@ -230,7 +252,8 @@ dmz::RenderPluginObjectOSG::_create_def_struct (const ObjectType &Type) {
 
    if (!result && Type.get_config ().lookup_all_config ("render.model", modelList)) {
 
-      result = new DefStruct;
+      result = new DefStruct (
+         config_to_boolean ("render.glyph.value", Type.get_config (), False));
 
       if (_defTable.store (Type.get_handle (), result)) {
 
@@ -345,7 +368,14 @@ dmz::RenderPluginObjectOSG::_add_models () {
 
          osg::Group *group (_core->create_dynamic_object (it.get_hash_key ()));
 
-         if (os->model.valid () && group) { group->addChild (os->model.get ()); }
+         if (os->model.valid () && group) {
+
+            os->model->setNodeMask (
+               (os->model->getNodeMask () & ~_masterIsectMask) |
+                  (os->Def.Glyph ? _glyphIsectMask : _entityIsectMask));
+
+            group->addChild (os->model.get ());
+         }
       }
    }
 }
@@ -363,7 +393,12 @@ dmz::RenderPluginObjectOSG::_remove_models () {
 
          osg::Group *group (_core->lookup_dynamic_object (it.get_hash_key ()));
 
-         if (os->model.valid () && group) { group->removeChild (os->model.get ()); }
+         if (os->model.valid () && group) {
+
+            os->model->setNodeMask (os->model->getNodeMask () | _masterIsectMask);
+
+            group->removeChild (os->model.get ());
+         }
       }
    }
 }

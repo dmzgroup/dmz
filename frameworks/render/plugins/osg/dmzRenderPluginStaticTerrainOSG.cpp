@@ -62,7 +62,7 @@ dmz::RenderPluginStaticTerrainOSG::discover_plugin (
 
          if (_core) {
 
-            const UInt32 IsectMask = _core->get_isect_mask ();
+            const UInt32 IsectMask = _core->get_master_isect_mask ();
 
             osg::Group *root = _core->get_static_objects ();
 
@@ -94,7 +94,7 @@ dmz::RenderPluginStaticTerrainOSG::discover_plugin (
 
       if (_core && (_core == RenderModuleCoreOSG::cast (PluginPtr))) {
 
-         const UInt32 IsectMask = _core->get_isect_mask ();
+         const UInt32 IsectMask = _core->get_master_isect_mask ();
 
          osg::Group *root = _core->get_static_objects ();
 

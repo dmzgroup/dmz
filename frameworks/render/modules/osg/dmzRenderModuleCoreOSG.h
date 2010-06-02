@@ -20,8 +20,8 @@ namespace dmz {
          static RenderModuleCoreOSG *cast (const Plugin *PluginPtr);
 
          virtual UInt32 get_cull_mask () = 0;
-         virtual UInt32 get_isect_mask () = 0;
-         virtual UInt32 get_overlay_mask () = 0;
+         virtual UInt32 get_master_isect_mask () = 0;
+         virtual UInt32 lookup_isect_mask (const String &AttributeName) = 0;
          virtual UInt32 lookup_isect_mask (const Handle Attribute) = 0;
 
          virtual osg::Group *get_scene () = 0;

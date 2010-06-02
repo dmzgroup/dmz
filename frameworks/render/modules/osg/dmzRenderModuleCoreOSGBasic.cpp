@@ -32,10 +32,10 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
       ObjectObserverUtil (Info, local),
       RenderModuleCoreOSG (Info),
       _log (Info),
+      _defs (Info),
       _extensions (Info.get_context (), &_log),
       _cullMask (0x001),
-      _isectMask (0x010),
-      _overlayMask (0x100),
+      _isectMask (0),
       _defaultHandle (0),
       _bvrHandle (0),
       _dirtyObjects (0) {
@@ -44,6 +44,27 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
       << Int32 (OPENSCENEGRAPH_MAJOR_VERSION) << "."
       << Int32 (OPENSCENEGRAPH_MINOR_VERSION) << "."
       << Int32 (OPENSCENEGRAPH_PATCH_VERSION) << endl;
+
+   const UInt32 StaticMask (0x01 << 1);
+   const UInt32 EntityMask (0x01 << 2);
+   const UInt32 GlyphMask (0x01 << 3);
+   const UInt32 OverlayMask (0x01 << 4);
+
+   _isectMaskTable.store (
+      _defs.create_named_handle (RenderIsectStaticName),
+      new UInt32 (StaticMask));
+
+   _isectMaskTable.store (
+      _defs.create_named_handle (RenderIsectEntityName),
+      new UInt32 (EntityMask));
+
+   _isectMaskTable.store (
+      _defs.create_named_handle (RenderIsectGlyphName),
+      new UInt32 (GlyphMask));
+
+   _isectMaskTable.store (
+      _defs.create_named_handle (RenderIsectOverlayName),
+      new UInt32 (OverlayMask));
 
    _scene = new osg::Group;
 
@@ -62,7 +83,18 @@ dmz::RenderModuleCoreOSGBasic::RenderModuleCoreOSGBasic (
 
    _init (local, global);
 
-   _overlay->setNodeMask (_overlayMask | _cullMask);
+   HashTableHandleIterator it;
+   UInt32 *mask (0);
+
+   while (_isectMaskTable.get_next (it, mask)) { _isectMask |= *mask; }
+
+   _staticObjects->setNodeMask (
+      (_staticObjects->getNodeMask () & ~_isectMask) | StaticMask);
+
+   _dynamicObjects->setNodeMask (
+      (_dynamicObjects->getNodeMask () & ~_isectMask) | EntityMask | GlyphMask);
+
+   _overlay->setNodeMask (OverlayMask | _cullMask);
 }
 
 
@@ -263,11 +295,16 @@ dmz::RenderModuleCoreOSGBasic::get_cull_mask () { return _cullMask; }
 
 
 dmz::UInt32
-dmz::RenderModuleCoreOSGBasic::get_isect_mask () { return _isectMask; }
+dmz::RenderModuleCoreOSGBasic::get_master_isect_mask () { return _isectMask; }
 
 
 dmz::UInt32
-dmz::RenderModuleCoreOSGBasic::get_overlay_mask () { return _overlayMask; }
+dmz::RenderModuleCoreOSGBasic::lookup_isect_mask (const String &AttributeName) {
+
+   UInt32 *ptr = _isectMaskTable.lookup (_defs.lookup_named_handle (AttributeName));
+
+   return ptr ? *ptr : 0;
+}
 
 
 dmz::UInt32

@@ -86,10 +86,11 @@ namespace dmz {
 
          struct DefStruct {
 
+            const Boolean Glyph;
             osg::ref_ptr<osg::Switch> model;
             StateStruct *stateMap;
 
-            DefStruct () : stateMap (0) {
+            DefStruct (const Boolean IsGlyph) : Glyph (IsGlyph), stateMap (0) {
 
                model = new osg::Switch;
                model->setDataVariance (osg::Object::DYNAMIC);
@@ -133,6 +134,9 @@ namespace dmz {
 
          ModelStruct _noModel;
          UInt32 _cullMask;
+         UInt32 _masterIsectMask;
+         UInt32 _entityIsectMask;
+         UInt32 _glyphIsectMask;
 
       private:
          RenderPluginObjectOSG ();

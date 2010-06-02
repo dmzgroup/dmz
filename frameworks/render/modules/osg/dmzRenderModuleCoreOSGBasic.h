@@ -82,6 +82,7 @@ namespace dmz {
          virtual UInt32 get_cull_mask ();
          virtual UInt32 get_isect_mask ();
          virtual UInt32 get_overlay_mask ();
+         virtual UInt32 lookup_isect_mask (const Handle Attribute);
 
          virtual osg::Group *get_scene ();
          virtual osg::Group *get_overlay ();
@@ -150,6 +151,7 @@ namespace dmz {
          osg::ref_ptr<osg::Group> _dynamicObjects;
          HashTableStringTemplate<ViewStruct> _viewTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
+         HashTableHandleTemplate<UInt32> _isectMaskTable;
          ObjectStruct *_dirtyObjects;
    };
 }

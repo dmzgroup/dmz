@@ -1,4 +1,5 @@
 #include <dmzRenderIsect.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableUInt32Template.h>
 #include <dmzTypesVector.h>
 
@@ -406,13 +407,16 @@ struct dmz::IsectParameters::State {
    Boolean findHandle;
    Boolean findDistance;
    Boolean findCullMode;
+   Boolean attrSet;
+   HandleContainer attr;
 
    State () :
       type (IsectAllPoints),
       findNormal (True),
       findHandle (True),
       findDistance (True),
-      findCullMode (True) {;}
+      findCullMode (True),
+      attrSet (False) {;}
 };
 
 
@@ -507,6 +511,27 @@ dmz::IsectParameters::set_calculate_cull_mode (const Boolean Value) {
 dmz::Boolean
 dmz::IsectParameters::get_calculate_cull_mode () const { return _state.findCullMode; }
 
+
+void
+dmz::IsectParameters::set_isect_attributes (const HandleContainer &Attr) {
+
+   if (Attr.get_count () > 0) {
+
+      _state.attrSet = True;
+      _state.attr = Attr;
+   }
+}
+
+
+dmz::Boolean
+dmz::IsectParameters::get_isect_attributes (HandleContainer &attr) const {
+
+   Boolean result (_state.attrSet);
+
+   if (result) { attr = _state.attr; }
+
+   return result;
+}
 
 /*!
 

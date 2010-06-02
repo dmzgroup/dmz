@@ -6,6 +6,8 @@
 
 namespace dmz {
 
+   class HandleContainer;
+
    //! \addtogroup Render
    //! @{
 
@@ -120,6 +122,9 @@ namespace dmz {
 
          void set_calculate_cull_mode (const Boolean Value);
          Boolean get_calculate_cull_mode () const;
+
+         void set_isect_attributes (const HandleContainer &Attr);
+         Boolean get_isect_attributes (HandleContainer &attr) const;
 
       protected:
          struct State;

@@ -2,6 +2,7 @@
 #include <dmzObjectModule.h>
 #include <dmzRenderConfigToOSG.h>
 #include <dmzRenderModuleCoreOSG.h>
+#include <dmzRenderObjectDataOSG.h>
 #include "dmzRenderPluginLinkOSG.h"
 #include <dmzRenderUtilOSG.h>
 #include <dmzRuntimeConfig.h>
@@ -294,6 +295,8 @@ dmz::RenderPluginLinkOSG::_create_link (LinkStruct &ls) {
 
       ls.root = new osg::MatrixTransform;
 
+      ls.root->setUserData (new RenderObjectDataOSG (ls.Link));
+      ls.root->setDataVariance (osg::Object::DYNAMIC);
       ls.root->addChild (ls.Def.model.get ());
 
       osg::ref_ptr<osg::Group> scene = _render->get_dynamic_objects ();

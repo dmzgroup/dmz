@@ -2,6 +2,7 @@
 #include <dmzObjectConsts.h>
 #include <dmzObjectModule.h>
 #include <dmzObjectAttributeMasks.h>
+#include <dmzRenderConsts.h>
 #include <dmzRenderObjectDataOSG.h>
 #include <dmzRenderUtilOSG.h>
 #include <dmzRuntimeConfig.h>
@@ -267,6 +268,15 @@ dmz::RenderModuleCoreOSGBasic::get_isect_mask () { return _isectMask; }
 
 dmz::UInt32
 dmz::RenderModuleCoreOSGBasic::get_overlay_mask () { return _overlayMask; }
+
+
+dmz::UInt32
+dmz::RenderModuleCoreOSGBasic::lookup_isect_mask (const Handle Attribute) {
+
+   UInt32 *ptr = _isectMaskTable.lookup (Attribute);
+
+   return ptr ? *ptr : 0;
+}
 
 
 osg::Group *

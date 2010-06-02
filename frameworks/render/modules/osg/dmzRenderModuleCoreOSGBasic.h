@@ -64,6 +64,13 @@ namespace dmz {
             const Vector &Value,
             const Vector *PreviousValue);
 
+         virtual void update_object_scale (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Vector &Value,
+            const Vector *PreviousValue);
+
          virtual void update_object_orientation (
             const UUID &Identity,
             const Handle ObjectHandle,
@@ -110,12 +117,14 @@ namespace dmz {
             osg::ref_ptr<osg::MatrixTransform> transform;
             Matrix ori;
             Vector pos;
+            Vector scale;
             Boolean dirty;
             Boolean destroyed;
 
             ObjectStruct (const Handle TheObject) :
                   Object (TheObject),
                   next (0),
+                  scale (1.0, 1.0, 1.0),
                   dirty (False),
                   destroyed (False) {
 

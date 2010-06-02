@@ -131,8 +131,6 @@ dmz::RenderModuleCoreOSGBasic::discover_plugin (
 void
 dmz::RenderModuleCoreOSGBasic::update_time_slice (const Float64 DeltaTime) {
 
-   static const Vector Scale (1.0, 1.0, 1.0);
-
    ObjectModule *objMod (get_object_module ());
 
    while (_dirtyObjects) {
@@ -140,7 +138,7 @@ dmz::RenderModuleCoreOSGBasic::update_time_slice (const Float64 DeltaTime) {
       ObjectStruct *os (_dirtyObjects);
       _dirtyObjects = os->next;
 
-      os->transform->setMatrix (to_osg_matrix (os->ori, os->pos, Scale));
+      os->transform->setMatrix (to_osg_matrix (os->ori, os->pos, os->scale));
 
       if (objMod) {
 
@@ -212,6 +210,30 @@ dmz::RenderModuleCoreOSGBasic::update_object_position (
 
 
 void
+dmz::RenderModuleCoreOSGBasic::update_object_scale (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Vector &Value,
+      const Vector *PreviousValue) {
+
+   ObjectStruct *os (_objectTable.lookup (ObjectHandle));
+
+   if (os) {
+
+      os->scale = Value;
+
+      if (!os->dirty) {
+
+         os->dirty = True;
+         os->next = _dirtyObjects;
+         _dirtyObjects = os;
+      }
+   }
+}
+
+
+void
 dmz::RenderModuleCoreOSGBasic::update_object_orientation (
       const UUID &Identity,
       const Handle ObjectHandle,
@@ -269,8 +291,6 @@ dmz::RenderModuleCoreOSGBasic::get_dynamic_objects () { return _dynamicObjects.g
 osg::Group *
 dmz::RenderModuleCoreOSGBasic::create_dynamic_object (const Handle ObjectHandle) {
 
-   static const Vector Scale (1.0, 1.0, 1.0);
-
    osg::Group *result (0);
 
    ObjectStruct *os (_objectTable.lookup (ObjectHandle));
@@ -291,15 +311,14 @@ dmz::RenderModuleCoreOSGBasic::create_dynamic_object (const Handle ObjectHandle)
          if (objMod) {
 
             objMod->lookup_position (ObjectHandle, _defaultHandle, os->pos);
+            objMod->lookup_scale (ObjectHandle, _defaultHandle, os->scale);
             objMod->lookup_orientation (ObjectHandle, _defaultHandle, os->ori);
-            os->transform->setMatrix (to_osg_matrix (os->ori, os->pos, Scale));
+            os->transform->setMatrix (to_osg_matrix (os->ori, os->pos, os->scale));
          }
-         else {
 
-            os->dirty = True;
-            os->next = _dirtyObjects;
-            _dirtyObjects = os;
-         }
+         os->dirty = True;
+         os->next = _dirtyObjects;
+         _dirtyObjects = os;
 
          if (_dynamicObjects.valid ()) {
 
@@ -432,7 +451,7 @@ dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
    }
 
    _defaultHandle = activate_default_object_attribute (
-      ObjectDestroyMask | ObjectPositionMask | ObjectOrientationMask);
+      ObjectDestroyMask | ObjectPositionMask | ObjectScaleMask | ObjectOrientationMask);
 
    _bvrHandle = config_to_named_handle (
       "bounding-volume-radius-attribute.name",

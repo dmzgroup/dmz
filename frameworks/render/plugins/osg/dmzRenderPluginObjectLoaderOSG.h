@@ -4,8 +4,15 @@
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzTypesHashTableHandleTemplate.h>
+
+#include <osg/Node>
+
 
 namespace dmz {
+
+   class RenderModuleCoreOSG;
+
 
    class RenderPluginObjectLoaderOSG :
          public Plugin,
@@ -192,8 +199,16 @@ namespace dmz {
 
       protected:
          void _init (Config &local);
+         
+         struct ObjectStruct {
+
+            osg::ref_ptr<osg::Node> model;
+         };
 
          Log _log;
+         RenderModuleCoreOSG *_core;
+         Handle _modelAttrHandle;
+         HashTableHandleTemplate<ObjectStruct> _objectTable;
 
       private:
          RenderPluginObjectLoaderOSG ();

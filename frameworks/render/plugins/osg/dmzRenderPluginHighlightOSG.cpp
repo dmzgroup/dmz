@@ -94,6 +94,16 @@ dmz::RenderPluginHighlightOSG::update_object_flag (
 
       osg::Group *group = _core->lookup_dynamic_object (ObjectHandle);
 
+      if (!group) {
+
+         HandleContainer links;
+
+         if (objMod->lookup_attribute_object_links (ObjectHandle, links)) {
+
+            group = _core->lookup_dynamic_object (links.get_first ());
+         }
+      }
+
       if (group) {
 
          HighlightStruct *current = _highlightList;

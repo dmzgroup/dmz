@@ -1,0 +1,8 @@
+lmk.set_name "dmzObjectPluginHighlight"
+lmk.set_type "plugin"
+lmk.add_files {"dmzObjectPluginHighlight.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzObjectFramework",}

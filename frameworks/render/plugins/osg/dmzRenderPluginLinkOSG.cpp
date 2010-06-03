@@ -181,9 +181,13 @@ dmz::RenderPluginLinkOSG::unlink_objects (
 
       if (ls->root.valid () && _render) {
 
-         osg::ref_ptr<osg::Group> scene = _render->get_dynamic_objects ();
+         osg::ref_ptr<osg::Group> scene = _render->lookup_dynamic_object (ls->Link);
 
-         if (scene.valid ()) { scene->removeChild (ls->root.get ()); }
+         if (scene.valid ()) {
+
+            scene->removeChild (ls->root.get ());
+            _render->destroy_dynamic_object (ls->Link);
+         }
       }
 
       delete ls; ls = 0;
@@ -317,7 +321,7 @@ dmz::RenderPluginLinkOSG::_create_link (LinkStruct &ls) {
          (ls.root->getNodeMask () & ~_masterMask) |
             (ls.Def.Glyph ? _glyphMask : _entityMask));
 
-      osg::ref_ptr<osg::Group> scene = _render->get_dynamic_objects ();
+      osg::ref_ptr<osg::Group> scene = _render->create_dynamic_object (ls.Link);
 
       if (scene.valid ()) { scene->addChild (ls.root.get ()); }
 

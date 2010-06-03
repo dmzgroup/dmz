@@ -60,6 +60,7 @@ namespace dmz {
          Boolean get_next_child (ObjectTypeIterator &it, ObjectType &type) const;
 
          Config get_config () const;
+         Config find_config (const String &Name) const;
 
          void set_type_context (TypeContext *context);
          TypeContext *get_type_context () const;

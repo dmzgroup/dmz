@@ -253,7 +253,7 @@ dmz::RenderPluginObjectOSG::_create_def_struct (const ObjectType &Type) {
    if (!result && Type.get_config ().lookup_all_config ("render.model", modelList)) {
 
       result = new DefStruct (
-         config_to_boolean ("render.glyph.value", Type.get_config (), False));
+         config_to_boolean ("value", Type.find_config ("glyph"), False));
 
       if (_defTable.store (Type.get_handle (), result)) {
 

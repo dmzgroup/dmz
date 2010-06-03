@@ -38,18 +38,6 @@ namespace dmz {
             Data *outData);
 
          // Object Observer Interface
-         virtual void update_link_attribute_object (
-            const Handle LinkHandle,
-            const Handle AttributeHandle,
-            const UUID &SuperIdentity,
-            const Handle SuperHandle,
-            const UUID &SubIdentity,
-            const Handle SubHandle,
-            const UUID &AttributeIdentity,
-            const Handle AttributeObjectHandle,
-            const UUID &PrevAttributeIdentity,
-            const Handle PrevAttributeObjectHandle);
-
          virtual void update_object_flag (
             const UUID &Identity,
             const Handle ObjectHandle,
@@ -66,9 +54,6 @@ namespace dmz {
 
          Handle _current;
          Handle _highlightAttr;
-
-         HandleContainer _attrObjects;
-         ObjectType _attrObjectType;
 
          Message _mouseMoveMsg;
 

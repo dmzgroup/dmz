@@ -25,10 +25,12 @@ dmz::RenderPluginLinkOSG::RenderPluginLinkOSG (const PluginInfo &Info, Config &l
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defaultAttrHandle (0),
+      _hideAttrHandle (0),
       _render (0),
       _masterMask (0),
       _glyphMask (0),
-      _entityMask (0) {
+      _entityMask (0),
+      _cullMask (0) {
 
    _init (local);
 }
@@ -79,6 +81,7 @@ dmz::RenderPluginLinkOSG::discover_plugin (
             _masterMask = _render->get_master_isect_mask ();
             _glyphMask = _render->lookup_isect_mask (RenderIsectGlyphName);
             _entityMask = _render->lookup_isect_mask (RenderIsectEntityName);
+            _cullMask = _render->get_cull_mask ();
 
             HashTableHandleIterator it;
             LinkDefStruct *def (0);
@@ -99,6 +102,7 @@ dmz::RenderPluginLinkOSG::discover_plugin (
          _masterMask = 0;
          _glyphMask = 0;
          _entityMask = 0;
+         _cullMask = 0;
          _render = 0;
       }
    }
@@ -208,6 +212,26 @@ dmz::RenderPluginLinkOSG::update_link_attribute_object (
       const UUID &PrevAttributeIdentity,
       const Handle PrevAttributeObjectHandle) {
 
+   LinkStruct *ls = _linkTable.lookup (LinkHandle);
+
+   if (ls) {
+
+      if (PrevAttributeObjectHandle) { _attrTable.remove (PrevAttributeObjectHandle); }
+
+      if (AttributeObjectHandle) {
+
+         _attrTable.store (AttributeObjectHandle, ls);
+
+         ObjectModule *module (get_object_module ());
+
+         if (module) {
+
+            ls->hide = module->lookup_flag (AttributeObjectHandle, _hideAttrHandle);
+
+            _update_link (*ls);
+         }
+      }
+   }
 }
 
 
@@ -230,6 +254,26 @@ dmz::RenderPluginLinkOSG::update_object_flag (
       const Boolean Value,
       const Boolean *PreviousValue) {
 
+   if (AttributeHandle == _hideAttrHandle) {
+
+      ObjectStruct *os = _objTable.lookup (ObjectHandle);
+
+      if (os) {
+
+         os->hide = Value;
+         _update_links (*os);
+      }
+      else {
+
+         LinkStruct *ls = _attrTable.lookup (ObjectHandle);
+
+         if (ls) {
+
+            ls->hide = Value;
+            _update_link (*ls);
+         }
+      }
+   }
 }
 
 
@@ -246,14 +290,7 @@ dmz::RenderPluginLinkOSG::update_object_position (
    if (os) {
 
       os->pos = Value;
-
-      HashTableHandleIterator it;
-      LinkStruct *link (0);
-
-      while (os->superTable.get_next (it, link)) { _update_link (*link); }
-      it.reset ();
-      link = 0;
-      while (os->subTable.get_next (it, link)) { _update_link (*link); }
+      _update_links (*os);
    }
 }
 
@@ -335,6 +372,13 @@ dmz::RenderPluginLinkOSG::_update_link (LinkStruct &ls) {
 
    if (ls.root.valid ()) {
 
+      UInt32 mask = ls.root->getNodeMask ();
+
+      if (ls.hide || ls.sub.hide || ls.super.hide) { mask &= ~_cullMask; }
+      else { mask |= _cullMask; }
+
+      ls.root->setNodeMask (mask);
+
       Vector dir = ls.super.pos - ls.sub.pos;
       const Vector Scale (1.0, 1.0, dir.magnitude ());
       dir.normalize_in_place ();
@@ -342,6 +386,19 @@ dmz::RenderPluginLinkOSG::_update_link (LinkStruct &ls) {
 
       ls.root->setMatrix (to_osg_matrix (rot, ls.sub.pos, Scale));
    }
+}
+
+
+void
+dmz::RenderPluginLinkOSG::_update_links (ObjectStruct &os) {
+
+   HashTableHandleIterator it;
+   LinkStruct *link (0);
+
+   while (os.superTable.get_next (it, link)) { _update_link (*link); }
+   it.reset ();
+   link = 0;
+   while (os.subTable.get_next (it, link)) { _update_link (*link); }
 }
 
 
@@ -437,7 +494,9 @@ dmz::RenderPluginLinkOSG::_init (Config &local) {
 
          if (lds && _defTable.store (Attr, lds)) {
 
-            activate_object_attribute (Attr, ObjectLinkMask | ObjectUnlinkMask);
+            activate_object_attribute (
+               Attr,
+               ObjectLinkMask | ObjectUnlinkMask | ObjectLinkAttributeMask);
          }
          else if (lds) { delete lds; lds = 0; }
       }
@@ -445,6 +504,8 @@ dmz::RenderPluginLinkOSG::_init (Config &local) {
 
    _defaultAttrHandle = activate_default_object_attribute (
       ObjectDestroyMask | ObjectPositionMask);
+
+   _hideAttrHandle = activate_object_attribute (ObjectAttributeHideName, ObjectFlagMask);
 }
 
 

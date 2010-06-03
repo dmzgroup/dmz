@@ -92,22 +92,6 @@ dmz::ObjectPluginHighlight::receive_message (
 
                Handle attrObj = module->lookup_link_attribute_object (Object);
 
-               if (!attrObj && _attrObjectType) {
-
-                  attrObj = module->create_object (_attrObjectType, ObjectLocal);
-                  module->store_link_attribute_object (Object, attrObj);
-                  module->activate_object (attrObj);
-
-                  Handle obj1 (0), obj2 (0), attr (0);
-
-                  if (module->lookup_linked_objects (Object, attr, obj1, obj2)) {
-
-                     activate_object_attribute (attr, ObjectLinkAttributeMask);
-                  }
-
-                  _attrObjects.add_handle (attrObj);
-               }
-
                if (attrObj) {
 
                   _current = attrObj;
@@ -122,28 +106,6 @@ dmz::ObjectPluginHighlight::receive_message (
 
 
 // Object Observer Interface
-void
-dmz::ObjectPluginHighlight::update_link_attribute_object (
-      const Handle LinkHandle,
-      const Handle AttributeHandle,
-      const UUID &SuperIdentity,
-      const Handle SuperHandle,
-      const UUID &SubIdentity,
-      const Handle SubHandle,
-      const UUID &AttributeIdentity,
-      const Handle AttributeObjectHandle,
-      const UUID &PrevAttributeIdentity,
-      const Handle PrevAttributeObjectHandle) {
-
-   if (_attrObjects.remove_handle (PrevAttributeObjectHandle)) {
-
-      ObjectModule *module (get_object_module ());
-
-      if (module) { module->destroy_object (PrevAttributeObjectHandle); }
-   }
-}
-
-
 void
 dmz::ObjectPluginHighlight::update_object_flag (
       const UUID &Identity,
@@ -189,11 +151,6 @@ dmz::ObjectPluginHighlight::_init (Config &local) {
       get_plugin_runtime_context ());
 
    subscribe_to_message (_mouseMoveMsg);
-
-   _attrObjectType = config_to_object_type (
-      "attribute-object-type.name",
-      local,
-      get_plugin_runtime_context ());
 }
 
 

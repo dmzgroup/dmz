@@ -302,13 +302,16 @@ dmz::RenderModuleIsectOSG::enable_isect (const Handle ObjectHandle) {
          RenderObjectDataOSG *data (
             dynamic_cast<RenderObjectDataOSG *> (g->getUserData ()));
 
-         if (data) { result = UInt32 (data->enable_isect ()); }
+         if (data) {
 
-         if (0 == result) {
+            result = UInt32 (data->enable_isect ());
 
-            UInt32 mask = g->getNodeMask ();
-            mask |= _defaultIsectMask;
-            g->setNodeMask (mask);
+            if (0 == result) {
+
+               UInt32 mask = g->getNodeMask ();
+               mask |= data->get_mask ();
+               g->setNodeMask (mask);
+            }
          }
       }
    }
@@ -331,13 +334,17 @@ dmz::RenderModuleIsectOSG::disable_isect (const Handle ObjectHandle) {
          RenderObjectDataOSG *data (
             dynamic_cast<RenderObjectDataOSG *> (g->getUserData ()));
 
-         if (data) { result = UInt32 (data->disable_isect ()); }
+         if (data) {
 
-         if (1 == result) {
+            result = UInt32 (data->disable_isect ());
 
-            UInt32 mask = g->getNodeMask ();
-            mask &= (~_defaultIsectMask);
-            g->setNodeMask (mask);
+            if (1 == result) {
+
+               UInt32 mask = g->getNodeMask ();
+               data->set_mask (mask & _defaultIsectMask);
+               mask &= (~_defaultIsectMask);
+               g->setNodeMask (mask);
+            }
          }
       }
    }

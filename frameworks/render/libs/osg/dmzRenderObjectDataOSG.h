@@ -15,6 +15,8 @@ namespace dmz {
 
          Handle get_handle () const;
 
+         void set_mask (const UInt32 Mask);
+         UInt32 get_mask () const;
          Boolean do_isect () const;
          Int32 disable_isect ();
          Int32 enable_isect ();
@@ -23,6 +25,7 @@ namespace dmz {
          virtual ~RenderObjectDataOSG () {;}
 
          const Handle _ObjectHandle;
+         UInt32 _mask;
          Int32 _isectCount;
    };
 };

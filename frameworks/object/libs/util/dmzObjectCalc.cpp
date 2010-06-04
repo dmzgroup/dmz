@@ -6,6 +6,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzTypesHandleContainer.h>
+#include <dmzTypesMath.h>
 
 //! \cond
 dmz::ObjectAttrOperator::ObjectAttrOperator (const ObjectAttrOperatorEnum Operator) :

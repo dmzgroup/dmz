@@ -22,6 +22,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginPortalOrbit (const PluginInfo &Info, Config &local);
          ~EntityPluginPortalOrbit ();
 
@@ -83,6 +84,7 @@ namespace dmz {
          Float64 _radius;
 
          EntityModulePortal *_portal;
+         //! \endcond
 
       private:
          EntityPluginPortalOrbit ();

@@ -15,6 +15,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          ObjectPluginAutoLinkAttribute (const PluginInfo &Info, Config &local);
          ~ObjectPluginAutoLinkAttribute ();
 
@@ -56,6 +57,7 @@ namespace dmz {
          HashTableHandleTemplate<ObjectType> _typeTable;
 
          Log _log;
+         //! \endcond
 
       private:
          ObjectPluginAutoLinkAttribute ();

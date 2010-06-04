@@ -1,5 +1,6 @@
 #include <dmzInputEventController.h>
 #include <dmzSystemStream.h>
+#include <dmzTypesMath.h>
 
 /*!
 

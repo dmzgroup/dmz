@@ -106,7 +106,7 @@ local_angle (QPointF p) {
    dmz::Vector v1 (0.0, 1.0, 0.0);
    dmz::Vector v2 ((float)p.x (), (float)p.y (), 0.0);
 
-   return dmz::to_degrees (-dmz::get_rotation_angle (v1, v2));
+   return dmz::to_degrees (-v1.get_signed_angle (v2));
 }
 
 

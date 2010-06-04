@@ -6,6 +6,28 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::ObjectPluginHighlight
+\ingroup Object
+\brief Sets the highlight flag on objects and links.
+\details
+\code
+<dmz>
+<dmzObjectPluginHighlight>
+   <data-convert-handle name="String"/>
+   <mouse-move-message name="String/>
+</dmzObjectPluginHighlight>
+</dmz>
+\endcode
+- data-convert-handle.name Name of the Data object's attribute that contains the highlight Handle. Defaults to "handle".
+- mouse-move-message.name Name of the message send when the mouse moves. Defaults to "Mouse_Move_Message".
+
+This plugin only allows one object to be highlighted at a time.
+
+*/
+
+//! \cond
 dmz::ObjectPluginHighlight::ObjectPluginHighlight (
       const PluginInfo &Info,
       Config &local) :
@@ -152,6 +174,7 @@ dmz::ObjectPluginHighlight::_init (Config &local) {
 
    subscribe_to_message (_mouseMoveMsg);
 }
+//! \endcond
 
 
 extern "C" {

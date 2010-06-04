@@ -17,6 +17,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          ObjectPluginHighlight (const PluginInfo &Info, Config &local);
          ~ObjectPluginHighlight ();
 
@@ -56,6 +57,7 @@ namespace dmz {
          Handle _highlightAttr;
 
          Message _mouseMoveMsg;
+         //! \endcond
 
       private:
          ObjectPluginHighlight ();

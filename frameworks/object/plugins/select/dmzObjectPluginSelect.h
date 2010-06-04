@@ -18,6 +18,7 @@ namespace dmz {
          public InputObserverUtil {
 
       public:
+         //! \cond
          ObjectPluginSelect (const PluginInfo &Info, Config &local);
          ~ObjectPluginSelect ();
 
@@ -56,6 +57,7 @@ namespace dmz {
          Message _selectMsg;
          Boolean _addToSelection;
          UInt32 _key;
+         //! \endcond
 
       private:
          ObjectPluginSelect ();

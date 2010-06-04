@@ -17,6 +17,7 @@ namespace dmz {
          public EntityModulePortal {
 
       public:
+         //! \cond
          EntityModulePortalBasic (const PluginInfo &Info, Config &local);
          ~EntityModulePortalBasic ();
 
@@ -51,6 +52,7 @@ namespace dmz {
          Vector _position;
          Matrix _orientation;
          Vector _velocity;
+         //! \endcond
 
       private:
          EntityModulePortalBasic ();

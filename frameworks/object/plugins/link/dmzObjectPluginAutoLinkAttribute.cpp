@@ -5,6 +5,25 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::ObjectPluginAutoLinkAttribute
+\ingroup Object
+\brief Automatically creates an attribute object when two objects are linked.
+\details
+The ObjectType of the link attribute object is determined by attribute handle
+used to create the link.
+\code
+<dmzObjectPluginAutoLinkAttribute>
+   <attribute name="Attribute Name" type="Object Type Name"/>
+   <attribute name="Attribute Name" type="Object Type Name"/>
+   ...
+</dmzObjectPluginAutoLinkAttribute>
+\endcode
+
+*/
+
+//! \cond
 dmz::ObjectPluginAutoLinkAttribute::ObjectPluginAutoLinkAttribute (
       const PluginInfo &Info,
       Config &local) :
@@ -142,7 +161,7 @@ dmz::ObjectPluginAutoLinkAttribute::_init (Config &local) {
       }
    }
 }
-
+//! \endcond
 
 extern "C" {
 

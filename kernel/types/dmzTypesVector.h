@@ -3,6 +3,7 @@
 
 #include <dmzTypesBase.h>
 #include <dmzTypesConsts.h>
+#include <dmzTypesMath.h>
 #include <math.h>
 
 namespace dmz {
@@ -77,6 +78,7 @@ class Vector {
       Vector cross (const Vector &Vec) const;
 
       Float64 get_angle (const Vector &Vec) const;
+      Float64 get_signed_angle (const Vector &Vec) const;
       Boolean is_zero () const;
       Boolean is_zero (const Float64 Epsilon) const;
 
@@ -498,6 +500,41 @@ inline dmz::Float64
 dmz::Vector::get_angle (const Vector &Vec) const {
 
    return atan2 (cross (Vec).magnitude (), dot (Vec));
+}
+
+
+/*!
+
+\brief Returns the angle between the two given vectors.
+\details The function calculates the smallest angle from this vector to \p Vec. The
+returned angle contains direction and may be negative.
+\returns Returns the angle in radians.
+
+*/
+inline dmz::Float64
+dmz::Vector::get_signed_angle (const Vector &Vec) const {
+
+   Float64 result = get_angle (Vec);
+
+   const Vector Cross = cross (Vec);
+
+   const Float64 ValueY = Cross.get_y ();
+
+   if (is_zero64 (ValueY)) {
+
+      const Float64 ValueX = Cross.get_x ();
+   
+      if (is_zero64 (ValueX)) {
+
+         const Float64 ValueZ = Cross.get_z ();
+
+         if (ValueZ > 0.0) { result = -result; }
+      }
+      else if (ValueX < 0.0) { result = -result; }
+   }
+   else if (ValueY < 0.0) { result = -result; }
+
+   return result;
 }
 
 

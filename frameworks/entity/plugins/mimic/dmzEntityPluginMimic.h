@@ -19,6 +19,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginMimic (const PluginInfo &Info, Config &local);
          ~EntityPluginMimic ();
 
@@ -65,6 +66,7 @@ namespace dmz {
          Handle _target;
          Handle _defaultAttrHandle;
          Int32 _active;
+         //! \endcond
 
       private:
          EntityPluginMimic ();

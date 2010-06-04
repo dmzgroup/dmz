@@ -16,8 +16,9 @@
 
 \class dmz::EntityPluginPortalArticulate
 \ingroup Entity
-\brief First-person view of human-in-th-loop object with the render and audio portals.
+\brief First-person articulated view of human-in-th-loop.
 \details
+This plugin uses the dmz::EntityModulePortal interface to update the portal view.
 \code
 <dmz>
 <dmzEntityPluginPortalArticulate>

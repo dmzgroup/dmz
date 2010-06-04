@@ -17,6 +17,7 @@
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamFile.h>
 #include <dmzTypesBase.h>
+#include <dmzTypesMath.h>
 
 namespace {
 

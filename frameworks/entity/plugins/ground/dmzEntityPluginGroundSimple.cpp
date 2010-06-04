@@ -33,6 +33,29 @@
 */
 
 //! \cond
+namespace {
+
+static void 
+get_orthogonal_component ( 
+      const dmz::Vector &Normal, 
+      const dmz::Vector &Value, 
+      dmz::Vector &ortho) {
+ 
+   const dmz::Vector UpY (0.0, 1.0, 0.0); 
+   dmz::Matrix mat (Normal, UpY);
+
+   ortho = Value;
+   mat.transform_vector (ortho);
+
+   mat.invert_in_place ();
+
+   ortho.set_y (0.0);
+
+   mat.transform_vector (ortho);
+}
+
+};
+
 dmz::EntityPluginGroundSimple::EntityPluginGroundSimple (
       const PluginInfo &Info,
       Config &local) :
@@ -544,7 +567,7 @@ dmz::EntityPluginGroundSimple::_move_entity (
 
    mat.transform_vector (vforward);
 
-   heading = get_rotation_angle (Forward, vforward);
+   heading = Forward.get_signed_angle ( vforward);
 
    if (Airborn) {
 
@@ -750,7 +773,7 @@ dmz::EntityPluginGroundSimple::_validate_move (
 
             ori = ori * mat;
 
-            heading = get_rotation_angle (Forward, newDir);
+            heading = Forward.get_signed_angle (newDir);
          }
       }
 

@@ -7,6 +7,21 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::ObjectPluginSelect
+\ingroup Object
+\brief Uses messages to update the selection set.
+\details Selects the object specified by the selection message. If the SHIFT key is held
+down at the time the message is received, the object is added to the selection set.
+If the object is already in the selection set, it is removed from the set.
+If the SHIFT key is not pressed, then the selection set is cleared and the single object
+specified by the message is placed in the selection set. If the message does not contain
+an object handle, the selection set is cleared.
+
+*/
+
+//! \cond
 dmz::ObjectPluginSelect::ObjectPluginSelect (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       MessageObserver (Info),
@@ -123,6 +138,7 @@ dmz::ObjectPluginSelect::_init (Config &local) {
 
    init_input_channels (local, InputEventKeyMask, &_log);
 }
+//! \endcond
 
 
 extern "C" {

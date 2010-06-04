@@ -101,21 +101,6 @@ namespace dmz {
 
    DMZ_KERNEL_LINK_SYMBOL Float32 string_to_float32 (const String &Value);
    DMZ_KERNEL_LINK_SYMBOL Float64 string_to_float64 (const String &Value);
-
-   DMZ_KERNEL_LINK_SYMBOL Boolean is_zero32 (const Float32 Value);
-   DMZ_KERNEL_LINK_SYMBOL Boolean is_zero32 (const Float32 Value, const Float32 Epsilon);
-   DMZ_KERNEL_LINK_SYMBOL Boolean is_zero64 (const Float64 Value);
-   DMZ_KERNEL_LINK_SYMBOL Boolean is_zero64 (const Float64 Value, const Float64 Epsilon);
-
-   DMZ_KERNEL_LINK_SYMBOL Float64 to_degrees (const Float64 Value);
-   DMZ_KERNEL_LINK_SYMBOL Float64 to_radians (const Float64 Value);
-
-   DMZ_KERNEL_LINK_SYMBOL Float64 normalize_angle (
-      const Float64 Value,
-      const Float64 Min);
-
-   DMZ_KERNEL_LINK_SYMBOL Float64 normalize_angle (const Float64 Value);
-
 //! @}
 };
 

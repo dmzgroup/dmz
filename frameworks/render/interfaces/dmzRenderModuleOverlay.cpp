@@ -117,6 +117,13 @@ const RenderOverlayTypeEnum Type)
 \param[out] value String used to return the current text value.
 \return Returns dmz::True if the text value was successfully found.
 
+\fn dmz::Boolean dmz::RenderModuleOverlay::lookup_text_size (const Handle Overlay, Float64 &length, Float64 &height)
+\brief Gets the length and height of the text.
+\param[in] Overlay Handle of text node.
+\param[out] length Length of the text node.
+\param[out] height Height of the text node.
+\return Returns dmz::True if the text size was successfully found.
+
 \fn dmz::Boolean dmz::RenderModuleOverlay::add_group_child (
 const Handle Parent,
 const Handle Child)

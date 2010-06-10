@@ -514,6 +514,7 @@ dmz::RenderModuleOverlayOSG::store_text (const Handle Overlay, const String &Val
    if (ts && ts->text.valid ()) {
 
       ts->text->setText (Value.get_buffer ());
+
       ts->value = Value;
       result = True;
    }
@@ -535,6 +536,28 @@ dmz::RenderModuleOverlayOSG::lookup_text (const Handle Overlay, String &value) {
       result = True;
    }
 
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::lookup_text_size (
+      const Handle Overlay,
+      Float64 &length,
+      Float64 &height) {
+
+   Boolean result (False);
+
+   TextStruct *ts (_textTable.lookup (Overlay));
+
+   if (ts && ts->text.valid ()) {
+
+      osg::BoundingBox bb = ts->text->computeBound ();
+      length = bb.xMax () - bb.xMin ();
+      height = bb.yMax () - bb.yMin ();
+
+      result = True;
+   }
 
    return result;
 }

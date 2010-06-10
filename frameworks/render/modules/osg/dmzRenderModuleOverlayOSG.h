@@ -119,6 +119,10 @@ namespace dmz {
          // Overlay Text API
          virtual Boolean store_text (const Handle Overlay, const String &Value);
          virtual Boolean lookup_text (const Handle Overlay, String &value);
+         virtual Boolean lookup_text_size (
+            const Handle Overlay,
+            Float64 &length,
+            Float64 &height);
 
          // Overlay Group API
          virtual Boolean add_group_child (const Handle Parent, const Handle Child);

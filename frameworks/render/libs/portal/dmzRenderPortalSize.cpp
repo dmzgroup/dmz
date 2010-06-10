@@ -21,14 +21,12 @@ local_configure (
 
    const String Prefix ("portal-size.");
 
-   Message result = config_create_message (
+   Message result = config_create_monostate_message (
       Prefix + "message.resize.name",
       init,
       "DMZ_Render_Portal_Resize_Message",
       context,
       0);
-
-   result.set_monostate_mode (MessageMonostateOn);
 
    portal = config_to_named_handle (
       Prefix + "name.value",

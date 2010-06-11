@@ -1217,6 +1217,25 @@ dmz::RenderModuleOverlayOSG::_add_text (
       const Int32 Depth = config_to_int32 ("depth.value", node);
       const String FontResource = config_to_string ("font.resource", node);
       const Vector Pos = config_to_vector ("position", node);
+      const String Align = config_to_string ("alignment.value", node);
+
+      osgText::TextBase::AlignmentType alignType (osgText::TextBase::BASE_LINE);
+
+      if (Align == "left") {
+
+         alignType = osgText::TextBase::LEFT_BOTTOM;
+      }
+      else if (Align == "right") {
+
+         alignType = osgText::TextBase::RIGHT_BOTTOM;
+      }
+      else if (Align == "center") {
+
+         alignType = osgText::TextBase::CENTER_BOTTOM;
+      }
+      else {
+
+      }
 
       String text;
       Config data;
@@ -1240,6 +1259,8 @@ dmz::RenderModuleOverlayOSG::_add_text (
 
          if (FontName) { textNode->setFont (FontName.get_buffer ()); }
       }
+
+      textNode->setAlignment (alignType);
 
       textNode->setAxisAlignment (osgText::TextBase::XY_PLANE);
       textNode->setBackdropType (osgText::Text::NONE);

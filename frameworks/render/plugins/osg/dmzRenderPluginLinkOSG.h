@@ -7,6 +7,7 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
 
 #include <osg/MatrixTransform>
@@ -101,6 +102,13 @@ namespace dmz {
             const Vector &Value,
             const Vector *PreviousValue);
 
+         virtual void update_object_orientation (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Matrix &Value,
+            const Matrix *PreviousValue);
+
          virtual void update_object_vector (
             const UUID &Identity,
             const Handle ObjectHandle,
@@ -174,12 +182,21 @@ namespace dmz {
          struct ObjectStruct {
 
             const Handle Object;
+            const Vector Center;
             Vector pos;
+            Vector offset;
+            Matrix ori;
             Boolean hide;
             HashTableHandleTemplate<LinkStruct> subTable;
             HashTableHandleTemplate<LinkStruct> superTable;
 
-            ObjectStruct (const Handle TheObject) : Object (TheObject), hide (False) {;}
+            ObjectStruct (
+                  const Handle TheObject,
+                  const Vector &TheCenter) :
+                  Object (TheObject),
+                  Center (TheCenter),
+                  offset (TheCenter),
+                  hide (False) {;}
          };
 
          ObjectStruct *_lookup_object (const Handle Object);
@@ -201,6 +218,7 @@ namespace dmz {
          UInt32 _entityMask;
          UInt32 _cullMask;
 
+         HashTableHandleTemplate<Vector> _centerTable;
          HashTableHandleTemplate<LinkDefStruct> _defTable;
          HashTableHandleTemplate<LinkStruct> _linkTable;
          HashTableHandleTemplate<LinkStruct> _attrTable;

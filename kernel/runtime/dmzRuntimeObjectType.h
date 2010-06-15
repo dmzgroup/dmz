@@ -61,6 +61,7 @@ namespace dmz {
 
          Config get_config () const;
          Config find_config (const String &Name) const;
+         Config find_config (const String &Name, ObjectType &type) const;
 
          void set_type_context (TypeContext *context);
          TypeContext *get_type_context () const;

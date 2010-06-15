@@ -9,6 +9,8 @@
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToVector.h>
+#include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesMatrix.h>
@@ -38,6 +40,7 @@ dmz::RenderPluginLinkOSG::RenderPluginLinkOSG (const PluginInfo &Info, Config &l
 
 dmz::RenderPluginLinkOSG::~RenderPluginLinkOSG () {
 
+   _centerTable.empty ();
    _defTable.empty ();
    _linkTable.empty ();
    _objTable.empty ();
@@ -296,6 +299,26 @@ dmz::RenderPluginLinkOSG::update_object_position (
 
 
 void
+dmz::RenderPluginLinkOSG::update_object_orientation (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Matrix &Value,
+      const Matrix *PreviousValue) {
+
+   ObjectStruct *os = _objTable.lookup (ObjectHandle);
+
+   if (os) {
+
+      os->ori = Value;
+      os->offset = os->Center;
+      Value.transform_vector (os->offset);
+      _update_links (*os);
+   }
+}
+
+
+void
 dmz::RenderPluginLinkOSG::update_object_vector (
       const UUID &Identity,
       const Handle ObjectHandle,
@@ -325,11 +348,37 @@ dmz::RenderPluginLinkOSG::_lookup_object (const Handle Object) {
 
    if (!result) {
 
-      result = new ObjectStruct (Object);
+      Vector center;
+
+      ObjectModule *module = get_object_module ();
+
+      if (module) {
+
+         ObjectType type = module->lookup_object_type (Object);
+
+         Vector *ptr = _centerTable.lookup (type.get_handle ());
+
+         if (!ptr) { 
+
+            Config data = type.find_config ("center-offset");
+
+            if (data) {
+
+               ptr = new Vector (config_to_vector (data));
+
+               if (ptr && !_centerTable.store (type.get_handle (), ptr)) {
+
+                  delete ptr; ptr = 0;
+               }
+            }
+         }
+
+         if (ptr) { center = *ptr; }
+      }
+
+      result = new ObjectStruct (Object, center);
 
       if (result && _objTable.store (Object, result)) { 
-
-         ObjectModule *module = get_object_module ();
 
          if (module) {
 
@@ -379,12 +428,12 @@ dmz::RenderPluginLinkOSG::_update_link (LinkStruct &ls) {
 
       ls.root->setNodeMask (mask);
 
-      Vector dir = ls.super.pos - ls.sub.pos;
+      Vector dir = (ls.super.pos + ls.super.offset) - (ls.sub.pos + ls.sub.offset);
       const Vector Scale (1.0, 1.0, dir.magnitude ());
       dir.normalize_in_place ();
       Matrix rot (dir);
 
-      ls.root->setMatrix (to_osg_matrix (rot, ls.sub.pos, Scale));
+      ls.root->setMatrix (to_osg_matrix (rot, ls.sub.pos + ls.sub.offset, Scale));
    }
 }
 
@@ -503,7 +552,7 @@ dmz::RenderPluginLinkOSG::_init (Config &local) {
    }
 
    _defaultAttrHandle = activate_default_object_attribute (
-      ObjectDestroyMask | ObjectPositionMask);
+      ObjectDestroyMask | ObjectPositionMask | ObjectOrientationMask);
 
    _hideAttrHandle = activate_object_attribute (ObjectAttributeHideName, ObjectFlagMask);
 }

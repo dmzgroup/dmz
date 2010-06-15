@@ -195,6 +195,7 @@ dmz::RenderPluginObjectTextOSG::_update_text (ObjectStruct &os, TextStruct &ts) 
             ts.text->setPosition (to_osg_vector (ts.Def.Offset));
             ts.text->setBackdropType (osgText::Text::NONE);
             ts.text->setCharacterSize (ts.Def.Height);
+            ts.text->setAlignment (osgText::TextBase::CENTER_BOTTOM);
 
             os.geode->addDrawable (ts.text.get ());
          }

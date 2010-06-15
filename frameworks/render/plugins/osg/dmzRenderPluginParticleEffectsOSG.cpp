@@ -208,6 +208,18 @@ dmz::RenderPluginParticleEffectsOSG::ParticleStateStruct::enable (
 }
 
 
+void
+dmz::RenderPluginParticleEffectsOSG::ParticleStateStruct::endless () {
+
+   if (effect.valid ()) {
+
+      osgParticle::Emitter *em = effect->getEmitter ();
+
+      if (em) { em->setEndless (true); }
+   }
+}
+
+
 dmz::RenderPluginParticleEffectsOSG::RenderPluginParticleEffectsOSG (
       const PluginInfo &Info,
       Config &local) :
@@ -317,6 +329,8 @@ dmz::RenderPluginParticleEffectsOSG::create_object (
 
                   if (pss->effect.valid ()) {
 
+                     pss->effect->setWind (to_osg_vector (_wind));
+
                      pss->enable (False);
 
                      os->geode->addDrawable (pss->effect->getParticleSystem ());
@@ -415,6 +429,40 @@ dmz::RenderPluginParticleEffectsOSG::update_object_velocity (
       const Vector &Value,
       const Vector *PreviousValue) {
 
+}
+
+
+void
+dmz::RenderPluginParticleEffectsOSG::update_object_vector (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Vector &Value,
+      const Vector *PreviousValue) {
+
+   _wind = Value;
+
+   HashTableHandleIterator it;
+   ObjectStruct *os (0);
+
+   const osg::Vec3 WindOSG = to_osg_vector (_wind);
+
+   while (_objTable.get_next (it, os)) {
+
+      ParticleStateStruct *pss = os->list;
+
+      while (pss) {
+
+         if (pss->effect.valid ()) {
+
+            pss->effect->setWind (WindOSG);
+            // note: setting the wind seems to turn endless smoke off so re-enable it.
+            pss->endless ();
+         }
+
+         pss = pss->next;
+      }
+   }
 }
 
 
@@ -664,6 +712,10 @@ dmz::RenderPluginParticleEffectsOSG::_init (Config &local) {
       ObjectCreateMask |
       ObjectDestroyMask |
       ObjectStateMask);
+
+   activate_object_attribute (
+      config_to_string ("wind-attribute.name", local, "Env_Wind_Direction"),
+      ObjectVectorMask);
 }
 
 

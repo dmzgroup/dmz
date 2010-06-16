@@ -362,14 +362,12 @@ dmz::RenderPluginLinkOSG::_lookup_object (const Handle Object) {
 
             Config data = type.find_config ("center-offset");
 
-            if (data) {
+            if (data) { ptr = new Vector (config_to_vector (data)); }
+            else { ptr = new Vector; }
 
-               ptr = new Vector (config_to_vector (data));
+            if (ptr && !_centerTable.store (type.get_handle (), ptr)) {
 
-               if (ptr && !_centerTable.store (type.get_handle (), ptr)) {
-
-                  delete ptr; ptr = 0;
-               }
+               delete ptr; ptr = 0;
             }
          }
 

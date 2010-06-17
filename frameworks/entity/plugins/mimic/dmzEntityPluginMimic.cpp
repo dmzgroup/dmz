@@ -10,6 +10,16 @@
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::EntityPluginMimic
+\ingroup Entity
+\brief Causes the Human In the Loop to mimic the attached object's position, orientation,
+and velocity.
+
+*/
+
+//! \cond
 dmz::EntityPluginMimic::EntityPluginMimic (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (Info),
@@ -149,6 +159,7 @@ dmz::EntityPluginMimic::_init (Config &local) {
 
    if (_targetMessage) { subscribe_to_message (_targetMessage); }
 }
+//! \endcond
 
 
 extern "C" {

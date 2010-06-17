@@ -14,7 +14,8 @@
 
 \class dmz::EntityPluginPortalTether
 \ingroup Entity
-\brief Tethers the render and audio portals to the human-in-the-loop object.
+\brief Tethers the portal to the human-in-the-loop object.
+\details This plugin uses the dmz::EntityModulePortal interface to update the portal view.
 
 */
 

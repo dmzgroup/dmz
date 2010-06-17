@@ -338,6 +338,36 @@ dmz::EventType::get_config () const {
 }
 
 
+/*!
+
+\brief Finds Config.
+\details Looks for Config up the EventType tree until Config is found or the root
+EventType is reached. Uses dmz::Config::lookup_all_config_merged().
+\param[in] Name String containing the name of the Config data to find.
+\return Returns a Config object. The Config object will be empty if the named Config
+can not be found.
+
+*/
+dmz::Config
+dmz::EventType::find_config (const String &Name) const {
+
+   Config result;
+
+   EventType current (_context);
+
+   while (current) {
+
+      if (current.get_config ().lookup_all_config_merged (Name, result)) {
+
+         current.set_type_context (0);
+      }
+      else { current.become_parent (); }
+   }
+
+   return result;
+}
+
+
 //! For internal use.
 void
 dmz::EventType::set_type_context (TypeContext *context) {

@@ -17,10 +17,11 @@ namespace dmz {
 //! \addtogroup Entity
 //! @{
 
+   //! Enum describes wheel type. Defined in dmzEntityConsts.h.
    enum EntityWheelEnum {
-      EntityWheelCenter,
-      EntityWheelLeft,
-      EntityWheelRight
+      EntityWheelCenter, //!< Center wheel.
+      EntityWheelLeft,   //!< Left Wheel.
+      EntityWheelRight   //!< Right Wheel.
    };
 
    //! \brief Name of entity health object attribute. Defined in dmzEntityConsts.h.
@@ -29,8 +30,10 @@ namespace dmz {
    //! \brief Name of entity attach message. Defined in dmzEntityConsts.h.
    const char EntityMessageAttachName[] = "DMZ_Entity_Attach_Message";
 
-   const char EntityWheelRootName[] = "Wheel_";
-   
+   //! \brief String root used to create wheel attribute names.
+   //! Defined in dmzEntityConsts.h
+   const char EntityWheelRootName[] = "Entity_Wheel_";
+
    String create_wheel_attribute_name (
       const String &Root,
       const EntityWheelEnum Side,
@@ -39,6 +42,17 @@ namespace dmz {
 };
 
 
+/*!
+
+\brief Creates wheel attribute names.
+\ingroup Entity
+\details Defined in dmzEntityConsts.h.
+\param[in] Root String containing the root value to use in the attribute name.
+\param[in] Side Enum specifying the side of the entity the wheel is located.
+\param[in] Which specifies which wheel.
+\return Returns a String containing the attribute name for the specified wheel.
+
+*/
 inline dmz::String
 dmz::create_wheel_attribute_name (
       const String &Root,
@@ -52,6 +66,5 @@ dmz::create_wheel_attribute_name (
    result << Which;
    return result;
 }
-
 
 #endif // DMZ_ENTITY_CONSTS_DOT_H

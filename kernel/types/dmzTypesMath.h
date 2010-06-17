@@ -9,15 +9,24 @@ namespace dmz {
 class Vector;
 class Matrix;
 
-DMZ_KERNEL_LINK_SYMBOL void get_orthogonal_component (
-   const Vector &Normal,
-   const Vector &Value,
-   Vector &ortho,
-   Vector *remainder = 0);
+//! \addtogroup Types
+//! @{
 
 DMZ_KERNEL_LINK_SYMBOL Float64 get_heading (const Matrix &Ori);
 
-DMZ_KERNEL_LINK_SYMBOL Float64 get_rotation_angle (const Vector &V1, const Vector &V2);
+DMZ_KERNEL_LINK_SYMBOL Boolean is_zero32 (const Float32 Value);
+DMZ_KERNEL_LINK_SYMBOL Boolean is_zero32 (const Float32 Value, const Float32 Epsilon);
+DMZ_KERNEL_LINK_SYMBOL Boolean is_zero64 (const Float64 Value);
+DMZ_KERNEL_LINK_SYMBOL Boolean is_zero64 (const Float64 Value, const Float64 Epsilon);
+
+DMZ_KERNEL_LINK_SYMBOL Float64 to_degrees (const Float64 Value);
+DMZ_KERNEL_LINK_SYMBOL Float64 to_radians (const Float64 Value);
+
+DMZ_KERNEL_LINK_SYMBOL Float64 normalize_angle (const Float64 Value, const Float64 Min);
+
+DMZ_KERNEL_LINK_SYMBOL Float64 normalize_angle (const Float64 Value);
+
+//! @}
 
 };
 

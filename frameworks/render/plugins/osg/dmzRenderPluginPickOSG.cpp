@@ -69,7 +69,12 @@ dmz::RenderPluginPickOSG::discover_plugin (
 
          _core = dmz::RenderModuleCoreOSG::cast (PluginPtr);
 
-         if (_core) { _isectMask = _core->get_isect_mask (); }
+         if (_core) {
+
+            _isectMask = _core->lookup_isect_mask (RenderIsectStaticName);
+            _isectMask |= _core->lookup_isect_mask (RenderIsectEntityName);
+            _isectMask |= _core->lookup_isect_mask (RenderIsectGlyphName);
+         }
       }
    }
    else if (Mode == PluginDiscoverRemove) {

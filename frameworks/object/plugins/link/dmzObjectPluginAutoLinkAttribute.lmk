@@ -1,0 +1,8 @@
+lmk.set_name "dmzObjectPluginAutoLinkAttribute"
+lmk.set_type "plugin"
+lmk.add_files {"dmzObjectPluginAutoLinkAttribute.cpp",}
+lmk.add_libs {
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzObjectFramework",}

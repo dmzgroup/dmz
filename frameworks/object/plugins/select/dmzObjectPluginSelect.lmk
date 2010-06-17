@@ -1,0 +1,9 @@
+lmk.set_name "dmzObjectPluginSelect"
+lmk.set_type "plugin"
+lmk.add_files {"dmzObjectPluginSelect.cpp",}
+lmk.add_libs {
+   "dmzInputEvents",
+   "dmzInputUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzInputFramework", "dmzObjectFramework",}

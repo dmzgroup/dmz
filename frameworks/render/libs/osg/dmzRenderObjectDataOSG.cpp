@@ -2,11 +2,20 @@
 
 dmz::RenderObjectDataOSG::RenderObjectDataOSG (const Handle ObjectHandle) :
       _ObjectHandle (ObjectHandle),
+      _mask (0),
       _isectCount (0) {;}
 
 
 dmz::Handle
 dmz::RenderObjectDataOSG::get_handle () const { return _ObjectHandle; }
+
+
+void
+dmz::RenderObjectDataOSG::set_mask (const UInt32 IsectMask) { _mask = IsectMask; }
+
+
+dmz::UInt32
+dmz::RenderObjectDataOSG::get_mask () const { return _mask; }
 
 
 dmz::Boolean

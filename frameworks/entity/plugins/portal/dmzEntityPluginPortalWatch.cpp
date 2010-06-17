@@ -15,7 +15,8 @@
 \class dmz::EntityPluginPortalWatch
 \ingroup Entity
 \brief Keeps the portal pointed towards the selected object.
-\details. Updates the views heading and pitch so that it is always facing the
+\details This plugin uses the dmz::EntityModulePortal interface to update the portal view.
+Updates the views heading and pitch so that it is always facing the
 selected object.
 
 */

@@ -512,6 +512,14 @@ dmz::Boolean
 dmz::IsectParameters::get_calculate_cull_mode () const { return _state.findCullMode; }
 
 
+/*!
+
+\brief Sets the isect attributes to use in the intersection tests.
+\details By default, all intersections are tested against dmz::RenderIsectStaticName and
+dmz::RenderIsectEntityName.
+\param[in] Attr HandleContainer containing the isect attribute handles.
+
+*/
 void
 dmz::IsectParameters::set_isect_attributes (const HandleContainer &Attr) {
 
@@ -523,6 +531,13 @@ dmz::IsectParameters::set_isect_attributes (const HandleContainer &Attr) {
 }
 
 
+/*!
+
+\brief Gets the isect attributes to use in the intersection tests.
+\param[out] attr HandleContainer containing the isect attribute handles.
+\return Return dmz::True if any handles were returned in the HandleContainer.
+
+*/
 dmz::Boolean
 dmz::IsectParameters::get_isect_attributes (HandleContainer &attr) const {
 

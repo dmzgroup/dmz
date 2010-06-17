@@ -13,6 +13,18 @@
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::EntityPluginPortalOrbit
+\ingroup Entity
+\brief Gives an orbit view of the human-in-the-loop object.
+\details This plugin uses the dmz::EntityModulePortal interface to update the portal view.
+Uses mouse events to move the portal in an orbit view around the human-in-the-loop object.
+The objects bounding volume radius will be used to initialized the orbit radius.
+
+*/
+
+//! \cond
 dmz::EntityPluginPortalOrbit::EntityPluginPortalOrbit (
       const PluginInfo &Info,
       Config &local) :
@@ -253,6 +265,7 @@ dmz::EntityPluginPortalOrbit::_init (Config &local) {
 
    activate_object_attribute (ObjectAttributeHumanInTheLoopName, ObjectFlagMask);
 }
+//! \endcond
 
 
 extern "C" {

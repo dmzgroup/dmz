@@ -11,6 +11,30 @@
 #include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
 
+/*!
+
+\class dmz::EntityPluginWheels
+\ingroup Entity
+\brief Articulates an object's wheels based on velocity.
+\details
+\code
+<dmz>
+<runtime>
+   <object-type name="Type">
+      <wheels pairs="Int32" radius="Float64" root="String" modifier="Float64"/>
+   </object-type>
+</runtime>
+</dmz>
+\endcode
+Wheels are defined on a ObjectType basis.
+- pairs: Number of wheel pairs. Defaults to 0.
+- radius: Wheel radius in meters. Defaults to 0.25.
+- root: Root of the wheel attribute name. Defaults to dmz::EntityWheelRootName.
+- modifier: Defaults to 1.0
+
+*/
+
+//! \cond
 dmz::EntityPluginWheels::EntityPluginWheels (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (Info),
@@ -236,6 +260,7 @@ dmz::EntityPluginWheels::_init (Config &local) {
 
    activate_default_object_attribute (ObjectCreateMask | ObjectDestroyMask);
 }
+//! \endcond
 
 
 extern "C" {

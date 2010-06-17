@@ -62,7 +62,7 @@ dmz::Matrix::to_euler_angles (Float64 &hy, Float64 &px, Float64 &rz)  const {
    else {
 
       hvec.normalize_in_place ();
-      hy = get_rotation_angle (Forward, hvec);
+      hy = Forward.get_signed_angle (hvec);
       hmat.from_axis_and_angle (Up, hy);
       hmat.transpose_in_place ();
       cmat = hmat * cmat;
@@ -73,7 +73,7 @@ dmz::Matrix::to_euler_angles (Float64 &hy, Float64 &px, Float64 &rz)  const {
    if (is_zero64 (pvec.get_y ())) { px = 0.0; }
    else {
 
-      px = get_rotation_angle (Forward, pvec);
+      px = Forward.get_signed_angle (pvec);
       pmat.from_axis_and_angle (Right, px);
       pmat.transpose_in_place ();
       cmat = pmat * cmat;
@@ -82,7 +82,7 @@ dmz::Matrix::to_euler_angles (Float64 &hy, Float64 &px, Float64 &rz)  const {
    cmat.transform_vector (rvec);
 
    if (is_zero64 (rvec.get_x ())) { rz = 0.0; }
-   else { rz = get_rotation_angle (Up, rvec); }
+   else { rz = Up.get_signed_angle (rvec); }
 }
 
 
@@ -105,14 +105,14 @@ dmz::Matrix::from_vector (const Vector &Direction) {
    if (!hvec.is_zero ()) {
 
       hvec.normalize_in_place ();
-      hmat.from_axis_and_angle (Up, get_rotation_angle (Forward, hvec));
+      hmat.from_axis_and_angle (Up, Forward.get_signed_angle (hvec));
    }
 
    hmat.transpose ().transform_vector (pvec);
 
    if (!is_zero64 (pvec.get_y ())) {
 
-      pmat.from_axis_and_angle (Right, get_rotation_angle (Forward, pvec));
+      pmat.from_axis_and_angle (Right, Forward.get_signed_angle (pvec));
    }
 
    *this = hmat * pmat;

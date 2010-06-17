@@ -6,6 +6,7 @@
 #include <dmzInputMaskConsts.h>
 #include <dmzRuntimeData.h>
 #include <dmzTypesMask.h>
+#include <dmzTypesMath.h>
 
 #include <ctype.h>
 

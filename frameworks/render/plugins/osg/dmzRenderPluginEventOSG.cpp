@@ -77,7 +77,7 @@ dmz::RenderPluginEventOSG::discover_plugin (
 
          _core = RenderModuleCoreOSG::cast (PluginPtr);
 
-         if (_core) { _isectMask = _core->get_isect_mask (); }
+         if (_core) { _isectMask = _core->get_master_isect_mask (); }
       }
    }
    else if (Mode == PluginDiscoverRemove) {

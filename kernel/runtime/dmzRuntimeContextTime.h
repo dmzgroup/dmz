@@ -6,6 +6,7 @@
 #include <dmzSystemRefCount.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesMath.h>
 
 namespace dmz {
 

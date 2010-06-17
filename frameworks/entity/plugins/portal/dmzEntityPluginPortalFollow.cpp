@@ -14,7 +14,8 @@
 
 \class dmz::EntityPluginPortalFollow
 \ingroup Entity
-\brief Follows human-in-th-loop object with the render and audio portals.
+\brief Follows human-in-th-loop object.
+\details This plugin uses the dmz::EntityModulePortal interface to update the portal view.
 
 */
 

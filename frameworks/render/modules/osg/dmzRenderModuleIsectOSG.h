@@ -38,7 +38,7 @@ namespace dmz {
 
          RenderModuleCoreOSG *_core;
 
-         UInt32 _isectMask;
+         UInt32 _defaultIsectMask;
    };
 };
 

@@ -53,6 +53,8 @@ namespace dmz {
    const char ObjectAttributeScalarThrottleName[] = "throttle";
    //! Selected object attribute handle name. Defined in dmzObjectConsts.h.
    const char ObjectAttributeSelectName[] = "Object_Select_Attribute";
+   //! Highlighted object attribute handle name. Defined in dmzObjectConsts.h.
+   const char ObjectAttributeHighlightName[] = "Object_Highlight_Attribute";
    //! Hidden object attribute handle name. Defined in dmzObjectConsts.h.
    const char ObjectAttributeHideName[] = "Object_Hide_Attribute";
    //! Object bounding volume radius attribute handle name. Defined in dmzObjectConsts.h.

@@ -4,6 +4,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::EntityModulePortalBasic
+\ingroup Entity
+\brief Provides basic implementation of the dmz::EntityModulePortal interface.
+
+*/
+
+//! \cond
 dmz::EntityModulePortalBasic::EntityModulePortalBasic (
       const PluginInfo &Info,
       Config &local) :
@@ -102,6 +111,7 @@ void
 dmz::EntityModulePortalBasic::_init (Config &local) {
 
 }
+//! \endcond
 
 
 extern "C" {

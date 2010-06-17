@@ -17,6 +17,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          EntityPluginWheels (const PluginInfo &Info, Config &local);
          ~EntityPluginWheels ();
 
@@ -81,6 +82,7 @@ namespace dmz {
 
          HashTableHandleTemplate<WheelStruct> _wheelTable;
          HashTableHandleTemplate<ObjectStruct> _objTable;
+         //! \endcond
 
       private:
          EntityPluginWheels ();

@@ -122,17 +122,20 @@ namespace dmz {
             const osg::Vec4 Color;
             const Float64 Radius;
             const Int32 Sides;
+            const Boolean Glyph;
             osg::ref_ptr<osg::Geode> model;
 
             LinkDefStruct (
                   const Handle TheAttrHandle,
                   const osg::Vec4 &TheColor,
                   const Float64 TheRadius,
-                  const Int32 TheSides) :
+                  const Int32 TheSides,
+                  const Boolean IsGlyph) :
                   AttrHandle (TheAttrHandle),
                   Color (TheColor),
                   Radius (TheRadius),
-                  Sides (TheSides >= 3 ? TheSides : 3) {;}
+                  Sides (TheSides >= 3 ? TheSides : 3),
+                  Glyph (IsGlyph) {;}
          };
 
          struct ObjectStruct;
@@ -143,6 +146,7 @@ namespace dmz {
             const LinkDefStruct &Def;
             ObjectStruct &super;
             ObjectStruct &sub;
+            Boolean hide;
             osg::ref_ptr<osg::MatrixTransform> root;
 
             LinkStruct (
@@ -153,7 +157,8 @@ namespace dmz {
                   Link (TheLink),
                   Def (TheDef),
                   super (theSuper),
-                  sub (theSub) {
+                  sub (theSub),
+                  hide (False) {
 
                super.superTable.store (Link, this);
                sub.subTable.store (Link, this);
@@ -170,26 +175,35 @@ namespace dmz {
 
             const Handle Object;
             Vector pos;
+            Boolean hide;
             HashTableHandleTemplate<LinkStruct> subTable;
             HashTableHandleTemplate<LinkStruct> superTable;
 
-            ObjectStruct (const Handle TheObject) : Object (TheObject) {;}
+            ObjectStruct (const Handle TheObject) : Object (TheObject), hide (False) {;}
          };
 
          ObjectStruct *_lookup_object (const Handle Object);
          void _create_link (LinkStruct &ls);
          void _update_link (LinkStruct &ls);
+         void _update_links (ObjectStruct &os);
          void _create_geometry (LinkDefStruct &def);
          void _init (Config &local);
 
          Log _log;
 
          Handle _defaultAttrHandle;
+         Handle _hideAttrHandle;
 
          RenderModuleCoreOSG *_render;
 
+         UInt32 _masterMask;
+         UInt32 _glyphMask;
+         UInt32 _entityMask;
+         UInt32 _cullMask;
+
          HashTableHandleTemplate<LinkDefStruct> _defTable;
          HashTableHandleTemplate<LinkStruct> _linkTable;
+         HashTableHandleTemplate<LinkStruct> _attrTable;
          HashTableHandleTemplate<ObjectStruct> _objTable;
 
       private:

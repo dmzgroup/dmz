@@ -1,27 +1,25 @@
-#ifndef DMZ_ENTITY_PLUGIN_MIMIC_DOT_H
-#define DMZ_ENTITY_PLUGIN_MIMIC_DOT_H
+#ifndef DMZ_OBJECT_PLUGIN_HIGHLIGHT_DOT_H
+#define DMZ_OBJECT_PLUGIN_HIGHLIGHT_DOT_H
 
-#include <dmzInputObserverUtil.h>
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeDataConverterTypesBase.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
+#include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzRuntimeTimeSlice.h>
+#include <dmzTypesHandleContainer.h>
 
 namespace dmz {
 
-   class EntityPluginMimic :
+   class ObjectPluginHighlight :
          public Plugin,
-         public TimeSlice,
          public MessageObserver,
-         public InputObserverUtil,
          public ObjectObserverUtil {
 
       public:
          //! \cond
-         EntityPluginMimic (const PluginInfo &Info, Config &local);
-         ~EntityPluginMimic ();
+         ObjectPluginHighlight (const PluginInfo &Info, Config &local);
+         ~ObjectPluginHighlight ();
 
          // Plugin Interface
          virtual void update_plugin_state (
@@ -32,9 +30,6 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
-         // TimeSlice Interface
-         virtual void update_time_slice (const Float64 TimeDelta);
-
          // Message Observer Interface
          virtual void receive_message (
             const Message &Type,
@@ -42,9 +37,6 @@ namespace dmz {
             const Handle TargetObserverHandle,
             const Data *InData,
             Data *outData);
-
-         // Input Observer Interface
-         virtual void update_channel_state (const Handle Channel, const Boolean State);
 
          // Object Observer Interface
          virtual void update_object_flag (
@@ -55,25 +47,24 @@ namespace dmz {
             const Boolean *PreviousValue);
 
       protected:
+         // ObjectPluginHighlight Interface
          void _init (Config &local);
 
          Log _log;
          DataConverterHandle _convert;
 
-         Message _targetMessage;
+         Handle _current;
+         Handle _highlightAttr;
 
-         Handle _hil;
-         Handle _target;
-         Handle _defaultAttrHandle;
-         Int32 _active;
+         Message _mouseMoveMsg;
          //! \endcond
 
       private:
-         EntityPluginMimic ();
-         EntityPluginMimic (const EntityPluginMimic &);
-         EntityPluginMimic &operator= (const EntityPluginMimic &);
+         ObjectPluginHighlight ();
+         ObjectPluginHighlight (const ObjectPluginHighlight &);
+         ObjectPluginHighlight &operator= (const ObjectPluginHighlight &);
 
    };
 };
 
-#endif // DMZ_ENTITY_PLUGIN_MIMIC_DOT_H
+#endif // DMZ_OBJECT_PLUGIN_HIGHLIGHT_DOT_H

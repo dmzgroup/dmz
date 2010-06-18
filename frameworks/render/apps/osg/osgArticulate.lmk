@@ -1,0 +1,10 @@
+require "lmkOSG"
+
+lmkOSG.set_name "osgArticulate"
+lmk.set_type "exe"
+lmk.add_files {"osgArticulate.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzRenderModuleCoreOSG",}
+lmkOSG.add_libs {"osgDB", "osgUtil", "osg", "OpenThreads",}

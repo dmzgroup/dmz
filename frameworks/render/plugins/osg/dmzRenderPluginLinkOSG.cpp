@@ -159,7 +159,8 @@ dmz::RenderPluginLinkOSG::link_objects (
       ObjectStruct *super = _lookup_object (SuperHandle);
       ObjectStruct *sub = _lookup_object (SubHandle);
 
-      if (super && sub) {
+      if (super && !super->superTable.lookup (LinkHandle) &&
+            sub && !sub->subTable.lookup (LinkHandle)) {
 
          LinkStruct *ls = new LinkStruct (LinkHandle, *lds, *super, *sub);
 
@@ -433,6 +434,7 @@ dmz::RenderPluginLinkOSG::_update_link (LinkStruct &ls) {
 
       ls.root->setMatrix (to_osg_matrix (rot, ls.sub.pos + ls.sub.offset, Scale));
    }
+else { _log.error << "Root not valid." << endl; }
 }
 
 

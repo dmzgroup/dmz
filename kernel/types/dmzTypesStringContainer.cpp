@@ -78,6 +78,68 @@ dmz::StringContainer::operator= (const StringContainer &Container) {
 }
 
 
+/*!
+
+\brief Relational "equal to" operator.
+\details Test that each container has the same content and that the content is
+stored in the same order.
+\param[in] Container StringContainer to test against.
+\return Returns dmz::True if the two StringContainer objects have the same content stored
+in the same order.
+
+*/
+dmz::Boolean
+dmz::StringContainer::operator== (const StringContainer &Container) {
+
+   Boolean result (False);
+
+   if (get_count () == Container.get_count ()) {
+
+      result = True;
+
+      StringContainerIterator it1, it2;
+      String v1, v2;
+
+      while (result && get_next (it1, v1) && Container.get_next (it2, v2)) {
+
+         if (v1 != v2) { result = False; }
+      }
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Tests if two StringContainer object have the same content.
+\param[in] Container StringContainer to test against.
+\return Returns dmz::True if the two StringContainer objects have the same content.
+
+*/
+dmz::Boolean
+dmz::StringContainer::has_same_content (const StringContainer &Container) {
+
+   Boolean result (False);
+
+   if (get_count () == Container.get_count ()) {
+
+      result = True;
+
+      StringContainerIterator it;
+      String value;
+
+      while (result && get_next (it, value)) {
+
+         if (!Container.contains (value)) { result = False; }
+      }
+   }
+
+
+   return result;
+}
+
+
 //! Clears container.
 void
 dmz::StringContainer::clear () { _state.table.clear (); }

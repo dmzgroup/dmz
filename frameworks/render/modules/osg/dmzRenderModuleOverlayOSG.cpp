@@ -1223,15 +1223,15 @@ dmz::RenderModuleOverlayOSG::_add_text (
 
       if (Align == "left") {
 
-         alignType = osgText::TextBase::LEFT_BOTTOM;
+         alignType = osgText::TextBase::LEFT_BOTTOM_BASE_LINE;
       }
       else if (Align == "right") {
 
-         alignType = osgText::TextBase::RIGHT_BOTTOM;
+         alignType = osgText::TextBase::RIGHT_BOTTOM_BASE_LINE;
       }
       else if (Align == "center") {
 
-         alignType = osgText::TextBase::CENTER_BOTTOM;
+         alignType = osgText::TextBase::CENTER_BOTTOM_BASE_LINE;
       }
       else {
 

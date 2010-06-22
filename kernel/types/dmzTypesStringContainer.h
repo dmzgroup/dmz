@@ -34,6 +34,8 @@ namespace dmz {
          ~StringContainer ();
 
          StringContainer &operator= (const StringContainer &Container);
+         Boolean operator== (const StringContainer &Container);
+         Boolean has_same_content (const StringContainer &Container);
 
          void clear ();
 

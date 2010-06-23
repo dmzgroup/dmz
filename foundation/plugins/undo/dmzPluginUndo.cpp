@@ -38,7 +38,7 @@ dmz::PluginUndo::receive_message (
       const Data *InData,
       Data *outData) {
 
-_log.error << "Got message: " << Msg.get_name () << endl;
+//_log.error << "Got message: " << Msg.get_name () << endl;
 
    if (Msg == _undoMessage) { _undo.do_next (UndoTypeUndo); }
    else if (Msg == _redoMessage) { _undo.do_next (UndoTypeRedo); }

@@ -1,5 +1,6 @@
 #include <dmzQtUtil.h>
 #include <dmzRuntimeObjectType.h>
+#include <dmzTypesStringContainer.h>
 #include <dmzTypesUUID.h>
 #include <math.h>
 #include <QtGui/QtGui>
@@ -182,5 +183,30 @@ dmz::rename_file (const QString &OldName, const QString &NewName) {
    }
 
    return retVal;
+}
+
+
+void
+dmz::to_qstringlist (const StringContainer &Source, QStringList &target) {
+
+   target.clear ();
+
+   String data;
+   while (Source.get_next (data)) {
+
+      target.append (data.get_buffer ());
+   }
+}
+
+
+void
+dmz::to_dmz_string_container (const QStringList &Source, StringContainer &target) {
+
+   target.clear ();
+
+   foreach (QString data, Source) {
+
+      target.append (qPrintable (data));
+   }
 }
 

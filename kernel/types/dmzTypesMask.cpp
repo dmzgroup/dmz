@@ -143,7 +143,7 @@ dmz::Mask::operator== (const Mask &Value) const {
 
 /*!
 
-\brief Relational "equal to" operator.
+\brief Relational "not equal to" operator.
 \param[in] Value Right hand value.
 \return Returns dmz::True if either of the two dmz::Mask objects have a bit set in one and
 not the other.

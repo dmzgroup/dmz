@@ -89,7 +89,7 @@ in the same order.
 
 */
 dmz::Boolean
-dmz::StringContainer::operator== (const StringContainer &Container) {
+dmz::StringContainer::operator== (const StringContainer &Container) const {
 
    Boolean result (False);
 
@@ -118,7 +118,7 @@ dmz::StringContainer::operator== (const StringContainer &Container) {
 
 */
 dmz::Boolean
-dmz::StringContainer::has_same_content (const StringContainer &Container) {
+dmz::StringContainer::has_same_content (const StringContainer &Container) const {
 
    Boolean result (False);
 

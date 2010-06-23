@@ -20,7 +20,7 @@ namespace dmz {
 
    DMZ_RENDER_ISECT_LINK_SYMBOL Boolean
    isect_clamp_point (
-      const Vector &Value,
+      const Vector Value,
       RenderModuleIsect &isect,
       Vector &point,
       Vector &normal);

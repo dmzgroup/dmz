@@ -63,7 +63,7 @@ dmz::RenderPluginHeightMapOSG::discover_plugin (
 
       if (core) {
 
-         osg::ref_ptr<osg::Group> scene = core->get_scene ();
+         osg::ref_ptr<osg::Group> scene = core->get_isect ();
 
          if (scene.valid () && _terrain.valid ()) {
 
@@ -81,7 +81,7 @@ dmz::RenderPluginHeightMapOSG::discover_plugin (
 
       if (core) {
 
-         osg::ref_ptr<osg::Group> scene = core->get_scene ();
+         osg::ref_ptr<osg::Group> scene = core->get_isect ();
 
          if (scene.valid () && _terrain.valid ()) {
 

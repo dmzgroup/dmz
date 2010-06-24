@@ -192,7 +192,9 @@ dmz::to_qstringlist (const StringContainer &Source, QStringList &target) {
    target.clear ();
 
    String data;
-   while (Source.get_next (data)) {
+   StringContainerIterator it;
+
+   while (Source.get_next (it, data)) {
 
       target.append (data.get_buffer ());
    }

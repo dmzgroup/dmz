@@ -1,0 +1,7 @@
+lmk.set_name "dmzObjectPluginSelectSimilar"
+lmk.set_type "plugin"
+lmk.add_files {"dmzObjectPluginSelectSimilar.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzObjectFramework",}

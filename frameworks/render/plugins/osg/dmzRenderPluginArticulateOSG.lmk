@@ -4,6 +4,7 @@ lmkOSG.set_name "dmzRenderPluginArticulateOSG"
 lmk.set_type "plugin"
 lmk.add_files {"dmzRenderPluginArticulateOSG.cpp",}
 lmk.add_libs {
+   "dmzRenderUtilOSG",
    "dmzObjectUtil",
    "dmzFoundation",
    "dmzKernel",

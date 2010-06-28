@@ -1,6 +1,7 @@
 #include <dmzFoundationXMLUtil.h>
 #include <dmzObjectAttributeMasks.h>
 #include <dmzRenderModuleCoreOSG.h>
+#include <dmzRenderUtilOSG.h>
 #include "dmzRenderPluginArticulateOSG.h"
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToNamedHandle.h>
@@ -10,8 +11,12 @@
 #include <dmzRuntimePluginInfo.h>
 
 #include <osg/Group>
+#include <osg/MatrixTransform>
 #include <osg/Transform>
 #include <osgSim/DOFTransform>
+
+#include <qdb.h>
+static dmz::qdb out;
 
 namespace {
 
@@ -39,6 +44,36 @@ struct DofScalarStruct : public sstruct {
       else if (Axis == dmz::VectorComponentZ) { hpr.z () = Value; }
 
       if (transform.valid ()) { transform->setCurrentHPR (hpr); }
+   }
+};
+
+struct MatrixScalarStruct : public sstruct {
+
+   osg::ref_ptr<osg::MatrixTransform> transform;
+   dmz::Vector axis;
+
+   MatrixScalarStruct (
+         const dmz::VectorComponentEnum TheAxis,
+         osg::MatrixTransform *node) :
+         transform (node) {
+
+      if (TheAxis == dmz::VectorComponentY) { axis.set_xyz (0.0, 1.0, 0.0); }
+      else if (TheAxis == dmz::VectorComponentX) { axis.set_xyz (1.0, 0.0, 0.0); }
+      else if (TheAxis == dmz::VectorComponentZ) { axis.set_xyz (0.0, 0.0, -1.0); }
+   }
+
+   virtual void update_scalar (
+         const dmz::Float64 Value,
+         const dmz::Float64 *PreviousValue) {
+
+      dmz::Matrix mat (axis, Value);
+      static const dmz::Vector PosVec;
+      static const dmz::Vector ScaleVec (1.0, 1.0, 1.0);
+
+      if (transform.valid ()) {
+
+         transform->setMatrix (to_osg_matrix (mat, PosVec, ScaleVec));
+      }
    }
 };
 
@@ -282,6 +317,25 @@ dmz::RenderPluginArticulateOSG::apply (osg::Transform &transform) {
                if (ss && !_currentObj->add_scalar (sds->AttrHandle, ss)) {
 
                   delete ss; ss = 0;
+               }
+            }
+         }
+         else {
+
+            osg::MatrixTransform *mat = dynamic_cast<osg::MatrixTransform *>(&transform);
+
+            if (mat) {
+
+               ScalarDefStruct *sds = _rcStack->rc.scalarMap.lookup (Name);
+
+               if (sds) {
+
+                  ScalarStruct *ss = new MatrixScalarStruct (sds->Axis, mat);
+
+                  if (ss && !_currentObj->add_scalar (sds->AttrHandle, ss)) {
+
+                     delete ss; ss = 0;
+                  }
                }
             }
          }

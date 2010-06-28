@@ -7,7 +7,7 @@
 #include <osg/NodeVisitor>
 #include <osgDB/ReadFile>
 #include <osgDB/WriteFile>
-// #include <osgFX/Cartoon>
+#include <osgSim/DOFTransform>
 
 #include <qdb.h>
 
@@ -72,9 +72,33 @@ main (int argc, char *argv[]) {
          while (dump.table.get_next (it, ptr)) {
 
             out << it.get_hash_key () << endl;
+
+#if 0
+            osg::ref_ptr<osgSim::DOFTransform> dof = new osgSim::DOFTransform;
+            dof->setCurrentScale (osg::Vec3 (1.0, 1.0, 1.0));
+#else
+            osg::ref_ptr<osg::MatrixTransform> dof = new osg::MatrixTransform;
+#endif
+            dof->setReferenceFrame (osg::Transform::RELATIVE_RF);
+
+            String name ("dmz_dof_");
+            name << it.get_hash_key ();
+
+            dof->setName (name.get_buffer ());
+
+            const unsigned int ChildCount = ptr->getNumChildren ();
+
+            for (unsigned int ix = 0; ix < ChildCount; ix++) {
+
+               dof->addChild (ptr->getChild (ix));
+            }
+
+            ptr->removeChildren (0, ChildCount);
+
+            ptr->addChild (dof.get ());
          }
 
-//         osgDB::writeNodeFile (*node, argv[2]);
+         osgDB::writeNodeFile (*node, argv[2]);
       }
       else { out << "Failed to load: " << argv[1] << endl; }
    }

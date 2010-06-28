@@ -191,6 +191,12 @@ dmz::EntityPluginWheels::_lookup_wheels_def (const ObjectType &Type) {
 }
 
 
+namespace {
+
+static const dmz::UInt32 FlipRight = 0x01;
+static const dmz::UInt32 FlipLeft = 0x02;
+};
+
 dmz::EntityPluginWheels::WheelStruct *
 dmz::EntityPluginWheels::_create_wheels_def (const ObjectType &Type) {
 
@@ -200,10 +206,21 @@ dmz::EntityPluginWheels::_create_wheels_def (const ObjectType &Type) {
 
    if (Type.get_config ().lookup_all_config_merged ("wheels", wheels)) {
 
+      UInt32 flip (0);
+
       const Float64 Radius = config_to_float64 ("radius", wheels, 0.25);
       const Float64 Mod = config_to_float64 ("modifier", wheels, 1.0);
       const String Root = config_to_string ("root", wheels, EntityWheelRootName);
       const Int32 Pairs = config_to_int32 ("pairs", wheels, 0);
+      const String FlipString = config_to_string ("reverse", wheels, "none");
+
+      if (FlipString == "left") { flip = FlipLeft; }
+      else if (FlipString == "right") { flip = FlipRight; }
+      else if ((FlipString == "both") || (FlipString == "all")) {
+
+         flip = FlipLeft | FlipRight;
+      }
+      else if (FlipString == "none") { flip = 0; }
 
       if (Radius > 0.0) {
 
@@ -216,7 +233,10 @@ dmz::EntityPluginWheels::_create_wheels_def (const ObjectType &Type) {
                Handle attr = _defs.create_named_handle (
                   create_wheel_attribute_name (Root, EntityWheelLeft, ix));
 
-               WheelStruct *ws = new WheelStruct (attr, InvertRadius, Mod);
+               WheelStruct *ws = new WheelStruct (
+                  attr,
+                  InvertRadius,
+                  Mod * (flip & FlipLeft ? -1.0 : 1.0));
 
                if (ws) {
 
@@ -227,7 +247,10 @@ dmz::EntityPluginWheels::_create_wheels_def (const ObjectType &Type) {
                attr = _defs.create_named_handle (
                   create_wheel_attribute_name (Root, EntityWheelRight, ix));
 
-               ws = new WheelStruct (attr, InvertRadius, Mod);
+               ws = new WheelStruct (
+                  attr,
+                  InvertRadius,
+                  Mod * (flip & FlipRight ? -1.0 : 1.0));
 
                if (ws) {
 

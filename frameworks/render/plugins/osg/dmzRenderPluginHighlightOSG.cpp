@@ -173,6 +173,21 @@ dmz::RenderPluginHighlightOSG::_init (Config &local) {
                   0,
                   GL_TEXTURE_2D, 
                   osg::StateAttribute::OVERRIDE | osg::StateAttribute::OFF);
+
+               hs->color->setTextureMode (
+                  1,
+                  GL_TEXTURE_2D, 
+                  osg::StateAttribute::OVERRIDE | osg::StateAttribute::OFF);
+
+               hs->color->setTextureMode (
+                  2,
+                  GL_TEXTURE_2D, 
+                  osg::StateAttribute::OVERRIDE | osg::StateAttribute::OFF);
+
+               hs->color->setTextureMode (
+                  3,
+                  GL_TEXTURE_2D, 
+                  osg::StateAttribute::OVERRIDE | osg::StateAttribute::OFF);
             }
 
             hs->next = _highlightList;

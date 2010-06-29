@@ -322,7 +322,7 @@ dmz::RenderPluginArticulateOSG::apply (osg::Transform &transform) {
          }
          else {
 
-            osg::MatrixTransform *mat = dynamic_cast<osg::MatrixTransform *>(&transform);
+            osg::MatrixTransform *mat = transform.asMatrixTransform ();
 
             if (mat) {
 

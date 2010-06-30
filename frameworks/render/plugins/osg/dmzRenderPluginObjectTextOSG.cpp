@@ -173,6 +173,10 @@ dmz::RenderPluginObjectTextOSG::_update_text (ObjectStruct &os, TextStruct &ts) 
 
       os.geode = new osg::Geode;
 
+      osg::ref_ptr<osg::StateSet> set = os.geode->getOrCreateStateSet ();
+
+      set->setMode (GL_LIGHTING, osg::StateAttribute::OFF);
+
       if (_core) {
 
          osg::ref_ptr<osg::Group> root = _core->create_dynamic_object (os.Object);

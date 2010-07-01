@@ -127,23 +127,29 @@ namespace dmz {
          struct LinkDefStruct {
 
             const Handle AttrHandle;
+            const Handle ScaleAttrHandle;
             const osg::Vec4 Color;
             const Float64 Radius;
             const Int32 Sides;
             const Boolean Glyph;
+            const Boolean Capped;
             osg::ref_ptr<osg::Geode> model;
 
             LinkDefStruct (
                   const Handle TheAttrHandle,
+                  const Handle TheScaleAttrHandle,
                   const osg::Vec4 &TheColor,
                   const Float64 TheRadius,
                   const Int32 TheSides,
-                  const Boolean IsGlyph) :
+                  const Boolean IsGlyph,
+                  const Boolean IsCapped) :
                   AttrHandle (TheAttrHandle),
+                  ScaleAttrHandle (TheScaleAttrHandle),
                   Color (TheColor),
                   Radius (TheRadius),
                   Sides (TheSides >= 3 ? TheSides : 3),
-                  Glyph (IsGlyph) {;}
+                  Glyph (IsGlyph),
+                  Capped (IsCapped) {;}
          };
 
          struct ObjectStruct;
@@ -155,6 +161,7 @@ namespace dmz {
             ObjectStruct &super;
             ObjectStruct &sub;
             Boolean hide;
+            Float64 scale;
             osg::ref_ptr<osg::MatrixTransform> root;
 
             LinkStruct (
@@ -166,7 +173,8 @@ namespace dmz {
                   Def (TheDef),
                   super (theSuper),
                   sub (theSub),
-                  hide (False) {
+                  hide (False),
+                  scale (1.0) {
 
                super.superTable.store (Link, this);
                sub.subTable.store (Link, this);

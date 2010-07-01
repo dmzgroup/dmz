@@ -232,6 +232,14 @@ dmz::RenderPluginLinkOSG::update_link_attribute_object (
 
             ls->hide = module->lookup_flag (AttributeObjectHandle, _hideAttrHandle);
 
+            if (ls->Def.ScaleAttrHandle) {
+
+               module->lookup_scalar (
+                  AttributeObjectHandle,
+                  ls->Def.ScaleAttrHandle,
+                  ls->scale);
+            }
+
             _update_link (*ls);
          }
       }
@@ -338,6 +346,14 @@ dmz::RenderPluginLinkOSG::update_object_scalar (
       const Float64 Value,
       const Float64 *PreviousValue) {
 
+   LinkStruct *ls = _attrTable.lookup (ObjectHandle);
+
+   if (ls) {
+
+      ls->scale = Value;
+
+      _update_link (*ls);
+   }
 }
 
 
@@ -428,7 +444,7 @@ dmz::RenderPluginLinkOSG::_update_link (LinkStruct &ls) {
       ls.root->setNodeMask (mask);
 
       Vector dir = (ls.super.pos + ls.super.offset) - (ls.sub.pos + ls.sub.offset);
-      const Vector Scale (1.0, 1.0, dir.magnitude ());
+      const Vector Scale (ls.scale, ls.scale, dir.magnitude ());
       dir.normalize_in_place ();
       Matrix rot (dir);
 
@@ -456,15 +472,14 @@ dmz::RenderPluginLinkOSG::_create_geometry (LinkDefStruct &def) {
 
    def.model = new osg::Geode ();
 
-   osg::Geometry* geom = new osg::Geometry;
+   osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
 
    osg::Vec4Array* colors = new osg::Vec4Array;
    colors->push_back (def.Color);
    geom->setColorArray (colors);
    geom->setColorBinding (osg::Geometry::BIND_OVERALL);
 
-   osg::StateSet *stateset = geom->getOrCreateStateSet ();
-
+   osg::StateSet *stateset = def.model->getOrCreateStateSet ();
    stateset->setAttributeAndModes (new osg::CullFace (osg::CullFace::BACK));
 
 #if 0
@@ -473,8 +488,28 @@ dmz::RenderPluginLinkOSG::_create_geometry (LinkDefStruct &def) {
    stateset->setAttributeAndModes (material.get (), osg::StateAttribute::ON);
 #endif
 
-   osg::Vec3Array *vertices = new osg::Vec3Array;
-   osg::Vec3Array* normals = new osg::Vec3Array;
+   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array;
+   osg::ref_ptr<osg::Vec3Array> normals = new osg::Vec3Array;
+
+   osg::ref_ptr<osg::Vec3Array> top (0);
+   osg::ref_ptr<osg::Vec3Array> bottom (0);
+   osg::ref_ptr<osg::Geometry> topGeom;
+   osg::ref_ptr<osg::Geometry> bottomGeom;
+
+   if (def.Capped) {
+
+      top = new osg::Vec3Array;
+      bottom = new osg::Vec3Array;
+
+      topGeom = new osg::Geometry;
+      bottomGeom = new osg::Geometry;
+
+      topGeom->setColorArray (colors);
+      topGeom->setColorBinding (osg::Geometry::BIND_OVERALL);
+
+      bottomGeom->setColorArray (colors);
+      bottomGeom->setColorBinding (osg::Geometry::BIND_OVERALL);
+   }
 
    const Vector Offset (0.0, 0.0, -1.0);
    const Vector Forward (0.0, 0.0, -1.0);
@@ -482,6 +517,7 @@ dmz::RenderPluginLinkOSG::_create_geometry (LinkDefStruct &def) {
    Float64 Angle = TwoPi64 / (Float64 (def.Sides));
 
    int count (0);
+   int capCount (0);
 
    for (Int32 ix = 0; ix <= def.Sides; ix++) {
 
@@ -500,13 +536,48 @@ dmz::RenderPluginLinkOSG::_create_geometry (LinkDefStruct &def) {
       vertices->push_back (to_osg_vector (radius)); count++;
       normals->push_back (to_osg_vector (vec));
       normals->push_back (to_osg_vector (vec));
+
+      if (top.valid ()) { top->push_back (to_osg_vector (radius + Offset)); }
+
+      if (bottom.valid ()) {
+
+         bottom->insert (bottom->begin (), to_osg_vector (radius));
+      }
+
+      capCount++;
    }
 
    geom->setNormalArray (normals);
    geom->setNormalBinding (osg::Geometry::BIND_PER_VERTEX);
    geom->addPrimitiveSet (new osg::DrawArrays (GL_TRIANGLE_STRIP, 0, count));
    geom->setVertexArray (vertices);
-   def.model->addDrawable (geom);
+
+   def.model->addDrawable (geom.get ());
+
+   if (top && topGeom.valid ()) {
+
+      osg::ref_ptr<osg::Vec3Array> topNorm = new osg::Vec3Array;
+      topNorm->push_back (osg::Vec3 (0.0, 0.0, -1.0));
+      topGeom->setNormalArray (topNorm);
+      topGeom->setNormalBinding (osg::Geometry::BIND_OVERALL);
+      topGeom->addPrimitiveSet (new osg::DrawArrays (GL_TRIANGLE_FAN, 0, capCount - 1));
+      topGeom->setVertexArray (top.get ());
+      def.model->addDrawable (topGeom.get ());
+   }
+
+   if (bottom && bottomGeom.valid ()) {
+
+      osg::ref_ptr<osg::Vec3Array> bottomNorm = new osg::Vec3Array;
+      bottomNorm->push_back (osg::Vec3 (0.0, 0.0, 1.0));
+      bottomGeom->setNormalArray (bottomNorm);
+      bottomGeom->setNormalBinding (osg::Geometry::BIND_OVERALL);
+
+      bottomGeom->addPrimitiveSet (
+         new osg::DrawArrays (GL_TRIANGLE_FAN, 0, capCount - 1));
+
+      bottomGeom->setVertexArray (bottom.get ());
+      def.model->addDrawable (bottomGeom.get ());
+   }
 }
 
 
@@ -529,6 +600,11 @@ dmz::RenderPluginLinkOSG::_init (Config &local) {
             link,
             context);
 
+         const Handle ScaleAttr = config_to_named_handle (
+            "scale-attribute",
+            link,
+            context);
+
          const osg::Vec4 Color = config_to_osg_vec4_color (
             link,
             osg::Vec4 (1.0, 1.0, 1.0, 1.0));
@@ -539,13 +615,27 @@ dmz::RenderPluginLinkOSG::_init (Config &local) {
 
          const Boolean Glyph = config_to_boolean ("glyph", link, True);
 
-         LinkDefStruct *lds = new LinkDefStruct (Attr, Color, Radius, Sides, Glyph);
+         const Boolean Capped = config_to_boolean ("capped", link, False);
+
+         LinkDefStruct *lds = new LinkDefStruct (
+            Attr,
+            ScaleAttr,
+            Color,
+            Radius,
+            Sides,
+            Glyph,
+            Capped);
 
          if (lds && _defTable.store (Attr, lds)) {
 
             activate_object_attribute (
                Attr,
                ObjectLinkMask | ObjectUnlinkMask | ObjectLinkAttributeMask);
+
+            if (ScaleAttr) {
+
+               activate_object_attribute (ScaleAttr, ObjectScalarMask);
+            }
          }
          else if (lds) { delete lds; lds = 0; }
       }

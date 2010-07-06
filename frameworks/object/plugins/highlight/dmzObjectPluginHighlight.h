@@ -57,6 +57,7 @@ namespace dmz {
          Handle _highlightAttr;
 
          Message _mouseMoveMsg;
+         Message _deactivateMsg;
          //! \endcond
 
       private:

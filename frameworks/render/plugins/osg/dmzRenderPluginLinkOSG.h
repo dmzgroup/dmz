@@ -7,6 +7,7 @@
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesMatrix.h>
 #include <dmzTypesVector.h>
 
 #include <osg/MatrixTransform>
@@ -101,6 +102,13 @@ namespace dmz {
             const Vector &Value,
             const Vector *PreviousValue);
 
+         virtual void update_object_orientation (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Matrix &Value,
+            const Matrix *PreviousValue);
+
          virtual void update_object_vector (
             const UUID &Identity,
             const Handle ObjectHandle,
@@ -119,23 +127,29 @@ namespace dmz {
          struct LinkDefStruct {
 
             const Handle AttrHandle;
+            const Handle ScaleAttrHandle;
             const osg::Vec4 Color;
             const Float64 Radius;
             const Int32 Sides;
             const Boolean Glyph;
+            const Boolean Capped;
             osg::ref_ptr<osg::Geode> model;
 
             LinkDefStruct (
                   const Handle TheAttrHandle,
+                  const Handle TheScaleAttrHandle,
                   const osg::Vec4 &TheColor,
                   const Float64 TheRadius,
                   const Int32 TheSides,
-                  const Boolean IsGlyph) :
+                  const Boolean IsGlyph,
+                  const Boolean IsCapped) :
                   AttrHandle (TheAttrHandle),
+                  ScaleAttrHandle (TheScaleAttrHandle),
                   Color (TheColor),
                   Radius (TheRadius),
                   Sides (TheSides >= 3 ? TheSides : 3),
-                  Glyph (IsGlyph) {;}
+                  Glyph (IsGlyph),
+                  Capped (IsCapped) {;}
          };
 
          struct ObjectStruct;
@@ -147,6 +161,7 @@ namespace dmz {
             ObjectStruct &super;
             ObjectStruct &sub;
             Boolean hide;
+            Float64 scale;
             osg::ref_ptr<osg::MatrixTransform> root;
 
             LinkStruct (
@@ -158,7 +173,8 @@ namespace dmz {
                   Def (TheDef),
                   super (theSuper),
                   sub (theSub),
-                  hide (False) {
+                  hide (False),
+                  scale (1.0) {
 
                super.superTable.store (Link, this);
                sub.subTable.store (Link, this);
@@ -174,12 +190,21 @@ namespace dmz {
          struct ObjectStruct {
 
             const Handle Object;
+            const Vector Center;
             Vector pos;
+            Vector offset;
+            Matrix ori;
             Boolean hide;
             HashTableHandleTemplate<LinkStruct> subTable;
             HashTableHandleTemplate<LinkStruct> superTable;
 
-            ObjectStruct (const Handle TheObject) : Object (TheObject), hide (False) {;}
+            ObjectStruct (
+                  const Handle TheObject,
+                  const Vector &TheCenter) :
+                  Object (TheObject),
+                  Center (TheCenter),
+                  offset (TheCenter),
+                  hide (False) {;}
          };
 
          ObjectStruct *_lookup_object (const Handle Object);
@@ -201,6 +226,7 @@ namespace dmz {
          UInt32 _entityMask;
          UInt32 _cullMask;
 
+         HashTableHandleTemplate<Vector> _centerTable;
          HashTableHandleTemplate<LinkDefStruct> _defTable;
          HashTableHandleTemplate<LinkStruct> _linkTable;
          HashTableHandleTemplate<LinkStruct> _attrTable;

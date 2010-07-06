@@ -87,11 +87,14 @@ local_init_event_type (
 
       if (current.lookup_attribute ("name", name)) {
 
+         Boolean parentFound (False);
+
          EventType *parent (0);
 
          String parentName;
          if (current.lookup_attribute ("parent", parentName)) {
 
+            parentFound = True;
             parent = def.eventNameTable.lookup (parentName);
          }
          else { parent = &RootType; }
@@ -102,7 +105,7 @@ local_init_event_type (
 
             if (eventType) {
 
-               if (eventType->get_parent () == *parent) {
+               if ((parentFound == False) || (eventType->get_parent () == *parent)) {
 
                   TypeContext *eventContext (eventType->get_type_context ());
 
@@ -223,9 +226,13 @@ local_init_object_type (
 
          ObjectType *parent (0);
 
+         Boolean parentFound (False);
+
          String parentName;
+
          if (current.lookup_attribute ("parent", parentName)) {
 
+            parentFound = True;
             parent = def.objectNameTable.lookup (parentName);
          }
          else { parent = &RootType; }
@@ -236,7 +243,7 @@ local_init_object_type (
 
             if (objType) {
 
-               if (objType->get_parent () == *parent) {
+               if ((parentFound == False) || (objType->get_parent () == *parent)) {
 
                   TypeContext *objContext (objType->get_type_context ());
 

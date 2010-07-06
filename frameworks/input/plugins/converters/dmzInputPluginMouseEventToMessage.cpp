@@ -420,11 +420,11 @@ dmz::InputPluginMouseEventToMessage::update_channel_state (
 
       _current = 0;
 
-      _send (_deactivateMessage, _deactivateTargetTable);
+      _deactivateMessage.send (_deactivateTargetTable);
    }
    else if (1 == _activeCount) {
 
-      _send (_activateMessage, _activateTargetTable);
+      _activateMessage.send (_activateTargetTable);
    }
 }
 
@@ -439,24 +439,6 @@ dmz::InputPluginMouseEventToMessage::receive_mouse_event (
       if (!_current) { _current = _start; }
 
       if (_current) { _current = _current->process_event (Value); }
-   }
-}
-
-
-void
-dmz::InputPluginMouseEventToMessage::_send (
-      const Message &Msg,
-      HandleContainer &targets) {
-
-   if (Msg) {
-
-      Handle target (targets.get_first ());
-
-      while (target) {
-
-         Msg.send (target, 0, 0);
-         target = targets.get_next ();
-      }
    }
 }
 

@@ -192,22 +192,19 @@ dmz::EntityPluginFreeFly::receive_axis_event (
       const Handle Channel,
       const InputEventAxis &Value) {
 
-   const Float64 AxisValue =
-      ((Value.get_axis_value () < 0.1) && (Value.get_axis_value () > -0.1)) ? 0.0 :
-      Value.get_axis_value () * fabs (Value.get_axis_value ());
+   const Float64 AxisValue = Value.get_axis_value ();
 
-   if (!is_zero64 (AxisValue)) {
+   Float64 rvalue = 0.0;
 
-      //_log.out << "Axis: " << Value.get_axis_id () << " Value: " << AxisValue << endl;
-   }
+   if (!is_zero64 (AxisValue, 0.1)) { rvalue = AxisValue  * fabs (AxisValue); }
 
    switch (Value.get_axis_id ()) {
 
-      case 2: { _move.speedAxis = AxisValue * _move.moveSpeed; break; }
-      case 1: { _move.turnAxis = AxisValue * _move.turnRate; break; }
-      case 6: { _move.strafeAxis = AxisValue * _move.moveSpeed; break; }
-      case 7: { _move.pitchAxis = AxisValue * _move.turnRate; break; }
-      case 8: { _move.ymoveAxis = AxisValue * _move.moveSpeed; break; }
+      case 2: { _move.speedAxis = rvalue * _move.moveSpeed; break; }
+      case 1: { _move.turnAxis = rvalue * _move.turnRate; break; }
+      case 6: { _move.strafeAxis = rvalue * _move.moveSpeed; break; }
+      case 7: { _move.pitchAxis = rvalue * _move.turnRate; break; }
+      case 8: { _move.ymoveAxis = rvalue * _move.moveSpeed; break; }
    }
 }
 

@@ -11,6 +11,7 @@
 #include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesMask.h>
+#include <dmzTypesVector.h>
 
 #include <osg/Geode>
 #include <osgParticle/ParticleEffect>
@@ -92,6 +93,13 @@ namespace dmz {
             const Vector &Value,
             const Vector *PreviousValue);
 
+         virtual void update_object_vector (
+            const UUID &Identity,
+            const Handle ObjectHandle,
+            const Handle AttributeHandle,
+            const Vector &Value,
+            const Vector *PreviousValue);
+
          // Event Observer Interface
          virtual void create_event (
             const Handle EventHandle,
@@ -121,6 +129,7 @@ namespace dmz {
             ~ParticleStateStruct () { if (next) { delete next; next = 0; } }
 
             void enable (const Boolean Enable);
+            void endless ();
          };
 
          struct ObjectStruct {
@@ -152,6 +161,8 @@ namespace dmz {
          Resources _rc;
 
          RenderModuleCoreOSG *_core;
+
+         Vector _wind;
 
          ObjectTypeSet _ignoreTypes;
          HashTableHandleTemplate<ObjectDefStruct> _objDefTable;

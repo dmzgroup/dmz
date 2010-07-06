@@ -46,7 +46,6 @@ namespace dmz {
             const InputEventMouse &Value);
 
       protected:
-         void _send (const Message &Message, HandleContainer &targets);
          void _get_targets (const String &Name, Config &config, HandleContainer &targets);
 
          ConverterStruct *_create_converter_basic (

@@ -125,7 +125,7 @@ dmz::InputPluginChannelSwitch::_init (Config &local) {
 
    Config list;
 
-   if (local.lookup_all_config ("switch.channel", list)) {
+   if (local.lookup_all_config ("channel", list)) {
 
       Definitions defs (get_plugin_runtime_context (), &_log);
 

@@ -2,6 +2,7 @@
 //#include <dmzRenderConfigToOSG.h>
 #include <dmzRenderModuleCoreOSG.h>
 #include "dmzRenderPluginParticleEffectsOSG.h"
+#include <dmzRenderConfigToOSG.h>
 #include <dmzRenderUtilOSG.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
@@ -28,28 +29,78 @@ class SmokeStateFactory : public ParticleStateFactory {
       SmokeStateFactory (
          const dmz::Mask &State,
          const dmz::String &TextureName,
-         const dmz::Vector &Offset);
+         const dmz::Vector &Offset,
+         const dmz::Config &Init);
 
       virtual osgParticle::ParticleEffect *create_effect ();
 
    protected:
       const dmz::String _TextureName;
       const dmz::Vector _Offset;
+      dmz::Float64 _scale;
+      dmz::Float64 _intensity;
+      dmz::Float64 _timeOut;
+      dmz::Boolean _setSize;
+      osgParticle::rangev4 _colorRange;
+      osgParticle::rangef _alphaRange;
+      osgParticle::rangef _sizeRange;
 };
 
 SmokeStateFactory::SmokeStateFactory (
       const dmz::Mask &State,
       const dmz::String &TextureName,
-      const dmz::Vector &Offset) :
+      const dmz::Vector &Offset,
+      const dmz::Config &Init) :
       ParticleStateFactory (State),
       _TextureName (TextureName),
-      _Offset (Offset) {;}
+      _Offset (Offset),
+      _scale (5.0),
+      _intensity (1.0),
+      _timeOut (20.0),
+      _setSize (dmz::False),
+      _colorRange (
+         osg::Vec4 (0.1, 0.1, 0.1, 1.0), osg::Vec4 (0.0, 0.0, 0.0, 1.0)),
+      _alphaRange (1.0f, 0.1f) {
+
+   _scale = dmz::config_to_float64 ("scale", Init, _scale);
+   _intensity = dmz::config_to_float64 ("intensity", Init, _intensity);
+
+   osg::Vec4 min = dmz::config_to_osg_vec4_color (
+      "start-color",
+      Init,
+      _colorRange.minimum);
+
+   osg::Vec4 max = dmz::config_to_osg_vec4_color (
+      "end-color",
+      Init,
+      _colorRange.maximum);
+
+   _colorRange.set (min, max);
+
+   dmz::Config sizeRange;
+
+   if (Init.lookup_config ("size-range", sizeRange)) {
+
+      dmz::Float32 Min = config_to_float32 ("min", sizeRange, 1.0);
+      dmz::Float32 Max = config_to_float32 ("max", sizeRange, 2.0);
+
+      _sizeRange.set (Min, Max);
+      _setSize = dmz::True;
+   }
+
+   _alphaRange.set (
+      dmz::config_to_float32 ("alpha-range.min", Init, 0.5),
+      dmz::config_to_float32 ("alpha-range.max", Init, 0.1));
+
+   _timeOut = dmz::config_to_float64 ("time-out", Init, _timeOut);
+}
+
 
 osgParticle::ParticleEffect *
 SmokeStateFactory::create_effect () {
 
    osgParticle::SmokeEffect *result (
-      new osgParticle::SmokeEffect (dmz::to_osg_vector (_Offset), 5.0, 1.0));
+      new osgParticle::SmokeEffect (dmz::to_osg_vector (_Offset), _scale, _intensity));
 
    if (result) {
 
@@ -65,12 +116,12 @@ SmokeStateFactory::create_effect () {
 
       osgParticle::Particle particle (OrigParticle);
 
-      particle.setLifeTime (20.0);
+      particle.setLifeTime (_timeOut);
 
-      osgParticle::rangev4 cr (
-         osg::Vec4 (0.1, 0.1, 0.1, 1.0), osg::Vec4 (0.0, 0.0, 0.0, 0.1));
+      particle.setColorRange (_colorRange);
+      particle.setAlphaRange (_alphaRange);
 
-      particle.setColorRange (cr);
+      if (_setSize) { particle.setSizeRange (_sizeRange); }
 
       result->setDefaultParticleTemplate (particle);
    }
@@ -85,30 +136,40 @@ class FireStateFactory : public ParticleStateFactory {
       FireStateFactory (
          const dmz::Mask &State,
          const dmz::String &TextureName,
-         const dmz::Vector &Offset);
+         const dmz::Vector &Offset,
+         const dmz::Config &Init);
 
       virtual osgParticle::ParticleEffect *create_effect ();
 
    protected:
       const dmz::String _TextureName;
       const dmz::Vector _Offset;
+      dmz::Float64 _scale;
+      dmz::Float64 _intensity;
 };
 
 
 FireStateFactory::FireStateFactory (
       const dmz::Mask &State,
       const dmz::String &TextureName,
-      const dmz::Vector &Offset) :
+      const dmz::Vector &Offset,
+      const dmz::Config &Init) :
       ParticleStateFactory (State),
       _TextureName (TextureName),
-      _Offset (Offset) {;}
+      _Offset (Offset),
+      _scale (5.0),
+      _intensity (1.0) {
+
+   _scale = dmz::config_to_float64 ("scale", Init, _scale);
+   _intensity = dmz::config_to_float64 ("intensity", Init, _intensity);
+}
 
 
 osgParticle::ParticleEffect *
 FireStateFactory::create_effect () {
 
    osgParticle::FireEffect *result (
-      new osgParticle::FireEffect (dmz::to_osg_vector (_Offset), 5.0, 1.0));
+      new osgParticle::FireEffect (dmz::to_osg_vector (_Offset), _scale, _intensity));
 
    if (result) {
 
@@ -204,6 +265,18 @@ dmz::RenderPluginParticleEffectsOSG::ParticleStateStruct::enable (
          em->setEnabled (Enable);
          em->setEndless (true);
       }
+   }
+}
+
+
+void
+dmz::RenderPluginParticleEffectsOSG::ParticleStateStruct::endless () {
+
+   if (effect.valid ()) {
+
+      osgParticle::Emitter *em = effect->getEmitter ();
+
+      if (em) { em->setEndless (true); }
    }
 }
 
@@ -317,6 +390,8 @@ dmz::RenderPluginParticleEffectsOSG::create_object (
 
                   if (pss->effect.valid ()) {
 
+                     pss->effect->setWind (to_osg_vector (_wind));
+
                      pss->enable (False);
 
                      os->geode->addDrawable (pss->effect->getParticleSystem ());
@@ -415,6 +490,40 @@ dmz::RenderPluginParticleEffectsOSG::update_object_velocity (
       const Vector &Value,
       const Vector *PreviousValue) {
 
+}
+
+
+void
+dmz::RenderPluginParticleEffectsOSG::update_object_vector (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Vector &Value,
+      const Vector *PreviousValue) {
+
+   _wind = Value;
+
+   HashTableHandleIterator it;
+   ObjectStruct *os (0);
+
+   const osg::Vec3 WindOSG = to_osg_vector (_wind);
+
+   while (_objTable.get_next (it, os)) {
+
+      ParticleStateStruct *pss = os->list;
+
+      while (pss) {
+
+         if (pss->effect.valid ()) {
+
+            pss->effect->setWind (WindOSG);
+            // note: setting the wind seems to turn endless smoke off so re-enable it.
+            pss->endless ();
+         }
+
+         pss = pss->next;
+      }
+   }
 }
 
 
@@ -519,7 +628,7 @@ dmz::RenderPluginParticleEffectsOSG::_create_smoke_state_factory (Config &fx) {
       const String Texture = Resource ? _rc.find_file (Resource) : String ();
       const Vector Offset (config_to_vector ("offset", fx, Vector (0.0, 2.5, 0.0)));
 
-      result = new SmokeStateFactory (state, Texture, Offset);
+      result = new SmokeStateFactory (state, Texture, Offset, fx);
    }
    else {
 
@@ -545,7 +654,7 @@ dmz::RenderPluginParticleEffectsOSG::_create_fire_state_factory (Config &fx) {
       const String Texture = Resource ? _rc.find_file (Resource) : String ();
       const Vector Offset (config_to_vector ("offset", fx, Vector (0.0, 1.5, 0.0)));
 
-      result = new FireStateFactory (state, Texture, Offset);
+      result = new FireStateFactory (state, Texture, Offset, fx);
    }
    else {
 
@@ -664,6 +773,10 @@ dmz::RenderPluginParticleEffectsOSG::_init (Config &local) {
       ObjectCreateMask |
       ObjectDestroyMask |
       ObjectStateMask);
+
+   activate_object_attribute (
+      config_to_string ("wind-attribute.name", local, "Env_Wind_Direction"),
+      ObjectVectorMask);
 }
 
 

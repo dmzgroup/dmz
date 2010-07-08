@@ -134,7 +134,13 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
 
    qframe_config_read ("frame", local, this);
 
-   QHBoxLayout *layout (new QHBoxLayout ());
+   QBoxLayout *layout;
+   if (config_to_boolean ("layout.horizontal", local, False) ||
+       !config_to_boolean ("layout.vertical", local, True)) {
+      layout = new QHBoxLayout ();
+   }
+
+   else { layout = new QVBoxLayout(); }
 
    Config buttonList;
    if (local.lookup_all_config ("channel", buttonList)) {

@@ -2,17 +2,20 @@
 #define DMZ_INPUT_PLUGIN_CHANNEL_RULES_DOT_H
 
 #include <dmzInputObserverUtil.h>
+#include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzTypesHashTableStringTemplate.h>
-#include <dmzTypesHashTableUInt32Template.h>
 
 namespace dmz {
 
-//! \cond
-   class InputPluginChannelRules : public Plugin, public InputObserverUtil {
+   class InputModule;
+
+   class InputPluginChannelRules :
+         public Plugin,
+         public InputObserverUtil {
 
       public:
-         InputPluginChannelRules (const PluginInfo &Info);
+         InputPluginChannelRules (const PluginInfo &Info, Config &local);
          ~InputPluginChannelRules ();
 
          // Plugin Interface
@@ -24,60 +27,62 @@ namespace dmz {
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
 
-         // TimeSlice Interface
-         virtual void update_time_slice (const Float64 DeltaTime);
+         // Input Observer Interface
+         virtual void update_channel_state (const Handle Channel, const Boolean State);
 
-         virtual void store_input_module (
-            const String &Name,
-            InputModule &module);
-
-         virtual void remove_input_module (
-            const String &Name,
-            InputModule &module);
-
-         virtual void update_channel_state (const UInt32 Channel, const Boolean State);
-
-         // No need for these functions so just stub them out
          virtual void receive_axis_event (
-            const UInt32 Channel,
-            const InputEventAxis &Value) {;}
+            const Handle Channel,
+            const InputEventAxis &Value);
 
          virtual void receive_button_event (
-            const UInt32 Channel,
-            const InputEventButton &Value) {;}
-
-         virtual void receive_key_event (
-            const UInt32 Channel,
-            const InputEventKey &Value) {;}
-
-         virtual void receive_mouse_event (
-            const UInt32 Channel,
-            const InputEventMouse &Value) {;}
+            const Handle Channel,
+            const InputEventButton &Value);
 
          virtual void receive_switch_event (
-            const UInt32 Channel,
-            const InputEventSwitch &Value) {;}
+            const Handle Channel,
+            const InputEventSwitch &Value);
+
+         virtual void receive_key_event (
+            const Handle Channel,
+            const InputEventKey &Value);
+
+         virtual void receive_mouse_event (
+            const Handle Channel,
+            const InputEventMouse &Value);
+
+         virtual void receive_data_event (
+            const Handle Channel,
+            const Handle Source,
+            const Data &Value);
 
       protected:
          struct ChannelStruct {
 
-            const String Name;
-            Uint32 handle;
+            const Handle Channel;
+            ChannelStruct *next;
 
-            ChannelStuct (const String &TheName) : Name (TheName), handle (0) {;}
+            ChannelStruct (const Handle TheHandle) :
+                  Channel (TheHandle),
+                  next (0) {;}
+
+            ~ChannelStruct () { if (next) { delete next; next = 0; } }
          };
 
-         struct ChannelGroupStruct {
+         // InputPluginChannelRules Interface
+         void _init (Config &local);
 
-         };
-
-         HashTableStringTemplate<ChannelStruct> _nameTable;
-         HashTableUInt32Template<ChannelStruct> _handleTable;
-//! \endcond
+         Log _log;
+         ChannelStruct *_channelList;
+         Handle _defaultChannel;
+         InputModule *_inputModule;
+         String _inputModuleName;
 
       private:
-         InputPluginChannelRules (const InputChannelRules &);
-         InputPluginChannelRules &operator= (const InputChannelRules &);
+         InputPluginChannelRules ();
+         InputPluginChannelRules (const InputPluginChannelRules &);
+         InputPluginChannelRules &operator= (const InputPluginChannelRules &);
+         UInt32 __activeChannelCount;
+
    };
 };
 

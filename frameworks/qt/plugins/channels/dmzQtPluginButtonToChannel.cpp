@@ -1,3 +1,4 @@
+#include <dmzInputEventMasks.h>
 #include <dmzInputModule.h>
 #include <dmzQtModuleMainWindow.h>
 #include "dmzQtPluginButtonToChannel.h"
@@ -14,13 +15,13 @@ dmz::QtPluginButtonToChannel::QtPluginButtonToChannel (
       QFrame (0),
       Plugin (Info),
       QtWidget (Info),
+      InputObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
       _inputModule (0),
       _inputModuleName (),
       _actionGroup (0),
-      _channelList (0),
-      _defaultChannel (0) {
+      _channelList (0) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
@@ -59,6 +60,11 @@ dmz::QtPluginButtonToChannel::discover_plugin (
                _inputModule->set_channel_state (
                   current->Channel, current->action->isChecked ());
 
+               _inputModule->register_input_observer (
+                     current->Channel,
+                     InputEventChannelStateMask,
+                     *this);
+
                current = current->next;
             }
          }
@@ -79,32 +85,39 @@ QWidget *
 dmz::QtPluginButtonToChannel::get_qt_widget () { return this; }
 
 
+// Input Observer Interface
+
+void
+dmz::QtPluginButtonToChannel::update_channel_state (
+      const Handle Channel,
+      const Boolean State) {
+
+   if (_channelList) {
+
+      ChannelStruct *current (_channelList);
+
+         while (current) {
+
+            if (current->Channel == Channel) { current->action->setChecked (State); }
+
+            current = current->next;
+         }
+   }
+}
+
+
 void
 dmz::QtPluginButtonToChannel::_slot_change_channel (QAction *theAction) {
 
    if (_inputModule && theAction) {
 
-      // if (theAction->isChecked ()) {
-      // 
-      //    foreach (QAction *action, _actionGroup->actions ()) {
-      // 
-      //       if (action != theAction) { action->setChecked (False); }
-      //    }
-      // 
-      //    _inputModule->set_channel_state (_defaultChannel, False);
-      // }
-      // else { _inputModule->set_channel_state (_defaultChannel, True); }
-
       ChannelStruct *current (_channelList);
 
       while (current) {
 
-         if (current->action) {
-
-            _inputModule->set_channel_state (
-               current->Channel,
-               current->action->isChecked ());
-         }
+         _inputModule->set_channel_state (
+            current->Channel,
+            current->action->isChecked ());
 
          current = current->next;
       }
@@ -119,23 +132,18 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
 
    _inputModuleName = config_to_string ("module.input.name", local);
 
-   const String DefaultName = config_to_string ("defaultChannel.name", local);
-
-//   _defaultChannel = defs.create_named_handle (DefaultName);
-
    qframe_config_read ("frame", local, this);
 
    QHBoxLayout *layout (new QHBoxLayout ());
 
    Config buttonList;
-
-   if (local.lookup_all_config_merged ("buttons", buttonList)) {
+   if (local.lookup_all_config ("channel", buttonList)) {
 
       ConfigIterator it;
       Config cd;
 
       _actionGroup = new QActionGroup (this);
-//      _actionGroup->setExclusive (True);
+      _actionGroup->setExclusive (False);
 
       connect (
          _actionGroup, SIGNAL (triggered (QAction *)),
@@ -143,11 +151,9 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
 
       String value;
       ChannelStruct *current (0);
-
       while (buttonList.get_next_config (it, cd)) {
 
-         const String Name (config_to_string ("channel", cd));
-
+         const String Name (config_to_string ("name", cd));
          if (Name) {
 
             ChannelStruct *next (new ChannelStruct (defs.create_named_handle (Name)));
@@ -156,7 +162,7 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
 
                QToolButton *button (new QToolButton (this));
 
-               qtoolbutton_config_read ("", cd, button);
+               qtoolbutton_config_read ("toolButton", cd, button);
 
                next->action = button->defaultAction ();
                if (next->action) {
@@ -177,7 +183,7 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
    layout->addStretch ();
    
    QVBoxLayout *mainLayout = new QVBoxLayout;
-   mainLayout->addLayout (layout);
+      mainLayout->addLayout (layout);
    mainLayout->addStretch ();
    setLayout (mainLayout);
 }

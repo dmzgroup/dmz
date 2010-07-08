@@ -736,7 +736,7 @@ dmz::MessageObserver::unsubscribe_to_all_messages () {
 
 \fn void dmz::MessageObserver::receive_message (
 const Message &Type,
-const UInt32 MessageSendHandle,
+const UInt32 MessageSendId,
 const Handle TargetObserverHandle,
 const Data *InData,
 Data *outData)
@@ -744,8 +744,8 @@ Data *outData)
 has been received.
 \details Derived class need to implement this function in order to receive messages.
 \param[in] Type dmz::Message being sent.
-\param[in] MessageSendHandle This handle corresponds to the handle returned to the caller
-of dmz::Messaging::send.
+\param[in] MessageSendId This value corresponds to the Uint32 returned to the caller
+of dmz::Messaging::send. Note: this value is not guaranteed to be unique.
 \param[in] TargetObserverHandle Handle of observer the message was sent to. Will be zero
 if the message was sent to all subscribers.
 \param[in] InData Pointer to data object containing data associated with the message. May

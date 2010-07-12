@@ -1,4 +1,5 @@
 #include <dmzSystemStream.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesString.h>
 #include <dmzTypesStringContainer.h>
 #include <dmzTypesUUID.h>
@@ -65,6 +66,16 @@ operator<< (dmz::Stream &stream, const dmz::Mask &Value) {
 //! Converts dmz::Matrix to a dmz::String and appends it to the \a stream.
 dmz::Stream &
 operator<< (dmz::Stream &stream, const dmz::Matrix &Value) {
+
+   dmz::String result;
+   stream << (result << Value);
+   return stream;
+}
+
+
+//! Converts dmz::HandleContainer to a dmz::String and appends it to the \a stream.
+dmz::Stream &
+operator<< (dmz::Stream &stream, const dmz::HandleContainer &Value) {
 
    dmz::String result;
    stream << (result << Value);

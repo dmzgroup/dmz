@@ -352,6 +352,14 @@ can not be found.
 dmz::Config
 dmz::ObjectType::find_config (const String &Name) const {
 
+   ObjectType value;
+   return find_config (Name, value);
+}
+
+
+dmz::Config
+dmz::ObjectType::find_config (const String &Name, ObjectType &type) const {
+
    Config result;
 
    ObjectType current (_context);
@@ -360,6 +368,7 @@ dmz::ObjectType::find_config (const String &Name) const {
 
       if (current.get_config ().lookup_all_config_merged (Name, result)) {
 
+         type = current;
          current.set_type_context (0);
       }
       else { current.become_parent (); }

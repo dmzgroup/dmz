@@ -1,0 +1,13 @@
+require "lmkOSG"
+
+lmkOSG.set_name "dmzRenderPluginObjectTextOSG"
+lmk.set_type "plugin"
+lmk.add_files {"dmzRenderPluginObjectTextOSG.cpp",}
+lmk.add_libs {
+   "dmzRenderUtilOSG",
+   "dmzObjectUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzRenderModuleCoreOSG", "dmzObjectFramework",}
+lmkOSG.add_libs {"osgText", "osgUtil", "osg", "OpenThreads",}
+

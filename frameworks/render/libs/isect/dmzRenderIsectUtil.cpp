@@ -52,6 +52,8 @@ dmz::isect_validate_point (
                ((Start - point).magnitude_squared () >
                   (Start - cpoint).magnitude_squared ())) {
 
+            if (cnormal.is_zero ()) { cnormal = Up; }
+
             Handle cullMode (0);
 
             isResult.get_cull_mode (cullMode);
@@ -102,7 +104,7 @@ dmz::isect_validate_point (
 */
 dmz::Boolean
 dmz::isect_clamp_point (
-      const Vector &Value,
+      const Vector Value,
       RenderModuleIsect &isect,
       Vector &point,
       Vector &normal) {

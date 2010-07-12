@@ -527,7 +527,7 @@ dmz::ObjectModuleBasic::activate_object (const Handle ObjectHandle) {
 
       if (!obj->active) {
 
-         obj->active = True;
+//         obj->active = True;
 
          if ((obj->locality == ObjectLocal) && !obj->uuid) {
 
@@ -3042,6 +3042,9 @@ void
 dmz::ObjectModuleBasic::activate_created_object (const Handle ObjectHandle) {
 
    _inObsUpdate = True;
+
+   ObjectStruct *obj (_lookup_object (ObjectHandle));
+   if (obj) { obj->active = True; }
 
    _dump_object (ObjectHandle);
 

@@ -419,18 +419,30 @@ dmz::Message::send (
       }
       else {
 
-         Handle target (Targets.get_first ());
-
-         while (target) {
+         if (Targets.get_count () == 0) {
 
             result = _context->dispatch->send (
-               (result == 0 ? True : False),
+               True,
                *this,
-               target,
+               0,
                InData,
                outData);
+         }
+         else {
 
-            target = Targets.get_next ();
+            Handle target (Targets.get_first ());
+
+            while (target) {
+
+               result = _context->dispatch->send (
+                  (result == 0 ? True : False),
+                  *this,
+                  target,
+                  InData,
+                  outData);
+
+               target = Targets.get_next ();
+            }
          }
       }
    }

@@ -514,6 +514,7 @@ dmz::RenderModuleOverlayOSG::store_text (const Handle Overlay, const String &Val
    if (ts && ts->text.valid ()) {
 
       ts->text->setText (Value.get_buffer ());
+
       ts->value = Value;
       result = True;
    }
@@ -535,6 +536,28 @@ dmz::RenderModuleOverlayOSG::lookup_text (const Handle Overlay, String &value) {
       result = True;
    }
 
+   return result;
+}
+
+
+dmz::Boolean
+dmz::RenderModuleOverlayOSG::lookup_text_size (
+      const Handle Overlay,
+      Float64 &length,
+      Float64 &height) {
+
+   Boolean result (False);
+
+   TextStruct *ts (_textTable.lookup (Overlay));
+
+   if (ts && ts->text.valid ()) {
+
+      osg::BoundingBox bb = ts->text->computeBound ();
+      length = bb.xMax () - bb.xMin ();
+      height = bb.yMax () - bb.yMin ();
+
+      result = True;
+   }
 
    return result;
 }
@@ -1194,6 +1217,25 @@ dmz::RenderModuleOverlayOSG::_add_text (
       const Int32 Depth = config_to_int32 ("depth.value", node);
       const String FontResource = config_to_string ("font.resource", node);
       const Vector Pos = config_to_vector ("position", node);
+      const String Align = config_to_string ("alignment.value", node);
+
+      osgText::TextBase::AlignmentType alignType (osgText::TextBase::BASE_LINE);
+
+      if (Align == "left") {
+
+         alignType = osgText::TextBase::LEFT_BOTTOM_BASE_LINE;
+      }
+      else if (Align == "right") {
+
+         alignType = osgText::TextBase::RIGHT_BOTTOM_BASE_LINE;
+      }
+      else if (Align == "center") {
+
+         alignType = osgText::TextBase::CENTER_BOTTOM_BASE_LINE;
+      }
+      else {
+
+      }
 
       String text;
       Config data;
@@ -1217,6 +1259,8 @@ dmz::RenderModuleOverlayOSG::_add_text (
 
          if (FontName) { textNode->setFont (FontName.get_buffer ()); }
       }
+
+      textNode->setAlignment (alignType);
 
       textNode->setAxisAlignment (osgText::TextBase::XY_PLANE);
       textNode->setBackdropType (osgText::Text::NONE);

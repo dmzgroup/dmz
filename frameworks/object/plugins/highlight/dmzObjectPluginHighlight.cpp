@@ -92,36 +92,50 @@ dmz::ObjectPluginHighlight::receive_message (
       const Data *InData,
       Data *outData) {
 
-   const Handle Object = _convert.to_handle (InData);
+   if (Type.is_of_type (_mouseMoveMsg)) {
 
-   if (Object != _current) {
+      const Handle Object = _convert.to_handle (InData);
 
-      ObjectModule *module = get_object_module ();
+      if (Object != _current) {
 
-      if (module) {
+         ObjectModule *module = get_object_module ();
 
-         module->store_flag (_current, _highlightAttr, False);
+         if (module) {
 
-         if (Object) {
+            module->store_flag (_current, _highlightAttr, False);
 
-            if (module->is_object (Object)) {
+            if (Object) {
 
-               _current = Object;
+               if (module->is_object (Object)) {
 
-               module->store_flag (_current, _highlightAttr, True);
-            }
-            else if (module->is_link (Object)) {
+                  _current = Object;
 
-               Handle attrObj = module->lookup_link_attribute_object (Object);
-
-               if (attrObj) {
-
-                  _current = attrObj;
                   module->store_flag (_current, _highlightAttr, True);
                }
+               else if (module->is_link (Object)) {
+
+                  Handle attrObj = module->lookup_link_attribute_object (Object);
+
+                  if (attrObj) {
+
+                     _current = attrObj;
+                     module->store_flag (_current, _highlightAttr, True);
+                  }
+               }
             }
+            else { _current = 0; }
          }
-         else { _current = 0; }
+      }
+   }
+   else if (Type.is_of_type (_deactivateMsg)) {
+
+      if (_current) { 
+
+         ObjectModule *module = get_object_module ();
+
+         if (module) { module->store_flag (_current, _highlightAttr, False); }
+
+         _current = 0;
       }
    }
 }
@@ -147,10 +161,7 @@ dmz::ObjectPluginHighlight::update_object_flag (
          _current = ObjectHandle;
       }
    }
-   else {
-
-      if (ObjectHandle == _current) { _current = 0; }
-   }
+   else if (ObjectHandle == _current) { _current = 0; } 
 }
 
 
@@ -172,7 +183,14 @@ dmz::ObjectPluginHighlight::_init (Config &local) {
       "Mouse_Move_Message",
       get_plugin_runtime_context ());
 
+   _deactivateMsg = config_create_message (
+      "deactivate-message.name",
+      local,
+      "Object_Highlight_Deactivate_Message",
+      get_plugin_runtime_context ());
+
    subscribe_to_message (_mouseMoveMsg);
+   subscribe_to_message (_deactivateMsg);
 }
 //! \endcond
 

@@ -9,6 +9,8 @@
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToVector.h>
+#include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzTypesMatrix.h>
@@ -38,6 +40,7 @@ dmz::RenderPluginLinkOSG::RenderPluginLinkOSG (const PluginInfo &Info, Config &l
 
 dmz::RenderPluginLinkOSG::~RenderPluginLinkOSG () {
 
+   _centerTable.empty ();
    _defTable.empty ();
    _linkTable.empty ();
    _objTable.empty ();
@@ -156,7 +159,8 @@ dmz::RenderPluginLinkOSG::link_objects (
       ObjectStruct *super = _lookup_object (SuperHandle);
       ObjectStruct *sub = _lookup_object (SubHandle);
 
-      if (super && sub) {
+      if (super && !super->superTable.lookup (LinkHandle) &&
+            sub && !sub->subTable.lookup (LinkHandle)) {
 
          LinkStruct *ls = new LinkStruct (LinkHandle, *lds, *super, *sub);
 
@@ -228,6 +232,14 @@ dmz::RenderPluginLinkOSG::update_link_attribute_object (
 
             ls->hide = module->lookup_flag (AttributeObjectHandle, _hideAttrHandle);
 
+            if (ls->Def.ScaleAttrHandle) {
+
+               module->lookup_scalar (
+                  AttributeObjectHandle,
+                  ls->Def.ScaleAttrHandle,
+                  ls->scale);
+            }
+
             _update_link (*ls);
          }
       }
@@ -296,6 +308,26 @@ dmz::RenderPluginLinkOSG::update_object_position (
 
 
 void
+dmz::RenderPluginLinkOSG::update_object_orientation (
+      const UUID &Identity,
+      const Handle ObjectHandle,
+      const Handle AttributeHandle,
+      const Matrix &Value,
+      const Matrix *PreviousValue) {
+
+   ObjectStruct *os = _objTable.lookup (ObjectHandle);
+
+   if (os) {
+
+      os->ori = Value;
+      os->offset = os->Center;
+      Value.transform_vector (os->offset);
+      _update_links (*os);
+   }
+}
+
+
+void
 dmz::RenderPluginLinkOSG::update_object_vector (
       const UUID &Identity,
       const Handle ObjectHandle,
@@ -314,6 +346,14 @@ dmz::RenderPluginLinkOSG::update_object_scalar (
       const Float64 Value,
       const Float64 *PreviousValue) {
 
+   LinkStruct *ls = _attrTable.lookup (ObjectHandle);
+
+   if (ls) {
+
+      ls->scale = Value;
+
+      _update_link (*ls);
+   }
 }
 
 
@@ -325,11 +365,35 @@ dmz::RenderPluginLinkOSG::_lookup_object (const Handle Object) {
 
    if (!result) {
 
-      result = new ObjectStruct (Object);
+      Vector center;
+
+      ObjectModule *module = get_object_module ();
+
+      if (module) {
+
+         ObjectType type = module->lookup_object_type (Object);
+
+         Vector *ptr = _centerTable.lookup (type.get_handle ());
+
+         if (!ptr) { 
+
+            Config data = type.find_config ("center-offset");
+
+            if (data) { ptr = new Vector (config_to_vector (data)); }
+            else { ptr = new Vector; }
+
+            if (ptr && !_centerTable.store (type.get_handle (), ptr)) {
+
+               delete ptr; ptr = 0;
+            }
+         }
+
+         if (ptr) { center = *ptr; }
+      }
+
+      result = new ObjectStruct (Object, center);
 
       if (result && _objTable.store (Object, result)) { 
-
-         ObjectModule *module = get_object_module ();
 
          if (module) {
 
@@ -379,13 +443,14 @@ dmz::RenderPluginLinkOSG::_update_link (LinkStruct &ls) {
 
       ls.root->setNodeMask (mask);
 
-      Vector dir = ls.super.pos - ls.sub.pos;
-      const Vector Scale (1.0, 1.0, dir.magnitude ());
+      Vector dir = (ls.super.pos + ls.super.offset) - (ls.sub.pos + ls.sub.offset);
+      const Vector Scale (ls.scale, ls.scale, dir.magnitude ());
       dir.normalize_in_place ();
       Matrix rot (dir);
 
-      ls.root->setMatrix (to_osg_matrix (rot, ls.sub.pos, Scale));
+      ls.root->setMatrix (to_osg_matrix (rot, ls.sub.pos + ls.sub.offset, Scale));
    }
+else { _log.error << "Root not valid." << endl; }
 }
 
 
@@ -407,15 +472,14 @@ dmz::RenderPluginLinkOSG::_create_geometry (LinkDefStruct &def) {
 
    def.model = new osg::Geode ();
 
-   osg::Geometry* geom = new osg::Geometry;
+   osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
 
    osg::Vec4Array* colors = new osg::Vec4Array;
    colors->push_back (def.Color);
    geom->setColorArray (colors);
    geom->setColorBinding (osg::Geometry::BIND_OVERALL);
 
-   osg::StateSet *stateset = geom->getOrCreateStateSet ();
-
+   osg::StateSet *stateset = def.model->getOrCreateStateSet ();
    stateset->setAttributeAndModes (new osg::CullFace (osg::CullFace::BACK));
 
 #if 0
@@ -424,8 +488,28 @@ dmz::RenderPluginLinkOSG::_create_geometry (LinkDefStruct &def) {
    stateset->setAttributeAndModes (material.get (), osg::StateAttribute::ON);
 #endif
 
-   osg::Vec3Array *vertices = new osg::Vec3Array;
-   osg::Vec3Array* normals = new osg::Vec3Array;
+   osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array;
+   osg::ref_ptr<osg::Vec3Array> normals = new osg::Vec3Array;
+
+   osg::ref_ptr<osg::Vec3Array> top (0);
+   osg::ref_ptr<osg::Vec3Array> bottom (0);
+   osg::ref_ptr<osg::Geometry> topGeom;
+   osg::ref_ptr<osg::Geometry> bottomGeom;
+
+   if (def.Capped) {
+
+      top = new osg::Vec3Array;
+      bottom = new osg::Vec3Array;
+
+      topGeom = new osg::Geometry;
+      bottomGeom = new osg::Geometry;
+
+      topGeom->setColorArray (colors);
+      topGeom->setColorBinding (osg::Geometry::BIND_OVERALL);
+
+      bottomGeom->setColorArray (colors);
+      bottomGeom->setColorBinding (osg::Geometry::BIND_OVERALL);
+   }
 
    const Vector Offset (0.0, 0.0, -1.0);
    const Vector Forward (0.0, 0.0, -1.0);
@@ -433,6 +517,7 @@ dmz::RenderPluginLinkOSG::_create_geometry (LinkDefStruct &def) {
    Float64 Angle = TwoPi64 / (Float64 (def.Sides));
 
    int count (0);
+   int capCount (0);
 
    for (Int32 ix = 0; ix <= def.Sides; ix++) {
 
@@ -451,13 +536,48 @@ dmz::RenderPluginLinkOSG::_create_geometry (LinkDefStruct &def) {
       vertices->push_back (to_osg_vector (radius)); count++;
       normals->push_back (to_osg_vector (vec));
       normals->push_back (to_osg_vector (vec));
+
+      if (top.valid ()) { top->push_back (to_osg_vector (radius + Offset)); }
+
+      if (bottom.valid ()) {
+
+         bottom->insert (bottom->begin (), to_osg_vector (radius));
+      }
+
+      capCount++;
    }
 
    geom->setNormalArray (normals);
    geom->setNormalBinding (osg::Geometry::BIND_PER_VERTEX);
    geom->addPrimitiveSet (new osg::DrawArrays (GL_TRIANGLE_STRIP, 0, count));
    geom->setVertexArray (vertices);
-   def.model->addDrawable (geom);
+
+   def.model->addDrawable (geom.get ());
+
+   if (top && topGeom.valid ()) {
+
+      osg::ref_ptr<osg::Vec3Array> topNorm = new osg::Vec3Array;
+      topNorm->push_back (osg::Vec3 (0.0, 0.0, -1.0));
+      topGeom->setNormalArray (topNorm);
+      topGeom->setNormalBinding (osg::Geometry::BIND_OVERALL);
+      topGeom->addPrimitiveSet (new osg::DrawArrays (GL_TRIANGLE_FAN, 0, capCount - 1));
+      topGeom->setVertexArray (top.get ());
+      def.model->addDrawable (topGeom.get ());
+   }
+
+   if (bottom && bottomGeom.valid ()) {
+
+      osg::ref_ptr<osg::Vec3Array> bottomNorm = new osg::Vec3Array;
+      bottomNorm->push_back (osg::Vec3 (0.0, 0.0, 1.0));
+      bottomGeom->setNormalArray (bottomNorm);
+      bottomGeom->setNormalBinding (osg::Geometry::BIND_OVERALL);
+
+      bottomGeom->addPrimitiveSet (
+         new osg::DrawArrays (GL_TRIANGLE_FAN, 0, capCount - 1));
+
+      bottomGeom->setVertexArray (bottom.get ());
+      def.model->addDrawable (bottomGeom.get ());
+   }
 }
 
 
@@ -480,6 +600,11 @@ dmz::RenderPluginLinkOSG::_init (Config &local) {
             link,
             context);
 
+         const Handle ScaleAttr = config_to_named_handle (
+            "scale-attribute",
+            link,
+            context);
+
          const osg::Vec4 Color = config_to_osg_vec4_color (
             link,
             osg::Vec4 (1.0, 1.0, 1.0, 1.0));
@@ -490,20 +615,34 @@ dmz::RenderPluginLinkOSG::_init (Config &local) {
 
          const Boolean Glyph = config_to_boolean ("glyph", link, True);
 
-         LinkDefStruct *lds = new LinkDefStruct (Attr, Color, Radius, Sides, Glyph);
+         const Boolean Capped = config_to_boolean ("capped", link, False);
+
+         LinkDefStruct *lds = new LinkDefStruct (
+            Attr,
+            ScaleAttr,
+            Color,
+            Radius,
+            Sides,
+            Glyph,
+            Capped);
 
          if (lds && _defTable.store (Attr, lds)) {
 
             activate_object_attribute (
                Attr,
                ObjectLinkMask | ObjectUnlinkMask | ObjectLinkAttributeMask);
+
+            if (ScaleAttr) {
+
+               activate_object_attribute (ScaleAttr, ObjectScalarMask);
+            }
          }
          else if (lds) { delete lds; lds = 0; }
       }
    }
 
    _defaultAttrHandle = activate_default_object_attribute (
-      ObjectDestroyMask | ObjectPositionMask);
+      ObjectDestroyMask | ObjectPositionMask | ObjectOrientationMask);
 
    _hideAttrHandle = activate_object_attribute (ObjectAttributeHideName, ObjectFlagMask);
 }

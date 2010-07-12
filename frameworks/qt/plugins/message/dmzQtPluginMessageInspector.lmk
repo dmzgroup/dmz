@@ -1,0 +1,12 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginMessageInspector"
+lmk.set_type "plugin"
+lmk.add_files {"MessageInspector.ui"}
+lmk.add_files ( {"dmzQtPluginMessageInspector.h",}, {src="moc"} )
+lmk.add_files {"dmzQtPluginMessageInspector.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+   "dmzQtUtil",
+}
+lmkQt.add_libs {"QtCore","QtGui"}
+

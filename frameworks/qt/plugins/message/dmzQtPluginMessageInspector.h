@@ -8,6 +8,7 @@
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <QtGui/QTreeWidget>
 #include <QtGui/QWidget>
+#include <QtGui/QListWidget>
 #include <ui_MessageInspector.h>
 
 namespace dmz {
@@ -41,8 +42,13 @@ namespace dmz {
             Data *outData);
 
       protected slots:
+         void _check_all_targets ();
+         void _uncheck_all_targets ();
+         void _check_all_types ();
+         void _uncheck_all_types ();
          void _update_displayed_text ();
-         void _filter_for_selected_target (const QString &text);
+         void _apply_new_filter (QListWidgetItem *);
+
 
       protected:
          // QtPluginMessageInspector Interface
@@ -50,6 +56,8 @@ namespace dmz {
 
          Log _log;
          Ui::InspectorForm _ui;
+         QStringList _targetFilterList;
+         QStringList _typeFilterList;
 
 
       private:
@@ -57,6 +65,7 @@ namespace dmz {
          QtPluginMessageInspector (const QtPluginMessageInspector &);
          QtPluginMessageInspector &operator= (const QtPluginMessageInspector &);
 
+         UInt32 __messageCount;
          //QStandardItem *__parentItem;
          String __runtimedata_to_string (const Data &Value);
 

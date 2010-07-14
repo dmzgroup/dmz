@@ -21,7 +21,8 @@ dmz::QtPluginButtonToChannel::QtPluginButtonToChannel (
       _inputModule (0),
       _inputModuleName (),
       _actionGroup (0),
-      _channelList (0) {
+      _channelList (0),
+      _defaultChannel (0) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
@@ -57,8 +58,8 @@ dmz::QtPluginButtonToChannel::discover_plugin (
 
                _inputModule->create_channel (current->Channel);
                
-               _inputModule->set_channel_state (
-                  current->Channel, current->action->isChecked ());
+//               _inputModule->set_channel_state (
+//                  current->Channel, current->action->isChecked ());
 
                _inputModule->register_input_observer (
                      current->Channel,
@@ -177,6 +178,8 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
                qtoolbutton_config_read ("toolButton", cd, button);
 
                next->action = button->defaultAction ();
+               next->action->setChecked (False);
+
                if (next->action) {
 
                   next->action->setData ((quint64)next->Channel);

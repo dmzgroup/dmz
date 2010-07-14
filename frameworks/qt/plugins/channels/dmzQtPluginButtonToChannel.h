@@ -90,6 +90,7 @@ namespace dmz {
          String _inputModuleName;
          QActionGroup *_actionGroup;
          ChannelStruct *_channelList;
+         Handle _defaultChannel;
 
       private:
          QtPluginButtonToChannel ();

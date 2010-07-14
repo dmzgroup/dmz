@@ -71,6 +71,7 @@ dmz::InputPluginChannelRules::discover_plugin (
 
                current = current->next;
             }
+            _inputModule->set_channel_state (_defaultChannel, True);
          }
       }
 

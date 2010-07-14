@@ -32,28 +32,28 @@ namespace dmz {
 
          virtual void receive_axis_event (
             const Handle Channel,
-            const InputEventAxis &Value);
+            const InputEventAxis &Value) {;}
 
          virtual void receive_button_event (
             const Handle Channel,
-            const InputEventButton &Value);
+            const InputEventButton &Value) {;}
 
          virtual void receive_switch_event (
             const Handle Channel,
-            const InputEventSwitch &Value);
+            const InputEventSwitch &Value) {;}
 
          virtual void receive_key_event (
             const Handle Channel,
-            const InputEventKey &Value);
+            const InputEventKey &Value) {;}
 
          virtual void receive_mouse_event (
             const Handle Channel,
-            const InputEventMouse &Value);
+            const InputEventMouse &Value) {;}
 
          virtual void receive_data_event (
             const Handle Channel,
             const Handle Source,
-            const Data &Value);
+            const Data &Value) {;}
 
       protected:
          struct ChannelStruct {

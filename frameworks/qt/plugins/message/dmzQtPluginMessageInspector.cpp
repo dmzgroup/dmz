@@ -74,23 +74,23 @@ dmz::QtPluginMessageInspector::update_plugin_state (
 
       Config targetList;
       ConfigIterator it;
-      if (session.lookup_all_config ("Target.target",targetList)) {
+      if (session.lookup_all_config ("Target.target", targetList)) {
          Config target;
-         while (targetList.get_next_config (it,target)) {
+         while (targetList.get_next_config (it, target)) {
             QString targetString = to_qstring (
-                  config_to_string ("value",target,"Failed Read"));
+                  config_to_string ("value", target, "Failed Read"));
             QListWidgetItem *messageTargetItem;
             if (!_targetFilterList.contains (targetString)) {
                 messageTargetItem =
-                      new QListWidgetItem (targetString,_ui.messageTargetList);
+                      new QListWidgetItem (targetString, _ui.messageTargetList);
             }
             else {
                QList<QListWidgetItem *> items = _ui.messageTargetList->findItems (
-                                                   targetString,Qt::MatchFixedString);
+                                                   targetString, Qt::MatchFixedString);
                messageTargetItem = items.first ();
             }
 
-            if (config_to_boolean ("checked",target)) {
+            if (config_to_boolean ("checked", target)) {
                messageTargetItem->setCheckState (Qt::Checked);
             }
             else { messageTargetItem->setCheckState (Qt::Unchecked); }
@@ -99,22 +99,22 @@ dmz::QtPluginMessageInspector::update_plugin_state (
 
       Config typeList;
       it.reset ();
-      if (session.lookup_all_config ("Type.type",typeList)) {
+      if (session.lookup_all_config ("Type.type", typeList)) {
          Config type;
-         while (typeList.get_next_config (it,type)) {
+         while (typeList.get_next_config (it, type)) {
             QString typeString = to_qstring (
-                  config_to_string ("value",type,"Failed Read"));
+                  config_to_string ("value", type, "Failed Read"));
             QListWidgetItem *messageTypeItem;
             if (!_typeFilterList.contains (typeString)) {
-                messageTypeItem = new QListWidgetItem (typeString,_ui.messageTypeList);
+                messageTypeItem = new QListWidgetItem (typeString, _ui.messageTypeList);
             }
             else {
                QList<QListWidgetItem *> items =
-                     _ui.messageTypeList->findItems (typeString,Qt::MatchFixedString);
+                     _ui.messageTypeList->findItems (typeString, Qt::MatchFixedString);
                messageTypeItem = items.first ();
             }
 
-            if (config_to_boolean ("checked",type)) {
+            if (config_to_boolean ("checked", type)) {
                messageTypeItem->setCheckState (Qt::Checked);
             }
             else { messageTypeItem->setCheckState (Qt::Unchecked); }
@@ -137,12 +137,11 @@ dmz::QtPluginMessageInspector::update_plugin_state (
 
          QListWidgetItem *item = _ui.messageTargetList->item (index);
          String text = qPrintable (item->text ());
-         Config current (string_to_config ("target",text));
-         //current.store_attribute ("name",text);
+         Config current (string_to_config ("target", text));
          String boolVal;
          if (item->checkState () == Qt::Checked) { boolVal = "True"; }
          else { boolVal = "False"; }
-         current.store_attribute ("checked",boolVal);
+         current.store_attribute ("checked", boolVal);
          target.add_config (current);
       }
 
@@ -151,11 +150,11 @@ dmz::QtPluginMessageInspector::update_plugin_state (
 
          QListWidgetItem *item = _ui.messageTypeList->item (index);
          String text = qPrintable (item->text ());
-         Config current (string_to_config ("type",text));
+         Config current (string_to_config ("type", text));
          String boolVal;
          if (item->checkState () == Qt::Checked) { boolVal = "True"; }
          else { boolVal = "False"; }
-         current.store_attribute ("checked",boolVal);
+         current.store_attribute ("checked", boolVal);
          type.add_config (current);
       }
 
@@ -225,7 +224,7 @@ dmz::QtPluginMessageInspector::receive_message (
 
    if (index == _ui.messageTargetList->count ()) {
       QListWidgetItem *messageTargetItem =
-            new QListWidgetItem (messageTarget,_ui.messageTargetList);
+            new QListWidgetItem (messageTarget, _ui.messageTargetList);
 
       messageTargetItem->setCheckState (Qt::Checked);
    }
@@ -236,7 +235,7 @@ dmz::QtPluginMessageInspector::receive_message (
 
    if (index == _ui.messageTypeList->count ()) {
       QListWidgetItem *messageTypeItem =
-            new QListWidgetItem (messageType,_ui.messageTypeList);
+            new QListWidgetItem (messageType, _ui.messageTypeList);
 
       messageTypeItem->setCheckState (Qt::Checked);
    }

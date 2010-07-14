@@ -98,9 +98,13 @@ dmz::QtPluginButtonToChannel::update_channel_state (
 
          while (current) {
 
-            if (current->Channel == Channel) { current->action->setChecked (State); }
+            if (current->Channel == Channel) {
 
-            current = current->next;
+               current->action->setChecked (State);
+               current = 0;
+
+            }
+            else { current = current->next; }
          }
    }
 }
@@ -115,11 +119,14 @@ dmz::QtPluginButtonToChannel::_slot_change_channel (QAction *theAction) {
 
       while (current) {
 
-         _inputModule->set_channel_state (
-            current->Channel,
-            current->action->isChecked ());
+         if (theAction == current->action) {
 
-         current = current->next;
+            _inputModule->set_channel_state (
+               current->Channel,
+               current->action->isChecked ());
+            current = 0;
+         }
+         else { current = current->next; }
       }
    }
 }
@@ -136,6 +143,7 @@ dmz::QtPluginButtonToChannel::_init (Config &local) {
 
    QBoxLayout *layout;
    if (config_to_boolean ("layout.vertical", local, False)) {
+
       layout = new QVBoxLayout ();
    }
    else { layout = new QHBoxLayout (); }

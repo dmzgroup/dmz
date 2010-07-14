@@ -90,7 +90,8 @@ dmz::InputPluginChannelRules::update_channel_state (const Handle Channel, const 
    else { --__activeChannelCount; }
 
    if (__activeChannelCount == 0 && _defaultChannel) {
-      _inputModule->set_channel_state (_defaultChannel,True);
+
+      _inputModule->set_channel_state (_defaultChannel, True);
    }
 
    else if (_channelList && _inputModule && State) {
@@ -100,63 +101,14 @@ dmz::InputPluginChannelRules::update_channel_state (const Handle Channel, const 
       while (current) {
 
          if (current->Channel != Channel) {
-            _inputModule->set_channel_state (current->Channel,False);
+
+            _inputModule->set_channel_state (current->Channel, False);
          }
 
          current = current->next;
       }
    }
 }
-
-
-void
-dmz::InputPluginChannelRules::receive_axis_event (
-      const Handle Channel,
-      const InputEventAxis &Value) {
-
-}
-
-
-void
-dmz::InputPluginChannelRules::receive_button_event (
-      const Handle Channel,
-      const InputEventButton &Value) {
-
-}
-
-
-void
-dmz::InputPluginChannelRules::receive_switch_event (
-      const Handle Channel,
-      const InputEventSwitch &Value) {
-
-}
-
-
-void
-dmz::InputPluginChannelRules::receive_key_event (
-      const Handle Channel,
-      const InputEventKey &Value) {
-
-}
-
-
-void
-dmz::InputPluginChannelRules::receive_mouse_event (
-      const Handle Channel,
-      const InputEventMouse &Value) {
-
-}
-
-
-void
-dmz::InputPluginChannelRules::receive_data_event (
-      const Handle Channel,
-      const Handle Source,
-      const Data &Value) {
-
-}
-
 
 // InputPluginChannelRules Interface
 void
@@ -183,6 +135,7 @@ dmz::InputPluginChannelRules::_init (Config &local) {
             if (next) {
 
                if (!_defaultChannel || config_to_boolean ("default", cd, False)) {
+
                   _defaultChannel = next->Channel;
                }
 

@@ -6,6 +6,7 @@
 
 namespace dmz {
 
+   class HandleContainer;
    class Mask;
    class Matrix;
    class Stream;
@@ -76,6 +77,9 @@ operator<< (dmz::Stream &stream, const dmz::Mask &Value);
 
 DMZ_KERNEL_LINK_SYMBOL dmz::Stream &
 operator<< (dmz::Stream &stream, const dmz::Matrix &Value);
+
+DMZ_KERNEL_LINK_SYMBOL dmz::Stream &
+operator<< (dmz::Stream &stream, const dmz::HandleContainer &Value);
 
 DMZ_KERNEL_LINK_SYMBOL dmz::Stream &
 operator<< (dmz::Stream &stream, const dmz::StringContainer &Value);

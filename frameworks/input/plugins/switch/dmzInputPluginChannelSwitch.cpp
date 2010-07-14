@@ -43,7 +43,7 @@ dmz::InputPluginChannelSwitch::~InputPluginChannelSwitch () {
 // Input Observer Interface
 void
 dmz::InputPluginChannelSwitch::update_channel_state (
-      const UInt32 Channel,
+      const Handle Channel,
       const Boolean State) {
 
 }
@@ -51,7 +51,7 @@ dmz::InputPluginChannelSwitch::update_channel_state (
 
 void
 dmz::InputPluginChannelSwitch::receive_button_event (
-      const UInt32 Channel,
+      const Handle Channel,
       const InputEventButton &Value) {
 
 }
@@ -59,7 +59,7 @@ dmz::InputPluginChannelSwitch::receive_button_event (
 
 void
 dmz::InputPluginChannelSwitch::receive_key_event (
-      const UInt32 Channel,
+      const Handle Channel,
       const InputEventKey &Value) {
 
    if ((Value.get_key () == KeyTab) && Value.get_key_state ()) {

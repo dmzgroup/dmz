@@ -398,6 +398,10 @@ dmz::RenderPluginLinkOSG::_lookup_object (const Handle Object) {
          if (module) {
 
             module->lookup_position (Object, _defaultAttrHandle, result->pos);
+            module->lookup_orientation (Object, _defaultAttrHandle, result->ori);
+            result->offset = result->Center;
+            result->ori.transform_vector (result->offset);
+
          }
       }
       else if (result) { delete result; result = 0; }
@@ -450,7 +454,6 @@ dmz::RenderPluginLinkOSG::_update_link (LinkStruct &ls) {
 
       ls.root->setMatrix (to_osg_matrix (rot, ls.sub.pos + ls.sub.offset, Scale));
    }
-else { _log.error << "Root not valid." << endl; }
 }
 
 

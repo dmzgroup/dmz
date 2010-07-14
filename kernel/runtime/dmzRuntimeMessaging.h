@@ -107,7 +107,7 @@ namespace dmz {
 
          virtual void receive_message (
             const Message &Type,
-            const Handle MessageSendHandle,
+            const UInt32 MessageSendId,
             const Handle TargetObserverHandle,
             const Data *InData,
             Data *outData) = 0;

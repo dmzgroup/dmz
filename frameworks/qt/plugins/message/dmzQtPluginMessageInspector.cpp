@@ -224,15 +224,18 @@ dmz::QtPluginMessageInspector::receive_message (
    _ui.treeWidgetList->addTopLevelItem (messageItem);
 
    for (UInt32 i = 0; i < _ui.treeWidgetList->columnCount (); ++ i) {
+
       _ui.treeWidgetList->resizeColumnToContents (i);
    }
 
    UInt32 index;
    for (index = 0; index < _ui.messageTargetList->count (); ++index) {
+
       if (_ui.messageTargetList->item (index)->text () == messageTarget) { break; }
    }
 
    if (index == _ui.messageTargetList->count ()) {
+
       QListWidgetItem *messageTargetItem =
             new QListWidgetItem (messageTarget, _ui.messageTargetList);
 
@@ -240,10 +243,12 @@ dmz::QtPluginMessageInspector::receive_message (
    }
 
    for (index = 0; index < _ui.messageTypeList->count (); ++index) {
+
       if (_ui.messageTypeList->item (index)->text () == messageType) { break; }
    }
 
    if (index == _ui.messageTypeList->count ()) {
+
       QListWidgetItem *messageTypeItem =
             new QListWidgetItem (messageType, _ui.messageTypeList);
 
@@ -256,38 +261,47 @@ dmz::QtPluginMessageInspector::receive_message (
 
 void
 dmz::QtPluginMessageInspector::_check_all_targets () {
+
    UInt32 index;
    for (index = 0; index < _ui.messageTargetList->count (); ++index) {
+
       _ui.messageTargetList->item (index)->setCheckState (Qt::Checked);
    }
 }
 
 void
 dmz::QtPluginMessageInspector::_uncheck_all_targets () {
+
    UInt32 index;
    for (index = 0; index < _ui.messageTargetList->count (); ++index) {
+
       _ui.messageTargetList->item (index)->setCheckState (Qt::Unchecked);
    }
 }
 
 void
 dmz::QtPluginMessageInspector::_check_all_types () {
+
    UInt32 index;
    for (index = 0; index < _ui.messageTypeList->count (); ++index) {
+
       _ui.messageTypeList->item (index)->setCheckState (Qt::Checked);
    }
 }
 
 void
 dmz::QtPluginMessageInspector::_uncheck_all_types () {
+
    UInt32 index;
    for (index = 0; index < _ui.messageTypeList->count (); ++index) {
+
       _ui.messageTypeList->item (index)->setCheckState (Qt::Unchecked);
    }
 }
 
 void
 dmz::QtPluginMessageInspector::_update_displayed_text () {
+
    QTreeWidgetItem *selectedMessage = _ui.treeWidgetList->currentItem ();
    QString messageData = selectedMessage->text (_ui.treeWidgetList->columnCount () - 1);
    _ui.textEdit->setText (messageData);
@@ -295,12 +309,15 @@ dmz::QtPluginMessageInspector::_update_displayed_text () {
 
 void
 dmz::QtPluginMessageInspector::_apply_new_filter (QListWidgetItem * filter) {
+
    QString text = filter->text ();
    if (filter->listWidget () == _ui.messageTargetList) {
+
       if (filter->checkState () == Qt::Checked) { _targetFilterList << text; }
       else { _targetFilterList.removeOne (text); }
    }
    else {
+
       if (filter->checkState () == Qt::Checked) { _typeFilterList << text; }
       else { _typeFilterList.removeOne (text); }
    }

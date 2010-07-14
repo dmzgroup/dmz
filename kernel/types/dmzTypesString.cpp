@@ -1,4 +1,5 @@
 #include <dmzTypesBase.h>
+#include <dmzTypesHandleContainer.h>
 #include <dmzTypesMask.h>
 #include <dmzTypesString.h>
 #include <dmzTypesVector.h>
@@ -1245,6 +1246,27 @@ operator<< (dmz::String &str, const dmz::Matrix &Value) {
       << 2 << "["
       << matrixData[6] << ", " << matrixData[7] << ", " << matrixData[8]
       << "])";
+
+   return str;
+}
+
+
+dmz::String &
+operator<< (dmz::String &str, const dmz::HandleContainer &Value) {
+
+   dmz::HandleContainerIterator it;
+   dmz::Handle next;
+   dmz::Boolean first (dmz::True);
+   str << "[";
+
+   while (Value.get_next (it, next)) {
+
+      if (!first) { str << ", "; }
+      else { first = dmz::False; }
+      str << "\"" << next << "\"";
+   }
+
+   str << "]";
 
    return str;
 }

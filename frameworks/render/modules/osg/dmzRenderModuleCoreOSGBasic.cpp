@@ -495,6 +495,12 @@ dmz::RenderModuleCoreOSGBasic::_init (Config &local, Config &global) {
             fpl.push_back (pathStr.get_buffer ());
          }
       }
+
+   }
+
+   if(reg) {
+
+      reg->setBuildKdTreesHint(osgDB::ReaderWriter::Options::BUILD_KDTREES);
    }
 
    _defaultHandle = activate_default_object_attribute (

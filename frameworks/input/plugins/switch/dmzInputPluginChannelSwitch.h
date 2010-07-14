@@ -24,26 +24,26 @@ namespace dmz {
             const Plugin *PluginPtr) {;}
 
          // Input Observer Interface
-         virtual void update_channel_state (const UInt32 Channel, const Boolean State);
+         virtual void update_channel_state (const Handle Channel, const Boolean State);
 
          virtual void receive_axis_event (
-            const UInt32 Channel,
+            const Handle Channel,
             const InputEventAxis &Value) {;}
 
          virtual void receive_button_event (
-            const UInt32 Channel,
+            const Handle Channel,
             const InputEventButton &Value);
 
          virtual void receive_key_event (
-            const UInt32 Channel,
+            const Handle Channel,
             const InputEventKey &Value);
 
          virtual void receive_mouse_event (
-            const UInt32 Channel,
+            const Handle Channel,
             const InputEventMouse &Value) {;}
 
          virtual void receive_switch_event (
-            const UInt32 Channel,
+            const Handle Channel,
             const InputEventSwitch &Value) {;}
 
       protected:

@@ -1,6 +1,7 @@
 #ifndef DMZ_QT_PLUGIN_BUTTON_TO_CHANNEL_DOT_H
 #define DMZ_QT_PLUGIN_BUTTON_TO_CHANNEL_DOT_H
 
+#include <dmzInputObserverUtil.h>
 #include <dmzQtWidget.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
@@ -16,7 +17,11 @@ namespace dmz {
 
    class InputModule;
 
-   class QtPluginButtonToChannel : public QFrame, public Plugin, public QtWidget {
+   class QtPluginButtonToChannel :
+         public QFrame,
+         public Plugin,
+         public QtWidget,
+         public InputObserverUtil {
 
       Q_OBJECT
 
@@ -35,6 +40,29 @@ namespace dmz {
 
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();
+
+         // Input Observer Interface
+         virtual void update_channel_state (const Handle Channel, const Boolean State);
+
+         virtual void receive_axis_event (
+            const Handle Channel,
+            const InputEventAxis &Value) {;}
+
+         virtual void receive_button_event (
+            const Handle Channel,
+            const InputEventButton &Value) {;}
+
+         virtual void receive_key_event (
+            const Handle Channel,
+            const InputEventKey &Value) {;}
+
+         virtual void receive_mouse_event (
+            const Handle Channel,
+            const InputEventMouse &Value) {;}
+
+         virtual void receive_switch_event (
+            const Handle Channel,
+            const InputEventSwitch &Value) {;}
 
       protected slots:
          void _slot_change_channel (QAction *action);
@@ -62,7 +90,6 @@ namespace dmz {
          String _inputModuleName;
          QActionGroup *_actionGroup;
          ChannelStruct *_channelList;
-         Handle _defaultChannel;
 
       private:
          QtPluginButtonToChannel ();

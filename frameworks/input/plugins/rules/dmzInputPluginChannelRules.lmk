@@ -1,0 +1,9 @@
+lmk.set_name "dmzInputPluginChannelRules"
+lmk.set_type "plugin"
+lmk.add_files {"dmzInputPluginChannelRules.cpp",}
+lmk.add_libs {
+   "dmzInputEvents",
+   "dmzInputUtil",
+   "dmzKernel",
+}
+lmk.add_preqs {"dmzInputFramework",}

@@ -75,22 +75,27 @@ dmz::QtPluginMessageInspector::update_plugin_state (
       Config targetList;
       ConfigIterator it;
       if (session.lookup_all_config ("Target.target", targetList)) {
+
          Config target;
          while (targetList.get_next_config (it, target)) {
+
             QString targetString = to_qstring (
                   config_to_string ("value", target, "Failed Read"));
             QListWidgetItem *messageTargetItem;
             if (!_targetFilterList.contains (targetString)) {
+
                 messageTargetItem =
                       new QListWidgetItem (targetString, _ui.messageTargetList);
             }
             else {
+
                QList<QListWidgetItem *> items = _ui.messageTargetList->findItems (
                                                    targetString, Qt::MatchFixedString);
                messageTargetItem = items.first ();
             }
 
             if (config_to_boolean ("checked", target)) {
+
                messageTargetItem->setCheckState (Qt::Checked);
             }
             else { messageTargetItem->setCheckState (Qt::Unchecked); }
@@ -100,21 +105,26 @@ dmz::QtPluginMessageInspector::update_plugin_state (
       Config typeList;
       it.reset ();
       if (session.lookup_all_config ("Type.type", typeList)) {
+
          Config type;
          while (typeList.get_next_config (it, type)) {
+
             QString typeString = to_qstring (
                   config_to_string ("value", type, "Failed Read"));
             QListWidgetItem *messageTypeItem;
             if (!_typeFilterList.contains (typeString)) {
+
                 messageTypeItem = new QListWidgetItem (typeString, _ui.messageTypeList);
             }
             else {
+
                QList<QListWidgetItem *> items =
                      _ui.messageTypeList->findItems (typeString, Qt::MatchFixedString);
                messageTypeItem = items.first ();
             }
 
             if (config_to_boolean ("checked", type)) {
+
                messageTypeItem->setCheckState (Qt::Checked);
             }
             else { messageTypeItem->setCheckState (Qt::Unchecked); }

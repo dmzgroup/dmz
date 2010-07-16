@@ -4,12 +4,14 @@
 dmz::RuntimeContextDefinitions::RuntimeContextDefinitions () :
       namedHandleTable (&namedHandleLock),
       namedHandleNameTable (&namedHandleNameLock),
-      eventHandleTable (&eventHandleLock),
-      eventNameTable (&eventNameLock),
       objectHandleTable (&objectHandleLock),
       objectNameTable (&objectNameLock),
+      eventHandleTable (&eventHandleLock),
+      eventNameTable (&eventNameLock),
       maskShift (0),
-      maskTable (&maskLock) {;}
+      maskTable (&maskLock),
+      messageHandleTable (&messageHandleLock),
+      messageNameTable (&messageNameLock) {;}
 
 
 //! Destructor.
@@ -17,11 +19,13 @@ dmz::RuntimeContextDefinitions::~RuntimeContextDefinitions () {
 
    namedHandleTable.empty ();
    namedHandleNameTable.empty ();
-   eventHandleTable.clear ();
-   eventNameTable.empty ();
    objectHandleTable.clear ();
    objectNameTable.empty ();
+   eventHandleTable.clear ();
+   eventNameTable.empty ();
    maskTable.empty ();
+   messageHandleTable.clear ();
+   messageNameTable.empty ();
    uniqueNameTable.clear ();
 }
 

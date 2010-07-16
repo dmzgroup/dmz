@@ -219,6 +219,30 @@ dmz::DefinitionsObserver::set_definitions_observer_callback_mask (const UInt32 T
          __state.mask &= ~RuntimeEventTypeMask;
          __state.defs->eventObsTable.remove (ObsHandle);
       }
+
+      if (RuntimeMessageMask & TheMask) {
+
+         if ((RuntimeMessageMask & __state.mask) == 0) {
+
+            if (__state.defs->messageObsTable.store (ObsHandle, this)) {
+
+               __state.mask |= RuntimeMessageMask;
+
+               HashTableHandleIterator it;
+               Message *ptr (0);
+
+               while (__state.defs->messageHandleTable.get_next (it, ptr)) {
+
+                  define_message (*ptr);
+               }
+            }
+         }
+      }
+      else if (RuntimeMessageMask & __state.mask) {
+
+         __state.mask &= ~RuntimeMessageMask;
+         __state.defs->messageObsTable.remove (ObsHandle);
+      }
    }
 
    return __state.mask;
@@ -283,6 +307,7 @@ dmz::DefinitionsObserver::define_object_type (const ObjectType &) {
    }
 }
 
+
 /*!
 
 \brief Callback for dmz::EventType definition.
@@ -302,4 +327,20 @@ dmz::DefinitionsObserver::define_event_type (const EventType &) {
 }
 
 
+/*!
 
+\brief Callback for dmz::Message definition.
+\details Activated by dmz::RuntimeMessageMask.
+\param[in] Type Message being defined.
+
+*/
+void
+dmz::DefinitionsObserver::define_message (const Message &) {
+
+   if ((RuntimeMessageMask & __state.warnMask) == 0) {
+
+      __state.warnMask |= RuntimeMessageMask;
+      __state.log.warn << "Base define_message called."
+         << " Function should have been overridden?" << endl;
+   }
+}

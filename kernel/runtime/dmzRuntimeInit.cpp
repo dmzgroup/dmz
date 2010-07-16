@@ -391,10 +391,9 @@ local_init_message (
       RuntimeContext *context,
       Log *log) {
 
-   RuntimeContextMessageContainer *container (
-      context ? context->get_message_container_context () : 0);
+   RuntimeContextDefinitions *defs (context ? context->get_definitions_context () : 0);
 
-   if (container) {
+   if (defs) {
 
       RuntimeContextMessaging *rcm (context ? context->get_messaging_context () : 0);
 
@@ -411,7 +410,7 @@ local_init_message (
 
             current.lookup_attribute ("parent", parentName);
 
-            Message tmp = container->create_message (name, parentName, context, rcm);
+            Message tmp = defs->create_message (name, parentName, context, rcm);
 
             if (config_to_boolean ("monostate", current, False)) {
 
@@ -933,14 +932,13 @@ dmz::Definitions::create_message (const String &Name, Message &type) {
 
    if (_state.context) {
 
-      RuntimeContextMessageContainer *container (
-         _state.context->get_message_container_context ());
+      RuntimeContextDefinitions *defs (_state.context->get_definitions_context ());
 
       RuntimeContextMessaging *rcm (_state.context->get_messaging_context ());
 
-      if (container) {
+      if (defs) {
 
-         type = container->create_message (Name, "", _state.context, rcm);
+         type = defs->create_message (Name, "", _state.context, rcm);
       }
    }
 
@@ -963,12 +961,11 @@ dmz::Definitions::lookup_message (const String &Name, Message &type) const {
 
    if (_state.context) {
 
-      RuntimeContextMessageContainer *container (
-         _state.context->get_message_container_context ());
+      RuntimeContextDefinitions *defs (_state.context->get_definitions_context ());
 
-      if (container) {
+      if (defs) {
 
-         Message *ptr (container->messageNameTable.lookup (Name));
+         Message *ptr (defs->messageNameTable.lookup (Name));
          if (ptr) { type = *ptr; result = True; }
          else if (_state.log) {
 
@@ -1006,12 +1003,11 @@ dmz::Definitions::lookup_message (const Handle TypeHandle, Message &type) const 
 
    if (_state.context) {
 
-      RuntimeContextMessageContainer *container (
-         _state.context->get_message_container_context ());
+      RuntimeContextDefinitions *defs (_state.context->get_definitions_context ());
 
-      if (container) {
+      if (defs) {
 
-         Message *ptr (container->messageHandleTable.lookup (TypeHandle));
+         Message *ptr (defs->messageHandleTable.lookup (TypeHandle));
          if (ptr) { type = *ptr; result = True; }
          else if (_state.log) {
 

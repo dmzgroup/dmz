@@ -24,7 +24,6 @@ dmz::RuntimeContext::RuntimeContext () :
       _key (new RuntimeContextThreadKey ((void *)this)),
       _handleAllocator (0),
       _defContext (0),
-      _messageContainerContext (0),
       _messagingContext (0),
       _rcContext (0),
       _rttiContext (0),
@@ -48,13 +47,6 @@ dmz::RuntimeContext::~RuntimeContext () {
    _defLock.lock ();
    if (_defContext) { _defContext->unref (); _defContext = 0; }
    _defLock.unlock ();
-
-   _msgContainerLock.lock ();
-   if (_messageContainerContext) {
-
-      _messageContainerContext->unref (); _messageContainerContext = 0;
-   }
-   _msgContainerLock.unlock ();
 
    _msgLock.lock ();
    if (_messagingContext) {
@@ -154,36 +146,18 @@ dmz::RuntimeContext::get_definitions_context () {
 }
 
 
-//! Gets message container context.
-dmz::RuntimeContextMessageContainer *
-dmz::RuntimeContext::get_message_container_context () {
-
-   if (!_messageContainerContext && _key) {
-
-      _msgContainerLock.lock ();
-      if (!_messageContainerContext) {
-
-         _messageContainerContext = new RuntimeContextMessageContainer;
-      }
-      _msgContainerLock.unlock ();
-   }
-
-   return _messageContainerContext;
-}
-
-
 //! Gets messaging context.
 dmz::RuntimeContextMessaging *
 dmz::RuntimeContext::get_messaging_context () {
 
    if (!_messagingContext && _key) {
 
-      RuntimeContextMessageContainer *container (get_message_container_context ());
+      RuntimeContextDefinitions *defs (get_definitions_context ());
 
       _msgLock.lock ();
-      if (!_messagingContext && container) {
+      if (!_messagingContext && defs) {
 
-         _messagingContext = new RuntimeContextMessaging (*_key, *container, this);
+         _messagingContext = new RuntimeContextMessaging (*_key, *defs, this);
       }
       _msgLock.unlock ();
    }

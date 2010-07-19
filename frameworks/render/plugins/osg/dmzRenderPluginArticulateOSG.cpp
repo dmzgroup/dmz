@@ -15,9 +15,6 @@
 #include <osg/Transform>
 #include <osgSim/DOFTransform>
 
-#include <qdb.h>
-static dmz::qdb out;
-
 namespace {
 
 typedef dmz::RenderPluginArticulateOSG::ScalarStruct sstruct;
@@ -72,7 +69,7 @@ struct MatrixScalarStruct : public sstruct {
 
       if (transform.valid ()) {
 
-         transform->setMatrix (to_osg_matrix (mat, PosVec, ScaleVec));
+         transform->setMatrix (dmz::to_osg_matrix (mat, PosVec, ScaleVec));
       }
    }
 };

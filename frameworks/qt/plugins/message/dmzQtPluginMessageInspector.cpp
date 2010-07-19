@@ -143,7 +143,7 @@ dmz::QtPluginMessageInspector::update_plugin_state (
 
       Config session (get_plugin_name ());
       Config target ("Target");
-      for (UInt32 index = 0; index < _ui.messageTargetList->count (); ++index) {
+      for (int index = 0; index < _ui.messageTargetList->count (); ++index) {
 
          QListWidgetItem *item = _ui.messageTargetList->item (index);
          String text = qPrintable (item->text ());
@@ -156,7 +156,7 @@ dmz::QtPluginMessageInspector::update_plugin_state (
       }
 
       Config type ("Type");
-      for (UInt32 index = 0; index < _ui.messageTypeList->count (); ++index) {
+      for (int index = 0; index < _ui.messageTypeList->count (); ++index) {
 
          QListWidgetItem *item = _ui.messageTypeList->item (index);
          String text = qPrintable (item->text ());
@@ -223,12 +223,12 @@ dmz::QtPluginMessageInspector::receive_message (
    QTreeWidgetItem *messageItem = new QTreeWidgetItem ((QTreeWidget*)0, messageData);
    _ui.treeWidgetList->addTopLevelItem (messageItem);
 
-   for (UInt32 i = 0; i < _ui.treeWidgetList->columnCount (); ++ i) {
+   for (int i = 0; i < _ui.treeWidgetList->columnCount (); ++ i) {
 
       _ui.treeWidgetList->resizeColumnToContents (i);
    }
 
-   UInt32 index;
+   int index (0);
    for (index = 0; index < _ui.messageTargetList->count (); ++index) {
 
       if (_ui.messageTargetList->item (index)->text () == messageTarget) { break; }
@@ -262,7 +262,7 @@ dmz::QtPluginMessageInspector::receive_message (
 void
 dmz::QtPluginMessageInspector::_check_all_targets () {
 
-   UInt32 index;
+   int index (0);
    for (index = 0; index < _ui.messageTargetList->count (); ++index) {
 
       _ui.messageTargetList->item (index)->setCheckState (Qt::Checked);
@@ -272,7 +272,7 @@ dmz::QtPluginMessageInspector::_check_all_targets () {
 void
 dmz::QtPluginMessageInspector::_uncheck_all_targets () {
 
-   UInt32 index;
+   int index (0);
    for (index = 0; index < _ui.messageTargetList->count (); ++index) {
 
       _ui.messageTargetList->item (index)->setCheckState (Qt::Unchecked);
@@ -282,7 +282,7 @@ dmz::QtPluginMessageInspector::_uncheck_all_targets () {
 void
 dmz::QtPluginMessageInspector::_check_all_types () {
 
-   UInt32 index;
+   int index (0);
    for (index = 0; index < _ui.messageTypeList->count (); ++index) {
 
       _ui.messageTypeList->item (index)->setCheckState (Qt::Checked);
@@ -292,7 +292,7 @@ dmz::QtPluginMessageInspector::_check_all_types () {
 void
 dmz::QtPluginMessageInspector::_uncheck_all_types () {
 
-   UInt32 index;
+   int index (0);
    for (index = 0; index < _ui.messageTypeList->count (); ++index) {
 
       _ui.messageTypeList->item (index)->setCheckState (Qt::Unchecked);
@@ -324,8 +324,8 @@ dmz::QtPluginMessageInspector::_apply_new_filter (QListWidgetItem * filter) {
 
    QTreeWidgetItem *selectedMessage;
    QString messageType,messageTarget;
-   for (UInt32 index = 0;
-        index < _ui.treeWidgetList->topLevelItemCount (); ++index) {
+   for (int index = 0;
+         index < _ui.treeWidgetList->topLevelItemCount (); ++index) {
 
       selectedMessage = _ui.treeWidgetList->topLevelItem (index);
       /*messageTarget = selectedMessage->text (1);

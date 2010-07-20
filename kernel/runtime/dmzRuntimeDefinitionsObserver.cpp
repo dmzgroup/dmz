@@ -53,6 +53,7 @@ struct dmz::DefinitionsObserver::State {
 
    ~State () {
 
+      if (handlePtr) { delete handlePtr; handlePtr = 0; }
       if (defs) { defs->unref (); defs = 0; }
       if (context) { context->unref (); context = 0; }
    }

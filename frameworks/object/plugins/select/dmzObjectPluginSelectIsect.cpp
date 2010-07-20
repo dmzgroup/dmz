@@ -9,6 +9,15 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::ObjectPluginSelectIsect
+\ingroup Object
+\brief Disables intersection testing for selected objects.
+
+*/
+
+//! \cond
 dmz::ObjectPluginSelectIsect::ObjectPluginSelectIsect (
       const PluginInfo &Info,
       Config &local) :
@@ -141,6 +150,7 @@ dmz::ObjectPluginSelectIsect::_init (Config &local) {
       }
    }
 }
+//! \endcond
 
 
 extern "C" {

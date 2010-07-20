@@ -19,6 +19,8 @@
 #include <dmzTypesBase.h>
 #include <dmzTypesMath.h>
 
+#include <dmzRuntimeToConfig.h>
+
 namespace {
 
 static const dmz::String ApplicationName ("dmzApplication");
@@ -617,6 +619,9 @@ dmz::Application::save_session () {
 
       _state.log.error << "Session file not found." << endl;
    }
+
+   StreamFileOut out;
+   format_config_to_xml (runtime_to_config (_state.rt.get_context ()), out, ConfigPrettyPrint);
 
    return result;
 }

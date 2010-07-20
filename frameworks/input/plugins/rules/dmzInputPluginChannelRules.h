@@ -15,6 +15,7 @@ namespace dmz {
          public InputObserverUtil {
 
       public:
+         //! \cond
          InputPluginChannelRules (const PluginInfo &Info, Config &local);
          ~InputPluginChannelRules ();
 
@@ -30,31 +31,6 @@ namespace dmz {
          // Input Observer Interface
          virtual void update_channel_state (const Handle Channel, const Boolean State);
 
-         virtual void receive_axis_event (
-            const Handle Channel,
-            const InputEventAxis &Value) {;}
-
-         virtual void receive_button_event (
-            const Handle Channel,
-            const InputEventButton &Value) {;}
-
-         virtual void receive_switch_event (
-            const Handle Channel,
-            const InputEventSwitch &Value) {;}
-
-         virtual void receive_key_event (
-            const Handle Channel,
-            const InputEventKey &Value) {;}
-
-         virtual void receive_mouse_event (
-            const Handle Channel,
-            const InputEventMouse &Value) {;}
-
-         virtual void receive_data_event (
-            const Handle Channel,
-            const Handle Source,
-            const Data &Value) {;}
-
       protected:
          struct ChannelStruct {
 
@@ -65,23 +41,24 @@ namespace dmz {
                   Channel (TheHandle),
                   next (0) {;}
 
-            ~ChannelStruct () { if (next) { delete next; next = 0; } }
+            ~ChannelStruct () {;}
          };
 
          // InputPluginChannelRules Interface
          void _init (Config &local);
 
          Log _log;
+         Int32 _active;
          ChannelStruct *_channelList;
          Handle _defaultChannel;
-         InputModule *_inputModule;
+         InputModule *_input;
          String _inputModuleName;
+         //! \endcond
 
       private:
          InputPluginChannelRules ();
          InputPluginChannelRules (const InputPluginChannelRules &);
          InputPluginChannelRules &operator= (const InputPluginChannelRules &);
-         UInt32 __activeChannelCount;
 
    };
 };

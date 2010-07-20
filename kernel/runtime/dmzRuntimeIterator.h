@@ -13,8 +13,10 @@ class DMZ_KERNEL_LINK_SYMBOL RuntimeIterator {
 
       void reset ();
 
+      //! \cond
       struct State;
       State &state;
+      //! \endcond
 
    private:
       RuntimeIterator (const RuntimeIterator &);

@@ -13,6 +13,7 @@ namespace dmz {
    class PluginInfo;
    class RuntimeContext;
    class RuntimeContextResources;
+   class StringContainer;
 
    class DMZ_KERNEL_LINK_SYMBOL ResourcesUpdate {
 
@@ -23,9 +24,18 @@ namespace dmz {
          ResourcesUpdate (const PluginInfo &Info, Log *log);
          ~ResourcesUpdate ();
 
-         Boolean update_resource_config (
+         Boolean update_resource (
+            const String &ResourceName,
+            const Config &Data);
+
+         Boolean remove_resource (const String &ResourceName);
+
+         Boolean update_resource_file (
             const String &ResourceName,
             const String &FileName);
+
+         Boolean add_search_path (const String &Name, const String &Path);
+         Boolean update_search_path (const String &Name, const StringContainer &Paths);
 
       protected:
          //! \cond

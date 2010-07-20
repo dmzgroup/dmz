@@ -9,7 +9,8 @@
 /*!
 
 \file dmzRuntimeTimeSlice.h
-\brief Contains TimeSlicehronization class.
+\ingroup Runtime
+\brief Contains TimeSlice class.
 
 \enum TimeSliceTypeEnum
 \ingroup Runtime

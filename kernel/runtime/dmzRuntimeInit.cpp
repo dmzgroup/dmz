@@ -11,6 +11,7 @@
 #include <dmzRuntimeLog.h>
 #include "dmzRuntimeMessageContext.h"
 #include "dmzRuntimePluginInfo.h"
+#include <dmzRuntimeResourcesObserver.h>
 #include "dmzRuntimeTypeContext.h"
 #include <dmzRuntimeTime.h>
 #include <dmzTypesMask.h>
@@ -529,6 +530,8 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
 
             if (Name) {
 
+               ResourcesModeEnum mode = ResourceCreated;
+
                Config *ptr (rc->rcTable.remove (Name));
 
                if (ptr) {
@@ -545,11 +548,23 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
                   }
 
                   delete ptr; ptr = 0;
+
+                  mode = ResourceUpdated;
                }
 
                ptr = new Config (resource);
 
                if (!rc->rcTable.store (Name, ptr)) { delete ptr; ptr = 0; }
+               else {
+
+                  HashTableHandleIterator it;
+                  ResourcesObserver *obs (0);
+
+                  while (rc->obsTable.get_next (it, obs)) {
+
+                     obs->update_resource (Name, mode);
+                  }
+               }
             }
             else if (log) {
 
@@ -884,6 +899,14 @@ dmz::Definitions::lookup_named_handle_name (const Handle NamedHandle) const {
 }
 
 
+/*!
+
+\brief Gets the first named handle defined.
+\param[in] it RuntimeIterator used to iterate over all the defined named handles.
+\return Returns the first named handle. Returns zero if no named handles have been
+defined.
+
+*/
 dmz::Handle
 dmz::Definitions::get_first_named_handle (RuntimeIterator &it) const {
 
@@ -901,6 +924,14 @@ dmz::Definitions::get_first_named_handle (RuntimeIterator &it) const {
 }
 
 
+/*!
+
+\brief Gets the next named handle defined.
+\param[in] it RuntimeIterator used to iterate over all the defined named handles.
+\return Returns the next named handle. Returns zero if all named handles have been
+returned.
+
+*/
 dmz::Handle
 dmz::Definitions::get_next_named_handle (RuntimeIterator &it) const {
 
@@ -1043,6 +1074,15 @@ dmz::Definitions::lookup_message (const Handle TypeHandle, Message &type) const 
 }
 
 
+/*!
+
+\brief Gets the first Message defined.
+\param[in] it RuntimeIterator used to iterate over all the defined Messages.
+\param[out] msg Message containing the first Message defined.
+\return Returns dmz::True if a Message was defined. Returns dmz::False if no Messages
+have been defined.
+
+*/
 dmz::Boolean
 dmz::Definitions::get_first_message (RuntimeIterator &it, Message &msg) const {
 
@@ -1063,6 +1103,15 @@ dmz::Definitions::get_first_message (RuntimeIterator &it, Message &msg) const {
 }
 
 
+/*!
+
+\brief Gets the next Message defined.
+\param[in] it RuntimeIterator used to iterate over all the defined Messages.
+\param[out] msg Message containing the next Message defined.
+\return Returns dmz::True if a Message was returned. Returns dmz::False if all Messages
+have been returned.
+
+*/
 dmz::Boolean
 dmz::Definitions::get_next_message (RuntimeIterator &it, Message &msg) const {
    Boolean result (False);
@@ -1167,6 +1216,15 @@ dmz::Definitions::lookup_event_type (const Handle TypeHandle, EventType &type) c
 }
 
 
+/*!
+
+\brief Gets the first EventType defined.
+\param[in] it RuntimeIterator used to iterate over all the defined EventTypes.
+\param[out] type EventType containing the first EventType defined.
+\return Returns dmz::True if an EventType was defined. Returns dmz::False if no EventTypes
+have been defined.
+
+*/
 dmz::Boolean
 dmz::Definitions::get_first_event_type (RuntimeIterator &it, EventType &type) const {
 
@@ -1182,6 +1240,15 @@ dmz::Definitions::get_first_event_type (RuntimeIterator &it, EventType &type) co
 }
 
 
+/*!
+
+\brief Gets the next EventType defined.
+\param[in] it RuntimeIterator used to iterate over all the defined EventTypes.
+\param[out] type EventType containing the next EventType defined.
+\return Returns dmz::True if an EventType was returned. Returns dmz::False if all
+EventTypes have been returned.
+
+*/
 dmz::Boolean
 dmz::Definitions::get_next_event_type (RuntimeIterator &it, EventType &type) const {
 
@@ -1282,6 +1349,15 @@ dmz::Definitions::lookup_object_type (const Handle TypeHandle, ObjectType &type)
 }
 
 
+/*!
+
+\brief Gets the first ObjectType defined.
+\param[in] it RuntimeIterator used to iterate over all the defined ObjectTypes.
+\param[out] type ObjectType containing the first ObjectType defined.
+\return Returns dmz::True if an ObjectType was defined. Returns dmz::False if no
+ObjectTypes have been defined.
+
+*/
 dmz::Boolean
 dmz::Definitions::get_first_object_type (RuntimeIterator &it, ObjectType &type) const {
 
@@ -1297,6 +1373,15 @@ dmz::Definitions::get_first_object_type (RuntimeIterator &it, ObjectType &type) 
 }
 
 
+/*!
+
+\brief Gets the next ObjectType defined.
+\param[in] it RuntimeIterator used to iterate over all the defined ObjectTypes.
+\param[out] type ObjectType containing the next ObjectType defined.
+\return Returns dmz::True if an ObjectType was returned. Returns dmz::False if all
+ObjectTypes have been returned.
+
+*/
 dmz::Boolean
 dmz::Definitions::get_next_object_type (RuntimeIterator &it, ObjectType &type) const {
 
@@ -1409,6 +1494,12 @@ dmz::Definitions::lookup_state_name (const Mask &State, String &name) const {
 }
 
 
+/*!
+
+\brief Gets a list of all state names.
+\param[out] list StringContainer used to return the list of state names.
+
+*/
 void
 dmz::Definitions::get_state_names (StringContainer &list) const {
 

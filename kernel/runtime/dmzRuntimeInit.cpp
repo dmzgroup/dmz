@@ -7,6 +7,7 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeHandleAllocator.h>
 #include <dmzRuntimeInit.h>
+#include "dmzRuntimeIteratorState.h"
 #include <dmzRuntimeLog.h>
 #include "dmzRuntimeMessageContext.h"
 #include "dmzRuntimePluginInfo.h"
@@ -14,6 +15,7 @@
 #include <dmzRuntimeTime.h>
 #include <dmzTypesMask.h>
 #include <dmzTypesString.h>
+#include <dmzTypesStringContainer.h>
 #include <dmzTypesStringTokenizer.h>
 #include <dmzTypesStringUtil.h>
 
@@ -882,6 +884,40 @@ dmz::Definitions::lookup_named_handle_name (const Handle NamedHandle) const {
 }
 
 
+dmz::Handle
+dmz::Definitions::get_first_named_handle (RuntimeIterator &it) const {
+
+   Handle result (0);
+
+   if (_state.defs) {
+
+      if (_state.defs->namedHandleNameTable.get_first (it.state.it)) {
+
+         result = it.state.it.get_hash_key ();
+      }
+   }
+
+   return result;
+}
+
+
+dmz::Handle
+dmz::Definitions::get_next_named_handle (RuntimeIterator &it) const {
+
+   Handle result (0);
+
+   if (_state.defs) {
+
+      if (_state.defs->namedHandleNameTable.get_next (it.state.it)) {
+
+         result = it.state.it.get_hash_key ();
+      }
+   }
+
+   return result;
+}
+
+
 //! Gets the global Message.
 dmz::Message
 dmz::Definitions::get_global_message () const {
@@ -930,16 +966,11 @@ dmz::Definitions::create_message (const String &Name, Message &type) {
 
    Boolean result (False);
 
-   if (_state.context) {
-
-      RuntimeContextDefinitions *defs (_state.context->get_definitions_context ());
+   if (_state.context && _state.defs) {
 
       RuntimeContextMessaging *rcm (_state.context->get_messaging_context ());
 
-      if (defs) {
-
-         type = defs->create_message (Name, "", _state.context, rcm);
-      }
+      type = _state.defs->create_message (Name, "", _state.context, rcm);
    }
 
    return result;
@@ -959,23 +990,14 @@ dmz::Definitions::lookup_message (const String &Name, Message &type) const {
 
    Boolean result (False);
 
-   if (_state.context) {
+   if (_state.defs) {
 
-      RuntimeContextDefinitions *defs (_state.context->get_definitions_context ());
+      Message *ptr (_state.defs->messageNameTable.lookup (Name));
 
-      if (defs) {
-
-         Message *ptr (defs->messageNameTable.lookup (Name));
-         if (ptr) { type = *ptr; result = True; }
-         else if (_state.log) {
-
-            _state.log->warn << "Unable to find dmz::Message: " << Name << endl;
-         }
-      }
+      if (ptr) { type = *ptr; result = True; }
       else if (_state.log) {
 
-         _state.log->error << "Internal Error, Unable to lookup dmz::MessgeType: "
-            << Name << endl;
+         _state.log->warn << "Unable to find dmz::Message: " << Name << endl;
       }
    }
    else if (_state.log) {
@@ -1001,29 +1023,59 @@ dmz::Definitions::lookup_message (const Handle TypeHandle, Message &type) const 
 
    Boolean result (False);
 
-   if (_state.context) {
+   if (_state.defs) {
 
-      RuntimeContextDefinitions *defs (_state.context->get_definitions_context ());
+      Message *ptr (_state.defs->messageHandleTable.lookup (TypeHandle));
 
-      if (defs) {
-
-         Message *ptr (defs->messageHandleTable.lookup (TypeHandle));
-         if (ptr) { type = *ptr; result = True; }
-         else if (_state.log) {
-
-            _state.log->warn << "Unable to find dmz::Message: " << TypeHandle << endl;
-         }
-      }
+      if (ptr) { type = *ptr; result = True; }
       else if (_state.log) {
 
-         _state.log->error << "Internal Error, Unable to lookup dmz::MessgeType: "
-            << TypeHandle << endl;
+         _state.log->warn << "Unable to find dmz::Message: " << TypeHandle << endl;
       }
    }
    else if (_state.log) {
 
       _state.log->error << "NULL Runtime context. Unable to lookup dmz::Message: "
          << TypeHandle << endl;
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::Definitions::get_first_message (RuntimeIterator &it, Message &msg) const {
+
+   Boolean result (False);
+
+   if (_state.defs) {
+
+      Message *ptr (_state.defs->messageHandleTable.get_first (it.state.it));
+
+      if (ptr) {
+
+         msg = *ptr;
+         result = True;
+      }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::Definitions::get_next_message (RuntimeIterator &it, Message &msg) const {
+   Boolean result (False);
+
+   if (_state.defs) {
+
+      Message *ptr (_state.defs->messageHandleTable.get_next (it.state.it));
+
+      if (ptr) {
+
+         msg = *ptr;
+         result = True;
+      }
    }
 
    return result;
@@ -1115,6 +1167,36 @@ dmz::Definitions::lookup_event_type (const Handle TypeHandle, EventType &type) c
 }
 
 
+dmz::Boolean
+dmz::Definitions::get_first_event_type (RuntimeIterator &it, EventType &type) const {
+
+   Boolean result (False);
+
+   if (_state.defs) {
+
+      EventType *found (_state.defs->eventHandleTable.get_first (it.state.it));
+      if (found) { type = *found; result = (type == *found); }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::Definitions::get_next_event_type (RuntimeIterator &it, EventType &type) const {
+
+   Boolean result (False);
+
+   if (_state.defs) {
+
+      EventType *found (_state.defs->eventHandleTable.get_next (it.state.it));
+      if (found) { type = *found; result = (type == *found); }
+   }
+
+   return result;
+}
+
+
 //! Gets root object type.
 dmz::ObjectType
 dmz::Definitions::get_root_object_type () const {
@@ -1193,6 +1275,36 @@ dmz::Definitions::lookup_object_type (const Handle TypeHandle, ObjectType &type)
    if (_state.defs) {
 
       ObjectType *found (_state.defs->objectHandleTable.lookup (TypeHandle));
+      if (found) { type = *found; result = (type == *found); }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::Definitions::get_first_object_type (RuntimeIterator &it, ObjectType &type) const {
+
+   Boolean result (False);
+
+   if (_state.defs) {
+
+      ObjectType *found (_state.defs->objectHandleTable.get_first (it.state.it));
+      if (found) { type = *found; result = (type == *found); }
+   }
+
+   return result;
+}
+
+
+dmz::Boolean
+dmz::Definitions::get_next_object_type (RuntimeIterator &it, ObjectType &type) const {
+
+   Boolean result (False);
+
+   if (_state.defs) {
+
+      ObjectType *found (_state.defs->objectHandleTable.get_next (it.state.it));
       if (found) { type = *found; result = (type == *found); }
    }
 
@@ -1294,6 +1406,23 @@ dmz::Definitions::lookup_state_name (const Mask &State, String &name) const {
    }
 
    return result;
+}
+
+
+void
+dmz::Definitions::get_state_names (StringContainer &list) const {
+
+   if (_state.defs) {
+
+      HashTableStringIterator it;
+
+      Mask *ptr (0);
+
+      while (_state.defs->maskTable.get_next (it, ptr)) {
+
+         list.append (it.get_hash_key ());
+      }
+   }
 }
 
 

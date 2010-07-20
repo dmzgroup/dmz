@@ -309,7 +309,7 @@ dmz::QtPluginMapObject::update_object_orientation (
 void
 dmz::QtPluginMapObject::_store_object_module (ObjectModule &module) {
 
-   PluginIterator it;
+   RuntimeIterator it;
 
    Plugin *ptr (_extensions.get_first (it));
 
@@ -330,7 +330,7 @@ dmz::QtPluginMapObject::_store_object_module (ObjectModule &module) {
 void
 dmz::QtPluginMapObject::_remove_object_module (ObjectModule &module) {
 
-   PluginIterator it;
+   RuntimeIterator it;
 
    Plugin *ptr (_extensions.get_first (it));
 

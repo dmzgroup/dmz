@@ -2,6 +2,7 @@
 #include "dmzLuaKernelPrivate.h"
 #include <dmzLuaKernelValidate.h>
 #include <dmzRuntimeData.h>
+#include <dmzRuntimeIterator.h>
 #include <dmzSystemStreamString.h>
 #include <dmzTypesString.h>
 #include <dmzTypesVector.h>
@@ -129,7 +130,7 @@ data_get_attributes (lua_State *L) {
 
       lua_createtable (L, Size, 0);
 
-      DataIterator it;
+      RuntimeIterator it;
       int index (1);
 
       for (

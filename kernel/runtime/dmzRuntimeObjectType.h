@@ -3,6 +3,7 @@
 
 #include <dmzKernelExport.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeIterator.h>
 #include <dmzSystemStream.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
@@ -13,20 +14,6 @@ namespace dmz {
    class Config;
    class RuntimeContext;
    class TypeContext;
-
-   class DMZ_KERNEL_LINK_SYMBOL ObjectTypeIterator {
-
-      public:
-         ObjectTypeIterator ();
-         ~ObjectTypeIterator ();
-
-         struct State;
-         State &state; //!< Internal state.
-
-      private:
-         ObjectTypeIterator (const ObjectTypeIterator &);
-         ObjectTypeIterator &operator= (const ObjectTypeIterator &);
-   };
 
    class DMZ_KERNEL_LINK_SYMBOL ObjectType {
 
@@ -56,8 +43,8 @@ namespace dmz {
          ObjectType get_parent () const;
          Boolean become_parent ();
 
-         Boolean get_first_child (ObjectTypeIterator &it, ObjectType &type) const;
-         Boolean get_next_child (ObjectTypeIterator &it, ObjectType &type) const;
+         Boolean get_first_child (RuntimeIterator &it, ObjectType &type) const;
+         Boolean get_next_child (RuntimeIterator &it, ObjectType &type) const;
 
          Config get_config () const;
          Config find_config (const String &Name) const;
@@ -94,8 +81,8 @@ namespace dmz {
          Boolean contains_type (const ObjectType &Type) const;
          Boolean contains_exact_type (const ObjectType &Type) const;
 
-         Boolean get_first (ObjectTypeIterator &it, ObjectType &type) const;
-         Boolean get_next (ObjectTypeIterator &it, ObjectType &type) const;
+         Boolean get_first (RuntimeIterator &it, ObjectType &type) const;
+         Boolean get_next (RuntimeIterator &it, ObjectType &type) const;
 
       protected:
          struct State;
@@ -167,7 +154,7 @@ inline dmz::Stream &
 operator<< (dmz::Stream &out, const dmz::ObjectTypeSet &set) {
 
    dmz::ObjectType type;
-   dmz::ObjectTypeIterator it;
+   dmz::RuntimeIterator it;
 
    while (set.get_next (it, type)) {
 

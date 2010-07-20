@@ -14,23 +14,10 @@ namespace dmz {
    class Mask;
    class Matrix;
    class RuntimeContext;
+   class RuntimeIterator;
    class Stream;
    class UUID;
    class Vector;
-
-   class DMZ_KERNEL_LINK_SYMBOL DataIterator {
-
-      public:
-         DataIterator ();
-         ~DataIterator ();
-
-         struct State;
-         State &state; //!< Internal state.
-
-      private:
-         DataIterator (const DataIterator &);
-         DataIterator &operator= (const DataIterator &);
-   };
 
    class DMZ_KERNEL_LINK_SYMBOL Data {
 
@@ -50,8 +37,8 @@ namespace dmz {
 
          void clear ();
 
-         Handle get_first_attribute (DataIterator &it) const;
-         Handle get_next_attribute (DataIterator &it) const;
+         Handle get_first_attribute (RuntimeIterator &it) const;
+         Handle get_next_attribute (RuntimeIterator &it) const;
 
          Int32 get_attribute_count () const;
          Int32 lookup_attribute_element_count (const Handle AttrHandle) const;

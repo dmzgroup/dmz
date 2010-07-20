@@ -999,7 +999,7 @@ dmz::LuaModuleBasic::_init (Config &local, Config &global) {
 
          _extensions.discover_plugins ();
 
-         PluginIterator it;
+         RuntimeIterator it;
 
          Plugin *ptr (_extensions.get_first (it));
 

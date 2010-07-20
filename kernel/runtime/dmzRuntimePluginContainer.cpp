@@ -1,3 +1,4 @@
+#include "dmzRuntimeIteratorState.h"
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeModule.h>
 #include <dmzRuntimePlugin.h>
@@ -7,31 +8,6 @@
 #include <dmzSystemDynamicLibrary.h>
 #include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
-
-/*!
-
-\class dmz::PluginIterator
-\ingroup Runtime
-\brief Class for iterating over Plugin instances stored in a PluginContainer.
-\sa dmz::PluginContainer::get_first \n dmz::PluginContainer::get_next
-
-*/
-
-//! \cond
-struct dmz::PluginIterator::State {
-
-   HashTableHandleIterator it;
-};
-//! \endcond
-
-
-//! Base constructor.
-dmz::PluginIterator::PluginIterator () : state (*(new State)) {;}
-
-
-//! Destructor.
-dmz::PluginIterator::~PluginIterator () { delete &state; }
-
 
 namespace {
 
@@ -888,13 +864,13 @@ dmz::PluginContainer::delete_plugins () {
 /*!
 
 \brief Gets first Plugin in the container.
-\param[in] it PluginIterator.
+\param[in] it RuntimeIterator.
 \return Returns pointer to first Plugin in the container. Returns NULL if container is
 empty.
 
 */
 dmz::Plugin *
-dmz::PluginContainer::get_first (PluginIterator &it) const {
+dmz::PluginContainer::get_first (RuntimeIterator &it) const {
 
    PluginStruct *current (_state.pluginTable.get_first (it.state.it));
    return current ? current->plugin : 0;
@@ -904,13 +880,13 @@ dmz::PluginContainer::get_first (PluginIterator &it) const {
 /*!
 
 \brief Gets next Plugin in the container.
-\param[in] it PluginIterator.
+\param[in] it RuntimeIterator.
 \return Returns pointer to next Plugin in the container. Returns NULL when end of the
 list is reached.
 
 */
 dmz::Plugin *
-dmz::PluginContainer::get_next (PluginIterator &it) const {
+dmz::PluginContainer::get_next (RuntimeIterator &it) const {
 
    PluginStruct *current (_state.pluginTable.get_next (it.state.it));
    return current ? current->plugin : 0;

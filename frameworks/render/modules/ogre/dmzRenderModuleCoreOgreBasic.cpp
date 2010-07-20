@@ -102,7 +102,7 @@ dmz::RenderModuleCoreOgreBasic::discover_plugin (
 
          if (_objectModule) {
 
-            PluginIterator it;
+            RuntimeIterator it;
 
             Plugin *ptr (_extensions.get_first (it));
 
@@ -126,7 +126,7 @@ dmz::RenderModuleCoreOgreBasic::discover_plugin (
 
       if (_objectModule && (_objectModule == ObjectModule::cast (PluginPtr))) {
 
-         PluginIterator it;
+         RuntimeIterator it;
 
          Plugin *ptr (_extensions.get_first (it));
 
@@ -313,7 +313,7 @@ dmz::RenderModuleCoreOgreBasic::OnSceneManagerCreate (
 
       _sceneManager = pManager;
 
-      PluginIterator it;
+      RuntimeIterator it;
 
       Plugin *ptr (_extensions.get_first (it));
 
@@ -530,7 +530,7 @@ dmz::RenderModuleCoreOgreBasic::_init_render_system (Config &local) {
 void
 dmz::RenderModuleCoreOgreBasic::_init_render_windows () {
 
-   PluginIterator it;
+   RuntimeIterator it;
 
    Plugin *ptr (_extensions.get_first (it));
 

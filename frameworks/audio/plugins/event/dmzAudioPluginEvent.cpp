@@ -275,7 +275,7 @@ dmz::AudioPluginEvent::_init (Config &local) {
 
    if (_eventTypes.get_count ()) {
 
-      EventTypeIterator it;
+      RuntimeIterator it;
       EventType type;
 
       while (_eventTypes.get_next (it, type)) {

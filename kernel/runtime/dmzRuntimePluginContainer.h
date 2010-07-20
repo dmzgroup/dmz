@@ -2,6 +2,7 @@
 #define DMZ_RUNTIME_PLUGIN_CONTAINER_DOT_H
 
 #include <dmzKernelExport.h>
+#include <dmzRuntimeIterator.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
 
@@ -12,22 +13,6 @@ namespace dmz {
    class Plugin;
    class PluginInfo;
    class RuntimeContext;
-
-   class DMZ_KERNEL_LINK_SYMBOL PluginIterator {
-
-      public:
-         PluginIterator ();
-         ~PluginIterator ();
-
-         //! \cond
-         struct State;
-         State &state; //!< Internal state.
-         //! \endcond
-
-      private:
-         PluginIterator (const PluginIterator &);
-         PluginIterator &operator= (const PluginIterator &);
-   };
 
    class DMZ_KERNEL_LINK_SYMBOL PluginContainer {
 
@@ -50,8 +35,8 @@ namespace dmz {
          void remove_plugins ();
          void delete_plugins ();
 
-         Plugin *get_first (PluginIterator &it) const;
-         Plugin *get_next (PluginIterator &it) const;
+         Plugin *get_first (RuntimeIterator &it) const;
+         Plugin *get_next (RuntimeIterator &it) const;
 
          void discover_external_plugin (const Plugin *PluginPtr);
          void remove_external_plugin (const Plugin *PluginPtr);

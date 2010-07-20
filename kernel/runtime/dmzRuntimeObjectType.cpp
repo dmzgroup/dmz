@@ -1,31 +1,10 @@
 #include <dmzRuntimeConfig.h>
 #include "dmzRuntimeContext.h"
 #include <dmzRuntimeDefinitions.h>
+#include "dmzRuntimeIteratorState.h"
 #include <dmzRuntimeObjectType.h>
 #include "dmzRuntimeTypeContext.h"
 #include <dmzTypesHashTableHandle.h>
-
-/*!
-
-\class dmz::ObjectTypeIterator
-\ingroup Runtime
-\brief Class used to iterate over dmz::ObjectType children.
-
-*/
-
-struct dmz::ObjectTypeIterator::State {
-
-   HashTableHandleIterator it;
-};
-
-
-//! Constructor.
-dmz::ObjectTypeIterator::ObjectTypeIterator () : state (*(new State)) {;}
-
-
-//! Destructor.
-dmz::ObjectTypeIterator::~ObjectTypeIterator () { delete &state; }
-
 
 /*!
 
@@ -273,14 +252,14 @@ dmz::ObjectType::become_parent () {
 /*!
 
 \brief Gets first object type child.
-\param[in] it ObjectTypeIterator.
+\param[in] it RuntimeIterator.
 \param[out] type ObjectType to store first child.
 \return Returns dmz::True if the first child is returned. Returns dmz::False if
 the object type has no children.
 
 */
 dmz::Boolean
-dmz::ObjectType::get_first_child (ObjectTypeIterator &it, ObjectType &type) const {
+dmz::ObjectType::get_first_child (RuntimeIterator &it, ObjectType &type) const {
 
    Boolean result (False);
 
@@ -300,14 +279,14 @@ dmz::ObjectType::get_first_child (ObjectTypeIterator &it, ObjectType &type) cons
 /*!
 
 \brief Gets next object type child.
-\param[in] it ObjectTypeIterator.
+\param[in] it RuntimeIterator.
 \param[out] type ObjectType to store next child.
 \return Returns dmz::True if the next child is returned. Returns dmz::False if
 the object type has no more children to return.
 
 */
 dmz::Boolean
-dmz::ObjectType::get_next_child (ObjectTypeIterator &it, ObjectType &type) const {
+dmz::ObjectType::get_next_child (RuntimeIterator &it, ObjectType &type) const {
 
    Boolean result (False);
 
@@ -656,14 +635,14 @@ dmz::ObjectTypeSet::contains_exact_type (const ObjectType &Type) const {
 /*!
 
 \brief Gets first object type in the set.
-\param[in] it ObjectTypeIterator used to iterate over the object types in the set.
+\param[in] it RuntimeIterator used to iterate over the object types in the set.
 \param[out] type ObjectType to store first object type.
 \return Returns dmz::True if the first object type is stored in \a type.
 Returns dmz::False if the set is empty.
 
 */
 dmz::Boolean
-dmz::ObjectTypeSet::get_first (ObjectTypeIterator &it, ObjectType &type) const {
+dmz::ObjectTypeSet::get_first (RuntimeIterator &it, ObjectType &type) const {
 
    Boolean result (False);
 
@@ -678,14 +657,14 @@ dmz::ObjectTypeSet::get_first (ObjectTypeIterator &it, ObjectType &type) const {
 /*!
 
 \brief Gets next object type in the set.
-\param[in] it ObjectTypeIterator used to iterate over the object types in the set.
+\param[in] it RuntimeIterator used to iterate over the object types in the set.
 \param[out] type ObjectType to store next object type.
 \return Returns dmz::True if the next object type is stored in \a type.
 Returns dmz::False if all even types have been returned.
 
 */
 dmz::Boolean
-dmz::ObjectTypeSet::get_next (ObjectTypeIterator &it, ObjectType &type) const {
+dmz::ObjectTypeSet::get_next (RuntimeIterator &it, ObjectType &type) const {
 
    Boolean result (False);
 

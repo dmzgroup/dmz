@@ -1,5 +1,5 @@
 #include "dmzRuntimeContext.h"
-#include "dmzRuntimeContextMessaging.h"
+#include "dmzRuntimeContextDefinitions.h"
 #include <dmzRuntimeDataConverterTypesBase.h>
 #include <dmzRuntimeExit.h>
 #include "dmzRuntimeMessageContext.h"
@@ -59,12 +59,11 @@ namespace {
 
       if (context) {
 
-         dmz::RuntimeContextMessageContainer *container (
-            context->get_message_container_context ());
+         dmz::RuntimeContextDefinitions *defs (context->get_definitions_context ());
 
-         if (container) {
+         if (defs) {
 
-            result = container->create_message (
+            result = defs->create_message (
                Name,
                "",
                context,

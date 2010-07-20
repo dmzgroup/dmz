@@ -225,7 +225,7 @@ object_type_get_children (lua_State *L) {
 
    if (objType && *objType) {
 
-      ObjectTypeIterator it;
+      RuntimeIterator it;
 
       ObjectType type;
 

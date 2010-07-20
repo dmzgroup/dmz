@@ -10,6 +10,7 @@ namespace dmz {
 class Mask;
 class ObjectType;
 class EventType;
+class Message;
 class PluginInfo;
 class RuntimeContext;
 
@@ -32,6 +33,10 @@ const UInt32 RuntimeObjectTypeMask = 0x04;
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
 //! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
 const UInt32 RuntimeEventTypeMask = 0x08;
+//! \brief Activate define_message callback in dmz::DefinitionsObserver
+//! \details Defined in dmzRuntimeDefinitionsObserver.h
+//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
+const UInt32 RuntimeMessageMask = 0x10;
 //! \brief Activate all callbacks in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
 //! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
@@ -52,6 +57,7 @@ class DMZ_KERNEL_LINK_SYMBOL DefinitionsObserver {
       virtual void define_state (const Mask &TheState, const String &Name);
       virtual void define_object_type (const ObjectType &Type);
       virtual void define_event_type (const EventType &Type);
+      virtual void define_message (const Message &Type);
 
    protected:
       DefinitionsObserver (RuntimeContext *context);

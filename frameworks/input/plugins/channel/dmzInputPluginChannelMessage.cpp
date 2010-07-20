@@ -6,6 +6,41 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 
+/*!
+
+\class dmz::InputPluginChannelMessage
+\ingroup Input
+\brief Send a message when a channel becomes active.
+\details
+\code
+<scope>
+   <channel name="String" message="String">
+      <attribute type="String" name="String">
+         <element value="Any"/>
+      </attribute>
+      <!-- ... -->
+      <attribute type="String" name="String">
+         <element value="Any"/>
+      </attribute>
+   </channel>
+   <channel name="String" message="String">
+      <!-- ... -->
+   </channel>
+   <!-- ... -->
+   <channel name="String" message="String">
+      <!-- ... -->
+   </channel>
+</scope>
+\endcode
+- \b channel.name String containing the channel name.
+- \b channel.message String containing the name of the message to send when channel is activated.
+- \b channel.attribute.* dmz::Data object that is sent with the message. See dmz::config_to_data for the dmz::Data config specification.
+
+\sa dmz::config_to_data
+
+*/
+
+//! \cond
 dmz::InputPluginChannelMessage::InputPluginChannelMessage (
       const PluginInfo &Info,
       Config &local) :
@@ -126,6 +161,7 @@ dmz::InputPluginChannelMessage::_init (Config &local) {
       }
    }
 }
+//! \endcond
 
 
 extern "C" {

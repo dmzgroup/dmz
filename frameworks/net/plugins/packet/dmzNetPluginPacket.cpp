@@ -119,7 +119,7 @@ dmz::NetPluginPacket::discover_plugin (
             EventTypeSet events;
             _codecMod->get_supported_events (events);
 
-            EventTypeIterator it;
+            RuntimeIterator it;
             EventType type;
 
             while (events.get_next (it, type)) {
@@ -168,7 +168,7 @@ dmz::NetPluginPacket::discover_plugin (
          EventTypeSet events;
          _codecMod->get_supported_events (events);
 
-         EventTypeIterator eventIt;
+         RuntimeIterator eventIt;
          EventType type;
 
          while (events.get_next (eventIt, type)) {

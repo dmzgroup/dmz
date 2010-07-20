@@ -5,6 +5,25 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeObjectType.h>
 
+/*!
+
+\class dmz::ObjectPluginSelectSimilar
+\ingroup Object
+\brief Selects objects similar to the currently selected objects.
+\details
+\code
+<scope>
+   <select-similar-message name="String"/>
+   <select-exact-message name="String"/>
+</scope>
+\endcode
+
+- \b select-similar-message.name String containing the name of the message that signals the plugin to select objects that are similar to objects that are currently selected. Similar objects will be dmz::ObjectType::is_of_type(). The default message name is "Object_Select_Similar_Message".
+- \b select-exact-message.name String containing the name of the message that signals the plugin to select objects that are exactly the same type as objects that are currently selected. Exact objects will be dmz::ObjectType::is_of_exact_type(). The default message name is "Object_Select_Exact_Message".
+
+*/
+
+//! \cond
 dmz::ObjectPluginSelectSimilar::ObjectPluginSelectSimilar (
       const PluginInfo &Info,
       Config &local) :
@@ -136,6 +155,7 @@ dmz::ObjectPluginSelectSimilar::_init (Config &local) {
    subscribe_to_message (_selectSimilarMsg);
    subscribe_to_message (_selectExactMsg);
 }
+//! \endcond
 
 
 extern "C" {

@@ -46,6 +46,20 @@ dmz::InputPluginChannelSwitch::update_channel_state (
       const Handle Channel,
       const Boolean State) {
 
+   if (State) {
+
+      ChannelStruct *current (_list);
+      while (current) {
+
+         if (current->Channel == Channel) {
+
+            _current = current;
+            current = 0;
+         }
+         else { current = current->next; }
+      }
+   }
+
 }
 
 
@@ -76,17 +90,17 @@ dmz::InputPluginChannelSwitch::receive_key_event (
 
             input->set_channel_state (_current->Channel, True);
 
-            ChannelStruct *current (_list);
+//            ChannelStruct *current (_list);
 
-            while (current) {
+//            while (current) {
 
-               if (current->Channel != _current->Channel) {
+//               if (current->Channel != _current->Channel) {
 
-                  input->set_channel_state (current->Channel, False);
-               }
+//                  input->set_channel_state (current->Channel, False);
+//               }
 
-               current = current->next;
-            }
+//               current = current->next;
+//            }
          }
       }
    }
@@ -96,27 +110,27 @@ dmz::InputPluginChannelSwitch::receive_key_event (
 void
 dmz::InputPluginChannelSwitch::_store_input_module (InputModule &module) {
 
-   if (!_current) { _current = _list; }
+//   if (!_current) { _current = _list; }
 
-   if (_current) {
+//   if (_current) {
 
-      module.create_channel (_current->Channel);
+//      module.create_channel (_current->Channel);
 
-      module.set_channel_state (_current->Channel, True);
+//      module.set_channel_state (_current->Channel, True);
 
-      ChannelStruct *current (_list);
+//      ChannelStruct *current (_list);
 
-      while (current) {
+//      while (current) {
 
-         if (current->Channel != _current->Channel) {
+//         if (current->Channel != _current->Channel) {
 
-            module.create_channel (current->Channel);
-            module.set_channel_state (current->Channel, False);
-         }
+//            module.create_channel (current->Channel);
+//            module.set_channel_state (current->Channel, False);
+//         }
 
-         current = current->next;
-      }
-   }
+//         current = current->next;
+//      }
+//   }
 }
 
 

@@ -1,6 +1,7 @@
 #include "dmzRuntimeContext.h"
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeDefinitions.h>
+#include "dmzRuntimeIteratorState.h"
 #include <dmzSystemStream.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableUInt32Template.h>
@@ -11,32 +12,6 @@
 #include <dmzTypesVector.h>
 
 #include <string.h> // for memset and memcpy
-
-/*!
-
-\file dmzRuntimeData.h
-\brief Contains Data related classes.
-
-\class dmz::DataIterator
-\ingroup Runtime
-\brief Used to iterate over attributes in the dmz::Data object.
-\sa dmz::Data
-
-*/
-
-struct dmz::DataIterator::State {
-
-   HashTableHandleIterator it;
-};
-
-
-//! Constructor.
-dmz::DataIterator::DataIterator () : state (*(new State)) {;}
-
-
-//! Destructor.
-dmz::DataIterator::~DataIterator () { delete &state; }
-
 
 using namespace dmz;
 
@@ -634,13 +609,13 @@ dmz::Data::clear () { _state.empty (); }
 /*!
 
 \brief Gets first attribute handle.
-\param[in] it DataIterator used to iterate over the attributes.
+\param[in] it RuntimeIterator used to iterate over the attributes.
 \return Returns the handle of the first attribute stored in the Data object.
 Returns zero if the Data object is empty.
 
 */
 dmz::Handle
-dmz::Data::get_first_attribute (DataIterator &it) const {
+dmz::Data::get_first_attribute (RuntimeIterator &it) const {
 
    Handle result (0);
 
@@ -654,13 +629,13 @@ dmz::Data::get_first_attribute (DataIterator &it) const {
 /*!
 
 \brief Gets next attribute handle.
-\param[in] it DataIterator used to iterate over the attributes.
+\param[in] it RuntimeIterator used to iterate over the attributes.
 \return Returns the handle of the next attribute stored in the Data object.
 Returns zero if there a no more attribute handles to return.
 
 */
 dmz::Handle
-dmz::Data::get_next_attribute (DataIterator &it) const {
+dmz::Data::get_next_attribute (RuntimeIterator &it) const {
 
    Handle result (0);
 
@@ -1657,7 +1632,7 @@ operator<< (Stream &stream, const Data &Value) {
       RuntimeContext *context (Value.get_runtime_context ());
       Definitions defs (context);
 
-      DataIterator it;
+      RuntimeIterator it;
 
       String buffer;
       buffer.repeat (" ", 3);

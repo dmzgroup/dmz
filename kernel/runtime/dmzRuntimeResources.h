@@ -25,25 +25,13 @@ namespace dmz {
 
          String find_file (const String &ResourceName) const;
 
-         Boolean store_resource_config (
-            const String &ResourceName,
-            const Config &Resource);
-
          Boolean lookup_resource_config (
             const String &ResourceName,
             Config &resource) const;
  
-         Boolean remove_resource_config (const String &ResourceName);
-
-         Boolean store_search_path (
-            const String &SearchPathName,
-            const StringContainer &SearchPath);
-
          Boolean lookup_search_path (
             const String &SearchPathName,
             StringContainer &searchPath) const;
-
-         Boolean remove_search_path (const String &SearchPathName);
 
       protected:
          //! \cond

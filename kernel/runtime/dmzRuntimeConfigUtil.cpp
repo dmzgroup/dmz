@@ -1,8 +1,4 @@
 #include <dmzRuntimeConfig.h>
-#include <dmzRuntimeDefinitions.h>
-#include <dmzRuntimeData.h>
-#include <dmzRuntimeLog.h>
-#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeConfigToMatrix.h>
 #include <dmzRuntimeConfigToNamedHandle.h>
@@ -10,7 +6,12 @@
 #include <dmzRuntimeConfigToStringContainer.h>
 #include <dmzRuntimeConfigToVector.h>
 #include <dmzRuntimeConfigWrite.h>
+#include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimeData.h>
 #include <dmzRuntimeEventType.h>
+#include "dmzRuntimeIteratorState.h"
+#include <dmzRuntimeLog.h>
+#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesMatrix.h>
@@ -1655,7 +1656,7 @@ dmz::data_to_config (const Data &Source, RuntimeContext *context, Log *log) {
 
    Definitions defs (context);
 
-   DataIterator it;
+   RuntimeIterator it;
 
    Handle handle (Source.get_first_attribute (it));
 

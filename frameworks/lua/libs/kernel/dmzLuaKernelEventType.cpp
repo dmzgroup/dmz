@@ -226,7 +226,7 @@ event_type_get_children (lua_State *L) {
 
    if (event && *event) {
 
-      EventTypeIterator it;
+      RuntimeIterator it;
 
       EventType type;
 

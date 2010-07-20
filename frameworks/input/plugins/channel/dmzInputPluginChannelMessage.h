@@ -15,6 +15,7 @@ namespace dmz {
          public InputObserverUtil {
 
       public:
+         //! \cond
          InputPluginChannelMessage (const PluginInfo &Info, Config &local);
          ~InputPluginChannelMessage ();
 
@@ -53,6 +54,7 @@ namespace dmz {
 
          Log _log;
          HashTableHandleTemplate<ChannelStruct> _channelTable;
+         //! \endcond
 
       private:
          InputPluginChannelMessage ();

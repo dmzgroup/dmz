@@ -270,7 +270,7 @@ main (int argc, char *argv[]) {
    // ============================================================================ //
    // <validate child iterator functions>
 
-   ObjectTypeIterator oIt;
+   RuntimeIterator oIt;
    ObjectType otype;
    test.validate (
       "test iterator get_first_child ()",

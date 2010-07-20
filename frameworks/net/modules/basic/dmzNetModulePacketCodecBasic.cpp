@@ -348,7 +348,7 @@ dmz::NetModulePacketCodecBasic::_discover_codec (const Plugin *PluginPtr) {
 
                if (eos && _objEncodeTable.store (hs->PacketID, eos)) {
 
-                  ObjectTypeIterator it;
+                  RuntimeIterator it;
                   ObjectType type;
 
                   while (hs->objects.get_next (it, type)) {
@@ -365,7 +365,7 @@ dmz::NetModulePacketCodecBasic::_discover_codec (const Plugin *PluginPtr) {
 
                if (ees && _eventEncodeTable.store (hs->PacketID, ees)) {
 
-                  EventTypeIterator it;
+                  RuntimeIterator it;
 
                   EventType type;
 
@@ -409,7 +409,7 @@ dmz::NetModulePacketCodecBasic::_remove_codec (const Plugin *PluginPtr) {
 
          if (objCodec && hs->objects.get_count ()) {
 
-            ObjectTypeIterator it;
+            RuntimeIterator it;
 
             ObjectType type;
 
@@ -436,7 +436,7 @@ dmz::NetModulePacketCodecBasic::_remove_codec (const Plugin *PluginPtr) {
          }
          else if (eventCodec && hs->events.get_count ()) {
 
-            EventTypeIterator it;
+            RuntimeIterator it;
 
             EventType type;
 
@@ -542,7 +542,7 @@ dmz::NetModulePacketCodecBasic::_init (Config &local, Config &global) {
 
          _extensions.discover_plugins ();
 
-         PluginIterator it;
+         RuntimeIterator it;
 
          Plugin *ptr (_extensions.get_first (it));
 

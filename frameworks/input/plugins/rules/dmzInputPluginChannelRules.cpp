@@ -5,15 +5,40 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzTypesDeleteListTemplate.h>
 
-dmz::InputPluginChannelRules::InputPluginChannelRules (const PluginInfo &Info, Config &local) :
+/*!
+
+\class dmz::InputPluginChannelRules
+\ingroup Input
+\brief Keeps only one channel in a list active at a time.
+\details
+If a channel in the list becomes active, every other channel in the list that was active will be deactivated. This ensures only one channel in the list is ever active. If all channels in the list become deactivated, the default channel will be activated.
+\code
+<scope>
+   <channel name="String" default="Boolean"/>
+   <channel name="String" default="Boolean"/>
+   <!-- ... -->
+   <channel name="String" default="Boolean"/>
+</scope>
+\endcode
+
+- \b channel.name A string containing the channels name
+- \b channel.default A boolean indicated if the channel is the default in the list. The last channel set as default will be the default channel if multiple channels are set to true.
+
+*/
+
+//! \cond
+dmz::InputPluginChannelRules::InputPluginChannelRules (
+      const PluginInfo &Info,
+      Config &local) :
       Plugin (Info),
       InputObserverUtil (Info, local),
       _log (Info),
+      _active (0),
       _channelList (0),
       _defaultChannel (0),
-      _inputModule (0),
-      __activeChannelCount (0) {
+      _input (0) {
 
    _init (local);
 }
@@ -21,6 +46,7 @@ dmz::InputPluginChannelRules::InputPluginChannelRules (const PluginInfo &Info, C
 
 dmz::InputPluginChannelRules::~InputPluginChannelRules () {
 
+   delete_list (_channelList);
 }
 
 
@@ -52,49 +78,54 @@ dmz::InputPluginChannelRules::discover_plugin (
 
    if (Mode == PluginDiscoverAdd) {
 
-      if (!_inputModule) {
+      if (!_input) {
 
-         _inputModule = InputModule::cast (PluginPtr, _inputModuleName);
+         _input = InputModule::cast (PluginPtr, _inputModuleName);
 
-         if (_inputModule) {
+         if (_input) {
 
             ChannelStruct *current (_channelList);
 
             while (current) {
 
-               _inputModule->create_channel (current->Channel);
+               _input->create_channel (current->Channel);
 
-               _inputModule->register_input_observer (
+               _input->register_input_observer (
                      current->Channel,
                      InputEventChannelStateMask,
                      *this);
 
                current = current->next;
             }
+
+            _input->set_channel_state (_defaultChannel, True);
          }
       }
-
-
    }
    else if (Mode == PluginDiscoverRemove) {
 
+      if (_input && (_input == InputModule::cast (PluginPtr, _inputModuleName))) {
+
+         _input = 0;
+      }
    }
 }
 
 
 // Input Observer Interface
 void
-dmz::InputPluginChannelRules::update_channel_state (const Handle Channel, const Boolean State) {
+dmz::InputPluginChannelRules::update_channel_state (
+      const Handle Channel,
+      const Boolean State) {
 
-   if (State) { ++__activeChannelCount; }
-   else { --__activeChannelCount; }
+   _active += (State ? 1 : -1);
 
-   if (__activeChannelCount == 0 && _defaultChannel) {
+   if (_active == 0 && _defaultChannel && _input) {
 
-      _inputModule->set_channel_state (_defaultChannel, True);
+      _input->set_channel_state (_defaultChannel, True);
    }
 
-   else if (_channelList && _inputModule && State) {
+   else if (_channelList && _input && State) {
 
       ChannelStruct *current (_channelList);
 
@@ -102,13 +133,14 @@ dmz::InputPluginChannelRules::update_channel_state (const Handle Channel, const 
 
          if (current->Channel != Channel) {
 
-            _inputModule->set_channel_state (current->Channel, False);
+            _input->set_channel_state (current->Channel, False);
          }
 
          current = current->next;
       }
    }
 }
+
 
 // InputPluginChannelRules Interface
 void
@@ -119,12 +151,14 @@ dmz::InputPluginChannelRules::_init (Config &local) {
    _inputModuleName = config_to_string ("module.input.name", local);
 
    Config channelList;
+
    if (local.lookup_all_config ("channel", channelList)) {
 
       ConfigIterator it;
       Config cd;
 
       ChannelStruct *current (0);
+
       while (channelList.get_next_config (it, cd)) {
 
          const String Name (config_to_string ("name", cd));
@@ -134,7 +168,7 @@ dmz::InputPluginChannelRules::_init (Config &local) {
 
             if (next) {
 
-               if (!_defaultChannel || config_to_boolean ("default", cd, False)) {
+               if (config_to_boolean ("default", cd, False)) {
 
                   _defaultChannel = next->Channel;
                }
@@ -146,6 +180,7 @@ dmz::InputPluginChannelRules::_init (Config &local) {
       }
    }
 }
+//! \endcond
 
 
 extern "C" {

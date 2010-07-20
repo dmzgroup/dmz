@@ -415,7 +415,7 @@ dmz::NetModuleAttributeMapBasic::_process_object_type (const ObjectType &Type) {
    _process_net_object_mask (Type);
    _process_net_object_type (Type);
 
-   ObjectTypeIterator it;
+   RuntimeIterator it;
    ObjectType next;
 
    Boolean found (Type.get_first_child (it, next));
@@ -606,7 +606,7 @@ dmz::NetModuleAttributeMapBasic::_process_event_type (const EventType &Type) {
    _process_net_event_mask (Type);
    _process_net_event_type (Type);
 
-   EventTypeIterator it;
+   RuntimeIterator it;
    EventType next;
 
    Boolean found (Type.get_first_child (it, next));

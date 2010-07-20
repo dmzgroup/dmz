@@ -2,9 +2,11 @@
 #define DMZ_RUNTIME_CONTEXT_RESOURCES_DOT_H
 
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeResourcesObserver.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemRefCount.h>
 #include <dmzTypesBase.h>
+#include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesString.h>
 
@@ -16,6 +18,7 @@ namespace dmz {
       public:
          RuntimeContextResources () {;}
 
+         HashTableHandleTemplate<ResourcesObserver> obsTable;
          HashTableStringTemplate<Config> rcTable;
          HashTableStringTemplate<StringContainer> pathTable;
 
@@ -28,6 +31,7 @@ namespace dmz {
 inline
 dmz::RuntimeContextResources::~RuntimeContextResources () {
 
+   obsTable.clear ();
    rcTable.empty ();
    pathTable.empty ();
 }

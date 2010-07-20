@@ -7,13 +7,16 @@
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeHandleAllocator.h>
 #include <dmzRuntimeInit.h>
+#include "dmzRuntimeIteratorState.h"
 #include <dmzRuntimeLog.h>
 #include "dmzRuntimeMessageContext.h"
 #include "dmzRuntimePluginInfo.h"
+#include <dmzRuntimeResourcesObserver.h>
 #include "dmzRuntimeTypeContext.h"
 #include <dmzRuntimeTime.h>
 #include <dmzTypesMask.h>
 #include <dmzTypesString.h>
+#include <dmzTypesStringContainer.h>
 #include <dmzTypesStringTokenizer.h>
 #include <dmzTypesStringUtil.h>
 
@@ -391,10 +394,9 @@ local_init_message (
       RuntimeContext *context,
       Log *log) {
 
-   RuntimeContextMessageContainer *container (
-      context ? context->get_message_container_context () : 0);
+   RuntimeContextDefinitions *defs (context ? context->get_definitions_context () : 0);
 
-   if (container) {
+   if (defs) {
 
       RuntimeContextMessaging *rcm (context ? context->get_messaging_context () : 0);
 
@@ -411,7 +413,7 @@ local_init_message (
 
             current.lookup_attribute ("parent", parentName);
 
-            Message tmp = container->create_message (name, parentName, context, rcm);
+            Message tmp = defs->create_message (name, parentName, context, rcm);
 
             if (config_to_boolean ("monostate", current, False)) {
 
@@ -528,6 +530,8 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
 
             if (Name) {
 
+               ResourcesModeEnum mode = ResourceCreated;
+
                Config *ptr (rc->rcTable.remove (Name));
 
                if (ptr) {
@@ -544,11 +548,23 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
                   }
 
                   delete ptr; ptr = 0;
+
+                  mode = ResourceUpdated;
                }
 
                ptr = new Config (resource);
 
                if (!rc->rcTable.store (Name, ptr)) { delete ptr; ptr = 0; }
+               else {
+
+                  HashTableHandleIterator it;
+                  ResourcesObserver *obs (0);
+
+                  while (rc->obsTable.get_next (it, obs)) {
+
+                     obs->update_resource (Name, mode);
+                  }
+               }
             }
             else if (log) {
 
@@ -883,6 +899,56 @@ dmz::Definitions::lookup_named_handle_name (const Handle NamedHandle) const {
 }
 
 
+/*!
+
+\brief Gets the first named handle defined.
+\param[in] it RuntimeIterator used to iterate over all the defined named handles.
+\return Returns the first named handle. Returns zero if no named handles have been
+defined.
+
+*/
+dmz::Handle
+dmz::Definitions::get_first_named_handle (RuntimeIterator &it) const {
+
+   Handle result (0);
+
+   if (_state.defs) {
+
+      if (_state.defs->namedHandleNameTable.get_first (it.state.it)) {
+
+         result = it.state.it.get_hash_key ();
+      }
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Gets the next named handle defined.
+\param[in] it RuntimeIterator used to iterate over all the defined named handles.
+\return Returns the next named handle. Returns zero if all named handles have been
+returned.
+
+*/
+dmz::Handle
+dmz::Definitions::get_next_named_handle (RuntimeIterator &it) const {
+
+   Handle result (0);
+
+   if (_state.defs) {
+
+      if (_state.defs->namedHandleNameTable.get_next (it.state.it)) {
+
+         result = it.state.it.get_hash_key ();
+      }
+   }
+
+   return result;
+}
+
+
 //! Gets the global Message.
 dmz::Message
 dmz::Definitions::get_global_message () const {
@@ -931,17 +997,11 @@ dmz::Definitions::create_message (const String &Name, Message &type) {
 
    Boolean result (False);
 
-   if (_state.context) {
-
-      RuntimeContextMessageContainer *container (
-         _state.context->get_message_container_context ());
+   if (_state.context && _state.defs) {
 
       RuntimeContextMessaging *rcm (_state.context->get_messaging_context ());
 
-      if (container) {
-
-         type = container->create_message (Name, "", _state.context, rcm);
-      }
+      type = _state.defs->create_message (Name, "", _state.context, rcm);
    }
 
    return result;
@@ -961,24 +1021,14 @@ dmz::Definitions::lookup_message (const String &Name, Message &type) const {
 
    Boolean result (False);
 
-   if (_state.context) {
+   if (_state.defs) {
 
-      RuntimeContextMessageContainer *container (
-         _state.context->get_message_container_context ());
+      Message *ptr (_state.defs->messageNameTable.lookup (Name));
 
-      if (container) {
-
-         Message *ptr (container->messageNameTable.lookup (Name));
-         if (ptr) { type = *ptr; result = True; }
-         else if (_state.log) {
-
-            _state.log->warn << "Unable to find dmz::Message: " << Name << endl;
-         }
-      }
+      if (ptr) { type = *ptr; result = True; }
       else if (_state.log) {
 
-         _state.log->error << "Internal Error, Unable to lookup dmz::MessgeType: "
-            << Name << endl;
+         _state.log->warn << "Unable to find dmz::Message: " << Name << endl;
       }
    }
    else if (_state.log) {
@@ -1004,30 +1054,77 @@ dmz::Definitions::lookup_message (const Handle TypeHandle, Message &type) const 
 
    Boolean result (False);
 
-   if (_state.context) {
+   if (_state.defs) {
 
-      RuntimeContextMessageContainer *container (
-         _state.context->get_message_container_context ());
+      Message *ptr (_state.defs->messageHandleTable.lookup (TypeHandle));
 
-      if (container) {
-
-         Message *ptr (container->messageHandleTable.lookup (TypeHandle));
-         if (ptr) { type = *ptr; result = True; }
-         else if (_state.log) {
-
-            _state.log->warn << "Unable to find dmz::Message: " << TypeHandle << endl;
-         }
-      }
+      if (ptr) { type = *ptr; result = True; }
       else if (_state.log) {
 
-         _state.log->error << "Internal Error, Unable to lookup dmz::MessgeType: "
-            << TypeHandle << endl;
+         _state.log->warn << "Unable to find dmz::Message: " << TypeHandle << endl;
       }
    }
    else if (_state.log) {
 
       _state.log->error << "NULL Runtime context. Unable to lookup dmz::Message: "
          << TypeHandle << endl;
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Gets the first Message defined.
+\param[in] it RuntimeIterator used to iterate over all the defined Messages.
+\param[out] msg Message containing the first Message defined.
+\return Returns dmz::True if a Message was defined. Returns dmz::False if no Messages
+have been defined.
+
+*/
+dmz::Boolean
+dmz::Definitions::get_first_message (RuntimeIterator &it, Message &msg) const {
+
+   Boolean result (False);
+
+   if (_state.defs) {
+
+      Message *ptr (_state.defs->messageHandleTable.get_first (it.state.it));
+
+      if (ptr) {
+
+         msg = *ptr;
+         result = True;
+      }
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Gets the next Message defined.
+\param[in] it RuntimeIterator used to iterate over all the defined Messages.
+\param[out] msg Message containing the next Message defined.
+\return Returns dmz::True if a Message was returned. Returns dmz::False if all Messages
+have been returned.
+
+*/
+dmz::Boolean
+dmz::Definitions::get_next_message (RuntimeIterator &it, Message &msg) const {
+   Boolean result (False);
+
+   if (_state.defs) {
+
+      Message *ptr (_state.defs->messageHandleTable.get_next (it.state.it));
+
+      if (ptr) {
+
+         msg = *ptr;
+         result = True;
+      }
    }
 
    return result;
@@ -1119,6 +1216,54 @@ dmz::Definitions::lookup_event_type (const Handle TypeHandle, EventType &type) c
 }
 
 
+/*!
+
+\brief Gets the first EventType defined.
+\param[in] it RuntimeIterator used to iterate over all the defined EventTypes.
+\param[out] type EventType containing the first EventType defined.
+\return Returns dmz::True if an EventType was defined. Returns dmz::False if no EventTypes
+have been defined.
+
+*/
+dmz::Boolean
+dmz::Definitions::get_first_event_type (RuntimeIterator &it, EventType &type) const {
+
+   Boolean result (False);
+
+   if (_state.defs) {
+
+      EventType *found (_state.defs->eventHandleTable.get_first (it.state.it));
+      if (found) { type = *found; result = (type == *found); }
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Gets the next EventType defined.
+\param[in] it RuntimeIterator used to iterate over all the defined EventTypes.
+\param[out] type EventType containing the next EventType defined.
+\return Returns dmz::True if an EventType was returned. Returns dmz::False if all
+EventTypes have been returned.
+
+*/
+dmz::Boolean
+dmz::Definitions::get_next_event_type (RuntimeIterator &it, EventType &type) const {
+
+   Boolean result (False);
+
+   if (_state.defs) {
+
+      EventType *found (_state.defs->eventHandleTable.get_next (it.state.it));
+      if (found) { type = *found; result = (type == *found); }
+   }
+
+   return result;
+}
+
+
 //! Gets root object type.
 dmz::ObjectType
 dmz::Definitions::get_root_object_type () const {
@@ -1197,6 +1342,54 @@ dmz::Definitions::lookup_object_type (const Handle TypeHandle, ObjectType &type)
    if (_state.defs) {
 
       ObjectType *found (_state.defs->objectHandleTable.lookup (TypeHandle));
+      if (found) { type = *found; result = (type == *found); }
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Gets the first ObjectType defined.
+\param[in] it RuntimeIterator used to iterate over all the defined ObjectTypes.
+\param[out] type ObjectType containing the first ObjectType defined.
+\return Returns dmz::True if an ObjectType was defined. Returns dmz::False if no
+ObjectTypes have been defined.
+
+*/
+dmz::Boolean
+dmz::Definitions::get_first_object_type (RuntimeIterator &it, ObjectType &type) const {
+
+   Boolean result (False);
+
+   if (_state.defs) {
+
+      ObjectType *found (_state.defs->objectHandleTable.get_first (it.state.it));
+      if (found) { type = *found; result = (type == *found); }
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Gets the next ObjectType defined.
+\param[in] it RuntimeIterator used to iterate over all the defined ObjectTypes.
+\param[out] type ObjectType containing the next ObjectType defined.
+\return Returns dmz::True if an ObjectType was returned. Returns dmz::False if all
+ObjectTypes have been returned.
+
+*/
+dmz::Boolean
+dmz::Definitions::get_next_object_type (RuntimeIterator &it, ObjectType &type) const {
+
+   Boolean result (False);
+
+   if (_state.defs) {
+
+      ObjectType *found (_state.defs->objectHandleTable.get_next (it.state.it));
       if (found) { type = *found; result = (type == *found); }
    }
 
@@ -1298,6 +1491,29 @@ dmz::Definitions::lookup_state_name (const Mask &State, String &name) const {
    }
 
    return result;
+}
+
+
+/*!
+
+\brief Gets a list of all state names.
+\param[out] list StringContainer used to return the list of state names.
+
+*/
+void
+dmz::Definitions::get_state_names (StringContainer &list) const {
+
+   if (_state.defs) {
+
+      HashTableStringIterator it;
+
+      Mask *ptr (0);
+
+      while (_state.defs->maskTable.get_next (it, ptr)) {
+
+         list.append (it.get_hash_key ());
+      }
+   }
 }
 
 

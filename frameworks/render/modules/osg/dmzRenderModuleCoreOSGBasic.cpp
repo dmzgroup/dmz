@@ -384,7 +384,12 @@ dmz::Boolean
 dmz::RenderModuleCoreOSGBasic::destroy_dynamic_object (const Handle ObjectHandle) {
 
    static const UUID Empty;
+
+   Boolean result = (_objectTable.lookup (ObjectHandle) ? True : False);
+
    destroy_object (Empty, ObjectHandle);
+
+   return result;
 }
 
 

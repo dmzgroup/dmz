@@ -413,7 +413,7 @@ dmz::RenderPluginEventOSG::_init (Config &local) {
    }
    else {
 
-      EventTypeIterator it;
+      RuntimeIterator it;
       EventType type;
 
       while (set.get_next (it, type)) {

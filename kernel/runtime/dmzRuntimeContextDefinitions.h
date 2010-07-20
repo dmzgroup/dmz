@@ -6,6 +6,7 @@
 #include <dmzRuntimeDefinitionsObserver.h>
 #include <dmzRuntimeEventType.h>
 #include <dmzRuntimeHandle.h>
+#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzSystemRefCount.h>
 #include <dmzSystemSpinLock.h>
@@ -20,10 +21,17 @@ namespace dmz {
       public:
          RuntimeContextDefinitions ();
 
+         Message create_message (
+            const String &Name,
+            const String &ParentName,
+            RuntimeContext *context,
+            RuntimeContextMessaging *messagingContext);
+
          void define_named_handle (const Handle TheHandle, const String &Name);
          void define_state (const Mask &TheState, const String &Name);
          void define_object_type (const ObjectType &Type);
          void define_event_type (const EventType &Type);
+         void define_message (const Message &Type);
 
          HashTableHandleTemplate<DefinitionsObserver> handleObsTable;
 
@@ -33,13 +41,13 @@ namespace dmz {
          ConfigContextLock namedHandleNameLock; //!< Lock.
          HashTableHandleTemplate<String> namedHandleNameTable;
 
-         HashTableHandleTemplate<DefinitionsObserver> eventObsTable;
+         HashTableHandleTemplate<DefinitionsObserver> maskObsTable;
 
-         ConfigContextLock eventHandleLock; //!< Lock.
-         HashTableHandleTemplate<EventType> eventHandleTable; //!< Table.
+         SpinLock maskShiftLock; //!< Lock
+         Int32 maskShift; //!< Shift value.
 
-         ConfigContextLock eventNameLock; //!< Lock.
-         HashTableStringTemplate<EventType> eventNameTable; //!< Table.
+         ConfigContextLock maskLock; //!< Lock
+         HashTableStringTemplate<Mask> maskTable; //!< Table.
 
          HashTableHandleTemplate<DefinitionsObserver> objectObsTable;
 
@@ -49,13 +57,21 @@ namespace dmz {
          ConfigContextLock objectNameLock; //!< Lock
          HashTableStringTemplate<ObjectType> objectNameTable; //!< Table.
 
-         HashTableHandleTemplate<DefinitionsObserver> maskObsTable;
+         HashTableHandleTemplate<DefinitionsObserver> eventObsTable;
 
-         SpinLock maskShiftLock; //!< Lock
-         Int32 maskShift; //!< Shift value.
+         ConfigContextLock eventHandleLock; //!< Lock.
+         HashTableHandleTemplate<EventType> eventHandleTable; //!< Table.
 
-         ConfigContextLock maskLock; //!< Lock
-         HashTableStringTemplate<Mask> maskTable; //!< Table.
+         ConfigContextLock eventNameLock; //!< Lock.
+         HashTableStringTemplate<EventType> eventNameTable; //!< Table.
+
+         HashTableHandleTemplate<DefinitionsObserver> messageObsTable;
+
+         ConfigContextLock messageHandleLock; //!< Lock.
+         HashTableHandleTemplate<Message> messageHandleTable; //!< Table.
+
+         ConfigContextLock messageNameLock; //!< Lock.
+         HashTableStringTemplate<Message> messageNameTable; //!< Table.
 
          Mutex uniqueNameLock; //!< Lock
          HashTableString uniqueNameTable; //!< Table.
@@ -107,6 +123,16 @@ dmz::RuntimeContextDefinitions::define_event_type (const EventType &Type) {
    DefinitionsObserver *obs (0);
 
    while (eventObsTable.get_next (it, obs)) { obs->define_event_type (Type); }
+}
+
+
+inline void
+dmz::RuntimeContextDefinitions::define_message (const Message &Type) {
+
+   HashTableHandleIterator it;
+   DefinitionsObserver *obs (0);
+
+   while (messageObsTable.get_next (it, obs)) { obs->define_message (Type); }
 }
 
 #endif // DMZ_RUNTIME_CONTEXT_DEFINITIONS_DOT_H

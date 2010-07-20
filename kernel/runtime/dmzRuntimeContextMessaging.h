@@ -15,35 +15,9 @@
 namespace dmz {
 
    class RuntimeContext;
+   class RuntimeContextDefinitions;
    class RuntimeContextMessaging;
    class RuntimeMessageContext;
-
-   class RuntimeContextMessageContainer : public RefCountDeleteOnZero {
-
-      public:
-         RuntimeContextMessageContainer ();
-
-         Message create_message (
-            const String &Name,
-            const String &ParentName,
-            RuntimeContext *context,
-            RuntimeContextMessaging *messagingContext);
-
-         ConfigContextLock messageHandleLock; //!< Lock.
-         HashTableHandleTemplate<Message> messageHandleTable; //!< Table.
-
-         ConfigContextLock messageNameLock; //!< Lock.
-         HashTableStringTemplate<Message> messageNameTable; //!< Table.
-
-
-      protected:
-         virtual ~RuntimeContextMessageContainer ();
-
-      private:
-         RuntimeContextMessageContainer (const RuntimeContextMessageContainer &);
-         RuntimeContextMessageContainer &operator= (
-            const RuntimeContextMessageContainer &);
-   };
 
    class RuntimeContextMessaging : public RefCountDeleteOnZero {
 
@@ -73,7 +47,7 @@ namespace dmz {
 
          RuntimeContextMessaging (
             RuntimeContextThreadKey &theKey,
-            RuntimeContextMessageContainer &container,
+            RuntimeContextDefinitions &container,
             RuntimeContext *context);
 
          void send_monostate_warning (const Message &Msg);

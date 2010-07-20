@@ -17,6 +17,7 @@ namespace dmz {
          public ObjectObserverUtil {
 
       public:
+         //! \cond
          ObjectPluginSelectIsect (const PluginInfo &Info, Config &local);
          ~ObjectPluginSelectIsect ();
 
@@ -50,6 +51,7 @@ namespace dmz {
          RenderModuleIsect *_isect;
 
          Int32 _active;
+         //! \endcond
 
       private:
          ObjectPluginSelectIsect ();

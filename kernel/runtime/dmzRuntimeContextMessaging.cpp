@@ -1,23 +1,9 @@
+#include "dmzRuntimeContextDefinitions.h"
 #include "dmzRuntimeContextMessaging.h"
 #include "dmzRuntimeMessageContext.h"
 
-//! Constructor.
-dmz::RuntimeContextMessageContainer::RuntimeContextMessageContainer () :
-      messageHandleTable (&messageHandleLock),
-      messageNameTable (&messageNameLock) {;}
-
-
-//! Destructor.
-dmz::RuntimeContextMessageContainer::~RuntimeContextMessageContainer () {
-
-   messageHandleTable.clear ();
-   messageNameTable.empty ();
-}
-
-
-//! Creates message type.
 dmz::Message
-dmz::RuntimeContextMessageContainer::create_message (
+dmz::RuntimeContextDefinitions::create_message (
       const String &Name,
       const String &ParentName,
       RuntimeContext *context,
@@ -49,6 +35,8 @@ dmz::RuntimeContextMessageContainer::create_message (
 
             if (messageNameTable.store (type->get_name (), type)) {
 
+               define_message(*type);
+
                messageHandleTable.store (type->get_handle (), type);
             }
             else {
@@ -71,7 +59,7 @@ dmz::RuntimeContextMessageContainer::create_message (
 //! Constructor.
 dmz::RuntimeContextMessaging::RuntimeContextMessaging (
       RuntimeContextThreadKey &theKey,
-      RuntimeContextMessageContainer &container,
+      RuntimeContextDefinitions &defs,
       RuntimeContext *context) :
       log (context ? context->get_log_context () : 0),
       head (0),
@@ -82,7 +70,7 @@ dmz::RuntimeContextMessaging::RuntimeContextMessaging (
       obsNameTable (&obsNameLock),
       monostateErrorTable (&monostateErrorLock) {
 
-   globalType = container.create_message ("Global_Message", "", context, this);
+   globalType = defs.create_message ("Global_Message", "", context, this);
    key.ref ();
    if (log) { log->ref (); }
 }

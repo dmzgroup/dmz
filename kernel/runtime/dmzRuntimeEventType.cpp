@@ -2,29 +2,9 @@
 #include "dmzRuntimeContext.h"
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeEventType.h>
+#include "dmzRuntimeIteratorState.h"
 #include "dmzRuntimeTypeContext.h"
 #include <dmzTypesHashTableHandle.h>
-
-/*!
-
-\class dmz::EventTypeIterator
-\ingroup Runtime
-\brief Class used to iterate over dmz::EventType children.
-
-*/
-
-struct dmz::EventTypeIterator::State {
-
-   HashTableHandleIterator it;
-};
-
-
-//! Constructor.
-dmz::EventTypeIterator::EventTypeIterator () : state (*(new State)) {;}
-
-
-//! Destructor.
-dmz::EventTypeIterator::~EventTypeIterator () { delete &state; }
 
 /*!
 
@@ -272,14 +252,14 @@ dmz::EventType::become_parent () {
 /*!
 
 \brief Gets first event type child.
-\param[in] it EventTypeIterator.
+\param[in] it RuntimeIterator.
 \param[out] type EventType to store first child.
 \return Returns dmz::True if the first child is returned. Returns dmz::False if
 the event type has no children.
 
 */
 dmz::Boolean
-dmz::EventType::get_first_child (EventTypeIterator &it, EventType &type) const {
+dmz::EventType::get_first_child (RuntimeIterator &it, EventType &type) const {
 
    Boolean result (False);
 
@@ -299,14 +279,14 @@ dmz::EventType::get_first_child (EventTypeIterator &it, EventType &type) const {
 /*!
 
 \brief Gets next event type child.
-\param[in] it EventTypeIterator.
+\param[in] it RuntimeIterator.
 \param[out] type EventType to store next child.
 \return Returns dmz::True if the next child is returned. Returns dmz::False if
 the event type has no more children to return.
 
 */
 dmz::Boolean
-dmz::EventType::get_next_child (EventTypeIterator &it, EventType &type) const {
+dmz::EventType::get_next_child (RuntimeIterator &it, EventType &type) const {
 
    Boolean result (False);
 
@@ -650,14 +630,14 @@ dmz::EventTypeSet::contains_exact_type (const EventType &Type) const {
 /*!
 
 \brief Gets first event type in the set.
-\param[in] it EventTypeIterator used to iterate over the event types in the set.
+\param[in] it RuntimeIterator used to iterate over the event types in the set.
 \param[out] type EventType to store first event type.
 \return Returns dmz::True if the first event type is stored in \a type. Returns dmz::False
 if the set is empty.
 
 */
 dmz::Boolean
-dmz::EventTypeSet::get_first (EventTypeIterator &it, EventType &type) const {
+dmz::EventTypeSet::get_first (RuntimeIterator &it, EventType &type) const {
 
    Boolean result (False);
 
@@ -672,14 +652,14 @@ dmz::EventTypeSet::get_first (EventTypeIterator &it, EventType &type) const {
 /*!
 
 \brief Gets next event type in the set.
-\param[in] it EventTypeIterator used to iterate over the event types in the set.
+\param[in] it RuntimeIterator used to iterate over the event types in the set.
 \param[out] type EventType to store next event type.
 \return Returns dmz::True if the next event type is stored in \a type. Returns dmz::False
 if all event types have been returned.
 
 */
 dmz::Boolean
-dmz::EventTypeSet::get_next (EventTypeIterator &it, EventType &type) const {
+dmz::EventTypeSet::get_next (RuntimeIterator &it, EventType &type) const {
 
    Boolean result (False);
 

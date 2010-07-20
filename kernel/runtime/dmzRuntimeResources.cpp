@@ -119,37 +119,6 @@ dmz::Resources::find_file (const String &ResourceName) const {
 
 /*!
 
-\brief Store a resource config.
-\details Existing resource can not be overwritten. They must be removed first before
-a new resource config with the same name may be stored.
-\param[in] ResourceName String containing the name of the resource Config.
-\param[in] Resource Config containing the resource data to store.
-\return Returns dmz::True if the resource config was stored. Will return dmz::False
-if there is already a resource config with the same name.
-
-*/
-dmz::Boolean
-dmz::Resources::store_resource_config (
-      const String &ResourceName,
-      const Config &Resource) {
-
-   Boolean result (False);
-
-   if (_context) {
-
-      Config *rc = new Config (Resource);
-
-      result = _context->rcTable.store (ResourceName, rc);
-
-      if (!result) { delete rc; rc = 0; }
-   }
-
-   return result;
-}
-
-
-/*!
-
 \brief Lookup a resource config.
 \param[in] ResourceName String containing the name of the resource Config.
 \param[out] resource Config used to return the found resource Config.
@@ -172,60 +141,6 @@ dmz::Resources::lookup_resource_config (
 
          _log->error << "Failed to find resource config: " << ResourceName << endl;
       }
-   }
-
-   return result;
-}
-
-
-/*!
-
-\brief Removes a resource config.
-\param[in] ResourceName String containing the name of the resource Config.
-\return Returns dmz::True if the named resource Config was removed.
-
-*/
-dmz::Boolean
-dmz::Resources::remove_resource_config (const String &ResourceName) {
-
-   Boolean result (False);
-
-   if (_context) {
-
-      Config *rc = _context->rcTable.remove (ResourceName);
-
-      if (rc) { delete rc; rc = 0; result = True; }
-   }
-
-   return result;
-}
-
-
-/*!
-
-\brief Store a search path.
-\details Existing search paths can not be overwritten. They must be removed first before
-a new search path with the same name may be stored.
-\param[in] SearchPathName String containing the name of the search path.
-\param[in] SearchPath StringContainer containing the search paths to store.
-\return Returns dmz::True if the search path was stored. Will return dmz::False
-if there is already a search path with the same name.
-
-*/
-dmz::Boolean
-dmz::Resources::store_search_path (
-      const String &SearchPathName,
-      const StringContainer &SearchPath) {
-
-   Boolean result (False);
-
-   if (_context) {
-
-      StringContainer *pc = new StringContainer (SearchPath);
-
-      result = _context->pathTable.store (SearchPathName, pc);
-
-      if (!result) { delete pc; pc = 0; }
    }
 
    return result;
@@ -257,25 +172,3 @@ dmz::Resources::lookup_search_path (
    return result;
 }
 
-
-/*!
-
-\brief Removes a search path.
-\param[in] SearchPathName String containing the name of the search path.
-\return Returns dmz::True if the named search path was removed.
-
-*/
-dmz::Boolean
-dmz::Resources::remove_search_path (const String &SearchPathName) {
-
-   Boolean result (False);
-
-   if (_context) {
-
-      StringContainer *pc = _context->pathTable.remove (SearchPathName);
-
-      if (pc) { delete pc; pc = 0; result = True; }
-   }
-
-   return result;
-}

@@ -434,7 +434,7 @@ dmz::QtPluginCanvasObject::update_object_orientation (
 void
 dmz::QtPluginCanvasObject::_store_object_module (ObjectModule &module) {
 
-   PluginIterator it;
+   RuntimeIterator it;
 
    Plugin *ptr (_extensions.get_first (it));
 
@@ -455,7 +455,7 @@ dmz::QtPluginCanvasObject::_store_object_module (ObjectModule &module) {
 void
 dmz::QtPluginCanvasObject::_remove_object_module (ObjectModule &module) {
 
-   PluginIterator it;
+   RuntimeIterator it;
 
    Plugin *ptr (_extensions.get_first (it));
 

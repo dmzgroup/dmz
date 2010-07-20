@@ -3,6 +3,7 @@
 #include <dmzLuaKernelValidate.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeResources.h>
+#include <dmzRuntimeResourcesUpdate.h>
 #include <dmzTypesString.h>
 #include <luacpp.h>
 
@@ -36,9 +37,9 @@ rc_store_config (lua_State *L) {
 
    if (resource) {
 
-      Resources rc (lua_get_runtime_context (L));
+      ResourcesUpdate rc (lua_get_runtime_context (L));
 
-      if (rc.store_resource_config (Name, *resource)) {
+      if (rc.update_resource (Name, *resource)) {
 
          lua_pushboolean (L, 1); result = 1;
       }
@@ -76,9 +77,9 @@ rc_remove_config (lua_State *L) {
 
    const String Name (luaL_checkstring (L, 1));
 
-   Resources rc (lua_get_runtime_context (L));
+   ResourcesUpdate rc (lua_get_runtime_context (L));
 
-   if (rc.remove_resource_config (Name)) {
+   if (rc.remove_resource (Name)) {
 
       lua_pushboolean (L, 1); result = 1;
    }

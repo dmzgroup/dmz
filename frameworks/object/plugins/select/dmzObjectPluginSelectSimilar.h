@@ -15,6 +15,7 @@ namespace dmz {
          public MessageObserver {
 
       public:
+         //! \cond
          ObjectPluginSelectSimilar (const PluginInfo &Info, Config &local);
          ~ObjectPluginSelectSimilar ();
 
@@ -46,6 +47,7 @@ namespace dmz {
 
          ObjectModule *_objMod;
          ObjectModuleSelect *_select;
+         //! \endcond
 
       private:
          ObjectPluginSelectSimilar ();

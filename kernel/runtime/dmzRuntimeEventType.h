@@ -3,6 +3,7 @@
 
 #include <dmzKernelExport.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeIterator.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
@@ -13,20 +14,6 @@ namespace dmz {
    class Config;
    class TypeContext;
    class RuntimeContext;
-
-   class DMZ_KERNEL_LINK_SYMBOL EventTypeIterator {
-
-      public:
-         EventTypeIterator ();
-         ~EventTypeIterator ();
-
-         struct State;
-         State &state; //!< Internal state.
-
-      private:
-         EventTypeIterator (const EventTypeIterator &);
-         EventTypeIterator &operator= (const EventTypeIterator &);
-   };
 
    class DMZ_KERNEL_LINK_SYMBOL EventType {
 
@@ -56,8 +43,8 @@ namespace dmz {
          EventType get_parent () const;
          Boolean become_parent ();
 
-         Boolean get_first_child (EventTypeIterator &it, EventType &type) const;
-         Boolean get_next_child (EventTypeIterator &it, EventType &type) const;
+         Boolean get_first_child (RuntimeIterator &it, EventType &type) const;
+         Boolean get_next_child (RuntimeIterator &it, EventType &type) const;
 
          Config get_config () const;
          Config find_config (const String &Name) const;
@@ -94,8 +81,8 @@ namespace dmz {
          Boolean contains_type (const EventType &Type) const;
          Boolean contains_exact_type (const EventType &Type) const;
 
-         Boolean get_first (EventTypeIterator &it, EventType &type) const;
-         Boolean get_next (EventTypeIterator &it, EventType &type) const;
+         Boolean get_first (RuntimeIterator &it, EventType &type) const;
+         Boolean get_next (RuntimeIterator &it, EventType &type) const;
 
       protected:
          struct State;

@@ -12,6 +12,11 @@
 \brief Observers runtime definitions.
 \sa dmz::Definitions
 
+\enum dmz::DefinitionsActivateModeEnum
+\ingroup Runtime
+\brief Definitions callback activate mode.
+
+
 */
 
 struct dmz::DefinitionsObserver::State {
@@ -114,13 +119,15 @@ dmz::DefinitionsObserver::get_definitions_observer_callback_mask () {
 \details The callback activation mask should be composed of the following masks:
 dmz::RuntimeNamedHandleMask, dmz::RuntimeStateMask, dmz::RuntimeObjectTypeMask, and/or
 dmz::RuntimeEventTypeMask.
+\param[in] Mode Specifies if all current definitions should be dumped to observer upon
+activation.
 \param[in] TheMask A mask specifying which callbacks to activate.
 \return Returns a mask of all callbacks that were activated.
 
 */
 dmz::UInt32
 dmz::DefinitionsObserver::set_definitions_observer_callback_mask (
-      const DefintionsActivateModeEnum Mode,
+      const DefinitionsActivateModeEnum Mode,
       const UInt32 TheMask) {
 
    if (__state.context && __state.context->is_main_thread () && __state.defs) {

@@ -10,6 +10,10 @@
 \ingroup Runtime
 \brief Contains ResourcesObserver class.
 
+\enum dmz::ResourcesActivateModeEnum
+\ingroup Runtime
+\brief Resources callback activate mode.
+
 \enum dmz::ResourcesUpdateTypeEnum
 \ingroup Runtime
 \brief Resources update callback type.
@@ -92,7 +96,13 @@ dmz::ResourcesObserver::ResourcesObserver (const PluginInfo &Info) :
 dmz::ResourcesObserver::~ResourcesObserver () { delete &__state; }
 
 
-//! Activates dmz::ResourcesObserver::update_resource() callback.
+/*!
+
+\brief Activates dmz::ResourcesObserver::update_resource() callback.
+\param[in] Mode Specifies if all currently defined resources should be dumped to observer
+upon activation.
+
+*/
 void
 dmz::ResourcesObserver::activate_resources_callback (
       const ResourcesActivateModeEnum Mode) {

@@ -42,9 +42,9 @@ const UInt32 DefinitionsMessageMask = 0x10;
 //! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
 const UInt32 DefinitionsAllMask = 0xFF;
 
-enum DefintionsActivateModeEnum {
-   DefinitionsDumpAll,
-   DefinitionsDumpNone
+enum DefinitionsActivateModeEnum {
+   DefinitionsDumpAll, //!< Dump all current definitions.
+   DefinitionsDumpNone //!< Do not dump all current definitions.
 };
 
 //! @}
@@ -57,7 +57,7 @@ class DMZ_KERNEL_LINK_SYMBOL DefinitionsObserver {
 
       UInt32 get_definitions_observer_callback_mask ();
       UInt32 set_definitions_observer_callback_mask (
-         const DefintionsActivateModeEnum Mode,
+         const DefinitionsActivateModeEnum Mode,
          const UInt32 Mask);
 
       virtual void define_named_handle (const Handle TheHandle, const String &Name);

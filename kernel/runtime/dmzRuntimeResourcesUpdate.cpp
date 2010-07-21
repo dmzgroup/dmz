@@ -12,7 +12,7 @@
 
 \class dmz::ResourcesUpdate
 \ingroup Runtime
-\brief Runtime Resource Updater.
+\brief Runtime Resources Updater.
 \details
 
 */
@@ -101,13 +101,13 @@ dmz::ResourcesUpdate::update_resource (
 
    if (_context) {
 
-      ResourcesModeEnum mode = ResourceCreated;
+      ResourcesUpdateTypeEnum type = ResourcesCreated;
 
       Config *rc = _context->rcTable.remove (ResourceName);
 
       if (rc) {
 
-         mode = ResourceUpdated;
+         type = ResourcesUpdated;
          delete rc; rc = 0;
       }
 
@@ -120,7 +120,7 @@ dmz::ResourcesUpdate::update_resource (
 
          while (_context->obsTable.get_next (it, obs)) {
 
-            obs->update_resource (ResourceName, mode);
+            obs->update_resource (ResourceName, type);
          }
 
          result = True;
@@ -157,7 +157,7 @@ dmz::ResourcesUpdate::remove_resource (const String &ResourceName) {
 
          while (_context->obsTable.get_next (it, obs)) {
 
-            obs->update_resource (ResourceName, ResourceRemoved);
+            obs->update_resource (ResourceName, ResourcesRemoved);
          }
 
          result = True;
@@ -199,7 +199,7 @@ dmz::ResourcesUpdate::update_resource_file (
 
             while (_context->obsTable.get_next (it, obs)) {
 
-               obs->update_resource (ResourceName, ResourceUpdated);
+               obs->update_resource (ResourceName, ResourcesUpdated);
             }
          }
          else if (_log) {

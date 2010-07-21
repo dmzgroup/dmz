@@ -530,7 +530,7 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
 
             if (Name) {
 
-               ResourcesModeEnum mode = ResourceCreated;
+               ResourcesUpdateTypeEnum type = ResourcesCreated;
 
                Config *ptr (rc->rcTable.remove (Name));
 
@@ -549,7 +549,7 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
 
                   delete ptr; ptr = 0;
 
-                  mode = ResourceUpdated;
+                  type = ResourcesUpdated;
                }
 
                ptr = new Config (resource);
@@ -562,7 +562,7 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
 
                   while (rc->obsTable.get_next (it, obs)) {
 
-                     obs->update_resource (Name, mode);
+                     obs->update_resource (Name, type);
                   }
                }
             }

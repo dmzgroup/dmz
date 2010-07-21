@@ -10,9 +10,9 @@
 \ingroup Runtime
 \brief Contains ResourcesObserver class.
 
-\enum dmz::ResourcesModeEnum
+\enum dmz::ResourcesUpdateTypeEnum
 \ingroup Runtime
-\brief Resource update callback mode.
+\brief Resources update callback type.
 
 \class dmz::ResourcesObserver
 \ingroup Runtime
@@ -74,7 +74,7 @@ struct dmz::ResourcesObserver::State {
 
 */
 dmz::ResourcesObserver::ResourcesObserver (RuntimeContext *context) :
-      __state (*(new State (0, "<Anonymous Resource Observer>", context))) {;}
+      __state (*(new State (0, "<Anonymous Resources Observer>", context))) {;}
 
 
 /*!
@@ -94,20 +94,21 @@ dmz::ResourcesObserver::~ResourcesObserver () { delete &__state; }
 
 //! Activates dmz::ResourcesObserver::update_resource() callback.
 void
-dmz::ResourcesObserver::activate_resources_calllback () {
+dmz::ResourcesObserver::activate_resources_callback (
+      const ResourcesActivateModeEnum Mode) {
 
    if (!__state.active) {
 
       __state.register_observer (this);
 
-      if (__state.active && __state.rc) {
+      if ((Mode == ResourcesDumpAll) && __state.active && __state.rc) {
 
          HashTableStringIterator it;
          Config *ptr (0);
 
          while (__state.rc->rcTable.get_next (it, ptr)) {
 
-            update_resource (it.get_hash_key (), ResourceCreated);
+            update_resource (it.get_hash_key (), ResourcesCreated);
          }
       }
    }
@@ -116,7 +117,7 @@ dmz::ResourcesObserver::activate_resources_calllback () {
 
 //! deactivates dmz::ResourcesObserver::update_resource() callback.
 void
-dmz::ResourcesObserver::deactivate_resources_calllback () {
+dmz::ResourcesObserver::deactivate_resources_callback () {
 
    __state.release_observer ();
 }
@@ -125,7 +126,7 @@ dmz::ResourcesObserver::deactivate_resources_calllback () {
 /*!
 
 \brief Dumps the current Resources to the observer.
-\details The dmz::ResourcesObserver::update_resource() Mode parameter will be set to dmz::ResourceDumped.
+\details The dmz::ResourcesObserver::update_resource() Mode parameter will be set to dmz::ResourcesDumped.
 
 */
 void
@@ -138,7 +139,7 @@ dmz::ResourcesObserver::dump_current_resources () {
 
       while (__state.rc->rcTable.get_next (it, ptr)) {
 
-         update_resource (it.get_hash_key (), ResourceDumped);
+         update_resource (it.get_hash_key (), ResourcesDumped);
       }
    }
 }
@@ -146,7 +147,7 @@ dmz::ResourcesObserver::dump_current_resources () {
 
 /*!
 
-\fn void dmz::ResourcesObserver::update_resource (const String &Name, const ResourcesModeEnum Mode)
+\fn void dmz::ResourcesObserver::update_resource (const String &Name, const ResourcesUpdateTypeEnum Mode)
 \brief Function invoked when runtime Resources are create, updated, or removed.
 
 */

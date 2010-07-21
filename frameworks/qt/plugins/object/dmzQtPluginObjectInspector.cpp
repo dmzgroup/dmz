@@ -687,7 +687,10 @@ dmz::QtPluginObjectInspector::_init (Config &local) {
    headerList << "Handle" << "ObjectType" << "Locality" << "UUID";
    _state.ui.objectTreeWidget->setHeaderLabels (headerList);
 
-   set_definitions_observer_callback_mask (RuntimeNamedHandleMask | RuntimeStateMask);
+   set_definitions_observer_callback_mask (
+      DefinitionsDumpAll,
+      DefinitionsNamedHandleMask | DefinitionsStateMask);
+
    activate_global_object_observer ();
 }
 

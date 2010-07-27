@@ -9,6 +9,7 @@
 #include <dmzRuntimeResources.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesDeleteListTemplate.h>
 
 #include <osg/Switch>
 
@@ -81,7 +82,7 @@ namespace dmz {
                State (TheState),
                next (0) {;}
 
-            ~StateStruct () { if (next) { delete next; next = 0; } }
+            ~StateStruct () {;}
          };
 
          struct DefStruct {
@@ -96,7 +97,7 @@ namespace dmz {
                model->setDataVariance (osg::Object::DYNAMIC);
             }
 
-            ~DefStruct () { if (stateMap) { delete stateMap; stateMap = 0; } }
+            ~DefStruct () { delete_list (stateMap); }
          };
  
          struct ObjectStruct {

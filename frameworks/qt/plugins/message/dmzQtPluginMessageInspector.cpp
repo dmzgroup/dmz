@@ -17,7 +17,9 @@ dmz::QtPluginMessageInspector::QtPluginMessageInspector (const PluginInfo &Info,
       QWidget (0),
       Plugin (Info),
       MessageObserver (Info),
+      TimeSlice (Info, TimeSliceTypeRuntime, TimeSliceModeSingle, 1.0),
       _log (Info),
+      _doColumnSizeUpdate (false),
       _targetFilterList (),
       _typeFilterList (),
       __messageCount (0) {
@@ -133,11 +135,11 @@ dmz::QtPluginMessageInspector::update_plugin_state (
 
       show ();
    }
-   else if (State == PluginStateStart) {
-
-   }
+   else if (State == PluginStateStart) { start_time_slice (); }
    else if (State == PluginStateStop) {
 
+      stop_time_slice ();
+      _doColumnSizeUpdate = false;
    }
    else if (State == PluginStateShutdown) {
 
@@ -223,9 +225,11 @@ dmz::QtPluginMessageInspector::receive_message (
    QTreeWidgetItem *messageItem = new QTreeWidgetItem ((QTreeWidget*)0, messageData);
    _ui.treeWidgetList->addTopLevelItem (messageItem);
 
-   for (int i = 0; i < _ui.treeWidgetList->columnCount (); ++ i) {
+   if (_doColumnSizeUpdate) {
+      for (int i = 0; i < _ui.treeWidgetList->columnCount (); ++ i) {
 
-      _ui.treeWidgetList->resizeColumnToContents (i);
+         _ui.treeWidgetList->resizeColumnToContents (i);
+      }
    }
 
    int index (0);
@@ -258,6 +262,12 @@ dmz::QtPluginMessageInspector::receive_message (
    messageItem->setHidden (!_typeFilterList.contains (messageType)
                            || !_targetFilterList.contains (messageTarget));
 }
+
+void dmz::QtPluginMessageInspector::update_time_slice (const Float64 TimeDelta) {
+   _doColumnSizeUpdate = true;
+   stop_time_slice ();
+}
+
 
 void
 dmz::QtPluginMessageInspector::_check_all_targets () {

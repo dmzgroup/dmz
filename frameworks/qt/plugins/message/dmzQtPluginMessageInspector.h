@@ -4,6 +4,7 @@
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
+#include <dmzRuntimeTimeSlice.h>
 #include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <QtGui/QTreeWidget>
@@ -16,7 +17,8 @@ namespace dmz {
    class QtPluginMessageInspector :
          public QWidget,
          public Plugin,
-         public MessageObserver {
+         public MessageObserver,
+         public TimeSlice {
 
       Q_OBJECT
 
@@ -41,6 +43,8 @@ namespace dmz {
             const Data *InData,
             Data *outData);
 
+         virtual void update_time_slice (const Float64 TimeDelta);
+
       protected slots:
          void _check_all_targets ();
          void _uncheck_all_targets ();
@@ -56,6 +60,7 @@ namespace dmz {
 
          Log _log;
          Ui::InspectorForm _ui;
+         bool _doColumnSizeUpdate;
          QStringList _targetFilterList;
          QStringList _typeFilterList;
 

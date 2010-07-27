@@ -136,7 +136,9 @@ dmz::RenderPluginObjectLoaderOSG::update_object_text (
             if (os->model.valid ()) {
 
                osgUtil::Optimizer optimizer;
-               optimizer.optimize (os->model.get ());
+               optimizer.optimize (os->model.get (),
+                  osgUtil::Optimizer::DEFAULT_OPTIMIZATIONS &
+                  !osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS);
                
                osg::Group *group (_core->create_dynamic_object (ObjectHandle));
 

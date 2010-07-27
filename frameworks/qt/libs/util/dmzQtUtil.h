@@ -14,6 +14,7 @@ namespace dmz {
 
    class Config;
    class ObjectType;
+   class StringContainer;
 
    QPointF to_qpointf (const Vector &Source);
    Vector to_dmz_vector (const QPointF &Source);
@@ -60,6 +61,9 @@ namespace dmz {
    DMZ_QT_UTIL_LINK_SYMBOL Boolean rename_file (
       const QString &OldName,
       const QString &NewName);
+
+   DMZ_QT_UTIL_LINK_SYMBOL void to_qstringlist (const StringContainer &Source, QStringList &target);
+   DMZ_QT_UTIL_LINK_SYMBOL void to_dmz_string_container (const QStringList &Source, StringContainer &target);
 };
 
 

@@ -560,7 +560,7 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
                   HashTableHandleIterator it;
                   ResourcesObserver *obs (0);
 
-                  while (rc->obsTable.get_next (it, obs)) {
+                  while (rc->rcObsTable.get_next (it, obs)) {
 
                      obs->update_resource (Name, type);
                   }

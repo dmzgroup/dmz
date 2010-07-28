@@ -434,7 +434,7 @@ dmz::RenderPluginObjectOSG::_init (Config &local) {
       config_to_string ("hide-object-flag.name", local, ObjectAttributeHideName),
       ObjectFlagMask);
 
-   activate_resources_callback (ResourcesDumpNone);
+   set_resources_observer_callback_mask (ResourcesDumpNone, ResourcesResourceMask);
 
    set_definitions_observer_callback_mask (
       DefinitionsDumpNone,

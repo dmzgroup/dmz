@@ -62,6 +62,11 @@ struct dmz::DefinitionsObserver::State {
       if (defs) { defs->unref (); defs = 0; }
       if (context) { context->unref (); context = 0; }
    }
+
+   Handle get_handle () {
+
+      return handlePtr ? handlePtr->get_runtime_handle () : ObsHandle;
+   }
 };
 
 
@@ -87,27 +92,9 @@ dmz::DefinitionsObserver::~DefinitionsObserver () {
 }
 
 
-//! Gets observer's handle.
-dmz::Handle
-dmz::DefinitionsObserver::get_definitions_observer_handle () const {
-
-   return __state.handlePtr ?
-      __state.handlePtr->get_runtime_handle () :
-      __state.ObsHandle;
-}
-
-
-//! Gets observer's name.
-dmz::String
-dmz::DefinitionsObserver::get_definitions_observer_name () const {
-
-   return __state.Name;
-}
-
-
 //! Returns a mask of active callbacks.
 dmz::UInt32
-dmz::DefinitionsObserver::get_definitions_observer_callback_mask () {
+dmz::DefinitionsObserver::get_definitions_observer_callback_mask () const {
 
    return __state.mask;
 }
@@ -134,7 +121,7 @@ dmz::DefinitionsObserver::set_definitions_observer_callback_mask (
 
       const Boolean Dump = (Mode == DefinitionsDumpAll);
 
-      const Handle ObsHandle = get_definitions_observer_handle ();
+      const Handle ObsHandle = __state.get_handle ();
 
       if (DefinitionsNamedHandleMask & TheMask) { 
 

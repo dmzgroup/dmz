@@ -1,6 +1,7 @@
 #include "dmzRuntimeContext.h"
 #include "dmzRuntimeContextResources.h"
 #include <dmzRuntimeHandle.h>
+#include <dmzRuntimeLog.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeResourcesObserver.h>
 
@@ -28,45 +29,30 @@ struct dmz::ResourcesObserver::State {
 
    RuntimeHandle *handlePtr;
    const Handle ObsHandle;
+   Log log;
    RuntimeContextResources *rc;
-   Boolean active;
+   UInt32 mask;
+   UInt32 warnMask;
 
    State (const Handle TheObsHandle, const String &ObsName, RuntimeContext *context) :
          handlePtr (
-            TheObsHandle ?
+            TheObsHandle == 0 ?
                new RuntimeHandle (ObsName + ".ResourcesObserver", context) :
                0),
          ObsHandle (handlePtr ? handlePtr->get_runtime_handle () : TheObsHandle),
+         log (ObsName + "ResourcesObserver", context),
          rc (context ? context->get_resources_context () : 0),
-         active (False) {
+         mask (0),
+         warnMask (0) {
 
-      if (rc) {
-
-         rc->ref ();
-      }
+      if (rc) { rc->ref (); }
    }
 
    ~State () {
 
-      release_observer ();
-
-      if (rc) {
-
-         rc->unref ();
-         rc = 0;
-      }
+      if (rc) { rc->unref (); rc = 0; }
 
       if (handlePtr) { delete handlePtr; handlePtr = 0; }
-   }
-
-   void register_observer (ResourcesObserver *self) {
-
-      if (rc && ObsHandle && !active) { active = rc->obsTable.store (ObsHandle, self); }
-   }
-
-   void release_observer () {
-
-      if (rc && ObsHandle && active) { active = (rc->obsTable.remove (ObsHandle) != 0); }
    }
 };
 
@@ -93,7 +79,18 @@ dmz::ResourcesObserver::ResourcesObserver (const PluginInfo &Info) :
 
 
 //! Destructor.
-dmz::ResourcesObserver::~ResourcesObserver () { delete &__state; }
+dmz::ResourcesObserver::~ResourcesObserver () {
+
+   set_resources_observer_callback_mask (ResourcesDumpNone, 0);
+   delete &__state;
+}
+
+
+dmz::UInt32
+dmz::ResourcesObserver::get_resources_observer_callback_mask () const {
+
+   return __state.mask;
+}
 
 
 /*!
@@ -103,33 +100,73 @@ dmz::ResourcesObserver::~ResourcesObserver () { delete &__state; }
 upon activation.
 
 */
-void
-dmz::ResourcesObserver::activate_resources_callback (
-      const ResourcesActivateModeEnum Mode) {
+dmz::UInt32
+dmz::ResourcesObserver::set_resources_observer_callback_mask (
+      const ResourcesActivateModeEnum Mode,
+      const UInt32 TheMask) {
 
-   if (!__state.active) {
+   if (__state.rc) {
 
-      __state.register_observer (this);
+      const Boolean Dump = (Mode == ResourcesDumpAll);
 
-      if ((Mode == ResourcesDumpAll) && __state.active && __state.rc) {
+      const Handle ObsHandle = __state.ObsHandle;
 
-         HashTableStringIterator it;
-         Config *ptr (0);
+      if (ResourcesPathMask & TheMask) {
 
-         while (__state.rc->rcTable.get_next (it, ptr)) {
+         if ((ResourcesPathMask & __state.mask) == 0) {
 
-            update_resource (it.get_hash_key (), ResourcesCreated);
+            if (__state.rc->pathObsTable.store (ObsHandle, this)) {
+
+               __state.mask |= ResourcesPathMask;
+
+               if (Dump) {
+
+                  HashTableStringIterator it;
+                  StringContainer *ptr (0);
+
+                  while (__state.rc->pathTable.get_next (it, ptr)) {
+
+                     update_resources_path (it.get_hash_key (), ResourcesCreated);
+                  }
+               }
+            }
          }
       }
+      else if (ResourcesPathMask & __state.mask) {
+
+         __state.mask &= ~ResourcesPathMask;
+         __state.rc->pathObsTable.remove (ObsHandle);
+      }
+
+      if (ResourcesResourceMask & TheMask) {
+
+         if ((ResourcesResourceMask & __state.mask) == 0) {
+
+            if (__state.rc->rcObsTable.store (ObsHandle, this)) {
+
+               __state.mask |= ResourcesResourceMask;
+
+               if (Dump) {
+
+                  HashTableStringIterator it;
+                  Config *ptr (0);
+
+                  while (__state.rc->rcTable.get_next (it, ptr)) {
+
+                     update_resource (it.get_hash_key (), ResourcesCreated);
+                  }
+               }
+            }
+         }
+      }
+      else if (ResourcesResourceMask & __state.mask) {
+
+         __state.mask &= ~ResourcesResourceMask;
+         __state.rc->rcObsTable.remove (ObsHandle);
+      }
    }
-}
 
-
-//! deactivates dmz::ResourcesObserver::update_resource() callback.
-void
-dmz::ResourcesObserver::deactivate_resources_callback () {
-
-   __state.release_observer ();
+   return __state.mask;
 }
 
 
@@ -144,12 +181,26 @@ dmz::ResourcesObserver::dump_current_resources () {
 
    if (__state.rc) {
 
-      HashTableStringIterator it;
-      Config *ptr (0);
+      if (__state.mask & ResourcesPathMask) {
 
-      while (__state.rc->rcTable.get_next (it, ptr)) {
+         HashTableStringIterator it;
+         StringContainer *ptr (0);
 
-         update_resource (it.get_hash_key (), ResourcesDumped);
+         while (__state.rc->pathTable.get_next (it, ptr)) {
+
+            update_resources_path (it.get_hash_key (), ResourcesDumped);
+         }
+      }
+
+      if (__state.mask & ResourcesResourceMask) {
+
+         HashTableStringIterator it;
+         Config *ptr (0);
+
+         while (__state.rc->rcTable.get_next (it, ptr)) {
+
+            update_resource (it.get_hash_key (), ResourcesDumped);
+         }
       }
    }
 }
@@ -157,7 +208,34 @@ dmz::ResourcesObserver::dump_current_resources () {
 
 /*!
 
-\fn void dmz::ResourcesObserver::update_resource (const String &Name, const ResourcesUpdateTypeEnum Mode)
 \brief Function invoked when runtime Resources are create, updated, or removed.
 
 */
+void
+dmz::ResourcesObserver::update_resources_path (
+      const String &Name,
+      const ResourcesUpdateTypeEnum Type) {
+
+   if ((ResourcesPathMask & __state.warnMask) == 0) {
+
+      __state.warnMask |= ResourcesPathMask;
+      __state.log.warn << "Base dmz::ResourcesObserver::update_resources_path called."
+         << " Function should have been overridden?" << endl;
+   }
+}
+
+
+void
+dmz::ResourcesObserver::update_resource (
+      const String &Name,
+      const ResourcesUpdateTypeEnum Type) {
+
+   if ((ResourcesResourceMask & __state.warnMask) == 0) {
+
+      __state.warnMask |= ResourcesResourceMask;
+      __state.log.warn << "Base dmz::ResourcesObserver::update_resource called."
+         << " Function should have been overridden?" << endl;
+   }
+}
+
+

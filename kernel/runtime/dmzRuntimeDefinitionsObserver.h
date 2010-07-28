@@ -52,10 +52,7 @@ enum DefinitionsActivateModeEnum {
 class DMZ_KERNEL_LINK_SYMBOL DefinitionsObserver {
 
    public:
-      Handle get_definitions_observer_handle () const;
-      String get_definitions_observer_name () const;
-
-      UInt32 get_definitions_observer_callback_mask ();
+      UInt32 get_definitions_observer_callback_mask () const;
       UInt32 set_definitions_observer_callback_mask (
          const DefinitionsActivateModeEnum Mode,
          const UInt32 Mask);

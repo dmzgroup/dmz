@@ -748,8 +748,13 @@ dmz::QtPluginGraph::_update_graph () {
 
    if (_showPowerLaw) { _update_power_law (lastBar, offset); }
 
-   if (_scene) { _scene->setSceneRect (_scene->itemsBoundingRect ()); }
+   if (_scene) {
+
+      _scene->setSceneRect (_scene->itemsBoundingRect ());
+      _scene->update (_scene->itemsBoundingRect ());
+   }
 }
+
 
 
 void

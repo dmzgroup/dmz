@@ -21,10 +21,10 @@
 
 struct dmz::DefinitionsObserver::State {
 
+   RuntimeHandle *handlePtr;
    const Handle ObsHandle;
    const String Name;
    Log log;
-   RuntimeHandle *handlePtr;
    UInt32 mask;
    UInt32 warnMask;
 
@@ -32,10 +32,13 @@ struct dmz::DefinitionsObserver::State {
    RuntimeContextDefinitions *defs;
 
    State (const Handle &TheHandle, const String &TheName, RuntimeContext *theContext) :
-         ObsHandle (TheHandle),
+         handlePtr (
+            TheHandle == 0 ?
+               new RuntimeHandle (TheName + ".ResourcesObserver", context) :
+               0),
+         ObsHandle (handlePtr ? handlePtr->get_runtime_handle () : TheHandle),
          Name (TheName),
          log (TheName + ".DefinitionsObserver", theContext),
-         handlePtr (0),
          mask (0),
          warnMask (0),
          context (theContext),
@@ -48,11 +51,6 @@ struct dmz::DefinitionsObserver::State {
          defs = context->get_definitions_context ();
 
          if (defs) { defs->ref (); }
-
-         if (!ObsHandle) {
-
-            handlePtr = new RuntimeHandle (TheName + ".DefinitionsObserver", context);
-         }
       }
    }
 
@@ -61,11 +59,6 @@ struct dmz::DefinitionsObserver::State {
       if (handlePtr) { delete handlePtr; handlePtr = 0; }
       if (defs) { defs->unref (); defs = 0; }
       if (context) { context->unref (); context = 0; }
-   }
-
-   Handle get_handle () {
-
-      return handlePtr ? handlePtr->get_runtime_handle () : ObsHandle;
    }
 };
 
@@ -121,7 +114,7 @@ dmz::DefinitionsObserver::set_definitions_observer_callback_mask (
 
       const Boolean Dump = (Mode == DefinitionsDumpAll);
 
-      const Handle ObsHandle = __state.get_handle ();
+      const Handle ObsHandle = __state.ObsHandle;
 
       if (DefinitionsNamedHandleMask & TheMask) { 
 

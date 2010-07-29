@@ -6,12 +6,20 @@ The externally maintained library sources included with DMZ are:
   - expat, located under foundation/3rdparty/expat. This code is copyright
     by the Expat maintainers and is released under an MIT license.
 
+  - yajl, located under foundation/3rdparty/yajl. This code is copyright
+    by Lloyd Hilaiel and is released under a BSD license.
+
+  - sha2, located under foundation/3rdparty/sha2. This code is copyright
+    by Aaron D. Gifford and is released under a BSD license.
+
+  - zlib, located under foundation/3rdparty/zip. This code is copyright
+    by Jean-loup Gailly and Mark Adler and is released under the zlib license.
+
+  - zip, located under foundation/3rdparty/zip. This code is copyright
+    by Gilles Vollant and is released under the zlib license.
+
   - Lua, located under frameworks/lua/3rdparty/lua/base. This code is copyright
     by Lua.org and PUC-Rio and is released under an MIT license.
-
-  - LuaJIT, located under frameworks/lua/3rdparty/lua/jit. This code is
-    is a derived work from Lua and is copyright by Mike Pall.
-    It is released under an MIT license.
 
   - HawkNL, located under frameworks/net/3rdparty/hawknl. This code is copyright
     by Phil Frisbie, Jr. and is released under the LGPL.
@@ -20,7 +28,7 @@ The externally maintained library sources included with DMZ are:
 External libraries used by frameworks in DMZ but not include with the source are:
 
   - Qt, This code is released under a LGLP/Commercial License.
-    see: http://trolltech.com
+    see: http://qt.nokia.com
 
   - OpenSceneGraph, This code is released under the OpenSceneGraph Public License
     (OSGPL) and is based on the Lesser Gnu Public License (LGPL).
@@ -29,6 +37,10 @@ External libraries used by frameworks in DMZ but not include with the source are
   - Ogre3D, This code is released under the GNU Lesser Public License (LGPL).
     see: http://ogre3d.org
 
+  - LuaJIT, This code is is a derived work from Lua and is copyright by Mike Pall.
+    It is released under an MIT license.
+    see: http://luajit.org/
+
   - FMOD, This library is released under several licenses include a Free non-commercial
     licences.
     see: http://www.fmod.org/
@@ -36,7 +48,7 @@ External libraries used by frameworks in DMZ but not include with the source are
 These libraries have their own licenses; we recommend you read them,
 as their terms may differ from the terms below.
 
-Copyright (c) 2007-2009 Randall E. Barker and the DMZ Group.
+Copyright (c) 2007-2010 Randall E. Barker and the DMZ Group.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

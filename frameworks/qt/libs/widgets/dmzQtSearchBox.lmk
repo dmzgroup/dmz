@@ -1,0 +1,13 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtSearchBox"
+lmk.set_type "shared"
+lmk.add_files {"dmzQtSearchBox.h",}
+lmk.add_files ({"dmzQtSearchBox.h", "GSuggestCompletion.h",},{src = "moc"})
+lmk.add_files {"dmzQtSearchBox.cpp","GSuggestCompletion.cpp",}
+lmk.add_libs {"dmzQtUtil","dmzKernel",}
+lmk.add_preqs {"dmzQtFramework",}
+lmkQt.add_libs {"QtCore","QtGui","QtNetwork"}
+
+lmk.add_vars ({
+   localDefines = "$(lmk.defineFlag)DMZ_QT_SEARCH_BOX_EXPORT"
+}, {win32 = true})

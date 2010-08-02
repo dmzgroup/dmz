@@ -111,6 +111,7 @@ lmk.add_files {
    "runtime/dmzRuntimeHandle.cpp",
    "runtime/dmzRuntimeHandleAllocator.cpp",
    "runtime/dmzRuntimeInit.cpp",
+   "runtime/dmzRuntimeIterator.cpp",
    "runtime/dmzRuntimeLog.cpp",
    "runtime/dmzRuntimeLogObserverBasic.cpp",
    "runtime/dmzRuntimeLogObserverFile.cpp",

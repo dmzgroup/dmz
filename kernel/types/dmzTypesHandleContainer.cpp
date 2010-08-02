@@ -90,7 +90,6 @@ dmz::Int32
 dmz::HandleContainer::get_count () const { return _state.table.get_count (); }
 
 
-
 /*!
 
 \brief Test if Handle is stored in container.

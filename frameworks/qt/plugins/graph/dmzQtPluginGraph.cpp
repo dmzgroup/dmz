@@ -612,7 +612,7 @@ dmz::QtPluginGraph::_update_power_law (
       if (!_powerLabel) {
 
          _powerLabel = new QGraphicsTextItem;
-         _powerLabel->setPos (260.0, -_barHeight);
+         _powerLabel->setPos (260.0, -_barHeight - 25);
          if (_scene) { _scene->addItem (_powerLabel); }
       }
 

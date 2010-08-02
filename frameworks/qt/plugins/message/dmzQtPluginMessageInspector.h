@@ -60,7 +60,6 @@ namespace dmz {
 
          Log _log;
          Ui::InspectorForm _ui;
-         bool _doColumnSizeUpdate;
          QStringList _targetFilterList;
          QStringList _typeFilterList;
 

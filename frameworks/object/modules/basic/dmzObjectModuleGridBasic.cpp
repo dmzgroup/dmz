@@ -151,7 +151,7 @@ dmz::ObjectModuleGridBasic::update_object_observer_grid (ObjectObserverGrid &obs
                while (current) {
 
                   if (!SearchSpace.contains_point (current->pos) &&
-                        os->objects.remove_handle (current->Object)) {
+                        os->objects.remove (current->Object)) {
 
                      observer.update_object_grid_state (
                         ObjectGridStateExit,
@@ -330,7 +330,7 @@ _log.error << (s ? "" : "##### NOT UNIQUE ") << xx << " " << yy << " = " << _map
 
    while (list) {
 
-      if (!objects.add_handle (list->Object)) {
+      if (!objects.add (list->Object)) {
 
          _log.error << "Loop detected in object list for object: " << list->Object
             << endl;
@@ -374,7 +374,7 @@ dmz::ObjectModuleGridBasic::destroy_object (
 
          while (obs) {
 
-            obs->objects.remove_handle (ObjectHandle);
+            obs->objects.remove (ObjectHandle);
             obs = _grid[os->place].obsTable.get_next (it);
          }
       }
@@ -417,7 +417,7 @@ dmz::ObjectModuleGridBasic::update_object_position (
 
          while (os) {
 
-            tested.add_handle (os->ObsHandle);
+            tested.add (os->ObsHandle);
             _update_observer (
                os->obs.get_observer_volume (),
                *current,
@@ -480,7 +480,7 @@ dmz::ObjectModuleGridBasic::_update_observer (
 
    const Boolean Contains = SearchSpace.contains_point (Obj.pos);
 
-   if (Contains && os.objects.add_handle (Obj.Object)) {
+   if (Contains && os.objects.add (Obj.Object)) {
 
       os.obs.update_object_grid_state (
          ObjectGridStateEnter,
@@ -488,7 +488,7 @@ dmz::ObjectModuleGridBasic::_update_observer (
          Obj.Type,
          Obj.pos);
    }
-   else if (!Contains && os.objects.remove_handle (Obj.Object)) {
+   else if (!Contains && os.objects.remove (Obj.Object)) {
 
       os.obs.update_object_grid_state (
          ObjectGridStateExit,

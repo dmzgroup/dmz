@@ -40,7 +40,7 @@ dmz::validate_path_container (const StringContainer &Container) {
 
       const String CleanPath (format_path (path));
 
-      if (get_absolute_path (CleanPath, path)) { result.append (path); }
+      if (get_absolute_path (CleanPath, path)) { result.add (path); }
 
       found = Container.get_next (path);
    }

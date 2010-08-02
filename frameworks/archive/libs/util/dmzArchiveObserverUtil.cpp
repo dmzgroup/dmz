@@ -176,7 +176,7 @@ dmz::ArchiveObserverUtil::init_archive_scope (const Config &Init) {
 void
 dmz::ArchiveObserverUtil::add_archive_scope (const String &Scope) {
 
-   __state.scope.append (Scope);
+   __state.scope.add (Scope);
 }
 
 
@@ -221,7 +221,7 @@ dmz::ArchiveObserverUtil::activate_archive (const String &ArchiveName) {
 
    if (result) {
 
-      __state.validHandles.add_handle (result);
+      __state.validHandles.add (result);
 
       Handle *ptr (new Handle (result));
 
@@ -267,7 +267,7 @@ dmz::ArchiveObserverUtil::deactivate_archive (const String &ArchiveName) {
 
    if (ptr) {
 
-      __state.validHandles.remove_handle (*ptr);
+      __state.validHandles.remove (*ptr);
 
       if (__state.module) { __state.module->release_archive_observer (*ptr, *this); }
 
@@ -303,7 +303,7 @@ dmz::ArchiveObserverUtil::deactivate_archive_all () {
 
       while (ptr) {
 
-         __state.validHandles.remove_handle (*ptr);
+         __state.validHandles.remove (*ptr);
          __state.module->release_archive_observer (*ptr, *this);
          ptr = __state.handleTable.get_next (it);
       }
@@ -329,7 +329,7 @@ dmz::ArchiveObserverUtil::get_archive_scope (const Handle ArchiveHandle) {
    StringContainer result;
 
    if (__state.scope.get_count () != 0) { result = __state.scope; }
-   else { result.append (get_archive_observer_name ()); }
+   else { result.add (get_archive_observer_name ()); }
 
    return result;
 }

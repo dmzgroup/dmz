@@ -148,7 +148,7 @@ dmz::read_config_file (
 
       if (rz.open_zip_file (FileName)) { rz.get_file_list (files); }
    }
-   else { files.append (FileName); }
+   else { files.add (FileName); }
 
    const String NullString;
 
@@ -181,7 +181,7 @@ dmz::read_config_file (
       Log *log) {
 
    StringContainer files;
-   files.append (FileName);
+   files.add (FileName);
 
    return read_config_files (ArchiveName, files, data, Type, log);
 }

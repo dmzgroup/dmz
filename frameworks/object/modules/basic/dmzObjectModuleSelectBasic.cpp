@@ -41,7 +41,7 @@ dmz::ObjectModuleSelectBasic::get_selected_objects (HandleContainer &container) 
 
    HashTableHandleIterator it;
 
-   while (_selectTable.get_next (it)) { container.add_handle (it.get_hash_key ()); }
+   while (_selectTable.get_next (it)) { container.add (it.get_hash_key ()); }
 }
 
 

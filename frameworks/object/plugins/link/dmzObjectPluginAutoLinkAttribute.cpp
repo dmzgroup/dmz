@@ -119,7 +119,7 @@ dmz::ObjectPluginAutoLinkAttribute::update_link_attribute_object (
       const UUID &PrevAttributeIdentity,
       const Handle PrevAttributeObjectHandle) {
 
-   if (_attrObjects.remove_handle (PrevAttributeObjectHandle)) {
+   if (_attrObjects.remove (PrevAttributeObjectHandle)) {
 
       ObjectModule *module (get_object_module ());
 

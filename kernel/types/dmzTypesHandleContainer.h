@@ -39,8 +39,8 @@ namespace dmz {
 
          Boolean contains (const Handle Value);
 
-         Boolean add_handle (const Handle Value);
-         Boolean remove_handle (const Handle Value);
+         Boolean add (const Handle Value);
+         Boolean remove (const Handle Value);
 
          Handle get_first () const;
          Handle get_next () const;

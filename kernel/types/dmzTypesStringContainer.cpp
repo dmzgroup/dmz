@@ -168,17 +168,19 @@ dmz::StringContainer::contains (const String &Value) const {
 /*!
 
 \brief Appends String to container.
-\param[in] Value String to be appended.
+\param[in] Value String to be added.
 \return Returns dmz::True if the \a String was added. Returns dmz::False if the
-\a String was not added or it is already in the container.
+\a String was not added.
 
 */
 dmz::Boolean
-dmz::StringContainer::append (const String &Value) {
+dmz::StringContainer::add (const String &Value) {
 
    Boolean result (False);
 
    result = _state.table.store (Value, (void *)this);
+
+   if (!result) { result = contains (Value); }
 
    return result;
 }

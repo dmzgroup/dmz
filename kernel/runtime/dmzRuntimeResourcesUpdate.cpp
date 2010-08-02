@@ -240,7 +240,7 @@ dmz::ResourcesUpdate::add_search_path (const String &Name, const String &Path) {
          if (_context->pathTable.store (Name, list)) { delete list; list = 0; }
       }
 
-      if (list) { list->append (Path); result = True; }
+      if (list) { list->add (Path); result = True; }
    }
 
    return result;

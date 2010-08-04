@@ -137,7 +137,7 @@ dmz::EntityPluginAutoAttach::create_object (
 
    if (_types.contains_type (Type)) {
 
-      _list.add_handle (ObjectHandle);
+      _list.add (ObjectHandle);
 
       if (!_attached) { _find_object (); }
    }
@@ -149,7 +149,7 @@ dmz::EntityPluginAutoAttach::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
-   _list.remove_handle (ObjectHandle);
+   _list.remove (ObjectHandle);
 
    if (ObjectHandle == _attached) { _attached = 0; _find_object (); }
 }

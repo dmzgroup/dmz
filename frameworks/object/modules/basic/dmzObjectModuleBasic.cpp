@@ -356,7 +356,7 @@ dmz::ObjectModuleBasic::get_object_handles (HandleContainer &container) {
 
    while (obj) {
 
-      if (obj->active) { container.add_handle (obj->handle); }
+      if (obj->active) { container.add (obj->handle); }
       obj = _objectTable.get_next (it);
    }
 
@@ -1214,7 +1214,7 @@ dmz::ObjectModuleBasic::lookup_attribute_object_links (
 
          while (obj->linkTable.get_next (it)) {
 
-            container.add_handle (it.get_hash_key ());
+            container.add (it.get_hash_key ());
          }
       }
    }
@@ -1245,7 +1245,7 @@ dmz::ObjectModuleBasic::lookup_super_links (
 
          while (ptr) {
 
-            container.add_handle (ptr->SuperHandle);
+            container.add (ptr->SuperHandle);
             ptr = table->get_next (it);
          }
       }
@@ -1277,7 +1277,7 @@ dmz::ObjectModuleBasic::lookup_sub_links (
 
          while (ptr) {
 
-            container.add_handle (ptr->SubHandle);
+            container.add (ptr->SubHandle);
             ptr = table->get_next (it);
          }
       }

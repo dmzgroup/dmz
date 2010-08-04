@@ -1,0 +1,6 @@
+lmk.set_name ("dmzTypesStringSubTest")
+lmk.set_type ("exe")
+lmk.add_files {"dmzTypesStringSubTest.cpp"}
+lmk.add_libs {"dmzTest", "dmzKernel",}
+lmk.add_preqs {"dmzTypesStringTest",}
+lmk.add_vars { test = {"$(localBinTarget)"} }

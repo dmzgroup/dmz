@@ -45,7 +45,7 @@ dmz::config_to_input_channels (
 
       Definitions defs (context);
 
-      result.add_handle (defs.create_named_handle (InputChannelDefaultName));
+      result.add (defs.create_named_handle (InputChannelDefaultName));
    }
 
    return result;
@@ -339,7 +339,7 @@ dmz::InputObserverUtil::get_channels (HandleContainer &channels) {
 
    while (__state.channelTable.get_next (it, cs)) {
 
-      channels.add_handle (cs->Channel);
+      channels.add (cs->Channel);
    }
 }
 

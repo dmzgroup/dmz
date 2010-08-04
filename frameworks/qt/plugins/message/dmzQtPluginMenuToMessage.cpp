@@ -174,12 +174,12 @@ dmz::QtPluginMenuToMessage::_get_targets (
          if (TargetName) {
 
             const Handle Target (_defs.create_named_handle (TargetName));
-            targets.add_handle (Target);
+            targets.add (Target);
          }
          else { _log.error << "Unable to add unnamed target" << endl; }
       }
    }
-   else if (_defaultTarget) { targets.add_handle (_defaultTarget); }
+   else if (_defaultTarget) { targets.add (_defaultTarget); }
 }
 
 

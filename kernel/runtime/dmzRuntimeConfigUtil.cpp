@@ -529,7 +529,7 @@ dmz::config_to_string_container (const String &Name, const Config &Source) {
 
    while (stringList.get_next_config (it, string)) {
 
-      result.append (config_to_string ("value", string));
+      result.add (config_to_string ("value", string));
    }
 
    return result;
@@ -1168,7 +1168,7 @@ dmz::config_to_handle_container (
 
    while (nameList.get_next_config (it, name)) {
 
-      result.add_handle (defs.create_named_handle (config_to_string ("name", name)));
+      result.add (defs.create_named_handle (config_to_string ("name", name)));
    }
 
    return result;

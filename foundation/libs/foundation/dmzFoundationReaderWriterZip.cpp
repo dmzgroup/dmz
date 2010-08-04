@@ -168,7 +168,7 @@ dmz::ReaderZip::get_file_list (StringContainer &container) const {
 
                   buffer[info.size_filename] = '\0';
 
-                  container.append (buffer);
+                  container.add (buffer);
                }
 
                delete []buffer; buffer = 0;

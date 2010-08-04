@@ -57,45 +57,33 @@ main (int argc, char *argv[]) {
       "Matrix created from Up vector and rotated half pi",
       (Left - v).is_zero ());
 
-   const Matrix RotXHalfPi (HalfPi64, 0.0, 0.0);
-   const Matrix RotYHalfPi (0.0, HalfPi64, 0.0);
-   const Matrix RotZHalfPi (0.0, 0.0, HalfPi64);
+   const Matrix RotHHalfPi (HalfPi64, 0.0, 0.0);
+   const Matrix RotPHalfPi (0.0, HalfPi64, 0.0);
+   const Matrix RotRHalfPi (0.0, 0.0, HalfPi64);
 
    v = Forward;
 
-   RotXHalfPi.transform_vector (v);
-
-   test.validate (
-      "Matrix created from pitch of half pi",
-      (Up - v).is_zero ());
-
-   v = Forward;
-
-   RotYHalfPi.transform_vector (v);
+   RotHHalfPi.transform_vector (v);
 
    test.validate (
       "Matrix created from heading of half pi",
       (Left - v).is_zero ());
 
+   v = Forward;
+
+   RotPHalfPi.transform_vector (v);
+
+   test.validate (
+      "Matrix created from pitch of half pi",
+      (Up - v).is_zero ());
+
    v = Right;
 
-   RotZHalfPi.transform_vector (v);
+   RotRHalfPi.transform_vector (v);
 
    test.validate (
       "Matrix created from roll of half pi",
-      (Up - v).is_zero ());
-
-   const Matrix RotXZHalfPi (HalfPi64, 0.0, HalfPi64);
-
-   v = Right;
-   Vector v2 = Right;
-
-   RotXZHalfPi.transform_vector (v);
-   (RotYHalfPi * (RotXHalfPi * RotZHalfPi)).transform_vector (v2);
-
-   test.validate (
-      "Matrix created from pitch of half pi and roll of half pi",
-      (Backward - v).is_zero ());
+      (Down - v).is_zero ());
 
    Matrix pitchInPlace, yawInPlace, rollInPlace;
    pitchInPlace.pitch_in_place (HalfPi64);

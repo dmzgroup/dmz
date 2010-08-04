@@ -70,5 +70,26 @@ main (int argc, char *argv[]) {
       "Convert $(foo) to 'new value' where foo == $(goo).",
       sub3.convert (s3) == "This is a new value.");
 
+   StringSub sub4;
+
+   sub4.store ("foo", "$(goo)");
+   sub4.store ("goo", "$(foo)");
+
+   String s4 ("$(foo)");
+
+   test.validate (
+      "Convert $(foo) with recursive value. Double recursion.",
+      sub4.convert (s4) == "");
+
+   StringSub sub5;
+
+   sub5.store ("foo", "$(foo)");
+
+   String s5 ("$(foo)");
+
+   test.validate (
+      "Convert $(foo) with recursive value. Single recursion.",
+      sub5.convert (s5) == "");
+
    return test.result ();
 }

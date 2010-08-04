@@ -1,3 +1,4 @@
+#include <dmzTypesStringContainer.h>
 #include <dmzTypesStringSub.h>
 #include <dmzTypesHashTableStringTemplate.h>
 
@@ -28,8 +29,11 @@ The '\' character is used to escape control strings such as "$(" and ")".
 
 struct dmz::StringSub::State {
 
+   Boolean firstCall;
+   StringContainer list;
    HashTableStringTemplate<String> table;
 
+   State () : firstCall (True) {;}
    ~State () { table.empty (); }
 };
 
@@ -123,6 +127,9 @@ the escape character '\', it will be stripped from the returned value.
 dmz::String
 dmz::StringSub::convert (const String &Value) const {
 
+   const Boolean FirstCall = _state.firstCall;
+   _state.firstCall = False;
+
    String result;
    String scratch;
 
@@ -185,7 +192,17 @@ dmz::StringSub::convert (const String &Value) const {
 
                scratch = convert (scratch);
                const String *Ptr = _state.table.lookup (scratch);
-               if (Ptr) { result += convert (*Ptr); }
+
+               if (Ptr) {
+
+                  if (!_state.list.contains (scratch)) {
+
+                     _state.list.add (scratch);
+                    
+                     result += convert (*Ptr);
+                  }
+               }
+
                scratch.flush ();
                mode = NormalMode;
             }
@@ -201,6 +218,12 @@ dmz::StringSub::convert (const String &Value) const {
 
       result += "$(";
       result += convert (scratch);
+   }
+
+   if (FirstCall) {
+
+      _state.list.clear ();
+      _state.firstCall = FirstCall;
    }
 
    return result;

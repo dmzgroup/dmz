@@ -8,7 +8,7 @@
 \ingroup Types
 \brief Converts Strings that contain variables.
 \details A variable is defined as $(\b Tag) where \b Tag corresponds to a \b Tag
-store in the class by dmz::SubString::Store.
+stored in the class by dmz::StringSub::store().
 \code
 StringSub sub;
 sub.store ("foo", "new value");
@@ -47,10 +47,10 @@ dmz::StringSub::~StringSub () { delete &_state; }
 
 /*!
 
-\brief Stores a variables value.
+\brief Stores a variable's value.
 \details If the variable is already defined, it will be overwritten.
-\param[in] Tag String containing the variables name.
-\param[in] Value String containing the variables value.
+\param[in] Tag String containing the variable's name.
+\param[in] Value String containing the variable's value.
 
 */
 void
@@ -69,9 +69,9 @@ dmz::StringSub::store (const String &Tag, const String &Value) {
 
 /*!
 
-\brief Looks up a variables value.
-\param[in] Tag String containing the variables name.
-\return Returns a String containing the variables value.
+\brief Looks up a variable's value.
+\param[in] Tag String containing the variable's name.
+\return Returns a String containing the variable's value.
 
 */
 dmz::String

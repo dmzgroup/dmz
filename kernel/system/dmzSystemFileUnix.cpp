@@ -49,7 +49,7 @@ dmz::get_file_list (
 
             if (current->d_type != DT_DIR) {
 
-               container.append (current->d_name);
+               container.add (current->d_name);
             }
 
             current = readdir (dir);
@@ -109,7 +109,7 @@ dmz::get_directory_list (
                   }
                }
 
-               if (store) { container.append (current->d_name); }
+               if (store) { container.add (current->d_name); }
             }
 
             current = readdir (dir);

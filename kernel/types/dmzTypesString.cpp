@@ -40,6 +40,26 @@ in the buffer to determine size and length.
 
 */
 
+/*!
+
+\enum dmz::NumberBaseEnum
+\ingroup Types
+\brief Specifies the base to use when converting a number to a String.
+
+*/
+
+#ifdef _WIN32
+#   if _MSC_VER >= 1400
+#      define sprintf_n sprintf_s
+#   else
+#      define sprintf_n _snprintf
+#   endif
+static const char rawInt64Format[] = "%I64";
+#else // Unix
+#   define sprintf_n snprintf
+static const char rawInt64Format[] = "%ll";
+#endif
+
 //! Converts Int8 to String.
 dmz::String
 dmz::String::number (const char Value) {
@@ -49,27 +69,9 @@ dmz::String::number (const char Value) {
 }
 
 
-//! Converts UInt8 to String.
-dmz::String
-dmz::String::number (const unsigned char Value) {
-
-   String result;
-   return result << (UInt32)Value;
-}
-
-
 //! Converts Int16 to String.
 dmz::String
 dmz::String::number (const short Value) {
-
-   String result;
-   return result << Value;
-}
-
-
-//! Converts UInt16 to String.
-dmz::String
-dmz::String::number (const unsigned short Value) {
 
    String result;
    return result << Value;
@@ -85,6 +87,72 @@ dmz::String::number (const int Value) {
 }
 
 
+//! Converts Int32 to String.
+dmz::String
+dmz::String::number (const long Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+//! Converts Int64 to String.
+dmz::String
+dmz::String::number (const Int64 Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+//! Converts UInt8 to String.
+dmz::String
+dmz::String::number (const unsigned char Value) {
+
+   String result;
+   return result << (UInt32)Value;
+}
+
+
+/*!
+
+\brief Converts UInt8 to String.
+\param[in] Value Number to convert.
+\param[in] Base Type to use when converting to string.
+\return Returns a String containing the converted value.
+
+*/
+dmz::String
+dmz::String::number (const unsigned char Value, const NumberBaseEnum Base) {
+
+   return number (UInt64 (Value), Base);
+}
+
+
+//! Converts UInt16 to String.
+dmz::String
+dmz::String::number (const unsigned short Value) {
+
+   String result;
+   return result << Value;
+}
+
+
+/*!
+
+\brief Converts UInt16 to String.
+\param[in] Value Number to convert.
+\param[in] Base Type to use when converting to string.
+\return Returns a String containing the converted value.
+
+*/
+dmz::String
+dmz::String::number (const unsigned short Value, const NumberBaseEnum Base) {
+
+   return number (UInt64 (Value), Base);
+}
+
+
 //! Converts unsigned int to String.
 dmz::String
 dmz::String::number (const unsigned int Value) {
@@ -94,16 +162,22 @@ dmz::String::number (const unsigned int Value) {
 }
 
 
-//! Converts Int32 int to String.
-dmz::String
-dmz::String::number (const long Value) {
+/*!
 
-   String result;
-   return result << Value;
+\brief Converts unsigned int to String.
+\param[in] Value Number to convert.
+\param[in] Base Type to use when converting to string.
+\return Returns a String containing the converted value.
+
+*/
+dmz::String
+dmz::String::number (const unsigned int Value, const NumberBaseEnum Base) {
+
+   return number (UInt64 (Value), Base);
 }
 
 
-//! Converts UInt32 int to String.
+//! Converts UInt32 to String.
 dmz::String
 dmz::String::number (const unsigned long Value) {
 
@@ -112,16 +186,22 @@ dmz::String::number (const unsigned long Value) {
 }
 
 
-//! Converts Int64 int to String.
-dmz::String
-dmz::String::number (const Int64 Value) {
+/*!
 
-   String result;
-   return result << Value;
+\brief Converts UInt32 to String.
+\param[in] Value Number to convert.
+\param[in] Base Type to use when converting to string.
+\return Returns a String containing the converted value.
+
+*/
+dmz::String
+dmz::String::number (const unsigned long Value, const NumberBaseEnum Base) {
+
+   return number (UInt64 (Value), Base);
 }
 
 
-//! Converts UInt64 int to String.
+//! Converts UInt64 to String.
 dmz::String
 dmz::String::number (const UInt64 Value) {
 
@@ -130,7 +210,32 @@ dmz::String::number (const UInt64 Value) {
 }
 
 
-//! Converts Float32 int to String.
+/*!
+
+\brief Converts UInt64 to String.
+\param[in] Value Number to convert.
+\param[in] Base Type to use when converting to string.
+\return Returns a String containing the converted value.
+
+*/
+dmz::String
+dmz::String::number (const UInt64 Value, const NumberBaseEnum Base) {
+
+   String mode (rawInt64Format);
+   if (Base == Decimal) { mode << "u"; }
+   else if (Base == Hexadecimal) { mode << "x"; }
+   else if (Base == Octal) { mode << "o"; }
+   else { mode << "u"; }
+
+   char buf[sizeof (Value) * 4];
+   const dmz::Int32 Len = sprintf_n (buf, sizeof (buf), mode.get_buffer (), Value);
+   dmz::String result (buf, Len);
+
+   return result;
+}
+
+
+//! Converts Float32 to String.
 dmz::String
 dmz::String::number (const Float32 Value) {
 
@@ -139,12 +244,80 @@ dmz::String::number (const Float32 Value) {
 }
 
 
-//! Converts Float64 int to String.
+/*!
+
+\brief Converts Float32 to String.
+\param[in] Value Number to convert.
+\param[in] Precision Number of digits after the decimal point.
+\return Returns the number converted to a string.
+
+*/
+dmz::String
+dmz::String::number (const Float32 Value, const Int32 Precision) {
+
+   return number (Value, Precision, 'f');
+}
+
+
+/*!
+
+\brief Converts Float32 to String.
+\param[in] Value Number to convert.
+\param[in] Precision Number of digits after the decimal point.
+\param[in] Mode char specifying the conversion mode. Value may be one of e E, f, F, g, and G.
+\return Returns the number converted to a string.
+
+*/
+dmz::String
+dmz::String::number (const Float32 Value, const Int32 Precision, const char Mode) {
+
+   return number (Float64 (Value), Precision, Mode);
+}
+
+
+//! Converts Float64 to String.
 dmz::String
 dmz::String::number (const Float64 Value) {
 
    String result;
    return result << Value;
+}
+
+
+/*!
+
+\brief Converts Float64 to String.
+\param[in] Value Number to convert.
+\param[in] Precision Number of digits after the decimal point.
+\return Returns the number converted to a string.
+
+*/
+dmz::String
+dmz::String::number (const Float64 Value, const Int32 Precision) {
+
+   return number (Value, Precision, 'f');
+}
+
+
+/*!
+
+\brief Converts Float64 to String.
+\param[in] Value Number to convert.
+\param[in] Precision Number of digits after the decimal point.
+\param[in] Mode char specifying the conversion mode. Value may be one of e E, f, F, g, and G.
+\return Returns the number converted to a string.
+
+*/
+dmz::String
+dmz::String::number (const Float64 Value, const Int32 Precision, const char Mode) {
+
+   String format;
+   format << "%." << Precision += Mode;
+   char buf[128];
+   const dmz::Int32 Len = sprintf_n (buf, sizeof (buf), format.get_buffer (), Value);
+   dmz::String result (buf, Len);
+
+   return result;
 }
 
 
@@ -326,6 +499,23 @@ dmz::String::operator+ (const String &Buffer) const {
 */
 dmz::String &
 dmz::String::operator+= (const String &Buffer) {
+
+   return append (Buffer);
+}
+
+
+/*!
+
+\brief Assignment by sum operator
+\details Appends content of \a Value.
+\param[in] Value Right hand value.
+\return Returns reference to self.
+
+*/
+dmz::String &
+dmz::String::operator+= (const char Value) {
+
+   const char Buffer[] = { Value, '\0' };
 
    return append (Buffer);
 }
@@ -1033,17 +1223,6 @@ operator<< (dmz::String &str, const char *value) {
    str.append (tmp);
    return str;
 }
-
-
-#ifdef _WIN32
-#   if _MSC_VER >= 1400
-#      define sprintf_n sprintf_s
-#   else
-#      define sprintf_n _snprintf
-#   endif
-#else // Unix
-#   define sprintf_n snprintf
-#endif
 
 
 dmz::String &

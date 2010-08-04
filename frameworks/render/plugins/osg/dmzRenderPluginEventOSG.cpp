@@ -274,14 +274,14 @@ dmz::RenderPluginEventOSG::_create_type (
 
                   _log.error << "Failed to load image resource: " << ImageRc
                      << " -> " << ImageName << endl;
-                  _ignore.add_handle (Object.get_handle ());
+                  _ignore.add (Object.get_handle ());
                }
             }
          }
          else {
 
             _log.error << "Failed to find image resource: " << ImageRc << endl;
-            _ignore.add_handle (Object.get_handle ());
+            _ignore.add (Object.get_handle ());
          }
       }
    }

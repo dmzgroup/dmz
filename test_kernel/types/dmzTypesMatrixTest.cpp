@@ -66,16 +66,16 @@ main (int argc, char *argv[]) {
    RotXHalfPi.transform_vector (v);
 
    test.validate (
-      "Matrix created from pitch of half pi",
-      (Up - v).is_zero ());
+      "Matrix created from heading of half pi",
+      (Left - v).is_zero ());
 
    v = Forward;
 
    RotYHalfPi.transform_vector (v);
 
    test.validate (
-      "Matrix created from heading of half pi",
-      (Left - v).is_zero ());
+      "Matrix created from pitch of half pi",
+      (Up - v).is_zero ());
 
    v = Right;
 
@@ -83,19 +83,17 @@ main (int argc, char *argv[]) {
 
    test.validate (
       "Matrix created from roll of half pi",
-      (Up - v).is_zero ());
+      (Down - v).is_zero ());
 
    const Matrix RotXZHalfPi (HalfPi64, 0.0, HalfPi64);
 
    v = Right;
-   Vector v2 = Right;
 
    RotXZHalfPi.transform_vector (v);
-   (RotYHalfPi * (RotXHalfPi * RotZHalfPi)).transform_vector (v2);
 
    test.validate (
       "Matrix created from pitch of half pi and roll of half pi",
-      (Backward - v).is_zero ());
+      (Down - v).is_zero ());
 
    Matrix pitchInPlace, yawInPlace, rollInPlace;
    pitchInPlace.pitch_in_place (HalfPi64);

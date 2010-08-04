@@ -29,7 +29,7 @@ dmz::get_file_list (
 
             if (!(data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
 
-               container.append (data.cFileName);
+               container.add (data.cFileName);
             }
          } while (FindNextFile (handle, &data));
 
@@ -74,7 +74,7 @@ dmz::get_directory_list (
                   }
                }
 
-               if (store) { container.append (data.cFileName); }
+               if (store) { container.add (data.cFileName); }
             }
          } while (FindNextFile (handle, &data));
       }

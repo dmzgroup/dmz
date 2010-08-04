@@ -83,6 +83,7 @@ lmk.add_files {
    "types/dmzTypesSphere.h",
    "types/dmzTypesString.h",
    "types/dmzTypesStringContainer.h",
+   "types/dmzTypesStringSub.h",
    "types/dmzTypesStringTokenizer.h",
    "types/dmzTypesStringUtil.h",
    "types/dmzTypesMath.h",
@@ -148,6 +149,7 @@ lmk.add_files {
    "types/dmzTypesSphere.cpp",
    "types/dmzTypesString.cpp",
    "types/dmzTypesStringContainer.cpp",
+   "types/dmzTypesStringSub.cpp",
    "types/dmzTypesStringUtil.cpp",
 }
 

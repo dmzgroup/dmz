@@ -510,7 +510,7 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
 
                   if (path.get_name () == "path") {
 
-                     pc->append (config_to_string ("value", path));
+                     pc->add (config_to_string ("value", path));
                   }
                }
             }
@@ -1511,7 +1511,7 @@ dmz::Definitions::get_state_names (StringContainer &list) const {
 
       while (_state.defs->maskTable.get_next (it, ptr)) {
 
-         list.append (it.get_hash_key ());
+         list.add (it.get_hash_key ());
       }
    }
 }

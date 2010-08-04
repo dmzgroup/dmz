@@ -515,7 +515,7 @@ dmz::InputPluginMouseEventToMessage::_get_targets (
          if (TargetName) {
 
             const Handle Target (_defs.create_named_handle (TargetName));
-            targets.add_handle (Target);
+            targets.add (Target);
          }
          else { _log.error << "Unable to add unnamed target" << endl; }
       }
@@ -699,7 +699,7 @@ dmz::InputPluginMouseEventToMessage::_init (Config &local) {
 
          if (SourceName) {
 
-            _sourceTable.add_handle (_defs.create_named_handle (SourceName));
+            _sourceTable.add (_defs.create_named_handle (SourceName));
          }
       }
    }

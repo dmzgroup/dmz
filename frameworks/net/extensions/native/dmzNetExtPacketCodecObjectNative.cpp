@@ -385,7 +385,7 @@ SubLink::decode (
 
             objMod.link_objects (_AttributeHandle, ObjectHandle, SubHandle);
          }
-         else { handles.remove_handle (SubHandle); }
+         else { handles.remove (SubHandle); }
       }
    }
 
@@ -472,7 +472,7 @@ SuperLink::decode (
 
             objMod.link_objects (_AttributeHandle, SuperHandle, ObjectHandle);
          }
-         else { handles.remove_handle (SuperHandle); }
+         else { handles.remove (SuperHandle); }
       }
    }
 

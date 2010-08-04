@@ -208,7 +208,7 @@ dmz::to_dmz_string_container (const QStringList &Source, StringContainer &target
 
    foreach (QString data, Source) {
 
-      target.append (qPrintable (data));
+      target.add (qPrintable (data));
    }
 }
 

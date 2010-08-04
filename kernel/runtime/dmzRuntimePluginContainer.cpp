@@ -196,7 +196,7 @@ struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
    
       while (pluginTable.get_next (it, ps)) {
 
-         container.add_handle (it.get_hash_key ());
+         container.add (it.get_hash_key ());
       }
    }
 

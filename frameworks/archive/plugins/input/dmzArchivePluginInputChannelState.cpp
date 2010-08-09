@@ -139,7 +139,7 @@ dmz::ArchivePluginInputChannelState::process_archive (
 
          while (list.get_next_config (it, channel)) {
 
-            activeChannels.add_handle (defs.lookup_named_handle (
+            activeChannels.add (defs.lookup_named_handle (
                config_to_string ("name", channel)));
          }
       }
@@ -151,7 +151,7 @@ dmz::ArchivePluginInputChannelState::process_archive (
          */
          Handle channel (defs.lookup_named_handle (config_to_string ("channel", local)));
 
-         if (channel) { activeChannels.add_handle (channel); found = True; }
+         if (channel) { activeChannels.add (channel); found = True; }
       }
 
       if (activeChannels.get_count () == 0) {
@@ -199,7 +199,7 @@ dmz::ArchivePluginInputChannelState::_init (Config &local) {
 
       while (list.get_next_config (it, channel)) {
 
-         _channels.add_handle (
+         _channels.add (
             defs.create_named_handle (config_to_string ("name", channel)));
       }
    }

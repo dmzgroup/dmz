@@ -93,7 +93,7 @@ dmz::ObjectPluginCleanup::create_object (
 
    if (!_ignoreSet.contains_type (Type) && _cleanupSet.contains_type (Type)) {
 
-      _cleanupTable.add_handle (ObjectHandle);
+      _cleanupTable.add (ObjectHandle);
    }
 }
 
@@ -103,7 +103,7 @@ dmz::ObjectPluginCleanup::destroy_object (
       const UUID &Identity,
       const Handle ObjectHandle) {
 
-   _cleanupTable.remove_handle (ObjectHandle);
+   _cleanupTable.remove (ObjectHandle);
 }
 
 

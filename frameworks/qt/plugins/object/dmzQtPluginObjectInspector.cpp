@@ -205,7 +205,7 @@ dmz::QtPluginObjectInspector::create_object (
          _state.ui.objectTreeWidget->setCurrentItem (item);
       }
       
-      _state.objects.add_handle (ObjectHandle);
+      _state.objects.add (ObjectHandle);
    }
    else {
 
@@ -240,6 +240,8 @@ dmz::QtPluginObjectInspector::destroy_object (
             break;
          }
       }
+
+      _state.objects.remove (ObjectHandle);
    }
 }
 

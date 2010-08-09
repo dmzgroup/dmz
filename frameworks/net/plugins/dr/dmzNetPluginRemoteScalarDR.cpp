@@ -130,7 +130,7 @@ dmz::NetPluginRemoteScalarDR::destroy_object (
    ObjectStruct *os = _objTable.remove (ObjectHandle);
 
    if (os) { delete os; os = 0; }
-   else { _ignoreObjects.remove_handle (ObjectHandle); }
+   else { _ignoreObjects.remove (ObjectHandle); }
 }
 
 
@@ -150,7 +150,7 @@ dmz::NetPluginRemoteScalarDR::update_object_scalar (
 
          if (objMod->lookup_locality (ObjectHandle) != ObjectRemote) {
 
-            _ignoreObjects.add_handle (ObjectHandle);
+            _ignoreObjects.add (ObjectHandle);
          }
          else {
 

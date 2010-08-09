@@ -224,7 +224,7 @@ dmz::NetModulePacketCodecBasic::register_object (
 
    if (ObjectHandle && eos && _objTable.store (ObjectHandle, eos)) {
 
-      eos->objects.add_handle (ObjectHandle);
+      eos->objects.add (ObjectHandle);
       result = _write_object (ObjectHandle, NetObjectActivate, outData);
    }
 
@@ -250,7 +250,7 @@ dmz::NetModulePacketCodecBasic::release_object (
 
    EncodeObjectStruct *eos = _objTable.remove (ObjectHandle);
 
-   if (eos) { eos->objects.remove_handle (ObjectHandle); }
+   if (eos) { eos->objects.remove (ObjectHandle); }
 
    return eos != 0;
 }

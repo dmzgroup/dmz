@@ -110,6 +110,11 @@ main (int argc, char *argv[]) {
       "Empty - String empty and null.",
       !str13 && str13.is_null ());
 
+   String str14;
+   str14 += 'A';
+   str14 += 'B';
+   test.validate ("Append char 'A' and 'B'", str14 == "AB");
+
    String strAppend1 ("12345");
    String strAppend2 ("67890");
    String strResultAppend1 = strAppend1 + strAppend2;
@@ -302,7 +307,6 @@ main (int argc, char *argv[]) {
    test.validate (
       "find_sub returns True when sub string is the same",
       strFindSub3.find_sub (strFindSub4, index));
-
 
    return test.result ();
 }

@@ -43,7 +43,7 @@ namespace dmz {
 
          Boolean contains (const String &Value) const;
 
-         Boolean append (const String &Value);
+         Boolean add (const String &Value);
          Boolean remove (const String &Value);
 
          Boolean get_first (String &value) const;

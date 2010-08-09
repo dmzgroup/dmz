@@ -14,21 +14,45 @@ namespace dmz {
    class UUID;
    class Vector;
 
+   enum NumberBaseEnum {
+      Octal,       //!< Base 8
+      Decimal,     //!< Base 10
+      Hexadecimal  //!< Base 16
+   };
+
    class DMZ_KERNEL_LINK_SYMBOL String {
 
       public:
          static String number (const char Value);
-         static String number (const unsigned char Value);
          static String number (const short Value);
-         static String number (const unsigned short Value);
          static String number (const int Value);
-         static String number (const unsigned int Value);
          static String number (const long Value);
-         static String number (const unsigned long Value);
          static String number (const Int64 Value);
+         static String number (const unsigned char Value);
+         static String number (const unsigned char Value, const NumberBaseEnum Base);
+         static String number (const unsigned short Value);
+         static String number (const unsigned short Value, const NumberBaseEnum Base);
+         static String number (const unsigned int Value);
+         static String number (const unsigned int Value, const NumberBaseEnum Base);
+         static String number (const unsigned long Value);
+         static String number (const unsigned long Value, const NumberBaseEnum Base);
          static String number (const UInt64 Value);
+         static String number (const UInt64 Value, const NumberBaseEnum Base);
          static String number (const Float32 Value);
+         static String number (const Float32 Value, const Int32 Precision);
+
+         static String number (
+            const Float32 Value,
+            const Int32 Precision,
+            const char Mode);
+
          static String number (const Float64 Value);
+         static String number (const Float64 Value, const Int32 Precision);
+
+         static String number (
+            const Float64 Value,
+            const Int32 Precision,
+            const char Mode);
 
          String ();
          String (const String &Str);
@@ -43,6 +67,7 @@ namespace dmz {
 
          String operator+ (const String &Buffer) const;
          String &operator+= (const String &Buffer);
+         String &operator+= (const char Value);
          Boolean operator! () const;
          DMZ_BOOLEAN_OPERATOR;
 

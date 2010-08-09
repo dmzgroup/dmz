@@ -109,15 +109,17 @@ dmz::HandleContainer::contains (const Handle Value) {
 \brief Adds Handle to container.
 \param[in] Value Handle to be added.
 \return Returns dmz::True if the \a Handle was added. Returns dmz::False if the
-\a Handle was not added or it is already in the container.
+\a Handle was not added.
 
 */
 dmz::Boolean
-dmz::HandleContainer::add_handle (const Handle Value) {
+dmz::HandleContainer::add (const Handle Value) {
 
    Boolean result (False);
 
    result = _state.table.store (Value, (void *)this);
+
+   if (!result) { result = contains (Value); }
 
    return result;
 }
@@ -131,7 +133,7 @@ dmz::HandleContainer::add_handle (const Handle Value) {
 
 */
 dmz::Boolean
-dmz::HandleContainer::remove_handle (const Handle Value) {
+dmz::HandleContainer::remove (const Handle Value) {
 
    return (_state.table.remove (Value) != 0);
 }

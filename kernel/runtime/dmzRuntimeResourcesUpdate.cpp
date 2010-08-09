@@ -242,7 +242,7 @@ dmz::ResourcesUpdate::add_search_path (const String &Name, const String &Path) {
 
       if (list) {
 
-         list->append (Path);
+         list->add (Path);
          result = True;
 
          HashTableHandleIterator it;

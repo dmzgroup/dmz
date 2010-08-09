@@ -798,7 +798,7 @@ dmz::DataConverterStringContainer::to_string_container (const Data &Value) {
 
       String str;
       Value.lookup_string (_state.handle, ix, str);
-      result.append (str);
+      result.add (str);
    }
 
    return result;

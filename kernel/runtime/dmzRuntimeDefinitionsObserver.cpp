@@ -12,14 +12,19 @@
 \brief Observers runtime definitions.
 \sa dmz::Definitions
 
+\enum dmz::DefinitionsActivateModeEnum
+\ingroup Runtime
+\brief Definitions callback activate mode.
+
+
 */
 
 struct dmz::DefinitionsObserver::State {
 
+   RuntimeHandle *handlePtr;
    const Handle ObsHandle;
    const String Name;
    Log log;
-   RuntimeHandle *handlePtr;
    UInt32 mask;
    UInt32 warnMask;
 
@@ -27,10 +32,13 @@ struct dmz::DefinitionsObserver::State {
    RuntimeContextDefinitions *defs;
 
    State (const Handle &TheHandle, const String &TheName, RuntimeContext *theContext) :
-         ObsHandle (TheHandle),
+         handlePtr (
+            TheHandle == 0 ?
+               new RuntimeHandle (TheName + ".ResourcesObserver", context) :
+               0),
+         ObsHandle (handlePtr ? handlePtr->get_runtime_handle () : TheHandle),
          Name (TheName),
          log (TheName + ".DefinitionsObserver", theContext),
-         handlePtr (0),
          mask (0),
          warnMask (0),
          context (theContext),
@@ -43,11 +51,6 @@ struct dmz::DefinitionsObserver::State {
          defs = context->get_definitions_context ();
 
          if (defs) { defs->ref (); }
-
-         if (!ObsHandle) {
-
-            handlePtr = new RuntimeHandle (TheName + ".DefinitionsObserver", context);
-         }
       }
    }
 
@@ -77,32 +80,14 @@ dmz::DefinitionsObserver::DefinitionsObserver (const PluginInfo &Info) :
 //! Destructor.
 dmz::DefinitionsObserver::~DefinitionsObserver () {
 
-   set_definitions_observer_callback_mask (0);
+   set_definitions_observer_callback_mask (DefinitionsDumpNone, 0);
    delete &__state;
-}
-
-
-//! Gets observer's handle.
-dmz::Handle
-dmz::DefinitionsObserver::get_definitions_observer_handle () const {
-
-   return __state.handlePtr ?
-      __state.handlePtr->get_runtime_handle () :
-      __state.ObsHandle;
-}
-
-
-//! Gets observer's name.
-dmz::String
-dmz::DefinitionsObserver::get_definitions_observer_name () const {
-
-   return __state.Name;
 }
 
 
 //! Returns a mask of active callbacks.
 dmz::UInt32
-dmz::DefinitionsObserver::get_definitions_observer_callback_mask () {
+dmz::DefinitionsObserver::get_definitions_observer_callback_mask () const {
 
    return __state.mask;
 }
@@ -114,134 +99,155 @@ dmz::DefinitionsObserver::get_definitions_observer_callback_mask () {
 \details The callback activation mask should be composed of the following masks:
 dmz::RuntimeNamedHandleMask, dmz::RuntimeStateMask, dmz::RuntimeObjectTypeMask, and/or
 dmz::RuntimeEventTypeMask.
+\param[in] Mode Specifies if all current definitions should be dumped to observer upon
+activation.
 \param[in] TheMask A mask specifying which callbacks to activate.
 \return Returns a mask of all callbacks that were activated.
 
 */
 dmz::UInt32
-dmz::DefinitionsObserver::set_definitions_observer_callback_mask (const UInt32 TheMask) {
+dmz::DefinitionsObserver::set_definitions_observer_callback_mask (
+      const DefinitionsActivateModeEnum Mode,
+      const UInt32 TheMask) {
 
    if (__state.context && __state.context->is_main_thread () && __state.defs) {
 
-      const Handle ObsHandle = get_definitions_observer_handle ();
+      const Boolean Dump = (Mode == DefinitionsDumpAll);
 
-      if (RuntimeNamedHandleMask & TheMask) { 
+      const Handle ObsHandle = __state.ObsHandle;
 
-         if ((RuntimeNamedHandleMask & __state.mask) == 0) {
+      if (DefinitionsNamedHandleMask & TheMask) { 
+
+         if ((DefinitionsNamedHandleMask & __state.mask) == 0) {
 
             if (__state.defs->handleObsTable.store (ObsHandle, this)) {
 
-               __state.mask |= RuntimeNamedHandleMask;
+               __state.mask |= DefinitionsNamedHandleMask;
 
-               HashTableHandleIterator it;
-               String *ptr (0);
+               if (Dump) {
 
-               while (__state.defs->namedHandleNameTable.get_next (it, ptr)) {
+                  HashTableHandleIterator it;
+                  String *ptr (0);
 
-                  define_named_handle (it.get_hash_key (), *ptr);
+                  while (__state.defs->namedHandleNameTable.get_next (it, ptr)) {
+
+                     define_named_handle (it.get_hash_key (), *ptr);
+                  }
                }
             }
          }
       }
-      else if (RuntimeNamedHandleMask & __state.mask) {
+      else if (DefinitionsNamedHandleMask & __state.mask) {
 
-         __state.mask &= ~RuntimeNamedHandleMask;
+         __state.mask &= ~DefinitionsNamedHandleMask;
          __state.defs->handleObsTable.remove (ObsHandle);
       }
 
-      if (RuntimeStateMask & TheMask) {
+      if (DefinitionsStateMask & TheMask) {
 
-         if ((RuntimeStateMask & __state.mask) == 0) {
+         if ((DefinitionsStateMask & __state.mask) == 0) {
 
             if (__state.defs->maskObsTable.store (ObsHandle, this)) {
 
-               __state.mask |= RuntimeStateMask;
+               __state.mask |= DefinitionsStateMask;
 
-               HashTableStringIterator it;
-               Mask *ptr (0);
+               if (Dump) {
 
-               while (__state.defs->maskTable.get_next (it, ptr)) {
+                  HashTableStringIterator it;
+                  Mask *ptr (0);
 
-                  define_state (*ptr, it.get_hash_key ());
+                  while (__state.defs->maskTable.get_next (it, ptr)) {
+
+                     define_state (*ptr, it.get_hash_key ());
+                  }
                }
             }
          }
       }
-      else if (RuntimeStateMask & __state.mask) {
+      else if (DefinitionsStateMask & __state.mask) {
 
-         __state.mask &= ~RuntimeStateMask;
+         __state.mask &= ~DefinitionsStateMask;
          __state.defs->maskObsTable.remove (ObsHandle);
       }
 
-      if (RuntimeObjectTypeMask & TheMask) {
+      if (DefinitionsObjectTypeMask & TheMask) {
 
-         if ((RuntimeObjectTypeMask & __state.mask) == 0) {
+         if ((DefinitionsObjectTypeMask & __state.mask) == 0) {
 
             if (__state.defs->objectObsTable.store (ObsHandle, this)) {
 
-               __state.mask |= RuntimeObjectTypeMask;
+               __state.mask |= DefinitionsObjectTypeMask;
 
-               HashTableHandleIterator it;
-               ObjectType *ptr (0);
+               if (Dump) {
 
-               while (__state.defs->objectHandleTable.get_next (it, ptr)) {
+                  HashTableHandleIterator it;
+                  ObjectType *ptr (0);
 
-                  define_object_type (*ptr);
+                  while (__state.defs->objectHandleTable.get_next (it, ptr)) {
+
+                     define_object_type (*ptr);
+                  }
                }
             }
          }
       }
-      else if (RuntimeObjectTypeMask & __state.mask) {
+      else if (DefinitionsObjectTypeMask & __state.mask) {
 
-         __state.mask &= ~RuntimeObjectTypeMask;
+         __state.mask &= ~DefinitionsObjectTypeMask;
          __state.defs->objectObsTable.remove (ObsHandle);
       }
 
-      if (RuntimeEventTypeMask & TheMask) {
+      if (DefinitionsEventTypeMask & TheMask) {
 
-         if ((RuntimeEventTypeMask & __state.mask) == 0) {
+         if ((DefinitionsEventTypeMask & __state.mask) == 0) {
 
             if (__state.defs->eventObsTable.store (ObsHandle, this)) {
 
-               __state.mask |= RuntimeEventTypeMask;
+               __state.mask |= DefinitionsEventTypeMask;
 
-               HashTableHandleIterator it;
-               EventType *ptr (0);
+               if (Dump) {
 
-               while (__state.defs->eventHandleTable.get_next (it, ptr)) {
+                  HashTableHandleIterator it;
+                  EventType *ptr (0);
 
-                  define_event_type (*ptr);
+                  while (__state.defs->eventHandleTable.get_next (it, ptr)) {
+
+                     define_event_type (*ptr);
+                  }
                }
             }
          }
       }
-      else if (RuntimeEventTypeMask & __state.mask) {
+      else if (DefinitionsEventTypeMask & __state.mask) {
 
-         __state.mask &= ~RuntimeEventTypeMask;
+         __state.mask &= ~DefinitionsEventTypeMask;
          __state.defs->eventObsTable.remove (ObsHandle);
       }
 
-      if (RuntimeMessageMask & TheMask) {
+      if (DefinitionsMessageMask & TheMask) {
 
-         if ((RuntimeMessageMask & __state.mask) == 0) {
+         if ((DefinitionsMessageMask & __state.mask) == 0) {
 
             if (__state.defs->messageObsTable.store (ObsHandle, this)) {
 
-               __state.mask |= RuntimeMessageMask;
+               __state.mask |= DefinitionsMessageMask;
 
-               HashTableHandleIterator it;
-               Message *ptr (0);
+               if (Dump) {
 
-               while (__state.defs->messageHandleTable.get_next (it, ptr)) {
+                  HashTableHandleIterator it;
+                  Message *ptr (0);
 
-                  define_message (*ptr);
+                  while (__state.defs->messageHandleTable.get_next (it, ptr)) {
+
+                     define_message (*ptr);
+                  }
                }
             }
          }
       }
-      else if (RuntimeMessageMask & __state.mask) {
+      else if (DefinitionsMessageMask & __state.mask) {
 
-         __state.mask &= ~RuntimeMessageMask;
+         __state.mask &= ~DefinitionsMessageMask;
          __state.defs->messageObsTable.remove (ObsHandle);
       }
    }
@@ -261,9 +267,9 @@ dmz::DefinitionsObserver::set_definitions_observer_callback_mask (const UInt32 T
 void
 dmz::DefinitionsObserver::define_named_handle (const Handle, const String &) {
 
-   if ((RuntimeNamedHandleMask & __state.warnMask) == 0) {
+   if ((DefinitionsNamedHandleMask & __state.warnMask) == 0) {
 
-      __state.warnMask |= RuntimeNamedHandleMask;
+      __state.warnMask |= DefinitionsNamedHandleMask;
       __state.log.warn << "Base define_named_handle called."
          << " Function should have been overridden?" << endl;
    }
@@ -281,9 +287,9 @@ dmz::DefinitionsObserver::define_named_handle (const Handle, const String &) {
 void
 dmz::DefinitionsObserver::define_state (const Mask &, const String &) {
 
-   if ((RuntimeStateMask & __state.warnMask) == 0) {
+   if ((DefinitionsStateMask & __state.warnMask) == 0) {
 
-      __state.warnMask |= RuntimeStateMask;
+      __state.warnMask |= DefinitionsStateMask;
       __state.log.warn << "Base define_state called."
          << " Function should have been overridden?" << endl;
    }
@@ -300,9 +306,9 @@ dmz::DefinitionsObserver::define_state (const Mask &, const String &) {
 void
 dmz::DefinitionsObserver::define_object_type (const ObjectType &) {
 
-   if ((RuntimeObjectTypeMask & __state.warnMask) == 0) {
+   if ((DefinitionsObjectTypeMask & __state.warnMask) == 0) {
 
-      __state.warnMask |= RuntimeObjectTypeMask;
+      __state.warnMask |= DefinitionsObjectTypeMask;
       __state.log.warn << "Base define_object_type called."
          << " Function should have been overridden?" << endl;
    }
@@ -319,9 +325,9 @@ dmz::DefinitionsObserver::define_object_type (const ObjectType &) {
 void
 dmz::DefinitionsObserver::define_event_type (const EventType &) {
 
-   if ((RuntimeEventTypeMask & __state.warnMask) == 0) {
+   if ((DefinitionsEventTypeMask & __state.warnMask) == 0) {
 
-      __state.warnMask |= RuntimeEventTypeMask;
+      __state.warnMask |= DefinitionsEventTypeMask;
       __state.log.warn << "Base define_event_type called."
          << " Function should have been overridden?" << endl;
    }
@@ -338,9 +344,9 @@ dmz::DefinitionsObserver::define_event_type (const EventType &) {
 void
 dmz::DefinitionsObserver::define_message (const Message &) {
 
-   if ((RuntimeMessageMask & __state.warnMask) == 0) {
+   if ((DefinitionsMessageMask & __state.warnMask) == 0) {
 
-      __state.warnMask |= RuntimeMessageMask;
+      __state.warnMask |= DefinitionsMessageMask;
       __state.log.warn << "Base define_message called."
          << " Function should have been overridden?" << endl;
    }

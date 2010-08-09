@@ -18,8 +18,9 @@ namespace dmz {
       public:
          RuntimeContextResources () {;}
 
-         HashTableHandleTemplate<ResourcesObserver> obsTable;
+         HashTableHandleTemplate<ResourcesObserver> rcObsTable;
          HashTableStringTemplate<Config> rcTable;
+         HashTableHandleTemplate<ResourcesObserver> pathObsTable;
          HashTableStringTemplate<StringContainer> pathTable;
 
       private:
@@ -31,8 +32,9 @@ namespace dmz {
 inline
 dmz::RuntimeContextResources::~RuntimeContextResources () {
 
-   obsTable.clear ();
+   rcObsTable.clear ();
    rcTable.empty ();
+   pathObsTable.clear ();
    pathTable.empty ();
 }
 

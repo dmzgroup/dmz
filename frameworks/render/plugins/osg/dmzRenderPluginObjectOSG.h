@@ -3,10 +3,12 @@
 
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimeDefinitionsObserver.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeResources.h>
+#include <dmzRuntimeResourcesObserver.h>
 #include <dmzTypesHashTableStringTemplate.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <dmzTypesDeleteListTemplate.h>
@@ -19,6 +21,8 @@ namespace dmz {
 
    class RenderPluginObjectOSG :
          public Plugin,
+         public ResourcesObserver,
+         public DefinitionsObserver,
          public ObjectObserverUtil {
 
       public:
@@ -33,6 +37,14 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
+
+         // Resources Observer Interface
+         virtual void update_resource (
+            const String &Name,
+            const ResourcesUpdateTypeEnum Mode);
+
+         // Definitions Observer Interface
+         virtual void define_object_type (const ObjectType &Type);
 
          // Object Observer Interface
          virtual void create_object (

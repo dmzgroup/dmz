@@ -20,38 +20,42 @@ class RuntimeContext;
 //! \brief Activate define_named_handle callback in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
 //! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
-const UInt32 RuntimeNamedHandleMask = 0x01;
+const UInt32 DefinitionsNamedHandleMask = 0x01;
 //! \brief Activate define_state callback in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
 //! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
-const UInt32 RuntimeStateMask = 0x02;
+const UInt32 DefinitionsStateMask = 0x02;
 //! \brief Activate define_object_type callback in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
 //! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
-const UInt32 RuntimeObjectTypeMask = 0x04;
+const UInt32 DefinitionsObjectTypeMask = 0x04;
 //! \brief Activate define_event_type callback in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
 //! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
-const UInt32 RuntimeEventTypeMask = 0x08;
+const UInt32 DefinitionsEventTypeMask = 0x08;
 //! \brief Activate define_message callback in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
 //! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
-const UInt32 RuntimeMessageMask = 0x10;
+const UInt32 DefinitionsMessageMask = 0x10;
 //! \brief Activate all callbacks in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
 //! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
-const UInt32 RuntimeAllMask = 0xFF;
+const UInt32 DefinitionsAllMask = 0xFF;
+
+enum DefinitionsActivateModeEnum {
+   DefinitionsDumpAll, //!< Dump all current definitions.
+   DefinitionsDumpNone //!< Do not dump all current definitions.
+};
 
 //! @}
 
 class DMZ_KERNEL_LINK_SYMBOL DefinitionsObserver {
 
    public:
-      Handle get_definitions_observer_handle () const;
-      String get_definitions_observer_name () const;
-
-      UInt32 get_definitions_observer_callback_mask ();
-      UInt32 set_definitions_observer_callback_mask (const UInt32 Mask);
+      UInt32 get_definitions_observer_callback_mask () const;
+      UInt32 set_definitions_observer_callback_mask (
+         const DefinitionsActivateModeEnum Mode,
+         const UInt32 Mask);
 
       virtual void define_named_handle (const Handle TheHandle, const String &Name);
       virtual void define_state (const Mask &TheState, const String &Name);

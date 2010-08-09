@@ -1,3 +1,4 @@
+#include <dmzTypesStringContainer.h>
 #include <dmzTypesStringSub.h>
 #include <dmzTypesHashTableStringTemplate.h>
 
@@ -7,7 +8,7 @@
 \ingroup Types
 \brief Converts Strings that contain variables.
 \details A variable is defined as $(\b Tag) where \b Tag corresponds to a \b Tag
-store in the class by dmz::SubString::Store.
+stored in the class by dmz::StringSub::store().
 \code
 StringSub sub;
 sub.store ("foo", "new value");
@@ -28,8 +29,11 @@ The '\' character is used to escape control strings such as "$(" and ")".
 
 struct dmz::StringSub::State {
 
+   Boolean firstCall;
+   StringContainer list;
    HashTableStringTemplate<String> table;
 
+   State () : firstCall (True) {;}
    ~State () { table.empty (); }
 };
 
@@ -43,10 +47,10 @@ dmz::StringSub::~StringSub () { delete &_state; }
 
 /*!
 
-\brief Stores a variables value.
+\brief Stores a variable's value.
 \details If the variable is already defined, it will be overwritten.
-\param[in] Tag String containing the variables name.
-\param[in] Value String containing the variables value.
+\param[in] Tag String containing the variable's name.
+\param[in] Value String containing the variable's value.
 
 */
 void
@@ -65,9 +69,9 @@ dmz::StringSub::store (const String &Tag, const String &Value) {
 
 /*!
 
-\brief Looks up a variables value.
-\param[in] Tag String containing the variables name.
-\return Returns a String containing the variables value.
+\brief Looks up a variable's value.
+\param[in] Tag String containing the variable's name.
+\return Returns a String containing the variable's value.
 
 */
 dmz::String
@@ -122,6 +126,9 @@ the escape character '\', it will be stripped from the returned value.
 */
 dmz::String
 dmz::StringSub::convert (const String &Value) const {
+
+   const Boolean FirstCall = _state.firstCall;
+   _state.firstCall = False;
 
    String result;
    String scratch;
@@ -185,7 +192,17 @@ dmz::StringSub::convert (const String &Value) const {
 
                scratch = convert (scratch);
                const String *Ptr = _state.table.lookup (scratch);
-               if (Ptr) { result += convert (*Ptr); }
+
+               if (Ptr) {
+
+                  if (!_state.list.contains (scratch)) {
+
+                     _state.list.add (scratch);
+                    
+                     result += convert (*Ptr);
+                  }
+               }
+
                scratch.flush ();
                mode = NormalMode;
             }
@@ -201,6 +218,12 @@ dmz::StringSub::convert (const String &Value) const {
 
       result += "$(";
       result += convert (scratch);
+   }
+
+   if (FirstCall) {
+
+      _state.list.clear ();
+      _state.firstCall = FirstCall;
    }
 
    return result;

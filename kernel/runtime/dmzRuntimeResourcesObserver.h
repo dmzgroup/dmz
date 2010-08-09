@@ -8,20 +8,44 @@ namespace dmz {
 class PluginInfo;
 class RuntimeContext;
 
-enum ResourcesModeEnum {
-   ResourceCreated, //!< Resource was created.
-   ResourceUpdated, //!< Resource was updated.
-   ResourceRemoved, //!< Resource was removed.
-   ResourceDumped   //!< Resource was dumped.
+//! \addtogroup Runtime
+//! @(
+
+const UInt32 ResourcesPathMask = 0x01;
+const UInt32 ResourcesResourceMask = 0x02;
+const UInt32 ResourcesAllMask = 0xFF;
+
+enum ResourcesActivateModeEnum {
+   ResourcesDumpAll, //!< Dump all currently defined resources.
+   ResourcesDumpNone //!< Do not dump all currently defined resources.
 };
+
+enum ResourcesUpdateTypeEnum {
+   ResourcesCreated, //!< Resource was created.
+   ResourcesUpdated, //!< Resource was updated.
+   ResourcesRemoved, //!< Resource was removed.
+   ResourcesDumped   //!< Resource was dumped.
+};
+
+//! @}
 
 class DMZ_KERNEL_LINK_SYMBOL ResourcesObserver {
 
    public:
-      void activate_resources_calllback ();
-      void deactivate_resources_calllback ();
+      UInt32 get_resources_observer_callback_mask () const;
+      UInt32 set_resources_observer_callback_mask (
+         const ResourcesActivateModeEnum Mode,
+         const UInt32 Mask);
+
       void dump_current_resources ();
-      virtual void update_resource (const String &Name, const ResourcesModeEnum Mode) = 0;
+
+      virtual void update_resources_path (
+         const String &Name,
+         const ResourcesUpdateTypeEnum Type);
+
+      virtual void update_resource (
+         const String &Name,
+         const ResourcesUpdateTypeEnum Type);
 
    protected:
       ResourcesObserver (RuntimeContext *context);

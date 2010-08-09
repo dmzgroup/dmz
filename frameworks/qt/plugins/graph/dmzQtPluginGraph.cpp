@@ -575,16 +575,19 @@ dmz::QtPluginGraph::_update_power_law (
 
    const Float32 Offset (_barWidth * 0.5f);
 
+   Float32 scaleHeightMax;
+
    while (bar) {
 
       if (!foundFirstBar && bar->count) {
-
-         path.moveTo (bar->offset + Offset, -local_power (p, q, bar->Id));
+         scaleHeightMax = -local_power (p, q, bar->Id);
+         path.moveTo (bar->offset + Offset, -_barHeight);
          foundFirstBar = True;
       }
       else if (foundFirstBar) {
 
-         path.lineTo (bar->offset + Offset, -local_power (p, q, bar->Id));
+         path.lineTo (bar->offset + Offset,
+                      local_power (p, q, bar->Id) / scaleHeightMax * _barHeight);
       }
       
       if (LastBar == bar) { bar = 0; }
@@ -612,7 +615,7 @@ dmz::QtPluginGraph::_update_power_law (
       if (!_powerLabel) {
 
          _powerLabel = new QGraphicsTextItem;
-         _powerLabel->setPos (260.0, -_barHeight - 25);
+         _powerLabel->setPos (260.0, -_barHeight - 60);
          if (_scene) { _scene->addItem (_powerLabel); }
       }
 

@@ -1,6 +1,7 @@
 #ifndef DMZ_QT_PLUGIN_MESSAGE_INSPECTOR_DOT_H
 #define DMZ_QT_PLUGIN_MESSAGE_INSPECTOR_DOT_H
 
+#include <dmzRuntimeDefinitionsObserver.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
@@ -18,7 +19,8 @@ namespace dmz {
          public QWidget,
          public Plugin,
          public MessageObserver,
-         public TimeSlice {
+         public TimeSlice,
+         public DefinitionsObserver {
 
       Q_OBJECT
 
@@ -44,6 +46,8 @@ namespace dmz {
             Data *outData);
 
          virtual void update_time_slice (const Float64 TimeDelta);
+
+         virtual void define_message (const Message &Type);
 
       protected slots:
          void _check_all_targets ();

@@ -18,6 +18,7 @@ dmz::QtPluginMessageInspector::QtPluginMessageInspector (const PluginInfo &Info,
       Plugin (Info),
       MessageObserver (Info),
       TimeSlice (Info, TimeSliceTypeRuntime, TimeSliceModeSingle, 0.0),
+      DefinitionsObserver (Info),
       _log (Info),
       _targetFilterList (),
       _typeFilterList (),
@@ -25,6 +26,8 @@ dmz::QtPluginMessageInspector::QtPluginMessageInspector (const PluginInfo &Info,
 
    _ui.setupUi (this);
    _init (local);
+   set_definitions_observer_callback_mask (DefinitionsDumpAll, DefinitionsMessageMask);
+
 
    QStringList labels;
    labels /*<< "#"*/ << "Message Target" << "Message Name" << "Message Data";
@@ -210,7 +213,7 @@ dmz::QtPluginMessageInspector::receive_message (
    }
 
    QString messageTarget = to_qstring (target);
-   QString messageType = to_qstring (Type.get_name());
+   QString messageType = to_qstring (Type.get_name ());
    String count;
    count << __messageCount++;
    QStringList messageData;
@@ -241,6 +244,26 @@ dmz::QtPluginMessageInspector::receive_message (
       messageTargetItem->setCheckState (Qt::Checked);
    }
 
+   messageItem->setHidden (!_typeFilterList.contains (messageType)
+                           || !_targetFilterList.contains (messageTarget));
+
+   start_time_slice ();
+}
+
+void
+dmz::QtPluginMessageInspector::update_time_slice (const Float64 TimeDelta) {
+
+   for (int i = 0; i < _ui.treeWidgetList->columnCount (); ++ i) {
+
+      _ui.treeWidgetList->resizeColumnToContents (i);
+   }
+}
+
+void
+dmz::QtPluginMessageInspector::define_message (const Message &Type) {
+
+   QString messageType = to_qstring (Type.get_name ());
+   UInt32 index = 0;
    for (index = 0; index < _ui.messageTypeList->count (); ++index) {
 
       if (_ui.messageTypeList->item (index)->text () == messageType) { break; }
@@ -253,21 +276,7 @@ dmz::QtPluginMessageInspector::receive_message (
 
       messageTypeItem->setCheckState (Qt::Checked);
    }
-
-   messageItem->setHidden (!_typeFilterList.contains (messageType)
-                           || !_targetFilterList.contains (messageTarget));
-
-   start_time_slice ();
 }
-
-void dmz::QtPluginMessageInspector::update_time_slice (const Float64 TimeDelta) {
-
-   for (int i = 0; i < _ui.treeWidgetList->columnCount (); ++ i) {
-
-      _ui.treeWidgetList->resizeColumnToContents (i);
-   }
-}
-
 
 void
 dmz::QtPluginMessageInspector::_check_all_targets () {

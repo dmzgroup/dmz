@@ -532,13 +532,44 @@ dmz::QtPluginGraph::_update_power_law (
 
    HashTableUInt32Iterator it;
    BarStruct *bar (_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
+   BarStruct *startBar = 0;
 
+//   while (bar) {
+
+//      if (bar->count && (-bar->height < _barHeight)) {
+
+//         foundFirstBar = true;
+//         if (startBar) {
+//            if (startBar->Id == 0) { x = 1.0; }
+//            else { x = log (Float64 (startBar->Id)); }
+
+//            if (startBar->height < 0.0f) {
+
+//               y = log (-startBar->height);
+//               sumY += y;
+//               sumX += x;
+//               sumXY += x * y;
+//               sumX2 += x * x;
+//               nonZeroCount++;
+//            }
+//         }
+//         break;
+//      }
+//      if (LastBar == bar) { bar = 0; }
+//      else {
+
+//         startBar = bar;
+//         bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
+//      }
+//   }
+
+//   UInt32 bar_count (0);
    while (bar) {
 
       if (!foundFirstBar && bar->count) { foundFirstBar = True; }
 
       if (foundFirstBar) {
-
+//         bar_count++;
          if (bar->Id == 0) { x = 1.0; }
          else { x = log (Float64 (bar->Id)); }
 
@@ -550,7 +581,9 @@ dmz::QtPluginGraph::_update_power_law (
             sumXY += x * y;
             sumX2 += x * x;
             nonZeroCount++;
+//            _log.warn << bar_count << " " << -bar->height << " " << y << " " << sumY<< " " << sumXY<< " " << nonZeroCount << endl;
          }
+
       }
 
       if (LastBar == bar) { bar = 0; }
@@ -568,26 +601,53 @@ dmz::QtPluginGraph::_update_power_law (
       p = exp ((sumY - (q * sumX)) / nonZeroCount);
    }
 
+//   _log.warn << "Q: " << q  << " sY: " << sumY << " sXY: " << sumXY << endl;
+
    foundFirstBar = false;
    QPainterPath path;
 
    bar = (_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
+   startBar = 0;
 
    const Float32 Offset (_barWidth * 0.5f);
 
    Float32 scaleHeightMax;
 
+   while (bar && !foundFirstBar) {
+
+      if (bar->count && (-bar->height < _barHeight)) {
+
+         foundFirstBar = true;
+         if (startBar) {
+            scaleHeightMax = -local_power (p, q, startBar->Id);
+            path.moveTo (startBar->offset + Offset, -_barHeight);
+         }
+         else {
+            scaleHeightMax = -local_power (p, q, bar->Id);
+            path.moveTo (bar->offset + Offset, -_barHeight);
+         }
+      }
+      if (!foundFirstBar) {
+         if (LastBar == bar) { bar = 0; }
+         else {
+            startBar = bar;
+            bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
+         }
+      }
+   }
+
    while (bar) {
 
-      if (!foundFirstBar && bar->count) {
+/*      if (!foundFirstBar && bar->count) {
          scaleHeightMax = -local_power (p, q, bar->Id);
          path.moveTo (bar->offset + Offset, -_barHeight);
          foundFirstBar = True;
       }
-      else if (foundFirstBar) {
+      else*/ if (foundFirstBar) {
 
          path.lineTo (bar->offset + Offset,
-                      local_power (p, q, bar->Id) / scaleHeightMax * _barHeight);
+                      local_power (p, q, bar->Id) /
+                      scaleHeightMax * _barHeight);
       }
       
       if (LastBar == bar) { bar = 0; }

@@ -77,7 +77,8 @@ namespace dmz {
 
          Log _log;
          Definitions _defs;
-         DataConverterString &_convert;
+//         DataConverterString &_convert;
+         DataConverterString _convert;
          QFormLayout *_layout;
          Handle _valueAttrHandle;
          HashTableStringTemplate<WidgetStruct> _widgetTable;

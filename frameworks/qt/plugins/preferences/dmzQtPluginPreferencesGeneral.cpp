@@ -219,6 +219,7 @@ namespace {
 
          String value = _convert.to_string (InData);
          if (value) {
+
             _comboBox->setCurrentIndex (_comboBox->findText (to_qstring (value)));
          }
       }
@@ -235,7 +236,7 @@ dmz::QtPluginPreferencesGeneral::QtPluginPreferencesGeneral (
       MessageObserver (Info),
       _log (Info),
       _defs (Info),
-      _convert (*(new DataConverterString (Info))),
+      _convert (Info),
       _layout (0),
       _valueAttrHandle (0),
       _widgetTable () {
@@ -247,7 +248,6 @@ dmz::QtPluginPreferencesGeneral::QtPluginPreferencesGeneral (
 dmz::QtPluginPreferencesGeneral::~QtPluginPreferencesGeneral () {
 
    _widgetTable.empty ();
-   delete &_convert;
 }
 
 

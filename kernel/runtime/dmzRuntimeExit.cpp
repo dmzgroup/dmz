@@ -251,7 +251,7 @@ dmz::TimedExit::~TimedExit () { delete &_state; }
 /*!
 
 \brief Gets the dmz::ExitStatusEnum to be used in the exit request.
-\return Returns the dmz:::ExitStatusEnum to be used in the exit request.
+\return Returns the dmz::ExitStatusEnum to be used in the exit request.
 
 */
 dmz::ExitStatusEnum

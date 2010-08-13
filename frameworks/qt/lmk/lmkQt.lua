@@ -49,3 +49,13 @@ function add_libs (list)
       }
    end
 end
+
+function add_uitools ()
+   local libDebug = ""
+   local buildMode = resolve ("$(lmk.buildMode)")
+   if buildMode == "debug" then libDebug = "_debug" end
+   lmk.add_vars {
+      localLibPaths = "$(lmk.libPathFlag)$(lmk.projectRoot)depend/lib",
+      localLibs = "$(lmk.libPrefix)QtUiTools" .. libDebug .. "$(lmk.libSuffix)",
+   }
+end

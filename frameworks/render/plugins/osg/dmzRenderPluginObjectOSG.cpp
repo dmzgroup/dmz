@@ -15,6 +15,8 @@ dmz::RenderPluginObjectOSG::RenderPluginObjectOSG (
       const PluginInfo &Info,
       Config &local) :
       Plugin (Info),
+      ResourcesObserver (Info),
+      DefinitionsObserver (Info),
       ObjectObserverUtil (Info, local),
       _log (Info),
       _defs (Info, &_log),
@@ -93,6 +95,22 @@ dmz::RenderPluginObjectOSG::discover_plugin (
          _glyphIsectMask = 0;
       }
    }
+}
+
+
+// Resources Observer Interface
+void
+dmz::RenderPluginObjectOSG::update_resource (
+      const String &Name,
+      const ResourcesUpdateTypeEnum Mode) {
+
+}
+
+
+// Definitions Observer Interface
+void
+dmz::RenderPluginObjectOSG::define_object_type (const ObjectType &Type) {
+
 }
 
 
@@ -416,6 +434,11 @@ dmz::RenderPluginObjectOSG::_init (Config &local) {
       config_to_string ("hide-object-flag.name", local, ObjectAttributeHideName),
       ObjectFlagMask);
 
+   set_resources_observer_callback_mask (ResourcesDumpNone, ResourcesResourceMask);
+
+   set_definitions_observer_callback_mask (
+      DefinitionsDumpNone,
+      DefinitionsObjectTypeMask);
 }
 
 

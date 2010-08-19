@@ -12,7 +12,7 @@
 
 \class dmz::ResourcesUpdate
 \ingroup Runtime
-\brief Runtime Resource Updater.
+\brief Runtime Resources Updater.
 \details
 
 */
@@ -101,13 +101,13 @@ dmz::ResourcesUpdate::update_resource (
 
    if (_context) {
 
-      ResourcesModeEnum mode = ResourceCreated;
+      ResourcesUpdateTypeEnum type = ResourcesCreated;
 
       Config *rc = _context->rcTable.remove (ResourceName);
 
       if (rc) {
 
-         mode = ResourceUpdated;
+         type = ResourcesUpdated;
          delete rc; rc = 0;
       }
 
@@ -118,9 +118,9 @@ dmz::ResourcesUpdate::update_resource (
          HashTableHandleIterator it;
          ResourcesObserver *obs (0);
 
-         while (_context->obsTable.get_next (it, obs)) {
+         while (_context->rcObsTable.get_next (it, obs)) {
 
-            obs->update_resource (ResourceName, mode);
+            obs->update_resource (ResourceName, type);
          }
 
          result = True;
@@ -155,9 +155,9 @@ dmz::ResourcesUpdate::remove_resource (const String &ResourceName) {
          HashTableHandleIterator it;
          ResourcesObserver *obs (0);
 
-         while (_context->obsTable.get_next (it, obs)) {
+         while (_context->rcObsTable.get_next (it, obs)) {
 
-            obs->update_resource (ResourceName, ResourceRemoved);
+            obs->update_resource (ResourceName, ResourcesRemoved);
          }
 
          result = True;
@@ -197,9 +197,9 @@ dmz::ResourcesUpdate::update_resource_file (
             HashTableHandleIterator it;
             ResourcesObserver *obs (0);
 
-            while (_context->obsTable.get_next (it, obs)) {
+            while (_context->rcObsTable.get_next (it, obs)) {
 
-               obs->update_resource (ResourceName, ResourceUpdated);
+               obs->update_resource (ResourceName, ResourcesUpdated);
             }
          }
          else if (_log) {
@@ -240,7 +240,19 @@ dmz::ResourcesUpdate::add_search_path (const String &Name, const String &Path) {
          if (_context->pathTable.store (Name, list)) { delete list; list = 0; }
       }
 
-      if (list) { list->add (Path); result = True; }
+      if (list) {
+
+         list->add (Path);
+         result = True;
+
+         HashTableHandleIterator it;
+         ResourcesObserver *obs (0);
+
+         while (_context->pathObsTable.get_next (it, obs)) {
+
+            obs->update_resources_path (Name, ResourcesUpdated);
+         }
+      }
    }
 
    return result;
@@ -266,6 +278,8 @@ dmz::ResourcesUpdate::update_search_path (
 
    if (_context) {
 
+      ResourcesUpdateTypeEnum type = ResourcesUpdated;
+
       StringContainer *list = _context->pathTable.remove (Name);
 
       if (list) { delete list; list = 0; }
@@ -276,8 +290,21 @@ dmz::ResourcesUpdate::update_search_path (
 
          if (list && _context->pathTable.store (Name, list)) { result = True; }
          else if (list) { delete list; list = 0; }
+
       }
-      else { result = True; }
+      else {
+
+         result = True;
+         type = ResourcesRemoved;
+      }
+
+      HashTableHandleIterator it;
+      ResourcesObserver *obs (0);
+
+      while (_context->pathObsTable.get_next (it, obs)) {
+
+         obs->update_resources_path (Name, type);
+      }
    }
 
    return result;

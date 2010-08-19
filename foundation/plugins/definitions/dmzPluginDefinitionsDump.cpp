@@ -58,7 +58,7 @@ dmz::PluginDefinitionsDump::define_event_type (const EventType &Type) {
 void
 dmz::PluginDefinitionsDump::_init (Config &local) {
 
-   set_definitions_observer_callback_mask (RuntimeAllMask);
+   set_definitions_observer_callback_mask (DefinitionsDumpAll, DefinitionsAllMask);
 }
 //! \endcond
 

@@ -495,10 +495,13 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
 
             StringContainer *pc = rc->pathTable.lookup (Name);
 
+            ResourcesUpdateTypeEnum type = ResourcesUpdated;
+
             if (!pc) {
 
                pc = new StringContainer;
                if (!rc->pathTable.store (Name, pc)) { delete pc; pc = 0; }
+               else { type = ResourcesCreated; }
             }
 
             if (pc) {
@@ -512,6 +515,14 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
 
                      pc->add (config_to_string ("value", path));
                   }
+               }
+
+               HashTableHandleIterator it;
+               ResourcesObserver *obs (0);
+
+               while (rc->pathObsTable.get_next (it, obs)) {
+
+                  obs->update_resources_path (Name, type);
                }
             }
          }
@@ -530,7 +541,7 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
 
             if (Name) {
 
-               ResourcesModeEnum mode = ResourceCreated;
+               ResourcesUpdateTypeEnum type = ResourcesCreated;
 
                Config *ptr (rc->rcTable.remove (Name));
 
@@ -549,7 +560,7 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
 
                   delete ptr; ptr = 0;
 
-                  mode = ResourceUpdated;
+                  type = ResourcesUpdated;
                }
 
                ptr = new Config (resource);
@@ -560,9 +571,9 @@ local_init_resources (const Config &Init, RuntimeContext *context, Log *log) {
                   HashTableHandleIterator it;
                   ResourcesObserver *obs (0);
 
-                  while (rc->obsTable.get_next (it, obs)) {
+                  while (rc->rcObsTable.get_next (it, obs)) {
 
-                     obs->update_resource (Name, mode);
+                     obs->update_resource (Name, type);
                   }
                }
             }

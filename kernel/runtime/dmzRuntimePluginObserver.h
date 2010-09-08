@@ -1,6 +1,7 @@
 #ifndef DMZ_RUNTIME_PLUGIN_OBSERVER_DOT_H
 #define DMZ_RUNTIME_PLUGIN_OBSERVER_DOT_H
 
+#include <dmzKernelExport.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesBase.h>
 #include <dmzTypesString.h>
@@ -9,7 +10,7 @@ namespace dmz {
 
 class RuntimeModule;
 
-class PluginObserver {
+class DMZ_KERNEL_LINK_SYMBOL PluginObserver {
 
    public:
       // PluginObserver Interface

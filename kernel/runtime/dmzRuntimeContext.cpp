@@ -2,6 +2,7 @@
 #include "dmzRuntimeContextDefinitions.h"
 #include "dmzRuntimeContextLog.h"
 #include "dmzRuntimeContextMessaging.h"
+#include "dmzRuntimeContextPluginObserver.h"
 #include "dmzRuntimeContextTime.h"
 #include "dmzRuntimeContextResources.h"
 #include "dmzRuntimeContextRTTI.h"
@@ -29,6 +30,7 @@ dmz::RuntimeContext::RuntimeContext () :
       _rttiContext (0),
       _timeContext (0),
       _undoContext (0),
+      _pluginContext (0),
       _logContext (0) {
 
    create_uuid (uuid);
@@ -70,6 +72,10 @@ dmz::RuntimeContext::~RuntimeContext () {
    _undoLock.lock ();
    if (_undoContext) { _undoContext->unref (); _undoContext = 0; }
    _undoLock.unlock ();
+
+   _pluginLock.lock ();
+   if (_pluginContext) { _pluginContext->unref (); _pluginContext = 0; }
+   _pluginLock.unlock ();
 
    _logLock.lock ();
    // Unref log context LAST
@@ -223,6 +229,20 @@ dmz::RuntimeContext::get_undo_context () {
    }
 
    return _undoContext;
+}
+
+
+dmz::RuntimeContextPluginObserver *
+dmz::RuntimeContext::get_plugin_observer_context () {
+
+   if (!_pluginContext) {
+
+      _pluginLock.lock ();
+      if (!_pluginContext) { _pluginContext = new RuntimeContextPluginObserver; }
+      _pluginLock.unlock ();
+   }
+
+   return _pluginContext;
 }
 
 

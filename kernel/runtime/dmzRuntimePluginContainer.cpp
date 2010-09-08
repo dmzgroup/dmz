@@ -1,11 +1,17 @@
+#include "dmzRuntimeContext.h"
+#include "dmzRuntimeContextPluginObserver.h"
+#include <dmzRuntimeDataConverterTypesBase.h>
+#include <dmzRuntimeDefinitions.h>
 #include "dmzRuntimeIteratorState.h"
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimeModule.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimePluginContainer.h>
 #include <dmzRuntimeRTTI.h>
 #include <dmzSystemDynamicLibrary.h>
+#include <dmzTypesDeleteListTemplate.h>
 #include <dmzTypesHandleContainer.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 
@@ -128,8 +134,13 @@ This class provide the necessary functionality to manage extensions.
 */
 
 //! \cond
-struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
+struct dmz::PluginContainer::State :
+      public Plugin,
+      public RuntimeModule,
+      public MessageObserver {
 
+   RuntimeContextPluginObserver *observerContext;
+   DataConverterHandle convert;
    PluginInfo &info;
    Boolean discovered;
    Boolean started;
@@ -141,7 +152,67 @@ struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
    UInt32 maxLevel;
    Log *log;
 
+   void dump (const Handle Target, const PluginDiscoverEnum Mode) {
+
+      PluginObserver *obs (
+         observerContext ? observerContext->obsTable.lookup (Target) : 0);
+
+      if (obs) {
+
+         const Handle Source (info.get_handle ());
+
+         HashTableHandleIterator it;
+         PluginStruct *ps (0);
+
+         while (pluginTable.get_next (it, ps)) {
+
+            if (ps->info) {
+
+               obs->update_runtime_plugin (Mode, Source, ps->info->get_handle ());
+            }
+         }
+
+         if (observerContext) {
+
+            observerContext->obsActiveTable.store (Target, obs);
+         }
+      }
+   }
+
+   void dump_all (const PluginDiscoverEnum Mode) {
+
+      if (observerContext) {
+
+         HashTableHandleIterator it;
+         PluginObserver *obs (0);
+
+         while (observerContext->obsActiveTable.get_next (it, obs)) {
+
+            dump (it.get_hash_key (), Mode);
+         }
+      }
+   }
+
+   void update_obs (const PluginDiscoverEnum Mode, const Handle PluginHandle) {
+
+      if (observerContext) {
+
+         const Handle Source (info.get_handle ());
+
+         HashTableHandleIterator it;
+         PluginObserver *obs (0);
+
+         while (observerContext->obsActiveTable.get_next (it, obs)) {
+
+            obs->update_runtime_plugin (Mode, Source, PluginHandle);
+         }
+      }
+   }
+
+
    void delete_plugins () {
+
+      dump_all (PluginDiscoverRemove);
 
       discovered = False;
       started = False;
@@ -157,14 +228,28 @@ struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
 
       pluginTable.empty ();
       externTable.clear ();
-      if (levelsHead) { delete levelsHead; levelsHead = 0; }
+      delete_list (levelsHead);
+      //if (levelsHead) { delete levelsHead; levelsHead = 0; }
       levelsTail = 0;
       maxLevel = 1;
+   }
+
+   void receive_message (
+         const Message &Type,
+         const UInt32 MessageSendId,
+         const Handle TargetObserverHandle,
+         const Data *InData,
+         Data *outData) {
+
+      dump (convert.to_handle (InData), PluginDiscoverAdd);
    }
 
    State (PluginInfo &theInfo, Log *theLog) :
          Plugin (theInfo),
          RuntimeModule (theInfo),
+         MessageObserver (theInfo),
+         observerContext (0),
+         convert (theInfo),
          info (theInfo),
          discovered (False),
          started (False),
@@ -174,10 +259,40 @@ struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
          log (theLog) {
 
       externTable.store (get_plugin_handle (), this);
+
+      RuntimeContext *rt = info.get_context ();
+
+      if (rt) {
+
+         observerContext = rt->get_plugin_observer_context ();
+
+         Definitions defs (rt);
+
+         Message msg;
+
+         defs.create_message (PluginObserverActivateMessageName, msg);
+
+         subscribe_to_message (msg);
+      }
+
+      if (observerContext) {
+
+         observerContext->ref ();
+         observerContext->moduleTable.store (info.get_handle (), this);
+      }
    }
 
 
-   ~State () { delete_plugins (); }
+   ~State () {
+
+      delete_plugins ();
+
+      if (observerContext) {
+
+         observerContext->moduleTable.remove (info.get_handle ());
+         observerContext->unref (); observerContext = 0;
+      }
+   }
 
 
    // Plugin Interface
@@ -270,6 +385,8 @@ struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
                }
             }
          }
+
+         update_obs (PluginDiscoverAdd, ps->info->get_handle ());
 
          result = True;
       }
@@ -464,7 +581,11 @@ struct dmz::PluginContainer::State : public Plugin, public RuntimeModule {
 
    PluginStruct *release_plugin (Handle PluginHandle) {
 
-      PluginStruct *ps = (pluginTable.remove (PluginHandle));
+      PluginStruct *ps (pluginTable.lookup (PluginHandle));
+
+      if (ps) { update_obs (PluginDiscoverRemove, PluginHandle); }
+
+      ps = (pluginTable.remove (PluginHandle));
 
       if (ps && ps->info && ps->plugin) {
 
@@ -536,7 +657,7 @@ dmz::PluginContainer::PluginContainer (RuntimeContext *context, Log *log) :
                PluginDeleteModeDoNotDelete,
                context,
                0)),
-         log))) {;}
+            log))) {;}
 
 
 /*!
@@ -553,6 +674,10 @@ dmz::PluginContainer::~PluginContainer () {
    delete &_state;
    if (info) { delete info; info = 0; }
 }
+
+
+dmz::Handle
+dmz::PluginContainer::get_handle () const { return _state.info.get_handle (); }
 
 
 /*!
@@ -724,7 +849,10 @@ dmz::PluginContainer::init_plugins () {
             current;
             current = ls->table.get_next (it)) {
 
-         if (current->plugin) { current->plugin->update_plugin_state (PluginStateInit, ls->Level); }
+         if (current->plugin) {
+
+            current->plugin->update_plugin_state (PluginStateInit, ls->Level);
+         }
       }
 
       ls = ls->prev;
@@ -754,7 +882,10 @@ dmz::PluginContainer::start_plugins () {
             current;
             current = ls->table.get_next (it)) {
 
-         if (current->plugin) { current->plugin->update_plugin_state (PluginStateStart, ls->Level); }
+         if (current->plugin) {
+
+            current->plugin->update_plugin_state (PluginStateStart, ls->Level);
+         }
       }
 
       ls = ls->prev;
@@ -784,7 +915,10 @@ dmz::PluginContainer::stop_plugins () {
             current;
             current = ls->table.get_prev (it)) {
 
-         if (current->plugin) { current->plugin->update_plugin_state (PluginStateStop, ls->Level); }
+         if (current->plugin) {
+
+            current->plugin->update_plugin_state (PluginStateStop, ls->Level);
+         }
       }
 
       ls = ls->next;
@@ -814,7 +948,10 @@ dmz::PluginContainer::shutdown_plugins () {
             current;
             current = _state.pluginTable.get_prev (it)) {
 
-         if (current->plugin) { current->plugin->update_plugin_state (PluginStateShutdown, 0); }
+         if (current->plugin) {
+
+            current->plugin->update_plugin_state (PluginStateShutdown, 0);
+         }
       }
 
       ls = ls->next;

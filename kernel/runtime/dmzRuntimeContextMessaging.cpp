@@ -202,7 +202,25 @@ dmz::RuntimeContextMessaging::send (
          }
       }
    }
-   else if (Type.get_message_context ()) {
+   else {
+
+      send_delayed (Type, ObserverHandle, InData);
+      result = 1;
+   }
+
+   return result;
+}
+
+
+void
+dmz::RuntimeContextMessaging::send_delayed (
+      const Message &Type,
+      const Handle ObserverHandle,
+      const Data *InData) const {
+
+   if (Type.get_message_context ()) {
+
+      RuntimeContextMessaging *self ((RuntimeContextMessaging *)this);
 
       MessageStruct *ms (new MessageStruct (Type, ObserverHandle, InData));
 
@@ -212,12 +230,8 @@ dmz::RuntimeContextMessaging::send (
          if (tail) { self->tail->next = ms; self->tail = ms; }
          else { self->head = self->tail = ms; }
          self->listLock.unlock ();
-
-         result = 1;
       }
    }
-
-   return result;
 }
 
 
@@ -240,7 +254,6 @@ dmz::RuntimeContextMessaging::update_time_slice () {
       delete ms; ms = 0;
    }
 }
-
 
 
 //! Adds message observer.

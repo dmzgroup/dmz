@@ -393,8 +393,8 @@ dmz::QtPluginPreferencesGeneral::_create_properties (Config &list) {
             ws = ss;
 
             connect (
-                  ss->widget, SIGNAL (currentIndexChanged (const QString &)),
-                  this, SLOT (_slot_widget_value_changed ()));
+               ss->widget, SIGNAL (currentIndexChanged (const QString &)),
+               this, SLOT (_slot_widget_value_changed ()));
          }
 
          if (ws) {

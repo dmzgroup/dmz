@@ -74,7 +74,6 @@ namespace dmz {
          QtPluginMessageInspector &operator= (const QtPluginMessageInspector &);
 
          UInt32 __messageCount;
-         //QStandardItem *__parentItem;
          String __runtimedata_to_string (const Data &Value);
 
    };

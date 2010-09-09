@@ -313,12 +313,12 @@ dmz::QtPluginGraph::receive_message (
 
    if (Type == _updateXLabelMsg) {
       if (_xAxisLabel) {
-         _xAxisLabel->setPlainText (to_qstring (_convertString.to_string (InData, 0)));
+         _xAxisLabel->setPlainText (to_qstring (_convertString.to_string (InData)));
       }
    }
    if (Type == _updateYLabelMsg) {
       if (_yAxisLabel) {
-         _yAxisLabel->setPlainText (to_qstring (_convertString.to_string (InData, 0)));
+         _yAxisLabel->setPlainText (to_qstring (_convertString.to_string (InData)));
       }
    }
 }
@@ -578,7 +578,6 @@ dmz::QtPluginGraph::_update_power_law (
             sumX2 += x * x;
             nonZeroCount++;
          }
-
       }
 
       if (LastBar == bar) { bar = 0; }
@@ -635,16 +634,10 @@ dmz::QtPluginGraph::_update_power_law (
 
    while (bar) {
 
-/*      if (!foundFirstBar && bar->count) {
-         scaleHeightMax = -local_power (p, q, bar->Id);
-         path.moveTo (bar->offset + Offset, -_barHeight);
-         foundFirstBar = True;
-      }
-      else*/ if (foundFirstBar) {
+      if (foundFirstBar) {
 
          path.lineTo (bar->offset + Offset,
-                      local_power (p, q, bar->Id) /
-                      scaleHeightMax * _barHeight);
+            local_power (p, q, bar->Id) / scaleHeightMax * _barHeight);
       }
       
       if (LastBar == bar) { bar = 0; }

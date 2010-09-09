@@ -223,13 +223,6 @@ dmz::QtPluginMessageInspector::receive_message (
    QTreeWidgetItem *messageItem = new QTreeWidgetItem ((QTreeWidget*)0, messageData);
    _ui.treeWidgetList->addTopLevelItem (messageItem);
 
-//   if (_doColumnSizeUpdate) {
-//      for (int i = 0; i < _ui.treeWidgetList->columnCount (); ++ i) {
-
-//         _ui.treeWidgetList->resizeColumnToContents (i);
-//      }
-//   }
-
    int index (0);
    for (index = 0; index < _ui.messageTargetList->count (); ++index) {
 
@@ -245,7 +238,7 @@ dmz::QtPluginMessageInspector::receive_message (
    }
 
    messageItem->setHidden (!_typeFilterList.contains (messageType)
-                           || !_targetFilterList.contains (messageTarget));
+      || !_targetFilterList.contains (messageTarget));
 
    start_time_slice ();
 }

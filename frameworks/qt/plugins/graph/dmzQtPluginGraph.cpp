@@ -16,9 +16,11 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (Info),
       ObjectObserverUtil (Info, local),
+      MessageObserver (Info),
       QtWidget (Info),
       _log (Info),
-      _convert (Info),
+      _convertBool (Info),
+      _convertString (Info),
       _mainWindowModule (0),
       _mainWindowModuleName (),
       _scene (0),
@@ -27,6 +29,8 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       _yLabels (0),
       _powerLawPath (0),
       _powerLabel (0),
+      _xAxisLabel (0),
+      _yAxisLabel (0),
       _graphDirty (False),
       _showPowerLaw (False),
       _showPercents (False),
@@ -298,6 +302,28 @@ QWidget *
 dmz::QtPluginGraph::get_qt_widget () { return this; }
 
 
+// Message Observer Interface
+void
+dmz::QtPluginGraph::receive_message (
+   const Message &Type,
+   const Handle MessageSendHandle,
+   const Handle TargetObserverHandle,
+   const Data *InData,
+   Data *outData) {
+
+   if (Type == _updateXLabelMsg) {
+      if (_xAxisLabel) {
+         _xAxisLabel->setPlainText (to_qstring (_convertString.to_string (InData, 0)));
+      }
+   }
+   if (Type == _updateYLabelMsg) {
+      if (_yAxisLabel) {
+         _yAxisLabel->setPlainText (to_qstring (_convertString.to_string (InData, 0)));
+      }
+   }
+}
+
+
 void
 dmz::QtPluginGraph::on_exportButton_clicked () {
 
@@ -354,7 +380,7 @@ dmz::QtPluginGraph::showEvent (QShowEvent *event) {
 
    if (_visibleMsg) {
 
-      Data out = _convert.to_data (True);
+      Data out = _convertBool.to_data (True);
       _visibleMsg.send (&out);
    }
 }
@@ -365,7 +391,7 @@ dmz::QtPluginGraph::hideEvent (QHideEvent *event) {
 
    if (_visibleMsg) {
 
-      Data out = _convert.to_data (False);
+      Data out = _convertBool.to_data (False);
       _visibleMsg.send (&out);
    }
 }
@@ -483,7 +509,7 @@ dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
       bar.text->setPos (
          bar.offset + (
             (_barWidth * 0.5) - ((_rotateLabel ? rect.height () : rect.width ()) * 0.5)),
-         5.0);
+         20.0);
    }
 
    if (bar.countText) {
@@ -907,6 +933,40 @@ dmz::QtPluginGraph::_init (Config &local) {
       line->setZValue (1.0f);
 
       _scene->addItem (line);
+   }
+
+   String xLabel = config_to_string ("x-axis-label.text", local);
+   if (xLabel) {
+
+      _xAxisLabel = new QGraphicsTextItem;
+      _xAxisLabel->setPos (0, 0);
+      _xAxisLabel->setPlainText (to_qstring (xLabel));
+      if (_scene) { _scene->addItem (_xAxisLabel); }
+      _updateXLabelMsg = config_create_message (
+         "x-axis-label.update-msg.name",
+         local,
+         "",
+         context,
+         &_log);
+
+      subscribe_to_message (_updateXLabelMsg);
+   }
+
+   String yLabel = config_to_string ("y-axis-label.text", local);
+   if (yLabel) {
+
+      _yAxisLabel = new QGraphicsTextItem;
+      _yAxisLabel->setPos (-40, -_barHeight - 40);
+      _yAxisLabel->setPlainText (to_qstring (yLabel));
+      if (_scene) { _scene->addItem (_yAxisLabel); }
+      _updateYLabelMsg = config_create_message (
+         "y-axis-label.update-msg.name",
+         local,
+         "",
+         context,
+         &_log);
+
+      subscribe_to_message (_updateYLabelMsg);
    }
 
    _visibleMsg = config_create_message (

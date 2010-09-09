@@ -636,7 +636,8 @@ dmz::QtPluginGraph::_update_power_law (
 
       if (foundFirstBar) {
 
-         path.lineTo (bar->offset + Offset,
+         path.lineTo (
+            bar->offset + Offset,
             local_power (p, q, bar->Id) / scaleHeightMax * _barHeight);
       }
       

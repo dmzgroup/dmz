@@ -378,6 +378,19 @@ struct dmz::LogObserver::LogObsState {
 \brief Constructor.
 \details The constructor automatically attaches the observer to the log stream so it will
 immediately start receiving messages.
+\param[in] Info Reference to PluginInfo.
+\sa dmz::LogObserver::attach_log_observer \n dmz::LogObserver::detach_log_observer
+
+*/
+dmz::LogObserver::LogObserver (const PluginInfo &Info) :
+      _logObsState (*(new LogObsState (Info.get_context ()))) { attach_log_observer (); }
+
+
+/*!
+
+\brief Constructor.
+\details The constructor automatically attaches the observer to the log stream so it will
+immediately start receiving messages.
 \param[in] context Pointer to runtime context.
 \sa dmz::LogObserver::attach_log_observer \n dmz::LogObserver::detach_log_observer
 

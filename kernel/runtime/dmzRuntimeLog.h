@@ -84,6 +84,7 @@ namespace dmz {
    class DMZ_KERNEL_LINK_SYMBOL LogObserver {
 
       public:
+         LogObserver (const PluginInfo &Info);
          LogObserver (RuntimeContext *context);
 
          Handle get_log_observer_handle ();

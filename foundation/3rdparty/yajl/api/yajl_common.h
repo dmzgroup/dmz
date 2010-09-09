@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2009, Lloyd Hilaiel.
+ * Copyright 2010, Lloyd Hilaiel.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -49,7 +49,11 @@ extern "C" {
 #    define YAJL_API __declspec(dllimport)
 #  endif
 #else
-#  define YAJL_API
+#  if defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__) >= 303
+#    define YAJL_API __attribute__ ((visibility("default")))
+#  else
+#    define YAJL_API
+#  endif
 #endif 
 
 /** pointer to a malloc function, supporting client overriding memory

@@ -1,6 +1,6 @@
 lmk.set_name "yajl"
 lmk.set_type "shared"
-lmk.add_files {"api/yajl_common.h", "api/yajl_gen.h", "api/yajl_parse.h",}
+lmk.add_files {"api/yajl_common.h", "api/yajl_gen.h", "api/yajl_parse.h", "api/yajl_version.h",}
 lmk.add_files {
    "yajl.c",
    "yajl_alloc.c",
@@ -9,6 +9,7 @@ lmk.add_files {
    "yajl_gen.c",
    "yajl_lex.c",
    "yajl_parser.c",
+   "yajl_version.c",
 }
 
 lmk.add_vars ({

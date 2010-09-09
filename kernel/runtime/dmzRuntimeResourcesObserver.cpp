@@ -86,6 +86,7 @@ dmz::ResourcesObserver::~ResourcesObserver () {
 }
 
 
+//! Returns a mask of active callbacks.
 dmz::UInt32
 dmz::ResourcesObserver::get_resources_observer_callback_mask () const {
 
@@ -98,6 +99,8 @@ dmz::ResourcesObserver::get_resources_observer_callback_mask () const {
 \brief Activates dmz::ResourcesObserver::update_resource() callback.
 \param[in] Mode Specifies if all currently defined resources should be dumped to observer
 upon activation.
+\param[in] TheMask A mask specifying which callbacks to activate.
+\return Returns a mask of all callbacks that were activated.
 
 */
 dmz::UInt32
@@ -208,7 +211,9 @@ dmz::ResourcesObserver::dump_current_resources () {
 
 /*!
 
-\brief Function invoked when runtime Resources are create, updated, or removed.
+\brief Function invoked when runtime Resources paths are create, updated, or removed.
+\param[in] Name String containing name of path being updated.
+\param[in] Type Type of update.
 
 */
 void
@@ -225,6 +230,13 @@ dmz::ResourcesObserver::update_resources_path (
 }
 
 
+/*!
+
+\brief Function invoked when runtime Resources are create, updated, or removed.
+\param[in] Name String containing name of resource being updated.
+\param[in] Type Type of update.
+
+*/
 void
 dmz::ResourcesObserver::update_resource (
       const String &Name,

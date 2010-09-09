@@ -19,27 +19,27 @@ class RuntimeContext;
 
 //! \brief Activate define_named_handle callback in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
-//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
+//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask()
 const UInt32 DefinitionsNamedHandleMask = 0x01;
 //! \brief Activate define_state callback in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
-//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
+//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask()
 const UInt32 DefinitionsStateMask = 0x02;
 //! \brief Activate define_object_type callback in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
-//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
+//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask()
 const UInt32 DefinitionsObjectTypeMask = 0x04;
 //! \brief Activate define_event_type callback in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
-//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
+//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask()
 const UInt32 DefinitionsEventTypeMask = 0x08;
 //! \brief Activate define_message callback in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
-//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
+//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask()
 const UInt32 DefinitionsMessageMask = 0x10;
 //! \brief Activate all callbacks in dmz::DefinitionsObserver
 //! \details Defined in dmzRuntimeDefinitionsObserver.h
-//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask
+//! \sa dmz::DefinitionsObserver::set_definitions_observer_callback_mask()
 const UInt32 DefinitionsAllMask = 0xFF;
 
 enum DefinitionsActivateModeEnum {

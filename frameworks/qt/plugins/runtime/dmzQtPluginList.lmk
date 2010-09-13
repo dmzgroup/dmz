@@ -1,0 +1,11 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginList"
+lmk.set_type "plugin"
+lmk.add_files {"PluginList.ui",}
+lmk.add_files ({"dmzQtPluginList.h",}, {src="moc",})
+lmk.add_files {"dmzQtPluginList.cpp",}
+lmk.add_libs {
+   "dmzQtUtil",
+   "dmzKernel",
+}
+lmkQt.add_libs {"QtCore", "QtGui",}

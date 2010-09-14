@@ -1,8 +1,10 @@
 #ifndef DMZ_QT_PLUGIN_LIST_DOT_H
 #define DMZ_QT_PLUGIN_LIST_DOT_H
 
+#include <dmzRuntimeConfig.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimeMessaging.h>
+#include <dmzRuntimeModule.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimePluginObserver.h>
 #include <dmzTypesHashTableHandleTemplate.h>
@@ -15,6 +17,8 @@
 
 namespace dmz {
 
+   class HandleContainer;
+
    class QtPluginList :
          public QFrame,
          public Plugin,
@@ -24,7 +28,7 @@ namespace dmz {
       Q_OBJECT
 
       public:
-         QtPluginList (const PluginInfo &Info, Config &local);
+         QtPluginList (const PluginInfo &Info, Config &local, Config &global);
          ~QtPluginList ();
 
          // Plugin Interface
@@ -59,9 +63,11 @@ namespace dmz {
          typedef QList<QStandardItem *> QStandardItemList;
 
          // QtPluginList Interface
+         void _get_selected (HandleContainer &list);
          void _init (Config &local);
 
          Log _log;
+         Config _global;
          Ui::PluginList _ui;
          QStandardItemModel _model;
          QSortFilterProxyModel _proxyModel;
@@ -69,6 +75,7 @@ namespace dmz {
          int _labelCount;
 
          HashTableHandleTemplate<QStandardItem> _itemTable;
+         HashTableHandleTemplate<RuntimeModule> _rmTable;
 
          Message _showMsg;
 
@@ -76,7 +83,6 @@ namespace dmz {
          QtPluginList ();
          QtPluginList (const QtPluginList &);
          QtPluginList &operator= (const QtPluginList &);
-
    };
 };
 

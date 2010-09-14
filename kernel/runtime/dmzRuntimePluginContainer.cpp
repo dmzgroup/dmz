@@ -410,8 +410,18 @@ struct dmz::PluginContainer::State :
          PluginInfo *infoPtr = container.lookup_plugin_info (plugin);
          Plugin *pluginPtr = container.lookup_plugin (plugin);
 
-         if (add_plugin (infoPtr, pluginPtr)) { container.release_plugin (plugin); }
-         else { container.remove_plugin (plugin); result = False; } 
+         if (container.release_plugin (plugin)) {
+
+            if (!add_plugin (infoPtr, pluginPtr)) { 
+
+               result = False;
+
+               if (container.add_plugin (infoPtr, pluginPtr)) {
+
+                  container.remove_plugin (plugin);
+               }
+            }
+         }
 
          plugin = pluginList.get_next ();
       }

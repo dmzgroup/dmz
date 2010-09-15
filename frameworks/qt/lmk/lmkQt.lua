@@ -57,5 +57,6 @@ function add_uitools ()
    lmk.add_vars {
       localLibPaths = "$(lmk.libPathFlag)$(lmk.projectRoot)depend/lib",
       localLibs = "$(lmk.libPrefix)QtUiTools" .. libDebug .. "$(lmk.libSuffix)",
+      localIncludes = "$(lmk.includePathFlag)$(lmk.projectRoot)depend/include",
    }
 end

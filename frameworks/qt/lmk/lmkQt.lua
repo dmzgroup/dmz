@@ -24,7 +24,7 @@ function add_libs (list)
       end
       lmk.add_vars {
          localLibPaths = "-F$(DMZ_QT_LIB_PATH) " .. paths,
-         localIncludes = "-F$(DMZ_QT_INCLUDE_PATH)",
+         localIncludes = "-F$(DMZ_QT_INCLUDE_PATH) $(lmk.includePathFlag)$(DMZ_QT_INCLUDE_PATH)",
       }
    else
       local libNumber = ""
@@ -57,6 +57,5 @@ function add_uitools ()
    lmk.add_vars {
       localLibPaths = "$(lmk.libPathFlag)$(lmk.projectRoot)depend/lib",
       localLibs = "$(lmk.libPrefix)QtUiTools" .. libDebug .. "$(lmk.libSuffix)",
-      localIncludes = "$(lmk.includePathFlag)$(lmk.projectRoot)depend/include",
    }
 end

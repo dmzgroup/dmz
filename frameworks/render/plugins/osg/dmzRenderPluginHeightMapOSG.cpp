@@ -136,9 +136,9 @@ dmz::RenderPluginHeightMapOSG::_init_height_map (Config &local) {
          const Float64 Max = config_to_float64 ("max", local, 1.0);
          const Float64 Diff = Max - Min;
  
-         for (int r = 0; r < heightField->getNumRows(); r++) {
+         for (unsigned int r = 0; r < heightField->getNumRows(); r++) {
 
-            for (int c = 0; c < heightField->getNumColumns(); c++) {
+            for (unsigned int c = 0; c < heightField->getNumColumns(); c++) {
 
                heightField->setHeight (
                   c,

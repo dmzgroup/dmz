@@ -59,6 +59,11 @@ namespace dmz {
             const Data *InData,
             Data *outData) const;
 
+         void send_delayed (
+            const Message &Type,
+            const Handle ObserverHandle,
+            const Data *InData) const;
+
          void update_time_slice ();
          Boolean add_observer (MessageObserver &obs);
          Boolean remove_observer (MessageObserver &obs);

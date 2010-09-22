@@ -25,6 +25,7 @@ lmk.add_files {
    "runtime/dmzRuntimeDataConverterStringContainer.h",
    "runtime/dmzRuntimeDataConverterTypesBase.h",
    "runtime/dmzRuntimeDataConverterUUID.h",
+   "runtime/dmzRuntimeDataConverterVector.h",
    "runtime/dmzRuntimeDefinitions.h",
    "runtime/dmzRuntimeDefinitionsObserver.h",
    "runtime/dmzRuntimeEventType.h",

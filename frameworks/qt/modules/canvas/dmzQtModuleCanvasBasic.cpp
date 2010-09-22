@@ -10,6 +10,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
+#include <QtCore/QMimeData>
 #include <QtGui/QtGui>
 #include <QtOpenGL/QtOpenGL>
 
@@ -381,6 +382,35 @@ dmz::QtModuleCanvasBasic::wheelEvent (QWheelEvent *event) {
 
 
 void
+dmz::QtModuleCanvasBasic::dragEnterEvent (QDragEnterEvent *event) {
+
+   if (event) { event->accept (); }
+}
+
+
+void
+dmz::QtModuleCanvasBasic::dragMoveEvent (QDragMoveEvent *event) {
+
+   if (event) { event->accept (); }
+}
+
+
+void
+dmz::QtModuleCanvasBasic::dropEvent (QDropEvent *event) {
+
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else {
+
+         event->accept ();
+         _handle_drop_event (*event);
+      }
+   }
+}
+
+
+void
 dmz::QtModuleCanvasBasic::_handle_key_event (
       const QKeyEvent &Event,
       const Boolean KeyState) {
@@ -494,6 +524,13 @@ dmz::QtModuleCanvasBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we)
          _inputModule->send_mouse_event (_mouseEvent);
       }
    }
+}
+
+
+void
+dmz::QtModuleCanvasBasic::_handle_drop_event (const QDropEvent &Event) {
+
+   _log.error << "Got drop event " << qPrintable (Event.mimeData ()->text ()) << endl;
 }
 
 
@@ -617,6 +654,8 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
       
       _ignoreEvents = config_to_boolean ("canvas.ignoreevents", local, _ignoreEvents);
    }
+
+   setAcceptDrops (true);
 }
 
 

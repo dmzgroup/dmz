@@ -82,12 +82,16 @@ namespace dmz {
          virtual void mouseReleaseEvent (QMouseEvent* event);
          virtual void mouseMoveEvent (QMouseEvent *event);
          virtual void wheelEvent (QWheelEvent* event);
+         virtual void dragEnterEvent (QDragEnterEvent *event);
+         virtual void dragMoveEvent (QDragMoveEvent *event);
+         virtual void dropEvent (QDropEvent *event);
 
          void _handle_key_event (
             const QKeyEvent &Event,
             const Boolean KeyState);
 
          void _handle_mouse_event (QMouseEvent *me, QWheelEvent *we);
+         void _handle_drop_event (const QDropEvent &Event);
 
          void _init (Config &local);
 

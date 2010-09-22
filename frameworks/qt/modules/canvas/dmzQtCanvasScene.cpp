@@ -1,6 +1,9 @@
 #include "dmzQtCanvasScene.h"
 //#include <math.h>
 #include <QtGui/QtGui>
+#include <QtCore/QMimeData>
+
+#include <qdb.h>
 
 
 dmz::QtCanvasScene::QtCanvasScene (QObject *parent) :

@@ -5,12 +5,12 @@
 #include <dmzInputEventMouse.h>
 #include "dmzQtCanvasScene.h"
 #include <dmzQtModuleCanvas.h>
+#include <dmzQtModuleDropEvent.h>
 #include <dmzQtWidget.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <QtGui/QFrame>
-
 
 namespace dmz {
 
@@ -98,6 +98,7 @@ namespace dmz {
          Log _log;
          InputModule *_inputModule;
          String _inputModuleName;
+         QtModuleDropEvent *_drop;
          QtCanvasScene _scene;
          QtCanvasView *_canvas;
          InputEventKey _keyEvent;

@@ -1,0 +1,7 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtModuleDropEventToMessage"
+lmk.set_type "plugin"
+lmk.add_files {"dmzQtModuleDropEventToMessage.cpp",}
+lmk.add_preqs {"dmzRenderFramework", "dmzQtFramework",}
+lmk.add_libs {"dmzQtUtil", "dmzKernel",}
+lmkQt.add_libs {"QtCore", "QtGui",}

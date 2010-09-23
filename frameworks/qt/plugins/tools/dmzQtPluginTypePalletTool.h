@@ -13,6 +13,8 @@
 
 namespace dmz {
 
+   class ObjectType;
+
    class QtPluginTypePalletTool :
          public QFrame,
          public Plugin,
@@ -48,9 +50,9 @@ namespace dmz {
       protected slots:
          void on_filter_textChanged (const QString &Text);
 
-
       protected:
          // QtPluginTypePalletTool Interface
+         void _add_type (const ObjectType &Type, QStandardItem *parent);
          void _init (Config &local);
 
          Log _log;

@@ -1,6 +1,8 @@
 #include "dmzQtPluginTypePalletTool.h"
 #include <dmzQtUtil.h>
 #include <dmzRuntimeConfigWrite.h>
+#include <dmzRuntimeDefinitions.h>
+#include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
@@ -103,6 +105,46 @@ dmz::QtPluginTypePalletTool::get_qt_widget () { return this; }
 
 // QtPluginTypePalletTool Interface
 void
+dmz::QtPluginTypePalletTool::_add_type (const ObjectType &Type, QStandardItem *parent) {
+
+   Boolean add (False);
+
+   QStandardItem *item (0);
+
+   if (parent) { add = True; }
+   else {
+
+      Config tmp;
+
+      if (Type.get_config ().lookup_config ("render", tmp)) { add = True; }
+   }
+
+   if (add) {
+
+      const String Name = Type.get_name ();
+
+      if (Name) {
+
+         item = new QStandardItem;
+
+         item->setData (Name.get_buffer (), Qt::DisplayRole);
+         item->setEditable (false);
+
+         if (parent) { parent->appendRow (item); }
+         else { _model.appendRow (item); }
+
+         _listModel.appendRow (item->clone ());
+      }
+   }
+
+   RuntimeIterator it;
+   ObjectType next;
+
+   while (Type.get_next_child (it, next)) { _add_type (next, item); }
+}
+
+
+void
 dmz::QtPluginTypePalletTool::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
@@ -134,23 +176,11 @@ dmz::QtPluginTypePalletTool::_init (Config &local) {
 
    _ui.typeTable->setModel (&_proxyModel);
    _ui.typeTree->setModel (&_model);
-
-   QStandardItem *item = new QStandardItem;
-   item->setData ("One", Qt::DisplayRole);
-   _model.appendRow (item);
-   _listModel.appendRow (item->clone ());
-
-   QStandardItem *item2 = new QStandardItem;
-   item2->setData ("Two", Qt::DisplayRole);
-   item->appendRow (item2);
-   _listModel.appendRow (item2->clone ());
-
-   item2 = new QStandardItem;
-   item2->setData ("Three", Qt::DisplayRole);
-   item->appendRow (item2);
-   _listModel.appendRow (item2->clone ());
-
    _ui.stack->setCurrentIndex (_ui.filter->text ().isEmpty () ? 0 : 1);
+
+   _add_type (Definitions (context).get_root_object_type (), 0);
+
+   _ui.typeTree->expandAll ();
 }
 
 

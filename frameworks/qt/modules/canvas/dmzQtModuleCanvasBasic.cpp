@@ -25,6 +25,7 @@ dmz::QtModuleCanvasBasic::QtModuleCanvasBasic (const PluginInfo &Info, Config &l
       _log (Info),
       _inputModule (0),
       _inputModuleName (),
+      _drop (0),
       _scene (),
       _canvas (0),
       _keyEvent (),
@@ -73,6 +74,8 @@ dmz::QtModuleCanvasBasic::discover_plugin (
 
          _inputModule = InputModule::cast (PluginPtr, _inputModuleName);
       }
+
+      if (!_drop) { _drop = QtModuleDropEvent::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
@@ -80,6 +83,8 @@ dmz::QtModuleCanvasBasic::discover_plugin (
 
          _inputModule = 0;
       }
+
+      if (_drop && (_drop == QtModuleDropEvent::cast (PluginPtr))) { _drop = 0; }
    }
 }
 
@@ -404,7 +409,8 @@ dmz::QtModuleCanvasBasic::dropEvent (QDropEvent *event) {
       else {
 
          event->accept ();
-         _handle_drop_event (*event);
+
+         if (_drop) { _drop->receive_drop_event (get_plugin_handle (), *event); }
       }
    }
 }
@@ -524,13 +530,6 @@ dmz::QtModuleCanvasBasic::_handle_mouse_event (QMouseEvent *me, QWheelEvent *we)
          _inputModule->send_mouse_event (_mouseEvent);
       }
    }
-}
-
-
-void
-dmz::QtModuleCanvasBasic::_handle_drop_event (const QDropEvent &Event) {
-
-   _log.error << "Got drop event " << qPrintable (Event.mimeData ()->text ()) << endl;
 }
 
 

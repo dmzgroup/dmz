@@ -4,6 +4,7 @@ lmk.add_files {
    "dmzQtModuleMainWindow.h",
    "dmzQtModuleCanvas.h",
    "dmzQtCanvasConsts.h",
+   "dmzQtModuleDropEvent.h",
    "dmzQtModuleMap.h",
    "dmzQtWidget.h",
 }

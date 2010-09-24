@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2009, Lloyd Hilaiel.
+ * Copyright 2010, Lloyd Hilaiel.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -34,6 +34,12 @@
 #define __YAJL_ENCODE_H__
 
 #include "yajl_buf.h"
+#include "api/yajl_gen.h"
+
+void yajl_string_encode2(const yajl_print_t printer,
+                         void * ctx,
+                         const unsigned char * str,
+                         unsigned int length);
 
 void yajl_string_encode(yajl_buf buf, const unsigned char * str,
                         unsigned int length);

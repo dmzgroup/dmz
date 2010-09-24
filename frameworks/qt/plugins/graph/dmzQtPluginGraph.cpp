@@ -16,9 +16,11 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       Plugin (Info),
       TimeSlice (Info),
       ObjectObserverUtil (Info, local),
+      MessageObserver (Info),
       QtWidget (Info),
       _log (Info),
-      _convert (Info),
+      _convertBool (Info),
+      _convertString (Info),
       _mainWindowModule (0),
       _mainWindowModuleName (),
       _scene (0),
@@ -27,6 +29,8 @@ dmz::QtPluginGraph::QtPluginGraph (const PluginInfo &Info, Config &local) :
       _yLabels (0),
       _powerLawPath (0),
       _powerLabel (0),
+      _xAxisLabel (0),
+      _yAxisLabel (0),
       _graphDirty (False),
       _showPowerLaw (False),
       _showPercents (False),
@@ -298,6 +302,28 @@ QWidget *
 dmz::QtPluginGraph::get_qt_widget () { return this; }
 
 
+// Message Observer Interface
+void
+dmz::QtPluginGraph::receive_message (
+   const Message &Type,
+   const Handle MessageSendHandle,
+   const Handle TargetObserverHandle,
+   const Data *InData,
+   Data *outData) {
+
+   if (Type == _updateXLabelMsg) {
+      if (_xAxisLabel) {
+         _xAxisLabel->setPlainText (to_qstring (_convertString.to_string (InData)));
+      }
+   }
+   if (Type == _updateYLabelMsg) {
+      if (_yAxisLabel) {
+         _yAxisLabel->setPlainText (to_qstring (_convertString.to_string (InData)));
+      }
+   }
+}
+
+
 void
 dmz::QtPluginGraph::on_exportButton_clicked () {
 
@@ -354,7 +380,7 @@ dmz::QtPluginGraph::showEvent (QShowEvent *event) {
 
    if (_visibleMsg) {
 
-      Data out = _convert.to_data (True);
+      Data out = _convertBool.to_data (True);
       _visibleMsg.send (&out);
    }
 }
@@ -365,7 +391,7 @@ dmz::QtPluginGraph::hideEvent (QHideEvent *event) {
 
    if (_visibleMsg) {
 
-      Data out = _convert.to_data (False);
+      Data out = _convertBool.to_data (False);
       _visibleMsg.send (&out);
    }
 }
@@ -483,7 +509,7 @@ dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
       bar.text->setPos (
          bar.offset + (
             (_barWidth * 0.5) - ((_rotateLabel ? rect.height () : rect.width ()) * 0.5)),
-         5.0);
+         20.0);
    }
 
    if (bar.countText) {
@@ -532,6 +558,7 @@ dmz::QtPluginGraph::_update_power_law (
 
    HashTableUInt32Iterator it;
    BarStruct *bar (_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
+   BarStruct *startBar = 0;
 
    while (bar) {
 
@@ -572,19 +599,46 @@ dmz::QtPluginGraph::_update_power_law (
    QPainterPath path;
 
    bar = (_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
+   startBar = 0;
 
    const Float32 Offset (_barWidth * 0.5f);
 
+   Float32 scaleHeightMax;
+
+   while (bar && !foundFirstBar) {
+
+      if (bar->count && (-bar->height < _barHeight)) {
+
+         foundFirstBar = true;
+         if (startBar) {
+
+            scaleHeightMax = -local_power (p, q, startBar->Id);
+            path.moveTo (startBar->offset + Offset, -_barHeight);
+         }
+         else {
+
+            scaleHeightMax = -local_power (p, q, bar->Id);
+            path.moveTo (bar->offset + Offset, -_barHeight);
+         }
+      }
+      if (!foundFirstBar) {
+
+         if (LastBar == bar) { bar = 0; }
+         else {
+
+            startBar = bar;
+            bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
+         }
+      }
+   }
+
    while (bar) {
 
-      if (!foundFirstBar && bar->count) {
+      if (foundFirstBar) {
 
-         path.moveTo (bar->offset + Offset, -local_power (p, q, bar->Id));
-         foundFirstBar = True;
-      }
-      else if (foundFirstBar) {
-
-         path.lineTo (bar->offset + Offset, -local_power (p, q, bar->Id));
+         path.lineTo (
+            bar->offset + Offset,
+            local_power (p, q, bar->Id) / scaleHeightMax * _barHeight);
       }
       
       if (LastBar == bar) { bar = 0; }
@@ -612,7 +666,7 @@ dmz::QtPluginGraph::_update_power_law (
       if (!_powerLabel) {
 
          _powerLabel = new QGraphicsTextItem;
-         _powerLabel->setPos (260.0, -_barHeight);
+         _powerLabel->setPos (260.0, -_barHeight - 60);
          if (_scene) { _scene->addItem (_powerLabel); }
       }
 
@@ -748,8 +802,13 @@ dmz::QtPluginGraph::_update_graph () {
 
    if (_showPowerLaw) { _update_power_law (lastBar, offset); }
 
-   if (_scene) { _scene->setSceneRect (_scene->itemsBoundingRect ()); }
+   if (_scene) {
+
+      _scene->setSceneRect (_scene->itemsBoundingRect ());
+      _scene->update (_scene->itemsBoundingRect ());
+   }
 }
+
 
 
 void
@@ -868,6 +927,40 @@ dmz::QtPluginGraph::_init (Config &local) {
       line->setZValue (1.0f);
 
       _scene->addItem (line);
+   }
+
+   String xLabel = config_to_string ("x-axis-label.text", local);
+   if (xLabel) {
+
+      _xAxisLabel = new QGraphicsTextItem;
+      _xAxisLabel->setPos (0, 0);
+      _xAxisLabel->setPlainText (to_qstring (xLabel));
+      if (_scene) { _scene->addItem (_xAxisLabel); }
+      _updateXLabelMsg = config_create_message (
+         "x-axis-label.update-msg.name",
+         local,
+         "",
+         context,
+         &_log);
+
+      subscribe_to_message (_updateXLabelMsg);
+   }
+
+   String yLabel = config_to_string ("y-axis-label.text", local);
+   if (yLabel) {
+
+      _yAxisLabel = new QGraphicsTextItem;
+      _yAxisLabel->setPos (-40, -_barHeight - 40);
+      _yAxisLabel->setPlainText (to_qstring (yLabel));
+      if (_scene) { _scene->addItem (_yAxisLabel); }
+      _updateYLabelMsg = config_create_message (
+         "y-axis-label.update-msg.name",
+         local,
+         "",
+         context,
+         &_log);
+
+      subscribe_to_message (_updateYLabelMsg);
    }
 
    _visibleMsg = config_create_message (

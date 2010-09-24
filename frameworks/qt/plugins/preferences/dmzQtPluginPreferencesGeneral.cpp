@@ -1,5 +1,6 @@
 #include <dmzQtConfigRead.h>
 #include "dmzQtPluginPreferencesGeneral.h"
+#include <dmzQtUtil.h>
 #include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeData.h>
@@ -15,7 +16,7 @@ namespace {
 
    struct ScalarStruct : public BaseWidgetStruct {
 
-      ScalarStruct (const Handle AttrHandle);
+      ScalarStruct (const Handle AttrHandle, DataConverterString &dcs);
       ~ScalarStruct ();
 
       void init (Config &local);
@@ -29,7 +30,7 @@ namespace {
 
    struct BooleanStruct : public BaseWidgetStruct {
 
-      BooleanStruct (const Handle AttrHandle);
+      BooleanStruct (const Handle AttrHandle, DataConverterString &dcs);
       ~BooleanStruct ();
 
       void init (Config &local);
@@ -40,9 +41,21 @@ namespace {
       QCheckBox *_checkBox;
    };
 
+   struct StateStruct : public BaseWidgetStruct {
+      StateStruct (const Handle AttrHandle, DataConverterString &dcs);
+      ~StateStruct ();
 
-   ScalarStruct::ScalarStruct (const Handle AttrHandle) :
-         BaseWidgetStruct (AttrHandle),
+      void init (Config &local);
+      void update (const Data &InData);
+      void send_message ();
+
+   private:
+      QComboBox *_comboBox;
+
+   };
+
+   ScalarStruct::ScalarStruct (const Handle AttrHandle, DataConverterString &dcs) :
+         BaseWidgetStruct (AttrHandle, dcs),
          _spinBox (new QDoubleSpinBox),
          _scale (1.0) {
 
@@ -95,8 +108,8 @@ namespace {
    }
 
 
-   BooleanStruct::BooleanStruct (const Handle AttrHandle) :
-         BaseWidgetStruct (AttrHandle),
+   BooleanStruct::BooleanStruct (const Handle AttrHandle, DataConverterString &dcs) :
+         BaseWidgetStruct (AttrHandle, dcs),
          _checkBox (new QCheckBox) {
 
       widget = _checkBox;
@@ -148,6 +161,69 @@ namespace {
          }
       }
    }
+
+   StateStruct::StateStruct (const Handle AttrHandle, DataConverterString &dcs) :
+         BaseWidgetStruct (AttrHandle, dcs),
+         _comboBox (new QComboBox) {
+
+      widget = _comboBox;
+   }
+
+
+   StateStruct::~StateStruct () {
+
+      if (_comboBox) {
+
+         _comboBox->setParent (0);
+         delete _comboBox;
+         _comboBox = 0;
+      }
+   }
+
+
+   void
+   StateStruct::init (Config &local) {
+
+      if (_comboBox) {
+
+         ConfigIterator it;
+         Config stateList, state;
+         local.lookup_all_config ("state", stateList);
+         while (stateList.get_next_config (it, state)) {
+
+            const String Name = config_to_string ("label", state);
+            _comboBox->addItem (to_qstring(Name));
+            if (config_to_boolean ("default", state, False)) {
+
+               _comboBox->setCurrentIndex (_comboBox->findText (to_qstring (Name)));
+            }
+         }
+      }
+   }
+
+
+   void
+   StateStruct::send_message () {
+
+      if (_comboBox) {
+
+         Data data = _convert.to_data (qPrintable(_comboBox->currentText ()));
+         message.send (&data);
+      }
+   }
+
+   void
+   StateStruct::update (const Data &InData) {
+
+      if (_comboBox) {
+
+         String value = _convert.to_string (InData);
+         if (value) {
+
+            _comboBox->setCurrentIndex (_comboBox->findText (to_qstring (value)));
+         }
+      }
+   }
 };
 
 
@@ -160,6 +236,7 @@ dmz::QtPluginPreferencesGeneral::QtPluginPreferencesGeneral (
       MessageObserver (Info),
       _log (Info),
       _defs (Info),
+      _convert (Info),
       _layout (0),
       _valueAttrHandle (0),
       _widgetTable () {
@@ -286,7 +363,7 @@ dmz::QtPluginPreferencesGeneral::_create_properties (Config &list) {
 
          if (Type == "scalar") {
 
-            ScalarStruct *ss (new ScalarStruct (_valueAttrHandle));
+            ScalarStruct *ss (new ScalarStruct (_valueAttrHandle, _convert));
             ws = ss;
 
             connect (
@@ -295,7 +372,7 @@ dmz::QtPluginPreferencesGeneral::_create_properties (Config &list) {
          }
          else if (Type == "boolean") {
 
-            BooleanStruct *bs (new BooleanStruct (_valueAttrHandle));
+            BooleanStruct *bs (new BooleanStruct (_valueAttrHandle, _convert));
             ws = bs;
 
             connect (
@@ -310,6 +387,14 @@ dmz::QtPluginPreferencesGeneral::_create_properties (Config &list) {
 //            connect (
 //               cs->widget, SIGNAL (currentIndexChanged (int)),
 //               this, SLOT (_slot_widget_value_changed ()));
+         }
+         else if (Type == "state") {
+            StateStruct *ss (new StateStruct (_valueAttrHandle, _convert));
+            ws = ss;
+
+            connect (
+               ss->widget, SIGNAL (currentIndexChanged (const QString &)),
+               this, SLOT (_slot_widget_value_changed ()));
          }
 
          if (ws) {

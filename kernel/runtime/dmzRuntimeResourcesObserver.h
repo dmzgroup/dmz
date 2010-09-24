@@ -11,8 +11,17 @@ class RuntimeContext;
 //! \addtogroup Runtime
 //! @(
 
+//! \brief Activate update_resources_path callback in dmz::ResourcesObserver
+//! \details Defined in dmzRuntimeResourcesObserver.h
+//! \sa dmz::ResourcesObserver::set_resources_observer_callback_mask()
 const UInt32 ResourcesPathMask = 0x01;
+//! \brief Activate update_resource callback in dmz::ResourcesObserver
+//! \details Defined in dmzRuntimeResourcesObserver.h
+//! \sa dmz::ResourcesObserver::set_resources_observer_callback_mask()
 const UInt32 ResourcesResourceMask = 0x02;
+//! \brief Activate all callbacks in dmz::ResourcesObserver
+//! \details Defined in dmzRuntimeResourcesObserver.h
+//! \sa dmz::ResourcesObserver::set_definitions_observer_callback_mask()
 const UInt32 ResourcesAllMask = 0xFF;
 
 enum ResourcesActivateModeEnum {

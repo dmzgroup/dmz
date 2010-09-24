@@ -23,7 +23,7 @@
 </dmzPluginSaveMessageMonostate>
 </dmz>
 \endcode
-\sa dmz;::get_session_config
+\sa dmz;::get_session_config()
 
 */
 

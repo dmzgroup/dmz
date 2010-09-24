@@ -20,6 +20,7 @@ namespace dmz {
          PluginContainer (RuntimeContext *context, Log *log = 0);
          ~PluginContainer ();
 
+         Handle get_handle () const;
          void get_plugin_list (HandleContainer &container);
          Boolean add_plugin (PluginInfo *Info, Plugin *plugin);
          PluginInfo *lookup_plugin_info (const Handle PluginHandle);

@@ -1013,6 +1013,8 @@ dmz::Definitions::create_message (const String &Name, Message &type) {
       RuntimeContextMessaging *rcm (_state.context->get_messaging_context ());
 
       type = _state.defs->create_message (Name, "", _state.context, rcm);
+
+      result = type.get_message_context () != 0;
    }
 
    return result;

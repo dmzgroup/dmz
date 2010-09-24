@@ -24,7 +24,7 @@ function add_libs (list)
       end
       lmk.add_vars {
          localLibPaths = "-F$(DMZ_QT_LIB_PATH) " .. paths,
-         localIncludes = "-F$(DMZ_QT_INCLUDE_PATH)",
+         localIncludes = "-F$(DMZ_QT_INCLUDE_PATH) $(lmk.includePathFlag)$(DMZ_QT_INCLUDE_PATH)",
       }
    else
       local libNumber = ""

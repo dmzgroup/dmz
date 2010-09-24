@@ -1,0 +1,6 @@
+lmk.set_name "dmzPluginExitOnLogError"
+lmk.set_type "plugin"
+lmk.add_files {"dmzPluginExitOnLogError.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+}

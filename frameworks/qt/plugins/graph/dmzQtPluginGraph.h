@@ -34,6 +34,7 @@ namespace dmz {
          public Plugin,
          public TimeSlice,
          public ObjectObserverUtil,
+         public MessageObserver,
          public QtWidget {
             
       Q_OBJECT
@@ -92,6 +93,14 @@ namespace dmz {
             const Handle AttributeHandle,
             const String &Value,
             const String *PreviousValue);
+
+         // Message Observer Interface
+         virtual void receive_message (
+            const Message &Type,
+            const Handle MessageSendHandle,
+            const Handle TargetObserverHandle,
+            const Data *InData,
+            Data *outData);
 
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();
@@ -162,7 +171,8 @@ namespace dmz {
          void _init (Config &local);
 
          Log _log;
-         DataConverterBoolean _convert;
+         DataConverterBoolean _convertBool;
+         DataConverterString _convertString;
          Ui::GraphForm _ui;
          QtModuleMainWindow *_mainWindowModule;
          String _mainWindowModuleName;
@@ -172,6 +182,8 @@ namespace dmz {
          QGraphicsTextItem **_yLabels;
          QGraphicsPathItem *_powerLawPath;
          QGraphicsTextItem *_powerLabel;
+         QGraphicsTextItem *_xAxisLabel;
+         QGraphicsTextItem *_yAxisLabel;
 
          QBrush _barFill;
          QPen _barStroke;
@@ -190,6 +202,8 @@ namespace dmz {
          Int32 _maxBarCount;
 
          Message _visibleMsg;
+         Message _updateXLabelMsg;
+         Message _updateYLabelMsg;
 
          Boolean _ascendingOrder;
          Float32 _barWidth;

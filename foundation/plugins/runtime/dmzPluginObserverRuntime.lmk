@@ -1,0 +1,6 @@
+lmk.set_name "dmzPluginObserverRuntime"
+lmk.set_type "plugin"
+lmk.add_files {"dmzPluginObserverRuntime.cpp",}
+lmk.add_libs {
+   "dmzKernel",
+}

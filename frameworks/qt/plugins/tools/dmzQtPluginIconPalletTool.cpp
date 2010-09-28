@@ -24,9 +24,6 @@ dmz::QtPluginIconPalletTool::QtPluginIconPalletTool (
 
    _ui.setupUi (this);
 
-   show ();
-   raise ();
-
    _init (local);
 }
 

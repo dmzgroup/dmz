@@ -9,4 +9,4 @@ lmk.add_libs {
    "dmzKernel",
 }
 lmk.add_preqs {"dmzQtFramework",}
-lmkQt.add_libs {"QtCore", "QtGui",}
+lmkQt.add_libs {"QtSvg", "QtCore", "QtGui",}

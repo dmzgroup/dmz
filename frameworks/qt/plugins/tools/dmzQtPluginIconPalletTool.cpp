@@ -7,6 +7,12 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
 
+#include <QtGui/QPainter>
+#include <QtGui/QPixmap>
+#include <QtGui/QIcon>
+#include <QtGui/QImage>
+#include <QtSvg/QSvgRenderer>
+
 dmz::QtPluginIconPalletTool::QtPluginIconPalletTool (
       const PluginInfo &Info,
       Config &local) :
@@ -106,14 +112,29 @@ dmz::QtPluginIconPalletTool::_add_type (const ObjectType &Type) {
 
       const String Name = Type.get_name ();
 
-_log.error << IconName << " " << Name << endl;
-
       if (Name) {
 
-         QSize size;
-         size.scale (100, 100, Qt::KeepAspectRatio);
+         QImage back (72, 72, QImage::Format_ARGB32_Premultiplied);
+         QPainter painter (&back);
+         painter.setCompositionMode (QPainter::CompositionMode_Source);
+         painter.fillRect (back.rect (), Qt::transparent);
+         painter.setCompositionMode (QPainter::CompositionMode_SourceOver);
+         QSvgRenderer qsr (QString (IconName.get_buffer ()));
+         QRectF size = qsr.viewBoxF ();
+         qreal width = size.width ();
+         qreal height = size.height ();
+         qreal scale = (width > height) ? width : height;
+         if (scale <= 0.0) { scale = 1.0; }
+         scale = 72 / scale;
+         width *= scale;
+         height *= scale;
+         size.setWidth (width);
+         size.setHeight (height);
+         if (height < 72.0) { size.moveTop (72.0 - height); }
+         qsr.render (&painter, size);
+         painter.end ();
          QIcon icon;
-         icon.addFile (IconName.get_buffer ()); //, size);
+         icon.addPixmap (QPixmap::fromImage (back));
          QStandardItem *item = new QStandardItem (icon, Name.get_buffer ());
          item->setEditable (false);
          _model.appendRow (item);

@@ -577,8 +577,6 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
 
       group = new QtCanvasObjectGroup (parent);
       
-//group->setFlag (QGraphicsItem::ItemIgnoresTransformations, true);
-
       QGraphicsItem *item (0);
 
       ConfigIterator it;
@@ -589,24 +587,29 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
 
          const String DataName (cd.get_name ().to_lower ());
          const String ItemName (config_to_string ("name", cd));
+         const Boolean Isect (config_to_boolean ("isect", cd, True));
 
          if (DataName == "image") {
 
             item = _create_image_item (os, group, cd);
-            item->setData (QtCanvasObjectHandleIndex, (quint64)os.ObjHandle);
-            
-//item->setFlag (QGraphicsItem::ItemIgnoresTransformations, false);
+
+            if (Isect) {
+
+               item->setData (QtCanvasObjectHandleIndex, (quint64)os.ObjHandle);
+            }
          }
          else if (DataName == "text") {
 
             item =  _create_text_item (os, group, cd);
-            item->setData (QtCanvasObjectHandleIndex, (quint64)os.ObjHandle);
-//item->setFlag (QGraphicsItem::ItemIgnoresTransformations, false);
+
+            if (Isect) {
+
+               item->setData (QtCanvasObjectHandleIndex, (quint64)os.ObjHandle);
+            }
          }
          else if (DataName == "group") {
 
             item = _create_item (os, group, cd);
-//item->setFlag (QGraphicsItem::ItemIgnoresTransformations, true);
          }
 
          if (item) {

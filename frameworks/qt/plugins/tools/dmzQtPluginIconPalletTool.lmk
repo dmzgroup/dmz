@@ -3,7 +3,7 @@ lmkQt.set_name "dmzQtPluginIconPalletTool"
 lmk.set_type "plugin"
 lmk.add_files {"IconFrame.ui",}
 lmk.add_files ({"dmzQtPluginIconPalletTool.h",}, {src="moc",})
-lmk.add_files {"dmzMimeModel.cpp", "dmzQtPluginIconPalletTool.cpp",}
+lmk.add_files {"dmzQtActionListView.cpp", "dmzMimeModel.cpp", "dmzQtPluginIconPalletTool.cpp",}
 lmk.add_libs {
    "dmzQtUtil",
    "dmzKernel",

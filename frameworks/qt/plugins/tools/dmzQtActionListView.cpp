@@ -4,21 +4,22 @@
 #include <QtGui/QStandardItemModel>
 
 namespace {
-// Basically mimic  QAbstractItemView's startDrag routine, except that
-// another pixmap is used, we don't want the whole row.
 
-void
+static void
 startActionDrag (
       QWidget *dragParent,
       QAbstractItemModel *model,
       const QModelIndexList &indexes,
-      Qt::DropActions supportedActions) {
+      Qt::DropActions supportedActions,
+      const int Extent) {
 
    if (indexes.empty())
        return;
 
-   QDrag *drag = new QDrag(dragParent);
-   QMimeData *data = model->mimeData(indexes);
+   const int HalfExtent = Extent / 2;
+
+   QDrag *drag = new QDrag (dragParent);
+   QMimeData *data = model->mimeData (indexes);
    drag->setMimeData (data);
 
    QStandardItemModel *smodel = dynamic_cast<QStandardItemModel *>(model);
@@ -27,21 +28,30 @@ startActionDrag (
 
       QStandardItem *item = smodel->itemFromIndex (indexes.front ());
 
-      drag->setPixmap (item->icon ().pixmap (72));
+      drag->setPixmap (item->icon ().pixmap (Extent));
    }
 
-   drag->setHotSpot (QPoint (36, 36));
+   drag->setHotSpot (QPoint (HalfExtent, HalfExtent));
    drag->start (supportedActions);
 }
 
 };
 
-dmz::QtActionListView::QtActionListView (QWidget *parent) : QListView (parent) {;}
+dmz::QtActionListView::QtActionListView (QWidget *parent) :
+      QListView (parent),
+      _iconExtent (72) {;}
 
 
 void
 dmz::QtActionListView::startDrag (Qt::DropActions supportedActions) {
 
-   startActionDrag(this, model (), selectedIndexes(), supportedActions);
+   startActionDrag (this, model (), selectedIndexes(), supportedActions, _iconExtent);
+}
+
+
+void
+dmz::QtActionListView::set_icon_extent (const int Extent) {
+
+   if (Extent > 0) { _iconExtent = Extent; }
 }
 

@@ -54,8 +54,10 @@ namespace dmz {
 
          Log _log;
          Resources _rc;
+         Message _showMsg;
          Ui::IconFrame _ui;
          MimeModel _model;
+         qreal _iconExtent;
 
 
       private:

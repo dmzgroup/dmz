@@ -20,7 +20,8 @@ dmz::QtPluginIconPalletTool::QtPluginIconPalletTool (
       MessageObserver (Info),
       QtWidget (Info),
       _log (Info),
-      _rc (Info) {
+      _rc (Info),
+      _iconExtent (72.0f) {
 
    _ui.setupUi (this);
 
@@ -90,6 +91,8 @@ dmz::QtPluginIconPalletTool::receive_message (
       const Data *InData,
       Data *outData) {
 
+   show ();
+   raise ();
 }
 
 
@@ -101,9 +104,11 @@ dmz::QtPluginIconPalletTool::get_qt_widget () { return this; }
 void
 dmz::QtPluginIconPalletTool::_add_type (const ObjectType &Type) {
 
-   const String IconName = _rc.find_file (config_to_string (
+   const String IconResource = config_to_string (
       get_plugin_name () + ".resource",
-      Type.get_config()));
+      Type.get_config());
+
+   const String IconName = _rc.find_file (IconResource);
 
    if (IconName) {
 
@@ -111,7 +116,10 @@ dmz::QtPluginIconPalletTool::_add_type (const ObjectType &Type) {
 
       if (Name) {
 
-         QImage back (72, 72, QImage::Format_ARGB32_Premultiplied);
+         QImage back (
+            (int)_iconExtent,
+            (int)_iconExtent,
+            QImage::Format_ARGB32_Premultiplied);
          QPainter painter (&back);
          painter.setCompositionMode (QPainter::CompositionMode_Source);
          painter.fillRect (back.rect (), Qt::transparent);
@@ -121,13 +129,13 @@ dmz::QtPluginIconPalletTool::_add_type (const ObjectType &Type) {
          qreal width = size.width ();
          qreal height = size.height ();
          qreal scale = (width > height) ? width : height;
-         if (scale <= 0.0) { scale = 1.0; }
-         scale = 72 / scale;
+         if (scale <= 0.0f) { scale = 1.0f; }
+         scale = _iconExtent / scale;
          width *= scale;
          height *= scale;
          size.setWidth (width);
          size.setHeight (height);
-         if (height < 72.0) { size.moveTop (72.0 - height); }
+         if (height < _iconExtent) { size.moveTop ((_iconExtent - height) * 0.5f); }
          qsr.render (&painter, size);
          painter.end ();
          QIcon icon;
@@ -136,6 +144,11 @@ dmz::QtPluginIconPalletTool::_add_type (const ObjectType &Type) {
          item->setEditable (false);
          _model.appendRow (item);
       }
+   }
+   else if (IconResource) {
+
+      _log.error << "Unable to find icon resource: " << IconResource
+          << " for object type: " << Type.get_name () << endl;
    }
 
    RuntimeIterator it;
@@ -150,15 +163,13 @@ dmz::QtPluginIconPalletTool::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
 
-/*
    _showMsg = config_create_message (
       "show.name",
       local,
-      "DMZ_Show_Type_Pallet_Tool",
+      "DMZ_Show_Icon_Pallet_Tool",
       context);
 
    subscribe_to_message (_showMsg);
-*/
 
    if (context) {
 

@@ -5,12 +5,12 @@
 #include <dmzInputEventMouse.h>
 #include "dmzQtCanvasScene.h"
 #include <dmzQtModuleCanvas.h>
+#include <dmzQtModuleDropEvent.h>
 #include <dmzQtWidget.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 #include <QtGui/QFrame>
-
 
 namespace dmz {
 
@@ -82,18 +82,23 @@ namespace dmz {
          virtual void mouseReleaseEvent (QMouseEvent* event);
          virtual void mouseMoveEvent (QMouseEvent *event);
          virtual void wheelEvent (QWheelEvent* event);
+         virtual void dragEnterEvent (QDragEnterEvent *event);
+         virtual void dragMoveEvent (QDragMoveEvent *event);
+         virtual void dropEvent (QDropEvent *event);
 
          void _handle_key_event (
             const QKeyEvent &Event,
             const Boolean KeyState);
 
          void _handle_mouse_event (QMouseEvent *me, QWheelEvent *we);
+         void _handle_drop_event (const QDropEvent &Event);
 
          void _init (Config &local);
 
          Log _log;
          InputModule *_inputModule;
          String _inputModuleName;
+         QtModuleDropEvent *_drop;
          QtCanvasScene _scene;
          QtCanvasView *_canvas;
          InputEventKey _keyEvent;

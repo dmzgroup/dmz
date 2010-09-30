@@ -331,6 +331,26 @@ can not be found.
 dmz::Config
 dmz::EventType::find_config (const String &Name) const {
 
+   EventType type;
+
+   return find_config (Name, type);
+}
+
+
+/*!
+
+\brief Finds Config.
+\details Looks for Config up the EventType tree until Config is found or the root
+EventType is reached. Uses dmz::Config::lookup_all_config_merged().
+\param[in] Name String containing the name of the Config data to find.
+\param[out] type EventType that the Config was found in.
+\return Returns a Config object. The Config object will be empty if the named Config
+can not be found.
+
+*/
+dmz::Config
+dmz::EventType::find_config (const String &Name, EventType &type) const {
+
    Config result;
 
    EventType current (_context);
@@ -339,6 +359,7 @@ dmz::EventType::find_config (const String &Name) const {
 
       if (current.get_config ().lookup_all_config_merged (Name, result)) {
 
+         type = current;
          current.set_type_context (0);
       }
       else { current.become_parent (); }

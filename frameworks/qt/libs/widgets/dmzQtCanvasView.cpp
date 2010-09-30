@@ -204,3 +204,9 @@ dmz::QtCanvasView::mouseMoveEvent (QMouseEvent *event) {
    }
 }
 
+
+void
+dmz::QtCanvasView::dragEnterEvent (QDragEnterEvent *event) {
+
+   if (event) { event->ignore (); }
+}

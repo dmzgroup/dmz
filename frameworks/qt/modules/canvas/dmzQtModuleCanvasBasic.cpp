@@ -10,6 +10,7 @@
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
+#include <QtCore/QMimeData>
 #include <QtGui/QtGui>
 #include <QtOpenGL/QtOpenGL>
 
@@ -24,6 +25,7 @@ dmz::QtModuleCanvasBasic::QtModuleCanvasBasic (const PluginInfo &Info, Config &l
       _log (Info),
       _inputModule (0),
       _inputModuleName (),
+      _drop (0),
       _scene (),
       _canvas (0),
       _keyEvent (),
@@ -72,6 +74,8 @@ dmz::QtModuleCanvasBasic::discover_plugin (
 
          _inputModule = InputModule::cast (PluginPtr, _inputModuleName);
       }
+
+      if (!_drop) { _drop = QtModuleDropEvent::cast (PluginPtr); }
    }
    else if (Mode == PluginDiscoverRemove) {
 
@@ -79,6 +83,8 @@ dmz::QtModuleCanvasBasic::discover_plugin (
 
          _inputModule = 0;
       }
+
+      if (_drop && (_drop == QtModuleDropEvent::cast (PluginPtr))) { _drop = 0; }
    }
 }
 
@@ -381,6 +387,36 @@ dmz::QtModuleCanvasBasic::wheelEvent (QWheelEvent *event) {
 
 
 void
+dmz::QtModuleCanvasBasic::dragEnterEvent (QDragEnterEvent *event) {
+
+   if (event) { event->accept (); }
+}
+
+
+void
+dmz::QtModuleCanvasBasic::dragMoveEvent (QDragMoveEvent *event) {
+
+   if (event) { event->accept (); }
+}
+
+
+void
+dmz::QtModuleCanvasBasic::dropEvent (QDropEvent *event) {
+
+   if (event) {
+      
+      if (_ignoreEvents) { event->ignore (); }
+      else {
+
+         event->accept ();
+
+         if (_drop) { _drop->receive_drop_event (get_plugin_handle (), *event); }
+      }
+   }
+}
+
+
+void
 dmz::QtModuleCanvasBasic::_handle_key_event (
       const QKeyEvent &Event,
       const Boolean KeyState) {
@@ -617,6 +653,8 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
       
       _ignoreEvents = config_to_boolean ("canvas.ignoreevents", local, _ignoreEvents);
    }
+
+   setAcceptDrops (true);
 }
 
 

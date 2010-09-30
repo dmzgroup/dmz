@@ -28,7 +28,6 @@ namespace dmz {
    
    class QtModuleMainWindow;
 
-
    class QtPluginGraph :
          public QFrame,
          public Plugin,

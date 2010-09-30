@@ -2,6 +2,7 @@
 #include <dmzRuntimeDataConverterStringContainer.h>
 #include <dmzRuntimeDataConverterTypesBase.h>
 #include <dmzRuntimeDataConverterUUID.h>
+#include <dmzRuntimeDataConverterVector.h>
 #include <dmzRuntimePluginInfo.h>
 
 /*!
@@ -886,3 +887,150 @@ dmz::DataConverterStringContainer::write_data (const StringContainer &Value, Dat
    }
 }
 
+
+/*!
+
+\class dmz::DataConverterVector
+\ingroup Runtime
+\brief Class for converting between a Vector and a Data object.
+
+*/
+
+struct dmz::DataConverterVector::State : public DataConverterCommonStruct {
+
+   State (RuntimeContext *context)  { set_handle ("vector", context); }
+};
+
+
+/*!
+
+\brief Constructor.
+\param[in] Info reference to PluginInfo.
+
+*/
+dmz::DataConverterVector::DataConverterVector (const PluginInfo &Info) :
+      _state (*(new State (Info.get_context ()))) {;}
+
+
+/*!
+
+\brief Constructor.
+\param[in] context Pointer to the runtime context.
+
+*/
+dmz::DataConverterVector::DataConverterVector (RuntimeContext *context) :
+      _state (*(new State (context))) {;}
+
+
+//! Destructor.
+dmz::DataConverterVector::~DataConverterVector () { delete &_state; }
+
+
+/*!
+
+\brief Sets the attribute handle used to store and retrieve the value in the Data object.
+\param[in] HandleName Vector containing the name of the attribute handle.
+\param[in] context Pointer to the runtime context.
+\return Returns the Handle being used.
+
+*/
+dmz::Handle
+dmz::DataConverterVector::set_handle (
+      const String &HandleName,
+      RuntimeContext *context) {
+
+   return _state.set_handle (HandleName, context);
+}
+
+
+/*!
+
+\brief Converts Data object to a Vector.
+\param[in] Value Data object to convert to a Vector.
+\return Returns Vector containing converted data.
+
+*/
+dmz::Vector
+dmz::DataConverterVector::to_vector (const Data &Value) {
+
+   Float64 xi (0.0), yj (0.0), zk (0.0);
+
+   Value.lookup_float64 (_state.handle, 0, xi);
+   Value.lookup_float64 (_state.handle, 1, yj);
+   Value.lookup_float64 (_state.handle, 2, zk);
+
+   return Vector (xi, yj, zk);
+}
+
+
+/*!
+
+\brief Converts Pointer to a Data object to a Vector.
+\param[in] Value Pointer to the Data object to convert to a Vector.
+\return Returns Vector containing converted data.
+
+*/
+dmz::Vector
+dmz::DataConverterVector::to_vector (const Data *Value) {
+
+   Vector result;
+
+   if (Value) { result = to_vector (*Value); }
+
+   return result;
+}
+
+
+/*!
+
+\brief Converts a Vector to a Data object.
+\param[in] Value Vector containing value to store in returned Data object.
+\return Returns a Data object containing the Vector in \a Value.
+
+*/
+dmz::Data
+dmz::DataConverterVector::to_data (const Vector &Value) {
+
+   Data result (_state.context);
+
+   write_data (Value, result);
+
+   return result;
+}
+
+
+/*!
+
+\brief Converts a Vector pointer to a Data object.
+\param[in] Value Vector pointer containing value to store in returned Data object.
+\return Returns a Data object containing the string in \a Value.
+
+*/
+dmz::Data
+dmz::DataConverterVector::to_data (const Vector *Value) {
+
+   Data result (_state.context);
+
+   if (Value) { result = to_data (*Value); }
+
+   return result;
+}
+
+
+/*!
+
+\brief Writes a Vector to a Data object.
+\param[in] Value Vector to store in the Data object.
+\param[out] data Data object used to store the \a Value
+
+*/
+void
+dmz::DataConverterVector::write_data (const Vector &Value, Data &data) {
+
+   if (_state.handle) {
+
+      data.store_float64 (_state.handle, 0, Value.get_x ());
+      data.store_float64 (_state.handle, 1, Value.get_y ());
+      data.store_float64 (_state.handle, 2, Value.get_z ());
+   }
+}

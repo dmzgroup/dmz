@@ -21,6 +21,7 @@ dmz::QtPluginIconPalletTool::QtPluginIconPalletTool (
       QtWidget (Info),
       _log (Info),
       _rc (Info),
+      _useSession (True),
       _iconExtent (72.0f) {
 
    _ui.setupUi (this);
@@ -53,7 +54,7 @@ dmz::QtPluginIconPalletTool::update_plugin_state (
 
       RuntimeContext *context (get_plugin_runtime_context ());
 
-      if (context) {
+      if (context && _useSession) {
 
          Config session (get_plugin_name ());
 
@@ -172,7 +173,9 @@ dmz::QtPluginIconPalletTool::_init (Config &local) {
 
    subscribe_to_message (_showMsg);
 
-   if (context) {
+   _useSession = config_to_boolean ("use-session.value", local, _useSession);
+
+   if (_useSession && context) {
 
       Config session (get_session_config (get_plugin_name (), context));
 

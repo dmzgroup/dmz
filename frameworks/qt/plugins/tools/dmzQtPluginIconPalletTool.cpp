@@ -136,6 +136,7 @@ dmz::QtPluginIconPalletTool::_add_type (const ObjectType &Type) {
          size.setWidth (width);
          size.setHeight (height);
          if (height < _iconExtent) { size.moveTop ((_iconExtent - height) * 0.5f); }
+         if (width < _iconExtent) { size.moveLeft ((_iconExtent - width) * 0.5f); }
          qsr.render (&painter, size);
          painter.end ();
          QIcon icon;

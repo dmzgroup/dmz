@@ -1650,9 +1650,13 @@ The \a Name parameter should not contain "." characters.
 
 */
 dmz::Config
-dmz::data_to_config (const Data &Source, RuntimeContext *context, Log *log) {
+dmz::data_to_config (
+     const String &Name,
+     const Data &Source,
+     RuntimeContext *context,
+     Log *log) {
 
-   Config result ("data");
+   Config result (Name);
 
    Definitions defs (context);
 

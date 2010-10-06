@@ -42,7 +42,17 @@ namespace dmz {
          virtual QMenu *lookup_menu (const String &Text);
          virtual void add_menu_action (const String &MenuName, QAction *action);
          virtual void remove_menu_action (const String &MenuName, QAction *action);
-         
+
+         virtual QDockWidget *create_dock_widget (const String &DockName, QWidget *widget);
+         virtual QDockWidget *update_dock_widget (const String &DockName, QWidget *widget);
+         virtual QDockWidget *lookup_dock_widget (const String &DockName);
+
+         virtual Boolean add_dock_widget (const String &DockName, const Qt::DockWidgetArea Area);
+         virtual Boolean add_dock_widget (QDockWidget *dock, const Qt::DockWidgetArea Area);
+
+         virtual Boolean remove_dock_widget (const String &DockName);
+         virtual Boolean remove_dock_widget (QDockWidget *dock);
+
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();
 
@@ -62,14 +72,14 @@ namespace dmz {
             Boolean floating;
 
             DockWidgetStruct (
-               const String &WidgetName,
+               const String &Name,
                const Config &Data,
                const Qt::DockWidgetArea Area);
 
             ~DockWidgetStruct ();
-            
+
             void set_widget (QWidget *widget);
-            
+
             void add_to (QMainWindow *window);
             void remove_from (QMainWindow *window);
          };
@@ -103,6 +113,7 @@ namespace dmz {
          String _windowMenuName;
          String _fileMenuName;
          HashTableStringTemplate<QMenu> _menuTable;
+         HashTableStringTemplate<QDockWidget> _dockTable;
          HashTableStringTemplate<DockWidgetStruct> _dockWidgetTable;
          Boolean _fixedSize;
 

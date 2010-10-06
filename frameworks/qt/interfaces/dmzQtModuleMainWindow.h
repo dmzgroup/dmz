@@ -7,8 +7,10 @@
 #include <QtCore/Qt>
 
 class QAction;
+class QDockWidget;
 class QMainWindow;
 class QMenu;
+class QWidget;
 
 
 namespace dmz {
@@ -22,11 +24,21 @@ namespace dmz {
 
          virtual QString get_window_name () = 0;
          virtual QMainWindow *get_qt_main_window () = 0;
-         
+
          virtual QMenu *lookup_menu (const String &Text) = 0;
-         
+
          virtual void add_menu_action (const String &MenuName, QAction *action) = 0;
          virtual void remove_menu_action (const String &MenuName, QAction *action) = 0;
+
+         virtual QDockWidget *create_dock_widget (const String &DockName, QWidget *widget = 0) = 0;
+         virtual QDockWidget *update_dock_widget (const String &DockName, QWidget *widget) = 0;
+         virtual QDockWidget *lookup_dock_widget (const String &DockName) = 0;
+
+         virtual Boolean add_dock_widget (const String &DockName, const Qt::DockWidgetArea Area) = 0;
+         virtual Boolean add_dock_widget (QDockWidget *dock, const Qt::DockWidgetArea Area) = 0;
+
+         virtual Boolean remove_dock_widget (const String &DockName) = 0;
+         virtual Boolean remove_dock_widget (QDockWidget *dock) = 0;
 
       protected:
          QtModuleMainWindow (const PluginInfo &Info);

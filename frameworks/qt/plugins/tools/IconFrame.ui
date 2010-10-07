@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>437</width>
-    <height>534</height>
+    <width>238</width>
+    <height>578</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,6 +22,12 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="dmz::QtActionListView" name="iconView">
+     <property name="minimumSize">
+      <size>
+       <width>210</width>
+       <height>550</height>
+      </size>
+     </property>
      <property name="dragEnabled">
       <bool>true</bool>
      </property>

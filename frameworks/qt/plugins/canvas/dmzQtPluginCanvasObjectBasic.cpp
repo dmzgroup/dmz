@@ -668,6 +668,8 @@ dmz::QtPluginCanvasObjectBasic::_create_pixmap_item (
 
    QGraphicsPixmapItem *item (new QGraphicsPixmapItem (parent));
 
+   Boolean center (True);
+
    if (_file_request (item, Data)) {
 
       item->setTransformationMode (Qt::SmoothTransformation);
@@ -688,6 +690,7 @@ dmz::QtPluginCanvasObjectBasic::_create_pixmap_item (
 
             Vector vec (config_to_vector (cd));
             item->translate (vec.get_x (), vec.get_y ());
+            center = False;
          }
          else if (DataName == "scale") {
 
@@ -702,6 +705,13 @@ dmz::QtPluginCanvasObjectBasic::_create_pixmap_item (
    }
    else { delete item; item = 0; }
 
+   if (item && center) {
+
+      QRectF bound = item->boundingRect ();
+
+      item->translate (bound.width () * -0.5f, bound.height () * -0.5f);
+   }
+
    return item;
 }
 
@@ -713,6 +723,8 @@ dmz::QtPluginCanvasObjectBasic::_create_svg_item (
       const Config &Data) {
 
    QGraphicsSvgItem *item (new QGraphicsSvgItem (parent));
+
+   Boolean center (True);
 
    if (_file_request (item, Data)) {
 
@@ -727,6 +739,7 @@ dmz::QtPluginCanvasObjectBasic::_create_svg_item (
 
             Vector vec (config_to_vector (cd));
             item->translate (vec.get_x (), vec.get_y ());
+            center = False;
          }
          else if (DataName == "scale") {
 
@@ -740,6 +753,13 @@ dmz::QtPluginCanvasObjectBasic::_create_svg_item (
       }
    }
    else { delete item; item = 0; }
+
+   if (item && center) {
+
+      QRectF bound = item->boundingRect ();
+
+      item->translate (bound.width () * -0.5f, bound.height () * -0.5f);
+   }
 
    return item;
 }

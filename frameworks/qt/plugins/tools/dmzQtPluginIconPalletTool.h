@@ -57,6 +57,7 @@ namespace dmz {
          Message _showMsg;
          Ui::IconFrame _ui;
          MimeModel _model;
+         Boolean _useSession;
          qreal _iconExtent;
 
 

@@ -53,7 +53,9 @@ end
 function add_uitools ()
    local libDebug = ""
    local buildMode = resolve ("$(lmk.buildMode)")
-   if buildMode == "debug" then libDebug = "_debug" end
+   if sys == "win32" then
+      if buildMode == "debug" then libDebug = "d" end
+   end
    lmk.add_vars {
       localLibPaths = "$(lmk.libPathFlag)$(lmk.projectRoot)depend/lib",
       localLibs = "$(lmk.libPrefix)QtUiTools" .. libDebug .. "$(lmk.libSuffix)",

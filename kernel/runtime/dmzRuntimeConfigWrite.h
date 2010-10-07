@@ -166,7 +166,7 @@ dmz::data_to_config (
       RuntimeContext *context,
       Log *log) {
 
-   data_to_config ("data", Source, context, log);
+   return data_to_config ("data", Source, context, log);
 }
 
 #endif // DMZ_RUNTIME_CONFIG_WRITE_DOT_H

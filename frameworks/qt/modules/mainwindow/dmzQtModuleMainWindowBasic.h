@@ -44,7 +44,6 @@ namespace dmz {
          virtual void remove_menu_action (const String &MenuName, QAction *action);
 
          virtual QDockWidget *create_dock_widget (const String &DockName, QWidget *widget);
-         virtual QDockWidget *update_dock_widget (const String &DockName, QWidget *widget);
          virtual QDockWidget *lookup_dock_widget (const String &DockName);
 
          virtual Boolean add_dock_widget (const String &DockName, const Qt::DockWidgetArea Area);
@@ -60,30 +59,6 @@ namespace dmz {
          struct ToolBarStruct;
          typedef QList<ToolBarStruct *> ToolBarList;
 
-         struct DockWidgetStruct {
-
-            const String Name;
-            QDockWidget *dock;
-            QWidget *widget;
-            Qt::DockWidgetArea area;
-            QDockWidget::DockWidgetFeatures features;
-            Qt::DockWidgetAreas allowedAreas;
-            Boolean visible;
-            Boolean floating;
-
-            DockWidgetStruct (
-               const String &Name,
-               const Config &Data,
-               const Qt::DockWidgetArea Area);
-
-            ~DockWidgetStruct ();
-
-            void set_widget (QWidget *widget);
-
-            void add_to (QMainWindow *window);
-            void remove_from (QMainWindow *window);
-         };
-
          struct ToolBarStruct {
 
             QToolBar *toolBar;
@@ -91,9 +66,9 @@ namespace dmz {
             Boolean visible;
 
             ToolBarStruct () :
-                  toolBar (0),
-                  area (Qt::NoToolBarArea),
-                  visible (False) {;}
+               toolBar (0),
+               area (Qt::NoToolBarArea),
+               visible (False) {;}
          };
 
          virtual void closeEvent (QCloseEvent *event);
@@ -114,7 +89,8 @@ namespace dmz {
          String _fileMenuName;
          HashTableStringTemplate<QMenu> _menuTable;
          HashTableStringTemplate<QDockWidget> _dockTable;
-         HashTableStringTemplate<DockWidgetStruct> _dockWidgetTable;
+         QList<QDockWidget *> _docksToShow;
+         QList<QDockWidget *> _docksToFloat;
          Boolean _fixedSize;
 
       private:

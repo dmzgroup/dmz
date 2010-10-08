@@ -219,15 +219,30 @@ dmz::ArchiveObserverUtil::activate_archive (const String &ArchiveName) {
 
    Handle result (__state.defs.create_named_handle (ArchiveName));
 
-   if (result) {
+   if (result && !activate_archive (result)) { result = 0; }
 
-      __state.validHandles.add (result);
+   return result;
+}
 
-      Handle *ptr (new Handle (result));
+
+dmz::Boolean
+dmz::ArchiveObserverUtil::activate_archive (const Handle ArchiveHandle) {
+
+   Boolean result (False);
+
+   __state.validHandles.add (ArchiveHandle);
+
+   const String ArchiveName (__state.defs.lookup_named_handle_name (ArchiveHandle));
+
+   if (ArchiveName) {
+
+      Handle *ptr (new Handle (ArchiveHandle));
 
       if (ptr) {
 
          if (__state.handleTable.store (ArchiveName, ptr)) {
+
+            result = True;
 
             if (__state.module) {
 

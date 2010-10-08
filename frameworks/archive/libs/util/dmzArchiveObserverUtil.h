@@ -23,6 +23,7 @@ namespace dmz {
 
          Handle activate_default_archive ();
          Handle activate_archive (const String &ArchiveName);
+         Boolean activate_archive (const Handle ArchiveHandle);
          void deactivate_default_archive ();
          void deactivate_archive (const String &ArchiveName);
          void deactivate_archive (const Handle ArchiveHandle);

@@ -266,7 +266,7 @@ dmz::config_to_dock_widget_areas (
    if (config_to_boolean ("none", areas)) { result = Qt::NoDockWidgetArea; }
    else if (config_to_boolean ("all", areas)) { result = Qt::AllDockWidgetAreas; }
    else {
-      
+
       if (config_to_boolean ("left", areas)) { result |= Qt::LeftDockWidgetArea; }
       if (config_to_boolean ("right", areas)) { result |= Qt::RightDockWidgetArea; }
       if (config_to_boolean ("top", areas)) { result |= Qt::TopDockWidgetArea; }
@@ -282,7 +282,6 @@ dmz::qicon_config_read (const String &Name, const Config &Source, QIcon *icon) {
 
    if (icon) {
 
-      QIcon result;
       Config iconData;
 
       if (Name) { Source.lookup_config (Name, iconData); }
@@ -397,7 +396,7 @@ dmz::qwidget_config_read (const String &Name, const Config &Source, QWidget *wid
       if (value) { widget->setWindowTitle (value.get_buffer ()); }
 
       set_qwidget_stylesheet ("stylesheet", cd, widget);
-      
+
 //      set_qwidget_contents_margins ("margins", cd, widget);
    }
 }
@@ -426,12 +425,12 @@ dmz::qframe_config_read (const String &Name, const Config &Source, QFrame *frame
 #endif
 
       qwidget_config_read ("widget", cd, frame);
-      
+
       frame->setLineWidth (config_to_int32 ("line-width", cd, 1));
       frame->setMidLineWidth (config_to_int32 ("mid-line-width", cd, 0));
-      
+
       String value;
-      
+
       value = config_to_string ("shape", cd).to_lower ();
       if (value == "noframe") { frame->setFrameShape (QFrame::NoFrame); }
       else if (value == "box") { frame->setFrameShape (QFrame::Box); }
@@ -522,7 +521,7 @@ dmz::qaction_config_read (const String &Name, const Config &Source, QAction *act
          else if (StandardKey == "new") { shortcut = QKeySequence::New; }
          else if (StandardKey == "open") { shortcut = QKeySequence::Open; }
          else if (StandardKey == "save") { shortcut = QKeySequence::Save; }
-         else if (StandardKey == "saveas") { 
+         else if (StandardKey == "saveas") {
 #if (QT_VERSION >= QT_VERSION_CHECK(4, 5, 0))
             shortcut = QKeySequence::SaveAs;
 #else
@@ -748,21 +747,21 @@ dmz::qdoublespinbox_config_read (
       const String &Name,
       const Config &Source,
       QDoubleSpinBox *spinBox) {
-         
+
    if (spinBox) {
-   
+
       Config cd;
-      
+
       if (Name) { Source.lookup_config (Name, cd); }
       else { cd = Source; }
-      
+
       qwidget_config_read ("widget", cd, spinBox);
-      
+
       spinBox->setDecimals (config_to_int32 ("decimals", cd, 2));
-      
+
       spinBox->setRange (
          config_to_float64 ("min", cd, 0), config_to_float64 ("max", cd, 1e+10)),
-         
+
       spinBox->setPrefix (config_to_string ("prefix", cd).get_buffer ());
       spinBox->setSingleStep (config_to_float64 ("step", cd, 1000));
       spinBox->setSuffix (config_to_string ("suffix", cd).get_buffer ());

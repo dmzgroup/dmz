@@ -276,6 +276,17 @@ dmz::QtModuleMainWindowBasic::lookup_menu (const String &Text) {
 
 
 void
+dmz::QtModuleMainWindowBasic::add_menu_separator (const String &MenuName) {
+
+   if (MenuName) {
+
+      QMenu *menu (lookup_menu (MenuName));
+      if (menu) { menu->addSeparator (); }
+   }
+}
+
+
+void
 dmz::QtModuleMainWindowBasic::add_menu_action (const String &MenuName, QAction *action) {
 
    if (MenuName && action) {

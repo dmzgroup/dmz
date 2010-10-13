@@ -8,95 +8,14 @@
 #include <dmzRuntimeSession.h>
 #include <QtGui/QtGui>
 
+class QMainWindodw;
+
 
 namespace {
 
 static const int LocalSessionVersion = 6;
 
 };
-
-
-dmz::QtModuleMainWindowBasic::DockWidgetStruct::DockWidgetStruct (
-      const String &TheName,
-      const Config &Data,
-      const Qt::DockWidgetArea Area) :
-      Name (TheName),
-      dock (0),
-      widget (0),
-      area (Area) {
-
-   const String Title (config_to_string ("title", Data, ""));
-
-   dock = new QDockWidget (Title.get_buffer ());
-   dock->setObjectName (Name.get_buffer ());
-   dock->setAllowedAreas (config_to_dock_widget_areas ("allowed-areas", Data, area));
-   dock->setFeatures (QDockWidget::AllDockWidgetFeatures);
-
-   visible = config_to_boolean ("visible", Data, True);
-   floating = config_to_boolean ("floating", Data, False);
-}
-
-
-dmz::QtModuleMainWindowBasic::DockWidgetStruct::~DockWidgetStruct () {
-
-   if (dock) { delete dock; dock = 0; }
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::DockWidgetStruct::set_widget (QWidget *theWidget) {
-
-   if (dock) {
-
-      if (theWidget) {
-
-         if (widget) {
-
-            dock->setWidget (0);
-            widget->setParent (0);
-         }
-
-         widget = theWidget;
-         dock->setWidget (widget);
-      }
-      else {
-
-         dock->setWidget (0);
-
-         if (widget) {
-
-            widget->setParent (0);
-            widget = 0;
-         }
-      }
-   }
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::DockWidgetStruct::add_to (QMainWindow *window) {
-
-   if (dock && widget && window) {
-
-//      dock->setParent (window);
-//      dock->adjustSize ();
-      window->addDockWidget (area, dock);
-      dock->setFloating (floating);
-      if (visible) { dock->show (); }
-      else { dock->hide (); }
-   }
-}
-
-
-void
-dmz::QtModuleMainWindowBasic::DockWidgetStruct::remove_from (QMainWindow *window) {
-
-   if (dock && window) {
-
-      window->removeDockWidget (dock);
-      dock->setParent (0);
-   }
-}
 
 
 dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
@@ -134,7 +53,6 @@ dmz::QtModuleMainWindowBasic::QtModuleMainWindowBasic (
 dmz::QtModuleMainWindowBasic::~QtModuleMainWindowBasic () {
 
    _dockTable.clear ();
-   _dockWidgetTable.empty ();
 }
 
 
@@ -146,47 +64,33 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
 
    if (State == PluginStateInit) {
 
-      HashTableStringIterator it;
-      DockWidgetStruct *dws (_dockWidgetTable.get_first (it));
-
-      while (dws) {
-
-         dws->add_to (this);
-         add_menu_action (_windowMenuName, dws->dock->toggleViewAction ());
-         dws = _dockWidgetTable.get_next (it);
-      }
-
       QAction *action (new QAction (this));
       action->setSeparator (True);
       add_menu_action (_fileMenuName, action);
       add_menu_action (_fileMenuName, _exitAction);
-
-      _load_session ();
-
-      show ();
-
-      _restore_state ();
    }
    else if (State == PluginStateStart) {
 
+      _load_session ();
+      _restore_state ();
+
+      show ();
       raise ();
       activateWindow ();
    }
    else if (State == PluginStateStop) {
 
-   }
-   else if (State == PluginStateShutdown) {
-
       _save_session ();
 
       HashTableStringIterator it;
-      DockWidgetStruct *dws (_dockWidgetTable.get_first (it));
+      QDockWidget *dock (_dockTable.get_first (it));
+      while (dock) {
 
-      while (dws) {
-
-         dws->dock->hide ();
-         dws = _dockWidgetTable.get_next (it);
+         dock->hide ();
+         dock = _dockTable.get_next (it);
       }
+   }
+   else if (State == PluginStateShutdown) {
 
       hide ();
    }
@@ -201,7 +105,6 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
    if (Mode == PluginDiscoverAdd) {
 
       QtWidget *w = QtWidget::cast (PluginPtr);
-
       if (w) {
 
          const String Name = w->get_qt_widget_name ();
@@ -213,18 +116,14 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
          }
          else {
 
-            DockWidgetStruct *dws = _dockWidgetTable.lookup (Name);
-            if (dws) {
-
-               dws->set_widget (widget);
-            }
+            QDockWidget *dock = lookup_dock_widget (Name);
+            if (dock && widget) { dock->setWidget (widget); }
          }
       }
    }
    else if (Mode == PluginDiscoverRemove) {
 
       QtWidget *w = QtWidget::cast (PluginPtr);
-
       if (w) {
 
          const String Name = w->get_qt_widget_name ();
@@ -238,12 +137,14 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
          }
          else {
 
-            DockWidgetStruct *dws = _dockWidgetTable.remove (Name);
-            if (dws && (dws->widget == w->get_qt_widget ())) {
+            QDockWidget *dock = lookup_dock_widget (Name);
+            if (dock) {
 
-               remove_menu_action (_windowMenuName, dws->dock->toggleViewAction ());
-               dws->remove_from (this);
-               dws->set_widget (0);
+               QWidget *widget = dock->widget ();
+               if (widget) { widget->setParent (0); }
+
+               dock->setWidget (0);
+               remove_dock_widget (dock);
             }
          }
       }
@@ -332,36 +233,6 @@ dmz::QtModuleMainWindowBasic::create_dock_widget (const String &DockName, QWidge
 
 
 QDockWidget *
-dmz::QtModuleMainWindowBasic::update_dock_widget (const String &DockName, QWidget *widget) {
-
-   QDockWidget *dock (0);
-
-   if (DockName && widget) {
-
-      dock = _dockTable.lookup (DockName);
-      if (!dock) {
-
-         dock = create_dock_widget (DockName, widget);
-      }
-      else {
-
-         QWidget *prevWidget = dock->widget ();
-         if (prevWidget) {
-
-            dock->setWidget (0);
-            prevWidget->setParent (0);
-         }
-
-         dock->setWidget (widget);
-         dock->setObjectName (DockName.get_buffer ());
-      }
-   }
-
-   return dock;
-}
-
-
-QDockWidget *
 dmz::QtModuleMainWindowBasic::lookup_dock_widget (const String &DockName) {
 
    return _dockTable.lookup (DockName);
@@ -388,6 +259,7 @@ dmz::QtModuleMainWindowBasic::add_dock_widget (
 
       addDockWidget (Area, dock);
       add_menu_action (_windowMenuName, dock->toggleViewAction ());
+      restoreDockWidget (dock);
       result = True;
    }
 
@@ -433,14 +305,9 @@ dmz::QtModuleMainWindowBasic::closeEvent (QCloseEvent *event) {
 void
 dmz::QtModuleMainWindowBasic::_save_session () {
 
-   String data;
-
    Config session (get_plugin_name ());
-
    session.add_config (qbytearray_to_config ("geometry", saveGeometry ()));
-
    session.add_config (qbytearray_to_config ("state", saveState (LocalSessionVersion)));
-
    set_session_config (get_plugin_runtime_context (), session);
 }
 
@@ -459,17 +326,22 @@ dmz::QtModuleMainWindowBasic::_load_session () {
    }
    else {
 
+      QDockWidget *dock (0);
+      foreach (dock, _docksToShow) { dock->setVisible (True); }
+      foreach (dock, _docksToFloat) { dock->setFloating (True); }
+
+      _docksToShow.clear ();
+      _docksToFloat.clear ();
+
       QRect grect = QApplication::desktop ()->availableGeometry (this);
       move(grect.center () - rect ().center ());
 
       HashTableStringIterator it;
-      DockWidgetStruct *dws (_dockWidgetTable.get_first (it));
+      dock = _dockTable.get_first (it);
+      while (dock) {
 
-      while (dws) {
-
-         QDockWidget *dock (dws->dock);
          dock->move (grect.center () - dock->rect ().center ());
-         dws = _dockWidgetTable.get_next (it);
+         dock = _dockTable.get_next (it);
       }
    }
 }
@@ -510,19 +382,14 @@ dmz::QtModuleMainWindowBasic::_init_dock_windows (Config &local) {
             while (groupList.get_next_config (wit, group)) {
 
                Config widgetList;
-
                Qt::DockWidgetArea area = Qt::NoDockWidgetArea;
-
-               String AreaName (config_to_string ("area", group).get_lower ());
+               const String AreaName (config_to_string ("area", group).get_lower ());
 
                if (AreaName == "left") { area = Qt::LeftDockWidgetArea; }
                else if (AreaName == "right") { area = Qt::RightDockWidgetArea; }
                else if (AreaName == "top") { area = Qt::TopDockWidgetArea; }
                else if (AreaName == "bottom") { area = Qt::BottomDockWidgetArea; }
-               else {
-
-                  _log.error << "Unknown widget area: " << AreaName << endl;
-               }
+               else { _log.error << "Unknown widget area: " << AreaName << endl; }
 
                if (group.lookup_all_config ("widget", widgetList)) {
 
@@ -533,16 +400,31 @@ dmz::QtModuleMainWindowBasic::_init_dock_windows (Config &local) {
 
                      const String WidgetName (config_to_string ("name", widget));
 
-                     if (!_dockWidgetTable.lookup (WidgetName)) {
+                     if (WidgetName && !_dockTable.lookup (WidgetName)) {
 
-                        DockWidgetStruct *dws =
-                           new DockWidgetStruct (WidgetName, widget, area);
+                        QDockWidget *dock = create_dock_widget (WidgetName, 0);
+                        if (dock) {
 
-                        if (dws) {
+                           const String Title (config_to_string ("title", widget, ""));
+                           if (Title) { dock->setWindowTitle (Title.get_buffer ()); }
 
-                           if (!_dockWidgetTable.store (WidgetName, dws)) {
+                           dock->setAllowedAreas (
+                                 config_to_dock_widget_areas ("allowed-areas", widget, area));
 
-                              delete dws; dws = 0;
+                           dock->setFeatures (QDockWidget::AllDockWidgetFeatures);
+
+                           add_dock_widget (dock, area);
+
+                           dock->setVisible (False);
+
+                           if (config_to_boolean ("visible", widget, True)) {
+
+                              _docksToShow.append (dock);
+                           }
+
+                           if (config_to_boolean ("floating", widget, False)) {
+
+                              _docksToFloat.append (dock);
                            }
                         }
                      }

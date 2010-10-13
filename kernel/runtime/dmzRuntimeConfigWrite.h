@@ -86,6 +86,12 @@ namespace dmz {
    Config string_to_config (const String &Name, const String &Value);
 
    DMZ_KERNEL_LINK_SYMBOL Config data_to_config (
+      const String &Name,
+      const Data &Source,
+      RuntimeContext *context,
+      Log *log = 0);
+
+   Config data_to_config (
       const Data &Source,
       RuntimeContext *context,
       Log *log = 0);
@@ -152,6 +158,15 @@ inline dmz::Config
 dmz::string_to_config (const String &Name, const String &Value) {
 
    return string_to_config (Name, "value", Value);
+}
+
+inline dmz::Config
+dmz::data_to_config (
+      const Data &Source,
+      RuntimeContext *context,
+      Log *log) {
+
+   return data_to_config ("data", Source, context, log);
 }
 
 #endif // DMZ_RUNTIME_CONFIG_WRITE_DOT_H

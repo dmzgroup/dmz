@@ -571,7 +571,8 @@ dmz::QtPluginGraph::_update_power_law (
 
          if (bar->height < 0.0f) {
 
-            y = log (-bar->height);
+            Float64 percentage (-bar->height / _barHeight * 100);
+            y = log (percentage);
             sumY += y;
             sumX += x;
             sumXY += x * y;

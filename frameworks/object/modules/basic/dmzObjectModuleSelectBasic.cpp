@@ -39,16 +39,14 @@ dmz::ObjectModuleSelectBasic::~ObjectModuleSelectBasic () {
 void
 dmz::ObjectModuleSelectBasic::get_selected_objects (HandleContainer &container) {
 
-   HashTableHandleIterator it;
-
-   while (_selectTable.get_next (it)) { container.add (it.get_hash_key ()); }
+   container = _selectTable;
 }
 
 
 dmz::Boolean
 dmz::ObjectModuleSelectBasic::is_selected (const Handle ObjectHandle) {
 
-   return _selectTable.lookup (ObjectHandle) != 0;
+   return _selectTable.contains (ObjectHandle);
 }
 
 
@@ -59,18 +57,26 @@ dmz::ObjectModuleSelectBasic::select_object (
 
    Boolean result (False);
 
-   if (Mode != ObjectSelectAdd) { unselect_all_objects (); }
+   if ((_selectTable.get_count () == 1) && (ObjectHandle == _selectTable.get_first ())) {
 
-   if (_selectTable.store (ObjectHandle, this)) {
-
-      ObjectModule *objMod (get_object_module ());
-
-      if (objMod && _selectHandle) {
-
-         objMod->store_flag (ObjectHandle, _selectHandle, True);
-      }
-
+      // Already selected
       result = True;
+   }
+   else {
+
+      if (Mode != ObjectSelectAdd) { unselect_all_objects (); }
+
+      if (_selectTable.add (ObjectHandle)) {
+
+         ObjectModule *objMod (get_object_module ());
+
+         if (objMod && _selectHandle) {
+
+            objMod->store_flag (ObjectHandle, _selectHandle, True);
+         }
+
+         result = True;
+      }
    }
 
    return result;
@@ -103,11 +109,12 @@ dmz::ObjectModuleSelectBasic::unselect_all_objects () {
 
    if (_selectHandle && objMod) {
 
-      HashTableHandleIterator it;
+      HandleContainerIterator it;
+      Handle obj (0);
 
-      while (_selectTable.get_next (it)) {
+      while (_selectTable.get_next (it, obj)) {
 
-         objMod->store_flag (it.get_hash_key (), _selectHandle, False);
+         objMod->store_flag (obj, _selectHandle, False);
       }
    }
 
@@ -146,7 +153,7 @@ dmz::ObjectModuleSelectBasic::update_object_flag (
 
    if (AttributeHandle == _selectHandle) {
 
-      if (Value) { _selectTable.store (ObjectHandle, this); }
+      if (Value) { _selectTable.add (ObjectHandle); }
       else { _selectTable.remove (ObjectHandle); }
    }
 }
@@ -168,13 +175,14 @@ dmz::ObjectModuleSelectBasic::_store_object_module (ObjectModule &objMod) {
 
    if (_selectHandle) {
 
-      HashTableHandleIterator it;
+      HandleContainerIterator it;
+      Handle obj (0);
 
-      while (_selectTable.get_next (it)) {
+      while (_selectTable.get_next (it, obj)) {
 
-         if (!objMod.store_flag (it.get_hash_key (), _selectHandle, True)) {
+         if (!objMod.store_flag (obj, _selectHandle, True)) {
 
-            _selectTable.remove (it.get_hash_key ());
+            _selectTable.remove (obj);
          }
       }
    }

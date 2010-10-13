@@ -5,7 +5,7 @@
 #include <dmzObjectObserverUtil.h>
 #include <dmzRuntimeLog.h>
 #include <dmzRuntimePlugin.h>
-#include <dmzTypesHashTableHandleTemplate.h>
+#include <dmzTypesHandleContainer.h>
 
 namespace dmz {
 
@@ -63,7 +63,7 @@ namespace dmz {
          // Object Observer Util Interface
          virtual void _store_object_module (ObjectModule &objMod);
 
-         HashTableHandleTemplate<const ObjectModuleSelectBasic> _selectTable;
+         HandleContainer _selectTable;
          Handle _selectHandle;
          Log _log;
          //! \endcond

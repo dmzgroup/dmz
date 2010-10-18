@@ -559,6 +559,30 @@ dmz::QtPluginGraph::_update_power_law (
    HashTableUInt32Iterator it;
    BarStruct *bar (_ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it));
    BarStruct *startBar = 0;
+   BarStruct *prevBar = 0;
+   UInt32 barOffset (0);
+
+   while (bar) {
+
+      if (-bar->height == _barHeight) {
+
+         ++barOffset;
+         prevBar = bar;
+         if (LastBar == bar) { bar = 0; }
+         else {
+
+            bar = (_ascendingOrder ? _barTable.get_next (it) : _barTable.get_prev (it));
+         }
+      }
+      else { bar = 0; }
+   }
+
+   if (prevBar) { bar = prevBar; --barOffset; }
+   else {
+
+      it.reset ();
+      bar = _ascendingOrder ? _barTable.get_first (it) : _barTable.get_last (it);
+   }
 
    while (bar) {
 
@@ -566,8 +590,8 @@ dmz::QtPluginGraph::_update_power_law (
 
       if (foundFirstBar) {
 
-         if (bar->Id == 0) { x = 1.0; }
-         else { x = log (Float64 (bar->Id)); }
+         if ((bar->Id - barOffset) == 0) { x = 1.0; }
+         else { x = log (Float64 (bar->Id - barOffset)); }
 
          if (bar->height < 0.0f) {
 
@@ -613,12 +637,12 @@ dmz::QtPluginGraph::_update_power_law (
          foundFirstBar = true;
          if (startBar) {
 
-            scaleHeightMax = -local_power (p, q, startBar->Id);
+            scaleHeightMax = -local_power (p, q, startBar->Id - barOffset);
             path.moveTo (startBar->offset + Offset, -_barHeight);
          }
          else {
 
-            scaleHeightMax = -local_power (p, q, bar->Id);
+            scaleHeightMax = -local_power (p, q, bar->Id - barOffset);
             path.moveTo (bar->offset + Offset, -_barHeight);
          }
       }
@@ -639,7 +663,7 @@ dmz::QtPluginGraph::_update_power_law (
 
          path.lineTo (
             bar->offset + Offset,
-            local_power (p, q, bar->Id) / scaleHeightMax * _barHeight);
+            local_power (p, q, bar->Id - barOffset) / scaleHeightMax * _barHeight);
       }
       
       if (LastBar == bar) { bar = 0; }

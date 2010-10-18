@@ -91,7 +91,10 @@ main (int argc, char *argv[]) {
 
    QApplication qtApp (argc, argv);
 
-   Application app ("dmzAppQt", "dmz");
+   String appName = get_env ("DMZ_APP_NAME");
+   if (!appName) { appName = "dmzAppQt"; }
+
+   Application app (appName, "dmz");
 
    //qsrand (QTime (0,0,0).secsTo (QTime::currentTime ()));
    srand (QDateTime::currentDateTime ().toTime_t ());

@@ -512,7 +512,7 @@ dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
          20.0);
    }
 
-   if (bar.countText) {
+   if (bar.countText && (((_barWidth + _spaceWidth) >= 25.0) || (Percent < 1))) {
 
       if (_showPercents) {
 
@@ -755,7 +755,9 @@ dmz::QtPluginGraph::_update_graph () {
                if (_scene) { _scene->addItem (bar->text); }
             }
 
-            if (!bar->countText) {
+            if (!bar->countText &&
+                (((_barWidth + _spaceWidth) >= 25.0) ||
+                  (bar->count / _maxBarCount) < 1)) {
 
                bar->countText = new QGraphicsTextItem (QString::number (bar->count));
                bar->countText->setZValue (0.0f);

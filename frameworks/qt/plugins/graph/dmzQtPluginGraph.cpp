@@ -512,15 +512,19 @@ dmz::QtPluginGraph::_update_bar (BarStruct &bar) {
          20.0);
    }
 
-   if (bar.countText && (((_barWidth + _spaceWidth) >= 25.0) || (Percent < 1))) {
+   if (bar.countText) {
 
-      if (_showPercents) {
+      if (((_barWidth + _spaceWidth) >= 25.0) || (Percent < 1)) {
 
-         bar.countText->setPlainText (QString::number (Percent * 100.0, 'f', 0));
+         if (_showPercents) {
+
+            bar.countText->setPlainText (QString::number (Percent * 100.0, 'f', 0));
+         }
+         else { bar.countText->setPlainText (QString::number (bar.count)); }
       }
       else {
 
-         bar.countText->setPlainText (QString::number (bar.count));
+         bar.countText->setPlainText ("");
       }
 
       QRectF rect = bar.countText->boundingRect ();

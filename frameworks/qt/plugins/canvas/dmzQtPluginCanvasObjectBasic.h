@@ -115,16 +115,22 @@ namespace dmz {
       protected:
          struct ModelStruct {
 
-//            const ObjectType ObjType;
+            const ObjectType ObjType;
             String templateName;
             Config itemData;
             Config textData;
             Config switchData;
 
-//            ModelStruct (const ObjectType &TheType, const String &TheTemplateName) :
             ModelStruct (const String &TheTemplateName) :
-//            ObjType (TheType),
+               ObjType (),
                templateName (TheTemplateName),
+               itemData (),
+               textData (),
+               switchData () {;}
+
+            ModelStruct (const ObjectType &TheType) :
+               ObjType (TheType),
+               templateName (""),
                itemData (),
                textData (),
                switchData () {;}
@@ -292,14 +298,17 @@ namespace dmz {
          void _lookup_object_state (const Handle ObjectHandle, Mask &objState);
          void _lookup_object_type (const Handle ObjectHandle, ObjectType &objType);
 
-//         ModelStruct *_get_model_struct (const ObjectType &ObjType);
+         ModelStruct *_get_model_struct (const ObjectType &ObjType);
 
-//         Boolean _find_config_from_type (Config &local, ObjectType &objType);
+         Boolean _find_config_from_type (Config &local, ObjectType &objType);
 
          ModelStruct *_config_to_model_struct (
             Config &local,
             String templateName);
-//            const ObjectType &ObjType);
+
+         ModelStruct *_config_to_model_struct (
+            Config &local,
+            const ObjectType &ObjType);
 
          String _get_object_name (ObjectStruct &os);
 
@@ -314,12 +323,10 @@ namespace dmz {
          Boolean _itemIgnoresTransformations;
          Int32 _zValue;
          HashTableStringTemplate<QSvgRenderer> _svgRendererTable;
-//         HashTableHandleTemplate<ModelStruct> _modelTable;
-//         HashTableHandleTemplate<ModelStruct> _masterModelTable;
-         HashTableHandleTemplate<ObjectStruct> _objectTable;
-
-//         HashTableStringTemplate<String> _templateStringTable;
+         HashTableHandleTemplate<ModelStruct> _modelTable;
+         HashTableHandleTemplate<ModelStruct> _masterModelTable;
          HashTableStringTemplate<ModelStruct> _templateModelTable;
+         HashTableHandleTemplate<ObjectStruct> _objectTable;
 
       private:
          QtPluginCanvasObjectBasic ();

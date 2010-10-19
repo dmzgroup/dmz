@@ -302,10 +302,11 @@ dmz::QtPluginCanvasObjectBasic::create_object (
       Type.get_config ());
    ModelStruct *ms (_templateModelTable.lookup (templateName));
 
+   if (!ms) { ms = _get_model_struct (Type); }
+
    if (ms) {
 
       HashTableStringTemplate<String> _templateStringTable;
-
       Config templ;
       if (Type.get_config ().lookup_all_config (
          "canvas-object-basic.template.var",
@@ -1103,71 +1104,71 @@ dmz::QtPluginCanvasObjectBasic::_lookup_object_type (
 }
 
 
-//dmz::QtPluginCanvasObjectBasic::ModelStruct *
-//dmz::QtPluginCanvasObjectBasic::_get_model_struct (const ObjectType &ObjType) {
+dmz::QtPluginCanvasObjectBasic::ModelStruct *
+dmz::QtPluginCanvasObjectBasic::_get_model_struct (const ObjectType &ObjType) {
 
-//   ModelStruct *retVal (_masterModelTable.lookup (ObjType.get_handle ()));
+   ModelStruct *retVal (_masterModelTable.lookup (ObjType.get_handle ()));
 
-//   if (!retVal) {
+   if (!retVal) {
 
-//      Config local;
-//      ObjectType currentType (ObjType);
+      Config local;
+      ObjectType currentType (ObjType);
 
-//      if (_find_config_from_type (local, currentType)) {
+      if (_find_config_from_type (local, currentType)) {
 
-//         ModelStruct *ms (_modelTable.lookup (currentType.get_handle ()));
+         ModelStruct *ms (_modelTable.lookup (currentType.get_handle ()));
 
-//         if (!ms) {
+         if (!ms) {
 
-//            ms = _config_to_model_struct (local, currentType);
+            ms = _config_to_model_struct (local, currentType);
 
-//            if (ms) {
+            if (ms) {
 
-//               _modelTable.store (ms->ObjType.get_handle (), ms);
-//            }
-//         }
+               _modelTable.store (ms->ObjType.get_handle (), ms);
+            }
+         }
 
-//         retVal = ms;
-//      }
-//   }
+         retVal = ms;
+      }
+   }
 
-//   if (retVal) {
+   if (retVal) {
 
-//      _masterModelTable.store (ObjType.get_handle (), retVal);
-//   }
+      _masterModelTable.store (ObjType.get_handle (), retVal);
+   }
 
-//   return retVal;
-//}
+   return retVal;
+}
 
 
-//dmz::Boolean
-//dmz::QtPluginCanvasObjectBasic::_find_config_from_type (
-//      Config &local,
-//      ObjectType &objType) {
+dmz::Boolean
+dmz::QtPluginCanvasObjectBasic::_find_config_from_type (
+      Config &local,
+      ObjectType &objType) {
 
-//   const String Name (get_plugin_name ());
+   const String Name (get_plugin_name ());
 
-//   Boolean found (objType.get_config ().lookup_all_config_merged (Name, local));
+   Boolean found (objType.get_config ().lookup_all_config_merged (Name, local));
 
-//   if (!found) {
+   if (!found) {
 
-//      ObjectType currentType (objType);
-//      currentType.become_parent ();
+      ObjectType currentType (objType);
+      currentType.become_parent ();
 
-//      while (currentType && !found) {
+      while (currentType && !found) {
 
-//         if (currentType.get_config ().lookup_all_config_merged (Name, local)) {
+         if (currentType.get_config ().lookup_all_config_merged (Name, local)) {
 
-//            found = True;
-//            objType = currentType;
-//         }
+            found = True;
+            objType = currentType;
+         }
 
-//         currentType.become_parent ();
-//      }
-//   }
+         currentType.become_parent ();
+      }
+   }
 
-//   return found;
-//}
+   return found;
+}
 
 
 dmz::QtPluginCanvasObjectBasic::ModelStruct *
@@ -1176,6 +1177,24 @@ dmz::QtPluginCanvasObjectBasic::_config_to_model_struct (
       String templateName) {
 
    ModelStruct *ms (new ModelStruct (templateName));
+
+   if (local.lookup_all_config_merged ("items", ms->itemData)) {
+
+      local.lookup_all_config_merged ("text", ms->textData);
+
+      local.lookup_all_config_merged ("switch", ms->switchData);
+   }
+   else { delete ms; ms = 0; }
+
+   return ms;
+}
+
+dmz::QtPluginCanvasObjectBasic::ModelStruct *
+dmz::QtPluginCanvasObjectBasic::_config_to_model_struct (
+      Config &local,
+      const ObjectType &ObjType) {
+
+   ModelStruct *ms (new ModelStruct (ObjType));
 
    if (local.lookup_all_config_merged ("items", ms->itemData)) {
 

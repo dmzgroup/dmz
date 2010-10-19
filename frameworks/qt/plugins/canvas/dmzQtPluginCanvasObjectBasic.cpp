@@ -248,8 +248,7 @@ dmz::QtPluginCanvasObjectBasic::QtPluginCanvasObjectBasic (
       _canvasModule (0),
       _canvasModuleName (),
       _svgRendererTable (),
-      _modelTable (),
-      _masterModelTable (),
+      _templateModelTable (),
       _objectTable () {
 
    _init (local);
@@ -258,8 +257,7 @@ dmz::QtPluginCanvasObjectBasic::QtPluginCanvasObjectBasic (
 
 dmz::QtPluginCanvasObjectBasic::~QtPluginCanvasObjectBasic () {
 
-   _masterModelTable.clear ();
-   _modelTable.empty ();
+   _templateModelTable.empty ();
    _objectTable.empty ();
    _svgRendererTable.empty ();
 }
@@ -297,11 +295,36 @@ dmz::QtPluginCanvasObjectBasic::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
-   ModelStruct *ms (_get_model_struct (Type));
+//   ModelStruct *ms (_get_model_struct (Type));
+
+   String templateName = config_to_string(
+      "canvas-object-basic.template.name",
+      Type.get_config ());
+   ModelStruct *ms (_templateModelTable.lookup (templateName));
 
    if (ms) {
 
-      if (_create_object (ObjectHandle, Type, *ms)) {
+      HashTableStringTemplate<String> _templateStringTable;
+
+      Config templ;
+      if (Type.get_config ().lookup_all_config (
+         "canvas-object-basic.template.var",
+         templ)) {
+
+         ConfigIterator it;
+         Config varTemplate;
+         while (templ.get_next_config (it, varTemplate)) {
+
+            String name = config_to_string ("name", varTemplate);
+            String *value = new String (config_to_string ("value", varTemplate));
+            if ((name != "") && (*value != "")) {
+
+               _templateStringTable.store (name, value);
+            }
+         }
+      }
+
+      if (_create_object (ObjectHandle, Type, *ms, _templateStringTable)) {
 
          Mask objState;
          _lookup_object_state (ObjectHandle, objState);
@@ -368,7 +391,8 @@ dmz::Boolean
 dmz::QtPluginCanvasObjectBasic::_create_object (
       const Handle ObjectHandle,
       const ObjectType &Type,
-      ModelStruct &ms) {
+      ModelStruct &ms,
+      HashTableStringTemplate<String> &_templateStringTable) {
 
    Boolean retVal (False);
 
@@ -382,7 +406,7 @@ dmz::QtPluginCanvasObjectBasic::_create_object (
 
          os->objType = Type;
 
-         os->item = _create_item (*os, parent, ms.itemData);
+         os->item = _create_item (*os, parent, ms.itemData, _templateStringTable);
 
 //         if (!parent->isVisible () && os->item) {
 //
@@ -569,7 +593,8 @@ dmz::QtCanvasObjectGroup *
 dmz::QtPluginCanvasObjectBasic::_create_item (
       ObjectStruct &os,
       QGraphicsItem *parent,
-      const Config &ItemList) {
+      const Config &ItemList,
+      HashTableStringTemplate<String> &_templateStringTable) {
 
    QtCanvasObjectGroup *group (0);
 
@@ -591,7 +616,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
 
          if (DataName == "image") {
 
-            item = _create_image_item (os, group, cd);
+            item = _create_image_item (os, group, cd, _templateStringTable);
 
             if (Isect) {
 
@@ -609,7 +634,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
          }
          else if (DataName == "group") {
 
-            item = _create_item (os, group, cd);
+            item = _create_item (os, group, cd, _templateStringTable);
          }
 
          if (item) {
@@ -640,20 +665,24 @@ QGraphicsItem *
 dmz::QtPluginCanvasObjectBasic::_create_image_item (
       ObjectStruct &os,
       QGraphicsItem *parent,
-      const Config &Data) {
+      const Config &Data,
+      HashTableStringTemplate<String> &_templateStringTable) {
 
    QGraphicsItem *item (0);
 
-   const String File = _rc.find_file (config_to_string ("resource", Data)).to_lower ();
+   String fileName = config_to_string ("resource", Data);
+   String *repName = _templateStringTable.lookup (fileName);
+
+   const String File = _rc.find_file (repName ? *repName : fileName).to_lower ();
    QFileInfo fi (File.get_buffer ());
 
    if (fi.suffix () == QLatin1String ("svg")) {
 
-      item = _create_svg_item (os, parent, Data);
+      item = _create_svg_item (os, parent, Data, _templateStringTable);
    }
    else {
 
-      item = _create_pixmap_item (os, parent, Data);
+      item = _create_pixmap_item (os, parent, Data, _templateStringTable);
    }
 
    return item;
@@ -664,13 +693,14 @@ QGraphicsPixmapItem *
 dmz::QtPluginCanvasObjectBasic::_create_pixmap_item (
       ObjectStruct &os,
       QGraphicsItem *parent,
-      const Config &Data) {
+      const Config &Data,
+      HashTableStringTemplate<String> &_templateStringTable) {
 
    QGraphicsPixmapItem *item (new QGraphicsPixmapItem (parent));
 
    Boolean center (True);
 
-   if (_file_request (item, Data)) {
+   if (_file_request (item, Data, _templateStringTable)) {
 
       item->setTransformationMode (Qt::SmoothTransformation);
 
@@ -720,13 +750,14 @@ QGraphicsSvgItem *
 dmz::QtPluginCanvasObjectBasic::_create_svg_item (
       ObjectStruct &os,
       QGraphicsItem *parent,
-      const Config &Data) {
+      const Config &Data,
+      HashTableStringTemplate<String> &_templateStringTable) {
 
    QGraphicsSvgItem *item (new QGraphicsSvgItem (parent));
 
    Boolean center (True);
 
-   if (_file_request (item, Data)) {
+   if (_file_request (item, Data, _templateStringTable)) {
 
       ConfigIterator it;
       Config cd;
@@ -962,10 +993,16 @@ dmz::QtPluginCanvasObjectBasic::_process_item_state (
 
 
 dmz::Boolean
-dmz::QtPluginCanvasObjectBasic::_file_request (QGraphicsItem *item, const Config &Data) {
+dmz::QtPluginCanvasObjectBasic::_file_request (
+   QGraphicsItem *item,
+   const Config &Data,
+   HashTableStringTemplate<String> &_templateStringTable) {
 
    Boolean result (False);
-   const String Resource (config_to_string ("resource", Data));
+   String fileName = config_to_string ("resource", Data);
+   String *repName = _templateStringTable.lookup (fileName);
+
+   const String Resource (repName ? *repName : fileName);
 
    if (Resource && item) {
 
@@ -1066,79 +1103,79 @@ dmz::QtPluginCanvasObjectBasic::_lookup_object_type (
 }
 
 
-dmz::QtPluginCanvasObjectBasic::ModelStruct *
-dmz::QtPluginCanvasObjectBasic::_get_model_struct (const ObjectType &ObjType) {
+//dmz::QtPluginCanvasObjectBasic::ModelStruct *
+//dmz::QtPluginCanvasObjectBasic::_get_model_struct (const ObjectType &ObjType) {
 
-   ModelStruct *retVal (_masterModelTable.lookup (ObjType.get_handle ()));
+//   ModelStruct *retVal (_masterModelTable.lookup (ObjType.get_handle ()));
 
-   if (!retVal) {
+//   if (!retVal) {
 
-      Config local;
-      ObjectType currentType (ObjType);
+//      Config local;
+//      ObjectType currentType (ObjType);
 
-      if (_find_config_from_type (local, currentType)) {
+//      if (_find_config_from_type (local, currentType)) {
 
-         ModelStruct *ms (_modelTable.lookup (currentType.get_handle ()));
+//         ModelStruct *ms (_modelTable.lookup (currentType.get_handle ()));
 
-         if (!ms) {
+//         if (!ms) {
 
-            ms = _config_to_model_struct (local, currentType);
+//            ms = _config_to_model_struct (local, currentType);
 
-            if (ms) {
+//            if (ms) {
 
-               _modelTable.store (ms->ObjType.get_handle (), ms);
-            }
-         }
+//               _modelTable.store (ms->ObjType.get_handle (), ms);
+//            }
+//         }
 
-         retVal = ms;
-      }
-   }
+//         retVal = ms;
+//      }
+//   }
 
-   if (retVal) {
+//   if (retVal) {
 
-      _masterModelTable.store (ObjType.get_handle (), retVal);
-   }
+//      _masterModelTable.store (ObjType.get_handle (), retVal);
+//   }
 
-   return retVal;
-}
+//   return retVal;
+//}
 
 
-dmz::Boolean
-dmz::QtPluginCanvasObjectBasic::_find_config_from_type (
-      Config &local,
-      ObjectType &objType) {
+//dmz::Boolean
+//dmz::QtPluginCanvasObjectBasic::_find_config_from_type (
+//      Config &local,
+//      ObjectType &objType) {
 
-   const String Name (get_plugin_name ());
+//   const String Name (get_plugin_name ());
 
-   Boolean found (objType.get_config ().lookup_all_config_merged (Name, local));
+//   Boolean found (objType.get_config ().lookup_all_config_merged (Name, local));
 
-   if (!found) {
+//   if (!found) {
 
-      ObjectType currentType (objType);
-      currentType.become_parent ();
+//      ObjectType currentType (objType);
+//      currentType.become_parent ();
 
-      while (currentType && !found) {
+//      while (currentType && !found) {
 
-         if (currentType.get_config ().lookup_all_config_merged (Name, local)) {
+//         if (currentType.get_config ().lookup_all_config_merged (Name, local)) {
 
-            found = True;
-            objType = currentType;
-         }
+//            found = True;
+//            objType = currentType;
+//         }
 
-         currentType.become_parent ();
-      }
-   }
+//         currentType.become_parent ();
+//      }
+//   }
 
-   return found;
-}
+//   return found;
+//}
 
 
 dmz::QtPluginCanvasObjectBasic::ModelStruct *
 dmz::QtPluginCanvasObjectBasic::_config_to_model_struct (
       Config &local,
-      const ObjectType &ObjType) {
+      String templateName) {
 
-   ModelStruct *ms (new ModelStruct (ObjType));
+   ModelStruct *ms (new ModelStruct (templateName));
 
    if (local.lookup_all_config_merged ("items", ms->itemData)) {
 
@@ -1183,6 +1220,22 @@ dmz::QtPluginCanvasObjectBasic::_init (Config &local) {
       "defaults.itemIgnoresTransformations",
       local,
       _itemIgnoresTransformations);
+
+   Config templ;
+   if (local.lookup_all_config ("template", templ)) {
+
+      ConfigIterator it;
+      Config objTemplate;
+      while (templ.get_next_config (it, objTemplate)) {
+
+         String templateName = config_to_string ("name", objTemplate, "");
+         if (templateName != "") {
+
+            ModelStruct *ms = _config_to_model_struct (objTemplate, templateName);
+            if (ms) { _templateModelTable.store (templateName, ms); }
+         }
+      }
+   }
 }
 
 

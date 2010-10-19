@@ -698,7 +698,7 @@ dmz::QtPluginGraph::_update_power_law (
       if (_powerLabel) {
 
          _powerLabel->setPlainText (
-            QString::fromAscii ("Exponent = ") + QString::number (q));
+            QString::fromAscii ("Exponent = ") + QString::number (-q));
       }
    }
    else if (_scene) {

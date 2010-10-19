@@ -82,13 +82,13 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
 
       _save_session ();
 
-//      HashTableStringIterator it;
-//      QDockWidget *dock (_dockTable.get_first (it));
-//      while (dock) {
+      HashTableStringIterator it;
+      QDockWidget *dock (_dockTable.get_first (it));
+      while (dock) {
 
-//         dock->hide ();
-//         dock = _dockTable.get_next (it);
-//      }
+         dock->hide ();
+         dock = _dockTable.get_next (it);
+      }
    }
    else if (State == PluginStateShutdown) {
 
@@ -137,7 +137,7 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
          }
          else {
 
-            remove_dock_widget (Name);
+            if (lookup_dock_widget (Name)) { remove_dock_widget (Name); }
          }
       }
    }
@@ -215,14 +215,12 @@ dmz::QtModuleMainWindowBasic::create_dock_widget (
 
          if (widget) {
 
-//            widget->setParent (dock);
+            widget->setParent (dock);
             dock->setWidget (widget);
          }
 
          addDockWidget (Area, dock);
          add_menu_action (_windowMenuName, dock->toggleViewAction ());
-
-//         restoreDockWidget (dock);
       }
       else { delete dock; dock = 0; }
    }
@@ -248,14 +246,11 @@ dmz::QtModuleMainWindowBasic::remove_dock_widget (const String &DockName) {
       remove_menu_action (_windowMenuName, dock->toggleViewAction ());
       removeDockWidget (dock);
 
-//      QWidget *widget (dock->widget ());
-//      if (widget) {
+      QWidget *widget (dock->widget ());
+      if (widget) { widget->setParent (0); }
 
-//         widget->setParent (0);
-//      }
-
-//      dock->setWidget (0);
-//      dock->setParent (0);
+      dock->setWidget (0);
+      dock->setParent (0);
 
       delete dock; dock = 0;
 

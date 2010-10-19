@@ -116,26 +116,19 @@ namespace dmz {
          struct ModelStruct {
 
             const ObjectType ObjType;
-            String templateName;
+            HashTableStringTemplate<String> table;
             Config itemData;
             Config textData;
             Config switchData;
 
-            ModelStruct (const String &TheTemplateName) :
-               ObjType (),
-               templateName (TheTemplateName),
-               itemData (),
-               textData (),
-               switchData () {;}
-
             ModelStruct (const ObjectType &TheType) :
                ObjType (TheType),
-               templateName (""),
+               table (),
                itemData (),
                textData (),
                switchData () {;}
 
-            ~ModelStruct () {;}
+            ~ModelStruct () { table.empty (); }
          };
 
          typedef HashTableStringTemplate<QtCanvasObjectText> QtCanvasObjectTextTable;
@@ -230,8 +223,7 @@ namespace dmz {
          Boolean _create_object (
             const Handle ObjectHandle,
             const ObjectType &Type,
-            ModelStruct &ms,
-            HashTableStringTemplate<String> &_templateStringTable);
+            ModelStruct &ms);
 
          void _destroy_object (const Handle ObjectHandle);
 
@@ -251,25 +243,25 @@ namespace dmz {
             ObjectStruct &os,
             QGraphicsItem *parent,
             const Config &itemList,
-            HashTableStringTemplate<String> &_templateStringTable);
+            HashTableStringTemplate<String> &table);
 
          QGraphicsItem *_create_image_item (
                ObjectStruct &os,
                QGraphicsItem *parent,
                const Config &Data,
-               HashTableStringTemplate<String> &_templateStringTable);
+               HashTableStringTemplate<String> &table);
 
          QGraphicsPixmapItem *_create_pixmap_item (
             ObjectStruct &os,
             QGraphicsItem *parent,
             const Config &Data,
-            HashTableStringTemplate<String> &_templateStringTable);
+            HashTableStringTemplate<String> &table);
 
          QGraphicsSvgItem *_create_svg_item (
             ObjectStruct &os,
             QGraphicsItem *parent,
             const Config &Data,
-            HashTableStringTemplate<String> &_templateStringTable);
+            HashTableStringTemplate<String> &table);
 
          QtCanvasObjectText *_create_text_item (
             ObjectStruct &os,
@@ -293,7 +285,7 @@ namespace dmz {
          Boolean _file_request (
             QGraphicsItem *item,
             const Config &Data,
-            HashTableStringTemplate<String> &_templateStringTable);
+            HashTableStringTemplate<String> &table);
 
          void _lookup_object_state (const Handle ObjectHandle, Mask &objState);
          void _lookup_object_type (const Handle ObjectHandle, ObjectType &objType);
@@ -301,10 +293,6 @@ namespace dmz {
          ModelStruct *_get_model_struct (const ObjectType &ObjType);
 
          Boolean _find_config_from_type (Config &local, ObjectType &objType);
-
-         ModelStruct *_config_to_model_struct (
-            Config &local,
-            String templateName);
 
          ModelStruct *_config_to_model_struct (
             Config &local,
@@ -325,8 +313,8 @@ namespace dmz {
          HashTableStringTemplate<QSvgRenderer> _svgRendererTable;
          HashTableHandleTemplate<ModelStruct> _modelTable;
          HashTableHandleTemplate<ModelStruct> _masterModelTable;
-         HashTableStringTemplate<ModelStruct> _templateModelTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
+         HashTableStringTemplate<Config> _templateConfigTable;
 
       private:
          QtPluginCanvasObjectBasic ();

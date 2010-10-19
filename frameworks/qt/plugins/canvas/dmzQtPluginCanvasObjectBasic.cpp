@@ -248,8 +248,10 @@ dmz::QtPluginCanvasObjectBasic::QtPluginCanvasObjectBasic (
       _canvasModule (0),
       _canvasModuleName (),
       _svgRendererTable (),
-      _templateModelTable (),
-      _objectTable () {
+      _modelTable (),
+      _masterModelTable (),
+      _objectTable (),
+      _templateConfigTable () {
 
    _init (local);
 }
@@ -257,8 +259,10 @@ dmz::QtPluginCanvasObjectBasic::QtPluginCanvasObjectBasic (
 
 dmz::QtPluginCanvasObjectBasic::~QtPluginCanvasObjectBasic () {
 
-   _templateModelTable.empty ();
+   _masterModelTable.clear ();
+   _modelTable.empty ();
    _objectTable.empty ();
+   _templateConfigTable.empty ();
    _svgRendererTable.empty ();
 }
 
@@ -295,37 +299,11 @@ dmz::QtPluginCanvasObjectBasic::create_object (
       const ObjectType &Type,
       const ObjectLocalityEnum Locality) {
 
-//   ModelStruct *ms (_get_model_struct (Type));
-
-   String templateName = config_to_string(
-      "canvas-object-basic.template.name",
-      Type.get_config ());
-   ModelStruct *ms (_templateModelTable.lookup (templateName));
-
-   if (!ms) { ms = _get_model_struct (Type); }
+   ModelStruct *ms (_get_model_struct (Type));
 
    if (ms) {
 
-      HashTableStringTemplate<String> _templateStringTable;
-      Config templ;
-      if (Type.get_config ().lookup_all_config (
-         "canvas-object-basic.template.var",
-         templ)) {
-
-         ConfigIterator it;
-         Config varTemplate;
-         while (templ.get_next_config (it, varTemplate)) {
-
-            String name = config_to_string ("name", varTemplate);
-            String *value = new String (config_to_string ("value", varTemplate));
-            if ((name != "") && (*value != "")) {
-
-               _templateStringTable.store (name, value);
-            }
-         }
-      }
-
-      if (_create_object (ObjectHandle, Type, *ms, _templateStringTable)) {
+      if (_create_object (ObjectHandle, Type, *ms)) {
 
          Mask objState;
          _lookup_object_state (ObjectHandle, objState);
@@ -392,8 +370,7 @@ dmz::Boolean
 dmz::QtPluginCanvasObjectBasic::_create_object (
       const Handle ObjectHandle,
       const ObjectType &Type,
-      ModelStruct &ms,
-      HashTableStringTemplate<String> &_templateStringTable) {
+      ModelStruct &ms) {
 
    Boolean retVal (False);
 
@@ -407,7 +384,7 @@ dmz::QtPluginCanvasObjectBasic::_create_object (
 
          os->objType = Type;
 
-         os->item = _create_item (*os, parent, ms.itemData, _templateStringTable);
+         os->item = _create_item (*os, parent, ms.itemData, ms.table);
 
 //         if (!parent->isVisible () && os->item) {
 //
@@ -595,7 +572,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
       ObjectStruct &os,
       QGraphicsItem *parent,
       const Config &ItemList,
-      HashTableStringTemplate<String> &_templateStringTable) {
+      HashTableStringTemplate<String> &table) {
 
    QtCanvasObjectGroup *group (0);
 
@@ -617,7 +594,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
 
          if (DataName == "image") {
 
-            item = _create_image_item (os, group, cd, _templateStringTable);
+            item = _create_image_item (os, group, cd, table);
 
             if (Isect) {
 
@@ -635,7 +612,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
          }
          else if (DataName == "group") {
 
-            item = _create_item (os, group, cd, _templateStringTable);
+            item = _create_item (os, group, cd, table);
          }
 
          if (item) {
@@ -667,23 +644,23 @@ dmz::QtPluginCanvasObjectBasic::_create_image_item (
       ObjectStruct &os,
       QGraphicsItem *parent,
       const Config &Data,
-      HashTableStringTemplate<String> &_templateStringTable) {
+      HashTableStringTemplate<String> &table) {
 
    QGraphicsItem *item (0);
 
    String fileName = config_to_string ("resource", Data);
-   String *repName = _templateStringTable.lookup (fileName);
+   String *repName = table.lookup (fileName);
 
    const String File = _rc.find_file (repName ? *repName : fileName).to_lower ();
    QFileInfo fi (File.get_buffer ());
 
    if (fi.suffix () == QLatin1String ("svg")) {
 
-      item = _create_svg_item (os, parent, Data, _templateStringTable);
+      item = _create_svg_item (os, parent, Data, table);
    }
    else {
 
-      item = _create_pixmap_item (os, parent, Data, _templateStringTable);
+      item = _create_pixmap_item (os, parent, Data, table);
    }
 
    return item;
@@ -695,13 +672,13 @@ dmz::QtPluginCanvasObjectBasic::_create_pixmap_item (
       ObjectStruct &os,
       QGraphicsItem *parent,
       const Config &Data,
-      HashTableStringTemplate<String> &_templateStringTable) {
+      HashTableStringTemplate<String> &table) {
 
    QGraphicsPixmapItem *item (new QGraphicsPixmapItem (parent));
 
    Boolean center (True);
 
-   if (_file_request (item, Data, _templateStringTable)) {
+   if (_file_request (item, Data, table)) {
 
       item->setTransformationMode (Qt::SmoothTransformation);
 
@@ -752,13 +729,13 @@ dmz::QtPluginCanvasObjectBasic::_create_svg_item (
       ObjectStruct &os,
       QGraphicsItem *parent,
       const Config &Data,
-      HashTableStringTemplate<String> &_templateStringTable) {
+      HashTableStringTemplate<String> &table) {
 
    QGraphicsSvgItem *item (new QGraphicsSvgItem (parent));
 
    Boolean center (True);
 
-   if (_file_request (item, Data, _templateStringTable)) {
+   if (_file_request (item, Data, table)) {
 
       ConfigIterator it;
       Config cd;
@@ -997,11 +974,11 @@ dmz::Boolean
 dmz::QtPluginCanvasObjectBasic::_file_request (
    QGraphicsItem *item,
    const Config &Data,
-   HashTableStringTemplate<String> &_templateStringTable) {
+   HashTableStringTemplate<String> &table) {
 
    Boolean result (False);
    String fileName = config_to_string ("resource", Data);
-   String *repName = _templateStringTable.lookup (fileName);
+   String *repName = table.lookup (fileName);
 
    const String Resource (repName ? *repName : fileName);
 
@@ -1170,37 +1147,42 @@ dmz::QtPluginCanvasObjectBasic::_find_config_from_type (
    return found;
 }
 
-
-dmz::QtPluginCanvasObjectBasic::ModelStruct *
-dmz::QtPluginCanvasObjectBasic::_config_to_model_struct (
-      Config &local,
-      String templateName) {
-
-   ModelStruct *ms (new ModelStruct (templateName));
-
-   if (local.lookup_all_config_merged ("items", ms->itemData)) {
-
-      local.lookup_all_config_merged ("text", ms->textData);
-
-      local.lookup_all_config_merged ("switch", ms->switchData);
-   }
-   else { delete ms; ms = 0; }
-
-   return ms;
-}
-
 dmz::QtPluginCanvasObjectBasic::ModelStruct *
 dmz::QtPluginCanvasObjectBasic::_config_to_model_struct (
       Config &local,
       const ObjectType &ObjType) {
 
+   Config defs (local);
+   Config tmpl;
+
    ModelStruct *ms (new ModelStruct (ObjType));
 
-   if (local.lookup_all_config_merged ("items", ms->itemData)) {
+   if (local.lookup_config ("template", tmpl)) {
 
-      local.lookup_all_config_merged ("text", ms->textData);
+      Config *ptr = _templateConfigTable.lookup (config_to_string ("name", tmpl));
 
-      local.lookup_all_config_merged ("switch", ms->switchData);
+      if (ptr) {
+
+         defs = *ptr;
+
+         Config var;
+         ConfigIterator it;
+         while (tmpl.get_next_config (it, var)) {
+
+            const String Name = config_to_string ("name", var);
+            String *Value = new String (config_to_string ("value", var));
+
+            if (Name && Value && *Value && ms->table.store (Name, Value)) {}
+            else { delete Value; Value = 0; }
+         }
+      }
+   }
+
+   if (defs.lookup_all_config_merged ("items", ms->itemData)) {
+
+      defs.lookup_all_config_merged ("text", ms->textData);
+
+      defs.lookup_all_config_merged ("switch", ms->switchData);
    }
    else { delete ms; ms = 0; }
 
@@ -1248,11 +1230,10 @@ dmz::QtPluginCanvasObjectBasic::_init (Config &local) {
       while (templ.get_next_config (it, objTemplate)) {
 
          String templateName = config_to_string ("name", objTemplate, "");
-         if (templateName != "") {
-
-            ModelStruct *ms = _config_to_model_struct (objTemplate, templateName);
-            if (ms) { _templateModelTable.store (templateName, ms); }
-         }
+         Config *config = new Config (objTemplate);
+         if (templateName != "" && config && *config &&
+            _templateConfigTable.store (templateName, config)) {}
+         else { delete config; config = 0; }
       }
    }
 }

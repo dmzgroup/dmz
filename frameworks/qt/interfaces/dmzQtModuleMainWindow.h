@@ -31,14 +31,14 @@ namespace dmz {
          virtual void add_menu_action (const String &MenuName, QAction *action) = 0;
          virtual void remove_menu_action (const String &MenuName, QAction *action) = 0;
 
-         virtual QDockWidget *create_dock_widget (const String &DockName, QWidget *widget) = 0;
-         virtual QDockWidget *lookup_dock_widget (const String &DockName) = 0;
+         virtual QDockWidget *create_dock_widget (
+            const String &DockName,
+            const Qt::DockWidgetArea Area,
+            QWidget *widget) = 0;
 
-         virtual Boolean add_dock_widget (const String &DockName, const Qt::DockWidgetArea Area) = 0;
-         virtual Boolean add_dock_widget (QDockWidget *dock, const Qt::DockWidgetArea Area) = 0;
+        virtual QDockWidget *lookup_dock_widget (const String &DockName) = 0;
 
-         virtual Boolean remove_dock_widget (const String &DockName) = 0;
-         virtual Boolean remove_dock_widget (QDockWidget *dock) = 0;
+        virtual Boolean remove_dock_widget (const String &DockName) = 0;
 
       protected:
          QtModuleMainWindow (const PluginInfo &Info);

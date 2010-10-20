@@ -44,14 +44,14 @@ namespace dmz {
          virtual void add_menu_action (const String &MenuName, QAction *action);
          virtual void remove_menu_action (const String &MenuName, QAction *action);
 
-         virtual QDockWidget *create_dock_widget (const String &DockName, QWidget *widget);
+         virtual QDockWidget *create_dock_widget (
+            const String &DockName,
+            const Qt::DockWidgetArea Area,
+            QWidget *widget);
+
          virtual QDockWidget *lookup_dock_widget (const String &DockName);
 
-         virtual Boolean add_dock_widget (const String &DockName, const Qt::DockWidgetArea Area);
-         virtual Boolean add_dock_widget (QDockWidget *dock, const Qt::DockWidgetArea Area);
-
          virtual Boolean remove_dock_widget (const String &DockName);
-         virtual Boolean remove_dock_widget (QDockWidget *dock);
 
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();

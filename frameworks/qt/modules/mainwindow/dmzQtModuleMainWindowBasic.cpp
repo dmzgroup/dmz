@@ -137,15 +137,7 @@ dmz::QtModuleMainWindowBasic::discover_plugin (
          }
          else {
 
-            QDockWidget *dock = lookup_dock_widget (Name);
-            if (dock) {
-
-               QWidget *widget = dock->widget ();
-               if (widget) { widget->setParent (0); }
-
-               dock->setWidget (0);
-               remove_dock_widget (dock);
-            }
+            if (lookup_dock_widget (Name)) { remove_dock_widget (Name); }
          }
       }
    }
@@ -207,7 +199,10 @@ dmz::QtModuleMainWindowBasic::remove_menu_action (const String &MenuName, QActio
 
 
 QDockWidget *
-dmz::QtModuleMainWindowBasic::create_dock_widget (const String &DockName, QWidget *widget) {
+dmz::QtModuleMainWindowBasic::create_dock_widget (
+      const String &DockName,
+      const Qt::DockWidgetArea Area,
+      QWidget *widget) {
 
    QDockWidget *dock (0);
 
@@ -223,9 +218,11 @@ dmz::QtModuleMainWindowBasic::create_dock_widget (const String &DockName, QWidge
             widget->setParent (dock);
             dock->setWidget (widget);
          }
+
+         addDockWidget (Area, dock);
+         add_menu_action (_windowMenuName, dock->toggleViewAction ());
       }
       else { delete dock; dock = 0; }
-
    }
 
    return dock;
@@ -240,49 +237,23 @@ dmz::QtModuleMainWindowBasic::lookup_dock_widget (const String &DockName) {
 
 
 dmz::Boolean
-dmz::QtModuleMainWindowBasic::add_dock_widget (
-      const String &DockName,
-      const Qt::DockWidgetArea Area) {
-
-   return add_dock_widget (_dockTable.lookup (DockName), Area);
-}
-
-
-dmz::Boolean
-dmz::QtModuleMainWindowBasic::add_dock_widget (
-      QDockWidget *dock,
-      const Qt::DockWidgetArea Area) {
-
-   Boolean result (False);
-
-   if (dock) {
-
-      addDockWidget (Area, dock);
-      add_menu_action (_windowMenuName, dock->toggleViewAction ());
-      restoreDockWidget (dock);
-      result = True;
-   }
-
-   return result;
-}
-
-
-dmz::Boolean
 dmz::QtModuleMainWindowBasic::remove_dock_widget (const String &DockName) {
 
-   return remove_dock_widget (_dockTable.lookup (DockName));
-}
-
-
-dmz::Boolean
-dmz::QtModuleMainWindowBasic::remove_dock_widget (QDockWidget *dock) {
-
    Boolean result (False);
-
+   QDockWidget *dock = _dockTable.remove (DockName);
    if (dock) {
 
-      removeDockWidget (dock);
       remove_menu_action (_windowMenuName, dock->toggleViewAction ());
+      removeDockWidget (dock);
+
+      QWidget *widget (dock->widget ());
+      if (widget) { widget->setParent (0); }
+
+      dock->setWidget (0);
+      dock->setParent (0);
+
+      delete dock; dock = 0;
+
       result = True;
    }
 
@@ -402,7 +373,7 @@ dmz::QtModuleMainWindowBasic::_init_dock_windows (Config &local) {
 
                      if (WidgetName && !_dockTable.lookup (WidgetName)) {
 
-                        QDockWidget *dock = create_dock_widget (WidgetName, 0);
+                        QDockWidget *dock = create_dock_widget (WidgetName, area, 0);
                         if (dock) {
 
                            const String Title (config_to_string ("title", widget, ""));
@@ -412,8 +383,6 @@ dmz::QtModuleMainWindowBasic::_init_dock_windows (Config &local) {
                                  config_to_dock_widget_areas ("allowed-areas", widget, area));
 
                            dock->setFeatures (QDockWidget::AllDockWidgetFeatures);
-
-                           add_dock_widget (dock, area);
 
                            dock->setVisible (False);
 

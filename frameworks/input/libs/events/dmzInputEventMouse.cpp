@@ -485,7 +485,8 @@ dmz::InputEventMouse::update (const InputEventMouse &Value) {
 
    Boolean result (False);
 
-   if (*this != Value) {
+   if ((*this != Value) || (Value.get_scroll_delta_x () != 0) ||
+         (Value.get_scroll_delta_y () != 0)) {
 
       set_window_size (Value.get_window_size_x (), Value.get_window_size_y ());
       set_mouse_position (Value.get_mouse_x (), Value.get_mouse_y ());

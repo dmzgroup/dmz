@@ -824,7 +824,28 @@ dmz::QtPluginCanvasObjectBasic::_create_text_item (
       else if (DataName == "translate") {
 
          Vector vec (config_to_vector (cd));
-         item->translate (vec.get_x (), vec.get_y ());
+         String itemName = config_to_string ("name", cd);
+
+         if (itemName) {
+
+            QGraphicsItem *img = os.itemTable.lookup (itemName);
+            if (img) {
+
+               QRectF rect = img->boundingRect ();
+               Vector rectVec;
+               if (vec.get_x () == 0) { rectVec.set_x (0); }
+               else if (vec.get_x() > 0) { rectVec.set_x (rect.center ().x ()); }
+               else { rectVec.set_x (-rect.center ().x ()); }
+
+               if (vec.get_y () == 0) { rectVec.set_y (0); }
+               else if (vec.get_y () > 0) { rectVec.set_y (rect.center ().y ()); }
+               else { rectVec.set_y (-rect.center ().y ()); }
+
+               vec += rectVec;
+               item->setPos (vec.get_x (), vec.get_y ());
+            }
+         }
+         else { item->translate (vec.get_x (), vec.get_y ()); }
       }
       else if (DataName == "scale") {
 

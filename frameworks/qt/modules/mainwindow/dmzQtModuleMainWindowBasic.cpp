@@ -7,6 +7,8 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
 #include <QtGui/QtGui>
+#include <QtCore/QDebug>
+
 
 class QMainWindodw;
 
@@ -225,6 +227,11 @@ dmz::QtModuleMainWindowBasic::create_dock_widget (
       else { delete dock; dock = 0; }
    }
 
+   if (dock) {
+
+      dock->installEventFilter (this);
+   }
+
    return dock;
 }
 
@@ -270,6 +277,37 @@ void
 dmz::QtModuleMainWindowBasic::closeEvent (QCloseEvent *event) {
 
    _exit.request_exit (dmz::ExitStatusNormal, get_plugin_name () + " Closed");
+}
+
+bool
+dmz::QtModuleMainWindowBasic::eventFilter (QObject *watched, QEvent *event) {
+
+   bool result (False);
+
+   if (event->type() == QEvent::KeyPress) {
+
+      qDebug () << "KeyPress";
+
+      QKeyEvent* ke = static_cast<QKeyEvent*>(event);
+
+      if (ke == QKeySequence::Undo) {
+
+         qDebug () << "Undo";
+      }
+   }
+//   if (event->type () == QEvent::ShortcutOverride) {
+
+
+//      if (ke == QKeySequence::Redo || ke == QKeySequence::Undo) {
+
+//         qDebug () << "watched: " << watched << " event: " << event;
+////         ke->accept();
+//      }
+//   }
+
+   result = QMainWindow::eventFilter (watched, event);
+
+   return result;
 }
 
 

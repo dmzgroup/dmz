@@ -73,6 +73,7 @@ namespace dmz {
          };
 
          virtual void closeEvent (QCloseEvent *event);
+         virtual bool eventFilter (QObject *watched, QEvent *event);
          void _save_session ();
          void _load_session ();
          void _restore_state ();

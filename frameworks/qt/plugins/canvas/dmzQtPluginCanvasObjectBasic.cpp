@@ -250,7 +250,8 @@ dmz::QtPluginCanvasObjectBasic::QtPluginCanvasObjectBasic (
       _svgRendererTable (),
       _modelTable (),
       _masterModelTable (),
-      _objectTable () {
+      _objectTable (),
+      _templateConfigTable () {
 
    _init (local);
 }
@@ -261,6 +262,7 @@ dmz::QtPluginCanvasObjectBasic::~QtPluginCanvasObjectBasic () {
    _masterModelTable.clear ();
    _modelTable.empty ();
    _objectTable.empty ();
+   _templateConfigTable.empty ();
    _svgRendererTable.empty ();
 }
 
@@ -382,7 +384,7 @@ dmz::QtPluginCanvasObjectBasic::_create_object (
 
          os->objType = Type;
 
-         os->item = _create_item (*os, parent, ms.itemData);
+         os->item = _create_item (*os, parent, ms.itemData, ms.table);
 
 //         if (!parent->isVisible () && os->item) {
 //
@@ -569,7 +571,8 @@ dmz::QtCanvasObjectGroup *
 dmz::QtPluginCanvasObjectBasic::_create_item (
       ObjectStruct &os,
       QGraphicsItem *parent,
-      const Config &ItemList) {
+      const Config &ItemList,
+      HashTableStringTemplate<String> &table) {
 
    QtCanvasObjectGroup *group (0);
 
@@ -591,7 +594,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
 
          if (DataName == "image") {
 
-            item = _create_image_item (os, group, cd);
+            item = _create_image_item (os, group, cd, table);
 
             if (Isect) {
 
@@ -609,7 +612,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
          }
          else if (DataName == "group") {
 
-            item = _create_item (os, group, cd);
+            item = _create_item (os, group, cd, table);
          }
 
          if (item) {
@@ -640,20 +643,24 @@ QGraphicsItem *
 dmz::QtPluginCanvasObjectBasic::_create_image_item (
       ObjectStruct &os,
       QGraphicsItem *parent,
-      const Config &Data) {
+      const Config &Data,
+      HashTableStringTemplate<String> &table) {
 
    QGraphicsItem *item (0);
 
-   const String File = _rc.find_file (config_to_string ("resource", Data)).to_lower ();
+   String fileName = config_to_string ("resource", Data);
+   String *repName = table.lookup (fileName);
+
+   const String File = _rc.find_file (repName ? *repName : fileName).to_lower ();
    QFileInfo fi (File.get_buffer ());
 
    if (fi.suffix () == QLatin1String ("svg")) {
 
-      item = _create_svg_item (os, parent, Data);
+      item = _create_svg_item (os, parent, Data, table);
    }
    else {
 
-      item = _create_pixmap_item (os, parent, Data);
+      item = _create_pixmap_item (os, parent, Data, table);
    }
 
    return item;
@@ -664,13 +671,14 @@ QGraphicsPixmapItem *
 dmz::QtPluginCanvasObjectBasic::_create_pixmap_item (
       ObjectStruct &os,
       QGraphicsItem *parent,
-      const Config &Data) {
+      const Config &Data,
+      HashTableStringTemplate<String> &table) {
 
    QGraphicsPixmapItem *item (new QGraphicsPixmapItem (parent));
 
    Boolean center (True);
 
-   if (_file_request (item, Data)) {
+   if (_file_request (item, Data, table)) {
 
       item->setTransformationMode (Qt::SmoothTransformation);
 
@@ -720,13 +728,14 @@ QGraphicsSvgItem *
 dmz::QtPluginCanvasObjectBasic::_create_svg_item (
       ObjectStruct &os,
       QGraphicsItem *parent,
-      const Config &Data) {
+      const Config &Data,
+      HashTableStringTemplate<String> &table) {
 
    QGraphicsSvgItem *item (new QGraphicsSvgItem (parent));
 
    Boolean center (True);
 
-   if (_file_request (item, Data)) {
+   if (_file_request (item, Data, table)) {
 
       ConfigIterator it;
       Config cd;
@@ -962,10 +971,16 @@ dmz::QtPluginCanvasObjectBasic::_process_item_state (
 
 
 dmz::Boolean
-dmz::QtPluginCanvasObjectBasic::_file_request (QGraphicsItem *item, const Config &Data) {
+dmz::QtPluginCanvasObjectBasic::_file_request (
+   QGraphicsItem *item,
+   const Config &Data,
+   HashTableStringTemplate<String> &table) {
 
    Boolean result (False);
-   const String Resource (config_to_string ("resource", Data));
+   String fileName = config_to_string ("resource", Data);
+   String *repName = table.lookup (fileName);
+
+   const String Resource (repName ? *repName : fileName);
 
    if (Resource && item) {
 
@@ -1132,19 +1147,42 @@ dmz::QtPluginCanvasObjectBasic::_find_config_from_type (
    return found;
 }
 
-
 dmz::QtPluginCanvasObjectBasic::ModelStruct *
 dmz::QtPluginCanvasObjectBasic::_config_to_model_struct (
       Config &local,
       const ObjectType &ObjType) {
 
+   Config defs (local);
+   Config tmpl;
+
    ModelStruct *ms (new ModelStruct (ObjType));
 
-   if (local.lookup_all_config_merged ("items", ms->itemData)) {
+   if (local.lookup_config ("template", tmpl)) {
 
-      local.lookup_all_config_merged ("text", ms->textData);
+      Config *ptr = _templateConfigTable.lookup (config_to_string ("name", tmpl));
 
-      local.lookup_all_config_merged ("switch", ms->switchData);
+      if (ptr) {
+
+         defs = *ptr;
+
+         Config var;
+         ConfigIterator it;
+         while (tmpl.get_next_config (it, var)) {
+
+            const String Name = config_to_string ("name", var);
+            String *Value = new String (config_to_string ("value", var));
+
+            if (Name && Value && *Value && ms->table.store (Name, Value)) {}
+            else { delete Value; Value = 0; }
+         }
+      }
+   }
+
+   if (defs.lookup_all_config_merged ("items", ms->itemData)) {
+
+      defs.lookup_all_config_merged ("text", ms->textData);
+
+      defs.lookup_all_config_merged ("switch", ms->switchData);
    }
    else { delete ms; ms = 0; }
 
@@ -1183,6 +1221,21 @@ dmz::QtPluginCanvasObjectBasic::_init (Config &local) {
       "defaults.itemIgnoresTransformations",
       local,
       _itemIgnoresTransformations);
+
+   Config templ;
+   if (local.lookup_all_config ("template", templ)) {
+
+      ConfigIterator it;
+      Config objTemplate;
+      while (templ.get_next_config (it, objTemplate)) {
+
+         String templateName = config_to_string ("name", objTemplate, "");
+         Config *config = new Config (objTemplate);
+         if (templateName != "" && config && *config &&
+            _templateConfigTable.store (templateName, config)) {}
+         else { delete config; config = 0; }
+      }
+   }
 }
 
 

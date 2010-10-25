@@ -116,17 +116,19 @@ namespace dmz {
          struct ModelStruct {
 
             const ObjectType ObjType;
+            HashTableStringTemplate<String> table;
             Config itemData;
             Config textData;
             Config switchData;
 
             ModelStruct (const ObjectType &TheType) :
                ObjType (TheType),
+               table (),
                itemData (),
                textData (),
                switchData () {;}
 
-            ~ModelStruct () {;}
+            ~ModelStruct () { table.empty (); }
          };
 
          typedef HashTableStringTemplate<QtCanvasObjectText> QtCanvasObjectTextTable;
@@ -240,22 +242,26 @@ namespace dmz {
          QtCanvasObjectGroup *_create_item (
             ObjectStruct &os,
             QGraphicsItem *parent,
-            const Config &itemList);
+            const Config &itemList,
+            HashTableStringTemplate<String> &table);
 
          QGraphicsItem *_create_image_item (
                ObjectStruct &os,
                QGraphicsItem *parent,
-               const Config &Data);
+               const Config &Data,
+               HashTableStringTemplate<String> &table);
 
          QGraphicsPixmapItem *_create_pixmap_item (
             ObjectStruct &os,
             QGraphicsItem *parent,
-            const Config &Data);
+            const Config &Data,
+            HashTableStringTemplate<String> &table);
 
          QGraphicsSvgItem *_create_svg_item (
             ObjectStruct &os,
             QGraphicsItem *parent,
-            const Config &Data);
+            const Config &Data,
+            HashTableStringTemplate<String> &table);
 
          QtCanvasObjectText *_create_text_item (
             ObjectStruct &os,
@@ -276,7 +282,10 @@ namespace dmz {
             const String &GroupName,
             const Config &ItemList);
 
-         Boolean _file_request (QGraphicsItem *item, const Config &Data);
+         Boolean _file_request (
+            QGraphicsItem *item,
+            const Config &Data,
+            HashTableStringTemplate<String> &table);
 
          void _lookup_object_state (const Handle ObjectHandle, Mask &objState);
          void _lookup_object_type (const Handle ObjectHandle, ObjectType &objType);
@@ -305,6 +314,7 @@ namespace dmz {
          HashTableHandleTemplate<ModelStruct> _modelTable;
          HashTableHandleTemplate<ModelStruct> _masterModelTable;
          HashTableHandleTemplate<ObjectStruct> _objectTable;
+         HashTableStringTemplate<Config> _templateConfigTable;
 
       private:
          QtPluginCanvasObjectBasic ();

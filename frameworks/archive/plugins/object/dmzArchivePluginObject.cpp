@@ -1304,7 +1304,12 @@ dmz::ArchivePluginObject::_init (Config &local) {
 
    Config filterList;
 
-   if (local.lookup_all_config ("archive", filterList)) {
+   if (!local.lookup_all_config ("filter", filterList)) {
+
+      local.lookup_all_config ("archive", filterList);
+   }
+
+   if (filterList) {
 
       ConfigIterator it;
       Config filter;

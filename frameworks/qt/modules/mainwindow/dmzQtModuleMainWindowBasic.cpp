@@ -227,9 +227,19 @@ dmz::QtModuleMainWindowBasic::create_dock_widget (
       else { delete dock; dock = 0; }
    }
 
-   if (dock) {
+   if (widget) {
 
-      dock->installEventFilter (this);
+qDebug () << "-----> widget->findChildren: " << widget;
+      QList<QLineEdit *> list = widget->findChildren<QLineEdit *>();
+//qDebug () << "-----> list: " << list;
+
+      foreach (QLineEdit *lineEdit, list) {
+
+//qDebug () << "---------------> installEventFilter on: " << lineEdit;
+         lineEdit->installEventFilter (this);
+      }
+
+      widget->installEventFilter (this);
    }
 
    return dock;
@@ -284,6 +294,9 @@ dmz::QtModuleMainWindowBasic::eventFilter (QObject *watched, QEvent *event) {
 
    bool result (False);
 
+//qDebug () << "event: " << event;
+//qDebug () << "watched: " << watched;
+
    if (event->type() == QEvent::KeyPress) {
 
       qDebug () << "KeyPress";
@@ -295,17 +308,19 @@ dmz::QtModuleMainWindowBasic::eventFilter (QObject *watched, QEvent *event) {
          qDebug () << "Undo";
       }
    }
-//   if (event->type () == QEvent::ShortcutOverride) {
 
+   if (event->type () == QEvent::ShortcutOverride) {
 
-//      if (ke == QKeySequence::Redo || ke == QKeySequence::Undo) {
+      QKeyEvent* ke = static_cast<QKeyEvent*>(event);
 
-//         qDebug () << "watched: " << watched << " event: " << event;
-////         ke->accept();
-//      }
-//   }
+      if (ke == QKeySequence::Redo || ke == QKeySequence::Undo) {
 
-   result = QMainWindow::eventFilter (watched, event);
+         qDebug () << "watched: " << watched << " event: " << event;
+//         ke->accept();
+      }
+   }
+
+   if (!result) { result = QMainWindow::eventFilter (watched, event); }
 
    return result;
 }

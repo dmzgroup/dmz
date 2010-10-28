@@ -1,5 +1,5 @@
-#ifndef DMZ_FOUNDATION_ZIP_DOT_H
-#define DMZ_FOUNDATION_ZIP_DOT_H
+#ifndef DMZ_FOUNDATION_READER_WRITER_ZIP_DOT_H
+#define DMZ_FOUNDATION_READER_WRITER_ZIP_DOT_H
 
 #include <dmzFoundationExport.h>
 #include <dmzFoundationReaderWriter.h>
@@ -11,7 +11,7 @@ class StringContainer;
 
 DMZ_FOUNDATION_LINK_SYMBOL Boolean is_zip_file (const String &FileName);
 
-class DMZ_FOUNDATION_LINK_SYMBOL ReaderZip : public Reader{
+class DMZ_FOUNDATION_LINK_SYMBOL ReaderZip : public Reader {
 
    public:
       ReaderZip ();
@@ -76,4 +76,4 @@ class DMZ_FOUNDATION_LINK_SYMBOL WriterZip : public Writer {
 
 };
 
-#endif // DMZ_FOUNDATION_ZIP_DOT_H
+#endif // DMZ_FOUNDATION_READER_WRITER_ZIP_DOT_H

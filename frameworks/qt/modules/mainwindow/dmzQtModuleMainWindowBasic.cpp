@@ -7,6 +7,8 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
 #include <QtGui/QtGui>
+#include <QtCore/QDebug>
+
 
 class QMainWindodw;
 

@@ -9,6 +9,7 @@
 #include <dmzFoundationReaderWriterFile.h>
 #include <dmzFoundationReaderWriterZip.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToTypesBase.h>
 #include <dmzRuntimeLog.h>
 #include <dmzSystem.h>
 #include <dmzSystemFile.h>
@@ -146,7 +147,40 @@ dmz::read_config_file (
 
       ReaderZip rz;
 
-      if (rz.open_zip_file (FileName)) { rz.get_file_list (files); }
+      if (rz.open_zip_file (FileName)) {
+
+         rz.get_file_list (files);
+
+         if (files.contains (ArchiveManifestFileName)) {
+
+            Config manifest ("global");
+
+            if (read_config_file (
+                  FileName,
+                  ArchiveManifestFileName,
+                  manifest,
+                  FileTypeXML,
+                  log)) {
+
+               files.clear ();
+
+               Config list;
+           
+               if (manifest.lookup_all_config ("manifest.config", list)) {
+
+                  ConfigIterator it;
+                  Config item;
+
+                  while (list.get_next_config (it, item)) {
+
+                     const String FileName = config_to_string ("file", item);
+
+                     if (FileName) { files.add (FileName); }
+                  }
+               }
+            }
+         }
+      }
    }
    else { files.add (FileName); }
 

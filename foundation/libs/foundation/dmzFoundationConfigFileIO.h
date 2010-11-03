@@ -10,6 +10,7 @@ class Config;
 class Log;
 class StringContainer;
 
+const char ArchiveManifestFileName[] = "DMZ_Archive_Manifest.xml";
 const UInt32 FileTypeAutoDetect = 0;
 const UInt32 FileTypeXML = 1;
 const UInt32 FileTypeJSON = 2;

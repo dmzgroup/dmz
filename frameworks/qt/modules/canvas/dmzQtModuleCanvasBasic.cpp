@@ -111,7 +111,7 @@ dmz::QtModuleCanvasBasic::set_background_transparent (const Boolean Value) {
       _canvas->setAttribute (Qt::WA_OpaquePaintEvent, false);
    }
    else {
-      
+
       _scene.enableGrid (_drawGrid);
 
       QPalette palette = _canvas->palette ();
@@ -293,13 +293,13 @@ QPointF
 dmz::QtModuleCanvasBasic::get_center () const {
 
    QPointF retVal (0, 0);
-   
+
    if (_canvas) {
-      
+
       QRect vpRect (_canvas->rect ());
       retVal = _canvas->mapToScene (vpRect.center ());
    }
-   
+
    return retVal;
 }
 
@@ -311,9 +311,9 @@ dmz::QtModuleCanvasBasic::get_qt_widget () { return this; }
 
 void
 dmz::QtModuleCanvasBasic::resizeEvent (QResizeEvent *event) {
-   
+
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_mouse_event (0, 0); }
    }
@@ -324,7 +324,7 @@ void
 dmz::QtModuleCanvasBasic::keyPressEvent (QKeyEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_key_event (*event, True); }
    }
@@ -335,7 +335,7 @@ void
 dmz::QtModuleCanvasBasic::keyReleaseEvent (QKeyEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_key_event (*event, False); }
    }
@@ -346,7 +346,7 @@ void
 dmz::QtModuleCanvasBasic::mousePressEvent (QMouseEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_mouse_event (event, 0); }
    }
@@ -357,7 +357,7 @@ void
 dmz::QtModuleCanvasBasic::mouseReleaseEvent (QMouseEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_mouse_event (event, 0); }
    }
@@ -368,7 +368,7 @@ void
 dmz::QtModuleCanvasBasic::mouseMoveEvent (QMouseEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_mouse_event (event, 0); }
    }
@@ -379,7 +379,7 @@ void
 dmz::QtModuleCanvasBasic::wheelEvent (QWheelEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_mouse_event (0, event); }
    }
@@ -404,7 +404,7 @@ void
 dmz::QtModuleCanvasBasic::dropEvent (QDropEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else {
 
@@ -546,23 +546,23 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
    _scene.setSceneRect (QRectF (MinX, MinY, MaxX - MinX, MaxY - MinY));
 
    const Int32 IndexMethod (config_to_int32 ("scene.itemIndexMethod", local, 0));
-   
+
    if (IndexMethod == QGraphicsScene::NoIndex) {
-      
+
       _scene.setItemIndexMethod (QGraphicsScene::NoIndex);
    }
-   
+
    _drawGrid = config_to_boolean ("scene.background.grid", local, _drawGrid);
 
    _canvas = new QtCanvasView (this);
    _canvas->setMouseTracking (true);
 
    set_background_transparent (config_to_boolean ("scene.background.transparent", local, False));
-   
+
    // if (config_to_boolean ("scene.background.transparent", local, False)) {
-   //    
+   //
    //    _scene.enableGrid (False);
-   //    
+   //
    //    QPalette palette = _canvas->palette ();
    //    palette.setBrush (QPalette::Base, Qt::transparent);
    //    _canvas->setPalette (palette);
@@ -571,7 +571,7 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
 
    _canvas->setTransformationAnchor (QGraphicsView::AnchorViewCenter);
    _canvas->setResizeAnchor (QGraphicsView::AnchorViewCenter);
-   
+
    const Boolean ScrollBars = config_to_boolean ("scrollbars.value", local, False);
 
    if (!ScrollBars) {
@@ -590,7 +590,7 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
    layout->setSpacing (0);
    layout->setContentsMargins (0, 0, 0, 0);
    layout->addWidget (_canvas);
-   
+
    setLayout (layout);
    setMouseTracking (true);
    _inputModuleName = config_to_string ("module.input.name", local);
@@ -650,7 +650,7 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
       set_zoom_max_value (config_to_float32 ("canvas.zoom.max", local, _zoomMax));
       set_zoom_step_value (config_to_float32 ("canvas.zoom.step", local, _zoomStep));
       set_zoom (config_to_float32 ("canvas.zoom.default", local, _zoomDefault));
-      
+
       _ignoreEvents = config_to_boolean ("canvas.ignoreevents", local, _ignoreEvents);
    }
 

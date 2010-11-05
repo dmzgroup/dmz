@@ -7,6 +7,8 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
 #include <QtGui/QtGui>
+#include <QtCore/QDebug>
+
 
 class QMainWindodw;
 
@@ -89,10 +91,11 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
          dock->hide ();
          dock = _dockTable.get_next (it);
       }
+
+      close ();
    }
    else if (State == PluginStateShutdown) {
 
-      hide ();
    }
 }
 

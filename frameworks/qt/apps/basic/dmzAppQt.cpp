@@ -15,15 +15,46 @@
 using namespace dmz;
 
 namespace {
-   
+
 const char LocalIconFile[] = "./assets/DMZ-Icon.png";
 static const String LocalResourcesFactory ("dmz_resources_validate");
+
+static dmz::Log *appLog (0);
 
 static void
 local_starup_error (const QString &Msg) {
 
    QString errorMsg (Msg + "\n\nStart up errors encountered.\nShutting down.");
    QMessageBox::critical (0, "Start Up Error", errorMsg);
+}
+
+static void
+local_qt_message_handler (QtMsgType type, const char *msg) {
+
+   if (appLog) {
+
+      const dmz::String Prefix ("qt:");
+
+      switch (type) {
+
+         case QtDebugMsg:
+            appLog->debug << Prefix << msg << endl;
+            break;
+
+         case QtWarningMsg:
+            appLog->warn << Prefix << msg << endl;
+            break;
+
+         case QtCriticalMsg:
+         case QtFatalMsg:
+            appLog->error << Prefix << msg << endl;
+            break;
+
+         default:
+            appLog->out << Prefix << msg << endl;
+            break;
+      }
+   }
 }
 
 static void
@@ -61,10 +92,10 @@ local_validate_resources (Application &app) {
             validate (resources);
          }
          else {
-            
+
             String msg ("Resource extension function: ");
             msg << FuncName << " not found.";
-            
+
             app.log.error << msg << endl;
             app.quit (msg);
          }
@@ -96,6 +127,11 @@ main (int argc, char *argv[]) {
 
    Application app (appName, "dmz");
 
+   if (!appLog) { appLog = &(app.log); }
+
+   // Set up the custom qWarning/qDebug custom handler
+   qInstallMsgHandler (local_qt_message_handler);
+
    //qsrand (QTime (0,0,0).secsTo (QTime::currentTime ()));
    srand (QDateTime::currentDateTime ().toTime_t ());
    //sranddev ();
@@ -119,11 +155,11 @@ main (int argc, char *argv[]) {
 
    app.process_command_line (cl);
    app.init_runtime ();
-   
+
    local_validate_resources (app);
-   
+
    if (app.is_running ()) {
-      
+
       QtSplashScreen *splash = new QtSplashScreen (app.get_context ());
       splash->show ();
       splash->raise ();
@@ -154,7 +190,7 @@ main (int argc, char *argv[]) {
       app.unload_plugins ();
 
       if (app.is_error ()) {
-         
+
          app.log.error << app.get_error () << endl;
          local_starup_error (app.get_error ().get_buffer ());
       }
@@ -174,12 +210,14 @@ main (int argc, char *argv[]) {
       }
    }
    else if (app.is_error ()) {
-      
+
       app.log.error << app.get_error () << endl;
       local_starup_error (app.get_error ().get_buffer ());
    }
-   
+
    qtApp.quit ();
+
+   appLog = 0;
 
    return app.is_error () ? -1 : 0;
 }

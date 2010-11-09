@@ -13,7 +13,7 @@
 
 
 namespace qmapcontrol {
-   
+
    class MapAdapter;
    class MapLayer;
    class GeometryLayer;
@@ -32,7 +32,7 @@ namespace dmz {
          public RenderModulePickConvert,
          public QtWidget,
          public QtModuleMap {
-            
+
    Q_OBJECT
 
       public:
@@ -66,39 +66,44 @@ namespace dmz {
 
          // QtModuleMap Interface
          virtual qmapcontrol::MapControl *get_map_control ();
-         
+
          virtual void use_default_map_adapter ();
          virtual void set_map_adapter (qmapcontrol::MapAdapter *adapter);
-         
+
          virtual String get_tile_cache_dir () const;
          virtual void empty_tile_cache ();
-         
-         virtual Boolean add_item (const Handle ObjectHandle, qmapcontrol::Geometry *item);
+
+         virtual Boolean add_item (
+            const Handle ObjectHandle,
+            qmapcontrol::Geometry *item);
+
          virtual qmapcontrol::Geometry *lookup_item (const Handle ObjectHandle);
          virtual qmapcontrol::Geometry *remove_item (const Handle ObjectHandle);
-         
+
          virtual void set_zoom_min_value (const Int32 Value);
          virtual Int32 get_zoom_min_value () const;
 
          virtual void set_zoom_max_value (const Int32 Value);
          virtual Int32 get_zoom_max_value () const;
-         
+
          virtual void set_zoom (const Int32 Value);
          virtual Int32 get_zoom () const;
 
          virtual void zoom_in ();
          virtual void zoom_out ();
-         
+
          virtual void pan_direction (const Int32 Dx, const Int32 Dy);
 
          virtual void center_on (const Float64 Dx, const Float64 Dy);
-         
+
          virtual QPoint world_to_screen (const QPointF &World) const;
          virtual QPointF screen_to_world (const QPoint &Screen) const;
-         
+
       protected slots:
-         void _mouse_event_coordinate (const QMouseEvent *Event, const QPointF Coordinate);
-         
+         void _mouse_event_coordinate (
+            const QMouseEvent *Event,
+            const QPointF Coordinate);
+
       protected:
          virtual void resizeEvent (QResizeEvent* event);
          virtual void keyPressEvent (QKeyEvent *event);
@@ -116,7 +121,7 @@ namespace dmz {
 
          void _save_session ();
          void _load_session ();
-         
+
          void _init (Config &local);
 
          Log _log;

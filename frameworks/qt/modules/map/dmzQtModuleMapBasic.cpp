@@ -86,7 +86,7 @@ dmz::QtModuleMapBasic::discover_plugin (
 
          _inputModule = InputModule::cast (PluginPtr, _inputModuleName);
       }
-      
+
       if (!_pickModule) {
 
          _pickModule = RenderModulePick::cast (PluginPtr, _pickModuleName);
@@ -98,7 +98,7 @@ dmz::QtModuleMapBasic::discover_plugin (
 
          _inputModule = 0;
       }
-      
+
       if (_pickModule && (_pickModule == RenderModulePick::cast (PluginPtr))) {
 
          _pickModule = 0;
@@ -119,9 +119,14 @@ dmz::QtModuleMapBasic::source_to_world (
    Boolean retVal (False);
 
    if (_pickModule) {
-      
+
       retVal = _pickModule->source_to_world (
-         get_plugin_handle (), ScreenPosX, ScreenPosY, worldPosition, normal, objectHandle);
+         get_plugin_handle (),
+         ScreenPosX,
+         ScreenPosY,
+         worldPosition,
+         normal,
+         objectHandle);
    }
 
    return retVal;
@@ -137,12 +142,12 @@ dmz::QtModuleMapBasic::world_to_source (
    Boolean retVal (False);
 
    if (_pickModule) {
-      
+
       retVal = _pickModule->world_to_source (
          get_plugin_handle (), WorldPosition, screenPosX, screenPosY);
    }
 
-   return retVal;   
+   return retVal;
 }
 
 
@@ -165,7 +170,7 @@ dmz::QtModuleMapBasic::use_default_map_adapter () {
 
 dmz::String
 dmz::QtModuleMapBasic::get_tile_cache_dir () const {
-   
+
    return _cacheDir;
 }
 
@@ -177,17 +182,17 @@ dmz::QtModuleMapBasic::empty_tile_cache () {
    StringContainer fileList;
 
    if (get_file_list (_cacheDir, fileList)) {
-      
+
       Boolean found (fileList.get_first (file));
-         
+
       while (found) {
-      
+
          const String CleanPath (format_path (_cacheDir + "/" + file));
          if (get_absolute_path (CleanPath, file))  {
 
             remove_file (file);
          }
-         
+
          found = fileList.get_next (file);
       }
    }
@@ -198,17 +203,17 @@ void
 dmz::QtModuleMapBasic::set_map_adapter (qmapcontrol::MapAdapter *adapter) {
 
    if (adapter != _mapAdapter) {
-      
+
       if (!adapter) { adapter = _defaultAdapter; }
 
       if (adapter && _map) {
 
-		  int zoom = _map->currentZoom ();
+        int zoom = _map->currentZoom ();
          _mapAdapter = adapter;
 
          if (_baseLayer) { _baseLayer->setMapAdapter (_mapAdapter); }
          if (_geomLayer) { _geomLayer->setMapAdapter (_mapAdapter); }
-         
+
          qmapcontrol::ImageManager::instance ()->abortLoading ();
          _map->updateRequestNew ();
          _map->setZoom (zoom);
@@ -218,8 +223,10 @@ dmz::QtModuleMapBasic::set_map_adapter (qmapcontrol::MapAdapter *adapter) {
 
 
 dmz::Boolean
-dmz::QtModuleMapBasic::add_item (const Handle ObjectHandle, qmapcontrol::Geometry *item) {
-   
+dmz::QtModuleMapBasic::add_item (
+      const Handle ObjectHandle,
+      qmapcontrol::Geometry *item) {
+
    Boolean retVal (False);
 
    if (item && _geomLayer) {
@@ -327,9 +334,9 @@ dmz::QtModuleMapBasic::zoom_out () {
 
 void
 dmz::QtModuleMapBasic::pan_direction (const Int32 Dx, const Int32 Dy) {
-   
+
    if (_map) {
-      
+
       _map->scroll (QPoint (Dx, Dy));
    }
 }
@@ -339,7 +346,7 @@ void
 dmz::QtModuleMapBasic::center_on (const Float64 Dx, const Float64 Dy) {
 
    if (_map) {
-      
+
       _map->setView (QPointF ((Float32)Dx, (Float32)Dy));
    }
 }
@@ -349,12 +356,12 @@ QPoint
 dmz::QtModuleMapBasic::world_to_screen (const QPointF &Coordinate) const {
 
    QPoint result;
-   
+
    if (_map) {
-      
+
       result = _map->worldCoordinateToScreen (Coordinate);
    }
-   
+
    return result;
 }
 
@@ -363,12 +370,12 @@ QPointF
 dmz::QtModuleMapBasic::screen_to_world (const QPoint &Point) const {
 
    QPointF result;
-   
+
    if (_map) {
-      
+
       result = _map->screenToWorldCoordinate (Point);
    }
-   
+
    return result;
 }
 
@@ -379,7 +386,7 @@ void
 dmz::QtModuleMapBasic::resizeEvent (QResizeEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) {
 
          event->ignore ();
@@ -401,7 +408,7 @@ void
 dmz::QtModuleMapBasic::keyPressEvent (QKeyEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_key_event (*event, True); }
    }
@@ -412,7 +419,7 @@ void
 dmz::QtModuleMapBasic::keyReleaseEvent (QKeyEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_key_event (*event, False); }
    }
@@ -423,7 +430,7 @@ void
 dmz::QtModuleMapBasic::mousePressEvent (QMouseEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_mouse_event (event, 0); }
    }
@@ -434,7 +441,7 @@ void
 dmz::QtModuleMapBasic::mouseReleaseEvent (QMouseEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_mouse_event (event, 0); }
    }
@@ -445,7 +452,7 @@ void
 dmz::QtModuleMapBasic::mouseMoveEvent (QMouseEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_mouse_event (event, 0); }
    }
@@ -456,7 +463,7 @@ void
 dmz::QtModuleMapBasic::wheelEvent (QWheelEvent *event) {
 
    if (event) {
-      
+
       if (_ignoreEvents) { event->ignore (); }
       else { _handle_mouse_event (0, event); }
    }
@@ -614,17 +621,17 @@ dmz::QtModuleMapBasic::_init (Config &local) {
    _map = new qmapcontrol::MapControl (frameSize (), qmapcontrol::MapControl::None);
 
    if (_map) {
-      
+
       connect (
          _map, SIGNAL (mouseEventCoordinate (const QMouseEvent *, const QPointF)),
          this, SLOT (_mouse_event_coordinate (const QMouseEvent *, const QPointF)));
-      
+
       _map->setMouseTracking (true);
-   
+
       _cacheDir = get_home_directory ();
-      
+
       if (is_valid_path (_cacheDir)) {
-         
+
 #if defined (_WIN32)
          _cacheDir << "/Local Settings/Application Data/";
 #elif defined (__APPLE__) || defined (MACOSX)
@@ -632,63 +639,65 @@ dmz::QtModuleMapBasic::_init (Config &local) {
 #else
          _cacheDir << "/.";
 #endif
-   
+
          _cacheDir << "dmz/QMapControl";
          _cacheDir = format_path (_cacheDir);
       }
       else { _cacheDir = ""; }
-      
+
       if (config_to_boolean ("map.cache", local, True) && _cacheDir) {
-   
+
          _log.info << "Persistent cache: " << _cacheDir << endl;
          _map->enablePersistentCache (QString (_cacheDir.get_buffer ()));
       }
-      
+
       _map->showScale (config_to_boolean ("map.scale", local, True));
       _map->showLoading (config_to_boolean ("map.loading", local, True));
-   
+
       _zoomMin = config_to_int32 ("zoom.min", local, _zoomMin);
       _zoomMax = config_to_int32 ("zoom.max", local, _zoomMax);
       _zoomDefault = config_to_int32 ("zoom.default", local, _zoomDefault);
-      
-      String mapUrl (config_to_string ("tileMapAdapter.url", local, "tile.openstreetmap.org"));
+
+      String mapUrl =
+         config_to_string ("tileMapAdapter.url", local, "tile.openstreetmap.org");
+
       String mapPath (config_to_string ("tileMapAdapter.path", local, "/%1/%2/%3.png"));
       Int32 tileSize (config_to_int32 ("tileMapAdapter.tileSize", local, 256));
-      
+
        _defaultAdapter = new qmapcontrol::TileMapAdapter (
          mapUrl.get_buffer (),
          mapPath.get_buffer (),
          tileSize,
          _zoomMin,
          _zoomMax);
-   
+
       _baseLayer = new qmapcontrol::MapLayer ("base", _defaultAdapter);
       _map->addLayer (_baseLayer);
-   
+
       _geomLayer = new qmapcontrol::GeometryLayer ("geom", _defaultAdapter);
       _map->addLayer (_geomLayer);
-   
+
       _mapAdapter = _defaultAdapter;
-         
+
       QVBoxLayout *layout (new QVBoxLayout ());
       layout->addWidget (_map);
       layout->setMargin (0);
-      
+
       setLayout (layout);
       setMouseTracking (true);
-      
+
       _inputModuleName = config_to_string ("module.input.name", local);
-   
+
       _keyEvent.set_source_handle (get_plugin_handle ());
       _mouseEvent.set_source_handle (get_plugin_handle ());
-      
+
       set_zoom_min_value (_zoomMin);
       set_zoom_max_value (_zoomMax);
       set_zoom (_zoomDefault);
-      
+
       Float64 latitude (config_to_float64 ("startCoordinate.latitude", local, 0.0));
       Float64 longitude (config_to_float64 ("startCoordinate.longitude", local, 0.0));
-      
+
       _map->setView (QPointF (longitude, latitude));
    }
 }

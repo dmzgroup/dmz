@@ -49,7 +49,10 @@ dmz::get_qmatrix_scale (const QMatrix &Source) {
 
 
 void
-dmz::set_qobject_properties (const String &Name, const Config &Source, QObject *object) {
+dmz::set_qobject_properties (
+      const String &Name,
+      const Config &Source,
+      QObject *object) {
 
    if (object) {
 
@@ -72,7 +75,10 @@ dmz::set_qobject_properties (const String &Name, const Config &Source, QObject *
 
 
 dmz::Boolean
-dmz::set_qwidget_stylesheet (const String &Name, const Config &Source, QWidget *widget) {
+dmz::set_qwidget_stylesheet (
+      const String &Name,
+      const Config &Source,
+      QWidget *widget) {
 
    Boolean result (False);
 
@@ -104,7 +110,10 @@ dmz::set_qwidget_stylesheet (const String &Name, const Config &Source, QWidget *
 
 
 void
-dmz::set_qwidget_contents_margins (const String &Name, const Config &Source, QWidget *widget) {
+dmz::set_qwidget_contents_margins (
+      const String &Name,
+      const Config &Source,
+      QWidget *widget) {
 
    if (widget) {
 
@@ -157,10 +166,17 @@ dmz::get_save_file_name_with_extension (
             break;
 
         const QString prompt =
-           QObject::tr("%1 already exists.\nDo you want to replace it?").arg(fi.fileName());
+           QObject::tr("%1 already exists.\nDo you want to replace it?")
+              .arg(fi.fileName());
 
-        if (QMessageBox::warning(parent, title, prompt, QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
+        if (QMessageBox::warning(
+              parent,
+              title,
+              prompt,
+              QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+
             break;
+        }
 
         dir = saveFile;
     }

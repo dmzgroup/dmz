@@ -481,7 +481,7 @@ main (int argc, char *argv[]) {
    QCoreApplication::setOrganizationName (OrganizationName);
    QCoreApplication::setOrganizationDomain (OrganizationDomain);
    QCoreApplication::setApplicationName (app.get_name ().get_buffer ());
-   
+
    app.state.set_autosave_file (
       get_home_directory () + "/." + app.get_prefix () + "_AUTO_SAVE_FILE");
 
@@ -512,7 +512,7 @@ main (int argc, char *argv[]) {
       qtLogObs.set_process_updates (False);
 
       if (splash) { delete splash; splash = 0; }
-      
+
       // This little hack is needed to get the main menubar to
       // show up correctly under OSX when using Qt 4.6 -ss
       QEventLoop dummyLoop;

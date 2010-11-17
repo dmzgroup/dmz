@@ -235,23 +235,32 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
       QString appName (_updateVersion.get_name ().get_buffer ());
       appName.replace (" ", "-");
 
+      const String Major (_updateVersion.get_major ());
+      const String Minor (_updateVersion.get_minor ());
+      const String Bug (_updateVersion.get_bug ());
       const String Build (_updateVersion.get_build ());
 
       QString fileName;
 
       if (_downloadToTemp) {
 
-         fileName = tr ("%1/%2-%3.%4").
+         fileName = tr ("%1/%2-%3-%4-%5-%6.%7").
             arg (QDir::tempPath ()).
             arg (appName).
+            arg (Major.get_buffer ()).
+            arg (Minor.get_buffer ()).
+            arg (Bug.get_buffer ()).
             arg (Build.get_buffer ()).
             arg (FileType);
       }
       else {
 
-         QString defaultFileName = tr ("%1/%2-%3.%4").
+         QString defaultFileName = tr ("%1/%2-%3-%4-%5-%6.%7").
             arg (QDesktopServices::storageLocation (QDesktopServices::DesktopLocation)).
             arg (appName).
+            arg (Major.get_buffer ()).
+            arg (Minor.get_buffer ()).
+            arg (Bug.get_buffer ()).
             arg (Build.get_buffer ()).
             arg (FileType);
 
@@ -279,6 +288,9 @@ dmz::QtPluginAppUpdater::_slot_download_start () {
 
          QString downloadServer (_downloadUrl.get_buffer ());
          downloadServer.replace ("{app_name}", appName);
+         downloadServer.replace ("{major}", Major.get_buffer ());
+         downloadServer.replace ("{minor}", Minor.get_buffer ());
+         downloadServer.replace ("{bug}", Bug.get_buffer ());
          downloadServer.replace ("{build_number}", Build.get_buffer ());
          downloadServer.append (tr (".") + FileType);
 
@@ -558,7 +570,7 @@ dmz::QtPluginAppUpdater::_init (Config &local) {
    _releaseChannel = config_to_string ("release.channel", local, _releaseChannel);
 
    // _updateUrl = "latest/{system_name}-{release_channel}/{app_name}.xml";
-   // _downloadUrl = "downloads/{app_name}-{build_number}";
+   // _downloadUrl = "downloads/{app_name}-{major}-{minor}-{bug}-{build_number}";
 
    String host = config_to_string ("update.host", local);
    String path = config_to_string ("update.path", local);

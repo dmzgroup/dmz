@@ -535,9 +535,15 @@ dmz::QtPluginAppUpdater::_get_changelog () {
       appName.replace (" ", "-");
 
       const QString Build (_updateVersion.get_build ().get_buffer ());
+      const QString Major (_updateVersion.get_major ().get_buffer ());
+      const QString Minor (_updateVersion.get_minor ().get_buffer ());
+      const QString Bug (_updateVersion.get_bug ().get_buffer ());
 
       QString changelogServer (_downloadUrl.get_buffer ());
       changelogServer.replace ("{app_name}", appName);
+      changelogServer.replace ("{major}", Major);
+      changelogServer.replace ("{minor}", Minor);
+      changelogServer.replace ("{bug}", Bug);
       changelogServer.replace ("{build_number}", Build);
       changelogServer.append (tr (".html"));
 

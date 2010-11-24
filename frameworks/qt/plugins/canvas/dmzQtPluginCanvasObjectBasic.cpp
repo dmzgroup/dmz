@@ -747,7 +747,32 @@ dmz::QtPluginCanvasObjectBasic::_create_svg_item (
          if (DataName == "translate") {
 
             Vector vec (config_to_vector (cd));
-            item->translate (vec.get_x (), vec.get_y ());
+            String itemName = config_to_string ("name", cd);
+
+            if (itemName) {
+
+               QGraphicsItem *img = os.itemTable.lookup (itemName);
+               if (img) {
+
+                  QRectF rect = img->boundingRect ();
+                  Vector rectVec;
+                  if (vec.get_x () == 0) { rectVec.set_x (0); }
+                  else if (vec.get_x() > 0) { rectVec.set_x (rect.center ().x ()); }
+                  else { rectVec.set_x (-rect.center ().x ()); }
+
+                  if (vec.get_y () == 0) { rectVec.set_y (0); }
+                  else if (vec.get_y () > 0) { rectVec.set_y (rect.center ().y ()); }
+                  else { rectVec.set_y (-rect.center ().y ()); }
+
+                  QPointF center = item->boundingRect ().center ();
+                  rectVec.set_x (rectVec.get_x () - center.x ());
+                  rectVec.set_y (rectVec.get_y () - center.y ());
+                  vec += rectVec;
+                  item->setPos (vec.get_x (), vec.get_y ());
+               }
+            }
+            else { item->translate (vec.get_x (), vec.get_y ()); }
+
             center = False;
          }
          else if (DataName == "scale") {

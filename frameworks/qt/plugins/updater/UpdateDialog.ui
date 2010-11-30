@@ -150,7 +150,7 @@ p, li { white-space: pre-wrap; }
        <item>
         <widget class="QPushButton" name="laterButton">
          <property name="text">
-          <string>Reminde Me Later</string>
+          <string>Remind Me Later</string>
          </property>
         </widget>
        </item>

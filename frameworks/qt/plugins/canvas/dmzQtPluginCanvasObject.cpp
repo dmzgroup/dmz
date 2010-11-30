@@ -210,6 +210,8 @@ dmz::QtPluginCanvasObject::update_time_slice (const Float64 TimeDelta) {
 
    if (_updateTable.get_count ()) {
 
+      QGraphicsView *view (_canvasModule->get_view ());
+      view->setUpdatesEnabled (false);
       HashTableHandleIterator it;
       ObjectStruct *os (_updateTable.get_first (it));
       while (os) {
@@ -219,6 +221,7 @@ dmz::QtPluginCanvasObject::update_time_slice (const Float64 TimeDelta) {
       }
 
       _updateTable.clear ();
+      view->setUpdatesEnabled (true);
    }
 }
 
@@ -389,7 +392,7 @@ dmz::QtPluginCanvasObject::update_object_position (
       const Vector *PreviousValue) {
 
    if (AttributeHandle == _positionAttrHandle) {
-      
+
       ObjectStruct *os (_objectTable.lookup (ObjectHandle));
 
       if (os) {

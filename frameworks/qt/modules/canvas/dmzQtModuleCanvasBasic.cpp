@@ -556,6 +556,7 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
 
    _canvas = new QtCanvasView (this);
    _canvas->setMouseTracking (true);
+   _canvas->setViewportUpdateMode (QGraphicsView::FullViewportUpdate);
 
    set_background_transparent (config_to_boolean ("scene.background.transparent", local, False));
 

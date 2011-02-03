@@ -7,6 +7,7 @@
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
 
+#include <QtCore/QFileInfo>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QIcon>
@@ -112,6 +113,8 @@ dmz::QtPluginIconPalletTool::_add_type (const ObjectType &Type) {
    const String IconName = _rc.find_file (IconResource);
 
    if (IconName) {
+      
+      QFileInfo fi (IconName.get_buffer ());
 
       const String Name = Type.get_name ();
 
@@ -121,24 +124,50 @@ dmz::QtPluginIconPalletTool::_add_type (const ObjectType &Type) {
             (int)_iconExtent,
             (int)_iconExtent,
             QImage::Format_ARGB32_Premultiplied);
+            
          QPainter painter (&back);
          painter.setCompositionMode (QPainter::CompositionMode_Source);
          painter.fillRect (back.rect (), Qt::transparent);
          painter.setCompositionMode (QPainter::CompositionMode_SourceOver);
-         QSvgRenderer qsr (QString (IconName.get_buffer ()));
-         QRectF size = qsr.viewBoxF ();
-         qreal width = size.width ();
-         qreal height = size.height ();
-         qreal scale = (width > height) ? width : height;
-         if (scale <= 0.0f) { scale = 1.0f; }
-         scale = _iconExtent / scale;
-         width *= scale;
-         height *= scale;
-         size.setWidth (width);
-         size.setHeight (height);
-         if (height < _iconExtent) { size.moveTop ((_iconExtent - height) * 0.5f); }
-         if (width < _iconExtent) { size.moveLeft ((_iconExtent - width) * 0.5f); }
-         qsr.render (&painter, size);
+
+         if (fi.suffix ().toLower () == QLatin1String ("svg")) {
+            
+            QSvgRenderer qsr (fi.filePath ());
+            QRectF size = qsr.viewBoxF ();
+            qreal width = size.width ();
+            qreal height = size.height ();
+            qreal scale = (width > height) ? width : height;
+            if (scale <= 0.0f) { scale = 1.0f; }
+            scale = _iconExtent / scale;
+            width *= scale;
+            height *= scale;
+            size.setWidth (width);
+            size.setHeight (height);
+            if (height < _iconExtent) { size.moveTop ((_iconExtent - height) * 0.5f); }
+            if (width < _iconExtent) { size.moveLeft ((_iconExtent - width) * 0.5f); }
+            qsr.render (&painter, size);
+         }
+         else {
+         
+            QRectF target(0.0, 0.0, _iconExtent, _iconExtent);
+            QPixmap pixmap(fi.filePath ());
+            
+            QRectF size = pixmap.rect ();
+            qreal width = size.width ();
+            qreal height = size.height ();
+            qreal scale = (width > height) ? width : height;
+            if (scale <= 0.0f) { scale = 1.0f; }
+            scale = _iconExtent / scale;
+            width *= scale;
+            height *= scale;
+            size.setWidth (width);
+            size.setHeight (height);
+            if (height < _iconExtent) { size.moveTop ((_iconExtent - height) * 0.5f); }
+            if (width < _iconExtent) { size.moveLeft ((_iconExtent - width) * 0.5f); }
+            
+            painter.drawPixmap (size, pixmap, pixmap.rect ());
+         }
+         
          painter.end ();
          QIcon icon;
          icon.addPixmap (QPixmap::fromImage (back));

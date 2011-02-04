@@ -178,6 +178,19 @@ dmz::Undo::get_type () const {
 }
 
 
+void
+dmz::Undo::get_current_undo_names (String &undoName, String &redoName) const {
+
+   if (_context) {
+
+      if (_context->undoHead) { undoName = _context->undoHead->Name; }
+      if (_context->redoHead) { redoName = _context->redoHead->Name; }
+   }
+
+   return;
+}
+
+
 /*!
 
 \brief Dumps the undo recordings.
@@ -525,11 +538,18 @@ dmz::Undo::abort_record (const Handle RecordHandle) {
       stack->next = 0;
 
       _context->update_record_state (
+         UndoRecordingStateAbort,
+         UndoRecordingTypeExplicit,
+         UndoTypeUndo);
+
+      _context->update_record_state (
          UndoRecordingStateStop,
          UndoRecordingTypeExplicit,
          UndoTypeUndo);
 
       delete stack; stack = 0;
+
+      result = True;
    }
 
    return result;

@@ -37,6 +37,8 @@ namespace dmz {
          Boolean operator== (const StringContainer &Container) const;
          Boolean has_same_content (const StringContainer &Container) const;
 
+         StringContainer &operator+= (const StringContainer &Container);
+
          void clear ();
 
          Int32 get_count () const;

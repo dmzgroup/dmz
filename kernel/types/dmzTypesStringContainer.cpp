@@ -140,6 +140,19 @@ dmz::StringContainer::has_same_content (const StringContainer &Container) const 
 }
 
 
+//! Assignment by sum operator.
+dmz::StringContainer &
+dmz::StringContainer::operator+= (const StringContainer &Container) {
+
+   String item;
+   StringContainerIterator it;
+
+   while (Container.get_next (it, item)) { add (item); }
+
+   return *this;
+}
+
+
 //! Clears container.
 void
 dmz::StringContainer::clear () { _state.table.clear (); }

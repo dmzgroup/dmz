@@ -167,7 +167,14 @@ local_init (
    const String LibName =
       config_to_string ("extension.name", manifest, app.get_name () + "Init");
 
-   DynamicLibrary dl (LibName, DynamicLibraryModeUnload);
+   DynamicLibraryModeEnum libMode (DynamicLibraryModeUnload);
+
+   if (config_to_boolean ("extension.keep", manifest, False)) {
+
+      libMode = DynamicLibraryModeKeep;
+   }
+
+   DynamicLibrary dl (LibName, libMode);
 
    if (dl.is_loaded ()) {
 

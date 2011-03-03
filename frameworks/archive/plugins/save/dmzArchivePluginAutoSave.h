@@ -53,6 +53,7 @@ namespace dmz {
          String _saveFile;
          Boolean _firstStart;
          Boolean _appStateDirty;
+         Boolean _deleteOnExit;
 
          Log _log;
          //! \endcond

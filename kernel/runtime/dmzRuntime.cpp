@@ -96,7 +96,7 @@ dmz::Runtime::get_session_config (Config &session) {
 
 /*!
 
-\brief TimeSlicehronizes the runtime context.
+\brief TimeSlice synchronizes the runtime context.
 \details This function should be called once per frame. It is responsible for updating
 simulation time, invoking timed events, and other time related functions found
 in the Runtime.

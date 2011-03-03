@@ -15,7 +15,6 @@ namespace dmz {
    enum UndoRecordingStateEnum {
       UndoRecordingStateStart, //!< Start recording undo actions.
       UndoRecordingStateStop, //!< Stop recording undo actions.
-      UndoRecordingStateAbort, //!< Abort recording undo actions.
    };
 
    enum UndoRecordingTypeEnum {
@@ -61,8 +60,6 @@ namespace dmz {
          Boolean is_in_undo () const;
          Boolean is_recording () const;
          UndoTypeEnum get_type () const;
-
-         void get_current_undo_names (String &undoName, String &redoName) const;
 
          void dump (const UndoTypeEnum Type, UndoDump &out);
 

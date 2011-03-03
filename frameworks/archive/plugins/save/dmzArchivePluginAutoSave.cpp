@@ -33,6 +33,7 @@ dmz::ArchivePluginAutoSave::ArchivePluginAutoSave (
       _archiveHandle (0),
       _firstStart (True),
       _appStateDirty (False),
+      _deleteOnExit (True),
       _log (Info) {
 
    _init (local);
@@ -99,7 +100,7 @@ dmz::ArchivePluginAutoSave::update_plugin_state (
    }
    else if (State == PluginStateShutdown) {
 
-      if (is_valid_path (_saveFile)) { remove_file (_saveFile); }
+      if (_deleteOnExit && is_valid_path (_saveFile)) { remove_file (_saveFile); }
    }
 }
 
@@ -167,11 +168,15 @@ dmz::ArchivePluginAutoSave::_init (Config &local) {
 
    if (_saveFile) {
 
+      _log.debug << "Auto save to file: " << _saveFile << endl;
+
       set_time_slice_interval (
          config_to_float64 ("save.rate", local, get_time_slice_interval ()));
 
       _archiveHandle = defs.create_named_handle (
          config_to_string ("archive.name", local, ArchiveDefaultName));
+
+      _deleteOnExit = config_to_boolean ("delete-on-exit.value", local, True);
    }
    else {
 

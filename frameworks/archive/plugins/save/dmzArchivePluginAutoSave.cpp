@@ -164,11 +164,21 @@ dmz::ArchivePluginAutoSave::_init (Config &local) {
 
    Definitions defs (get_plugin_runtime_context ());
 
+   Boolean useHomeDir = config_to_boolean ("use-home-dir.value", local);
+
    _saveFile = config_to_string ("save.file", local, _appState.get_autosave_file ());
 
    if (_saveFile) {
 
-      _log.debug << "Auto save to file: " << _saveFile << endl;
+      if (useHomeDir) {
+
+         String path, file, ext;
+         split_path_file_ext (_saveFile, path, file, ext);
+
+         _saveFile = format_path (get_home_directory () + "/" + file + ext);
+      }
+
+      _log.info << "Auto save to file: " << _saveFile << endl;
 
       set_time_slice_interval (
          config_to_float64 ("save.rate", local, get_time_slice_interval ()));
@@ -183,7 +193,6 @@ dmz::ArchivePluginAutoSave::_init (Config &local) {
       _log.warn << "No auto save file specified. Auto save disabled." << endl;
       stop_time_slice ();
    }
-
 }
 //! \endcond
 

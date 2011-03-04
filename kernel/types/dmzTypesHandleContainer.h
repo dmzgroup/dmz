@@ -32,12 +32,16 @@ namespace dmz {
          ~HandleContainer ();
 
          HandleContainer &operator= (const HandleContainer &Container);
+         Boolean operator== (const HandleContainer &Container) const;
+         Boolean has_same_content (const HandleContainer &Container) const;
+
+         HandleContainer &operator+= (const HandleContainer &Container);
 
          void clear ();
 
          Int32 get_count () const;
 
-         Boolean contains (const Handle Value);
+         Boolean contains (const Handle Value) const;
 
          Boolean add (const Handle Value);
          Boolean remove (const Handle Value);

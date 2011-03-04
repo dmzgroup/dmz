@@ -80,6 +80,80 @@ dmz::HandleContainer::operator= (const HandleContainer &Container) {
 }
 
 
+/*!
+
+\brief Relational "equal to" operator.
+\details Test that each container has the same content and that the content is
+stored in the same order.
+\param[in] Container HandleContainer to test against.
+\return Returns dmz::True if the two HandleContainer objects have the same content stored
+in the same order.
+
+*/
+dmz::Boolean
+dmz::HandleContainer::operator== (const HandleContainer &Container) const {
+
+   Boolean result (False);
+
+   if (get_count () == Container.get_count ()) {
+
+      result = True;
+
+      HandleContainerIterator it1, it2;
+      Handle v1, v2;
+
+      while (result && get_next (it1, v1) && Container.get_next (it2, v2)) {
+
+         if (v1 != v2) { result = False; }
+      }
+   }
+
+   return result;
+}
+
+
+/*!
+
+\brief Tests if two HandleContainer object have the same content.
+\param[in] Container HandleContainer to test against.
+\return Returns dmz::True if the two HandleContainer objects have the same content.
+
+*/
+dmz::Boolean
+dmz::HandleContainer::has_same_content (const HandleContainer &Container) const {
+
+   Boolean result (False);
+
+   if (get_count () == Container.get_count ()) {
+
+      result = True;
+
+      HandleContainerIterator it;
+      Handle value;
+
+      while (result && get_next (it, value)) {
+
+         if (!Container.contains (value)) { result = False; }
+      }
+   }
+
+   return result;
+}
+
+
+//! Assignment by sum operator.
+dmz::HandleContainer &
+dmz::HandleContainer::operator+= (const HandleContainer &Container) {
+
+   Handle item;
+   HandleContainerIterator it;
+
+   while (Container.get_next (it, item)) { add (item); }
+
+   return *this;
+}
+
+
 //! Clears container.
 void
 dmz::HandleContainer::clear () { _state.table.clear (); }
@@ -98,7 +172,7 @@ dmz::HandleContainer::get_count () const { return _state.table.get_count (); }
 
 */
 dmz::Boolean
-dmz::HandleContainer::contains (const Handle Value) {
+dmz::HandleContainer::contains (const Handle Value) const {
 
    return _state.table.lookup (Value) != 0;
 }

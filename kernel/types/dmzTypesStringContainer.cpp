@@ -135,7 +135,6 @@ dmz::StringContainer::has_same_content (const StringContainer &Container) const 
       }
    }
 
-
    return result;
 }
 

@@ -46,7 +46,6 @@ dmz::ArchivePluginAutoCache::update_plugin_state (
       if (_firstStart && _saveFile && is_valid_path (_saveFile) && _archiveMod) {
 
          _log.info << "Restoring from auto cached archive: " << _saveFile << endl;
-_log.warn << "Restoring from auto cached archive: " << _saveFile << endl;
 
          Config global ("global");
          ParserXML parser;
@@ -154,7 +153,6 @@ dmz::ArchivePluginAutoCache::_cache_archive () {
          format_config_to_xml (config, out, ConfigPrettyPrint);
 
          close_file (file);
-         _log.warn << "Cached archive: " << _saveFile << endl;
       }
    }
 }

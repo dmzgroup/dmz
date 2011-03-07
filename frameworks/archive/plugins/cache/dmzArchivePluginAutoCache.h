@@ -51,7 +51,7 @@ namespace dmz {
          Handle _archiveHandle;
          String _cacheDir;
          String _saveFile;
-         Boolean _firstStart;
+         Boolean _autoRestore;
          Boolean _appStateDirty;
          Message _updateArchiveMessage;
          Log _log;

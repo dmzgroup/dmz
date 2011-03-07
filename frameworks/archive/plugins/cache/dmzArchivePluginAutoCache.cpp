@@ -19,7 +19,7 @@ dmz::ArchivePluginAutoCache::ArchivePluginAutoCache (const PluginInfo &Info, Con
       _appState (Info),
       _archiveMod (0),
       _archiveHandle (0),
-      _firstStart (True),
+      _autoRestore (True),
       _appStateDirty (False),
       _log (Info) {
 
@@ -43,7 +43,7 @@ dmz::ArchivePluginAutoCache::update_plugin_state (
    }
    else if (State == PluginStateStart) {
 
-      if (_firstStart && _saveFile && is_valid_path (_saveFile) && _archiveMod) {
+      if (_autoRestore && _saveFile && is_valid_path (_saveFile) && _archiveMod) {
 
          _log.info << "Restoring from auto cached archive: " << _saveFile << endl;
 
@@ -82,10 +82,11 @@ dmz::ArchivePluginAutoCache::update_plugin_state (
          }
       }
 
-      _firstStart = False;
+      _autoRestore = False;
    }
    else if (State == PluginStateStop) {
 
+      _appStateDirty = True;
       _cache_archive ();
    }
    else if (State == PluginStateShutdown) {
@@ -153,6 +154,8 @@ dmz::ArchivePluginAutoCache::_cache_archive () {
          format_config_to_xml (config, out, ConfigPrettyPrint);
 
          close_file (file);
+
+         _log.debug << "Archive cached: " << _saveFile << endl;
       }
    }
 }
@@ -222,6 +225,8 @@ dmz::ArchivePluginAutoCache::_init (Config &local) {
 
          _archiveHandle = defs.create_named_handle (
             config_to_string ("archive.name", local, ArchiveDefaultName));
+
+         _autoRestore = config_to_boolean ("auto-restore.value", local, _autoRestore);
       }
       else {
 

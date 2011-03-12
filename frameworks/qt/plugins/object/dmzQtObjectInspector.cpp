@@ -68,6 +68,11 @@ namespace {
 
             setText (dmz::ValueCol, data);
          }
+
+         void set_value (const dmz::UUID &Identity) {
+
+            setText (dmz::ValueCol, Identity.to_string ().get_buffer ());
+         }
    };
    
    class GroupItem : public QTreeWidgetItem {
@@ -87,6 +92,17 @@ namespace {
             _handleMap[item] = AttrHandle;
             _itemMap[AttrHandle] = item;
             addChild (item);
+         }
+
+         void remove_item (const dmz::Handle AttrHandle,  AttributeItem *item) {
+
+            if (item) {
+
+               _handleMap.remove (item);
+               _itemMap.remove (AttrHandle);
+               removeChild (item);
+               delete item; item = 0;
+            }
          }
       
          AttributeItem *get_item (const dmz::Handle AttrHandle) {
@@ -164,6 +180,22 @@ struct dmz::QtObjectInspector::State {
       }
       
       return item;
+   }
+
+   void remove_item (const ObjectAttrEnum Type, const Handle AttrHandle) {
+
+      GroupItem *group = get_group (Type);
+      if (group) {
+
+         AttributeItem *item = group->get_item (AttrHandle);
+         if (item) {
+
+            group->remove_item (AttrHandle, item);
+
+            itemToGroupMap.remove (item);
+            itemToHandleMap.remove (item);
+         }
+      }
    }
    
    QString handle_to_name (const Handle Object) {
@@ -266,6 +298,8 @@ dmz::QtObjectInspector::link_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
+//   AttributeItem *item = _state.get_item (ObjectAttrLink, AttributeHandle);
+//   if (item) { item->set_value (SubIdentity); }
 }
 
 
@@ -278,6 +312,7 @@ dmz::QtObjectInspector::unlink_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
+//   _state.remove_item (ObjectAttrLink, AttributeHandle);
 }
 
 
@@ -371,7 +406,12 @@ dmz::QtObjectInspector::update_object_time_stamp (
       const Float64 Value) {
 
    AttributeItem *item = _state.get_item (ObjectAttrTimeStamp, AttributeHandle);
-   if (item) { item->setText (ValueCol, QString::number (Value, 'f', 2)); }
+   if (item) {
+
+      QString format ("yyyy.MM.dd '-' hh:mm:ss ap");
+      QString time = QDateTime::fromTime_t (Value).toString (format);
+      item->setText (ValueCol, time + " (" + QString::number (Value, 'f', 3) + ")");
+   }
 }
 
 

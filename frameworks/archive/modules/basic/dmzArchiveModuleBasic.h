@@ -12,6 +12,7 @@
 
 namespace dmz {
 
+
    class ArchiveModuleBasic :
          public Plugin,
          public ArchiveModule {
@@ -47,11 +48,13 @@ namespace dmz {
 
             const String Name;
             const Int32 Version;
+            const Boolean ClearOldArchives;
             HashTableHandleTemplate<ArchiveObserver> table;
 
-            ArchiveStruct (const String &TheName, const Int32 TheVersion) :
+            ArchiveStruct (const String &TheName, const Int32 TheVersion, const Boolean Clear) :
                   Name (TheName),
-                  Version (TheVersion) {;}
+                  Version (TheVersion),
+                  ClearOldArchives (Clear) {;}
 
             ~ArchiveStruct () { table.clear (); }
          };

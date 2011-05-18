@@ -70,7 +70,7 @@ dmz::ArchiveModuleBasic::register_archive_observer (
 
       if (!as) {
 
-         as = new ArchiveStruct (_defs.lookup_named_handle_name (ArchiveHandle), -1);
+         as = new ArchiveStruct (_defs.lookup_named_handle_name (ArchiveHandle), -1, False);
 
          if (as && !_archiveTable.store (ArchiveHandle, as)) { delete as; as = 0; }
       }
@@ -183,57 +183,65 @@ dmz::ArchiveModuleBasic::process_archive (const Handle ArchiveHandle, Config &ar
             << " is greater than the supported version number: " << as->Version << endl;
       }
 
-      HashTableHandleIterator it;
+//      _log.warn << "Name: " << as->Name << " COA: " << as->ClearOldArchives << " CurrVer: " << Version << " asVer: " << as->Version << endl;
+      if (as->ClearOldArchives && (Version < as->Version)) {
 
-      ArchiveObserver *obs (as->table.get_first (it));
 
-      while (obs) {
-
-         obs->pre_process_archive (ArchiveHandle, Version);
-         obs = as->table.get_next (it);
       }
+      else {
 
-      obs = as->table.get_first (it);
+         HashTableHandleIterator it;
 
-      while (obs) {
+         ArchiveObserver *obs (as->table.get_first (it));
 
-         StringContainer sc = obs->get_archive_scope (ArchiveHandle);
-         String scopeName;
-         sc.get_first (scopeName);
-         Config local (scopeName);
+         while (obs) {
 
-         Boolean found = sc.get_last (scopeName);
-
-         while (found) {
-
-            Config data;
-            archive.lookup_all_config_merged (scopeName, data);
-
-            if (data) {
-
-               local.add_children (data);
-               ConfigIterator it;
-               String attr, value;
-
-               while (data.get_next_attribute (it, attr, value)) {
-
-                  local.store_attribute (attr, value);
-               }
-            }
-
-            found = sc.get_prev (scopeName);
+            obs->pre_process_archive (ArchiveHandle, Version);
+            obs = as->table.get_next (it);
          }
 
-         obs->process_archive (ArchiveHandle, Version, local, archive);
-         obs = as->table.get_next (it);
-      }
+         obs = as->table.get_first (it);
 
-      obs = as->table.get_first (it);
+         while (obs) {
 
-      while (obs) {
+            StringContainer sc = obs->get_archive_scope (ArchiveHandle);
+            String scopeName;
+            sc.get_first (scopeName);
+            Config local (scopeName);
 
-         obs->post_process_archive (ArchiveHandle, Version);
-         obs = as->table.get_next (it);
+            Boolean found = sc.get_last (scopeName);
+
+            while (found) {
+
+               Config data;
+               archive.lookup_all_config_merged (scopeName, data);
+
+               if (data) {
+
+                  local.add_children (data);
+                  ConfigIterator it;
+                  String attr, value;
+
+                  while (data.get_next_attribute (it, attr, value)) {
+
+                     local.store_attribute (attr, value);
+                  }
+               }
+
+               found = sc.get_prev (scopeName);
+            }
+
+            obs->process_archive (ArchiveHandle, Version, local, archive);
+            obs = as->table.get_next (it);
+         }
+
+         obs = as->table.get_first (it);
+
+         while (obs) {
+
+            obs->post_process_archive (ArchiveHandle, Version);
+            obs = as->table.get_next (it);
+         }
       }
    }
 
@@ -259,10 +267,13 @@ dmz::ArchiveModuleBasic::_init (Config &local) {
             config_to_string ("name", archive, ArchiveDefaultName);
 
          const Int32 Version = config_to_int32 ("version", archive, -1);
+         const Boolean Clear = config_to_boolean ("clear-old", archive, False);
+
+         _log.warn << "Name: " << ArchiveName << endl;
 
          if (ArchiveName) {
 
-            ArchiveStruct *as = new ArchiveStruct (ArchiveName, Version);
+            ArchiveStruct *as = new ArchiveStruct (ArchiveName, Version, Clear);
 
             if (as &&
                   !_archiveTable.store (_defs.create_named_handle (ArchiveName), as)) {

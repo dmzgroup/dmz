@@ -183,7 +183,6 @@ dmz::ArchiveModuleBasic::process_archive (const Handle ArchiveHandle, Config &ar
             << " is greater than the supported version number: " << as->Version << endl;
       }
 
-//      _log.warn << "Name: " << as->Name << " COA: " << as->ClearOldArchives << " CurrVer: " << Version << " asVer: " << as->Version << endl;
       if (as->ClearOldArchives && (Version < as->Version)) {
 
 
@@ -268,8 +267,6 @@ dmz::ArchiveModuleBasic::_init (Config &local) {
 
          const Int32 Version = config_to_int32 ("version", archive, -1);
          const Boolean Clear = config_to_boolean ("clear-old", archive, False);
-
-         _log.warn << "Name: " << ArchiveName << endl;
 
          if (ArchiveName) {
 

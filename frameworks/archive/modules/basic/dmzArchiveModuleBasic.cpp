@@ -25,7 +25,8 @@ dmz::ArchiveModuleBasic::ArchiveModuleBasic (
       _log (Info),
       _defs (Info, &_log),
       _global (global),
-      _appState (Info) {
+      _appState (Info),
+      _databaseName ("-") {
 
    _init (local);
 }
@@ -114,6 +115,13 @@ dmz::ArchiveModuleBasic::create_archive (const Handle ArchiveHandle) {
 
    if (as) {
 
+      if (_databaseName.get_length () >= 0) {
+
+         Config database ("db");
+         database.store_attribute ("app", _databaseName);
+         result.add_config (database);
+      }
+
       if (as->Version >= 0) {
 
          Config version ("archive-version");
@@ -176,6 +184,7 @@ dmz::ArchiveModuleBasic::process_archive (const Handle ArchiveHandle, Config &ar
    if (as) {
 
       const Int32 Version = config_to_int32 ("archive-version.version", archive, -1);
+      const String dbName = config_to_string ("db.app", archive, "");
 
       if (Version > as->Version) {
 
@@ -183,7 +192,20 @@ dmz::ArchiveModuleBasic::process_archive (const Handle ArchiveHandle, Config &ar
             << " is greater than the supported version number: " << as->Version << endl;
       }
 
-      if (as->ClearOldArchives && (Version < as->Version)) {
+      if (!dbName.get_length () && (_databaseName != "-")) {
+
+         if (Version != -1) {
+
+            _log.warn << "Archive <" << as->Name << "> does not have an associated database." << endl;
+         }
+      }
+      else if (dbName.get_length () && (dbName != _databaseName)) {
+
+         _log.error << "Archive Database does not match connected database. Ignoring archive." << endl;
+      }
+
+      if ((dbName.get_length () && (dbName != _databaseName)) ||
+         as->ClearOldArchives && (Version < as->Version)) {
 
 
       }
@@ -255,6 +277,8 @@ dmz::ArchiveModuleBasic::_init (Config &local) {
 
    Config list;
 
+   _databaseName = config_to_string ("db.app", local, "-");
+   _log.warn << "DATABASE NAME: " << _databaseName << endl;
    if (local.lookup_all_config ("archive", list)) {
 
       ConfigIterator it;

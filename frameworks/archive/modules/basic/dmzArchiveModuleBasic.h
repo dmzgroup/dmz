@@ -66,6 +66,7 @@ namespace dmz {
          Config _global;
          ApplicationState _appState;
          HashTableHandleTemplate<ArchiveStruct> _archiveTable;
+         String _databaseName;
          //! \endcond
 
       private:

@@ -278,7 +278,6 @@ dmz::ArchiveModuleBasic::_init (Config &local) {
    Config list;
 
    _databaseName = config_to_string ("db.app", local, "-");
-   _log.warn << "DATABASE NAME: " << _databaseName << endl;
    if (local.lookup_all_config ("archive", list)) {
 
       ConfigIterator it;

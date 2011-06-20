@@ -27,6 +27,7 @@ dmz::QtPluginAppUpdater::QtPluginAppUpdater (
       Config &global) :
       QObject (0),
       Plugin (Info),
+      MessageObserver (Info),
       _log (Info),
       _exit (get_plugin_runtime_context ()),
       _version (global),
@@ -54,11 +55,11 @@ dmz::QtPluginAppUpdater::QtPluginAppUpdater (
 dmz::QtPluginAppUpdater::~QtPluginAppUpdater () {
 
    if (_netManager) {
-      
+
       delete _netManager;
       _netManager = 0;
    }
-   
+
    if (_updateDialog) {
 
       _updateDialog->setParent (0);
@@ -78,7 +79,7 @@ dmz::QtPluginAppUpdater::update_plugin_state (
 
    }
    else if (State == PluginStateStart) {
-      
+
       RuntimeContext *context (get_plugin_runtime_context ());
       Definitions defs (context, &_log);
 
@@ -89,7 +90,7 @@ dmz::QtPluginAppUpdater::update_plugin_state (
          const Data *data (message.get_monostate ());
          if (data) { data->lookup_boolean (_valueAttrHandle, 0, _updateFlag); }
       }
-      
+
       if (defs.lookup_message (_channelMessageName, message)) {
 
          const Data *data (message.get_monostate ());
@@ -97,9 +98,9 @@ dmz::QtPluginAppUpdater::update_plugin_state (
       }
 
       if (_forceUpdate || _updateFlag) {
-         
+
          if (!_netManager) { _netManager = new QNetworkAccessManager (this); }
-         
+
          if (_netManager) {
 
             if (_mainWindowModule && !_updateDialog) {
@@ -122,6 +123,7 @@ dmz::QtPluginAppUpdater::update_plugin_state (
                   this, SLOT (_slot_handle_downloaded_file ()));
             }
 
+            _waitToOpenMsg.send ();
             _check_for_update ();
          }
       }
@@ -159,10 +161,21 @@ dmz::QtPluginAppUpdater::discover_plugin (
 }
 
 
+// Message Observer Interface
+void
+dmz::QtPluginAppUpdater::receive_message (
+      const Message &Type,
+      const UInt32 MessageSendHandle,
+      const Handle TargetObserverHandle,
+      const Data *InData,
+      Data *outData) { ; }
+
+
 void
 dmz::QtPluginAppUpdater::_slot_get_version_finished () {
 
    QNetworkReply *reply (qobject_cast<QNetworkReply *>(sender ()));
+   Boolean sendAllow (True);
 
    if (reply) {
 
@@ -207,15 +220,18 @@ dmz::QtPluginAppUpdater::_slot_get_version_finished () {
                   _ui.textLabel->setText (message);
 
                   _ui.stackedWidget->setCurrentWidget (_ui.startPage);
+                  sendAllow = false;
                   _updateDialog->open ();
                }
             }
          }
       }
-      
+
       reply->deleteLater ();
       reply = 0;
    }
+   _log.warn << "SendAllow: " << sendAllow << endl;
+   if (sendAllow && _allowOpenMsg) { _allowOpenMsg.send (); }
 }
 
 
@@ -346,6 +362,8 @@ dmz::QtPluginAppUpdater::_slot_download_cancel () {
 
    if (_downloadReply) { _downloadReply->abort (); }
    if (_updateDialog) { _updateDialog->reject (); }
+   _log.warn << "Send allow cancel" << endl;
+   if (_allowOpenMsg) { _allowOpenMsg.send (); }
 }
 
 
@@ -590,13 +608,13 @@ dmz::QtPluginAppUpdater::_init (Config &local) {
 
       if (host && path) { _downloadUrl = host + path; }
    }
-   
+
    if (_updateUrl) { _log.debug << "Update URL: " << _updateUrl << endl; }
    else { _log.debug << "Update URL not specified." << endl; }
 
    if (_downloadUrl) { _log.debug << "Download URL: " << _downloadUrl << endl; }
    else { _log.debug << "Download URL not specified." << endl; }
-   
+
    _valueAttrHandle = config_to_named_handle (
       "attribute.value.name",
       local,
@@ -605,6 +623,18 @@ dmz::QtPluginAppUpdater::_init (Config &local) {
 
    _updateMessageName = config_to_string ("update.message", local, _updateMessageName);
    _channelMessageName = config_to_string ("channel.message", local, _channelMessageName);
+
+   _waitToOpenMsg = config_create_message (
+      "wait-message.name",
+      local,
+      "",
+      context);
+
+   _allowOpenMsg = config_create_message (
+      "allow-message.name",
+      local,
+      "",
+      context);
 }
 
 

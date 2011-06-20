@@ -35,7 +35,7 @@ dmz::QtPluginPreferencesAppUpdater::~QtPluginPreferencesAppUpdater () {
 // QtWidget Interface
 QWidget *
 dmz::QtPluginPreferencesAppUpdater::get_qt_widget () {
-   
+
    return this;
 }
 
@@ -85,7 +85,7 @@ dmz::QtPluginPreferencesAppUpdater::receive_message (
       Data *outData) {
 
    if (InData) {
-      
+
       if (Type == _updateMessage) {
 
          Boolean value;
@@ -100,7 +100,7 @@ dmz::QtPluginPreferencesAppUpdater::receive_message (
          if (InData->lookup_string (_valueAttrHandle, 0, value)) {
 
             int index = _ui.channelComboBox->findText (value.get_buffer ());
-            
+
             if (index != -1) {
 
                _ui.channelComboBox->setCurrentIndex (index);
@@ -116,7 +116,7 @@ dmz::QtPluginPreferencesAppUpdater::on_updateCheckBox_stateChanged (int value) {
 
    Data data;
    data.store_boolean (_valueAttrHandle, 0, value ? True : False);
-      
+
    _updateMessage.send (&data);
 }
 
@@ -127,7 +127,7 @@ dmz::QtPluginPreferencesAppUpdater::on_channelComboBox_currentIndexChanged (
 
    String value ("stable");
    if (!Text.isEmpty ()) { value = qPrintable (Text); }
-   
+
    Data data;
    data.store_string (_valueAttrHandle, 0, qPrintable (Text));
 
@@ -141,37 +141,37 @@ dmz::QtPluginPreferencesAppUpdater::_init (Config &local, Config &global) {
    setObjectName (get_plugin_name ().get_buffer ());
 
    qframe_config_read ("frame", local, this);
-   
+
    _ui.setupUi (this);
 
    Version version (global);
    const QString Name (version.get_name ().get_buffer ());
-   
+
    QString infoText (_ui.infoLabel->text ());
    infoText.replace ("{app_name}", Name);
-   
+
    _ui.infoLabel->setText (infoText);
-   
+
    RuntimeContext *context (get_plugin_runtime_context ());
-   
+
    _updateMessage = config_create_message (
       "update.message", local, "AppUpdaterUpdateMessage", context);
-      
+
    _channelMessage = config_create_message (
       "channel.message", local, "AppUpdaterChannelMessage", context);
-   
+
    _updateMessage.set_monostate_mode (MessageMonostateOn);
    _channelMessage.set_monostate_mode (MessageMonostateOn);
-   
+
    subscribe_to_message (_updateMessage);
    subscribe_to_message (_channelMessage);
-   
+
    _valueAttrHandle = config_to_named_handle (
       "attribute.value.name",
       local,
       "value",
       context);
-   
+
    Config channelList;
 
    if (local.lookup_all_config ("release-channel", channelList)) {
@@ -183,13 +183,13 @@ dmz::QtPluginPreferencesAppUpdater::_init (Config &local, Config &global) {
       while (channelList.get_next_config (it, channel)) {
 
          const String ChannelName (config_to_string ("name", channel));
-         
+
          if (ChannelName) {
 
             itemList << ChannelName.get_buffer ();
          }
       }
-      
+
       _ui.channelComboBox->clear ();
       _ui.channelComboBox->addItems (itemList);
    }

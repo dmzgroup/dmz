@@ -3,6 +3,7 @@
 
 #include <dmzRuntimeExit.h>
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzRuntimeVersion.h>
 #include <QtCore/QTemporaryFile>
@@ -20,7 +21,8 @@ namespace dmz {
 
    class QtPluginAppUpdater :
          public QObject,
-         public Plugin {
+         public Plugin,
+         public MessageObserver {
 
    Q_OBJECT
 
@@ -36,6 +38,14 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
+
+         // Message Observer Interface
+         virtual void receive_message (
+            const Message &Type,
+            const UInt32 MessageSendHandle,
+            const Handle TargetObserverHandle,
+            const Data *InData,
+            Data *outData);
 
       protected Q_SLOTS:
          void _slot_get_version_finished ();
@@ -74,6 +84,8 @@ namespace dmz {
          Handle _valueAttrHandle;
          String _updateMessageName;
          String _channelMessageName;
+         Message _waitToOpenMsg;
+         Message _allowOpenMsg;
 
       private:
          QtPluginAppUpdater ();

@@ -7,6 +7,7 @@
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
 #include <dmzTypesHashTableHandleTemplate.h>
 
@@ -15,6 +16,7 @@ namespace dmz {
 
    class ArchiveModuleBasic :
          public Plugin,
+         public MessageObserver,
          public ArchiveModule {
 
       public:
@@ -30,6 +32,14 @@ namespace dmz {
          virtual void discover_plugin (
             const PluginDiscoverEnum Mode,
             const Plugin *PluginPtr);
+
+         // Message Observer Interface
+         virtual void receive_message (
+            const Message &Type,
+            const UInt32 MessageSendHandle,
+            const Handle TargetObserverHandle,
+            const Data *InData,
+            Data *outData);
 
          // ArchiveModule Interface
          virtual Boolean register_archive_observer (
@@ -67,6 +77,8 @@ namespace dmz {
          ApplicationState _appState;
          HashTableHandleTemplate<ArchiveStruct> _archiveTable;
          String _databaseName;
+         Message _clearArchiveMessage;
+         Boolean _clearArchive;
          //! \endcond
 
       private:

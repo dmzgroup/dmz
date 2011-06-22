@@ -21,12 +21,14 @@ dmz::ArchiveModuleBasic::ArchiveModuleBasic (
       Config &local,
       Config &global) :
       Plugin (Info),
+      MessageObserver (Info),
       ArchiveModule (Info),
       _log (Info),
       _defs (Info, &_log),
       _global (global),
       _appState (Info),
-      _databaseName ("-") {
+      _databaseName ("-"),
+      _clearArchive (False) {
 
    _init (local);
 }
@@ -54,6 +56,18 @@ dmz::ArchiveModuleBasic::discover_plugin (
 
       if (obs) { obs->remove_archive_module (get_plugin_name (), *this); }
    }
+}
+
+// Message Observer Interface
+void
+dmz::ArchiveModuleBasic::receive_message (
+      const Message &Type,
+      const UInt32 MessageSendHandle,
+      const Handle TargetObserverHandle,
+      const Data *InData,
+      Data *outData) {
+
+   if (Type == _clearArchiveMessage) { _clearArchive = True; }
 }
 
 
@@ -131,7 +145,9 @@ dmz::ArchiveModuleBasic::create_archive (const Handle ArchiveHandle) {
             version.store_attribute ("name", as->Name);
          }
 
-         version.store_attribute ("version", String::number (as->Version));
+         version.store_attribute (
+            "version",
+            String::number (_clearArchive ? -1 : as->Version));
          result.add_config (version);
       }
 
@@ -273,11 +289,13 @@ dmz::ArchiveModuleBasic::process_archive (const Handle ArchiveHandle, Config &ar
 void
 dmz::ArchiveModuleBasic::_init (Config &local) {
 
-   RuntimeContext *context (0);
+   RuntimeContext *context (get_plugin_runtime_context ());
 
    Config list;
 
    _databaseName = config_to_string ("db.app", local, "-");
+   _clearArchiveMessage = config_create_message ("clear-archive.message", local, "", context);
+   subscribe_to_message (_clearArchiveMessage);
    if (local.lookup_all_config ("archive", list)) {
 
       ConfigIterator it;

@@ -302,15 +302,19 @@ dmz::QtObjectInspector::link_objects (
    dmz::String objectTypeString = _state.defs.lookup_runtime_name (SubHandle);
 
    AttributeItem *item = _state.get_item (ObjectAttrLinkObject, LinkHandle);
-   if (item) { item->setText (ValueCol, ( QString("Attribute Handle Name: ")
-                                        + QString(to_qstring(attributeHandleString))
-                                        + QString("     Child Handle: ")
-                                        + QString::number (SubHandle)
-                                        + QString("     Child Type: ")
-                                        + QString(to_qstring(objectTypeString))
-                                        + QString("     Child UUID: ")
-                                        + QString(to_qstring(SubIdentity)))
-                                       );}
+   if (item) {
+      item->setText (ValueCol, ( //QString("Attribute Handle Name: ")
+                               //+ QString(to_qstring(attributeHandleString))
+                               //+ QString("     Child Handle: ")
+                                 QString::number (SubHandle)
+                               //+ QString("     Child Type: ")
+                               //+ QString(to_qstring(objectTypeString))
+                               //+ QString("     Child UUID: ")
+                               //+ QString(to_qstring(SubIdentity)))
+                               )
+                              );}
+      /* ToDo: Inspect why this has to be set */
+      item->setText (AttributeCol, QString("Child Handle: "));
 }
 
 void
@@ -753,6 +757,29 @@ dmz::QtObjectInspector::on_treeWidget_itemDoubleClicked (
                   dialog->setLabelText (item->text (AttributeCol));
                   dialog->setTextValue (value.get_buffer ());
                   dialog->open (this, SLOT (_update_object_text (const QString &)));
+               }
+
+               break;
+            }
+
+            case ObjectAttrLinkObject: {
+
+               const dmz::Handle objHandle = item->text(ValueCol).toInt();
+
+               if (objMod) {
+
+                  QtObjectInspector *inspector =
+                     new QtObjectInspector(_state.obs, _state.context);
+
+                  if (inspector) {
+
+                     inspector->set_state_names (_state.stateNameList);
+
+                     inspector->move (QPoint(25,25));
+
+                     inspector->show ();
+
+                  }
                }
 
                break;

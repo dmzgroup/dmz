@@ -46,7 +46,7 @@ namespace {
       "Scalar",
       "Text",
       "Data",
-      "Object"
+      "sub handle"
    };
 
    class AttributeItem : public QTreeWidgetItem {
@@ -205,7 +205,8 @@ struct dmz::QtObjectInspector::State {
       GroupItem *subGroup = group->get_subGroup (AttrHandle);
       if (!subGroup) {
 
-         subGroup = new GroupItem (group, AttrHandle, "OBJECT!");
+         QString linkName = to_qstring(defs.lookup_named_handle_name (AttrHandle));
+         subGroup = new GroupItem (group, AttrHandle, linkName);
          group->add_subGroup (AttrHandle, subGroup);
          groupMap[(ObjectAttrEnum)AttrHandle] = subGroup;
       }
@@ -249,12 +250,12 @@ struct dmz::QtObjectInspector::State {
          item = subGroup->get_item (SubHandle);
          if (!item) {
 
-            item = new AttributeItem (dmz::Object);
-            item->setText (AttrHandle, handle_to_name (SubHandle));
+            item = new AttributeItem (dmz::SubHandle);
+            item->setText (dmz::AttributeCol, ObjectAttrName[dmz::SubHandle]);
 
             subGroup->add_item (SubHandle, item);
 
-            itemToGroupMap[item] = Object;
+            itemToGroupMap[item] = dmz::SubHandle;
             itemToHandleMap[item] = SubHandle;
          }
       }
@@ -358,7 +359,6 @@ dmz::QtObjectInspector::create_object (
    }
 }
 
-
 void
 dmz::QtObjectInspector::destroy_object () {
 
@@ -389,18 +389,11 @@ dmz::QtObjectInspector::link_objects (
 
    AttributeItem *item = _state.get_link_item (ObjectAttrLink, AttributeHandle, SubHandle);
    if (item) {
-      item->setText (ValueCol, ( //QString("Attribute Handle Name: ")
-                               //+ QString(to_qstring(attributeHandleString))
-                               //+ QString("     Child Handle: ")
-                                 QString::number (SubHandle)
-                               //+ QString("     Child Type: ")
-                               //+ QString(to_qstring(objectTypeString))
-                               //+ QString("     Child UUID: ")
-                               //+ QString(to_qstring(SubIdentity)))
-                               )
-                              );}
-      /* ToDo: Inspect why this has to be set */
-      item->setText (AttributeCol, QString("sub handle: "));
+
+      item->setText (ValueCol, (QString::number (SubHandle)));
+   }
+   /* ToDo: Inspect why this has to be set */
+   //item->setText (AttributeCol, QString("sub handle: "));
 }
 
 void
@@ -426,7 +419,6 @@ dmz::QtObjectInspector::update_link_attribute_object (
       const Handle SubHandle,
       const UUID &AttributeIdentity,
       const Handle AttributeObjectHandle) {
-
 
 }
 
@@ -848,7 +840,7 @@ dmz::QtObjectInspector::on_treeWidget_itemDoubleClicked (
                break;
             }
 
-            case ObjectAttrLinkObject: {
+            case SubHandle: {
 
                const dmz::Handle objHandle = item->text(ValueCol).toInt();
                Q_EMIT linkItemClicked (objHandle);

@@ -40,8 +40,8 @@ namespace dmz {
       AttributeCol = 0,
       ValueCol = 1,
    };
-   
-   
+
+
 };
 
 

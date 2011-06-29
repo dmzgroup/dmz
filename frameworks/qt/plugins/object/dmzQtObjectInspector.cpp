@@ -765,22 +765,7 @@ dmz::QtObjectInspector::on_treeWidget_itemDoubleClicked (
             case ObjectAttrLinkObject: {
 
                const dmz::Handle objHandle = item->text(ValueCol).toInt();
-
-               if (objMod) {
-
-                  QtObjectInspector *inspector =
-                     new QtObjectInspector(_state.obs, _state.context);
-
-                  if (inspector) {
-
-                     inspector->set_state_names (_state.stateNameList);
-
-                     inspector->move (QPoint(25,25));
-
-                     inspector->show ();
-
-                  }
-               }
+               Q_EMIT linkItemClicked (objHandle);
 
                break;
             }

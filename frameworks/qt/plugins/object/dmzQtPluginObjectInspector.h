@@ -36,7 +36,7 @@ namespace dmz {
 
          // QtWidget Interface
          virtual QWidget *get_qt_widget ();
-         
+
          // Plugin Interface
          virtual void update_plugin_state (
             const PluginStateEnum State,
@@ -53,7 +53,7 @@ namespace dmz {
             const Handle TargetObserverHandle,
             const Data *InData,
             Data *outData);
-            
+
          // Definitions Observer Interface
          virtual void define_named_handle (const Handle TheHandle, const String &Name);
          virtual void define_state (const Mask &TheState, const String &Name);
@@ -228,8 +228,8 @@ namespace dmz {
 
       protected slots:
          void on_objectTreeWidget_itemActivated (QTreeWidgetItem *item, int column);
-         
-         void _inspector_finished (const Handle ObjectHandle);
+         void objectInspectorItemClicked (const Handle);
+         void _inspector_finished (const Handle);
 
       protected:
          Handle _item_to_handle (QTreeWidgetItem *item);

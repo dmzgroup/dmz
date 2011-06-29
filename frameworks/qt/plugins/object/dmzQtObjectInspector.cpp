@@ -45,7 +45,8 @@ namespace {
       "Vector",
       "Scalar",
       "Text",
-      "Data"
+      "Data",
+      "Object"
    };
 
    class AttributeItem : public QTreeWidgetItem {
@@ -87,10 +88,26 @@ namespace {
             setExpanded (true);
          }
 
+         GroupItem (QTreeWidgetItem *parent, const dmz::Handle AttrHandle, QString Attr) :
+               QTreeWidgetItem (parent, AttrHandle + QTreeWidgetItem::UserType) {
+
+            setText (dmz::AttributeCol, Attr);
+            setFlags (Qt::ItemIsEnabled);
+            setFirstColumnSpanned (true);
+            setExpanded (true);
+         }
+
          void add_item (const dmz::Handle AttrHandle, AttributeItem *item) {
 
             _handleMap[item] = AttrHandle;
             _itemMap[AttrHandle] = item;
+            addChild (item);
+         }
+
+         void add_subGroup (const dmz::Handle AttrHandle, GroupItem *item) {
+
+            _handleMap[item] = AttrHandle;
+            _groupMap[AttrHandle] = item;
             addChild (item);
          }
 
@@ -105,9 +122,24 @@ namespace {
             }
          }
 
+         void remove_subGroup (const dmz::Handle AttrHandle, GroupItem *item) {
+
+            if (item) {
+               _handleMap.remove (item);
+               _groupMap.remove (AttrHandle);
+               removeChild (item);
+               delete item; item = 0;
+            }
+         }
+
          AttributeItem *get_item (const dmz::Handle AttrHandle) {
 
             return _itemMap[AttrHandle];
+         }
+
+         GroupItem *get_subGroup (const dmz::Handle AttrHandle) {
+
+            return _groupMap[AttrHandle];
          }
 
          dmz::Handle get_handle (QTreeWidgetItem *item) {
@@ -118,6 +150,7 @@ namespace {
       protected:
          QMap<QTreeWidgetItem *, dmz::Handle> _handleMap;
          QMap<dmz::Handle, AttributeItem *> _itemMap;
+         QMap<dmz::Handle, GroupItem *> _groupMap;
    };
 };
 
@@ -136,6 +169,7 @@ struct dmz::QtObjectInspector::State {
    QMap<QTreeWidgetItem *, ObjectAttrEnum> itemToGroupMap;
    QMap<QTreeWidgetItem *, Handle> itemToHandleMap;
    QMap<ObjectAttrEnum, GroupItem *> groupMap;
+   QMap<Handle, GroupItem *> subGroupMap;
 
    State (ObjectObserverUtil &theObs, RuntimeContext *theContext) :
          obs (theObs),
@@ -157,6 +191,26 @@ struct dmz::QtObjectInspector::State {
       }
 
       return group;
+   }
+
+   GroupItem *get_subGroup (const ObjectAttrEnum Type, const Handle AttrHandle) {
+
+      GroupItem *group = get_group (Type);
+      if (!group) {
+
+         group = new GroupItem (ui.treeWidget, Type);
+         groupMap[Type] = group;
+      }
+
+      GroupItem *subGroup = group->get_subGroup (AttrHandle);
+      if (!subGroup) {
+
+         subGroup = new GroupItem (group, AttrHandle, "OBJECT!");
+         group->add_subGroup (AttrHandle, subGroup);
+         groupMap[(ObjectAttrEnum)AttrHandle] = subGroup;
+      }
+
+      return subGroup;
    }
 
    AttributeItem *get_item (const ObjectAttrEnum Type, const Handle AttrHandle) {
@@ -182,6 +236,32 @@ struct dmz::QtObjectInspector::State {
       return item;
    }
 
+
+   AttributeItem *get_link_item (
+         const ObjectAttrEnum Type,
+         const Handle AttrHandle,
+         const Handle SubHandle) {
+
+      AttributeItem *item (0);
+      GroupItem *subGroup = get_subGroup (Type, AttrHandle);
+      if (subGroup) {
+
+         item = subGroup->get_item (SubHandle);
+         if (!item) {
+
+            item = new AttributeItem (dmz::Object);
+            item->setText (AttrHandle, handle_to_name (SubHandle));
+
+            subGroup->add_item (SubHandle, item);
+
+            itemToGroupMap[item] = Object;
+            itemToHandleMap[item] = SubHandle;
+         }
+      }
+
+      return item;
+   }
+
    void remove_item (const ObjectAttrEnum Type, const Handle AttrHandle) {
 
       GroupItem *group = get_group (Type);
@@ -198,12 +278,18 @@ struct dmz::QtObjectInspector::State {
       }
    }
 
+   void remove_link_item (
+         const ObjectAttrEnum Type,
+         const Handle AttrHandle,
+         const Handle SubHandle) {
+
+   }
+
    QString handle_to_name (const Handle Object) {
 
       return QLatin1String (defs.lookup_named_handle_name (Object).get_buffer ());
    }
 };
-
 
 dmz::QtObjectInspector::QtObjectInspector (
       ObjectObserverUtil &observer,
@@ -301,7 +387,7 @@ dmz::QtObjectInspector::link_objects (
    dmz::String attributeHandleString = _state.defs.lookup_named_handle_name(AttributeHandle);
    dmz::String objectTypeString = _state.defs.lookup_runtime_name (SubHandle);
 
-   AttributeItem *item = _state.get_item (ObjectAttrLinkObject, LinkHandle);
+   AttributeItem *item = _state.get_link_item (ObjectAttrLink, AttributeHandle, SubHandle);
    if (item) {
       item->setText (ValueCol, ( //QString("Attribute Handle Name: ")
                                //+ QString(to_qstring(attributeHandleString))
@@ -314,7 +400,7 @@ dmz::QtObjectInspector::link_objects (
                                )
                               );}
       /* ToDo: Inspect why this has to be set */
-      item->setText (AttributeCol, QString("Child Handle: "));
+      item->setText (AttributeCol, QString("sub handle: "));
 }
 
 void

@@ -32,6 +32,7 @@ namespace dmz {
       ObjectAttrScalar,
       ObjectAttrText,
       ObjectAttrData,
+      Object,
       MaxObjectAttr
    };
 

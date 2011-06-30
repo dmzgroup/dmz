@@ -46,7 +46,7 @@ namespace {
       "Scalar",
       "Text",
       "Data",
-      "Sub Handle"
+      "Object Type"
    };
 
    class AttributeItem : public QTreeWidgetItem {
@@ -74,6 +74,15 @@ namespace {
 
             setText (dmz::ValueCol, Identity.to_string ().get_buffer ());
          }
+
+         void set_value (const dmz::Handle SubHandle, const dmz::ObjectType ObjectType) {
+
+            this->SubHandle = SubHandle;
+            this->ObjectType = ObjectType;
+         }
+
+         dmz::ObjectType ObjectType;
+         dmz::Handle SubHandle;
    };
 
    class GroupItem : public QTreeWidgetItem {
@@ -256,12 +265,12 @@ struct dmz::QtObjectInspector::State {
          item = subGroup->get_item (SubHandle);
          if (!item) {
 
-            item = new AttributeItem (dmz::ObjectAttrSubHandle);
-            item->setText (dmz::AttributeCol, ObjectAttrName[dmz::ObjectAttrSubHandle]);
+            item = new AttributeItem (dmz::ObjectAttrSubObjectType);
+            item->setText (dmz::AttributeCol, ObjectAttrName[dmz::ObjectAttrSubObjectType]);
 
             subGroup->add_item (SubHandle, item);
 
-            itemToGroupMap[item] = dmz::ObjectAttrSubHandle;
+            itemToGroupMap[item] = dmz::ObjectAttrSubObjectType;
             itemToHandleMap[item] = SubHandle;
          }
       }
@@ -282,6 +291,13 @@ struct dmz::QtObjectInspector::State {
             itemToGroupMap.remove (item);
             itemToHandleMap.remove (item);
          }
+      }
+      if (group->is_empty ()) {
+
+         int index = ui.treeWidget->indexOfTopLevelItem(group);
+         ui.treeWidget->takeTopLevelItem(index);
+         delete group;
+         groupMap.remove (Type);
       }
    }
 
@@ -304,22 +320,20 @@ struct dmz::QtObjectInspector::State {
                itemToGroupMap.remove (item);
                itemToHandleMap.remove (item);
             }
-            else {
-
-               log.error << "Error (remove_link_item): Could not allocate item." << endl;
-            }
          }
-         else {
+         if (subGroup->is_empty ()) {
 
-            log.error << "Error (remove_link_item): Could not allocate subGroup." << endl;
+            group->remove_subGroup (AttrHandle, subGroup);
+            subGroupMap.remove ((ObjectAttrEnum)AttrHandle);
          }
       }
-      else {
+      if (group->is_empty ()) {
 
-         log.error << "Error (remove_link_item): Could not allocate group." << endl;
+         int index = ui.treeWidget->indexOfTopLevelItem(group);
+         ui.treeWidget->takeTopLevelItem(index);
+         delete group;
+         groupMap.remove (Type);
       }
-
-
    }
 
    QString handle_to_name (const Handle Object) {
@@ -420,13 +434,14 @@ dmz::QtObjectInspector::link_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-   String attributeHandleString = _state.defs.lookup_named_handle_name(AttributeHandle);
-   String objectTypeString = _state.defs.lookup_runtime_name (SubHandle);
+   ObjectModule *objMod = _state.obs.get_object_module ();
+   ObjectType objectType = objMod->lookup_object_type (SubHandle);
 
    AttributeItem *item = _state.get_link_item (ObjectAttrLink, AttributeHandle, SubHandle);
    if (item) {
 
-      item->setText (ValueCol, (QString::number (SubHandle)));
+      item->set_value(SubHandle, objectType);
+      item->setText (ValueCol, to_qstring(objectType));
    }
 }
 
@@ -876,9 +891,10 @@ dmz::QtObjectInspector::on_treeWidget_itemDoubleClicked (
                break;
             }
 
-            case ObjectAttrSubHandle: {
+            case ObjectAttrSubObjectType: {
 
-               const Handle objHandle = item->text(ValueCol).toInt();
+               AttributeItem *itemPtr = static_cast<AttributeItem*>(item);
+               const Handle objHandle = itemPtr->SubHandle;
                Q_EMIT linkItemClicked (objHandle);
 
                break;

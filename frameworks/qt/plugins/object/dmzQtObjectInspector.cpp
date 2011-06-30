@@ -46,7 +46,7 @@ namespace {
       "Scalar",
       "Text",
       "Data",
-      "sub handle"
+      "Sub Handle"
    };
 
    class AttributeItem : public QTreeWidgetItem {
@@ -125,6 +125,7 @@ namespace {
          void remove_subGroup (const dmz::Handle AttrHandle, GroupItem *item) {
 
             if (item) {
+
                _handleMap.remove (item);
                _groupMap.remove (AttrHandle);
                removeChild (item);
@@ -255,12 +256,12 @@ struct dmz::QtObjectInspector::State {
          item = subGroup->get_item (SubHandle);
          if (!item) {
 
-            item = new AttributeItem (dmz::SubHandle);
-            item->setText (dmz::AttributeCol, ObjectAttrName[dmz::SubHandle]);
+            item = new AttributeItem (dmz::ObjectAttrSubHandle);
+            item->setText (dmz::AttributeCol, ObjectAttrName[dmz::ObjectAttrSubHandle]);
 
             subGroup->add_item (SubHandle, item);
 
-            itemToGroupMap[item] = dmz::SubHandle;
+            itemToGroupMap[item] = dmz::ObjectAttrSubHandle;
             itemToHandleMap[item] = SubHandle;
          }
       }
@@ -288,6 +289,7 @@ struct dmz::QtObjectInspector::State {
          const ObjectAttrEnum Type,
          const Handle AttrHandle,
          const Handle SubHandle) {
+
       GroupItem *group = get_group (Type);
       if (group) {
 
@@ -418,8 +420,8 @@ dmz::QtObjectInspector::link_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-   dmz::String attributeHandleString = _state.defs.lookup_named_handle_name(AttributeHandle);
-   dmz::String objectTypeString = _state.defs.lookup_runtime_name (SubHandle);
+   String attributeHandleString = _state.defs.lookup_named_handle_name(AttributeHandle);
+   String objectTypeString = _state.defs.lookup_runtime_name (SubHandle);
 
    AttributeItem *item = _state.get_link_item (ObjectAttrLink, AttributeHandle, SubHandle);
    if (item) {
@@ -874,9 +876,9 @@ dmz::QtObjectInspector::on_treeWidget_itemDoubleClicked (
                break;
             }
 
-            case SubHandle: {
+            case ObjectAttrSubHandle: {
 
-               const dmz::Handle objHandle = item->text(ValueCol).toInt();
+               const Handle objHandle = item->text(ValueCol).toInt();
                Q_EMIT linkItemClicked (objHandle);
 
                break;

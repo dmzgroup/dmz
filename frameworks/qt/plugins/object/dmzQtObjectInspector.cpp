@@ -147,6 +147,11 @@ namespace {
             return _handleMap[item];
          }
 
+         bool is_empty (void) {
+
+            return (_itemMap.isEmpty () && _groupMap.isEmpty ());
+         }
+
       protected:
          QMap<QTreeWidgetItem *, dmz::Handle> _handleMap;
          QMap<dmz::Handle, AttributeItem *> _itemMap;
@@ -283,6 +288,35 @@ struct dmz::QtObjectInspector::State {
          const ObjectAttrEnum Type,
          const Handle AttrHandle,
          const Handle SubHandle) {
+      GroupItem *group = get_group (Type);
+      if (group) {
+
+         GroupItem *subGroup = get_subGroup (Type, AttrHandle);
+         if (subGroup) {
+
+            AttributeItem *item = get_link_item (Type, AttrHandle, SubHandle);
+            if (item) {
+
+               subGroup->remove_item (SubHandle, item);
+
+               itemToGroupMap.remove (item);
+               itemToHandleMap.remove (item);
+            }
+            else {
+
+               log.error << "Error (remove_link_item): Could not allocate item." << endl;
+            }
+         }
+         else {
+
+            log.error << "Error (remove_link_item): Could not allocate subGroup." << endl;
+         }
+      }
+      else {
+
+         log.error << "Error (remove_link_item): Could not allocate group." << endl;
+      }
+
 
    }
 
@@ -392,9 +426,8 @@ dmz::QtObjectInspector::link_objects (
 
       item->setText (ValueCol, (QString::number (SubHandle)));
    }
-   /* ToDo: Inspect why this has to be set */
-   //item->setText (AttributeCol, QString("sub handle: "));
 }
+
 
 void
 dmz::QtObjectInspector::unlink_objects (
@@ -405,7 +438,7 @@ dmz::QtObjectInspector::unlink_objects (
       const UUID &SubIdentity,
       const Handle SubHandle) {
 
-//   _state.remove_item (ObjectAttrLink, AttributeHandle);
+   _state.remove_link_item (ObjectAttrLink, AttributeHandle, SubHandle);
 }
 
 
@@ -419,6 +452,7 @@ dmz::QtObjectInspector::update_link_attribute_object (
       const Handle SubHandle,
       const UUID &AttributeIdentity,
       const Handle AttributeObjectHandle) {
+
 
 }
 

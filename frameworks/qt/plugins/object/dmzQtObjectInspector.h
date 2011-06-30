@@ -22,7 +22,7 @@ namespace dmz {
             QWidget *parent = 0);
 
          ~QtObjectInspector ();
-         
+
          void set_state_names (const QStringList &StateList);
 
          virtual void create_object (
@@ -30,7 +30,7 @@ namespace dmz {
             const Handle ObjectHandle,
             const ObjectType &Type,
             const ObjectLocalityEnum Locality);
-            
+
          virtual void destroy_object ();
 
          virtual void remove_object_attribute (
@@ -126,19 +126,20 @@ namespace dmz {
          virtual void update_object_data (
             const Handle AttributeHandle,
             const Data &Value);
-            
+
       Q_SIGNALS:
          void finished (const Handle);
+         void linkItemClicked (const Handle);
 
       protected Q_SLOTS:
          void on_treeWidget_itemDoubleClicked (QTreeWidgetItem *item, int column);
-         
+
          // void on_treeWidget_currentItemChanged (
          //    QTreeWidgetItem *current,
          //    QTreeWidgetItem *previous);
-            
+
          void on_treeWidget_itemChanged (QTreeWidgetItem *item, int column);
-         
+
          void _update_object_counter (int value);
          void _update_object_counter_minimum (int value);
          void _update_object_counter_maximum (int value);

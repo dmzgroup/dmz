@@ -25,7 +25,7 @@ namespace {
 
 
 struct dmz::QtPluginObjectInspector::State {
-  
+
    Log log;
    Definitions defs;
    Ui::ObjectListForm ui;
@@ -34,7 +34,7 @@ struct dmz::QtPluginObjectInspector::State {
    HandleContainer objects;
    QPoint newWindowPos;
    QStringList stateList;
-   
+
    State (const PluginInfo &Info) :
       log (Info),
       defs (Info, &log),
@@ -42,7 +42,7 @@ struct dmz::QtPluginObjectInspector::State {
       inspectorTable (),
       objects (),
       newWindowPos () {;}
-      
+
 };
 
 
@@ -68,7 +68,7 @@ dmz::QtPluginObjectInspector::QtPluginObjectInspector (
 dmz::QtPluginObjectInspector::~QtPluginObjectInspector () {
 
    _state.inspectorTable.empty ();
-   
+
    delete &_state;
 }
 
@@ -188,23 +188,23 @@ dmz::QtPluginObjectInspector::create_object (
    if (!_state.objects.contains (ObjectHandle)) {
 
       QTreeWidgetItem *item = new QTreeWidgetItem ();
-      
+
       item->setText (HandleCol, to_qstring (ObjectHandle));
       item->setData (HandleCol, HandleRole, (quint64)ObjectHandle);
-      
+
       item->setText (TypeCol, to_qstring (Type));
       item->setText (UUIDCol, to_qstring (Identity));
-      
+
       const char *localityNames[3] = { "Unknown", "Local", "Remote" };
       item->setText (LocalityCol, localityNames[Locality]);
-      
+
       _state.ui.objectTreeWidget->addTopLevelItem (item);
-      
+
       if (_state.ui.objectTreeWidget->topLevelItemCount () == 1) {
-      
+
          _state.ui.objectTreeWidget->setCurrentItem (item);
       }
-      
+
       _state.objects.add (ObjectHandle);
    }
    else {
@@ -311,9 +311,9 @@ dmz::QtPluginObjectInspector::unlink_objects (
 
    QList<Handle> handleList;
    handleList << SuperHandle << SubHandle;
-   
+
    foreach (Handle obj, handleList) {
-      
+
       QtObjectInspector *inspector = _state.inspectorTable.lookup (obj);
       if (inspector) {
 
@@ -344,7 +344,7 @@ dmz::QtPluginObjectInspector::update_link_attribute_object (
 
       QtObjectInspector *inspector = _state.inspectorTable.lookup (obj);
       if (inspector) {
-      
+
          inspector->update_link_attribute_object (
             LinkHandle,
             AttributeHandle,
@@ -614,14 +614,20 @@ dmz::QtPluginObjectInspector::update_object_data (
    }
 }
 
-
 void
 dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
       QTreeWidgetItem *item,
       int column) {
 
-   ObjectModule *objMod (get_object_module ());
    Handle objHandle = _item_to_handle (item);
+   objectInspectorItemClicked (objHandle);
+}
+
+void
+dmz::QtPluginObjectInspector::objectInspectorItemClicked (
+      Handle objHandle) {
+
+   ObjectModule *objMod (get_object_module ());
 
    QtObjectInspector *inspector = _state.inspectorTable.lookup (objHandle);
 
@@ -641,12 +647,16 @@ dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
             inspector, SIGNAL (finished (const Handle)),
             this, SLOT (_inspector_finished (const Handle)));
 
+         connect (
+            inspector, SIGNAL (linkItemClicked (const Handle)),
+            this, SLOT (objectInspectorItemClicked (const Handle)));
+
          inspector->set_state_names (_state.stateList);
 
          objMod->dump_all_object_attributes (objHandle, *this);
 
          inspector->move (_state.newWindowPos);
-         
+
          inspector->show ();
 
          _state.newWindowPos += QPoint (25, 25);
@@ -657,7 +667,6 @@ dmz::QtPluginObjectInspector::on_objectTreeWidget_itemActivated (
       }
    }
 }
-
 
 void
 dmz::QtPluginObjectInspector::_inspector_finished (const Handle ObjectHandle) {

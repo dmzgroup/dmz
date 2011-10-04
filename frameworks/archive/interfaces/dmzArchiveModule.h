@@ -36,6 +36,9 @@ namespace dmz {
          virtual Config create_archive (const Handle ArchiveHandle) = 0;
          virtual void process_archive (const Handle ArchiveHandle, Config &archive) = 0;
 
+         virtual void set_database_name (const String database) = 0;
+         virtual String get_database_name () = 0;
+
       protected:
          ArchiveModule (const PluginInfo &Info);
          ~ArchiveModule ();

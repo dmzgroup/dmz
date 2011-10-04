@@ -44,6 +44,7 @@ namespace dmz {
       protected:
          void _cache_archive ();
          Boolean _init_cache_dir ();
+         void _load_cache ();
          void _init (Config &local);
 
          ApplicationState _appState;
@@ -51,9 +52,14 @@ namespace dmz {
          Handle _archiveHandle;
          String _cacheDir;
          String _saveFile;
+         String _dbName;
          Boolean _autoRestore;
          Boolean _appStateDirty;
          Message _updateArchiveMessage;
+         Handle _dbHandle;
+         Message _loadMessage;
+         Message _dbMessage;
+         Message _skippedMessage;
          Log _log;
 
       private:

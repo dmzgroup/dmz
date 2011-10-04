@@ -4,7 +4,9 @@
 #include <dmzFoundationParserXML.h>
 #include <dmzFoundationXMLUtil.h>
 #include <dmzRuntimeConfig.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeData.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
@@ -43,44 +45,7 @@ dmz::ArchivePluginAutoCache::update_plugin_state (
    }
    else if (State == PluginStateStart) {
 
-      if (_autoRestore && _saveFile && is_valid_path (_saveFile) && _archiveMod) {
-
-         _log.info << "Restoring from auto cached archive: " << _saveFile << endl;
-
-         Config global ("global");
-         ParserXML parser;
-         InterpreterXMLConfig interpreter (global);
-         parser.set_interpreter (&interpreter);
-
-         FILE *file = open_file (_saveFile, "rb");
-         if (file) {
-
-            Boolean error (False);
-            String buffer;
-
-            while (read_file (file, 1024, buffer) && !error) {
-
-               const Int32 Length = buffer.get_length ();
-               const char *cbuf = buffer.get_buffer ();
-
-               if (!parser.parse_buffer (cbuf, Length, Length < 1024)) {
-
-                  error = True;
-                  _log.error << "Unable to restore from auto cached archive: " << _saveFile
-                     << " : " << parser.get_error ();
-               }
-            }
-
-            close_file (file);
-
-            Config data;
-
-            if (!error && global.lookup_all_config_merged ("dmz", data)) {
-
-               _archiveMod->process_archive (_archiveHandle, data);
-            }
-         }
-      }
+      if (_autoRestore) { _load_cache (); }
 
       _autoRestore = False;
    }
@@ -132,6 +97,24 @@ dmz::ArchivePluginAutoCache::receive_message (
       Data *outData) {
 
    if (Type == _updateArchiveMessage) { _appStateDirty = True; }
+   else if ((Type == _dbMessage) && _archiveMod) {
+
+      String database;
+      if (InData->lookup_string (_dbHandle, 0, database)) {
+
+         _archiveMod->set_database_name (database);
+      }
+   }
+   else if (Type == _loadMessage) { _load_cache (); }
+   else if (Type == _skippedMessage) {
+
+      String database;
+      if (InData->lookup_string (_dbHandle, 0, database)) {
+
+         _archiveMod->set_database_name (database);
+      }
+      _load_cache ();
+   }
 }
 
 
@@ -194,17 +177,83 @@ dmz::ArchivePluginAutoCache::_init_cache_dir () {
 
 
 void
+dmz::ArchivePluginAutoCache::_load_cache () {
+
+   if (_saveFile && is_valid_path (_saveFile) && _archiveMod) {
+
+      _log.info << "Restoring from auto cached archive: " << _saveFile << endl;
+
+      Config global ("global");
+      ParserXML parser;
+      InterpreterXMLConfig interpreter (global);
+      parser.set_interpreter (&interpreter);
+
+      FILE *file = open_file (_saveFile, "rb");
+      if (file) {
+
+         Boolean error (False);
+         String buffer;
+
+         while (read_file (file, 1024, buffer) && !error) {
+
+            const Int32 Length = buffer.get_length ();
+            const char *cbuf = buffer.get_buffer ();
+
+            if (!parser.parse_buffer (cbuf, Length, Length < 1024)) {
+
+               error = True;
+               _log.error << "Unable to restore from auto cached archive: " << _saveFile
+                  << " : " << parser.get_error ();
+            }
+         }
+
+         close_file (file);
+
+         Config data;
+
+         if (!error && global.lookup_all_config_merged ("dmz", data)) {
+
+            _archiveMod->process_archive (_archiveHandle, data);
+         }
+      }
+   }
+}
+
+
+void
 dmz::ArchivePluginAutoCache::_init (Config &local) {
 
    RuntimeContext *context (get_plugin_runtime_context ());
    Definitions defs (context);
 
+   _dbHandle = config_to_named_handle ("attribute.database", local, "database", context);
    _updateArchiveMessage = config_create_message (
       "archive-updated-message.name",
       local,
       "Archive_Updated_Message",
        context);
 
+   _skippedMessage = config_create_message (
+      "message.skipped",
+      local,
+      "SkippedDatabaseMessage",
+      context);
+
+   _loadMessage = config_create_message (
+      "message.load",
+      local,
+      "LoadArchiveMessage",
+      context);
+
+   _dbMessage = config_create_message (
+      "message.database",
+      local,
+      "SetDatabaseMessage",
+      context);
+
+   subscribe_to_message (_loadMessage);
+   subscribe_to_message (_dbMessage);
+   subscribe_to_message (_skippedMessage);
    subscribe_to_message (_updateArchiveMessage);
 
    if (_init_cache_dir ()) {

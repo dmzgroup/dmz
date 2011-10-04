@@ -196,7 +196,6 @@ dmz::ArchiveModuleBasic::process_archive (const Handle ArchiveHandle, Config &ar
    _appState.push_mode (ApplicationModeLoading);
 
    ArchiveStruct *as (_archiveTable.lookup (ArchiveHandle));
-
    if (as) {
 
       const Int32 Version = config_to_int32 ("archive-version.version", archive, -1);

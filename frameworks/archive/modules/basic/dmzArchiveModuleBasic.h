@@ -53,6 +53,9 @@ namespace dmz {
          virtual Config create_archive (const Handle ArchiveHandle);
          virtual void process_archive (const Handle ArchiveHandle, Config &archive);
 
+         virtual void set_database_name (String name) { _databaseName = name; }
+         virtual String get_database_name () { return _databaseName; }
+
       protected:
          struct ArchiveStruct {
 

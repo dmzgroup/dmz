@@ -40,9 +40,25 @@ namespace dmz {
          virtual QString get_window_name ();
          virtual QMainWindow *get_qt_main_window ();
          virtual QMenu *lookup_menu (const String &Text);
+
          virtual void add_menu_separator (const String &MenuName);
-         virtual void add_menu_action (const String &MenuName, QAction *action);
-         virtual void remove_menu_action (const String &MenuName, QAction *action);
+
+         virtual void add_menu_action (
+            const String &MenuName,
+            QAction *action);
+
+         virtual void insert_menu_separator (
+            const String &MenuName,
+            QAction *beforeAction);
+
+         virtual void insert_menu_action (
+            const String &MenuName,
+            QAction *beforeAction,
+            QAction *action);
+
+         virtual void remove_menu_action (
+            const String &MenuName,
+            QAction *action);
 
          virtual QDockWidget *create_dock_widget (
             const String &DockName,

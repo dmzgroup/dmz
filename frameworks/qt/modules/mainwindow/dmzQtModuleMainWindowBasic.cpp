@@ -66,10 +66,6 @@ dmz::QtModuleMainWindowBasic::update_plugin_state (
 
    if (State == PluginStateInit) {
 
-      QAction *action (new QAction (this));
-      action->setSeparator (True);
-      add_menu_action (_fileMenuName, action);
-      add_menu_action (_fileMenuName, _exitAction);
    }
    else if (State == PluginStateStart) {
 
@@ -183,7 +179,9 @@ dmz::QtModuleMainWindowBasic::add_menu_separator (const String &MenuName) {
 
 
 void
-dmz::QtModuleMainWindowBasic::add_menu_action (const String &MenuName, QAction *action) {
+dmz::QtModuleMainWindowBasic::add_menu_action (
+      const String &MenuName,
+      QAction *action) {
 
    if (MenuName && action) {
 
@@ -194,7 +192,36 @@ dmz::QtModuleMainWindowBasic::add_menu_action (const String &MenuName, QAction *
 
 
 void
-dmz::QtModuleMainWindowBasic::remove_menu_action (const String &MenuName, QAction *action) {
+dmz::QtModuleMainWindowBasic::insert_menu_separator (
+      const String &MenuName,
+      QAction *beforeAction) {
+
+   if (MenuName) {
+
+      QMenu *menu (lookup_menu (MenuName));
+      if (menu) { menu->insertSeparator (beforeAction); }
+   }
+}
+
+
+void
+dmz::QtModuleMainWindowBasic::insert_menu_action (
+      const String &MenuName,
+      QAction *beforeAction,
+      QAction *action) {
+
+   if (MenuName && action) {
+
+      QMenu *menu (lookup_menu (MenuName));
+      if (menu) { menu->insertAction (beforeAction, action); }
+   }
+}
+
+
+void
+dmz::QtModuleMainWindowBasic::remove_menu_action (
+      const String &MenuName,
+      QAction *action) {
 
    QMenu *menu (_menuTable.lookup (MenuName));
    if (menu) { menu->removeAction (action); }
@@ -491,6 +518,11 @@ dmz::QtModuleMainWindowBasic::_init (Config &local) {
    }
 
    _fileMenuName = config_to_string ("file-menu.text", local, _fileMenuName);
+
+   QAction *action (new QAction (this));
+   action->setSeparator (True);
+   add_menu_action (_fileMenuName, action);
+   add_menu_action (_fileMenuName, _exitAction);
 
    _windowMenuName = config_to_string ("window-menu.text", local, _windowMenuName);
 

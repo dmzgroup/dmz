@@ -2,8 +2,10 @@
 #define DMZ_QT_PLUGIN_CANVAS_ZOOM_DOT_H
 
 #include <dmzInputObserverUtil.h>
+#include <dmzRuntimeDataConverterTypesBase.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimeLog.h>
+#include <dmzRuntimeMessaging.h>
 #include <dmzRuntimePlugin.h>
 #include <QtGui/QFrame>
 #include "ui_dmzQtPluginCanvasZoomPan.h"
@@ -77,6 +79,7 @@ namespace dmz {
          void _load_session ();
          void _init (Config &local);
 
+
          Log _log;
          Definitions _rti;
          Ui::zoomPanForm _ui;
@@ -94,6 +97,8 @@ namespace dmz {
          Float32 _zoomMax;
          Float32 _zoomStep;
          Float32 _zoomDefault;
+         DataConverterFloat64 _convertNum;
+         Message _zoomMessage;
 
       private:
          QtPluginCanvasZoomPan ();

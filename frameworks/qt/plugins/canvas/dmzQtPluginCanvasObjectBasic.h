@@ -308,6 +308,7 @@ namespace dmz {
          QtModuleCanvas *_canvasModule;
          String _canvasModuleName;
          Handle _defaultAttributeHandle;
+         Handle _stateAttributeHandle;
          Boolean _itemIgnoresTransformations;
          Int32 _zValue;
          HashTableStringTemplate<QSvgRenderer> _svgRendererTable;

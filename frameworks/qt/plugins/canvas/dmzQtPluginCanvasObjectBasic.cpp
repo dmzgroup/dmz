@@ -5,6 +5,7 @@
 #include <dmzQtUtil.h>
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeObjectType.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
@@ -82,11 +83,11 @@ dmz::QtCanvasObjectText::set_text (const QString &Text) {
 
    prepareGeometryChange ();
    _text = Text;
-   
+
    if ((_maxLength > 0) && (_text.length () > _maxLength)) {
-     
+
       _text.resize (_maxLength);
-      _text += QString (3, '.'); 
+      _text += QString (3, '.');
    }
 
    update ();
@@ -243,6 +244,7 @@ dmz::QtPluginCanvasObjectBasic::QtPluginCanvasObjectBasic (
       _defs (Info, &_log),
       _rc (Info, &_log),
       _defaultAttributeHandle (0),
+      _stateAttributeHandle (0),
       _itemIgnoresTransformations (False),
       _zValue (10),
       _canvasModule (0),
@@ -330,7 +332,7 @@ dmz::QtPluginCanvasObjectBasic::update_object_state (
       const Mask &Value,
       const Mask *PreviousValue) {
 
-   if (AttributeHandle == _defaultAttributeHandle) {
+   if (AttributeHandle == _stateAttributeHandle) {
 
       _update_object_state (ObjectHandle, Value, PreviousValue);
    }
@@ -579,7 +581,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
    if (parent) {
 
       group = new QtCanvasObjectGroup (parent);
-      
+
       QGraphicsItem *item (0);
 
       ConfigIterator it;
@@ -619,7 +621,7 @@ dmz::QtPluginCanvasObjectBasic::_create_item (
 
             item->setFlag (QGraphicsItem::ItemIgnoresParentOpacity, true);
             item->setFlag (QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
-            
+
             item->setZValue (z++);
 
             if (ItemName) {
@@ -1108,7 +1110,7 @@ dmz::QtPluginCanvasObjectBasic::_lookup_object_state (
 
    if (objectModule) {
 
-      objectModule->lookup_state (ObjectHandle, _defaultAttributeHandle, objState);
+      objectModule->lookup_state (ObjectHandle, _stateAttributeHandle, objState);
    }
 }
 
@@ -1257,10 +1259,12 @@ dmz::QtPluginCanvasObjectBasic::_init (Config &local) {
    _canvasModuleName = config_to_string ("module.canvas.name", local);
 
    _defaultAttributeHandle = activate_default_object_attribute (
-      ObjectCreateMask |
-      ObjectDestroyMask |
-      ObjectStateMask);
+      ObjectCreateMask | ObjectDestroyMask);
 
+   const String StateAttrName (
+      config_to_string ("attribute.state.name", local, ObjectAttributeDefaultName));
+
+   _stateAttributeHandle = activate_object_attribute (StateAttrName, ObjectStateMask);
    _zValue = config_to_int32 ("defaults.zValue", local, _zValue);
 
    _itemIgnoresTransformations = config_to_boolean (

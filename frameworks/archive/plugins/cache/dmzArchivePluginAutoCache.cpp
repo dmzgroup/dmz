@@ -106,7 +106,7 @@ dmz::ArchivePluginAutoCache::receive_message (
       }
    }
    else if (Type == _loadMessage) { _load_cache (); }
-   else if (Type == _skippedMessage) {
+   else if (Type == _skippedMessage && _archiveMod) {
 
       String database;
       if (InData->lookup_string (_dbHandle, 0, database)) {

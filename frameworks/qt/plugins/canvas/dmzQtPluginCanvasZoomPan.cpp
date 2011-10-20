@@ -7,6 +7,7 @@
 #include "dmzQtPluginCanvasZoomPan.h"
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeData.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
 #include <dmzRuntimeSession.h>
@@ -34,7 +35,8 @@ dmz::QtPluginCanvasZoomPan::QtPluginCanvasZoomPan (
       _zoomMin (0.5f),
       _zoomMax (2.0f),
       _zoomStep (1.1f),
-      _zoomDefault (1.0f) {
+      _zoomDefault (1.0f),
+      _convertNum (Info) {
 
    setObjectName (get_plugin_name ().get_buffer ());
 
@@ -263,7 +265,7 @@ void
 dmz::QtPluginCanvasZoomPan::on_zoomSlider_valueChanged (int value) {
 
    if (_canvasModule) {
-      
+
       const Float32 ZoomMin (_canvasModule->get_zoom_min_value ());
       const Float32 ZoomMax (_canvasModule->get_zoom_max_value ());
       const Float32 ZoomRange (ZoomMax - ZoomMin);
@@ -273,6 +275,9 @@ dmz::QtPluginCanvasZoomPan::on_zoomSlider_valueChanged (int value) {
       _ignoreScaleChange = True;
       _canvasModule->set_zoom (ZoomMin + (ZoomRange * SliderValue));
       _ignoreScaleChange = False;
+      _log.warn << "Sending data: " << _zoomMessage.get_name () << endl;
+      Data data = _convertNum.to_data (ZoomMin + (ZoomRange * SliderValue));
+      _zoomMessage.send (&data);
    }
 }
 
@@ -347,8 +352,10 @@ dmz::QtPluginCanvasZoomPan::_load_session () {
 void
 dmz::QtPluginCanvasZoomPan::_init (Config &local) {
 
+   RuntimeContext *context = get_plugin_runtime_context ();
    _canvasModuleName = config_to_string ("module.canvas.name", local);
    _mainWindowModuleName = config_to_string ("module.mainWindow.name", local);
+   _zoomMessage = config_create_message ("message", local, "Canvas_Zoom_Message", context);
 
    init_input_channels (
       local,
@@ -361,9 +368,9 @@ dmz::QtPluginCanvasZoomPan::_init (Config &local) {
 
    Int32 slidderMin = config_to_int32 ("slidder.min", local, 0);
    Int32 slidderMax = config_to_int32 ("slidder.max", local, 100);
-   
+
    if (slidderMin < slidderMax) {
-      
+
       _ui.zoomSlider->setRange (slidderMin, slidderMax);
    }
 
@@ -373,7 +380,7 @@ dmz::QtPluginCanvasZoomPan::_init (Config &local) {
    _zoomDefault = config_to_float32 ("zoom.default", local, _zoomDefault);
 
    qframe_config_read ("frame", local, this);
-   
+
    qtoolbutton_config_read ("panLeft", local, _ui.panLeftButton);
    qtoolbutton_config_read ("panRight", local, _ui.panRightButton);
    qtoolbutton_config_read ("panUp", local, _ui.panUpButton);

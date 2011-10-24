@@ -25,12 +25,14 @@ namespace dmz {
             const Handle SuberHandle,
             const Handle SubHandle,
             const Float32 PenWidth,
+            const Int32 ArrowSize = 1,
             QGraphicsItem *parent = 0);
 
          ~QtCanvasLink ();
 
          Handle get_link_handle () const;
 
+         void set_arrow_multiplier (const Int32 Multiplier);
          void set_arrow_state (const Boolean State);
          void set_rotation_offset (const Float32 RotationOffset);
 
@@ -51,6 +53,7 @@ namespace dmz {
          Float32 _rotation;
          QGraphicsPolygonItem *_arrow1;
          QGraphicsPolygonItem *_arrow2;
+         Int32 _arrowSizeMultiplier;
    };
 
    class QtPluginCanvasLink :
@@ -127,12 +130,13 @@ namespace dmz {
                const Handle TheAttrHandle,
                const Handle TheSuperHandle,
                const Handle TheSubHandle,
-               const Float32 PenWidth) :
+               const Float32 PenWidth,
+               const Int32 ArrowMultiplier) :
                ObjHandle (TheHandle),
                AttrHandle (TheAttrHandle),
                SuperHandle (TheSuperHandle),
                SubHandle (TheSubHandle),
-               item (new QtCanvasLink (ObjHandle, SuperHandle, SubHandle, PenWidth)) {;}
+               item (new QtCanvasLink (ObjHandle, SuperHandle, SubHandle, PenWidth, ArrowMultiplier)) {;}
 
             ~LinkStruct () { if (item) { delete item; item = 0; } }
          };
@@ -195,6 +199,7 @@ namespace dmz {
          ColorStruct *_stateList;
 
          Float32 _penWidth;
+         Int32 _arrowMultiplier;
 
       private:
          QtPluginCanvasLink ();

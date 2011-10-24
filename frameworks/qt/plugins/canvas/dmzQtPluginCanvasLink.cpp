@@ -22,6 +22,7 @@ dmz::QtCanvasLink::QtCanvasLink (
       const Handle SuperHandle,
       const Handle SubHandle,
       const Float32 PenWidth,
+      const Int32 ArrowSize,
       QGraphicsItem *parent) :
       QGraphicsLineItem (parent),
       _LinkHandle (LinkHandle),
@@ -29,7 +30,8 @@ dmz::QtCanvasLink::QtCanvasLink (
       _SubHandle (SubHandle),
       _rotation (0.0f),
       _arrow1 (0),
-      _arrow2 (0) {
+      _arrow2 (0),
+      _arrowSizeMultiplier (ArrowSize) {
 
    setFlag (ItemIsSelectable, true);
 
@@ -52,6 +54,14 @@ dmz::QtCanvasLink::get_link_handle () const { return _LinkHandle; }
 
 
 void
+dmz::QtCanvasLink::set_arrow_multiplier (const Int32 Multiplier) {
+
+   _arrowSizeMultiplier = Multiplier;
+   if (_arrow1 && _arrow2) { set_arrow_state (true); }
+}
+
+
+void
 dmz::QtCanvasLink::set_arrow_state (const Boolean State) {
 
    if (State) {
@@ -62,10 +72,10 @@ dmz::QtCanvasLink::set_arrow_state (const Boolean State) {
       QPolygon poly (4);
 
       poly.putPoints (0, 4,
-         0, -9,
-         9, 5,
+         0, -9 * _arrowSizeMultiplier,
+         9 * _arrowSizeMultiplier, 5 * _arrowSizeMultiplier,
          0, 0,
-         -9, 5);
+         -9 * _arrowSizeMultiplier, 5 * _arrowSizeMultiplier);
 
       if (_arrow1) {
 
@@ -216,7 +226,8 @@ dmz::QtPluginCanvasLink::QtPluginCanvasLink (
       _linkTable (),
       _nodeTable (),
       _stateList (0),
-      _penWidth (4.0f) {
+      _penWidth (4.0f),
+      _arrowMultiplier (1) {
 
    _init (local);
 }
@@ -281,7 +292,8 @@ dmz::QtPluginCanvasLink::link_objects (
                AttributeHandle,
                SuperHandle,
                SubHandle,
-               _penWidth));
+               _penWidth,
+               _arrowMultiplier));
 
             if (_linkTable.store (LinkHandle, os)) {
 
@@ -442,7 +454,7 @@ dmz::QtPluginCanvasLink::update_object_position (
       const Vector *PreviousValue) {
 
    if (AttributeHandle == _positionAttrHandle) {
-      
+
       NodeStruct *node (_nodeTable.lookup (ObjectHandle));
 
       if (node) {
@@ -522,7 +534,7 @@ dmz::QtPluginCanvasLink::_init (Config &local) {
 
    const String PosAttrName (
       config_to_string ("attribute.position.name", local, ObjectAttributeDefaultName));
-   
+
    _defaultAttrHandle = activate_default_object_attribute (ObjectStateMask);
 
    _positionAttrHandle = activate_object_attribute (
@@ -576,6 +588,7 @@ dmz::QtPluginCanvasLink::_init (Config &local) {
    }
 
    _penWidth = config_to_float32 ("pen-width.value", local, _penWidth);
+   _arrowMultiplier = config_to_int32 ("arrow-multiplier.value", local, _arrowMultiplier);
 }
 
 

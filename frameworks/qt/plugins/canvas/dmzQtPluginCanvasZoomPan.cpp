@@ -275,7 +275,6 @@ dmz::QtPluginCanvasZoomPan::on_zoomSlider_valueChanged (int value) {
       _ignoreScaleChange = True;
       _canvasModule->set_zoom (ZoomMin + (ZoomRange * SliderValue));
       _ignoreScaleChange = False;
-      _log.warn << "Sending data: " << _zoomMessage.get_name () << endl;
       Data data = _convertNum.to_data (ZoomMin + (ZoomRange * SliderValue));
       _zoomMessage.send (&data);
    }

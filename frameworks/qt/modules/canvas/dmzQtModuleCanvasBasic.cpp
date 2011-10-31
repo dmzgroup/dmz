@@ -652,6 +652,11 @@ dmz::QtModuleCanvasBasic::_init (Config &local) {
       set_zoom_step_value (config_to_float32 ("canvas.zoom.step", local, _zoomStep));
       set_zoom (config_to_float32 ("canvas.zoom.default", local, _zoomDefault));
 
+      if (config_to_boolean ("setTop.value", local, False)) {
+
+         _canvas->centerOn (MinX, MinY);
+      }
+
       _ignoreEvents = config_to_boolean ("canvas.ignoreevents", local, _ignoreEvents);
    }
 

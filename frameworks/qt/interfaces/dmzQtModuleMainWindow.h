@@ -28,8 +28,23 @@ namespace dmz {
          virtual QMenu *lookup_menu (const String &Text) = 0;
 
          virtual void add_menu_separator (const String &MenuName) = 0;
-         virtual void add_menu_action (const String &MenuName, QAction *action) = 0;
-         virtual void remove_menu_action (const String &MenuName, QAction *action) = 0;
+
+         virtual void add_menu_action (
+            const String &MenuName,
+            QAction *action) = 0;
+
+         virtual void insert_menu_separator (
+            const String &MenuName,
+            QAction *beforeAction) = 0;
+
+         virtual void insert_menu_action (
+            const String &MenuName,
+            QAction *beforeAction,
+            QAction *action) = 0;
+
+         virtual void remove_menu_action (
+            const String &MenuName,
+            QAction *action) = 0;
 
          virtual QDockWidget *create_dock_widget (
             const String &DockName,

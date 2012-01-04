@@ -1,0 +1,8 @@
+require "lmkQt"
+lmkQt.set_name "dmzQtPluginCanvasZoomMessage"
+lmk.set_type "plugin"
+lmk.add_files ({"dmzQtPluginCanvasZoomMessage.h",}, {src="moc"})
+lmk.add_files {"dmzQtPluginCanvasZoomMessage.cpp",}
+lmk.add_libs {"dmzKernel", "dmzQtUtil",}
+lmk.add_preqs {"dmzQtFramework", "dmzFoundation",}
+lmkQt.add_libs {"QtCore", "QtGui",}

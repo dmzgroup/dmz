@@ -119,7 +119,6 @@ dmz::QtPluginCanvasZoomMessage::_set_zoom () {
       Float32 zoom = _zoomList.at (_zoomIndex);
       _canvasModule->center_on (_location);
       _canvasModule->set_zoom (zoom);
-      _log.warn << "Setting zoom: " << zoom << " at: (" << _location.x () << ", " << _location.y () << ")" << endl;
       Data data = _convertNum.to_data (zoom);
       _zoomMessage.send (&data);
    }

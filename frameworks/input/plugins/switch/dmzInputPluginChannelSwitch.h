@@ -67,6 +67,7 @@ namespace dmz {
          ChannelStruct *_current;
 
          Log _log;
+         Boolean _useTab;
          //! \endcond
 
       private:

@@ -27,7 +27,8 @@ dmz::InputPluginChannelSwitch::InputPluginChannelSwitch (
       InputObserverUtil (Info, local),
       _list (0),
       _current (0),
-      _log (Info) {
+      _log (Info),
+      _useTab (True) {
 
    _init (local);
 }
@@ -76,7 +77,7 @@ dmz::InputPluginChannelSwitch::receive_key_event (
       const Handle Channel,
       const InputEventKey &Value) {
 
-   if ((Value.get_key () == KeyTab) && Value.get_key_state ()) {
+   if ((Value.get_key () == KeyTab) && _useTab && Value.get_key_state ()) {
 
       if (_current) { _current = _current->next; }
 
@@ -139,6 +140,7 @@ dmz::InputPluginChannelSwitch::_init (Config &local) {
 
    Config list;
 
+   _useTab = config_to_boolean ("useTab.value", local, _useTab);
    if (local.lookup_all_config ("channel", list)) {
 
       Definitions defs (get_plugin_runtime_context (), &_log);

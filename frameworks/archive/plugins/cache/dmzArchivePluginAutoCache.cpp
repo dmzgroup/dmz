@@ -6,10 +6,12 @@
 #include <dmzRuntimeConfig.h>
 #include <dmzRuntimeConfigToNamedHandle.h>
 #include <dmzRuntimeConfigToTypesBase.h>
+#include <dmzRuntimeConfigWrite.h>
 #include <dmzRuntimeData.h>
 #include <dmzRuntimeDefinitions.h>
 #include <dmzRuntimePluginFactoryLinkSymbol.h>
 #include <dmzRuntimePluginInfo.h>
+#include <dmzRuntimeSession.h>
 #include <dmzSystemFile.h>
 #include <dmzSystemStreamFile.h>
 
@@ -21,6 +23,9 @@ dmz::ArchivePluginAutoCache::ArchivePluginAutoCache (const PluginInfo &Info, Con
       _appState (Info),
       _archiveMod (0),
       _archiveHandle (0),
+      _versionHandle (0),
+      _version (0),
+      _versionDelta (0),
       _autoRestore (True),
       _appStateDirty (False),
       _log (Info) {
@@ -40,8 +45,11 @@ dmz::ArchivePluginAutoCache::update_plugin_state (
       const PluginStateEnum State,
       const UInt32 Level) {
 
+   RuntimeContext *context (get_plugin_runtime_context ());
    if (State == PluginStateInit) {
 
+      Config session (get_session_config (get_plugin_name (), context));
+      _version = config_to_uint32 ("version.value", session, _version);
    }
    else if (State == PluginStateStart) {
 
@@ -51,6 +59,9 @@ dmz::ArchivePluginAutoCache::update_plugin_state (
    }
    else if (State == PluginStateStop) {
 
+      Config session (get_plugin_name ());
+      session.add_config (uint32_to_config ("version", "value", _version));
+      set_session_config (context, session);
       _appStateDirty = True;
       _cache_archive ();
    }
@@ -105,7 +116,17 @@ dmz::ArchivePluginAutoCache::receive_message (
          _archiveMod->set_database_name (database);
       }
    }
-   else if (Type == _loadMessage) { _load_cache (); }
+   else if (Type == _loadMessage) {
+
+      UInt32 version = 0;
+      Boolean gotVersion = (InData && InData->lookup_uint32 (_versionHandle, 0, version));
+      if (!_versionDelta || (gotVersion && ((version - _version) < _versionDelta))) {
+
+         _load_cache ();
+      }
+      _log.warn << "_Version: " << _version << " Version: " << version << " Delta: " << _versionDelta << endl;
+      if (gotVersion) { _version = version; }
+   }
    else if (Type == _skippedMessage && _archiveMod) {
 
       String database;
@@ -250,6 +271,9 @@ dmz::ArchivePluginAutoCache::_init (Config &local) {
       local,
       "SetDatabaseMessage",
       context);
+
+   _versionHandle = config_to_named_handle ("version.name", local, "version", context);
+   _versionDelta = config_to_uint32 ("version.max-delta", local, _versionDelta);
 
    subscribe_to_message (_loadMessage);
    subscribe_to_message (_dbMessage);

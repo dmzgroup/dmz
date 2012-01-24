@@ -50,6 +50,9 @@ namespace dmz {
          ApplicationState _appState;
          ArchiveModule *_archiveMod;
          Handle _archiveHandle;
+         Handle _versionHandle;
+         UInt32 _version;
+         UInt32 _versionDelta;
          String _cacheDir;
          String _saveFile;
          String _dbName;

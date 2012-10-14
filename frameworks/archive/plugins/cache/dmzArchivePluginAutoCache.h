@@ -58,6 +58,7 @@ namespace dmz {
          String _dbName;
          Boolean _autoRestore;
          Boolean _appStateDirty;
+         Boolean _haveLoadedCache;
          Message _updateArchiveMessage;
          Handle _dbHandle;
          Message _loadMessage;

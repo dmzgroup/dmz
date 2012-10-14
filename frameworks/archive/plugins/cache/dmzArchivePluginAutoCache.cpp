@@ -28,6 +28,7 @@ dmz::ArchivePluginAutoCache::ArchivePluginAutoCache (const PluginInfo &Info, Con
       _versionDelta (0),
       _autoRestore (True),
       _appStateDirty (False),
+      _haveLoadedCache (False),
       _log (Info) {
 
    _init (local);
@@ -127,7 +128,7 @@ dmz::ArchivePluginAutoCache::receive_message (
       _log.warn << "_Version: " << _version << " Version: " << version << " Delta: " << _versionDelta << endl;
       if (gotVersion) { _version = version; }
    }
-   else if (Type == _skippedMessage && _archiveMod) {
+   else if (Type == _skippedMessage && _archiveMod && !_haveLoadedCache) {
 
       String database;
       if (InData->lookup_string (_dbHandle, 0, database)) {
@@ -237,6 +238,7 @@ dmz::ArchivePluginAutoCache::_load_cache () {
             _archiveMod->process_archive (_archiveHandle, data);
          }
       }
+      _haveLoadedCache = True;
    }
 }
 
